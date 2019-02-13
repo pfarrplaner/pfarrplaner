@@ -51,7 +51,7 @@
                                value="{{ strftime('%H:%M', strtotime($service->time)) }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
                     </div>
                     <div class="form-group">
-                        <label for="pastor">Pfarrer</label>
+                        <label for="pastor">Pfarrer*in</label>
                         <input class="form-control" type="text" name="pastor" value="{{ $service->pastor }}" @if ((!(Auth::user()->isAdmin || Auth::user()->canEditField('pastor'))) || ($service->need_predicant)) disabled @endif/>
                     </div>
                     <div class="form-check">
@@ -62,11 +62,11 @@
                         </label>
                     </div>
                     <div class="form-group">
-                        <label for="organist">Organist</label>
+                        <label for="organist">Organist*in</label>
                         <input class="form-control" type="text" name="organist" value="{{ $service->organist }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditField('organist'))) disabled @endif/>
                     </div>
                     <div class="form-group">
-                        <label for="sacristan">Mesner</label>
+                        <label for="sacristan">Mesner*in</label>
                         <input class="form-control" type="text" name="sacristan" value="{{ $service->sacristan }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditField('sacristan'))) disabled @endif/>
                     </div>
                     <h4>Besonderheiten</h4>
@@ -90,11 +90,11 @@
                     </div>
                     <h4>Opfer</h4>
                     <div class="form-group">
-                        <label for="offerings_counter1">Opferzähler 1</label>
+                        <label for="offerings_counter1">Opferzähler*in 1</label>
                         <input class="form-control" type="text" name="offerings_counter1" value="{{ $service->offerings_counter1 }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
                     </div>
                     <div class="form-group">
-                        <label for="offerings_counter2">Opferzähler 2</label>
+                        <label for="offerings_counter2">Opferzähler*in 2</label>
                         <input class="form-control" type="text" name="offerings_counter2" value="{{ $service->offerings_counter2 }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
                     </div>
                     <div class="form-group">
