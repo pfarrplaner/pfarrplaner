@@ -224,7 +224,7 @@
                                                 class="designation">O: </span>{{ $service->organist }}</div>
                                         <div class="service-team service-sacristan"><span
                                                 class="designation">M: </span>{{ $service->sacristan }}</div>
-                                        <div class="service-description">{{ $service->description }}</div>
+                                        <div class="service-description">{{ $service->descriptionText() }}</div>
                                     </div>
                                 @endforeach
                                 @if (Auth::user()->isAdmin || Auth::user()->cities->contains($city))

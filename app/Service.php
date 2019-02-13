@@ -20,9 +20,32 @@ class Service extends Model
         'city_id' => 'Kirchengemeinde',
         'special_location' => 'Ort (Freitext)',
         'need_predicant' => 'Prädikant benötigt',
+        'baptism' => 'Taufe',
+        'eucharist' => 'Abendmahl',
+        'offerings_counter1' => 'Opferzähler 1',
+        'offerings_counter2' => 'Opferzähler 2',
+        'offering_goal' => 'Opferzweck',
+        'offering_description' => 'Anmerkungen zum Opfer',
     );
 
-    protected $fillable = ['day_id', 'location_id', 'time', 'pastor', 'organist', 'sacristan', 'description', 'city_id', 'special_location', 'need_predicant'];
+    protected $fillable = [
+        'day_id',
+        'location_id',
+        'time',
+        'pastor',
+        'organist',
+        'sacristan',
+        'description',
+        'city_id',
+        'special_location',
+        'need_predicant',
+        'baptism',
+        'eucharist',
+        'offerings_counter1',
+        'offerings_counter2',
+        'offering_goal',
+        'offering_description',
+    ];
 
     public static function boot()
     {
@@ -43,6 +66,14 @@ class Service extends Model
 
     public function locationText() {
         return $this->special_location ?: $this->location->name;
+    }
+
+    public function descriptionText() {
+        $description = [];
+        if ($this->baptism) $description[] = 'Taufen';
+        if ($this->eucharist) $description[] = 'Abendmahl';
+        if ($this->description != '') $description[] = $this->description;
+        return join('; ', $description);
     }
 
     public function notifyOfCreation(User $author, $text) {

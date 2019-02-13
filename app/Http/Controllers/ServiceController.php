@@ -75,6 +75,12 @@ class ServiceController extends Controller
             'special_location' => $specialLocation,
             'city_id' => $request->get('city_id'),
             'need_predicant' => $request->get('need_predicant') ? 1 : 0,
+            'baptism' => $request->get('baptism') ? 1 : 0,
+            'eucharist' => $request->get('eucharist') ? 1 : 0,
+            'offerings_counter1' => $request->get('offerings_counter1') ?: '',
+            'offerings_counter2' => $request->get('offerings_counter2') ?: '',
+            'offering_goal' => $request->get('offering_goal') ?: '',
+            'offering_description' => $request->get('offering_description') ?: '',
         ]);
         //$service->location_id = $location->id;
         //$service->day_id = $day->id;
@@ -151,6 +157,12 @@ class ServiceController extends Controller
         $service->city_id = $request->get('city_id');
         $service->special_location = $specialLocation;
         $service->need_predicant = $request->get('need_predicant') ? 1 : 0;
+        $service->baptism = $request->get('baptism') ? 1 : 0;
+        $service->eucharist = $request->get('eucharist') ? 1 : 0;
+        $service->offerings_counter1 = $request->get('offerings_counter1') ?: '';
+        $service->offerings_counter2 = $request->get('offerings_counter2') ?: '';
+        $service->offering_goal = $request->get('offering_goal') ?: '';
+        $service->offering_description = $request->get('offering_description') ?: '';
 
 
         $service->notifyOfChanges(Auth::user(), '%s hat soeben folgende Änderungen an einem Gottesdienst vorgenommen');

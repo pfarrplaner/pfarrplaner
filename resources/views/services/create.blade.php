@@ -59,9 +59,41 @@
                         <label for="sacristan">Mesner</label>
                         <input class="form-control" type="text" name="sacristan"/>
                     </div>
+                    <h4>Besonderheiten</h4>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="baptism" value="1"
+                               id="baptism" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif>
+                        <label class="form-check-label" for="baptism">
+                            Taufe(n)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="eucharist" value="1"
+                               id="eucharist" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif>
+                        <label class="form-check-label" for="eucharist">
+                            Abendmahl
+                        </label>
+                    </div>
                     <div class="form-group">
-                        <label for="description">Besonderheiten</label>
-                        <input type="text" class="form-control" name="description"/>
+                        <label for="description">Anmerkungen</label>
+                        <input type="text" class="form-control" name="description"  />
+                    </div>
+                    <h4>Opfer</h4>
+                    <div class="form-group">
+                        <label for="offerings_counter1">Opferzähler 1</label>
+                        <input class="form-control" type="text" name="offerings_counter1" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                    </div>
+                    <div class="form-group">
+                        <label for="offerings_counter2">Opferzähler 2</label>
+                        <input class="form-control" type="text" name="offerings_counter2" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                    </div>
+                    <div class="form-group">
+                        <label for="offering_goal">Opferzweck</label>
+                        <input class="form-control" type="text" name="offering_goal" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                    </div>
+                    <div class="form-group">
+                        <label for="offering_description">Anmerkungen zum Opfer</label>
+                        <input class="form-control" type="text" name="offering_description" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
                     </div>
                     <button type="submit" class="btn btn-primary">Hinzufügen</button>
                 </form>

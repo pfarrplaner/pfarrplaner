@@ -92,8 +92,8 @@ class ReportsController extends Controller
                     $textRun->addText(htmlspecialchars($service->location->name) . "\t");
                 }
                 $textRun->addText(htmlspecialchars($service->pastor));
-                if ($service->description) {
-                    $textRun->addText(' - ' . htmlspecialchars($service->description));
+                if ($service->descriptionText() != "") {
+                    $textRun->addText(' - ' . htmlspecialchars($service->descriptionText()));
                 }
             }
             $textRun = $section->addTextRun('list');
@@ -256,39 +256,10 @@ class ReportsController extends Controller
                 $table->addCell(Converter::cmToTwip(3.25))->addText($day->date->format('d.m.Y').'<w:br />');
                 $table->addCell(Converter::cmToTwip(5))->addText($service->locationText());
                 $table->addCell(Converter::cmToTwip(3.25))->addText(strftime('%H:%M Uhr', strtotime($service->time)));
-                $table->addCell(Converter::cmToTwip(6))->addText($service->description);
+                $table->addCell(Converter::cmToTwip(6))->addText($service->descriptionText());
                 $table->addCell(Converter::cmToTwip(7.25));
             }
         }
-
-            /*
-            foreach ($days as $day) {
-                $ctr = 0;
-                foreach ($serviceList[$day->date->format('Y-m-d')] as $service) {
-                    $ctr++;
-                    $textRun = $section->addTextRun('list');
-                    if ($ctr == 1) {
-                        $textRun->addText($day->date->format('d.m.Y'));
-                    }
-                    if ($ctr == 2) {
-                        $textRun->addText(htmlspecialchars($day->name));
-                    }
-                    $textRun->addText("\t");
-                    $textRun->addText(strftime('%H:%M', strtotime($service->time)) . " Uhr\t");
-                    if ($service->special_location) {
-                        $textRun->addText(htmlspecialchars($service->special_location) . "\t");
-                    } else {
-                        $textRun->addText(htmlspecialchars($service->location->name) . "\t");
-                    }
-                    $textRun->addText(htmlspecialchars($service->pastor));
-                    if ($service->description) {
-                        $textRun->addText(' - ' . htmlspecialchars($service->description));
-                    }
-                }
-                $textRun = $section->addTextRun('list');
-
-            }
-            */
 
         header("Content-Description: File Transfer");
         header('Content-Disposition: attachment; filename="' . $filename . '.docx"');
