@@ -26,6 +26,7 @@ class Service extends Model
         'offerings_counter2' => 'Opferzähler 2',
         'offering_goal' => 'Opferzweck',
         'offering_description' => 'Anmerkungen zum Opfer',
+        'offering_type' => 'Opfertyp',
     );
 
     protected $fillable = [
@@ -45,6 +46,7 @@ class Service extends Model
         'offerings_counter2',
         'offering_goal',
         'offering_description',
+        'offering_type',
     ];
 
     public static function boot()
@@ -69,11 +71,24 @@ class Service extends Model
     }
 
     public function descriptionText() {
-        $description = [];
-        if ($this->baptism) $description[] = 'Taufen';
-        if ($this->eucharist) $description[] = 'Abendmahl';
-        if ($this->description != '') $description[] = $this->description;
-        return join('; ', $description);
+        $desc = [];
+        if ($this->baptism) $desc[] = 'Taufen';
+        if ($this->eucharist) $desc[] = 'Abendmahl';
+        if ($this->getAttribute('description') != '') $desc[] = $this->getAttribute('description');
+        return join('; ', $desc);
+    }
+
+    public function offeringText() {
+        return $this->offering_goal.($this->offering_type ? ' ('.$this->offering_type.')' : '');
+    }
+
+    /**
+     * Check if service description contains a specific text (case-insensitive!)
+     * @param string $text Search for this text
+     * @return bool True if text is in description
+     */
+    public function hasDescription(string $text): bool {
+        return (false !== strpos(strtolower($this->descriptionText()), strtolower($text)));
     }
 
     public function notifyOfCreation(User $author, $text) {

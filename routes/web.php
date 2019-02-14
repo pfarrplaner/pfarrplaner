@@ -28,6 +28,8 @@ Route::get('/reports/person/setup', ['as' => 'reports.person.setup', 'uses' => '
 Route::post('/reports/person', ['as' => 'reports.person', 'uses' => 'ReportsController@person']);
 Route::get('/reports/predicants/setup', ['as' => 'reports.predicants.setup', 'uses' => 'ReportsController@predicantsSetup']);
 Route::post('/reports/predicants', ['as' => 'reports.predicants', 'uses' => 'ReportsController@predicants']);
+Route::get('/reports/largetable/setup', ['as' => 'reports.largetable.setup', 'uses' => 'ReportsController@largetableSetup']);
+Route::post('/reports/largetable', ['as' => 'reports.largetable', 'uses' => 'ReportsController@largetable']);
 
 
 

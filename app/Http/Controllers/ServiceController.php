@@ -81,6 +81,7 @@ class ServiceController extends Controller
             'offerings_counter2' => $request->get('offerings_counter2') ?: '',
             'offering_goal' => $request->get('offering_goal') ?: '',
             'offering_description' => $request->get('offering_description') ?: '',
+            'offering_type' => $request->get('offering_type') ?: '',
         ]);
         //$service->location_id = $location->id;
         //$service->day_id = $day->id;
@@ -163,6 +164,7 @@ class ServiceController extends Controller
         $service->offerings_counter2 = $request->get('offerings_counter2') ?: '';
         $service->offering_goal = $request->get('offering_goal') ?: '';
         $service->offering_description = $request->get('offering_description') ?: '';
+        $service->offering_type = $request->get('offering_type') ?: '';
 
 
         $service->notifyOfChanges(Auth::user(), '%s hat soeben folgende Änderungen an einem Gottesdienst vorgenommen');

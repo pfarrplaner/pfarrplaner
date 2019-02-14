@@ -92,6 +92,27 @@
                         <input class="form-control" type="text" name="offering_goal" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
                     </div>
                     <div class="form-group">
+                        <label style="display:block;">Opfertyp</label>
+                        <div class="form-check-inline">
+                            <input type="radio" name="offering_type" value="" autocomplete="off" checked>
+                            <label class="form-check-label">
+                                Eigener Beschluss
+                            </label>
+                        </div>
+                        <div class="form-check-inline">
+                            <input type="radio" name="offering_type" value="eO" autocomplete="off">
+                            <label class="form-check-label">
+                                Empfohlenes Opfer
+                            </label>
+                        </div>
+                        <div class="form-check-inline disabled">
+                            <input type="radio" name="offering_type" value="PO" autocomplete="off">
+                            <label class="form-check-label">
+                                Pflichtopfer
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="offering_description">Anmerkungen zum Opfer</label>
                         <input class="form-control" type="text" name="offering_description" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
                     </div>

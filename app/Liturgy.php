@@ -34,7 +34,7 @@ class Liturgy
         return self::$instance;
     }
 
-    public static function getDayInfo(Day $day): array {
+    public static function getDayInfo(Day $day, $fallback = false): array {
         if (!count(self::$data)) {
             $tmpData = json_decode(
                 file_get_contents(
@@ -44,7 +44,16 @@ class Liturgy
                 self::$data[$val['date']] = $val;
             }
         }
-        return isset(self::$data[$day->date->format('d.m.Y')]) ? self::$data[$day->date->format('d.m.Y')] : [];
+        if (isset(self::$data[$day->date->format('d.m.Y')])) {
+            return self::$data[$day->date->format('d.m.Y')];
+        } elseif ($fallback) {
+            $date = $day->date;
+            while (!isset(self::$data[$date->format('d.m.Y')])) {
+                $date = $date->subDays(1);
+            }
+            return isset(self::$data[$date->format('d.m.Y')]) ? self::$data[$date->format('d.m.Y')] : [];
+        }
+        return [];
     }
 
 

@@ -114,11 +114,13 @@
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop3">
                                     <a class="dropdown-item"
-                                       href="{{ route('reports.person.setup') }}">Alle Gottesdienste einer Person</a>
+                                       href="{{ route('reports.person.setup') }}"><span class="fa fa-file-pdf"></span> Alle Gottesdienste einer Person</a>
                                     <a class="dropdown-item"
-                                       href="{{ route('reports.gemeindebrief.setup') }}">Liste für Gemeindebrief</a>
+                                       href="{{ route('reports.largetable.setup') }}"><span class="fa fa-file-excel"></span> Jahresplan der Gottesdienste</a>
                                     <a class="dropdown-item"
-                                       href="{{ route('reports.predicants.setup') }}">Prädikantenanforderung</a>
+                                       href="{{ route('reports.gemeindebrief.setup') }}"><span class="fa fa-file-word"></span> Liste für Gemeindebrief</a>
+                                    <a class="dropdown-item"
+                                       href="{{ route('reports.predicants.setup') }}"><span class="fa fa-file-word"></span> Prädikantenanforderung</a>
                                 </div>
                             </div>
                         </div>
