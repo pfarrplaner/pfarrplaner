@@ -23,7 +23,11 @@ class User extends Authenticatable
         'canEditGeneral',
         'canEditChurch',
         'canEditFields',
-        'notifications'
+        'notifications',
+        'office',
+        'address',
+        'phone',
+        'preference_cities',
     ];
 
     /**

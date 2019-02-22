@@ -16,14 +16,14 @@
                         </ul>
                     </div><br/>
                 @endif
-                <form method="post" action="{{ route('reports.gemeindebrief') }}">
+                <form method="post" action="{{ route('reports.render', $report) }}">
                     @csrf
                     <div class="form-group"> <!-- Radio group !-->
                         <label class="control-label">Folgende Kirchengemeinden mit einbeziehen:</label>
                         @foreach ($cities as $city)
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="includeCities[]" value="{{ $city->id }}"
-                                       id="defaultCheck{{$city->id}}" checked>
+                                       id="defaultCheck{{$city->id}}" @if(Auth::user()->cities->contains($city)) checked @endif >
                                 <label class="form-check-label" for="defaultCheck{{$city->id}}">
                                     {{$city->name}}
                                 </label>
@@ -38,6 +38,18 @@
                         <label for="end">Bis:</label>
                         <input type="text" class="form-control" name="end" value="{{ $maxDate->date->format('d.m.Y') }}" placeholder="TT.MM.JJJJ" />
                     </div>
+                    <div class="row">
+                        @foreach($formats as $format)
+                            <div class="col-6">
+                                <label>
+                                    <input type="radio" name="format" value="{{ $format }}" @if($loop->first) checked @endif/>
+                                Format: <b>{{ $format }}</b><br />
+                                </label>
+                                <img class="img-fluid" src="/img/bulletin/{{ $format }}.jpg" />
+                            </div>
+                        @endforeach
+                    </div>
+                    <br />
                     <button type="submit" class="btn btn-primary">Erstellen</button>
                 </form>
             </div>

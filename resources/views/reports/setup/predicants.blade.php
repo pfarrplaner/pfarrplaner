@@ -4,7 +4,7 @@
     <div class="container py-5">
         <div class="card">
             <div class="card-header">
-                Jahresplan der Gottesdienste erstellen
+                Prädikantenanforderung erstellen
             </div>
             <div class="card-body">
                 @if ($errors->any())
@@ -16,10 +16,10 @@
                         </ul>
                     </div><br/>
                 @endif
-                <form method="post" action="{{ route('reports.largetable') }}">
+                <form method="post" action="{{ route('reports.render', $report) }}">
                     @csrf
                     <div class="form-group"> <!-- Radio group !-->
-                        <label class="control-label">Jahresplan für folgende Kirchengemeinde erstellen:</label>
+                        <label class="control-label">Prädikanten für folgende Kirchengemeinde anfordern:</label>
                         <select class="form-control" name="city">
                             @foreach ($cities as $city)
                                 <option value="{{ $city->id }}">
@@ -29,12 +29,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="year">Jahr:</label>
-                        <select class="form-control" name="year">
-                        @for ($year=$minDate->date->year; $year<=$maxDate->date->year; $year++)
-                            <option value="{{ $year }}" @if ($year == date('Y')) selected @endif>{{ $year }}</option>
-                        @endfor
-                        </select>
+                        <label for="start">Gottesdienste von:</label>
+                        <input type="text" class="form-control" name="start" value="{{ date('d.m.Y') }}" placeholder="TT.MM.JJJJ" />
+                    </div>
+                    <div class="form-group">
+                        <label for="end">Bis:</label>
+                        <input type="text" class="form-control" name="end" value="{{ $maxDate->date->format('d.m.Y') }}" placeholder="TT.MM.JJJJ" />
                     </div>
                     <button type="submit" class="btn btn-primary">Erstellen</button>
                 </form>

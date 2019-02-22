@@ -107,22 +107,11 @@
                             <a class="btn btn-default"
                                href="{{ route('calendar.printsetup', ['year' => $year, 'month' => $month]) }}"><span
                                     class="fa fa-print"></span></a>
-                            <div class="btn-group" role="group">
-                                <button id="btnGroupDrop3" type="button" class="btn btn-default dropdown-toggle"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Berichte
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="btnGroupDrop3">
-                                    <a class="dropdown-item"
-                                       href="{{ route('reports.person.setup') }}"><span class="fa fa-file-pdf"></span> Alle Gottesdienste einer Person</a>
-                                    <a class="dropdown-item"
-                                       href="{{ route('reports.largetable.setup') }}"><span class="fa fa-file-excel"></span> Jahresplan der Gottesdienste</a>
-                                    <a class="dropdown-item"
-                                       href="{{ route('reports.gemeindebrief.setup') }}"><span class="fa fa-file-word"></span> Liste für Gemeindebrief</a>
-                                    <a class="dropdown-item"
-                                       href="{{ route('reports.predicants.setup') }}"><span class="fa fa-file-word"></span> Prädikantenanforderung</a>
-                                </div>
-                            </div>
+                            <a class="btn btn-default"
+                               href="{{ route('reports.list') }}"
+                               title="Daten in verschiedenen Formaten ausgeben">
+                                Ausgabe...
+                            </a>
                         </div>
                     </div>
                 @endauth

@@ -60,6 +60,9 @@ class UserController extends Controller
             'canEditGeneral' => $request->get('canEditGeneral') ? 1 : 0,
             'canEditFields' => join(',', $request->get('canEditField') ?: []),
             'notifications' => $request->get('notifications') ? 1 : 0,
+            'office' => $request->get('office') ?: '',
+            'address' => $request->get('address') ?: '',
+            'phone' => $request->get('phone') ?: '',
         ]);
         $user->save();
         $user->cities()->sync($request->get('cities'));
@@ -118,6 +121,10 @@ class UserController extends Controller
         $user->canEditChurch = $request->get('canEditChurch') ? 1 : 0;
         $user->canEditFields = join(',', $request->get('canEditField') ?: []);
         $user->notifications = $request->get('notifications') ? 1 : 0;
+        $user->office = $request->get('office') ?: '';
+        $user->address = $request->get('address') ?: '';
+        $user->phone = $request->get('phone') ?: '';
+        $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
         $user->save();
 
         return redirect()->route('users.index')->with('success', 'Die Änderungen wurden gespeichert.');
@@ -135,5 +142,19 @@ class UserController extends Controller
         $user = User::find($id);
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Der Benutzer wurde gelöscht.');
+    }
+
+    public function preferences($id) {
+        $user = User::find($id);
+        $preferenceCities = City::whereIn('id', $user->preference_cities ?: $user->cities);
+        $allowedCities = City::whereIn('id', $user->cities);
+        foreach ($allowedCities as $city) {
+            if ($preferenceCities->contains($city)) $allowedCities->forget($city);
+        }
+        return view('users.preferences', ['user' => $user, 'allowedCities' => $allowedCities, 'preferenceCities' => $preferenceCities]);
+    }
+
+    public function savePreferences(Request $request, $id) {
+
     }
 }

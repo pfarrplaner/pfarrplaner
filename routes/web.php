@@ -22,14 +22,11 @@ Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])
 Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name('calendar.printsetup');
 Route::post('/calendar/{year?}/{month?}/print', ['uses' => 'CalendarController@print'])->name('calendar.print');
 
-Route::get('/reports/gemeindebrief/setup', ['as' => 'reports.gemeindebrief.setup', 'uses' => 'ReportsController@gemeindebriefSetup']);
-Route::post('/reports/gemeindebrief', ['as' => 'reports.gemeindebrief', 'uses' => 'ReportsController@gemeindebrief']);
-Route::get('/reports/person/setup', ['as' => 'reports.person.setup', 'uses' => 'ReportsController@personSetup']);
-Route::post('/reports/person', ['as' => 'reports.person', 'uses' => 'ReportsController@person']);
-Route::get('/reports/predicants/setup', ['as' => 'reports.predicants.setup', 'uses' => 'ReportsController@predicantsSetup']);
-Route::post('/reports/predicants', ['as' => 'reports.predicants', 'uses' => 'ReportsController@predicants']);
-Route::get('/reports/largetable/setup', ['as' => 'reports.largetable.setup', 'uses' => 'ReportsController@largetableSetup']);
-Route::post('/reports/largetable', ['as' => 'reports.largetable', 'uses' => 'ReportsController@largetable']);
+Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
+Route::get('/reports/setup/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
+Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
+
+Route::get('/vertretungen', ['as' => 'absences', 'uses' => 'PublicController@absences']);
 
 
 

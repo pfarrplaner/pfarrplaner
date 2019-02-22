@@ -24,6 +24,18 @@
                     <label for="password">Neues Passwort:</label>
                     <input type="text" class="form-control" id="password" name="password" value=""/>
                 </div>
+                <div class="form-group">
+                    <label for="office">Pfarramt/Büro:</label>
+                    <input type="text" class="form-control" id="office" name="office" value="{{ $user->office }}"/>
+                </div>
+                <div class="form-group">
+                    <label for="address">Adresse:</label>
+                    <textarea name="address" class="form-control">{{ $user->address }}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefon:</label>
+                    <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}"/>
+                </div>
                 <div class="form-group"> <!-- Radio group !-->
                     <label class="control-label">Gehört zu folgenden Kirchengemeinden:</label>
                     @foreach ($cities as $city)

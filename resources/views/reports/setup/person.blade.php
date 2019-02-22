@@ -4,7 +4,7 @@
     <div class="container py-5">
         <div class="card">
             <div class="card-header">
-                Prädikantenanforderung erstellen
+                Gottesdienstliste für eine Person erstellen
             </div>
             <div class="card-body">
                 @if ($errors->any())
@@ -16,17 +16,11 @@
                         </ul>
                     </div><br/>
                 @endif
-                <form method="post" action="{{ route('reports.predicants') }}">
+                <form method="post" action="{{ route('reports.render', $report) }}">
                     @csrf
-                    <div class="form-group"> <!-- Radio group !-->
-                        <label class="control-label">Prädikanten für folgende Kirchengemeinde anfordern:</label>
-                        <select class="form-control" name="city">
-                            @foreach ($cities as $city)
-                                <option value="{{ $city->id }}">
-                                    {{$city->name}}
-                                </option>
-                            @endforeach
-                        </select>
+                    <div class="form-group">
+                        <label for="highlight">Nach folgendem Namen suchen:</label>
+                        <input type="text" class="form-control" name="highlight" value="{{ $lastName }}" />
                     </div>
                     <div class="form-group">
                         <label for="start">Gottesdienste von:</label>

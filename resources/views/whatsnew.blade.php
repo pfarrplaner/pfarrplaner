@@ -5,6 +5,15 @@
         <h1>Neue Funktionen</h1>
         <ul>
             <li>
+                <b>22.02.2019:</b>
+                Die verschiedenen Ausgabeformate sind jetzt übersichtlicher auf einer separaten Seite angeordnet. Bei der
+                Ausgabe für den Gemeindebrief kann zwischen verschiedenen Formaten (Tailfingen, Truchtelfingen) gewählt werden.
+            </li>
+            <li>
+                <b>20.02.2019:</b>
+                Öffentlich (d.h. ohne Passwort) einsehbarer Vertretungsplan unter {{ env('APP_URL') }}vertretungen
+            </li>
+            <li>
                 <b>14.02.2019:</b>
                 Mit "Berichte &gt; Jahresplan der Gottesdienste" kann eine Exceldatei mit einem Jahresplan aller Gottesdienste (inkl. Opfer) erzeugt werden.
             </li>
