@@ -12,7 +12,7 @@ return [
     'font_path' => base_path('resources/fonts/'),
     'font_data' => [
         'HelveticaCondensed' => [
-            'R' => 'Helvetica Condensed.ttf',
+            'R' => 'HelveticaCondensed.ttf',
             'B' => 'HelveticaCdBd.ttf',
         ]
     ]

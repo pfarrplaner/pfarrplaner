@@ -58,11 +58,14 @@ class UserController extends Controller
             'isAdmin' => $request->get('isAdmin') ? 1 : 0,
             'canEditChurch' => $request->get('canEditChurch') ? 1 : 0,
             'canEditGeneral' => $request->get('canEditGeneral') ? 1 : 0,
+            'canEditOfferings' => $request->get('canEditOfferings') ? 1 : 0,
+            'canEditCC' => $request->get('canEditCC') ? 1 : 0,
             'canEditFields' => join(',', $request->get('canEditField') ?: []),
             'notifications' => $request->get('notifications') ? 1 : 0,
             'office' => $request->get('office') ?: '',
             'address' => $request->get('address') ?: '',
             'phone' => $request->get('phone') ?: '',
+            'preference_cities' => '', // TODO: empty for now
         ]);
         $user->save();
         $user->cities()->sync($request->get('cities'));
@@ -119,6 +122,8 @@ class UserController extends Controller
         $user->isAdmin = $request->get('isAdmin') ? 1 : 0;
         $user->canEditGeneral = $request->get('canEditGeneral') ? 1 : 0;
         $user->canEditChurch = $request->get('canEditChurch') ? 1 : 0;
+        $user->canEditOfferings = $request->get('canEditOfferings') ? 1 : 0;
+        $user->canEditCC = $request->get('canEditCC') ? 1 : 0;
         $user->canEditFields = join(',', $request->get('canEditField') ?: []);
         $user->notifications = $request->get('notifications') ? 1 : 0;
         $user->office = $request->get('office') ?: '';

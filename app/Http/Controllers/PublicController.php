@@ -3,16 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Day;
+use App\Service;
 use App\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class PublicController extends Controller
 {
     protected $vacationData = [];
 
-    protected function findUserByLastName($lastName) {
-        return User::with('cities')->where('name', 'like', '%'.$lastName)->first();
+    protected function findUserByLastName($lastName)
+    {
+        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
     }
 
     protected function getVacationers($start, $end)
@@ -46,12 +48,12 @@ class PublicController extends Controller
         return $vacationers;
     }
 
-    public function absences() {
-
+    public function absences()
+    {
         $start = Carbon::now()
-            ->setTime(0,0,0);
+            ->setTime(0, 0, 0);
         $end = Carbon::createFromDate($start->year, $start->month, 1)
-            ->setTime(0,0,0)
+            ->setTime(0, 0, 0)
             ->addMonth(2)
             ->subSecond(1);
 
@@ -63,6 +65,52 @@ class PublicController extends Controller
             'start' => $start,
             'end' => $end,
             'cities' => $cities,
+        ]);
+    }
+
+    public function childrensChurch($city)
+    {
+        $city = City::where('name', 'like', '%'.$city.'%')->first();
+        if (!$city) {
+            return redirect()->route('home');
+        }
+
+        $minDate = Carbon::now();
+        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first()->date;
+
+        $days = Day::where('date', '>=', $minDate)
+            ->where('date', '<=', $maxDate)
+            ->orderBy('date', 'ASC')
+            ->get();
+
+        $serviceList = [];
+        foreach ($days as $day) {
+            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
+                ->where('day_id', $day->id)
+                ->where('cc', 1)
+                ->where('city_id', $city->id)
+                ->orderBy('time', 'ASC')
+                ->get();
+        }
+
+        $dates = [];
+        foreach ($serviceList as $day => $services) {
+            foreach ($services as $service) {
+                $dates[] = $service->day->date;
+            }
+        }
+
+        if (count($dates)) {
+            $minDate = min($dates);
+            $maxDate = max($dates);
+        }
+
+        return view('public.cc', [
+            'start' => $minDate,
+            'end' => $maxDate,
+            'city' => $city,
+            'services' => $serviceList,
+            'count' => count($dates),
         ]);
     }
 }

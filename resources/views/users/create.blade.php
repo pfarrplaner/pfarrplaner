@@ -62,6 +62,20 @@
                             </label>
                         </div>
                     @endforeach
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="canEditOfferings" value="1"
+                               id="canEditOfferings">
+                        <label class="form-check-label" for="canEditOfferings">
+                            Opfer
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="canEditCC" value="1"
+                               id="canEditCC">
+                        <label class="form-check-label" for="canEditCC">
+                            Kinderkirche
+                        </label>
+                    </div>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="notifications" value="1"

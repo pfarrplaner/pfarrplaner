@@ -165,9 +165,11 @@
                                 {{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope']] }}</div>
                             </div>
                             @endif
-                            @if (count($vacations[$day->id]))
-                                @foreach ($vacations[$day->id] as $vacation) <div class="vacation">{{ $vacation }}</div>
-                                @endforeach
+                            @if (Auth::user()->isAdmin || Auth::user()->canEditField('pastor'))
+                                @if (count($vacations[$day->id]))
+                                    @foreach ($vacations[$day->id] as $vacation) <div class="vacation">{{ $vacation }}</div>
+                                    @endforeach
+                                @endif
                             @endif
                         </th>
                     @endforeach
@@ -203,6 +205,7 @@
                                             <span class="separator">|</span>
                                             <div class="service-location">{{ $service->location->name }}</div>
                                         @endif
+                                            @if($service->cc) <img src="{{ env('APP_URL') }}img/cc.png" title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
                                         <div class="service-team service-pastor"><span
                                                 class="designation">P: </span>
                                             @if ($service->need_predicant)
@@ -218,7 +221,7 @@
                                         <div class="service-description">{{ $service->descriptionText() }}</div>
                                     </div>
                                 @endforeach
-                                @if (Auth::user()->isAdmin || Auth::user()->cities->contains($city))
+                                @if (Auth::user()->isAdmin || (Auth::user()->canEditGeneral && Auth::user()->cities->contains($city)))
                                     <a class="btn btn-success btn-sm" title="Neuen Gottesdiensteintrag hinzufügen"
                                        href="{{ route('services.add', ['date' => $day->id, 'city' => $city->id]) }}"><span
                                             class="fa fa-plus"></span></a>

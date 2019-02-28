@@ -17,7 +17,6 @@ class ServiceController extends Controller
         $this->middleware('auth');
     }
 
-
     /**
      * Display a listing of the resource.
      *
@@ -40,7 +39,7 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -52,13 +51,16 @@ class ServiceController extends Controller
         if ($specialLocation = ($request->get('special_location') ?: '')) {
             $locationId = 0;
             $time = $request->get('time') ?: '';
+            $ccLocation = $request->get('cc_location') ?: '';
         } else {
             $locationId = $request->get('location_id') ?: 0;
             if ($locationId) {
                 $location = Location::find($locationId);
                 $time = $request->get('time') ?: $location->default_time;
+                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
             } else {
                 $time = $request->get('time') ?: '';
+                $ccLocation = $request->get('cc_location') ?: '';
             }
         }
 
@@ -82,6 +84,11 @@ class ServiceController extends Controller
             'offering_goal' => $request->get('offering_goal') ?: '',
             'offering_description' => $request->get('offering_description') ?: '',
             'offering_type' => $request->get('offering_type') ?: '',
+            'others' => $request->get('others') ?: '',
+            'cc' => $request->get('cc') ? 1: 0,
+            'cc_location' => $ccLocation,
+            'cc_lesson' => $request->get('cc_lesson') ?: '',
+            'cc_staff' => $request->get('cc_staff') ?: '',
         ]);
         //$service->location_id = $location->id;
         //$service->day_id = $day->id;
@@ -95,7 +102,7 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -106,7 +113,7 @@ class ServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -120,8 +127,8 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -136,24 +143,25 @@ class ServiceController extends Controller
         if ($specialLocation = ($request->get('special_location') ?: '')) {
             $locationId = 0;
             $time = $request->get('time') ?: '';
+            $ccLocation = $request->get('cc_location') ?: '';
         } else {
             $locationId = $request->get('location_id') ?: 0;
             if ($locationId) {
                 $location = Location::find($locationId);
+                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
                 $time = $request->get('time') ?: $location->default_time;
             } else {
                 $time = $request->get('time') ?: '';
+                $ccLocation = $request->get('cc_location') ?: '';
             }
         }
 
-
-
         $service->day_id = $day->id;
         $service->location_id = $locationId;
-        $service->time= $time;
-        $service->pastor= $request->get('pastor') ?: '';
+        $service->time = $time;
+        $service->pastor = $request->get('pastor') ?: '';
         $service->organist = $request->get('organist') ?: '';
-        $service->sacristan= $request->get('sacristan') ?: '';
+        $service->sacristan = $request->get('sacristan') ?: '';
         $service->description = $request->get('description') ?: '';
         $service->city_id = $request->get('city_id');
         $service->special_location = $specialLocation;
@@ -165,11 +173,14 @@ class ServiceController extends Controller
         $service->offering_goal = $request->get('offering_goal') ?: '';
         $service->offering_description = $request->get('offering_description') ?: '';
         $service->offering_type = $request->get('offering_type') ?: '';
-
+        $service->others = $request->get('others') ?: '';
+        $service->cc = $request->get('cc') ? 1 : 0;
+        $service->cc_location = $ccLocation;
+        $service->cc_lesson = $request->get('cc_lesson') ?: '';
+        $service->cc_staff = $request->get('cc_staff') ?: '';
 
         $service->notifyOfChanges(Auth::user(), '%s hat soeben folgende Änderungen an einem Gottesdienst vorgenommen');
         $service->save();
-
 
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
@@ -178,7 +189,7 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -190,7 +201,8 @@ class ServiceController extends Controller
             ->with('success', 'Der Gottesdiensteintrag wurde gelöscht.');
     }
 
-    public function add($date, $city) {
+    public function add($date, $city)
+    {
         $day = Day::find($date);
         $city = City::find($city);
 

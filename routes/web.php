@@ -26,6 +26,10 @@ Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@lis
 Route::get('/reports/setup/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
 
+Route::get('/input/{input}', ['as' => 'inputs.setup', 'uses' => 'InputController@setup']);
+Route::post('/input/collect/{input}', ['as' => 'inputs.input', 'uses' => 'InputController@input']);
+Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputController@save']);
+
 Route::get('/vertretungen', ['as' => 'absences', 'uses' => 'PublicController@absences']);
 
 
@@ -44,7 +48,7 @@ Route::get('/logout', function() { Auth::logout(); return redirect()->route('log
 
 Route::get('/home', function(){
     return redirect()->route('calendar');
-});
+})->name('home');
 
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
@@ -56,13 +60,4 @@ Route::get('/whatsnew', function(){
 })->name('whatsnew');
 
 
-Route::get('/auto', function(){
-    $services = \App\Service::with('location')->get();
-    foreach ($services as $service) {
-        if ($service->location_id > 0) {
-            $service->city_id = $service->location->city_id;
-            $service->save();
-        }
-    }
-    die('Done');
-});
+Route::get('/kinderkirche/{city}', ['as' => 'cc-public', 'uses' => 'PublicController@childrensChurch']);

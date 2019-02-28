@@ -24,6 +24,9 @@
                             <a class="nav-link" href="#offerings" role="tab" data-toggle="tab">Opfer</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="#cc" role="tab" data-toggle="tab">Kinderkirche</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" href="#history" role="tab" data-toggle="tab">Bearbeitungen</a>
                         </li>
                     </ul>
@@ -89,6 +92,10 @@
                                 <label for="sacristan">Mesner*in</label>
                                 <input class="form-control" type="text" name="sacristan" value="{{ $service->sacristan }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditField('sacristan'))) disabled @endif/>
                             </div>
+                            <div class="form-group">
+                                <label for="others">Weitere Beteiligte</label>
+                                <input class="form-control" type="text" name="others" value="{{ $service->others }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                            </div>
                         </div>
                         <div role="tabpanel" id="special" class="tab-pane fade">
                             <div class="form-check">
@@ -114,32 +121,32 @@
                         <div role="tabpanel" id="offerings" class="tab-pane fade">
                             <div class="form-group">
                                 <label for="offerings_counter1">Opferzähler*in 1</label>
-                                <input class="form-control" type="text" name="offerings_counter1" value="{{ $service->offerings_counter1 }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offerings_counter1" value="{{ $service->offerings_counter1 }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
                             </div>
                             <div class="form-group">
                                 <label for="offerings_counter2">Opferzähler*in 2</label>
-                                <input class="form-control" type="text" name="offerings_counter2" value="{{ $service->offerings_counter2 }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offerings_counter2" value="{{ $service->offerings_counter2 }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
                             </div>
                             <div class="form-group">
                                 <label for="offering_goal">Opferzweck</label>
-                                <input class="form-control" type="text" name="offering_goal" value="{{ $service->offering_goal }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offering_goal" value="{{ $service->offering_goal }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
                             </div>
                             <div class="form-group">
                                 <label style="display:block;">Opfertyp</label>
                                 <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="" autocomplete="off" @if($service->offering_type == '')checked @endif>
+                                    <input type="radio" name="offering_type" value="" autocomplete="off" @if($service->offering_type == '')checked @endif @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
                                     <label class="form-check-label">
                                         Eigener Beschluss
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="eO" autocomplete="off" @if($service->offering_type == 'eO')checked @endif>
+                                    <input type="radio" name="offering_type" value="eO" autocomplete="off" @if($service->offering_type == 'eO')checked @endif @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
                                     <label class="form-check-label">
                                         Empfohlenes Opfer
                                     </label>
                                 </div>
                                 <div class="form-check-inline disabled">
-                                    <input type="radio" name="offering_type" value="PO" autocomplete="off" @if($service->offering_type == 'PO')checked @endif>
+                                    <input type="radio" name="offering_type" value="PO" autocomplete="off" @if($service->offering_type == 'PO')checked @endif @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
                                     <label class="form-check-label">
                                         Pflichtopfer
                                     </label>
@@ -147,7 +154,29 @@
                             </div>
                             <div class="form-group">
                                 <label for="offering_description">Anmerkungen zum Opfer</label>
-                                <input class="form-control" type="text" name="offering_description" value="{{ $service->offering_description }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offering_description" value="{{ $service->offering_description }}"@if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="cc">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="cc" value="1"
+                                       id="cc-check" @if($service->cc) checked @endif @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif>
+                                <label class="form-check-label" for="cc">
+                                    Parallel findet Kinderkirche statt
+                                </label>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label for="cc_location">Ort der Kinderkirche:</label>
+                                <input class="form-control" type="text" name="cc_location" placeholder="Leer lassen für " value="{{ $service->cc_location }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
+                            </div>
+                            <div class="form-group">
+                                <label for="cc_lesson">Lektion:</label>
+                                <input class="form-control" type="text" name="cc_lesson" value="{{ $service->cc_lesson }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
+                            </div>
+                            <div class="form-group">
+                                <label for="cc_staff">Mitarbeiter:</label>
+                                <input class="form-control" type="text" name="cc_staff" placeholder="Name, Name, ..." value="{{ $service->cc_staff }}" @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
                             </div>
                         </div>
                         <div role="tabpanel" id="history" class="tab-pane fade">

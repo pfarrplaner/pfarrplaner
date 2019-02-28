@@ -52,7 +52,8 @@ class LocationController extends Controller
         $location = new Location([
             'name' => $request->get('name'),
             'city_id' => $request->get('city_id'),
-            'default_time' => $request->get('default_time')
+            'default_time' => $request->get('default_time'),
+            'cc_default_location' => $request->get('cc_default_location') ?: '',
         ]);
         $location->save();
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde gespeichert');
@@ -103,6 +104,7 @@ class LocationController extends Controller
         $location->name = $request->get('name');
         $location->city_id = $request->get('city_id');
         $location->default_time = $request->get('default_time');
+        $location->cc_default_location = $request->get('cc_default_location') ?: '';
         $location->save();
 
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde geändert.');

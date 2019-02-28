@@ -27,6 +27,11 @@ class Service extends Model
         'offering_goal' => 'Opferzweck',
         'offering_description' => 'Anmerkungen zum Opfer',
         'offering_type' => 'Opfertyp',
+        'others' => 'Weitere Beteiligte',
+        'cc' => 'Kinderkirche findet statt',
+        'cc_location' => 'Ort der Kinderkirche',
+        'cc_lesson' => 'Lektion für die Kinderkirche',
+        'cc_staff' => 'Mitarbeiter in der Kinderkirche',
     );
 
     protected $fillable = [
@@ -47,6 +52,11 @@ class Service extends Model
         'offering_goal',
         'offering_description',
         'offering_type',
+        'others',
+        'cc',
+        'cc_location',
+        'cc_lesson',
+        'cc_staff',
     ];
 
     public static function boot()
@@ -172,6 +182,14 @@ class Service extends Model
                 .', '.strftime('%H:%M Uhr', strtotime($this->time))
                 .', '.($this->special_location ?: $this->location->name)."\r\n\r\n",
                 utf8_decode($text), 'From: no-reply@tailfingen.de');
+        }
+    }
+
+    function hasNonStandardCCLocation() {
+        if ($this->special_location) {
+            return true;
+        } else {
+            return ($this->cc_location != $this->location->cc_default_location);
         }
     }
 

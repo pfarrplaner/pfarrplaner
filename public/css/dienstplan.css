@@ -177,3 +177,15 @@ ol.steps li {
 ol.steps img {
     margin-top: 20px;
 }
+
+.service-row.cc {
+    background-color: lightgreen;
+}
+
+.service-row.no-cc {
+    color: darkgray;
+}
+
+.data-row.no-cc {
+    display: none;
+}

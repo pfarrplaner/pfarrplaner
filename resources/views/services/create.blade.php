@@ -20,6 +20,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#offerings" role="tab" data-toggle="tab">Opfer</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#cc" role="tab" data-toggle="tab">Kinderkirche</a>
+                        </li>
                     </ul>
 
 
@@ -42,6 +45,7 @@
                                 <select class="form-control" name="location_id">
                                     @foreach($locations as $thisLocation)
                                         <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
+                                                data-cc="{{ $thisLocation->cc_default_location }}"
                                                 value="{{$thisLocation->id}}">{{$thisLocation->name}}</option>
                                     @endforeach
                                     <option value="">Freie Ortsangabe</option>
@@ -76,6 +80,10 @@
                                 <label for="sacristan">Mesner*in</label>
                                 <input class="form-control" type="text" name="sacristan"/>
                             </div>
+                            <div class="form-group">
+                                <label for="others">Weitere Beteiligte</label>
+                                <input class="form-control" type="text" name="others" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                            </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="special">
                             <div class="form-check">
@@ -101,32 +109,32 @@
                         <div role="tabpanel" class="tab-pane fade" id="offerings">
                             <div class="form-group">
                                 <label for="offerings_counter1">Opferzähler*in 1</label>
-                                <input class="form-control" type="text" name="offerings_counter1" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offerings_counter1" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
                             </div>
                             <div class="form-group">
                                 <label for="offerings_counter2">Opferzähler*in 2</label>
-                                <input class="form-control" type="text" name="offerings_counter2" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offerings_counter2" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
                             </div>
                             <div class="form-group">
                                 <label for="offering_goal">Opferzweck</label>
-                                <input class="form-control" type="text" name="offering_goal" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offering_goal" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
                             </div>
                             <div class="form-group">
                                 <label style="display:block;">Opfertyp</label>
                                 <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="" autocomplete="off" checked>
+                                    <input type="radio" name="offering_type" value="" autocomplete="off" checked @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
                                     <label class="form-check-label">
                                         Eigener Beschluss
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="eO" autocomplete="off">
+                                    <input type="radio" name="offering_type" value="eO" autocomplete="off" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
                                     <label class="form-check-label">
                                         Empfohlenes Opfer
                                     </label>
                                 </div>
                                 <div class="form-check-inline disabled">
-                                    <input type="radio" name="offering_type" value="PO" autocomplete="off">
+                                    <input type="radio" name="offering_type" value="PO" autocomplete="off" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
                                     <label class="form-check-label">
                                         Pflichtopfer
                                     </label>
@@ -134,7 +142,29 @@
                             </div>
                             <div class="form-group">
                                 <label for="offering_description">Anmerkungen zum Opfer</label>
-                                <input class="form-control" type="text" name="offering_description" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="offering_description" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="cc">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="cc" value="1"
+                                       id="cc-check" @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif>
+                                <label class="form-check-label" for="cc">
+                                    Parallel findet Kinderkirche statt
+                                </label>
+                            </div>
+                            <br />
+                            <div class="form-group">
+                                <label for="cc_location">Ort der Kinderkirche:</label>
+                                <input class="form-control" type="text" name="cc_location" placeholder="Leer lassen für " @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
+                            </div>
+                            <div class="form-group">
+                                <label for="cc_lesson">Lektion:</label>
+                                <input class="form-control" type="text" name="cc_lesson" @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
+                            </div>
+                            <div class="form-group">
+                                <label for="cc_staff">Mitarbeiter:</label>
+                                <input class="form-control" type="text" name="cc_staff" placeholder="Name, Name, ..." @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
                             </div>
                         </div>
                     </div>
@@ -147,10 +177,12 @@
             function setDefaultTime() {
                 if ($('select[name=location_id]').val() == '') {
                     $('input[name=time]').attr('placeholder', 'HH:MM');
+                    $('input[name=cc_default_location]').attr('placeholder', '');
                     $('#special_location').show();
                     $('#special_location input').first().focus();
                 } else {
                     $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + ($('select[name=location_id]').children("option:selected").data('time')));
+                    $('input[name=cc_location]').attr('placeholder', 'Leer lassen für ' + ($('select[name=location_id]').children("option:selected").data('cc')));
                     $('#special_location_input').val('');
                     $('#special_location').hide();
                 }

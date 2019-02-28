@@ -28,6 +28,8 @@ class User extends Authenticatable
         'address',
         'phone',
         'preference_cities',
+        'canEditOfferings',
+        'canEditCC',
     ];
 
     /**

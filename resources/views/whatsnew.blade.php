@@ -5,6 +5,40 @@
         <h1>Neue Funktionen</h1>
         <ul>
             <li>
+                <b>28.02.2019:</b>
+                Der Urlaub der Pfarrer wird nur noch den Personen angezeigt, die auch Pfarrer einteilen dürfen.
+            </li>
+            <li>
+                <b>28.02.2019:</b>
+                Nur Personen, die allgemeine Gottesdienstdaten bearbeiten dürfen, können auch neue Gottesdienste anlegen.
+            </li>
+            <li>
+                <b>28.02.2019:</b>
+                Der Plan für die Kinderkirche kann nun ohne Login unter {{ env('APP_URL') }}kinderkirche/{kirchengemeinde} (also z.B.
+                <a href="{{ env('APP_URL') }}kinderkirche/tailfingen">{{ env('APP_URL') }}kinderkirche/tailfingen</a>) eingesehen werden.
+                Außerdem steht der Plan unter "Ausgabe > Programm für die Kinderkirche" als PDF-Datei zur Verfügung.
+            </li>
+            <li>
+                <b>28.02.2019:</b>
+                Der Plan für die Kinderkirche kann nun für ein ganzes Jahr unter "Sammeleingabe > Kinderkirche" bearbeitet werden.
+            </li>
+            <li>
+                <b>28.02.2019:</b>
+                Separate Benutzerrechte für die Bearbeitung von Informationen zu Opfer und Kinderkirche.
+            </li>
+            <li>
+                <b>28.02.2019:</b>
+                Neue Felder für weitere am Gottesdienst Beteiligte und Kinderkirche.
+            </li>
+            <li>
+                <b>22.02.2019:</b>
+                Das Gottesdienstformular ist übersichtlicher in mehrere Reiter unterteilt.
+            </li>
+            <li>
+                <b>22.02.2019:</b>
+                Der komplette Opferplan einer Gemeinde für ein Jahr kann jetzt unter "Sammeleingabe > Opferplan" auf einmal bearbeitet werden.
+            </li>
+            <li>
                 <b>22.02.2019:</b>
                 Die verschiedenen Ausgabeformate sind jetzt übersichtlicher auf einer separaten Seite angeordnet. Bei der
                 Ausgabe für den Gemeindebrief kann zwischen verschiedenen Formaten (Tailfingen, Truchtelfingen) gewählt werden.

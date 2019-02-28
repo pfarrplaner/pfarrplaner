@@ -6,6 +6,21 @@
             <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
         </li>
     @else
+        @if (\App\Inputs\Inputs::all())
+            <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    <span class="fa fa-th-list"></span> Sammeleingabe <span class="caret"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    @foreach(\App\Inputs\Inputs::all() as $input)
+                    <a class="dropdown-item" href="{{ route('inputs.setup', $input->getKey()) }}">
+                        {{ $input->title }}
+                    </a>
+                    @endforeach
+                </div>
+            </li>
+        @endif
         @if (Auth::user()->isAdmin || Auth::user()->canEditChurch)
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('whatsnew') }}">Neue Funktionen</a>

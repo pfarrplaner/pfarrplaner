@@ -26,6 +26,7 @@ use App\Day;
 use App\Service;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Section;
@@ -39,7 +40,7 @@ class PredicantsReport extends AbstractWordDocumentReport
 
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
-        $cities = City::all();
+        $cities = Auth::user()->cities;
         return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities]);
     }
 
