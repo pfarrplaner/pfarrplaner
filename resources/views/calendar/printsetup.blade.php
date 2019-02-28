@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Monatsplan erstellen')
+
 @section('content')
     <div class="container py-5">
         <div class="card">

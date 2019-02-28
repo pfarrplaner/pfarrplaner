@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Tag hinzufügen')
+
 @section('content')
     <style>
         .uper {

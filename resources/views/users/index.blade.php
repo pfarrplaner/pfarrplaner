@@ -1,4 +1,6 @@
 @extends('layouts.app')
+@section('title', 'Benutzer')
+
 
 @section('content')
     @component('components.container')

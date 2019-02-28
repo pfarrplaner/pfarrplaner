@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('title', 'Mit Outlook verbinden')
+
+
 @section('content')
     @component('components.container')
         <h1>Mit Outlook verbinden:</h1>

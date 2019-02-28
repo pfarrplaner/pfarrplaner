@@ -1,4 +1,6 @@
 @extends('layouts.app')
+@section('title', 'Passwort ändern')
+
 @section('content')
     @component('components.container')
         <div class="card">

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Kirchengemeinde hinzufügen')
+
 @section('content')
     <style>
         .uper {

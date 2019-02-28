@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Opferplan ({{ $city->name }}, {{ $year}})')
+
 @section('content')
     <div class="py-5">
         <div class="card">

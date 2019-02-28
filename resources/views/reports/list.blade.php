@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Ausgabeformat wählen')
+
 @section('content')
     <div class="container py-5">
         @foreach($reports as $group => $reportGroup)

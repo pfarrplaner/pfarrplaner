@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Kirche bearbeiten')
+
 @section('content')
     @component('components.container')
     <div class="card">

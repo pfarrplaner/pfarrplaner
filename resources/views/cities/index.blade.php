@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Kirchengemeinden')
+
 @section('content')
 
     <!-- Bootstrap Boilerplate... -->

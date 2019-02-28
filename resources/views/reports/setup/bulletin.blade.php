@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Gottesdienstliste für den Gemeindebrief erstellen')
+
 @section('content')
     <div class="container py-5">
         <div class="card">

@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title') :: Dienstplan Online</title>
+    <title>{{ $months[(int)$month] }} {{ $year }} :: Dienstplan Online</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Kirchen')
+
 @section('content')
     @component('components.container')
         <table class="table table-striped">
