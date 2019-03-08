@@ -146,7 +146,7 @@ class DayController extends Controller
         $day = Day::find($id);
 
         // if no churches are left for a limited day, the record will be deleted
-        if (($request->get('day_type') == Day::DAY_TYPE_LIMITED) && (count($request->get('cities') ?: []))) {
+        if (($request->get('day_type') == Day::DAY_TYPE_LIMITED) && (count($request->get('cities') ?: [])) == 0) {
             $date = $day->date;
             $day->delete();
             return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month]);
