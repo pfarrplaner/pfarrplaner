@@ -7,6 +7,11 @@
         <h1>Neue Funktionen</h1>
         <ul>
             <li>
+                <b>08.03.2019:</b>
+                Es können nun Tage angelegt werden, die nur für bestimmte Gemeinden angezeigt werden sollen. Diese Tage
+                werden im Kalender als lila Streifen angezeigt und erst auf ein Klicken hin eingeblendet.
+            </li>
+            <li>
                 <b>28.02.2019:</b>
                 Der Urlaub der Pfarrer wird nur noch den Personen angezeigt, die auch Pfarrer einteilen dürfen.
             </li>

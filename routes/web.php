@@ -61,3 +61,13 @@ Route::get('/whatsnew', function(){
 
 
 Route::get('/kinderkirche/{city}', ['as' => 'cc-public', 'uses' => 'PublicController@childrensChurch']);
+
+Route::post('/showLimitedColumns/{switch}', function($switch){
+    Session::put('showLimitedDays', (bool)$switch);
+    return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
+})->middleware('auth')->name('showLimitedColumns');
+
+Route::get('/showLimitedColumns/{switch}', function($switch){
+    Session::put('showLimitedDays', (bool)$switch);
+    return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
+})->middleware('auth')->name('showLimitedColumns');

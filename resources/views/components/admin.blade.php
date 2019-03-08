@@ -26,7 +26,7 @@
                 <a class="nav-link" href="{{ route('whatsnew') }}"><span class="fa fa-sun" title="Neue Funktionen"></span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('connectWithOutlook') }}"><span class="fa fa-calendar-alt" title="Mit Outlook verbinden"></a>
+                <a class="nav-link" href="{{ route('connectWithOutlook') }}"><span class="fa fa-calendar-alt" title="Mit Outlook verbinden">I</a>
             </li>
         <li class="nav-item dropdown">
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"

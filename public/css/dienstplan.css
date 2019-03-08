@@ -20,6 +20,10 @@
     color: rgba(0,0,0,.7);
 }
 
+.button-row .btn-toggle-limited-days {
+    background-color: #DCD0FF;
+}
+
 .calendar-month {
     padding: 0 5px;
 }
@@ -36,6 +40,38 @@
 .calendar-month th .btn {
     font-size: 0.5em;
 }
+
+.calendar-month th.limited,
+.calendar-month td.limited.for-city {
+    background-color: #DCD0FF;
+}
+
+
+.calendar-month th.limited.collapsed,
+.calendar-month td.limited.collapsed {
+    width: 10px !important;
+    max-width: 10px !important;
+    overflow: hidden;
+    border-left: solid 1px #F8FAFC;
+    border-right: solid 1px #F8FAFC;
+}
+
+.calendar-month th.limited.not-my-city,
+.calendar-month td.limited.not-my-city,
+.calendar-month td.limited:not(.for-city){
+    background-color: #e7e7e7 !important;
+}
+
+.calendar-month td.limited.not-my-city .btn-add-day,
+.calendar-month td.limited:not(.for-city) .btn-add-day {
+    display: none;
+}
+
+.calendar-month th.limited.not-for-city,
+.calendar-month td.limited.not-for-city {
+    display: none;
+}
+
 
 .calendar-month .special-weekday {
     color: red;

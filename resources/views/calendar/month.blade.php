@@ -95,6 +95,12 @@
                                 <span class="fa fa-forward"></span>
                             </a>
                         </div>
+                        <div class="btn-group mr-2" role="group">
+                            <a class="btn btn-default btn-toggle-limited-days"
+                               href="#"
+                               title="Alle ausgeblendeten Tage einblenden"><span
+                                        class="fa @if(Session::get('showLimitedDays') === true) fa-check-square @else fa-square @endif"></span></a>
+                        </div>
                         @if (Auth::user()->isAdmin || Auth::user()->canEditGeneral)
                             <div class="btn-group mr-2" role="group">
                                 <a class="btn btn-default"
@@ -136,7 +142,12 @@
                 <tr>
                     <th class="no-print">Kirchengemeinde</th>
                     @foreach ($days as $day)
-                        <th class="hide-buttons @if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif">
+                        <th class="hide-buttons @if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif
+                                @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) limited collapsed @endif
+                                @if($day->day_type == \App\Day::DAY_TYPE_LIMITED && (count($day->cities->intersect(Auth::user()->cities))==0)) not-for-city @endif
+                                " @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) title="{{ $day->date->format('d.m.Y') }} (Klicken, um Ansicht umzuschalten)" @endif
+                            data-day="{{ $day->id }}"
+                        >
                             @if ($day->date->dayOfWeek > 0) <span class="special-weekday">{{ strftime('%a', $day->date->getTimestamp()) }}
                                 .</span>, @endif
                             {{ $day->date->format('d.m.Y') }}
@@ -183,7 +194,14 @@
                     <tr>
                         <td class="no-print">{{$city->name}}</td>
                         @foreach ($days as $day)
-                            <td class="@if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif">
+                            <td class="@if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif
+                            @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) limited collapsed @endif
+                            @if($day->day_type == \App\Day::DAY_TYPE_LIMITED && (count($day->cities->intersect(Auth::user()->cities))==0)) not-for-city @endif
+                            @if($day->day_type == \App\Day::DAY_TYPE_LIMITED && ($day->cities->contains($city))) for-city @endif
+                            @if(!Auth::user()->cities->contains($city)) not-my-city @endif
+                                    " @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) title="{{ $day->date->format('d.m.Y') }} (Klicken, um Ansicht umzuschalten)" @endif
+                            data-day="{{ $day->id }}"
+                            >
                                 @foreach ($services[$city->id][$day->id] as $service)
                                     <div
                                         class="service-entry @if (Auth::user()->isAdmin || Auth::user()->cities->contains($city)) editable @endif
@@ -222,7 +240,7 @@
                                     </div>
                                 @endforeach
                                 @if (Auth::user()->isAdmin || (Auth::user()->canEditGeneral && Auth::user()->cities->contains($city)))
-                                    <a class="btn btn-success btn-sm" title="Neuen Gottesdiensteintrag hinzufügen"
+                                    <a class="btn btn-success btn-sm btn-add-day" title="Neuen Gottesdiensteintrag hinzufügen"
                                        href="{{ route('services.add', ['date' => $day->id, 'city' => $city->id]) }}"><span
                                             class="fa fa-plus"></span></a>
                                 @endif
@@ -235,6 +253,33 @@
             <hr/>
         </div>
     </main>
+    <script>
+        function setLimitedColumnStatus() {
+            if ($('.btn-toggle-limited-days').find('span').first().hasClass('fa-square')) {
+                $('.btn-toggle-limited-days').attr('title', 'Alle ausgeblendeten Tage einblenden');
+                $('.limited').addClass('collapsed');
+                $.get('{{ route('showLimitedColumns', ['switch' => 0]) }}');
+            } else {
+                $('.btn-toggle-limited-days').attr('title', 'Alle ausblendbaren Tage ausblenden');
+                $('.limited').removeClass('collapsed');
+                $.get('{{ route('showLimitedColumns', ['switch' => 1]) }}');
+            }
+        }
+
+        $(document).ready(function(){
+            $('.limited').on('click', function(e) {
+                if (e.target !== this) return;
+                $('[data-day='+$(this).data('day')+']').toggleClass('collapsed');
+            })
+            $('.btn-toggle-limited-days').on('click', function(e){
+                e.preventDefault();
+                $(this).find('span').toggleClass('fa-square').toggleClass('fa-check-square');
+                setLimitedColumnStatus();
+            });
+            setLimitedColumnStatus();
+        });
+
+    </script>
 </div>
 </body>
 </html>

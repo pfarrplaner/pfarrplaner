@@ -9,6 +9,7 @@ use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use PDF;
 
 class CalendarController extends Controller
@@ -88,6 +89,10 @@ class CalendarController extends Controller
     {
         if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
             return $r;
+        }
+
+        if (!Session::has('showLimitedDays')) {
+            Session::put('showLimitedDays', false);
         }
 
         $days = $this->getDaysInMonth($year, $month);
