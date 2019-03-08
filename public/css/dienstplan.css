@@ -56,9 +56,13 @@
     border-right: solid 1px #F8FAFC;
 }
 
-.calendar-month th.limited.not-my-city,
-.calendar-month td.limited.not-my-city,
-.calendar-month td.limited:not(.for-city){
+.calendar-month th.limited.collapsed .celldata,
+.calendar-month td.limited.collapsed .celldata {
+    display: none;
+}
+
+
+.calendar-month td.limited.collapsed:not(.for-city){
     background-color: #e7e7e7 !important;
 }
 

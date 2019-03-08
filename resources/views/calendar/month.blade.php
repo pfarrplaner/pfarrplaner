@@ -202,6 +202,7 @@
                                     " @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) title="{{ $day->date->format('d.m.Y') }} (Klicken, um Ansicht umzuschalten)" @endif
                             data-day="{{ $day->id }}"
                             >
+                                <div class="celldata">
                                 @foreach ($services[$city->id][$day->id] as $service)
                                     <div
                                         class="service-entry @if (Auth::user()->isAdmin || Auth::user()->cities->contains($city)) editable @endif
@@ -244,6 +245,7 @@
                                        href="{{ route('services.add', ['date' => $day->id, 'city' => $city->id]) }}"><span
                                             class="fa fa-plus"></span></a>
                                 @endif
+                                </div>
                             </td>
                         @endforeach
                     </tr>
