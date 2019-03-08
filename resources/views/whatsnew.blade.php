@@ -8,6 +8,11 @@
         <ul>
             <li>
                 <b>08.03.2019:</b>
+                Der Organistenplan kann nun unter "Sammeleingabe > Organistenplan" für ein ganzes Jahr auf einmal
+                bearbeitet werden.
+            </li>
+            <li>
+                <b>08.03.2019:</b>
                 Es können nun Tage angelegt werden, die nur für bestimmte Gemeinden angezeigt werden sollen. Diese Tage
                 werden im Kalender als lila Streifen angezeigt und erst auf ein Klicken hin eingeblendet.
             </li>

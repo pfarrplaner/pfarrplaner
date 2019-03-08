@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', '{{ $input->title }} bearbeiten')
+@section('title'){{ $input->title }} bearbeiten @endsection
 
 @section('content')
     <div class="container py-5">
