@@ -264,7 +264,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
                     ->getStartColor()->setARGB($colors[$liturgy['litColor']]);
 
                 // yellow for special location
-                if ($service->special_location) {
+                if (!is_object($service->location)) {
                     $sheet->getStyle("E{$row}")->getFill()->setFillType(Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('ffffff00');
                 }

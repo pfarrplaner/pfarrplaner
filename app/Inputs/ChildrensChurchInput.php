@@ -70,7 +70,7 @@ class ChildrensChurchInput extends AbstractInput
             $service = Service::find($id);
             if (null !== $service) {
                 if (isset($data['cc']) ? $data['cc'] : 0) {
-                    if ($service->special_location) {
+                    if (!is_object($service->location)) {
                         $ccLocation = isset($data['cc_location']) ? $data['cc_location'] : '';
                     } else {
                         $ccLocation = isset($data['cc_location']) ? $data['cc_location'] : $service->location->cc_default_location;

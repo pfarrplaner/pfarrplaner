@@ -115,7 +115,7 @@ class BulletinReport extends AbstractWordDocumentReport
                 }
                 $textRun->addText("\t");
                 $textRun->addText(strftime('%H:%M', strtotime($service->time)) . " Uhr\t");
-                if ($service->special_location) {
+                if (!is_object($service->location)) {
                     $textRun->addText(htmlspecialchars($service->special_location) . "\t");
                 } else {
                     $textRun->addText(htmlspecialchars($service->location->name) . "\t");

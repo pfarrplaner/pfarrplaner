@@ -52,7 +52,7 @@
                                     @foreach($locations as $thisLocation)
                                         <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
                                                 value="{{$thisLocation->id}}"
-                                                @if (!$service->special_location)
+                                                @if (is_object($service->location))
                                                 @if ($service->location->id == $thisLocation->id) selected @endif
                                             @endif
                                         >
@@ -60,7 +60,7 @@
                                         </option>
                                     @endforeach
                                     <option value=""
-                                            @if ($service->special_location) selected @endif
+                                            @if (!is_object($service->location)) selected @endif
                                     >Freie Ortsangabe</option>
                                 </select>
                             </div>

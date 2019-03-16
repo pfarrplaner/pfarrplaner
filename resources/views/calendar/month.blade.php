@@ -210,7 +210,7 @@
                                         title="Klicken, um diesen Eintrag zu bearbeiten"
                                         @if (Auth::user()->isAdmin || Auth::user()->cities->contains($city)) onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
                                         @endif>
-                                        @if ($service->special_location)
+                                        @if (!is_object($service->location))
                                             <div class="service-time service-special-time">
                                                 {{ strftime('%H:%M', strtotime($service->time)) }} Uhr
                                             </div>
