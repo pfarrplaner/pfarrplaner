@@ -7,6 +7,11 @@
         <h1>Neue Funktionen</h1>
         <ul>
             <li>
+                <b>29.03.2019:</b>
+                "Lilane" Tage, die einen Gottesdienst enthalten, für den der aktuelle Nutzer eingeteilt sind,
+                werden nun automatisch aufgeklappt.
+            </li>
+            <li>
                 <b>08.03.2019:</b>
                 Der Organistenplan kann nun unter "Sammeleingabe > Organistenplan" für ein ganzes Jahr auf einmal
                 bearbeitet werden.

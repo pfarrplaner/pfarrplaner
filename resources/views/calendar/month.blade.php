@@ -269,16 +269,23 @@
         }
 
         $(document).ready(function(){
+
+            // toggle for limited days
             $('.limited').on('click', function(e) {
                 if (e.target !== this) return;
                 $('[data-day='+$(this).data('day')+']').toggleClass('collapsed');
             })
+
+            // toggle all limited days
             $('.btn-toggle-limited-days').on('click', function(e){
                 e.preventDefault();
                 $(this).find('span').toggleClass('fa-square').toggleClass('fa-check-square');
                 setLimitedColumnStatus();
             });
             setLimitedColumnStatus();
+
+            // open limited days with services that belong to me
+            $('.limited .service-entry.mine').parent().parent().removeClass('collapsed');
         });
 
     </script>
