@@ -245,17 +245,20 @@
                                         @endif
                                         @endcanany
                                         <div class="service-team service-pastor"><span
-                                                class="designation">P: </span>
+                                                    class="designation">P: </span>
                                             @if ($service->need_predicant)
                                                 <span class="need-predicant">Prädikant benötigt</span>
                                             @else
-                                                <span @can('urlaub-lesen') @if (in_array($service->pastor, array_keys($vacations[$day->id]))) class="vacation-conflict" title="Konflikt mit Urlaub!" @endif @endcan>{{ $service->pastor }}</span>
+                                                @foreach($service->pastors as $participant)
+                                                    <span @can('urlaub-lesen') @if (in_array($participant->lastName(), array_keys($vacations[$day->id]))) class="vacation-conflict" title="Konflikt mit Urlaub!" @endif @endcan>{{ $participant->lastName(true) }}</span>
+                                                    @if($loop->last) @else | @endif
+                                                @endforeach
                                             @endif
                                         </div>
                                         <div class="service-team service-organist"><span
-                                                class="designation">O: </span>{{ $service->organist }}</div>
+                                                    class="designation">O: </span>@foreach($service->organists as $participant){{ $participant->lastName(true) }}@if($loop->last) @else | @endif @endforeach</div>
                                         <div class="service-team service-sacristan"><span
-                                                class="designation">M: </span>{{ $service->sacristan }}</div>
+                                                    class="designation">M: </span>@foreach($service->sacristans as $participant){{ $participant->lastName(true) }}@if($loop->last) @else | @endif @endforeach</div>
                                         <div class="service-description">{{ $service->descriptionText() }}</div>
                                         @canany(['gd-kasualien-lesen', 'gd-kasualien-nur-statistik'])
                                             @if($service->baptisms->count())

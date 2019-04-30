@@ -21,7 +21,6 @@ class MinistryHomeScreen extends AbstractHomeScreen
     {
         /** @var User $user */
         $user = Auth::user();
-        $name = $user->lastName();
 
         $start = Carbon::now();
         $end = Carbon::now()->addMonth(2);
@@ -29,10 +28,8 @@ class MinistryHomeScreen extends AbstractHomeScreen
         $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->where(function ($query) use ($name) {
-                $query->where('pastor', 'like', '%' . $name . '%')
-                    ->orWhere('organist', 'like', '%' . $name . '%')
-                    ->orWhere('sacristan', 'like', '%' . $name . '%');
+            ->whereHas('participants', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
                     ->where('date', '<=', $end);

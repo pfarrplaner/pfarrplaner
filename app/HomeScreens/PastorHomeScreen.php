@@ -21,7 +21,6 @@ class PastorHomeScreen extends AbstractHomeScreen
     {
         /** @var User $user */
         $user = Auth::user();
-        $name = $user->lastName();
 
         $start = Carbon::now()->setTime(0,0,0);
         $end = Carbon::now()->addMonth(2);
@@ -29,10 +28,8 @@ class PastorHomeScreen extends AbstractHomeScreen
         $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->where(function ($query) use ($name) {
-                $query->where('pastor', 'like', '%' . $name . '%')
-                    ->orWhere('organist', 'like', '%' . $name . '%')
-                    ->orWhere('sacristan', 'like', '%' . $name . '%');
+            ->whereHas('participants', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
                     ->where('date', '<=', $end);
@@ -51,10 +48,8 @@ class PastorHomeScreen extends AbstractHomeScreen
                 $query->where('date', '>=', $start)
                     ->where('date', '<=', $end);
             })
-            ->where(function ($query) use ($name) {
-                $query->where('pastor', 'like', '%' . $name . '%')
-                    ->orWhere('organist', 'like', '%' . $name . '%')
-                    ->orWhere('sacristan', 'like', '%' . $name . '%');
+            ->whereHas('participants', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
@@ -65,10 +60,8 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereHas('funerals')
-            ->where(function ($query) use ($name) {
-                $query->where('pastor', 'like', '%' . $name . '%')
-                    ->orWhere('organist', 'like', '%' . $name . '%')
-                    ->orWhere('sacristan', 'like', '%' . $name . '%');
+            ->whereHas('participants', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start);
@@ -82,10 +75,8 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereHas('weddings')
-            ->where(function ($query) use ($name) {
-                $query->where('pastor', 'like', '%' . $name . '%')
-                    ->orWhere('organist', 'like', '%' . $name . '%')
-                    ->orWhere('sacristan', 'like', '%' . $name . '%');
+            ->whereHas('participants', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
             })
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)

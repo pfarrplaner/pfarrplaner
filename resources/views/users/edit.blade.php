@@ -27,6 +27,19 @@
                     <label for="password">Neues Passwort:</label>
                     <input type="text" class="form-control" id="password" name="password" value=""/>
                 </div>
+                <hr />
+                <div class="form-group">
+                    <label for="title">Titel:</label>
+                    <input type="text" class="form-control" id="title" name="title" value="{{ $user->title }}"/>
+                </div>
+                <div class="form-group">
+                    <label for="first_name">Vorname:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ $user->first_name }}"/>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Nachname:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ $user->last_name }}"/>
+                </div>
                 <div class="form-group">
                     <label for="office">Pfarramt/Büro:</label>
                     <input type="text" class="form-control" id="office" name="office" value="{{ $user->office }}"/>

@@ -86,8 +86,12 @@
                                        value="{{ strftime('%H:%M', strtotime($service->time)) }}" @cannot('gd-allgemein-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
-                                <label for="pastor">Pfarrer*in</label>
-                                <input class="form-control" type="text" name="pastor" value="{{ $service->pastor }}" @cannot('gd-pfarrer-bearbeiten') disabled @endcannot />
+                                <label for="participants[P][]"><span class="fa fa-user"></span>&nbsp;Pfarrer*in</label>
+                                <select class="form-control peopleSelect" name="participants[P][]" multiple @cannot('gd-pfarrer-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)" >
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}" @if($service->pastors->contains($user)) selected @endif>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="need_predicant" value="1"
@@ -95,19 +99,31 @@
                                 <label class="form-check-label" for="needPredicant">
                                     Für diesen Gottesdienst wird ein Prädikant benötigt.
                                 </label>
-                                <br />
+                                <br /><br />
                             </div>
                             <div class="form-group">
-                                <label for="organist">Organist*in</label>
-                                <input class="form-control" type="text" name="organist" value="{{ $service->organist }}" @cannot('gd-organist-bearbeiten') disabled @endcannot />
+                                <label for="participants[O][]"><span class="fa fa-user"></span>&nbsp;Organist*in</label>
+                                <select class="form-control peopleSelect" name="participants[O][]" multiple @cannot('gd-organist-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)" >
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}" @if($service->organists->contains($user)) selected @endif>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="sacristan">Mesner*in</label>
-                                <input class="form-control" type="text" name="sacristan" value="{{ $service->sacristan }}" @cannot('gd-mesner-bearbeiten') disabled @endcannot />
+                                <label for="participants[M][]"><span class="fa fa-user"></span>&nbsp;Mesner*in</label>
+                                <select class="form-control peopleSelect" name="participants[M][]" multiple @cannot('gd-mesner-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)" >
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}" @if($service->sacristans->contains($user)) selected @endif>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="form-group">
-                                <label for="others">Weitere Beteiligte</label>
-                                <input class="form-control" type="text" name="others" value="{{ $service->others }}" @cannot('gd-allgemein-bearbeiten') disabled @endcannot />
+                                <label for="participants[A][]"><span class="fa fa-users"></span>&nbsp;Weitere Beteiligte</label>
+                                <select class="form-control peopleSelect" name="participants[A][]" multiple @cannot('gd-allgemein-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)">
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}" @if($service->otherParticipants->contains($user)) selected @endif>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div role="tabpanel" id="special" class="tab-pane fade">
@@ -331,6 +347,34 @@
             }
 
             $(document).ready(function () {
+
+                $('.peopleSelect').select2({
+                    placeholder: 'Eine oder mehrere Personen (keine Anmerkungen!)',
+                    allowClear: true,
+                    multiple: true,
+                    allowclear: true,
+                    tags: true,
+                    createTag: function (params) {
+                        return {
+                            id: params.term,
+                            text: params.term,
+                            newOption: true
+                        }
+                    },
+                    templateResult: function (data) {
+                        var $result = $("<span></span>");
+
+                        $result.text(data.text);
+
+                        if (data.newOption) {
+                            $result.append(" <em>(Neue Person anlegen)</em>");
+                        }
+
+                        return $result;
+                    },
+                });
+
+
                 setDefaultTime();
 
                 if ($('select[name=location_id] option').length > 2) {

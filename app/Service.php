@@ -88,6 +88,57 @@ class Service extends Model
         return $this->hasMany(Wedding::class);
     }
 
+    public function participants() {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function users() {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
+    public function pastors() {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'P')->withTimestamps();
+    }
+
+    public function organists() {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'O')->withTimestamps();
+    }
+
+    public function sacristans() {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'M')->withTimestamps();
+    }
+
+    public function otherParticipants() {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
+    }
+
+    public function participantsByCategory($category) {
+        switch ($category) {
+            case 'P': return $this->pastors;
+            case 'O': return $this->organists;
+            case 'M': return $this->sacristans;
+            case 'A': return $this->otherParticipants;
+        }
+
+    }
+
+    public function participantsText($category) {
+        return $this->participantsByCategory($category)->pluck('name')->implode(' | ');
+    }
+
+    public function syncParticipantsByCategory ($category, $participantIds) {
+        $participants = [];
+        foreach ($participantIds as $participantId) {
+            $participants[$participantId] = ['category' => $category];
+        }
+        switch ($category) {
+            case 'P': return $this->pastors()->sync($participants);
+            case 'O': return $this->organists()->sync($participants);
+            case 'M': return $this->sacristans()->sync($participants);
+            case 'A': return $this->otherParticipants()->sync($participants);
+        }
+    }
+
     public function locationText() {
         return $this->special_location ?: $this->location->name;
     }

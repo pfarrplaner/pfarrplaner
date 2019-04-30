@@ -25,6 +25,19 @@
                     <label for="password">Passwort:</label>
                     <input type="password" class="form-control" id="password" name="password"/>
                 </div>
+                <hr />
+                <div class="form-group">
+                    <label for="title">Titel:</label>
+                    <input type="text" class="form-control" id="title" name="title" value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="first_name">Vorname:</label>
+                    <input type="text" class="form-control" id="first_name" name="first_name" value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Nachname:</label>
+                    <input type="text" class="form-control" id="last_name" name="last_name" value=""/>
+                </div>
                 <div class="form-group"> <!-- Radio group !-->
                     <label class="control-label">Gehört zu folgenden Kirchengemeinden:</label>
                     @foreach ($cities as $city)

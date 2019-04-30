@@ -4,7 +4,7 @@
 
 @section('content')
     @component('components.container')
-        <h1>Willkommen, {{ $user->name }}!</h1>
+        <h1>Willkommen, @if($user->first_name != ''){{$user->first_name}}! @else {{ $user->name }}! @endif</h1>
         <a class="btn btn-primary btn-lg" href="{{ route('calendar') }}"><span class="fa fa-calendar"></span> Zum Kalender</a>
         <hr />
 

@@ -61,7 +61,7 @@
                                         Zähler 2: {{ $service->offering_counter2 }}</small>
                                 </td>
                                 @endcanany
-                                <td rowspan="{{ $service->baptisms->count() }}">
+                                <td>
                                     @include('partials.service.edit-rites-block', ['service', $service])
                                 </td>
                             </tr>

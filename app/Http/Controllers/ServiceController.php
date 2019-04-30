@@ -6,6 +6,7 @@ use App\City;
 use App\Day;
 use App\Location;
 use App\Service;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -123,7 +124,8 @@ class ServiceController extends Controller
         $service = Service::find($id);
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::where('city_id', '=', $service->city_id)->get();
-        return view('services.edit', ['service' => $service, 'days' => $days, 'locations' => $locations]);
+        $users = User::all()->sortBy('name');
+        return view('services.edit', compact('service', 'days', 'locations', 'users'));
     }
 
     /**
@@ -184,6 +186,32 @@ class ServiceController extends Controller
         $service->notifyOfChanges(Auth::user(), '%s hat soeben folgende Änderungen an einem Gottesdienst vorgenommen');
         $service->save();
 
+        // participants:
+        $participants = [];
+        foreach ($request->get('participants') as $category => $participantList) {
+            foreach ($participantList as $participant) {
+                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
+                    $user = new User([
+                        'name' => $participant,
+                        'office' => '',
+                        'phone' => '',
+                        'address' => '',
+                        'preference_cities' => '',
+                        'first_name' => '',
+                        'last_name' => '',
+                        'title' => '',
+                    ]);
+                    $user->save();
+                    $participant = $user->id;
+                }
+                $participants[$category][$participant] = ['category' => $category];
+            }
+        }
+        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
+        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
+        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
+        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
+
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
     }
@@ -211,7 +239,8 @@ class ServiceController extends Controller
         $days = Day::orderBy('date', 'ASC')->get();
 
         $locations = Location::where('city_id', '=', $city->id)->get();
+        $users = User::all()->sortBy('name');
 
-        return view('services.create', ['day' => $day, 'city' => $city, 'days' => $days, 'locations' => $locations]);
+        return view('services.create', compact('day', 'city', 'days', 'locations', 'users'));
     }
 }

@@ -19,12 +19,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'first_name',
+        'last_name',
+        'title',
         'email',
         'password',
-        'isAdmin',
-        'canEditGeneral',
-        'canEditChurch',
-        'canEditFields',
         'notifications',
         'office',
         'address',
@@ -52,6 +51,10 @@ class User extends Authenticatable
         return $this->belongsToMany(City::class);
     }
 
+    public function services() {
+        return $this->belongsToMany(Service::class)->withTimestamps();
+    }
+
     public function canEditField($field)
     {
         return $this->isAdmin || in_array($field, $this->getEditableFields());
@@ -77,10 +80,11 @@ class User extends Authenticatable
         return md5($this->name . $this->password . env('TOKEN_SALT'));
     }
 
-    public function lastName()
+    public function lastName($withTitle = false)
     {
+        if ($this->last_name) return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').$this->last_name;
         $name = explode(' ', $this->name);
-        return end($name);
+        return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').end($name);
     }
 
     public function userSettings()

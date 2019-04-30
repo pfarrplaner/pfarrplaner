@@ -50,8 +50,7 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email',
-            'password' => 'required|min:8',
+            'email' => 'email',
             'cities' => 'required',
         ]);
 
@@ -60,12 +59,9 @@ class UserController extends Controller
             'email' => $request->get('email'),
             'password' => Hash::make($request->get('password')),
             'cities' => $request->get('cities'),
-            'isAdmin' => $request->get('isAdmin') ? 1 : 0,
-            'canEditChurch' => $request->get('canEditChurch') ? 1 : 0,
-            'canEditGeneral' => $request->get('canEditGeneral') ? 1 : 0,
-            'canEditOfferings' => $request->get('canEditOfferings') ? 1 : 0,
-            'canEditCC' => $request->get('canEditCC') ? 1 : 0,
-            'canEditFields' => join(',', $request->get('canEditField') ?: []),
+            'title' => $request->get('title') ?: '',
+            'first_name' => $request->get('first_name') ?: '',
+            'last_name' => $request->get('last_name') ?: '',
             'notifications' => $request->get('notifications') ? 1 : 0,
             'office' => $request->get('office') ?: '',
             'address' => $request->get('address') ?: '',
@@ -77,13 +73,15 @@ class UserController extends Controller
 
         // assign roles
         $roles = $request->get('roles');
-        if ((($key = array_search('Superadministrator*in', $roles)) !== false)
-            && (!$user->hasRole('Superadmininistrator*in')))
-            unset($roles[$key]);
-        if ((($key = array_search('Administrator*in', $roles)) !== false)
-            && (!$user->hasRole('Superadmininistrator*in'))
-            && (!$user->hasRole('Administrator*in')))
-            unset($roles[$key]);
+        if (is_array($roles) && count($roles)) {
+            if ((($key = array_search('Superadministrator*in', $roles)) !== false)
+                && (!$user->hasRole('Superadmininistrator*in')))
+                unset($roles[$key]);
+            if ((($key = array_search('Administrator*in', $roles)) !== false)
+                && (!$user->hasRole('Superadmininistrator*in'))
+                && (!$user->hasRole('Administrator*in')))
+                unset($roles[$key]);
+        }
         $user->syncRoles($request->get('roles') ?: []);
 
 
@@ -129,20 +127,15 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'email' => 'required|email',
-            'cities' => 'required',
         ]);
 
         $user = User::find($id);
         $user->name = $request->get('name');
         $user->email = $request->get('email');
         if ($password = $request->get('password') != '') $user->password = Hash::make($password);
-        $user->isAdmin = $request->get('isAdmin') ? 1 : 0;
-        $user->canEditGeneral = $request->get('canEditGeneral') ? 1 : 0;
-        $user->canEditChurch = $request->get('canEditChurch') ? 1 : 0;
-        $user->canEditOfferings = $request->get('canEditOfferings') ? 1 : 0;
-        $user->canEditCC = $request->get('canEditCC') ? 1 : 0;
-        $user->canEditFields = join(',', $request->get('canEditField') ?: []);
+        $user->title = $request->get('title') ?: '';
+        $user->first_name = $request->get('first_name') ?: '';
+        $user->last_name = $request->get('last_name') ?: '';
         $user->notifications = $request->get('notifications') ? 1 : 0;
         $user->office = $request->get('office') ?: '';
         $user->address = $request->get('address') ?: '';
@@ -154,13 +147,15 @@ class UserController extends Controller
 
         // assign roles
         $roles = $request->get('roles');
-        if ((($key = array_search('Superadministrator*in', $roles)) !== false)
-            && (!$user->hasRole('Superadmininistrator*in')))
-            unset($roles[$key]);
-        if ((($key = array_search('Administrator*in', $roles)) !== false)
-            && (!$user->hasRole('Superadmininistrator*in'))
-            && (!$user->hasRole('Administrator*in')))
-            unset($roles[$key]);
+        if (is_array($roles) && count($roles)) {
+            if ((($key = array_search('Superadministrator*in', $roles)) !== false)
+                && (!$user->hasRole('Superadmininistrator*in')))
+                unset($roles[$key]);
+            if ((($key = array_search('Administrator*in', $roles)) !== false)
+                && (!$user->hasRole('Superadmininistrator*in'))
+                && (!$user->hasRole('Administrator*in')))
+                unset($roles[$key]);
+        }
         $user->syncRoles($request->get('roles') ?: []);
 
         if ($request->get('homescreen')) $user->setSetting('homeScreen', $request->get('homescreen'));
