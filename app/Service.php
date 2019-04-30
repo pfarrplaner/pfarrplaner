@@ -122,11 +122,11 @@ class Service extends Model
 
     }
 
-    public function participantsText($category) {
+    public function participantsText($category, $fullName = false, $withTitle = true) {
         $participants = $this->participantsByCategory($category);
         $names = [];
         foreach ($participants as $participant) {
-            $names[] = $participant->lastName(true);
+            $names[] = ($fullName ? $participant->fullName($withTitle) : $participant->lastName($withTitle));
         }
         return join(', ', $names);
     }

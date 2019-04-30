@@ -59,6 +59,7 @@ class PersonReport extends AbstractPDFDocumentReport
         $users = User::whereIn('id', $userIds)->get();
 
         $services = Service::with(['location'])
+            ->select(['services.*','days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereHas('participants', function ($query) use ($userIds) {
                 $query->whereIn('user_id', $userIds);

@@ -87,6 +87,10 @@ class User extends Authenticatable
         return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').end($name);
     }
 
+    public function fullName($withTitle = false) {
+        return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').$this->name;
+    }
+
     public function userSettings()
     {
         return $this->hasMany(UserSetting::class);
