@@ -123,7 +123,12 @@ class Service extends Model
     }
 
     public function participantsText($category) {
-        return $this->participantsByCategory($category)->pluck('name')->implode(' | ');
+        $participants = $this->participantsByCategory($category);
+        $names = [];
+        foreach ($participants as $participant) {
+            $names[] = $participant->lastName(true);
+        }
+        return join(', ', $names);
     }
 
     public function syncParticipantsByCategory ($category, $participantIds) {

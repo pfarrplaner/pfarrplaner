@@ -24,6 +24,7 @@ namespace App\Reports;
 use App\City;
 use App\Day;
 use App\Service;
+use App\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -42,25 +43,25 @@ class PersonReport extends AbstractPDFDocumentReport
 
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
-        $name = explode(' ', Auth::user()->name);
-        $name = end($name);
-        return $this->renderSetupView(['maxDate' => $maxDate, 'lastName' => $name]);
+        $users = User::all();
+        return $this->renderSetupView(compact('maxDate', 'users'));
     }
 
     public function render(Request $request)
     {
         $request->validate([
-            'highlight' => 'required',
             'start' => 'required|date|date_format:d.m.Y',
             'end' => 'required|date|date_format:d.m.Y',
         ]);
 
+        $userIds = $request->get('person');
+        $userIds = is_array($userIds) ? $userIds : [$userIds];
+        $users = User::whereIn('id', $userIds)->get();
+
         $services = Service::with(['location'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->where(function ($query) use ($request) {
-                $query->where('pastor', 'like', '%' . $request->get('highlight') . '%')
-                    ->orWhere('organist', 'like', '%' . $request->get('highlight') . '%')
-                    ->orWhere('sacristan', 'like', '%' . $request->get('highlight') . '%');
+            ->whereHas('participants', function ($query) use ($userIds) {
+                $query->whereIn('user_id', $userIds);
             })->whereHas('day', function ($query) use ($request) {
                 $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')));
                 $query->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')));
@@ -73,7 +74,7 @@ class PersonReport extends AbstractPDFDocumentReport
             [
                 'start' => $request->get('start'),
                 'end' => $request->get('end'),
-                'highlight' => ucfirst($request->get('highlight')),
+                'highlight' => $users,
                 'services' => $services,
             ],
             ['format' => 'A4']);
