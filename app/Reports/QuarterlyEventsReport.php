@@ -134,9 +134,9 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
                 $table->addRow();
                 $table->addCell()->addText(strftime('%a., %d. %B', $service->day->date->getTimeStamp()));
                 $table->addCell()->addText(strftime('%H:%M Uhr', strtotime($service->time)));
-                if ($request->get('includePastor')) $table->addCell()->addText($service->pastor);
-                if ($request->get('includeOrganist')) $table->addCell()->addText($service->organist);
-                if ($request->get('includeSacristan')) $table->addCell()->addText($service->sacristan);
+                if ($request->get('includePastor')) $table->addCell()->addText($service->participantsText('P'));
+                if ($request->get('includeOrganist')) $table->addCell()->addText($service->participantsText('O'));
+                if ($request->get('includeSacristan')) $table->addCell()->addText($service->participantsText('M'));
                 if ($request->get('includeDescription')) $table->addCell()->addText($service->descriptionText());
             }
         }

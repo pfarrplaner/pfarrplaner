@@ -120,7 +120,7 @@ class BulletinReport extends AbstractWordDocumentReport
                 } else {
                     $textRun->addText(htmlspecialchars($service->location->name) . "\t");
                 }
-                $textRun->addText(htmlspecialchars($service->pastor));
+                $textRun->addText(htmlspecialchars($service->participantsText('P', false, false)));
                 if ($service->descriptionText() != "") {
                     $textRun->addText(' - ' . htmlspecialchars($service->descriptionText()));
                 }
@@ -150,7 +150,7 @@ class BulletinReport extends AbstractWordDocumentReport
                 $table->addCell(Converter::cmToTwip(1.58))->addText(strftime('%H:%M Uhr', strtotime($service->time)));
                 $table->addCell(Converter::cmToTwip(2.11))->addText($service->locationText());
                 $table->addCell(Converter::cmToTwip(2.32))->addText($service->descriptionText());
-                $table->addCell(Converter::cmToTwip(3.52))->addText($service->pastor);
+                $table->addCell(Converter::cmToTwip(3.52))->addText($service->participantsText('P', false, false));
                 $table->addCell(Converter::cmToTwip(2.25))->addText(isset($liturgy['perikope']) ? $liturgy['litTextsPerikope'.$liturgy['perikope']] : '');
                 $table->addCell(Converter::cmToTwip(2.5))->addText($service->offering_goal ? 'Opfer für '.$service->offering_goal : '');
                 $first = false;

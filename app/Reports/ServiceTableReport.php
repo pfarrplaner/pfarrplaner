@@ -244,10 +244,10 @@ class ServiceTableReport extends AbstractExcelDocumentReport
                 $sheet->setCellValue("C{$row}", $service->descriptionText());
                 $sheet->setCellValue("D{$row}", strftime('%H:%M', strtotime($service->time)));
                 $sheet->setCellValue("E{$row}", $service->locationText());
-                $sheet->setCellValue("F{$row}", $service->pastor);
-                $sheet->setCellValue("G{$row}", $service->organist);
+                $sheet->setCellValue("F{$row}", $service->participantsText('P', false, false));
+                $sheet->setCellValue("G{$row}", $service->participantsText('O', false, false));
                 $sheet->setCellValue("H{$row}", $service->eucharist ? 'X' : '');
-                $sheet->setCellValue("I{$row}", $service->sacristan);
+                $sheet->setCellValue("I{$row}", $service->participantsText('M', false, false));
                 $sheet->setCellValue("J{$row}", $service->offerings_counter1);
                 $sheet->setCellValue("J{$row2}", $service->offerings_counter2);
                 $sheet->setCellValue("K{$row}", $service->offeringText());
