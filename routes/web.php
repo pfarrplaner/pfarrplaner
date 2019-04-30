@@ -16,6 +16,7 @@ Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('services', 'ServiceController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
 Route::resource('users', 'UserController')->middleware('auth');
+Route::resource('roles', 'RoleController');
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
 Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
@@ -33,9 +34,22 @@ Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputContr
 Route::get('/vertretungen', ['as' => 'absences', 'uses' => 'PublicController@absences']);
 
 
+// RITES (Kasualien)
+Route::resource('baptisms', 'BaptismController')->middleware('auth');
+Route::get('/baptism/add/{service}', ['as' => 'baptism.add', 'uses' => 'BaptismController@create'])->middleware('auth');
+Route::get('/baptism/destroy/{baptism}', ['as' => 'baptism.destroy', 'uses' => 'BaptismController@destroy']);
+Route::resource('funerals', 'FuneralController')->middleware('auth');
+Route::get('/funeral/add/{service}', ['as' => 'funeral.add', 'uses' => 'FuneralController@create'])->middleware('auth');
+Route::get('/funeral/destroy/{funeral}', ['as' => 'funeral.destroy', 'uses' => 'FuneralController@destroy']);
+Route::get('/funeral/{funeral}/Formular KRA.pdf', ['as' => 'funeral.form', 'uses' => 'FuneralController@pdfForm']);
+Route::resource('weddings', 'WeddingController')->middleware('auth');
+Route::get('/wedding/add/{service}', ['as' => 'wedding.add', 'uses' => 'WeddingController@create'])->middleware('auth');
+Route::get('/wedding/destroy/{wedding}', ['as' => 'wedding.destroy', 'uses' => 'WeddingController@destroy']);
 
+// Home routes
+Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 Route::get('/', function () {
-    if (Auth::user()) return redirect()->route('calendar');
+    if (Auth::user()) return redirect()->route('home');
     return redirect()->route('login');
 });
 
@@ -44,11 +58,6 @@ Route::post('/changePassword','HomeController@changePassword')->name('changePass
 
 Auth::routes();
 Route::get('/logout', function() { Auth::logout(); return redirect()->route('login'); });
-
-
-Route::get('/home', function(){
-    return redirect()->route('calendar');
-})->name('home');
 
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
@@ -71,3 +80,9 @@ Route::get('/showLimitedColumns/{switch}', function($switch){
     Session::put('showLimitedDays', (bool)$switch);
     return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
 })->middleware('auth')->name('showLimitedColumns');
+
+
+// utility to create storage link
+Route::get('/createStorageLink', function () {
+    Artisan::call('storage:link');
+});

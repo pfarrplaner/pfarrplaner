@@ -26,7 +26,29 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $homeScreen = Auth::user()->getSetting('homeScreen', 'route:calendar');
+        if (strpos($homeScreen, ':') !== false) {
+            list($action, $data) = explode(':', $homeScreen);
+            switch ($action) {
+                case 'redirect':
+                    return redirect($data);
+                    break;
+                case 'route':
+                    return redirect(route($data));
+                    break;
+                case 'view':
+                    return view($data);
+                    break;
+                case 'homescreen':
+                    $homeScreenClass = 'App\\HomeScreens\\'.ucfirst($data).'HomeScreen';
+                    if (class_exists($homeScreenClass)) {
+                        $homeScreenObj = new $homeScreenClass();
+                        return $homeScreenObj->render();
+                    }
+            }
+        } else {
+            return view($homeScreen);
+        }
     }
 
     public function showChangePassword() {

@@ -147,6 +147,20 @@ span.vacation-conflict {
     box-shadow: 0 0 0 .2rem rgba(52,144,220,.25);
 }
 
+.calendar-month .service-entry.funeral {
+    background-color: darkgray;
+    color: white;
+}
+
+.calendar-month .service-entry.funeral.mine {
+    background-color: #a9cda9;
+    color: black;
+}
+
+.calendar-month .service-entry h3 {
+    margin-top: 15px;
+}
+
 .calendar-month .service-entry .separator {
     color: gray;
 }
@@ -228,4 +242,17 @@ ol.steps img {
 
 .data-row.no-cc {
     display: none;
+}
+
+
+table.table tr.past td {
+    background-color: dimgray;
+}
+
+table.table .fa-check-circle {
+    color: green;
+}
+
+table.table .fa-times-circle {
+    color: red;
 }

@@ -63,23 +63,6 @@
     </div>
     <script>
         $(document).ready(function(){
-            function updateCityChecks() {
-                if ($('#check-type-limited').prop('checked')) {
-                    $('.city-check.my-city').attr('disabled', false);
-                } else {
-                    $('.city-check').attr('disabled', true);
-                }
-            }
-            $('.datepicker').datepicker({
-                language: 'de',
-                format: 'dd.mm.yyyy',
-                startDate: '{{ $day->date->format('Y-m-d') }}',
-            });
-
-            updateCityChecks();
-            $('input[name=day_type]').on('change', function(){
-                updateCityChecks();
-            });
             $('#btnSave').click(function(event){
                 event.preventDefault();
                 $('input[name=date]').attr('disabled', false);

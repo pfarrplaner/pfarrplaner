@@ -30,7 +30,7 @@ class ServicePolicy
      */
     public function create(User $user)
     {
-        return ($user->isAdmin) || ($user->canEditGeneral);
+        return $user->hasPermissionTo('gd-bearbeiten');
     }
 
     /**
@@ -42,7 +42,8 @@ class ServicePolicy
      */
     public function update(User $user, Service $service)
     {
-        return ($user->isAdmin) || ($user->canEditGeneral && $user->cities()->contains($service->location->city));
+        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        return $user->hasPermissionTo('gd-bearbeiten') && $cityOkay;
     }
 
     /**
@@ -54,7 +55,8 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service)
     {
-        return ($user->isAdmin) || ($user->canEditGeneral && $user->cities()->contains($service->location->city));
+        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
     }
 
     /**
@@ -66,7 +68,8 @@ class ServicePolicy
      */
     public function restore(User $user, Service $service)
     {
-        return ($user->isAdmin) || ($user->canEditGeneral && $user->cities()->contains($service->location->city));
+        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
     }
 
     /**
@@ -78,6 +81,7 @@ class ServicePolicy
      */
     public function forceDelete(User $user, Service $service)
     {
-        return ($user->isAdmin) || ($user->canEditGeneral && $user->cities()->contains($service->location->city));
+        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
     }
 }

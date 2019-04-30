@@ -8,12 +8,14 @@ use App\Location;
 use App\Policies\CityPolicy;
 use App\Policies\DayPolicy;
 use App\Policies\LocationPolicy;
+use App\Policies\RolePolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\UserPolicy;
 use App\Service;
 use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -23,12 +25,12 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        'App\Model' => 'App\Policies\ModelPolicy',
         User::class => UserPolicy::class,
         Location::class => LocationPolicy::class,
         City::class => CityPolicy::class,
         Service::class => ServicePolicy::class,
         Day::class => DayPolicy::class,
+        Role::class => RolePolicy::class,
     ];
 
     /**
@@ -40,8 +42,15 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
+        Gate::before(function($user, $ability) {
+           if ($user->hasRole('Super-Administrator*in')) return true;
+           if ($user->hasRole('Administrator*in') && ($ability != 'superadmin-bearbeiten') && ($ability != 'admin-bearbeiten')) return true;
+           return null;
+        });
+
         Gate::define('calendar.month', 'App\Policies\CalendarPolicy@month');
         Gate::define('calendar.print', 'App\Policies\CalendarPolicy@print');
         Gate::define('calendar.printsetup', 'App\Policies\CalendarPolicy@printsetup');
+
     }
 }

@@ -11,7 +11,7 @@ return [
     'tempDir' => base_path('../temp/'),
     'font_path' => base_path('resources/fonts/'),
     'font_data' => [
-        'HelveticaCondensed' => [
+        'helveticacondensed' => [
             'R' => 'HelveticaCondensed.ttf',
             'B' => 'HelveticaCdBd.ttf',
         ]

@@ -7,9 +7,16 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +24,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->isAdmin) return redirect()->back()->with('error', 'Leider haben Sie dafür keine Berechtigung.');
         $users = User::all();
         return view('users.index', compact('users'));
     }
@@ -29,20 +35,19 @@ class UserController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->isAdmin) return redirect()->back()->with('error', 'Leider haben Sie dafür keine Berechtigung.');
         $cities = City::all();
-        return view('users.create', ['cities' => $cities]);
+        $roles = Role::all()->sortBy('name');
+        return view('users.create', compact('cities', 'roles'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        if (!Auth::user()->isAdmin) return redirect()->back()->with('error', 'Leider haben Sie dafür keine Berechtigung.');
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email',
@@ -70,13 +75,27 @@ class UserController extends Controller
         $user->save();
         $user->cities()->sync($request->get('cities'));
 
+        // assign roles
+        $roles = $request->get('roles');
+        if ((($key = array_search('Superadministrator*in', $roles)) !== false)
+            && (!$user->hasRole('Superadmininistrator*in')))
+            unset($roles[$key]);
+        if ((($key = array_search('Administrator*in', $roles)) !== false)
+            && (!$user->hasRole('Superadmininistrator*in'))
+            && (!$user->hasRole('Administrator*in')))
+            unset($roles[$key]);
+        $user->syncRoles($request->get('roles') ?: []);
+
+
+        if ($request->get('homescreen')) $user->setSetting('homeScreen', $request->get('homescreen'));
+
         return redirect()->route('users.index')->with('success', 'Der neue Benutzer wurde angelegt.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -87,27 +106,27 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        if (!Auth::user()->isAdmin) return redirect()->back()->with('error', 'Leider haben Sie dafür keine Berechtigung.');
         $user = User::find($id);
         $cities = City::all();
-        return view('users.edit', ['user' => $user, 'cities' => $cities]);
+        $roles = Role::all()->sortBy('name');
+        $homescreen = $user->getSetting('homeScreen', 'route:calendar');
+        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->isAdmin) return redirect()->back()->with('error', 'Leider haben Sie dafür keine Berechtigung.');
         $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email',
@@ -118,7 +137,6 @@ class UserController extends Controller
         $user->name = $request->get('name');
         $user->email = $request->get('email');
         if ($password = $request->get('password') != '') $user->password = Hash::make($password);
-        $user->cities()->sync($request->get('cities'));
         $user->isAdmin = $request->get('isAdmin') ? 1 : 0;
         $user->canEditGeneral = $request->get('canEditGeneral') ? 1 : 0;
         $user->canEditChurch = $request->get('canEditChurch') ? 1 : 0;
@@ -132,24 +150,39 @@ class UserController extends Controller
         $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
         $user->save();
 
+        $user->cities()->sync($request->get('cities'));
+
+        // assign roles
+        $roles = $request->get('roles');
+        if ((($key = array_search('Superadministrator*in', $roles)) !== false)
+            && (!$user->hasRole('Superadmininistrator*in')))
+            unset($roles[$key]);
+        if ((($key = array_search('Administrator*in', $roles)) !== false)
+            && (!$user->hasRole('Superadmininistrator*in'))
+            && (!$user->hasRole('Administrator*in')))
+            unset($roles[$key]);
+        $user->syncRoles($request->get('roles') ?: []);
+
+        if ($request->get('homescreen')) $user->setSetting('homeScreen', $request->get('homescreen'));
+
         return redirect()->route('users.index')->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        if (!Auth::user()->isAdmin) return redirect()->back()->with('error', 'Leider haben Sie dafür keine Berechtigung.');
         $user = User::find($id);
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Der Benutzer wurde gelöscht.');
     }
 
-    public function preferences($id) {
+    public function preferences($id)
+    {
         $user = User::find($id);
         $preferenceCities = City::whereIn('id', $user->preference_cities ?: $user->cities);
         $allowedCities = City::whereIn('id', $user->cities);
@@ -159,7 +192,8 @@ class UserController extends Controller
         return view('users.preferences', ['user' => $user, 'allowedCities' => $allowedCities, 'preferenceCities' => $preferenceCities]);
     }
 
-    public function savePreferences(Request $request, $id) {
+    public function savePreferences(Request $request, $id)
+    {
 
     }
 }

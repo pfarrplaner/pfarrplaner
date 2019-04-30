@@ -57,29 +57,5 @@
                 </form>
             </div>
         </div>
-        <script>
-            function updateCityChecks() {
-                if ($('#check-type-limited').prop('checked')) {
-                    $('.city-check.my-city').attr('disabled', false);
-                } else {
-                    $('.city-check').attr('disabled', true);
-                }
-            }
-            $(document).ready(function(){
-                $('.datepicker').datepicker({
-                    language: 'de',
-                    format: 'dd.mm.yyyy',
-                    startDate: '01.{{ $month }}.{{ $year }}',
-                });
-
-                updateCityChecks();
-                $('input[name=day_type]').on('change', function(){
-                    updateCityChecks();
-                });
-                $('#submit').click(function(e){
-                    $('.city-check').removeAttr('disabled');
-                })
-            });
-        </script>
     @endcomponent
 @endsection

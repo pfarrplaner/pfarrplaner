@@ -15,6 +15,7 @@
         src="https://code.jquery.com/jquery-3.3.1.min.js"
         integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"
             integrity="sha256-59IZ5dbLyByZgSsRE3Z0TjDuX7e1AiqW5bZ8Bg50dsU=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/de.js"
@@ -101,14 +102,14 @@
                                title="Alle ausgeblendeten Tage einblenden"><span
                                         class="fa @if(Session::get('showLimitedDays') === true) fa-check-square @else fa-square @endif"></span></a>
                         </div>
-                        @if (Auth::user()->isAdmin || Auth::user()->canEditGeneral)
+                        @can('create', \App\Service::class)
                             <div class="btn-group mr-2" role="group">
                                 <a class="btn btn-default"
                                    href="{{ route('days.add', ['year' => $year, 'month' => $month]) }}"
                                    title="Tag hinzufügen"><span
                                         class="fa fa-calendar-plus"></span></a>
                             </div>
-                        @endif
+                        @endcan
                         <div class="btn-group mr-2" role="group">
                             <a class="btn btn-default"
                                href="{{ route('calendar.printsetup', ['year' => $year, 'month' => $month]) }}"><span
@@ -151,9 +152,11 @@
                             @if ($day->date->dayOfWeek > 0) <span class="special-weekday">{{ strftime('%a', $day->date->getTimestamp()) }}
                                 .</span>, @endif
                             {{ $day->date->format('d.m.Y') }}
+                            @can('gd-allgemein-bearbeiten')
                             <a class="btn btn-default btn-sm" role="button"
                                href="{{ route('days.edit', $day->id) }}"><span class="fa fa-edit"></span></a>
-                            @if (Auth::user()->isAdmin)
+                            @endcan
+                            @can('tag-loeschen')
                                 <form action="{{ route('days.destroy', $day->id)}}" method="post"
                                       style="display: inline;">
                                     @csrf
@@ -162,7 +165,7 @@
                                             class="fa fa-trash"></span>
                                     </button>
                                 </form>
-                            @endif
+                            @endcan
                             @if ($day->name)
                                 <div class="day-name">{{ $day->name }}</div> @endif
                             @if ($day->description)
@@ -176,12 +179,12 @@
                                 {{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope']] }}</div>
                             </div>
                             @endif
-                            @if (Auth::user()->isAdmin || Auth::user()->canEditField('pastor'))
+                            @can('urlaub-lesen')
                                 @if (count($vacations[$day->id]))
                                     @foreach ($vacations[$day->id] as $vacation) <div class="vacation">{{ $vacation }}</div>
                                     @endforeach
                                 @endif
-                            @endif
+                            @endcan
                         </th>
                     @endforeach
                 </tr>
@@ -205,11 +208,15 @@
                                 <div class="celldata">
                                 @foreach ($services[$city->id][$day->id] as $service)
                                     <div
-                                        class="service-entry @if (Auth::user()->isAdmin || Auth::user()->cities->contains($city)) editable @endif
-                                            @if ((false !== strpos($service->pastor, Auth::user()->lastName())) || (false !== strpos($service->organist, Auth::user()->lastName())) || (false !== strpos($service->sacristan, Auth::user()->lastName()))) mine @endif"
-                                        title="Klicken, um diesen Eintrag zu bearbeiten"
-                                        @if (Auth::user()->isAdmin || Auth::user()->cities->contains($city)) onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
-                                        @endif>
+                                        class="service-entry @can('update', $service) editable @endcan
+                                            @if ((false !== strpos($service->pastor, Auth::user()->lastName())) || (false !== strpos($service->organist, Auth::user()->lastName())) || (false !== strpos($service->sacristan, Auth::user()->lastName()))) mine @endif
+                                            @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen']) @if($service->funerals->count()) funeral @endif @endcanany
+                                                "
+                                        @can('update', $service)
+                                            style="cursor: pointer;"
+                                            title="Klicken, um diesen Eintrag zu bearbeiten"
+                                            onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
+                                        @endcan>
                                         @if (!is_object($service->location))
                                             <div class="service-time service-special-time">
                                                 {{ strftime('%H:%M', strtotime($service->time)) }} Uhr
@@ -225,12 +232,24 @@
                                             <div class="service-location">{{ $service->location->name }}</div>
                                         @endif
                                             @if($service->cc) <img src="{{ env('APP_URL') }}img/cc.png" title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
+                                        @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen'])
+                                        @if($service->weddings->count())
+                                            <div class="service-description">
+                                                <span class="fa fa-ring"></span> @can('gd-kasualien-lesen') {{ $service->weddingsText() }} @endcan
+                                            </div>
+                                        @endif
+                                        @if($service->funerals->count())
+                                            <div class="service-description">
+                                                <span class="fa fa-cross"></span> @can('gd-kasualien-lesen') {{ $service->funeralsText() }} @endcan
+                                            </div>
+                                        @endif
+                                        @endcanany
                                         <div class="service-team service-pastor"><span
                                                 class="designation">P: </span>
                                             @if ($service->need_predicant)
                                                 <span class="need-predicant">Prädikant benötigt</span>
                                             @else
-                                                <span @if (in_array($service->pastor, array_keys($vacations[$day->id]))) class="vacation-conflict" title="Konflikt mit Urlaub!" @endif>{{ $service->pastor }}</span>
+                                                <span @can('urlaub-lesen') @if (in_array($service->pastor, array_keys($vacations[$day->id]))) class="vacation-conflict" title="Konflikt mit Urlaub!" @endif @endcan>{{ $service->pastor }}</span>
                                             @endif
                                         </div>
                                         <div class="service-team service-organist"><span
@@ -238,9 +257,16 @@
                                         <div class="service-team service-sacristan"><span
                                                 class="designation">M: </span>{{ $service->sacristan }}</div>
                                         <div class="service-description">{{ $service->descriptionText() }}</div>
+                                        @canany(['gd-kasualien-lesen', 'gd-kasualien-nur-statistik'])
+                                            @if($service->baptisms->count())
+                                                <div class="service-description">
+                                                    @if($service->baptisms->count()) <span class="fa fa-water" @can('gd-kasualien-lesen') title="{{ $service->baptismsText(true) }}" @endcan ></span> {{ $service->baptisms->count() }} @endif
+                                                </div>
+                                            @endif
+                                        @endcanany
                                     </div>
                                 @endforeach
-                                @if (Auth::user()->isAdmin || (Auth::user()->canEditGeneral && Auth::user()->cities->contains($city)))
+                                @if (Auth::user()->can('create', \App\Service::class) && Auth::user()->cities->contains($city))
                                     <a class="btn btn-success btn-sm btn-add-day" title="Neuen Gottesdiensteintrag hinzufügen"
                                        href="{{ route('services.add', ['date' => $day->id, 'city' => $city->id]) }}"><span
                                             class="fa fa-plus"></span></a>

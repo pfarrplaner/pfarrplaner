@@ -20,12 +20,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#special" role="tab" data-toggle="tab">Besonderheiten</a>
                         </li>
+                        @canany(['gd-opfer-lesen','gd-opfer-bearbeiten'])
                         <li class="nav-item">
                             <a class="nav-link" href="#offerings" role="tab" data-toggle="tab">Opfer</a>
                         </li>
+                        @endcanany
+                        @canany(['gd-kinderkirche-lesen', 'gd-kinderkirche-bearbeiten'])
                         <li class="nav-item">
                             <a class="nav-link" href="#cc" role="tab" data-toggle="tab">Kinderkirche</a>
                         </li>
+                        @endcanany
                     </ul>
 
 
@@ -35,7 +39,7 @@
                             <div class="form-group">
                                 @csrf
                                 <label for="day_id">Datum</label>
-                                <select class="form-control" name="day_id">
+                                <select class="form-control" name="day_id" @cannot('gd-allgemein-bearbeiten') disabled @endcannot >
                                     @foreach($days as $thisDay)
                                         <option value="{{$thisDay->id}}"
                                                 @if (($day) && ($day->id == $thisDay->id)) selected @endif
@@ -45,7 +49,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="location_id">Kirche</label>
-                                <select class="form-control" name="location_id">
+                                <select class="form-control" name="location_id" @cannot('gd-allgemein-bearbeiten') disabled @endcannot>
                                     @foreach($locations as $thisLocation)
                                         <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
                                                 data-cc="{{ $thisLocation->cc_default_location }}"
@@ -56,20 +60,20 @@
                             </div>
                             <div id="special_location" class="form-group">
                                 <label for="special_location">Freie Ortsangabe</label>
-                                <input id="special_location_input" class="form-control" type="text" name="special_location"/>
+                                <input id="special_location_input" class="form-control" type="text" name="special_location" @cannot('gd-allgemein-bearbeiten') disabled @endcannot/>
                                 <input type="hidden" name="city_id" value="{{ $city->id }}"/>
                             </div>
                             <div class="form-group">
                                 <label for="time">Uhrzeit (leer lassen für Standarduhrzeit)</label>
-                                <input class="form-control" type="text" name="time" placeholder="HH:MM"/>
+                                <input class="form-control" type="text" name="time" placeholder="HH:MM" @cannot('gd-allgemein-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label for="pastor">Pfarrer*in</label>
-                                <input class="form-control" type="text" name="pastor"/>
+                                <input class="form-control" type="text" name="pastor" @cannot('gd-pfarrer-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="need_predicant" value="1"
-                                       id="needPredicant">
+                                       id="needPredicant" @cannot('gd-pfarrer-bearbeiten') disabled @endcannot />
                                 <label class="form-check-label" for="needPredicant">
                                     Für diesen Gottesdienst wird ein Prädikant benötigt.
                                 </label>
@@ -77,28 +81,28 @@
                             <br />
                             <div class="form-group">
                                 <label for="organist">Organist*in</label>
-                                <input class="form-control" type="text" name="organist"/>
+                                <input class="form-control" type="text" name="organist" @cannot('gd-organist-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label for="sacristan">Mesner*in</label>
-                                <input class="form-control" type="text" name="sacristan"/>
+                                <input class="form-control" type="text" name="sacristan" @cannot('gd-mesner-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label for="others">Weitere Beteiligte</label>
-                                <input class="form-control" type="text" name="others" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif/>
+                                <input class="form-control" type="text" name="others" @cannot('gd-allgemein-bearbeiten') disabled @endcannot />
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="special">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="baptism" value="1"
-                                       id="baptism" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif>
+                                       id="baptism" @cannot('gd-taufe-bearbeiten') disabled @endcannot >
                                 <label class="form-check-label" for="baptism">
                                     Taufe(n)
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="eucharist" value="1"
-                                       id="eucharist" @if (!(Auth::user()->isAdmin || Auth::user()->canEditGeneral)) disabled @endif>
+                                       id="eucharist" @cannot('gd-abendmahl-bearbeiten') disabled @endcannot >
                                 <label class="form-check-label" for="eucharist">
                                     Abendmahl
                                 </label>
@@ -106,38 +110,39 @@
                             <br />
                             <div class="form-group">
                                 <label for="description">Anmerkungen</label>
-                                <input type="text" class="form-control" name="description"  />
+                                <input type="text" class="form-control" name="description" @canany(['gd-allgemein-beabeiten', 'gd-anmerkungen-bearbeiten']) @else disabled @endcanany />
                             </div>
                         </div>
+                        @canany(['gd-opfer-lesen','gd-opfer-bearbeiten'])
                         <div role="tabpanel" class="tab-pane fade" id="offerings">
                             <div class="form-group">
                                 <label for="offerings_counter1">Opferzähler*in 1</label>
-                                <input class="form-control" type="text" name="offerings_counter1" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
+                                <input class="form-control" type="text" name="offerings_counter1" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label for="offerings_counter2">Opferzähler*in 2</label>
-                                <input class="form-control" type="text" name="offerings_counter2" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
+                                <input class="form-control" type="text" name="offerings_counter2" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label for="offering_goal">Opferzweck</label>
-                                <input class="form-control" type="text" name="offering_goal" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
+                                <input class="form-control" type="text" name="offering_goal" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label style="display:block;">Opfertyp</label>
                                 <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="" autocomplete="off" checked @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
+                                    <input type="radio" name="offering_type" value="" autocomplete="off" checked @cannot('gd-opfer-bearbeiten') disabled @endcannot >
                                     <label class="form-check-label">
                                         Eigener Beschluss
                                     </label>
                                 </div>
                                 <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="eO" autocomplete="off" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
+                                    <input type="radio" name="offering_type" value="eO" autocomplete="off" @cannot('gd-opfer-bearbeiten') disabled @endcannot >
                                     <label class="form-check-label">
                                         Empfohlenes Opfer
                                     </label>
                                 </div>
                                 <div class="form-check-inline disabled">
-                                    <input type="radio" name="offering_type" value="PO" autocomplete="off" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif>
+                                    <input type="radio" name="offering_type" value="PO" autocomplete="off" @cannot('gd-opfer-bearbeiten') disabled @endcannot >
                                     <label class="form-check-label">
                                         Pflichtopfer
                                     </label>
@@ -145,13 +150,15 @@
                             </div>
                             <div class="form-group">
                                 <label for="offering_description">Anmerkungen zum Opfer</label>
-                                <input class="form-control" type="text" name="offering_description" @if (!(Auth::user()->isAdmin || Auth::user()->canEditOfferings)) disabled @endif/>
+                                <input class="form-control" type="text" name="offering_description" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
                             </div>
                         </div>
+                        @endcanany
+                        @canany(['gd-kinderkirche-lesen', 'gd-kinderkirche-bearbeiten'])
                         <div role="tabpanel" class="tab-pane fade" id="cc">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="cc" value="1"
-                                       id="cc-check" @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif>
+                                       id="cc-check" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot >
                                 <label class="form-check-label" for="cc">
                                     Parallel findet Kinderkirche statt
                                 </label>
@@ -159,17 +166,18 @@
                             <br />
                             <div class="form-group">
                                 <label for="cc_location">Ort der Kinderkirche:</label>
-                                <input class="form-control" type="text" name="cc_location" placeholder="Leer lassen für " @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
+                                <input class="form-control" type="text" name="cc_location" placeholder="Leer lassen für " @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label for="cc_lesson">Lektion:</label>
-                                <input class="form-control" type="text" name="cc_lesson" @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
+                                <input class="form-control" type="text" name="cc_lesson" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot />
                             </div>
                             <div class="form-group">
                                 <label for="cc_staff">Mitarbeiter:</label>
-                                <input class="form-control" type="text" name="cc_staff" placeholder="Name, Name, ..." @if (!(Auth::user()->isAdmin || Auth::user()->canEditCC)) disabled @endif/>
+                                <input class="form-control" type="text" name="cc_staff" placeholder="Name, Name, ..." @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot />
                             </div>
                         </div>
+                        @endcanany
                     </div>
                     <button type="submit" class="btn btn-primary">Hinzufügen</button>
                 </form>

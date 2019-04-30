@@ -7,9 +7,25 @@
         <h1>Neue Funktionen</h1>
         <ul>
             <li>
+                <b>24.04.2019:</b>
+                Für jeden Benutzer gibt es jetzt einen Startbildschirm mit einer Übersicht der für ihn relevanten Daten.
+                Für unterschiedliche Benutzertypen gibt es dabei verschiedene Varianten dieses Startbildschirms.
+            </li>
+            <li>
+                <b>24.04.2019:</b>
+                Gottesdiensten können nun Kasualien (Bestattung, Taufe, Trauung) mit den entsprechenden Daten zugeordnet
+                werden. Alle persönlichen Daten werden dabei ausschließlich verschlüsselt gespeichert und erst für die Anzeige
+                entschlüsselt.
+            </li>
+            <li>
+                <b>03.04.2019:</b>
+                Beim Anlegen von Tagen, die nur für bestimmte Gemeinden angezeigt werden sollen ("lilane Tage") ist es nun
+                möglich, auch "fremde" Gemeinden auszuwählen.
+            </li>
+            <li>
                 <b>29.03.2019:</b>
                 "Lilane" Tage, die einen Gottesdienst enthalten, für den der aktuelle Nutzer eingeteilt sind,
-                werden nun automatisch aufgeklappt.
+                werden snun automatisch aufgeklappt.
             </li>
             <li>
                 <b>08.03.2019:</b>

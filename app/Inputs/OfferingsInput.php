@@ -35,7 +35,7 @@ class OfferingsInput extends AbstractInput
 
     public function canEdit(): bool
     {
-        return Auth::user()->isAdmin || Auth::user()->canEditOfferings;
+        return Auth::user()->can('gd-opfer-bearbeiten');
     }
 
     public function input(Request $request) {

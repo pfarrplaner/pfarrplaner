@@ -35,7 +35,7 @@ class ChildrensChurchInput extends AbstractInput
 
     public function canEdit(): bool
     {
-        return Auth::user()->isAdmin || Auth::user()->canEditCC;
+        return Auth::user()->can('gd-kinderkirche-bearbeiten');
     }
 
     public function input(Request $request) {

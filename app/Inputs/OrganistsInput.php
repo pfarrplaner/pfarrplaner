@@ -36,7 +36,7 @@ class OrganistsInput extends AbstractInput
 
     public function canEdit(): bool
     {
-        return Auth::user()->isAdmin || Auth::user()->canEditField('organist');
+        return Auth::user()->can('gd-organist-bearbeiten');
     }
 
     public function input(Request $request) {

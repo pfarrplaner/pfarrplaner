@@ -76,6 +76,18 @@ class Service extends Model
         return $this->belongsTo(City::class);
     }
 
+    public function baptisms() {
+        return $this->hasMany(Baptism::class);
+    }
+
+    public function funerals() {
+        return $this->hasMany(Funeral::class);
+    }
+
+    public function weddings() {
+        return $this->hasMany(Wedding::class);
+    }
+
     public function locationText() {
         return $this->special_location ?: $this->location->name;
     }
@@ -88,10 +100,44 @@ class Service extends Model
         return join('; ', $desc);
     }
 
+    public function timeText() {
+        return strftime('%H:%M', strtotime($this->time)).' Uhr';
+    }
+
     public function offeringText() {
         return $this->offering_goal.($this->offering_type ? ' ('.$this->offering_type.')' : '');
     }
 
+    public function baptismsText($includeCount = false) {
+        $baptisms = [];
+        foreach ($this->baptisms as $baptism) {
+            $baptisms[] = $baptism->candidate_name;
+        }
+        return ($includeCount ? $this->baptisms()->count().' '.($this->baptisms()->count() == 1 ? 'Taufe ' : 'Taufen ') : '')
+            .join('; ', $baptisms);
+    }
+
+    public function funeralsText() {
+        $funerals = [];
+        foreach ($this->funerals as $funeral) {
+            $funerals[] = $funeral->type.' von '.$funeral->buried_name;
+        }
+        return (join('; ', $funerals));
+    }
+
+    public function weddingsText() {
+        $weddings = [];
+        /** @var Wedding $wedding */
+        foreach ($this->weddings as $wedding) {
+            $weddings[] = 'Trauung von '.$wedding->spouse1_name
+                .($wedding->spouse1_birth_name ? ' ('.$wedding->spouse1_birth_name.')' : '')
+                .' und '.$wedding->spouse2_name
+                .($wedding->spouse2_birth_name ? ' ('.$wedding->spouse2_birth_name.')' : '');
+        }
+        return (join('; ', $weddings));
+    }
+    
+    
     /**
      * Check if service description contains a specific text (case-insensitive!)
      * @param string $text Search for this text
@@ -109,15 +155,15 @@ class Service extends Model
         foreach ($this->revisionFormattedFieldNames as $key => $name) {
             $attribute = $this->getAttribute($key);
             if ($key == 'time') $attribute = strftime('%H:%M', strtotime($attribute));
-            if ($key == 'day_id') {
-                if ($this->special_location) {
-                    $attribute = $this->special_location;
+            if ($key == 'day_id') $attribute = strftime('%A, %d. %B %Y', $this->day->date->getTimestamp());
+            if ($key == 'city_id') $attribute = $this->city->name;
+            if ($key == 'location_id') {
+                if (is_object($this->location)) {
+                    $attribute = $this->location->name;
                 } else {
-                    $attribute = strftime('%A, %d. %B %Y', $this->day->date->getTimestamp());
+                    $attribute = $this->special_location;
                 }
             }
-            if ($key == 'city_id') $attribute = $this->city->name;
-            if ($key == 'location_id') $attribute = $this->location->name;
             if ($key != 'special_location') $mailText .= 'Feld "'.$name.'": "'.$attribute.'"'."\r\n";
         }
 
@@ -143,7 +189,7 @@ class Service extends Model
                 $original = strftime('%H:%M', strtotime($original));
             }
             if ($key == 'location_id') {
-                if ($this->special_location) {
+                if (!is_object($this->location)) {
                     $original = $this->getOriginal('special_location');
                     $attribute = $this->getAttribute('special_location');
                 } else {

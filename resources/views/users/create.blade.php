@@ -37,48 +37,6 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="form-group"> <!-- Radio group !-->
-                    <label class="control-label">Darf folgende Bereiche bearbeiten:</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="isAdmin" value="1"
-                               id="isAdmin">
-                        <label class="form-check-label" for="isAdmin">
-                            <b>Alles</b> (Administrator)
-                        </label>
-                    </div>
-                    @foreach (['church' => 'Kirche', 'general' => 'Allgemeine Gottesdienstfelder'] as $key => $title)
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="canEdit{{ ucfirst($key) }}" value="1"
-                                   id="canEdit{{ ucfirst($key) }}">
-                            <label class="form-check-label" for="canEdit{{ ucfirst($key) }}">
-                                {{ $title }}
-                            </label>
-                        </div>
-                    @endforeach
-                    @foreach (['pastor' => 'Pfarrer', 'organist' => 'Organist', 'sacristan' => 'Mesner'] as $key => $title)
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="canEditField[{{ $key }}]" value="{{$key}}"
-                                   id="canEditField{{ ucfirst($key) }}">
-                            <label class="form-check-label" for="canEditField{{ ucfirst($key) }}">
-                                {{ $title }}
-                            </label>
-                        </div>
-                    @endforeach
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="canEditOfferings" value="1"
-                               id="canEditOfferings">
-                        <label class="form-check-label" for="canEditOfferings">
-                            Opfer
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="canEditCC" value="1"
-                               id="canEditCC">
-                        <label class="form-check-label" for="canEditCC">
-                            Kinderkirche
-                        </label>
-                    </div>
-                </div>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" name="notifications" value="1"
                            id="notifications">
@@ -86,7 +44,27 @@
                         Dieser Benutzer wird per E-Mail benachrichtigt, wenn Gottesdienste seiner Gemeinde(n) geändert werden.
                     </label>
                 </div>
-                <br />
+                <hr />
+                <div class="form-group">
+                    <label for="roles[]">Benutzerrollen</label>
+                    <select class="form-control fancy-select2" name="roles[]" multiple>
+                        @foreach($roles as $role)
+                            <option>{{ $role->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <hr />
+                <div class="form-group">
+                    <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
+                    <select class="form-control" name="homescreen">
+                        <option value="route:calendar" selected>Kalender</option>
+                        <option value="homescreen:pastor">Zusammenfassung für Pfarrer</option>
+                        <option value="homescreen:ministry">Zusammenfassung für andere Beteiligte</option>
+                        <option value="homescreen:secretary">Zusammenfassung für Sekretär</option>
+                        <option value="homescreen:office">Zusammenfassung für Kirchenpflege/Kirchenregisteramt</option>
+                    </select>
+                </div>
+                <hr />
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
             </form>
         </div>

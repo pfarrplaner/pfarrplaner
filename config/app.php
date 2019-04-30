@@ -176,6 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         niklasravnsborg\LaravelPdf\PdfServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        AustinHeap\Database\Encryption\EncryptionServiceProvider::class,
+        \Spatie\Permission\PermissionServiceProvider::class,
     ],
 
     /*
@@ -225,6 +227,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
+        'DatabaseEncryption' => AustinHeap\Database\EncryptionFacade::class,
     ],
 
 ];
