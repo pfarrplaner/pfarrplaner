@@ -324,7 +324,7 @@
                 </form>
             </div>
         </div>
-        @if (Auth::user()->canEditGeneral)
+        @can('gd-loeschen')
         <hr />
         <form action="{{ route('services.destroy', $service->id)}}" method="post">
             @csrf
