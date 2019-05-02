@@ -2,7 +2,11 @@
 
 namespace App;
 
+use App\Mail\ServiceUpdated;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\View;
 
 class Service extends Model
 {
@@ -59,13 +63,23 @@ class Service extends Model
         'cc_staff',
     ];
 
+    private $auditData = [];
+
     public static function boot()
     {
         parent::boot();
     }
 
+    public function audit($field, $originalRecords, $newIds) {
+        $originalIds = $originalRecords->pluck('id')->toArray();
+    }
+
     public function day() {
         return $this->belongsTo(Day::class);
+    }
+
+    public function date($format = null) {
+        if (is_null($format)) return $this->day->date; else return $this->day->date->format($format);
     }
 
     public function location() {
@@ -228,50 +242,6 @@ class Service extends Model
         $this->notify($mailText);
     }
 
-    public function notifyOfChanges(User $author, $text) {
-
-        $mailText = sprintf($text, $author->name.' ('.$author->email.')')."\r\n\r\n"
-        ."Gottesdienst:\r\n=============\r\n"
-        .$this->day->date->format('d.m.Y')
-            .', '.strftime('%H:%M Uhr', strtotime($this->time))
-            .', '.($this->special_location ?: $this->location->name)."\r\n\r\n"
-        ."Änderungen:\r\n===========\r\n";
-
-        foreach ($this->revisionFormattedFieldNames as $key => $name) {
-            $attribute = $this->getAttribute($key);
-            $original = $this->getOriginal($key);
-            if ($key == 'time') {
-                $attribute = strftime('%H:%M', strtotime($attribute));
-                $original = strftime('%H:%M', strtotime($original));
-            }
-            if ($key == 'location_id') {
-                if (!is_object($this->location)) {
-                    $original = $this->getOriginal('special_location');
-                    $attribute = $this->getAttribute('special_location');
-                } else {
-                    $original = Location::find($original)->name;
-                    $attribute = $this->location->name;
-                }
-            }
-            if ($key == 'city_id') {
-                $attribute = $this->city->name;
-                $original = City::find($original)->name;
-            }
-            if ($key == 'day_id') {
-                $attribute = $this->day->date->format('d.m.Y');
-                $original = Day::find($original)->date->format('d.m.Y');
-            }
-            if ($key != 'special_location') {
-                if ($attribute != $original) {
-                    $mailText .= 'Feld "'.$name.'": "'.$attribute.'" (vorher: "'.$original.'"'.")\r\n";
-                }
-            }
-        }
-
-        $mailText .= "\r\n\r\nDiese Benachrichtigung wurde automatisch erzeugt.";
-
-        $this->notify($mailText);
-    }
 
     protected function notify ($text) {
         $users = User::whereHas('cities', function($query){
