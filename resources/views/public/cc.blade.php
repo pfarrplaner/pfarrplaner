@@ -41,7 +41,8 @@
     <main class="py-1">
         @component('components.container')
             <h1>Kinderkirche {{ $city->name }}</h1>
-            <b>Von {{ $start->format('d.m.Y') }} bis {{ $end->format('d.m.Y') }}</b>
+            <p><b>Von {{ $start->format('d.m.Y') }} bis {{ $end->format('d.m.Y') }}</b></p>
+            <a class="btn btn-primary btn-lg" href="{{ route('cc-public-pdf', $city->name) }}"><span class="fa fa-file-pdf"></span> Als PDF herunterladen</a>
             <hr/>
 
             @if($count)

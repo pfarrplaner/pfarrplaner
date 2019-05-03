@@ -88,6 +88,7 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
                 'end' => $maxDate,
                 'city' => $city,
                 'services' => $serviceList,
+                'count' => count($dates),
             ],
             ['format' => 'A4']);
 

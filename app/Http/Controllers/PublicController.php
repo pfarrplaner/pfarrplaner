@@ -7,6 +7,8 @@ use App\Day;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 class PublicController extends Controller
 {
@@ -68,7 +70,12 @@ class PublicController extends Controller
         ]);
     }
 
-    public function childrensChurch($city)
+    /**
+     * @param Request $request
+     * @param $city
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    public function childrensChurch(Request $request, $city)
     {
         $city = City::where('name', 'like', '%'.$city.'%')->first();
         if (!$city) {
@@ -103,6 +110,18 @@ class PublicController extends Controller
         if (count($dates)) {
             $minDate = min($dates);
             $maxDate = max($dates);
+        }
+
+        if ($request->is('*/pdf')) {
+            $pdf = Pdf::loadView('reports.render.childrenschurch', [
+                'start' => $minDate,
+                'end' => $maxDate,
+                'city' => $city,
+                'services' => $serviceList,
+                'count' => count($dates),
+            ]);
+            $filename = $minDate->format('Ymd').'-'.$maxDate->format('Ymd').' Kinderkirche '.$city->name.'.pdf';
+            return $pdf->stream($filename);
         }
 
         return view('public.cc', [

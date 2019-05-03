@@ -69,6 +69,7 @@ Route::get('/whatsnew', function(){
 })->name('whatsnew');
 
 
+Route::get('/kinderkirche/{city}/pdf', ['as' => 'cc-public-pdf', 'uses' => 'PublicController@childrensChurch']);
 Route::get('/kinderkirche/{city}', ['as' => 'cc-public', 'uses' => 'PublicController@childrensChurch']);
 
 Route::post('/showLimitedColumns/{switch}', function($switch){
