@@ -15,13 +15,13 @@
     @if ($service->need_predicant)
         <span class="need-predicant">Prädikant benötigt</span>
     @else
-        {{ $service->pastor }}
+        {{ $service->participantsText('P') }}
     @endif
 </div>
 <div class="service-team service-organist"><span
-            class="designation">O: </span>{{ $service->organist }}</div>
+            class="designation">O: </span>{{ $service->participantsText('O') }}</div>
 <div class="service-team service-sacristan"><span
-            class="designation">M: </span>{{ $service->sacristan }}</div>
+            class="designation">M: </span>{{ $service->participantsText('M') }}</div>
 <div class="service-description">{{ $service->descriptionText() }}</div>
 @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen', 'gd-kasualien-barbeiten'])
 @if($service->baptisms->count())
