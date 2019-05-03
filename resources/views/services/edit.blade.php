@@ -274,7 +274,7 @@
                         <div role="tabpanel" class="tab-pane fade" id="cc">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="cc" value="1"
-                                       id="cc-check" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot />
+                                       id="cc-check" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot @if($service->cc) checked @endif/>
                                 <label class="form-check-label" for="cc">
                                     Parallel findet Kinderkirche statt
                                 </label>
