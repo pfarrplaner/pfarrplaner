@@ -64,7 +64,10 @@
     <script>
         $(document).ready(function(){
             $('.fancy-select2').select2();
-            $('.datepicker').datepicker();
+            $('.datepicker').datepicker({
+                format: 'dd.mm.yyyy',
+                language: 'de',
+            });
         });
     </script>
 </div>
