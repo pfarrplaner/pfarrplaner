@@ -48,35 +48,7 @@
                                 <td>{{ $service->timeText() }}</td>
                                 <td>{{ $service->locationText() }}</td>
                                 <td>
-                                    @if($service->weddings->count())
-                                        <div class="service-description">
-                                            <span class="fa fa-ring"></span> {{ $service->weddingsText() }}
-                                        </div>
-                                    @endif
-                                    @if($service->funerals->count())
-                                        <div class="service-description">
-                                            <span class="fa fa-cross"></span> {{ $service->funeralsText() }}
-                                        </div>
-                                    @endif
-                                    <div class="service-team service-pastor"><span
-                                                class="designation">P: </span>
-                                        @if ($service->need_predicant)
-                                            <span class="need-predicant">Prädikant benötigt</span>
-                                        @else
-                                            {{ $service->pastor }}
-                                        @endif
-                                    </div>
-                                    <div class="service-team service-organist"><span
-                                                class="designation">O: </span>{{ $service->organist }}</div>
-                                    <div class="service-team service-sacristan"><span
-                                                class="designation">M: </span>{{ $service->sacristan }}</div>
-                                    <div class="service-description">{{ $service->descriptionText() }}</div>
-                                    @if($service->baptisms->count())
-                                        <div class="service-description">
-                                            @if($service->baptisms->count()) <span class="fa fa-water" title="{{ $service->baptismsText(true) }}"></span> {{ $service->baptisms->count() }} @endif
-                                        </div>
-                                    @endif
-                                    @if($service->cc) <img src="{{ env('APP_URL') }}img/cc.png" title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
+                                    @include('partials.service.details')
                                 </td>
                                 <td>
                                     @include('partials.service.edit-rites-block', ['service', $service])
