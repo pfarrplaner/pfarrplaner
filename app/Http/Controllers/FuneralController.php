@@ -65,7 +65,7 @@ class FuneralController extends Controller
         if ($request->get('announcement')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
         if ($request->get('wake')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
         $funeral->save();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
     /**
@@ -120,7 +120,7 @@ class FuneralController extends Controller
         if ($request->get('wake') != '') $funeral->wake = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
         $funeral->save();
 
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
     /**
@@ -133,7 +133,7 @@ class FuneralController extends Controller
     {
         $serviceId = $funeral->service_id;
         $funeral->delete();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
     /**

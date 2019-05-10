@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Day;
 use App\Location;
+use App\Mail\ServiceCreated;
+use App\Mail\ServiceUpdated;
 use App\Service;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class ServiceController extends Controller
 {
@@ -16,7 +19,6 @@ class ServiceController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->authorizeResource(Service::class, 'service');
 
     }
 
@@ -73,12 +75,13 @@ class ServiceController extends Controller
             'day_id' => $day->id,
             'location_id' => $locationId,
             'time' => $time,
-            'pastor' => $request->get('pastor') ?: '',
-            'organist' => $request->get('organist') ?: '',
-            'sacristan' => $request->get('sacristan') ?: '',
-            'description' => $request->get('description') ?: '',
             'special_location' => $specialLocation,
             'city_id' => $request->get('city_id'),
+            'pastor' => '',
+            'organist' => '',
+            'sacristan' => '',
+            'others' => '',
+            'description' => $request->get('description') ?: '',
             'need_predicant' => $request->get('need_predicant') ? 1 : 0,
             'baptism' => $request->get('baptism') ? 1 : 0,
             'eucharist' => $request->get('eucharist') ? 1 : 0,
@@ -87,16 +90,55 @@ class ServiceController extends Controller
             'offering_goal' => $request->get('offering_goal') ?: '',
             'offering_description' => $request->get('offering_description') ?: '',
             'offering_type' => $request->get('offering_type') ?: '',
-            'others' => $request->get('others') ?: '',
             'cc' => $request->get('cc') ? 1: 0,
             'cc_location' => $ccLocation,
             'cc_lesson' => $request->get('cc_lesson') ?: '',
             'cc_staff' => $request->get('cc_staff') ?: '',
         ]);
+
+        $service->save();
+
+        // participants:
+        $participants = [];
+        foreach ($request->get('participants') as $category => $participantList) {
+            foreach ($participantList as $participant) {
+                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
+                    $user = new User([
+                        'name' => $participant,
+                        'office' => '',
+                        'phone' => '',
+                        'address' => '',
+                        'preference_cities' => '',
+                        'first_name' => '',
+                        'last_name' => '',
+                        'title' => '',
+                    ]);
+                    $user->save();
+                    $participant = $user->id;
+                }
+                $participants[$category][$participant] = ['category' => $category];
+            }
+        }
+        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
+        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
+        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
+        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
+
+
         //$service->location_id = $location->id;
         //$service->day_id = $day->id;
-        $service->save();
-        $service->notifyOfCreation(Auth::user(), '%s hat soeben folgenden Gottesdienst angelegt:');
+        //$service->notifyOfCreation(Auth::user(), '%s hat soeben folgenden Gottesdienst angelegt:');
+
+        // notify:
+        // (needs to happen before save, so the model is still dirty
+        $subscribers = User::whereHas('cities', function($query) use ($service) {
+            $query->where('city_id', $service->city_id);
+        })->where('notifications', 1)
+            ->get();
+
+        foreach ($subscribers as $subscriber) {
+            Mail::to($subscriber)->send(new ServiceCreated($service, $subscriber));
+        }
 
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', 'Der Gottesdienst wurde hinzugefügt');
@@ -117,15 +159,16 @@ class ServiceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int $id
+     * @param  string $tab optional tab name
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, $tab = 'home')
     {
         $service = Service::find($id);
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::where('city_id', '=', $service->city_id)->get();
         $users = User::all()->sortBy('name');
-        return view('services.edit', compact('service', 'days', 'locations', 'users'));
+        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab'));
     }
 
     /**
@@ -142,6 +185,8 @@ class ServiceController extends Controller
         ]);//
 
         $service = Service::find($id);
+        $original = clone $service;
+
         $day = Day::find($request->get('day_id'));
 
         if ($specialLocation = ($request->get('special_location') ?: '')) {
@@ -183,9 +228,6 @@ class ServiceController extends Controller
         $service->cc_lesson = $request->get('cc_lesson') ?: '';
         $service->cc_staff = $request->get('cc_staff') ?: '';
 
-        $service->notifyOfChanges(Auth::user(), '%s hat soeben folgende Änderungen an einem Gottesdienst vorgenommen');
-        $service->save();
-
         // participants:
         $participants = [];
         foreach ($request->get('participants') as $category => $participantList) {
@@ -211,6 +253,23 @@ class ServiceController extends Controller
         $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
         $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
         $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
+
+        // notify:
+        // (needs to happen before save, so the model is still dirty
+        $subscribers = User::whereHas('cities', function($query) use ($service) {
+            $query->where('city_id', $service->city_id);
+        })->where('notifications', 1)
+            ->get();
+
+        foreach ($subscribers as $subscriber) {
+            Mail::to($subscriber)->send(new ServiceUpdated($service, $original, $subscriber));
+        }
+
+
+
+        $service->save();
+
+
 
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');

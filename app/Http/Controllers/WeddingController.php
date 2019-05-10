@@ -78,7 +78,7 @@ class WeddingController extends Controller
         }
 
         $wedding->save();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
     /**
@@ -144,7 +144,7 @@ class WeddingController extends Controller
         }
 
         $wedding->save();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
         //
     }
 
@@ -158,6 +158,6 @@ class WeddingController extends Controller
     {
         $serviceId = $wedding->service_id;
         $wedding->delete();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 }

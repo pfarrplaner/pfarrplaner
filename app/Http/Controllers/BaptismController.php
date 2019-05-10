@@ -77,7 +77,7 @@ class BaptismController extends Controller
         }
 
         $baptism->save();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
     /**
@@ -142,7 +142,7 @@ class BaptismController extends Controller
         }
 
         $baptism->save();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
     /**
@@ -155,6 +155,6 @@ class BaptismController extends Controller
     {
         $serviceId = $baptism->service_id;
         $baptism->delete();
-        return redirect(route('services.edit', $serviceId).'#rites');
+        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 }
