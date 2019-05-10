@@ -317,9 +317,10 @@
 
                     <hr />
                     @can('update', $service)
-                    <button id="btnSave" type="submit" class="btn btn-primary">Speichern</button>
+                    <button id="btnSave" style="display: none;" type="submit" class="btn btn-primary">Speichern</button>
+                    <a id="btnBack" class="btn btn-primary" href="{{ route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Schließen</a>
                     @else
-                        <a class="btn btn-primary" href="{{ route('calendar', $service->day->date->year, $service->day->date->month) }}">Zurück</a>
+                        <a class="btn btn-primary" href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Zurück</a>
                     @endcan
                 </form>
             </div>
@@ -343,6 +344,22 @@
                     $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + ($('select[name=location_id]').children("option:selected").data('time')));
                     $('#special_location_input').val('');
                     $('#special_location').hide();
+                }
+            }
+
+            var originalFormData;
+
+            function isDirty() {
+                return (originalFormData !== $('form#frmEdit').serialize());
+            }
+
+            function dirtHandler() {
+                if (isDirty()) {
+                    $('#btnSave').show();
+                    $('#btnBack').hide();
+                } else {
+                    $('#btnBack').show();
+                    $('#btnSave').hide();
                 }
             }
 
@@ -414,6 +431,13 @@
                     window.location.hash = e.target.hash;
                 })
 
+                // save original form data for dirt-checking
+                originalFormData = $('form#frmEdit').serialize();
+
+                // dirty handler:
+                $(":input:not(:button):not([type=hidden])").change(dirtHandler);
+                $(":input:not(:button):not([type=hidden])").click(dirtHandler);
+                $(":input:not(:button):not([type=hidden])").on('keyup', dirtHandler);
             });
 
         </script>
