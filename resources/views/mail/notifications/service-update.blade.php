@@ -61,6 +61,7 @@
 
 
                                                                     <h5 class="text-center" style="margin-top: 0; margin-bottom: 0; font-weight: 500; color: inherit; vertical-align: baseline; font-size: 20px; line-height: 24px;" align="center"><strong>Die Änderungen im Überblick</strong></h5>
+                                                                    <p class="text-center" style="line-height: 24px; font-size: 16px; margin: 0;" align="center">Änderungen vorgenommen am {{ date('d.m.Y') }} um {{ date('H:i') }} Uhr durch {{ \Illuminate\Support\Facades\Auth::user()->name }} ({{ \Illuminate\Support\Facades\Auth::user()->email }}) </p>
                                                                     <table class="table" border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%; max-width: 100%;" bgcolor="#ffffff">
                                                                         <thead>
                                                                         <tr>
@@ -77,7 +78,7 @@
                                                                             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->day->date->format('d.m.Y') }}</td>
                                                                         </tr>
                                                                         @endif
-                                                                        @if(isset($changes['time']))
+                                                                        @if($original->timeText() != $service->timeText())
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Uhrzeit</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->timeText() }}</td>
@@ -98,21 +99,21 @@
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->participantsText('P') }}</td>
                                                                             </tr>
                                                                         @endif
-                                                                        @if(isset($changes['need_predicant']))
+                                                                        @if($original->need_predicant != $service->need_predicant)
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Prädikant benötigt</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->need_predicant ? '✔' : '✘' }}</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->need_predicant ? '✔' : '✘' }}</td>
                                                                             </tr>
                                                                         @endif
-                                                                        @if(isset($changes['eucharist']))
+                                                                        @if($original->eucharist != $service->eucharist)
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Abendmahl</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->eucharist ? '✔' : '✘' }}</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->eucharist ? '✔' : '✘' }}</td>
                                                                             </tr>
                                                                         @endif
-                                                                        @if(isset($changes['baptism']))
+                                                                        @if($original->baptism != $service->baptism)
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Taufgottesdienst</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->baptism ? '✔' : '✘' }}</td>
@@ -161,7 +162,7 @@
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->offering_description }}</td>
                                                                             </tr>
                                                                         @endif
-                                                                        @if(isset($changes['cc']))
+                                                                        @if($original->cc != $service->cc)
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Kinderkirche</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->cc ? '✔' : '✘' }}</td>

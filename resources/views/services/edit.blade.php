@@ -16,37 +16,37 @@
                     @csrf
 
                     <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item active">
-                            <a class="nav-link active" href="#home" role="tab" data-toggle="tab">Allgemeines</a>
-                        </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#special" role="tab" data-toggle="tab">Besonderheiten</a>
+                            <a class="nav-link @if($tab == 'home') active @endif" href="#home" role="tab" data-toggle="tab">Allgemeines</a>
+                        </li>
+                        <li class="nav-item  ">
+                            <a class="nav-link @if($tab == 'special') active @endif" href="#special" role="tab" data-toggle="tab">Besonderheiten</a>
                         </li>
                         @canany(['gd-opfer-lesen','gd-opfer-bearbeiten'])
-                        <li class="nav-item">
-                            <a class="nav-link" href="#offerings" role="tab" data-toggle="tab">Opfer</a>
+                        <li class="nav-item ">
+                            <a class="nav-link @if($tab == 'offerings') active @endif" href="#offerings" role="tab" data-toggle="tab">Opfer</a>
                         </li>
                         @endcanany
                         @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten', 'gd-kasualien-nur-statistik'])
-                        <li class="nav-item">
-                            <a class="nav-link" href="#rites" role="tab" data-toggle="tab">Kasualien</a>
+                        <li class="nav-item ">
+                            <a class="nav-link @if($tab == 'rites') active @endif" href="#rites" role="tab" data-toggle="tab">Kasualien</a>
                         </li>
                         @endcan
                         @canany(['gd-kinderkirche-lesen', 'gd-kinderkirche-bearbeiten'])
-                        <li class="nav-item">
-                            <a class="nav-link" href="#cc" role="tab" data-toggle="tab">Kinderkirche</a>
+                        <li class="nav-item ">
+                            <a class="nav-link @if($tab == 'cc') active @endif" href="#cc" role="tab" data-toggle="tab">Kinderkirche</a>
                         </li>
                         @endcanany
                         @can('admin')
                         <li class="nav-item">
-                            <a class="nav-link" href="#history" role="tab" data-toggle="tab">Bearbeitungen</a>
+                            <a class="nav-link @if($tab == 'history') active @endif" href="#history" role="tab" data-toggle="tab">Bearbeitungen</a>
                         </li>
                         @endcan('admin')
                     </ul>
 
                     <div class="tab-content">
                         <br />
-                        <div role="tabpanel" class="tab-pane fade in active show" id="home">
+                        <div role="tabpanel" class="tab-pane fade @if($tab == 'home' || $tab == '') in active show @endif " id="home">
                             <div class="form-group">
                                 <label for="day_id">Datum</label>
                                 <select class="form-control" name="day_id" @cannot('gd-allgemein-bearbeiten') disabled @endcannot >
@@ -126,7 +126,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div role="tabpanel" id="special" class="tab-pane fade">
+                        <div role="tabpanel" id="special" class="tab-pane fade @if($tab == 'special') in active show @endif ">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="baptism" value="1"
                                        id="baptism" @if ($service->baptism) checked @endif @cannot('gd-taufe-bearbeiten') disabled @endcannot >
@@ -147,7 +147,7 @@
                                 <input type="text" class="form-control" name="description" value="{{ $service->description }}" @canany(['gd-allgemein-bearbeiten','gd-anmerkungen-bearbeiten']) @else disabled @endcanany/>
                             </div>
                         </div>
-                        <div role="tabpanel" id="offerings" class="tab-pane fade">
+                        <div role="tabpanel" id="offerings" class="tab-pane fade @if($tab == 'offerings') in active show @endif ">
                             <div class="form-group">
                                 <label for="offerings_counter1">Opferzähler*in 1</label>
                                 <input class="form-control" type="text" name="offerings_counter1" value="{{ $service->offerings_counter1 }}" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
@@ -187,7 +187,8 @@
                             </div>
                         </div>
                         @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten', 'gd-kasualien-nur-statistik'])
-                            <div role="tabpanel" class="tab-pane fade" id="rites">
+                            <div role="tabpanel" class="tab-pane fade @if($tab == 'rites') in active show @endif " id="rites">
+                                <div id="ritesAlert" style="display: none;" class="alert alert-danger">Kasualien können nicht bearbeitet werden, solange ungespeicherte Änderungen existieren. Bitte speichere zunächst den Gottesdienst.</div>
                                 @if ($service->weddings->count() >0 )
                                     <h3>{{ $service->weddings->count() }} @if($service->weddings->count() != 1)Trauungen @else Trauung @endif</h3>
                                     @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten'])
@@ -205,8 +206,8 @@
                                                     @include('partials.wedding.details', ['wedding' => $wedding])
                                                     <td>
                                                         @can('gd-kasualien-bearbeiten')
-                                                            <a class="btn btn-default btn-secondary" href="{{ route('weddings.edit', $wedding->id) }}" title="Trauung bearbeiten"><span class="fa fa-edit"></span></a>
-                                                            <a class="btn btn-default btn-danger" href="{{ route('wedding.destroy', $wedding->id) }}" title="Trauung löschen"><span class="fa fa-trash"></span></a>
+                                                            <a class="btn btn-default btn-secondary btn-rite" href="{{ route('weddings.edit', $wedding->id) }}" title="Trauung bearbeiten"><span class="fa fa-edit"></span></a>
+                                                            <a class="btn btn-default btn-danger btn-rite" href="{{ route('wedding.destroy', $wedding->id) }}" title="Trauung löschen"><span class="fa fa-trash"></span></a>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -231,8 +232,8 @@
                                                     @include('partials.baptism.details', ['baptism' => $baptism])
                                                     <td>
                                                         @can('gd-kasualien-bearbeiten')
-                                                            <a class="btn btn-default btn-secondary" href="{{ route('baptisms.edit', $baptism->id) }}" title="Taufe bearbeiten"><span class="fa fa-edit"></span></a>
-                                                            <a class="btn btn-default btn-danger" href="{{ route('baptism.destroy', $baptism->id) }}" title="Taufe löschen"><span class="fa fa-trash"></span></a>
+                                                            <a class="btn btn-default btn-secondary btn-rite" href="{{ route('baptisms.edit', $baptism->id) }}" title="Taufe bearbeiten"><span class="fa fa-edit"></span></a>
+                                                            <a class="btn btn-default btn-danger btn-rite" href="{{ route('baptism.destroy', $baptism->id) }}" title="Taufe löschen"><span class="fa fa-trash"></span></a>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -255,8 +256,8 @@
                                                     @include('partials.funeral.details', ['funeral' => $funeral])
                                                     <td>
                                                         @can('gd-kasualien-bearbeiten')
-                                                            <a class="btn btn-default btn-secondary" href="{{ route('funerals.edit', $funeral->id) }}" title="Bestattung bearbeiten"><span class="fa fa-edit"></span></a>
-                                                            <a class="btn btn-default btn-danger" href="{{ route('funeral.destroy', $funeral->id) }}" title="Bestattung löschen"><span class="fa fa-trash"></span></a>
+                                                            <a class="btn btn-default btn-secondary btn-rite" href="{{ route('funerals.edit', $funeral->id) }}" title="Bestattung bearbeiten"><span class="fa fa-edit"></span></a>
+                                                            <a class="btn btn-default btn-danger btn-rite" href="{{ route('funeral.destroy', $funeral->id) }}" title="Bestattung löschen"><span class="fa fa-trash"></span></a>
                                                         @endcan
                                                     </td>
                                                 </tr>
@@ -265,13 +266,15 @@
                                     @endcanany
                                 @endif
                                 @can('gd-kasualien-bearbeiten')
-                                    <a class="btn btn-default btn-secondary" href="{{ route('wedding.add', $service->id) }}">Trauung hinzufügen</a>
-                                    <a class="btn btn-default btn-secondary" href="{{ route('baptism.add', $service->id) }}">Taufe hinzufügen</a>
-                                    <a class="btn btn-default btn-secondary" href="{{ route('funeral.add', $service->id) }}">Bestattung hinzufügen</a>
+                                    <div id="rites-buttons">
+                                        <a class="btn btn-default btn-secondary btn-rite" href="{{ route('wedding.add', $service->id) }}">Trauung hinzufügen</a>
+                                        <a class="btn btn-default btn-secondary btn-rite" href="{{ route('baptism.add', $service->id) }}">Taufe hinzufügen</a>
+                                        <a class="btn btn-default btn-secondary btn-rite" href="{{ route('funeral.add', $service->id) }}">Bestattung hinzufügen</a>
+                                    </div>
                                 @endcan
                             </div>
                         @endcanany
-                        <div role="tabpanel" class="tab-pane fade" id="cc">
+                        <div role="tabpanel" class="tab-pane fade @if($tab == 'cc') in active show @endif " id="cc">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="cc" value="1"
                                        id="cc-check" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot @if($service->cc) checked @endif/>
@@ -294,7 +297,7 @@
                             </div>
                         </div>
                         @can('admin')
-                            <div role="tabpanel" id="history" class="tab-pane fade">
+                            <div role="tabpanel" id="history" class="tab-pane fade @if($tab == 'history') in active show @endif ">
                                 @if (count($service->revisionHistory))
                                         <b>Bisherige Änderungen an diesem Gottesdiensteintrag:</b><br />
                                         @foreach($service->revisionHistory as $history)
@@ -357,9 +360,13 @@
                 if (isDirty()) {
                     $('#btnSave').show();
                     $('#btnBack').hide();
+                    $('.btn-rite').addClass('disabled');
+                    $('#ritesAlert').show();
                 } else {
                     $('#btnBack').show();
                     $('#btnSave').hide();
+                    $('.btn-rite').removeClass('disabled');
+                    $('#ritesAlert').hide();
                 }
             }
 
@@ -390,6 +397,8 @@
                         return $result;
                     },
                 });
+                // css fix for select2 when tabbing to anything else than home (why???)
+                $('.select2-container--default').css('width', '1068px');
 
 
                 setDefaultTime();
@@ -420,17 +429,6 @@
                     $('#frmEdit').submit();
                 });
 
-                // Javascript to enable link to tab
-                var url = document.location.toString();
-                if (url.match('#')) {
-                    $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
-                }
-
-                // Change hash for page-reload
-                $('.nav-tabs a').on('shown.bs.tab', function (e) {
-                    window.location.hash = e.target.hash;
-                })
-
                 // save original form data for dirt-checking
                 originalFormData = $('form#frmEdit').serialize();
 
@@ -438,6 +436,7 @@
                 $(":input:not(:button):not([type=hidden])").change(dirtHandler);
                 $(":input:not(:button):not([type=hidden])").click(dirtHandler);
                 $(":input:not(:button):not([type=hidden])").on('keyup', dirtHandler);
+
             });
 
         </script>
