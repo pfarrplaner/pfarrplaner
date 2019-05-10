@@ -209,7 +209,7 @@
                                 @foreach ($services[$city->id][$day->id] as $service)
                                     <div
                                         class="service-entry @can('update', $service) editable @endcan
-                                            @if ((false !== strpos($service->pastor, Auth::user()->lastName())) || (false !== strpos($service->organist, Auth::user()->lastName())) || (false !== strpos($service->sacristan, Auth::user()->lastName()))) mine @endif
+                                            @if ($service->participants->contains(Auth::user())) mine @endif
                                             @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen']) @if($service->funerals->count()) funeral @endif @endcanany
                                                 "
                                         @can('update', $service)
