@@ -63,13 +63,13 @@
                     </div>
 
                     <hr />
-                    <input type="hidden" name="routeBack" value="" />
+                    <input type="hidden" name="routeBack" value="{{ $backRoute }}" />
                     @can('update', $service)
-                    <button style="display: none;" type="submit" class="btn btn-primary btnSave" data-route="{{ route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Speichern und schließen</button>
+                    <button style="display: none;" type="submit" class="btn btn-primary btnSave" @if($backRoute) data-route="{{ $backRoute }}" @endif>Speichern und schließen</button>
                     <button style="display: none;" type="submit" class="btn btn-primary btnSave" data-route="{{ route('services.edit', ['service' => $service->id]) }}">Speichern</button>
-                    <a id="btnBack" class="btn btn-primary" href="{{ route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Schließen</a>
+                    <a id="btnBack" class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}" @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Schließen</a>
                     @else
-                        <a class="btn btn-primary" href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Zurück</a>
+                        <a class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}" @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Zurück</a>
                     @endcan
                 </form>
             </div>
@@ -175,7 +175,8 @@
 
                 $('.btnSave').click(function(event){
                     event.preventDefault();
-                    $('input[name=routeBack]').val($(this).data('route'));
+                    var route = $(this).data('route');
+                    if (route != '') $('input[name=routeBack]').val(route);
                     $('#frmEdit input, #frmEdit select, #frmEdit textarea').each(function() {
                         $(this).attr('disabled', false);
                     });

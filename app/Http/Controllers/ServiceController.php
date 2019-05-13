@@ -158,12 +158,14 @@ class ServiceController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
+     * @param Request $request
      * @param  int $id
      * @param  string $tab optional tab name
      * @return \Illuminate\Http\Response
      */
-    public function edit($id, $tab = 'home')
+    public function edit(Request $request, $id, $tab = 'home')
     {
+
         $service = Service::find($id);
         $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
@@ -171,7 +173,10 @@ class ServiceController extends Controller
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::where('city_id', '=', $service->city_id)->get();
         $users = User::all()->sortBy('name');
-        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab'));
+
+        $backRoute = $request->get('back') ?: '';
+
+        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute'));
     }
 
     /**
