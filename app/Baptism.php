@@ -2,12 +2,14 @@
 
 namespace App;
 
+use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
 
 class Baptism extends Model
 {
     use HasEncryptedAttributes;
+    use HasCommentsTrait;
 
     protected $fillable = [
         'service_id',

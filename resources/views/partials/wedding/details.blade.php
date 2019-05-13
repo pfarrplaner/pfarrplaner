@@ -3,6 +3,11 @@
         Fon {{ $wedding->spouse1_phone }}<br />
         E-Mail <a href="mailto:{{ $wedding->spouse1_email }}">{{ $wedding->spouse1_email }}</a>
     </small>
+    @can('gd-kasualien-bearbeiten')
+        @if ($wedding->commentsForCurrentUser->count() > 0)
+            <span class="fa fa-comments"></span>&nbsp;{{ $wedding->commentsForCurrentUser->count() }}
+        @endif
+    @endcan
 </td>
 <td>{{ $wedding->spouse2_name }}@if($wedding->spouse2_birth_name) ({{$wedding->spouse2_birth_name}}) @endif<br />
     <small>

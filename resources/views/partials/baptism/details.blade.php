@@ -5,6 +5,11 @@
         Fon {{ $baptism->candidate_phone }}<br />
         E-Mail <a href="mailto:{{ $baptism->candidate_email }}">{{ $baptism->candidate_email }}</a>
     </small>
+    @can('gd-kasualien-bearbeiten')
+        @if ($baptism->commentsForCurrentUser->count() > 0)
+            <span class="fa fa-comments"></span>&nbsp;{{ $baptism->commentsForCurrentUser->count() }}
+        @endif
+    @endcan
 
 </td>
 <td>

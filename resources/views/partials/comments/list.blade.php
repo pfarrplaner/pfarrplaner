@@ -4,7 +4,7 @@
 
         </thead>
         <tbody>
-        @foreach($service->commentsForCurrentUser as $comment)
+        @foreach($owner->commentsForCurrentUser as $comment)
             @include('partials.comments.single')
         @endforeach
         @include('partials.comments.form', ['comment' => NULL])

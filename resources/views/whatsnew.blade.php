@@ -8,6 +8,10 @@
         <ul>
             <li>
                 <b>13.05.2019:</b>
+                Kommentare können nun auch bei Kasualien angelegt werden.
+            </li>
+            <li>
+                <b>13.05.2019:</b>
                 Beerdigungen können nun von Pfarrern vom Startbildschirm aus angelegt werden. Dabei werden die Einträge für
                 Tag (falls noch nicht angelegt) und Gottesdienst automatisch angelegt.
             </li>
