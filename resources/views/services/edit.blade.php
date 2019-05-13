@@ -63,8 +63,10 @@
                     </div>
 
                     <hr />
+                    <input type="hidden" name="routeBack" value="" />
                     @can('update', $service)
-                    <button id="btnSave" style="display: none;" type="submit" class="btn btn-primary">Speichern</button>
+                    <button style="display: none;" type="submit" class="btn btn-primary btnSave" data-route="{{ route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Speichern und schließen</button>
+                    <button style="display: none;" type="submit" class="btn btn-primary btnSave" data-route="{{ route('services.edit', ['service' => $service->id]) }}">Speichern</button>
                     <a id="btnBack" class="btn btn-primary" href="{{ route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Schließen</a>
                     @else
                         <a class="btn btn-primary" href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}">Zurück</a>
@@ -108,13 +110,13 @@
 
             function dirtHandler() {
                 if (isDirty()) {
-                    $('#btnSave').show();
+                    $('.btnSave').show();
                     $('#btnBack').hide();
                     $('.btn-rite').addClass('disabled');
                     $('#ritesAlert').show();
                 } else {
                     $('#btnBack').show();
-                    $('#btnSave').hide();
+                    $('.btnSave').hide();
                     $('.btn-rite').removeClass('disabled');
                     $('#ritesAlert').hide();
                 }
@@ -171,8 +173,9 @@
                     }
                 });
 
-                $('#btnSave').click(function(event){
+                $('.btnSave').click(function(event){
                     event.preventDefault();
+                    $('input[name=routeBack]').val($(this).data('route'));
                     $('#frmEdit input, #frmEdit select, #frmEdit textarea').each(function() {
                         $(this).attr('disabled', false);
                     });
