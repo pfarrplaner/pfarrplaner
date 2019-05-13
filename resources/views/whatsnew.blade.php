@@ -8,6 +8,11 @@
         <ul>
             <li>
                 <b>13.05.2019:</b>
+                Beerdigungen können nun von Pfarrern vom Startbildschirm aus angelegt werden. Dabei werden die Einträge für
+                Tag (falls noch nicht angelegt) und Gottesdienst automatisch angelegt.
+            </li>
+            <li>
+                <b>13.05.2019:</b>
                 Das Schließen der Detailansicht eines Gottesdienstes löst nur noch dann einen Speichervorgang (und eine
                 E-Mailbenachrichtigung) aus, wenn tatsächlich etwas verändert wurde.
             </li>
