@@ -7,6 +7,7 @@
         <h1>Willkommen, @if($user->first_name != ''){{$user->first_name}}! @else {{ $user->name }}! @endif</h1>
         <a class="btn btn-primary btn-lg" href="{{ route('calendar') }}"><span class="fa fa-calendar"></span> Zum Kalender</a>
         <a class="btn btn-secondary btn-lg" href="{{ route('baptisms.create') }}"><span class="fa fa-water"></span> Taufe anlegen...</a>
+        <a class="btn btn-secondary btn-lg" href="{{ route('funerals.wizard') }}"><span class="fa fa-cross"></span> Beerdigung anlegen...</a>
         <hr />
 
         <ul class="nav nav-tabs" role="tablist">

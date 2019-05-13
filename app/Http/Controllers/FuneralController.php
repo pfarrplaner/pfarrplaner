@@ -2,10 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
+use App\Day;
 use App\Funeral;
+use App\Location;
+use App\Mail\ServiceCreated;
 use App\Service;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use PDF;
 
 class FuneralController extends Controller
@@ -34,7 +41,116 @@ class FuneralController extends Controller
         return view('funerals.create', compact('service'));
     }
 
-    /**
+
+    public function wizardStep1(Request $request) {
+        $cities = Auth::user()->cities;
+        return view('funerals.wizard.step1', compact('cities'));
+    }
+
+    public function wizardStep2(Request $request) {
+        $request->validate([
+            'date' => 'required|date|date_format:d.m.Y',
+            'city' => 'required|integer',
+        ]);
+
+        $cityId = $request->get('city');
+        $date = Carbon::createFromFormat('d.m.Y', $request->get('date'))->setTime(0,0,0);
+
+        $city = City::find($cityId);
+
+        // check if day exists
+        $day = Day::where('date', $date)->first();
+        if ($day) {
+            // check if it visible for this city
+            if ($day->day_type == Day::DAY_TYPE_LIMITED) {
+                if (!$day->cities->contains($city)) $day->cities()->attach($city);
+            }
+        } else {
+            // create day
+            $day = new Day([
+               'date' => $date,
+                'name' => '',
+                'description' => '',
+                'day_type' => Day::DAY_TYPE_LIMITED,
+            ]);
+            $day->save();
+            $day->cities()->sync([$cityId]);
+        }
+
+        $locations = Location::where('city_id', $cityId)->get();
+
+        return view('funerals.wizard.step2', compact('day', 'city', 'locations'));
+
+    }
+
+    public function wizardStep3(Request $request)
+    {
+        $request->validate([
+            'day' => 'required|integer',
+            'city' => 'required|integer',
+        ]);
+
+        $city = City::find($request->get('city'));
+        $day = Day::find($request->get('day'));
+
+        if ($specialLocation = ($request->get('special_location') ?: '')) {
+            $locationId = 0;
+            $time = $request->get('time') ?: '';
+            $ccLocation = $request->get('cc_location') ?: '';
+        } else {
+            $locationId = $request->get('location_id') ?: 0;
+            if ($locationId) {
+                $location = Location::find($locationId);
+                $time = $request->get('time') ?: $location->default_time;
+                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
+            } else {
+                $time = $request->get('time') ?: '';
+                $ccLocation = $request->get('cc_location') ?: '';
+            }
+        }
+
+        // create the service
+        $service = new Service([
+            'day_id' => $day->id,
+            'location_id' => $locationId,
+            'time' => $time,
+            'special_location' => $specialLocation,
+            'city_id' => $city->id,
+            'pastor' => '',
+            'organist' => '',
+            'sacristan' => '',
+            'others' => '',
+            'description' => '',
+            'need_predicant' => 0,
+            'baptism' => 0,
+            'eucharist' => 0,
+            'offerings_counter1' => '',
+            'offerings_counter2' => '',
+            'offering_goal' => '',
+            'offering_description' => '',
+            'offering_type' => '',
+            'cc' => 0,
+            'cc_location' => '',
+            'cc_lesson' => '',
+            'cc_staff' => '',
+        ]);
+        $service->save();
+        $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+
+        $subscribers = User::whereHas('cities', function($query) use ($service) {
+            $query->where('city_id', $service->city_id);
+        })->where('notifications', 1)
+            ->get();
+
+        foreach ($subscribers as $subscriber) {
+            Mail::to($subscriber)->send(new ServiceCreated($service, $subscriber));
+        }
+
+        return redirect(route('funeral.add', ['service' => $service]));
+
+    }
+
+        /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
