@@ -17,6 +17,9 @@
                 <a class="nav-link" href="#baptisms" role="tab" data-toggle="tab">Taufen @if($baptisms->count())<span class="badge badge-primary">{{ $baptisms->count() }}</span> @endif </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="#baptismRequests" role="tab" data-toggle="tab">Taufanfragen @if($baptismRequests->count())<span class="badge badge-primary">{{ $baptismRequests->count() }}</span> @endif </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="#funerals" role="tab" data-toggle="tab">Beerdigungen @if($funerals->count())<span class="badge badge-primary">{{ $funerals->count() }}</span> @endif </a>
             </li>
             <li class="nav-item">
@@ -110,6 +113,39 @@
                                     @endif
                                 </tr>
                             @endforeach
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="baptismRequests">
+                <h2>Taufanfragen</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Täufling</th>
+                            <th>Erstkontakt</th>
+                            <th>Taufgespräch</th>
+                            <th>Anmeldung</th>
+                            <th>Urkunden</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($baptismRequests as $baptism)
+                            <tr class="">
+                                @include('partials.baptism.details', ['baptism' => $baptism])
+                                <td>
+                                    <a class="btn btn-sm btn-secondary" href="{{ route('calendar', ['month' => $service->day->date->format('m'), 'year' => $service->day->date->format('Y')]) }}" title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
+                                    <a class="btn btn-sm btn-primary" href="{{route('baptisms.edit', $baptism->id)}}" title="Bearbeiten"><span class="fa fa-edit"></span></a>
+                                    <form action="{{ route('baptisms.destroy', $baptism->id) }}" method="post">
+                                        @method('DELETE')
+                                        @csrf
+                                        <button class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
+                                    </form>
+                                </td>
+                            </tr>
                         @endforeach
                         </tbody>
                     </table>

@@ -6,14 +6,46 @@
     @component('components.container')
         <div class="card">
             <div class="card-header">
-                Taufe am {{ $service->day->date->format('d.m.Y') }} hinzufügen
+                Taufe hinzufügen
             </div>
             <div class="card-body">
                 @component('components.errors')
                 @endcomponent
                 <form method="post" action="{{ route('baptisms.store') }}" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" name="service" value="{{ $service->id }}" />
+                    @if(null !== $service)
+                        <input type="hidden" name="service" value="{{ $service->id }}" />
+                    @else
+                        <div class="form-group">
+                            <label for="service">Taufgottesdienst</label>
+                            <select name="service" class="form-control">
+                                <option value="">-- noch kein Datum festgelegt --</option>
+                                <optgroup label="Taufgottesdienste">
+                                    @foreach($baptismalServices as $baptismalService)
+                                        <option value="{{$baptismalService->id}}">
+                                            {{ $baptismalService->day->date->format('d.m.Y') }}, {{ $baptismalService->timeText() }} ({{ $baptismalService->locationText() }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <optgroup label="Andere Gottesdienste">
+                                    @foreach($otherServices as $baptismalService)
+                                        <option value="{{$baptismalService->id}}">
+                                            {{ $baptismalService->day->date->format('d.m.Y') }}, {{ $baptismalService->timeText() }} ({{ $baptismalService->locationText() }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                            </select>
+                        </div>
+                    @endif
+                    <div id="citySelect" class="form-group" @if (null !== $service) style="display:none;" @endif>
+                        <label for="city_id">Kirchengemeinde</label>
+                        <select class="form-control" name="city_id">
+                            @foreach ($cities as $city)
+                                <option value="{{ $city->id }}">{{ $city->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label for="candidate_name">Name des Täuflings</label>
                         <input type="text" class="form-control" name="candidate_name" placeholder="Nachname, Vorname"/>
@@ -44,7 +76,7 @@
                     </div>
                     <div class="form-group">
                         <label for="first_contact_on">Datum des Erstkontakts</label>
-                        <input type="text" class="form-control datepicker" name="first_contact_on" placeholder="tt.mm.jjjj" />
+                        <input type="text" class="form-control datepicker" name="first_contact_on" placeholder="tt.mm.jjjj" value="{{ date('d.m.Y') }}"/>
                     </div>
                     <div class="form-group">
                         <label for="appointment">Taufgespräch</label>
@@ -87,5 +119,22 @@
                 </form>
             </div>
         </div>
+        <script>
+            $(document).ready(function(){
+                var originalCity = $('#citySelect select').first().val();
+
+                $('select[name=service]').change(function(){
+                    if ($(this).val() == '') {
+                        $('#citySelect select').first().val(originalCity);
+                        $('#citySelect').show();
+                        $('#citySelect select').first().focus();
+                    } else {
+                        $('#citySelect').hide();
+                        $('#citySelect select').val($(this).data('city'));
+                        $('input[name=candidate_name]').focus();
+                    }
+                });
+            });
+        </script>
     @endcomponent
 @endsection

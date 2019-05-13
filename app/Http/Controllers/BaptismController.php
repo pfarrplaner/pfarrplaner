@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Baptism;
+use App\City;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class BaptismController extends Controller
@@ -27,16 +29,36 @@ class BaptismController extends Controller
         //
     }
 
+    protected function getBaptismalServices($baptismFlag = 1) {
+        return Service::where('baptism', '=', $baptismFlag)
+            ->select('services.*')
+            ->join('days', 'services.day_id', '=', 'days.id')
+            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->whereHas('day', function ($query) {
+                $query->where('date', '>=', Carbon::now());
+            })
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time')
+            ->get();
+    }
+
     /**
      * Show the form for creating a new resource.
      *
      * @param int $serviceId Service Id
      * @return \Illuminate\Http\Response
      */
-    public function create($serviceId)
+    public function create($serviceId = null)
     {
-        $service = Service::find($serviceId);
-        return view('baptisms.create', compact('service'));
+        $service = null;
+        if ($serviceId) $service = Service::find($serviceId);
+
+        $baptismalServices = $this->getBaptismalServices();
+        $otherServices = $this->getBaptismalServices(0);
+
+        $cities = City::all();
+
+        return view('baptisms.create', compact('service', 'baptismalServices', 'otherServices', 'cities'));
     }
 
     /**
@@ -49,13 +71,11 @@ class BaptismController extends Controller
     {
         $request->validate([
             'candidate_name' => 'required',
-            'service' => 'required|integer',
+            'city_id' => 'required|integer',
         ]);
 
-        $serviceId = $request->get('service');
-
         $baptism = new Baptism([
-            'service_id' => $serviceId,
+            'city_id' => $request->get('city_id'),
             'candidate_name' => $request->get('candidate_name') ?: '',
             'candidate_address' => $request->get('candidate_address') ?: '',
             'candidate_zip' => $request->get('candidate_zip') ?: '',
@@ -69,6 +89,10 @@ class BaptismController extends Controller
             'docs_ready' => $request->get('docs_ready') ? 1 : 0,
             'docs_where' => $request->get('docs_where') ?: '',
         ]);
+        $serviceId = $request->get('service') ?: '';
+        if ($serviceId) {
+            $baptism->service_id = $serviceId;
+        }
         if ($request->get('first_contact_on')) $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
         if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y', $request->get('appointment'));
 
@@ -77,7 +101,11 @@ class BaptismController extends Controller
         }
 
         $baptism->save();
-        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        if ($serviceId) {
+            return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        } else {
+            return redirect(route('home'));
+        }
     }
 
     /**
@@ -99,7 +127,25 @@ class BaptismController extends Controller
      */
     public function edit(Baptism $baptism)
     {
-        return view('baptisms.edit', compact('baptism'));
+
+        $baptismalServicesQuery = Service::where('baptism', '=', 1)
+            ->select('services.*')
+            ->join('days', 'services.day_id', '=', 'days.id')
+            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->whereHas('day', function ($query) {
+                $query->where('date', '>=', Carbon::now());
+            })
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time');
+        if ($baptism->service_id) {
+            $baptismalServicesQuery->orWhere('services.id', (int)$baptism->service_id);
+        }
+        $baptismalServices = $baptismalServicesQuery->get();
+
+        $cities = City::all();
+
+        $otherServices = $this->getBaptismalServices(0);
+        return view('baptisms.edit', compact('baptism', 'baptismalServices', 'otherServices', 'cities'));
     }
 
     /**
@@ -113,10 +159,16 @@ class BaptismController extends Controller
     {
         $request->validate([
             'candidate_name' => 'required',
-            'service' => 'required|integer',
+            'city_id' => 'required|integer',
         ]);
 
         $serviceId = $request->get('service');
+        if ($serviceId) {
+            $baptism->service_id = $serviceId;
+        } else {
+            $baptism->service_id = null;
+        }
+        $baptism->city_id = $request->get('city_id');
         $baptism->candidate_name = $request->get('candidate_name') ?: '';
         $baptism->candidate_address= $request->get('candidate_address') ?: '';
         $baptism->candidate_zip = $request->get('candidate_zip') ?: '';
@@ -142,7 +194,11 @@ class BaptismController extends Controller
         }
 
         $baptism->save();
-        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        if ($serviceId) {
+            return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        } else {
+            return redirect(route('home'));
+        }
     }
 
     /**
@@ -155,6 +211,10 @@ class BaptismController extends Controller
     {
         $serviceId = $baptism->service_id;
         $baptism->delete();
-        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        if ($serviceId) {
+            return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        } else {
+            return redirect(route('home'));
+        }
     }
 }

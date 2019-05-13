@@ -24,7 +24,8 @@ class Baptism extends Model
         'signed',
         'appointment',
         'docs_ready',
-        'docs_where'
+        'docs_where',
+        'city_id'
         ];
 
     protected $dates = [

@@ -55,6 +55,10 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->get();
         $baptisms->load('day');
 
+        $baptismRequests = Baptism::whereNull('service_id')
+            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->get();
+
         $funerals = Service::with(['funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
@@ -83,7 +87,7 @@ class OfficeHomeScreen extends AbstractHomeScreen
         $weddings->load('day');
 
 
-        return view('homescreen.office', compact('user', 'services', 'funerals', 'baptisms', 'weddings'));
+        return view('homescreen.office', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
     }
 
 }

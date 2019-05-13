@@ -55,6 +55,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Service::class)->withTimestamps();
     }
 
+    public function comments() {
+        return $this->hasMany(Comment::class);
+    }
+
     public function canEditField($field)
     {
         return $this->isAdmin || in_array($field, $this->getEditableFields());

@@ -5,6 +5,7 @@ namespace App;
 use App\Mail\ServiceUpdated;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 
@@ -121,6 +122,26 @@ class Service extends Model
     public function sacristans() {
         return $this->belongsToMany(User::class)->wherePivot('category', 'M')->withTimestamps();
     }
+
+    public function comments() {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function publicComments() {
+        return $this->comments()->where('private', 0);
+    }
+
+    public function commentsForUser(User $user) {
+        return $this->comments()->where(function($query) use ($user) {
+            $query->where('private', 0);
+            $query->orWhere('user_id', $user->id);
+        });
+    }
+
+    public function commentsForCurrentUser() {
+        return $this->commentsForUser(Auth::user());
+    }
+
 
     public function otherParticipants() {
         return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();

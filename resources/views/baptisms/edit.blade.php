@@ -14,7 +14,36 @@
                 <form method="post" action="{{ route('baptisms.update', $baptism->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
-                    <input type="hidden" name="service" value="{{ $baptism->service_id }}" />
+                    <div class="form-group">
+                        <label for="service">Taufgottesdienst</label>
+                        <select name="service" class="form-control">
+                            <option value="">-- noch kein Datum festgelegt --</option>
+                                <optgroup label="Taufgottesdienste">
+                                    @foreach($baptismalServices as $baptismalService)
+                                    <option value="{{$baptismalService->id}}" @if($baptism->service_id == $baptismalService->id) selected @endif data-city="{{ $baptismalService->city_id }}">
+                                        {{ $baptismalService->day->date->format('d.m.Y') }}, {{ $baptismalService->timeText() }} ({{ $baptismalService->locationText() }}) P: {{ $baptismalService->participantsText('P') }} @if ($baptismalService->baptisms->count()) [bisherige Taufen: {{ $baptismalService->baptisms->count() }}] @endif
+                                    </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <optgroup label="Andere Gottesdienste">
+                                    @foreach($otherServices as $baptismalService)
+                                        <option value="{{$baptismalService->id}}" @if($baptism->service_id == $baptismalService->id) selected @endif data-city="{{ $baptismalService->city_id }}">
+                                            {{ $baptismalService->day->date->format('d.m.Y') }}, {{ $baptismalService->timeText() }} ({{ $baptismalService->locationText() }}) P: {{ $baptismalService->participantsText('P') }} @if ($baptismalService->baptisms->count()) [bisherige Taufen: {{ $baptismalService->baptisms->count() }}] @endif
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+                        </select>
+                    </div>
+                    <div id="citySelect" class="form-group" @if (null !== $baptism->service_id) style="display:none;" @endif>
+                        <label for="city_id">Kirchengemeinde</label>
+                        <select class="form-control" name="city_id">
+                            @foreach ($cities as $city)
+                                <option value="{{ $city->id }}" @if ($baptism->city_id == $city->id) selected @endif>{{ $city->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <input id="cityHidden" type="hidden" name="city_id" value="{{ $baptism->city_id }}" />
                     <div class="form-group">
                         <label for="candidate_name">Name des Täuflings</label>
                         <input type="text" class="form-control" name="candidate_name" placeholder="Nachname, Vorname" value="{{ $baptism->candidate_name }}"/>
@@ -100,6 +129,29 @@
                     $('#linkToAttachment').hide();
                     $('#btnRemoveAttachment').hide();
                 });
+
+                var originalCity = $('#citySelect select').first().val();
+
+                $('select[name=service]').change(function(){
+                    if ($(this).val() == '') {
+                        $('#citySelect select').first().val(originalCity);
+                        $('#cityHidden').val(orginalCity);
+                        $('#citySelect').show();
+                        $('#citySelect select').first().focus();
+                    } else {
+                        $('#citySelect').hide();
+                        $('#citySelect select').val($(this).find(':selected').data('city'));
+                        $('#cityHidden').val($(this).find(':selected').data('city'));
+                        $('input[name=candidate_name]').focus();
+
+                    }
+                });
+
+                $('#citySelect select').change(function(){
+                   $('#cityHidden').val($(this).val());
+                });
+
+
             });
         </script>
     @endcomponent

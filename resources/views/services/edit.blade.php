@@ -37,6 +37,9 @@
                             <a class="nav-link @if($tab == 'cc') active @endif" href="#cc" role="tab" data-toggle="tab">Kinderkirche</a>
                         </li>
                         @endcanany
+                        <li class="nav-item">
+                            <a class="nav-link @if($tab == 'comments') active @endif" href="#comments" role="tab" data-toggle="tab">Kommentare <span class="badge badge-primary" id="commentCount">{{ $service->commentsForCurrentUser->count() }}</span></a>
+                        </li>
                         @can('admin')
                         <li class="nav-item">
                             <a class="nav-link @if($tab == 'history') active @endif" href="#history" role="tab" data-toggle="tab">Bearbeitungen</a>
@@ -46,277 +49,18 @@
 
                     <div class="tab-content">
                         <br />
-                        <div role="tabpanel" class="tab-pane fade @if($tab == 'home' || $tab == '') in active show @endif " id="home">
-                            <div class="form-group">
-                                <label for="day_id">Datum</label>
-                                <select class="form-control" name="day_id" @cannot('gd-allgemein-bearbeiten') disabled @endcannot >
-                                    @foreach($days as $thisDay)
-                                        <option value="{{$thisDay->id}}"
-                                                @if ($service->day->id == $thisDay->id) selected @endif
-                                        >{{$thisDay->date->format('d.m.Y')}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="location_id">Kirche</label>
-                                <select class="form-control" name="location_id" @cannot('gd-allgemein-bearbeiten') disabled @endcannot >
-                                    @foreach($locations as $thisLocation)
-                                        <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
-                                                value="{{$thisLocation->id}}"
-                                                @if (is_object($service->location))
-                                                @if ($service->location->id == $thisLocation->id) selected @endif
-                                            @endif
-                                        >
-                                            {{$thisLocation->name}}
-                                        </option>
-                                    @endforeach
-                                    <option value=""
-                                            @if (!is_object($service->location)) selected @endif
-                                    >Freie Ortsangabe</option>
-                                </select>
-                            </div>
-                            <div id="special_location" class="form-group">
-                                <label for="special_location">Freie Ortsangabe</label>
-                                <input id="special_location_input" class="form-control" type="text" name="special_location" value="{{ $service->special_location }}"/>
-                                <input type="hidden" name="city_id" value="{{ $service->city_id }}"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="time">Uhrzeit (leer lassen für Standarduhrzeit)</label>
-                                <input class="form-control" type="text" name="time" placeholder="HH:MM"
-                                       value="{{ strftime('%H:%M', strtotime($service->time)) }}" @cannot('gd-allgemein-bearbeiten') disabled @endcannot />
-                            </div>
-                            <div class="form-group">
-                                <label for="participants[P][]"><span class="fa fa-user"></span>&nbsp;Pfarrer*in</label>
-                                <select class="form-control peopleSelect" name="participants[P][]" multiple @cannot('gd-pfarrer-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)" >
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}" @if($service->pastors->contains($user)) selected @endif>{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="need_predicant" value="1"
-                                       id="needPredicant" @if ($service->need_predicant) checked @endif @cannot('gd-pfarrer-bearbeiten') disabled @endcannot >
-                                <label class="form-check-label" for="needPredicant">
-                                    Für diesen Gottesdienst wird ein Prädikant benötigt.
-                                </label>
-                                <br /><br />
-                            </div>
-                            <div class="form-group">
-                                <label for="participants[O][]"><span class="fa fa-user"></span>&nbsp;Organist*in</label>
-                                <select class="form-control peopleSelect" name="participants[O][]" multiple @cannot('gd-organist-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)" >
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}" @if($service->organists->contains($user)) selected @endif>{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="participants[M][]"><span class="fa fa-user"></span>&nbsp;Mesner*in</label>
-                                <select class="form-control peopleSelect" name="participants[M][]" multiple @cannot('gd-mesner-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)" >
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}" @if($service->sacristans->contains($user)) selected @endif>{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="participants[A][]"><span class="fa fa-users"></span>&nbsp;Weitere Beteiligte</label>
-                                <select class="form-control peopleSelect" name="participants[A][]" multiple @cannot('gd-allgemein-bearbeiten') disabled @endcannot placeholder="Eine oder mehrere Personen (keine Anmerkungen!)">
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}" @if($service->otherParticipants->contains($user)) selected @endif>{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div role="tabpanel" id="special" class="tab-pane fade @if($tab == 'special') in active show @endif ">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="baptism" value="1"
-                                       id="baptism" @if ($service->baptism) checked @endif @cannot('gd-taufe-bearbeiten') disabled @endcannot >
-                                <label class="form-check-label" for="baptism">
-                                    Taufe(n)
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="eucharist" value="1"
-                                       id="eucharist" @if ($service->eucharist) checked @endif @cannot('gd-abendmahl-bearbeiten') disabled @endcannot >
-                                <label class="form-check-label" for="eucharist">
-                                    Abendmahl
-                                </label>
-                            </div>
-                            <br />
-                            <div class="form-group">
-                                <label for="description">Anmerkungen</label>
-                                <input type="text" class="form-control" name="description" value="{{ $service->description }}" @canany(['gd-allgemein-bearbeiten','gd-anmerkungen-bearbeiten']) @else disabled @endcanany/>
-                            </div>
-                        </div>
-                        <div role="tabpanel" id="offerings" class="tab-pane fade @if($tab == 'offerings') in active show @endif ">
-                            <div class="form-group">
-                                <label for="offerings_counter1">Opferzähler*in 1</label>
-                                <input class="form-control" type="text" name="offerings_counter1" value="{{ $service->offerings_counter1 }}" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
-                            </div>
-                            <div class="form-group">
-                                <label for="offerings_counter2">Opferzähler*in 2</label>
-                                <input class="form-control" type="text" name="offerings_counter2" value="{{ $service->offerings_counter2 }}" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
-                            </div>
-                            <div class="form-group">
-                                <label for="offering_goal">Opferzweck</label>
-                                <input class="form-control" type="text" name="offering_goal" value="{{ $service->offering_goal }}" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
-                            </div>
-                            <div class="form-group">
-                                <label style="display:block;">Opfertyp</label>
-                                <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="" autocomplete="off" @if($service->offering_type == '')checked @endif @cannot('gd-opfer-bearbeiten') disabled @endcannot />
-                                    <label class="form-check-label">
-                                        Eigener Beschluss
-                                    </label>
-                                </div>
-                                <div class="form-check-inline">
-                                    <input type="radio" name="offering_type" value="eO" autocomplete="off" @if($service->offering_type == 'eO')checked @endif @cannot('gd-opfer-bearbeiten') disabled @endcannot  />
-                                    <label class="form-check-label">
-                                        Empfohlenes Opfer
-                                    </label>
-                                </div>
-                                <div class="form-check-inline disabled">
-                                    <input type="radio" name="offering_type" value="PO" autocomplete="off" @if($service->offering_type == 'PO')checked @endif @cannot('gd-opfer-bearbeiten') disabled @endcannot />
-                                    <label class="form-check-label">
-                                        Pflichtopfer
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="offering_description">Anmerkungen zum Opfer</label>
-                                <input class="form-control" type="text" name="offering_description" value="{{ $service->offering_description }}" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
-                            </div>
-                        </div>
+                        @include('partials.service.tabs.home')
+                        @include('partials.service.tabs.special')
+                        @include('partials.service.tabs.offerings')
                         @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten', 'gd-kasualien-nur-statistik'])
-                            <div role="tabpanel" class="tab-pane fade @if($tab == 'rites') in active show @endif " id="rites">
-                                <div id="ritesAlert" style="display: none;" class="alert alert-danger">Kasualien können nicht bearbeitet werden, solange ungespeicherte Änderungen existieren. Bitte speichere zunächst den Gottesdienst.</div>
-                                @if ($service->weddings->count() >0 )
-                                    <h3>{{ $service->weddings->count() }} @if($service->weddings->count() != 1)Trauungen @else Trauung @endif</h3>
-                                    @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten'])
-                                        <table class="table table-fluid">
-                                            <tr>
-                                                <th>Ehepartner 1</th>
-                                                <th>Ehepartner 2</th>
-                                                <th>Traugespräch</th>
-                                                <th>Anmeldung</th>
-                                                <th>Urkunden</th>
-                                                <th></th>
-                                            </tr>
-                                            @foreach($service->weddings as $wedding)
-                                                <tr>
-                                                    @include('partials.wedding.details', ['wedding' => $wedding])
-                                                    <td>
-                                                        @can('gd-kasualien-bearbeiten')
-                                                            <a class="btn btn-default btn-secondary btn-rite" href="{{ route('weddings.edit', $wedding->id) }}" title="Trauung bearbeiten"><span class="fa fa-edit"></span></a>
-                                                            <a class="btn btn-default btn-danger btn-rite" href="{{ route('wedding.destroy', $wedding->id) }}" title="Trauung löschen"><span class="fa fa-trash"></span></a>
-                                                        @endcan
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </table>
-                                    @endcanany
-                                @endif
-                                @if ($service->baptisms->count() >0 )
-                                    <h3>{{ $service->baptisms->count() }} @if($service->baptisms->count() != 1)Taufen @else Taufe @endif</h3>
-                                    @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten'])
-                                        <table class="table table-fluid">
-                                            <tr>
-                                                <th>Täufling</th>
-                                                <th>Erstkontakt</th>
-                                                <th>Taufgespräch</th>
-                                                <th>Anmeldung</th>
-                                                <th>Urkunden</th>
-                                                <th></th>
-                                            </tr>
-                                            @foreach($service->baptisms as $baptism)
-                                                <tr>
-                                                    @include('partials.baptism.details', ['baptism' => $baptism])
-                                                    <td>
-                                                        @can('gd-kasualien-bearbeiten')
-                                                            <a class="btn btn-default btn-secondary btn-rite" href="{{ route('baptisms.edit', $baptism->id) }}" title="Taufe bearbeiten"><span class="fa fa-edit"></span></a>
-                                                            <a class="btn btn-default btn-danger btn-rite" href="{{ route('baptism.destroy', $baptism->id) }}" title="Taufe löschen"><span class="fa fa-trash"></span></a>
-                                                        @endcan
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </table>
-                                    @endcanany
-                                @endif
-                                @if ($service->funerals->count() > 0)
-                                <h3>{{ $service->funerals->count() }} @if($service->funerals->count() != 1)Bestattungen @else Bestattung @endif</h3>
-                                    @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten'])
-                                        <table class="table table-fluid">
-                                            <tr>
-                                                <th>Person</th>
-                                                <th>Bestattungsart</th>
-                                                <th>Abkündigung</th>
-                                                <th></th>
-                                            </tr>
-                                            @foreach ($service->funerals as $funeral)
-                                                <tr>
-                                                    @include('partials.funeral.details', ['funeral' => $funeral])
-                                                    <td>
-                                                        @can('gd-kasualien-bearbeiten')
-                                                            <a class="btn btn-default btn-secondary btn-rite" href="{{ route('funerals.edit', $funeral->id) }}" title="Bestattung bearbeiten"><span class="fa fa-edit"></span></a>
-                                                            <a class="btn btn-default btn-danger btn-rite" href="{{ route('funeral.destroy', $funeral->id) }}" title="Bestattung löschen"><span class="fa fa-trash"></span></a>
-                                                        @endcan
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        </table>
-                                    @endcanany
-                                @endif
-                                @can('gd-kasualien-bearbeiten')
-                                    <div id="rites-buttons">
-                                        <a class="btn btn-default btn-secondary btn-rite" href="{{ route('wedding.add', $service->id) }}">Trauung hinzufügen</a>
-                                        <a class="btn btn-default btn-secondary btn-rite" href="{{ route('baptism.add', $service->id) }}">Taufe hinzufügen</a>
-                                        <a class="btn btn-default btn-secondary btn-rite" href="{{ route('funeral.add', $service->id) }}">Bestattung hinzufügen</a>
-                                    </div>
-                                @endcan
-                            </div>
+                            @include('partials.service.tabs.rites')
                         @endcanany
-                        <div role="tabpanel" class="tab-pane fade @if($tab == 'cc') in active show @endif " id="cc">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="cc" value="1"
-                                       id="cc-check" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot @if($service->cc) checked @endif/>
-                                <label class="form-check-label" for="cc">
-                                    Parallel findet Kinderkirche statt
-                                </label>
-                            </div>
-                            <br />
-                            <div class="form-group">
-                                <label for="cc_location">Ort der Kinderkirche:</label>
-                                <input class="form-control" type="text" name="cc_location" placeholder="Leer lassen für " value="{{ $service->cc_location }}" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot />
-                            </div>
-                            <div class="form-group">
-                                <label for="cc_lesson">Lektion:</label>
-                                <input class="form-control" type="text" name="cc_lesson" value="{{ $service->cc_lesson }}" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot />
-                            </div>
-                            <div class="form-group">
-                                <label for="cc_staff">Mitarbeiter:</label>
-                                <input class="form-control" type="text" name="cc_staff" placeholder="Name, Name, ..." value="{{ $service->cc_staff }}" @cannot('gd-kinderkirche-bearbeiten') disabled @endcannot />
-                            </div>
-                        </div>
+                        @include('partials.service.tabs.cc')
                         @can('admin')
-                            <div role="tabpanel" id="history" class="tab-pane fade @if($tab == 'history') in active show @endif ">
-                                @if (count($service->revisionHistory))
-                                        <b>Bisherige Änderungen an diesem Gottesdiensteintrag:</b><br />
-                                        @foreach($service->revisionHistory as $history)
-                                            @if($history->key == 'created_at' && !$history->old_value)
-                                                {{ $history->created_at->format('d.m.Y, H:i:s') }}
-                                                : {{ $history->userResponsible()->name }} hat diesen Eintrag
-                                                angelegt: {{ $history->newValue() }}<br/>
-                                            @else
-                                                {{ $history->created_at->format('d.m.Y, H:i:s') }}
-                                                : {{ $history->userResponsible()->name }} hat "{{ $history->fieldName() }}" von
-                                                "{{ $history->oldValue() }}" zu "{{ $history->newValue() }}" geändert.
-                                                <br/>
-                                            @endif
-                                        @endforeach
-                                @endif
-                            </div>
+                            @include('partials.service.tabs.history')
                         @endcan
+                        @include('partials.service.tabs.comments')
                     </div>
-
 
                     <hr />
                     @can('update', $service)
@@ -351,9 +95,15 @@
             }
 
             var originalFormData;
+            var dirty = false;
 
             function isDirty() {
-                return (originalFormData !== $('form#frmEdit').serialize());
+                return (originalFormData !== $('form#frmEdit').serialize()) || dirty;
+            }
+
+            function setDirty(status = true) {
+                dirty = status;
+                dirtHandler();
             }
 
             function dirtHandler() {

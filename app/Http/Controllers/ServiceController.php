@@ -165,6 +165,9 @@ class ServiceController extends Controller
     public function edit($id, $tab = 'home')
     {
         $service = Service::find($id);
+        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
+
+
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::where('city_id', '=', $service->city_id)->get();
         $users = User::all()->sortBy('name');

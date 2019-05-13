@@ -15,7 +15,7 @@ class CreateBaptismsTable extends Migration
     {
         Schema::create('baptisms', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('service_id');
+            $table->integer('service_id')->nullable();
             $table->text('candidate_name');
             $table->text('candidate_address');
             $table->text('candidate_zip');

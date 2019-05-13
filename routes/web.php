@@ -15,7 +15,8 @@ Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
 Route::resource('users', 'UserController')->middleware('auth');
-Route::resource('roles', 'RoleController');
+Route::resource('roles', 'RoleController')->middleware('auth');
+Route::resource('comments', 'CommentController')->middleware('auth');
 
 Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);

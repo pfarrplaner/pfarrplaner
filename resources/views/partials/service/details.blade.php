@@ -23,11 +23,17 @@
 <div class="service-team service-sacristan"><span
             class="designation">M: </span>{{ $service->participantsText('M') }}</div>
 <div class="service-description">{{ $service->descriptionText() }}</div>
+<div class="service-description">
 @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen', 'gd-kasualien-barbeiten'])
 @if($service->baptisms->count())
-    <div class="service-description">
         @if($service->baptisms->count()) <span class="fa fa-water" title="@canany(['gd-kasualien-lesen', 'gd-kasualien-barbeiten']){{ $service->baptismsText(true) }}" @endcanany></span> {{ $service->baptisms->count() }} @endif
-    </div>
 @endif
 @endcanany
+@can('edit', $service)
+    @if ($service->commentsForCurrentUser->count() > 0)
+        <span class="fa fa-comments"></span>&nbsp;{{ $service->commentsForCurrentUser->count() }}
+    @endif
+@endcan
+</div>
+
 @if($service->cc) <img src="{{ env('APP_URL') }}img/cc.png" title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif

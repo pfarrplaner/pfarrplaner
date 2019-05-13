@@ -7,6 +7,16 @@
         <h1>Neue Funktionen</h1>
         <ul>
             <li>
+                <b>13.05.2019:</b>
+                Das Schließen der Detailansicht eines Gottesdienstes löst nur noch dann einen Speichervorgang (und eine
+                E-Mailbenachrichtigung) aus, wenn tatsächlich etwas verändert wurde.
+            </li>
+            <li>
+                <b>13.05.2019:</b>
+                Taufen können nun zunächst als Taufantrag ohne Datum angelegt werden (über den Button, der bei Pfarrern und
+                beim Kirchenregisteramt auf der Startseite erscheint).
+            </li>
+            <li>
                 <b>24.04.2019:</b>
                 Für jeden Benutzer gibt es jetzt einen Startbildschirm mit einer Übersicht der für ihn relevanten Daten.
                 Für unterschiedliche Benutzertypen gibt es dabei verschiedene Varianten dieses Startbildschirms.

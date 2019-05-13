@@ -56,6 +56,11 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->get();
         $baptisms->load('day');
 
+        $baptismRequests = Baptism::whereNull('service_id')
+            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->get();
+
+
         $funerals = Service::with(['funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
@@ -87,7 +92,7 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->get();
         $weddings->load('day');
 
-        return view('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'weddings'));
+        return view('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
     }
 
 }
