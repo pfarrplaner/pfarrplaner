@@ -46,6 +46,10 @@ class ServiceUpdated extends Mailable
     public function build()
     {
 
+        $this->service->load(['location', 'day']);
+
+        $ics = view('ical/ical', ['services' => [$this->service], 'token' => null, 'action' => null, 'key' => null])->render();
+        $icsTitle = 'GD '.$this->service->day->date->format('Ymd').' '.$this->service->timeText(false).' '.$this->service->locationText().'.ics';
 
         return $this->subject('Änderungen am Gottesdienst vom '.$this->original->day->date->format('d.m.Y').', '.$this->original->timeText().' ('.$this->original->locationText().')')
             ->view('mail.notifications.service-update')->with([
@@ -53,6 +57,8 @@ class ServiceUpdated extends Mailable
             'original' => $this->original,
             'changes' => $this->changes,
             'user' => $this->user,
-        ]);
+        ])->attachData($ics, $icsTitle, [
+                'mime' => 'text/calendar',
+            ]);
     }
 }
