@@ -174,8 +174,8 @@ class Service extends Model
         return join('; ', $desc);
     }
 
-    public function timeText() {
-        return strftime('%H:%M', strtotime($this->time)).' Uhr';
+    public function timeText($uhr = true)  {
+        return strftime('%H:%M', strtotime($this->time)).($uhr ? ' Uhr' : '');
     }
 
     public function offeringText() {
