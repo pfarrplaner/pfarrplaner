@@ -5,7 +5,7 @@ METHOD:PUBLISH
 @foreach($services as $service)BEGIN:VEVENT
 UID:{{ $service->id }}{{ '@' }}{{ parse_url(env('APP_URL'), PHP_URL_HOST) }}
 LOCATION:{{ $service->locationText() }}
-SUMMARY: {{ wordwrap('GD P: '.$service->pastor.' O: '.$service->organist.' M: '.$service->sacristan.($service->description ? ' ('.$service->description.')' : ''), 64, "\r\n  ") }}
+SUMMARY: {{ wordwrap('GD P: '.$service->participantsText('P').' O: '.$service->participantsText('O').' M: '.$service->participantsText('M').($service->description ? ' ('.$service->description.')' : ''), 64, "\r\n  ") }}
 @if($service->description)
 DESCRIPTION: {{ wordwrap ($service->description, 62, "\r\n  ") }}
 @endif
