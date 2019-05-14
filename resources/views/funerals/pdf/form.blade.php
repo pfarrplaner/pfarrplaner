@@ -120,7 +120,7 @@
                 {{ $funeral->text }}
             </div>
             <div class="input">
-                {{ $funeral->announcement->format('d.m.Y') }}
+                @if (!is_null($funeral->announcement)){{ $funeral->announcement->format('d.m.Y') }}@endif
             </div>
             <div class="input-label">Bestattungstext</div>
             <div class="input-label">Abkündigung am</div>
