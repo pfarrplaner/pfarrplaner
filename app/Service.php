@@ -182,12 +182,14 @@ class Service extends Model
         return $this->offering_goal.($this->offering_type ? ' ('.$this->offering_type.')' : '');
     }
 
-    public function baptismsText($includeCount = false) {
+    public function baptismsText($includeCount = false, $includeText = false) {
         $baptisms = [];
         foreach ($this->baptisms as $baptism) {
             $baptisms[] = $baptism->candidate_name;
         }
-        return ($includeCount ? $this->baptisms()->count().' '.($this->baptisms()->count() == 1 ? 'Taufe ' : 'Taufen ') : '')
+        return
+            ($includeText ? ($this->baptisms()->count() == 1 ? 'Taufe ' : 'Taufen ').'von ' : '')
+            .($includeCount ? $this->baptisms()->count().' '.($this->baptisms()->count() == 1 ? 'Taufe ' : 'Taufen ') : '')
             .join('; ', $baptisms);
     }
 
@@ -209,6 +211,15 @@ class Service extends Model
                 .($wedding->spouse2_birth_name ? ' ('.$wedding->spouse2_birth_name.')' : '');
         }
         return (join('; ', $weddings));
+    }
+
+    public function titleText() {
+        $elements = [];
+        if ($x = $this->weddingsText()) $elements[] = $x;
+        if ($x = $this->funeralsText()) $elements[] = $x;
+        if ($x = $this->baptismsText()) $elements[] = 'Taufe(n)';
+        if ((count($elements) == 1) && ($x != '')) $elements[0] = 'GD mit '.$elements[0];
+        return join(' / ', $elements) ?: 'GD';
     }
     
     

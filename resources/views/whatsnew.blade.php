@@ -7,6 +7,11 @@
         <h1>Neue Funktionen</h1>
         <ul>
             <li>
+                <b>14.05.2019:</b>
+                E-Mailbenachrichtigungen zu neuen/geänderten Gottesdienste enthalten nun eine .ics-Datei im Anhang, die als
+                Termin direkt in Outlook importiert werden kann.
+            </li>
+            <li>
                 <b>13.05.2019:</b>
                 Kommentare können nun auch bei Kasualien angelegt werden.
             </li>
