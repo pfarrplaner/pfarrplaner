@@ -100,7 +100,7 @@ class ServiceController extends Controller
 
         // participants:
         $participants = [];
-        foreach ($request->get('participants') as $category => $participantList) {
+        foreach (($request->get('participants') ?: []) as $category => $participantList) {
             foreach ($participantList as $participant) {
                 if ((!is_numeric($participant)) || (User::find($participant) === false)) {
                     $user = new User([
@@ -238,7 +238,7 @@ class ServiceController extends Controller
 
         // participants:
         $participants = [];
-        foreach ($request->get('participants') as $category => $participantList) {
+        foreach (($request->get('participants') ?: []) as $category => $participantList) {
             foreach ($participantList as $participant) {
                 if ((!is_numeric($participant)) || (User::find($participant) === false)) {
                     $user = new User([
