@@ -62,11 +62,11 @@
                                 <label class="form-check-label" for="subscribe[{{ $city->id }}]" >alle Gottesdienste</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="1" />
+                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="1" checked />
                                 <label class="form-check-label" for="subscribe[{{ $city->id }}]">eigene Gottesdienste</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="0" checked />
+                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="0" />
                                 <label class="form-check-label" for="subscribe[{{ $city->id }}]">keine Gottesdienste</label>
                             </div>
                         </div>

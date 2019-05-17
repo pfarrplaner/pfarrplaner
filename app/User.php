@@ -166,7 +166,7 @@ class User extends Authenticatable
             $subscription = new Subscription([
                 'user_id' => $this->id,
                 'city_id' => $city->id,
-                'subscription_type' => Subscription::SUBSCRIBE_NONE,
+                'subscription_type' => Subscription::SUBSCRIBE_OWN,
             ]);
             $subscription->save();
         }
