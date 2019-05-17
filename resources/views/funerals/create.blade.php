@@ -13,6 +13,7 @@
                 @endcomponent
                 <form method="post" action="{{ route('funerals.store') }}" enctype="multipart/form-data">
                     @csrf
+                    <input type="hidden" name="wizard" value="{{ $wizard }}" />
                     <input type="hidden" name="service" value="{{ $service->id }}" />
                     <div class="form-group">
                         <label for="buried_name">Name</label>

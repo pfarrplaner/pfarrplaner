@@ -8,11 +8,13 @@ use App\Funeral;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Service;
+use App\Subscription;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
 use PDF;
 
 class FuneralController extends Controller
@@ -38,7 +40,8 @@ class FuneralController extends Controller
      */
     public function create(Service $service)
     {
-        return view('funerals.create', compact('service'));
+        $wizard = Session::get('wizard', 0);
+        return view('funerals.create', compact('service', 'wizard'));
     }
 
 
@@ -136,17 +139,9 @@ class FuneralController extends Controller
         ]);
         $service->save();
         $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+        Session::flash('wizard', 1);
 
-        $subscribers = User::whereHas('cities', function($query) use ($service) {
-            $query->where('city_id', $service->city_id);
-        })->where('notifications', 1)
-            ->get();
-
-        foreach ($subscribers as $subscriber) {
-            Mail::to($subscriber)->send(new ServiceCreated($service, $subscriber));
-        }
-
-        return redirect(route('funeral.add', ['service' => $service]));
+        return redirect(route('funeral.add', compact('service')));
 
     }
 
@@ -181,6 +176,12 @@ class FuneralController extends Controller
         if ($request->get('announcement')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
         if ($request->get('wake')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
         $funeral->save();
+
+        // delayed notification after wizard completion:
+        if ($request->get('wizard') == 1) {
+            Subscription::send(Service::find($serviceId), ServiceCreated::class);
+        }
+
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
