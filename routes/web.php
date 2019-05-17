@@ -76,9 +76,7 @@ Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@b
 Route::get('/connectWithOutlook', ['uses' => 'HomeController@connectWithOutlook'])->name('connectWithOutlook');
 
 
-Route::get('/whatsnew', function(){
-    return view('whatsnew');
-})->name('whatsnew');
+Route::get('/whatsnew', ['as' => 'whatsnew', 'uses' => 'HomeController@whatsnew'])->middleware('auth');
 
 
 Route::get('/kinderkirche/{city}/pdf', ['as' => 'cc-public-pdf', 'uses' => 'PublicController@childrensChurch']);

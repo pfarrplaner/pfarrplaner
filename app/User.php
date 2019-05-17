@@ -31,6 +31,11 @@ class User extends Authenticatable
         'preference_cities',
         'canEditOfferings',
         'canEditCC',
+        'new_features'
+    ];
+
+    protected $dates = [
+        'new_features',
     ];
 
     /**

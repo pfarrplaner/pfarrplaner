@@ -63,8 +63,6 @@
     </nav>
 
     <main class="py-1">
-        @component('components.flashmessage')
-        @endcomponent
         @yield('content')
     </main>
     <script>

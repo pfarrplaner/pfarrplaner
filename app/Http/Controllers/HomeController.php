@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Misc\VersionInfo;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -82,5 +84,10 @@ class HomeController extends Controller
         $name = explode(' ', Auth::user()->name);
         $name = end($name);
         return view('connectwithoutlook', ['user' => $user, 'token' => $token, 'cities' => $cities, 'name' => $name]);
+    }
+
+    public function whatsnew() {
+        $messages = VersionInfo::getMessages()->sortByDesc('date');
+        return view('whatsnew', compact('messages'));
     }
 }
