@@ -43,6 +43,8 @@ Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputContr
 
 Route::get('/vertretungen', ['as' => 'absences', 'uses' => 'PublicController@absences']);
 
+Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses' => 'DownloadController@download'])->middleware('auth');
+
 
 // RITES (Kasualien)
 Route::resource('baptisms', 'BaptismController')->middleware('auth');
