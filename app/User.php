@@ -3,6 +3,7 @@
 namespace App;
 
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -145,4 +146,92 @@ class User extends Authenticatable
             $setting->delete();
         }
     }
+
+    public function subscriptions() {
+        return $this->hasMany(Subscription::class);
+    }
+
+
+    /**
+     * Get a single subscription for a specific city
+     *
+     * If no subscription is present yet, it will be created with type SUBSCRIBE_NONE
+     *
+     * @param int|City $city
+     * @return bool
+     */
+    public function getSubscription($city) {
+        $subscription = $this->subscriptions()->where('city_id', is_int($city)? $city : $city->id)->first();
+        if (null === $subscription) {
+            $subscription = new Subscription([
+                'user_id' => $this->id,
+                'city_id' => $city->id,
+                'subscription_type' => Subscription::SUBSCRIBE_NONE,
+            ]);
+            $subscription->save();
+        }
+        return $subscription;
+    }
+
+    /**
+     * Set the user's subscription for a city
+     * @param City|int $city City
+     * @param int $type Subscription type
+     * @return Subscription
+     */
+    public function setSubscription($city, int $type) {
+        $city = is_int($city) ? City::find($city) : $city;
+        $subscription = $this->getSubscription($city);
+        if (null === $subscription) {
+            $subscription = new Subscription([
+                'user_id' => $this->id,
+                'city_id' => $city->id,
+            ]);
+        }
+        $subscription->subscription_type = $type;
+        $subscription->save();
+        return $subscription;
+    }
+
+    /**
+     * Get the users subscription for a city
+     * @param $city
+     * @return Subscription
+     */
+    public function getSubscriptionType($city) {
+        $subscription = $this->getSubscription($city)->subscription_type;
+        return $subscription;
+    }
+
+
+    /**
+     * Query for users subscribed to a specific service
+     *
+     * This requires one of two condition sets to be true:
+     * 1) User is subscribed to all services for this city
+     * 2) User is subscribed to own services for this city AND is a participant in this service
+     *
+     * @param Builder $query
+     * @param Service $service
+     * @return mixed
+     */
+    public function scopeSubscribedTo(Builder $query, Service $service) {
+        return $query->whereHas('subscriptions', function($query) use ($service) {
+            $query->where('city_id', $service->city_id);
+            $query->where('subscription_type', Subscription::SUBSCRIBE_ALL);
+        })->orWhere(function ($query) use ($service) {
+            $query->whereIn('id', $service->participants->pluck('id'));
+            $query->whereHas('subscriptions', function ($query) use ($service) {
+                $query->where('city_id', $service->city_id);
+                $query->where('subscription_type', Subscription::SUBSCRIBE_OWN);
+            });
+        });
+    }
+
+    public function setSubscriptionsFromArray($subscriptions) {
+        foreach ($subscriptions as $city => $type) {
+            $this->setSubscription($city, $type);
+        }
+    }
+
 }

@@ -60,7 +60,7 @@
                                                                     </div>
 
 
-                                                                    <h5 class="text-center" style="margin-top: 0; margin-bottom: 0; font-weight: 500; color: inherit; vertical-align: baseline; font-size: 20px; line-height: 24px;" align="center"><strong>Die Änderungen im Überblick</strong></h5>
+                                                                    <h5 class="text-center" style="margin-top: 0; margin-bottom: 0; font-weight: 500; color: inherit; vertical-align: baseline; font-size: 20px; line-height: 24px;" align="center"><strong>Der Gottesdiensteintrag im Überblick</strong></h5>
                                                                     <table class="table" border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%; max-width: 100%;" bgcolor="#ffffff">
                                                                         <thead>
                                                                         <tr>
@@ -221,7 +221,14 @@
 
 
 
-                                    <div class="text-center text-muted" style="color: #636c72;" align="center">Du erhältst diese Nachricht, weil du die entsprechende Benachrichtigung im Dienstplan Online abonniert hast.</div>
+                                    <div class="text-center text-muted" style="color: #636c72; font-size: 8pt; line-height: 9pt;" align="center">
+                                        @if($user->getSubscriptionType($service->city) == \App\Subscription::SUBSCRIBE_ALL)
+                                            Du erhältst diese Nachricht, weil du über alle Änderungen an Gottesdiensten in {{ $service->city->name }} benachrichtigt werden willst.
+                                        @elseif($user->getSubscriptionType($service->city) == \App\Subscription::SUBSCRIBE_OWN)
+                                            Du erhältst diese Nachricht, weil du über Änderungen an Gottesdiensten in {{ $service->city->name }}, an denen du beteiligt bist, benachrichtigt werden willst.
+                                        @endif
+                                        Diese Einstellung kannst du selbst <a href="{{ route('user.profile') }}">in deinem Benutzerprofil bei Dienstplan Online</a> ändern.
+                                    </div>
                                     <div class="hr " style="width: 100%; margin: 20px 0; border: 0;">
                                         <table border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%;">
                                             <tbody>
@@ -238,7 +245,7 @@
                                         <tr>
                                             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;" align="left">© 2019 Dienstplan Online</td>
                                             <td class="text-right" style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;" align="right">
-                                                <a class="text-muted" href="https://tailfingen.dienstplan.de/" style="color: #636c72;">Jetzt einloggen</a>
+                                                <a class="text-muted" href="{{ env('APP_URL') }}" style="color: #636c72;">Jetzt einloggen</a>
                                             </td>
                                         </tr>
                                         </tbody>

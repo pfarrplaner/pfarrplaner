@@ -8,6 +8,7 @@ use App\Location;
 use App\Mail\ServiceCreated;
 use App\Mail\ServiceUpdated;
 use App\Service;
+use App\Subscription;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -131,14 +132,7 @@ class ServiceController extends Controller
 
         // notify:
         // (needs to happen before save, so the model is still dirty
-        $subscribers = User::whereHas('cities', function($query) use ($service) {
-            $query->where('city_id', $service->city_id);
-        })->where('notifications', 1)
-            ->get();
-
-        foreach ($subscribers as $subscriber) {
-            Mail::to($subscriber)->send(new ServiceCreated($service, $subscriber));
-        }
+        Subscription::send($service, ServiceCreated::class);
 
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', 'Der Gottesdienst wurde hinzugefügt');
@@ -264,16 +258,7 @@ class ServiceController extends Controller
 
         // notify:
         // (needs to happen before save, so the model is still dirty
-        $subscribers = User::whereHas('cities', function($query) use ($service) {
-            $query->where('city_id', $service->city_id);
-        })->where('notifications', 1)
-            ->get();
-
-        foreach ($subscribers as $subscriber) {
-            Mail::to($subscriber)->send(new ServiceUpdated($service, $original, $subscriber));
-        }
-
-
+        Subscription::send($service, ServiceUpdated::class, compact('original'));
 
         $service->save();
 

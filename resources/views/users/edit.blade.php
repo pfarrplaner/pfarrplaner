@@ -56,7 +56,7 @@
                     <label class="control-label">Gehört zu folgenden Kirchengemeinden:</label>
                     @foreach ($cities as $city)
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="cities[]" value="{{ $city->id }}"
+                            <input class="form-check-input check-city" data-city="{{ $city->id }}" type="checkbox" name="cities[]" value="{{ $city->id }}"
                                    id="defaultCheck{{$city->id}}" @if ($user->cities->contains($city)) checked @endif>
                             <label class="form-check-label" for="defaultCheck{{$city->id}}">
                                 {{$city->name}}
@@ -64,13 +64,28 @@
                         </div>
                     @endforeach
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="notifications" value="1"
-                           id="notifications" @if ($user->notifications) checked @endif>
-                    <label class="form-check-label" for="notifications">
-                        Dieser Benutzer wird per E-Mail benachrichtigt, wenn Gottesdienste seiner Gemeinde(n) geändert werden.
-                    </label>
+                <div class="form-group">
+                    <label>Benutzer wird bei Änderungen an Gottesdiensten per E-Mail benachrichtigt für:</label>
                 </div>
+                @foreach ($cities as $city)
+                <div class="form-group row city-subscription-row" data-city="{{ $city->id }}">
+                    <label class="col-sm-2">{{ $city->name }}</label>
+                    <div class="col-sm-10">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="2" @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_ALL) checked @endif>
+                            <label class="form-check-label" for="subscribe[{{ $city->id }}]" >alle Gottesdienste</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="1" @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_OWN) checked @endif>
+                            <label class="form-check-label" for="subscribe[{{ $city->id }}]">eigene Gottesdienste</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="0" @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_NONE) checked @endif>
+                            <label class="form-check-label" for="subscribe[{{ $city->id }}]">keine Gottesdienste</label>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
                 <hr />
                 <div class="form-group">
                     <label for="roles[]">Benutzerrollen</label>
@@ -96,5 +111,23 @@
             </form>
         </div>
     </div>
+        <script>
+            function toggleSubscriptionRows() {
+                $('.city-subscription-row').each(function(){
+                    if ($('input[data-city='+$(this).data('city')+']').prop('checked')) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+
+            $(document).ready(function(){
+                toggleSubscriptionRows();
+                $('.check-city').change(function(){
+                    toggleSubscriptionRows();
+                });
+            });
+        </script>
     @endcomponent
 @endsection

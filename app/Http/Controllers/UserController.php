@@ -84,6 +84,9 @@ class UserController extends Controller
         }
         $user->syncRoles($request->get('roles') ?: []);
 
+        // set subscriptions
+        $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
+
 
         if ($request->get('homescreen')) $user->setSetting('homeScreen', $request->get('homescreen'));
 
@@ -114,6 +117,27 @@ class UserController extends Controller
         $roles = Role::all()->sortBy('name');
         $homescreen = $user->getSetting('homeScreen', 'route:calendar');
         return view('users.edit', compact('user', 'cities', 'homescreen', 'roles'));
+    }
+
+    public function profile(Request $request) {
+        $user = Auth::user();
+        $cities = $user->cities;
+        return view('users.profile', compact('user', 'cities'));
+    }
+
+    public function profileSave(Request $request) {
+        $user = Auth::user();
+        $user->email = $request->get('email');
+        $user->office = $request->get('office') ?: '';
+        $user->address = $request->get('address') ?: '';
+        $user->phone = $request->get('phone') ?: '';
+        $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
+        $user->save();
+
+        // set subscriptions
+        $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
+
+        return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
     /**
@@ -157,6 +181,9 @@ class UserController extends Controller
                 unset($roles[$key]);
         }
         $user->syncRoles($request->get('roles') ?: []);
+
+        // set subscriptions
+        $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
 
         if ($request->get('homescreen')) $user->setSetting('homeScreen', $request->get('homescreen'));
 
