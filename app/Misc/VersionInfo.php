@@ -11,6 +11,7 @@ namespace App\Misc;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class VersionInfo
 {
@@ -22,6 +23,12 @@ class VersionInfo
     public static function getMessages()
     {
         return collect([
+            [
+                'date' => Carbon::createFromFormat('d.m.Y H:i:s', '17.05.2019 18:00:00'),
+                'text' => 'E-Mailbenachrichtungen für neue/geänderte Gottesdienste können nun selbst im Menü unter  <a href="'.route('user.profile').'">'
+                .'<span class="fa fa-user"></span>&nbsp;'
+                .Auth::user()->name.' > Mein Profil</a> an- und abbestellt werden.',
+            ],
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '14.05.2019'),
                 'text' => 'E-Mailbenachrichtigungen zu neuen/geänderten Gottesdienste enthalten nun eine .ics-Datei im Anhang, die als
