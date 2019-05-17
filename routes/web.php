@@ -106,3 +106,7 @@ Route::get('/createStorageLink', function () {
 });
 
 
+Route::get('/helper/schedule/run' , function(){
+    Artisan::call('schedule:run');
+    return 'OK';
+});
