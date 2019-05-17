@@ -9,30 +9,8 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ServiceCreated extends Mailable
+class ServiceCreated extends AbstractServiceMailable
 {
-    use Queueable, SerializesModels;
-
-
-    /** @var Service $service */
-    protected $service;
-
-    /** @var User $user */
-    protected $user;
-
-
-
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct(Service $service, User $user)
-    {
-        $this->service = $service;
-        $this->user = $user;
-    }
-
     /**
      * Build the message.
      *

@@ -9,19 +9,9 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class ServiceUpdated extends Mailable
+class ServiceUpdated extends AbstractServiceMailable
 {
-    use Queueable, SerializesModels;
-
-    /** @var Service $service */
-    protected $service;
-
-    /** @var Service $original */
     protected $original;
-
-    /** @var User $user */
-    protected $user;
-
     protected $changes;
 
     /**
@@ -29,12 +19,10 @@ class ServiceUpdated extends Mailable
      *
      * @return void
      */
-    public function __construct(Service $service, Service $original, User $user)
+    public function __construct(User $user, Service $service, array $data)
     {
-        $this->service = $service;
-        $this->original = $original;
-        $this->user = $user;
-
+        parent::__construct($user, $service, $data);
+        $this->original = $this->data['original'];
         $this->changes = $service->getDirty();
     }
 
