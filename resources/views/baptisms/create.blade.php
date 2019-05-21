@@ -15,6 +15,7 @@
                     @csrf
                     @if(null !== $service)
                         <input type="hidden" name="service" value="{{ $service->id }}" />
+                        <input type="hidden" name="city_id" value="{{ $service->city_id }}" />
                     @else
                         <div class="form-group">
                             <label for="service">Taufgottesdienst</label>
@@ -120,19 +121,24 @@
             </div>
         </div>
         <script>
+            function setCitySelect() {
+                if ($('select[name=service]').val() == '') {
+                    $('#citySelect select').first().val(originalCity);
+                    $('#citySelect').show();
+                    $('#citySelect select').first().focus();
+                } else {
+                    $('#citySelect').hide();
+                    $('#citySelect select').val($(this).data('city'));
+                    $('input[name=candidate_name]').focus();
+                }
+            }
+
             $(document).ready(function(){
                 var originalCity = $('#citySelect select').first().val();
+                setCitySelect();
 
                 $('select[name=service]').change(function(){
-                    if ($(this).val() == '') {
-                        $('#citySelect select').first().val(originalCity);
-                        $('#citySelect').show();
-                        $('#citySelect select').first().focus();
-                    } else {
-                        $('#citySelect').hide();
-                        $('#citySelect select').val($(this).data('city'));
-                        $('input[name=candidate_name]').focus();
-                    }
+                    setCitySelect();
                 });
             });
         </script>
