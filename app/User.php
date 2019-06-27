@@ -57,11 +57,13 @@ class User extends Authenticatable
         return $this->belongsToMany(City::class);
     }
 
-    public function services() {
+    public function services()
+    {
         return $this->belongsToMany(Service::class)->withTimestamps();
     }
 
-    public function comments() {
+    public function comments()
+    {
         return $this->hasMany(Comment::class);
     }
 
@@ -92,12 +94,15 @@ class User extends Authenticatable
 
     public function lastName($withTitle = false)
     {
-        if ($this->last_name) return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').$this->last_name;
+        if ($this->last_name) {
+            return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').$this->last_name;
+        }
         $name = explode(' ', $this->name);
         return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').end($name);
     }
 
-    public function fullName($withTitle = false) {
+    public function fullName($withTitle = false)
+    {
         return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').$this->name;
     }
 
@@ -147,7 +152,8 @@ class User extends Authenticatable
         }
     }
 
-    public function subscriptions() {
+    public function subscriptions()
+    {
         return $this->hasMany(Subscription::class);
     }
 
@@ -160,7 +166,8 @@ class User extends Authenticatable
      * @param int|City $city
      * @return bool
      */
-    public function getSubscription($city) {
+    public function getSubscription($city)
+    {
         $subscription = $this->subscriptions()->where('city_id', is_int($city)? $city : $city->id)->first();
         if (null === $subscription) {
             $subscription = new Subscription([
@@ -179,7 +186,8 @@ class User extends Authenticatable
      * @param int $type Subscription type
      * @return Subscription
      */
-    public function setSubscription($city, int $type) {
+    public function setSubscription($city, int $type)
+    {
         $city = is_int($city) ? City::find($city) : $city;
         $subscription = $this->getSubscription($city);
         if (null === $subscription) {
@@ -198,7 +206,8 @@ class User extends Authenticatable
      * @param $city
      * @return Subscription
      */
-    public function getSubscriptionType($city) {
+    public function getSubscriptionType($city)
+    {
         $subscription = $this->getSubscription($city)->subscription_type;
         return $subscription;
     }
@@ -215,8 +224,9 @@ class User extends Authenticatable
      * @param Service $service
      * @return mixed
      */
-    public function scopeSubscribedTo(Builder $query, Service $service) {
-        return $query->whereHas('subscriptions', function($query) use ($service) {
+    public function scopeSubscribedTo(Builder $query, Service $service)
+    {
+        return $query->whereHas('subscriptions', function ($query) use ($service) {
             $query->where('city_id', $service->city_id);
             $query->where('subscription_type', Subscription::SUBSCRIBE_ALL);
         })->orWhere(function ($query) use ($service) {
@@ -228,10 +238,10 @@ class User extends Authenticatable
         });
     }
 
-    public function setSubscriptionsFromArray($subscriptions) {
+    public function setSubscriptionsFromArray($subscriptions)
+    {
         foreach ($subscriptions as $city => $type) {
             $this->setSubscription($city, $type);
         }
     }
-
 }

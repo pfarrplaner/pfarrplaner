@@ -105,8 +105,9 @@ Route::get('/createStorageLink', function () {
     Artisan::call('storage:link');
 });
 
-
+// helper routes
 Route::get('/helper/schedule/run' , function(){
+    ignore_user_abort(true);
     Artisan::call('schedule:run');
     return 'OK';
 });
