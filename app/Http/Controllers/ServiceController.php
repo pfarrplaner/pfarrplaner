@@ -10,6 +10,7 @@ use App\Mail\ServiceUpdated;
 use App\Service;
 use App\Subscription;
 use App\User;
+use App\Vacations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -299,5 +300,17 @@ class ServiceController extends Controller
         $users = User::all()->sortBy('name');
 
         return view('services.create', compact('day', 'city', 'days', 'locations', 'users'));
+    }
+
+    public function servicesByCityAndDay($cityId, $dayId) {
+        $day = Day::find($dayId);
+        $city = City::find($cityId);
+        $vacations = [$dayId => Vacations::getByDay($day)];
+        $services = Service::with('day', 'location')
+            ->where('city_id', $cityId)
+            ->where('day_id', '=', $dayId)
+            ->orderBy('time')
+            ->get();
+        return view('services.ajax.byCityAndDay', compact('services', 'day', 'vacations', 'city'));
     }
 }

@@ -33,6 +33,15 @@ Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])
 Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name('calendar.printsetup');
 Route::post('/calendar/{year?}/{month?}/print', ['uses' => 'CalendarController@print'])->name('calendar.print');
 
+
+// Calendar (JS version)
+Route::get('/calendarjs/{year?}/{month?}', ['uses' => 'CalendarController@monthJS'])->name('calendarjs');
+Route::get('/ajax/servicesByCityAndDay/{cityId}/{dayId}/', ['uses' => 'ServiceController@servicesByCityAndDay'])->name('servicesByCityAndDay');
+Route::get('/ajax/vacationsByDay/{dayId}/', ['uses' => 'VacationController@vacationsByDay'])->name('vacationsByDay');
+Route::get('/ajax/liturgicalInfo/{dayId}/', ['uses' => 'LiturgicalDaysController@info'])->name('liturgicalInfo');
+
+
+
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
 Route::get('/reports/setup/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);

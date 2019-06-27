@@ -21,13 +21,13 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Cache;
+
 class Liturgy
 {
 
     /** @var Liturgy|null Instance */
     protected static $instance = null;
-
-    protected static $data = [];
 
     public static function getInstance() {
         if (null === self::$instance) self::$instance = new self();
@@ -35,23 +35,28 @@ class Liturgy
     }
 
     public static function getDayInfo(Day $day, $fallback = false): array {
-        if (!count(self::$data)) {
+
+        if (!Cache::has('liturgicalDays')) {
             $tmpData = json_decode(
                 file_get_contents(
                     'https://www.kirchenjahr-evangelisch.de/service.php?o=lcf&f=gaa&r=json&dl=user'),
                 true);
             foreach ($tmpData['content']['days'] as $key => $val) {
-                self::$data[$val['date']] = $val;
+                $data[$val['date']] = $val;
             }
+            Cache::put('liturgicalDays', $data, 86400);
+        } else {
+            $data = Cache::get('liturgicalDays');
         }
-        if (isset(self::$data[$day->date->format('d.m.Y')])) {
-            return self::$data[$day->date->format('d.m.Y')];
+
+        if (isset($data[$day->date->format('d.m.Y')])) {
+            return $data[$day->date->format('d.m.Y')];
         } elseif ($fallback) {
             $date = $day->date;
-            while (!isset(self::$data[$date->format('d.m.Y')])) {
+            while (!isset($data[$date->format('d.m.Y')])) {
                 $date = $date->subDays(1);
             }
-            return isset(self::$data[$date->format('d.m.Y')]) ? self::$data[$date->format('d.m.Y')] : [];
+            return isset($data[$date->format('d.m.Y')]) ? $data[$date->format('d.m.Y')] : [];
         }
         return [];
     }

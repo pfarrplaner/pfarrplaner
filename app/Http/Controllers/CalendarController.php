@@ -140,6 +140,45 @@ class CalendarController extends Controller
         ]);
     }
 
+
+    public function monthJS($year = 0, $month = 0)
+    {
+        if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
+            return $r;
+        }
+
+        if (!Session::has('showLimitedDays')) {
+            Session::put('showLimitedDays', false);
+        }
+
+        $days = $this->getDaysInMonth($year, $month);
+        $nextDay = Day::where('date', '>=', Carbon::createFromTimestamp(time()))
+            ->orderBy('date', 'ASC')
+            ->limit(1)
+            ->get()->first();
+
+        $cities = City::all();
+
+        $allDays = Day::orderBy('date', 'ASC')->get();
+        for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
+            $years[] = $i;
+        }
+        for ($i = 1; $i <= 12; $i++) {
+            $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
+        }
+
+        return view('calendar.monthjs', [
+            'year' => $year,
+            'month' => $month,
+            'years' => $years,
+            'months' => $months,
+            'days' => $days,
+            'cities' => $cities,
+            'nextDay' => $nextDay,
+        ]);
+    }
+
+
     public function printsetup($year = 0, $month = 0)
     {
         if (false !== ($r = $this->redirectIfMissingParameters('calendar.printsetup', $year, $month))) {
