@@ -189,6 +189,39 @@ class ServiceController extends Controller
 
         $service = Service::find($id);
         $original = clone $service;
+        foreach (['P', 'O', 'M', 'A'] as $key) {
+            $originalParticipants[$key] = $original->participantsText($key);
+        }
+
+
+        // participants first
+        $participants = [];
+        foreach (($request->get('participants') ?: []) as $category => $participantList) {
+            foreach ($participantList as $participant) {
+                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
+                    $user = new User([
+                        'name' => $participant,
+                        'office' => '',
+                        'phone' => '',
+                        'address' => '',
+                        'preference_cities' => '',
+                        'first_name' => '',
+                        'last_name' => '',
+                        'title' => '',
+                    ]);
+                    $user->save();
+                    $participant = $user->id;
+                }
+                $participants[$category][$participant] = ['category' => $category];
+            }
+        }
+
+        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
+        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
+        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
+        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
+        $service->save();
+
 
         $day = Day::find($request->get('day_id'));
 
@@ -231,35 +264,9 @@ class ServiceController extends Controller
         $service->cc_lesson = $request->get('cc_lesson') ?: '';
         $service->cc_staff = $request->get('cc_staff') ?: '';
 
-        // participants:
-        $participants = [];
-        foreach (($request->get('participants') ?: []) as $category => $participantList) {
-            foreach ($participantList as $participant) {
-                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
-                    $user = new User([
-                        'name' => $participant,
-                        'office' => '',
-                        'phone' => '',
-                        'address' => '',
-                        'preference_cities' => '',
-                        'first_name' => '',
-                        'last_name' => '',
-                        'title' => '',
-                    ]);
-                    $user->save();
-                    $participant = $user->id;
-                }
-                $participants[$category][$participant] = ['category' => $category];
-            }
-        }
-        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
-        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
-        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
-        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
-
         // notify:
         // (needs to happen before save, so the model is still dirty
-        Subscription::send($service, ServiceUpdated::class, compact('original'));
+        Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
 
         $service->save();
 

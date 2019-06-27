@@ -24,6 +24,7 @@ class ServiceUpdated extends AbstractServiceMailable
         parent::__construct($user, $service, $data);
         $this->original = $this->data['original'];
         $this->changes = $service->getDirty();
+
     }
 
     /**
@@ -44,6 +45,7 @@ class ServiceUpdated extends AbstractServiceMailable
             'service' => $this->service,
             'original' => $this->original,
             'changes' => $this->changes,
+            'data' => $this->data,
             'user' => $this->user,
         ])->attachData($ics, $icsTitle, [
                 'mime' => 'text/calendar',

@@ -27,6 +27,7 @@ class ServiceCreated extends AbstractServiceMailable
             ->view('mail.notifications.service-created')->with([
                 'service' => $this->service,
                 'user' => $this->user,
+                'data' => $this->data,
             ])->attachData($ics, $icsTitle, [
                 'mime' => 'text/calendar',
             ]);

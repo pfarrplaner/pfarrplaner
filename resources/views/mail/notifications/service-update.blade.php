@@ -92,10 +92,10 @@
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->locationText() }}</td>
                                                                             </tr>
                                                                         @endif
-                                                                        @if($original->participantsText('P') != $service->participantsText('P'))
+                                                                        @if($data['originalParticipants']['P'] != $service->participantsText('P'))
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Pfarrer*in</td>
-                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->participantsText('P') }}</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $data['originalParticipants']['O'] }}</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->participantsText('P') }}</td>
                                                                             </tr>
                                                                         @endif
@@ -104,6 +104,27 @@
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Prädikant benötigt</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->need_predicant ? '✔' : '✘' }}</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->need_predicant ? '✔' : '✘' }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        @if($data['originalParticipants']['O'] != $service->participantsText('O'))
+                                                                            <tr>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Organist*in</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $data['originalParticipants']['O'] }}</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->participantsText('O') }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        @if($data['originalParticipants']['M'] != $service->participantsText('M'))
+                                                                            <tr>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Mesner*in</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $data['originalParticipants']['M'] }}</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->participantsText('M') }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        @if($data['originalParticipants']['A'] != $service->participantsText('A'))
+                                                                            <tr>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Weitere Beteiligte</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $data['originalParticipants']['A'] }}</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->participantsText('A') }}</td>
                                                                             </tr>
                                                                         @endif
                                                                         @if($original->eucharist != $service->eucharist)
