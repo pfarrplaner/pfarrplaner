@@ -238,6 +238,8 @@
                 axios.get($(this).data('route'), {
                 }).then((response) => {
                     $(this).replaceWith(response.data);
+                    // open limited days with services that belong to me
+                    $('.limited .service-entry.mine').parent().parent().removeClass('collapsed');
                 }).catch((error)=>{
                     console.log(error.response.data)
                 });
