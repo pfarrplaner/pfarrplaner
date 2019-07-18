@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '18.07.2019'),
+                'text' => 'Pfarrer können Trauungen direkt vom Startbildschirm aus anlegen.'
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y H:i:s', '17.05.2019 18:00:00'),
                 'text' => 'E-Mailbenachrichtungen für neue/geänderte Gottesdienste können nun selbst im Menü unter  <a href="'.route('user.profile').'">'
                 .'<span class="fa fa-user"></span>&nbsp;'

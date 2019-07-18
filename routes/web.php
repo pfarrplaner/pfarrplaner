@@ -68,6 +68,11 @@ Route::get('/funeral/wizard', ['as' => 'funerals.wizard', 'uses' => 'FuneralCont
 Route::post('/funeral/wizard/step2', ['as' => 'funerals.wizard.step2', 'uses' => 'FuneralController@wizardStep2']);
 Route::post('/funeral/wizard/step3', ['as' => 'funerals.wizard.step3', 'uses' => 'FuneralController@wizardStep3']);
 
+Route::get('/wedding/wizard', ['as' => 'weddings.wizard', 'uses' => 'WeddingController@wizardStep1']);
+Route::post('/wedding/wizard/step2', ['as' => 'weddings.wizard.step2', 'uses' => 'WeddingController@wizardStep2']);
+Route::post('/wedding/wizard/step3', ['as' => 'weddings.wizard.step3', 'uses' => 'WeddingController@wizardStep3']);
+
+
 
 
 Route::resource('weddings', 'WeddingController')->middleware('auth');
@@ -119,4 +124,10 @@ Route::get('/helper/schedule/run' , function(){
     ignore_user_abort(true);
     Artisan::call('schedule:run');
     return 'OK';
+});
+
+
+Route::get('/liturgyCache', function() {
+    //\App\Liturgy::getDayInfo(\App\Day::find(144));
+   dd(\Illuminate\Support\Facades\Cache::get('liturgicalDays'));
 });
