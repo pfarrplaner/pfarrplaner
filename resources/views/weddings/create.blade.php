@@ -6,7 +6,7 @@
     @component('components.container')
         <div class="card">
             <div class="card-header">
-                Taufe am {{ $service->day->date->format('d.m.Y') }} hinzufügen
+                Trauung am {{ $service->day->date->format('d.m.Y') }} hinzufügen
             </div>
             <div class="card-body">
                 @component('components.errors')
@@ -52,7 +52,7 @@
                     <hr />
                     <h3>Vorbereitung</h3>
                     <div class="form-group">
-                        <label for="appointment">Taufgespräch</label>
+                        <label for="appointment">Traugespräch</label>
                         <input type="text" class="form-control datepicker" name="appointment" placeholder="tt.mm.jjjj" />
                     </div>
                     <div class="form-group">
