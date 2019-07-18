@@ -138,7 +138,9 @@ class FuneralController extends Controller
             'cc_staff' => '',
         ]);
         $service->save();
-        $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+        if (Auth::user()->hasRole('Pfarrer*in')) {
+            $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+        }
         Session::flash('wizard', 1);
 
         return redirect(route('funeral.add', compact('service')));
@@ -180,6 +182,7 @@ class FuneralController extends Controller
         // delayed notification after wizard completion:
         if ($request->get('wizard') == 1) {
             Subscription::send(Service::find($serviceId), ServiceCreated::class);
+            Session::remove('wizard');
         }
 
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
