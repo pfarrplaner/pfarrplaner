@@ -55,7 +55,7 @@
                         </tbody>
                     </table>
                     <hr />
-                    <button type="submit" class="btn btn-primary">Bearbeiten</button>
+                    <button type="submit" class="btn btn-primary">Änderungen speichern</button>
                 </form>
             </div>
         </div>
