@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Opferplan ({{ $city->name }}, {{ $year}})')
+@section('title') Opferplan für {{ $city->name }}, {{ $year}} @endsection
 
 @section('content')
     <div class="py-5">
