@@ -23,7 +23,9 @@ namespace App\Inputs;
 
 use App\City;
 use App\Day;
+use App\Mail\ServiceUpdated;
 use App\Service;
+use App\Subscription;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,13 +71,25 @@ class OfferingsInput extends AbstractInput
         foreach ($services as $id => $data) {
             $service = Service::find($id);
             if (null !== $service) {
+
+                // get old data set for comparison
+                $original = clone $service;
+                foreach (['P', 'O', 'M', 'A'] as $key) {
+                    $originalParticipants[$key] = $original->participantsText($key);
+                }
+
                 $service->offering_goal = $data['offering_goal'] ?: '';
                 $service->offering_type = isset($data['offering_type']) ? $data['offering_type'] : '';
                 $service->offering_description = $data['offering_description'] ?: '';
                 $service->offerings_counter1 = $data['offerings_counter1'] ?: '';
                 $service->offerings_counter2 = $data['offerings_counter2'] ?: '';
-                $service->notifyOfChanges(Auth::user(), '%s hat soeben über den Opferplan folgende Änderungen an einem Gottesdienst vorgenommen');
+                $dirty = (count($service->getDirty()) > 0);
                 $service->save();
+
+                if ($dirty) {
+                    Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
+                }
+
             }
         }
         return redirect()->route('calendar')->with('success', 'Der Opferplan wurde gespeichert.');
