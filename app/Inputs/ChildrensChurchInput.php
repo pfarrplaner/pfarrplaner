@@ -23,7 +23,9 @@ namespace App\Inputs;
 
 use App\City;
 use App\Day;
+use App\Mail\ServiceUpdated;
 use App\Service;
+use App\Subscription;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -69,6 +71,14 @@ class ChildrensChurchInput extends AbstractInput
         foreach ($services as $id => $data) {
             $service = Service::find($id);
             if (null !== $service) {
+
+                // get old data set for comparison
+                $original = clone $service;
+                foreach (['P', 'O', 'M', 'A'] as $key) {
+                    $originalParticipants[$key] = $original->participantsText($key);
+                }
+
+
                 if (isset($data['cc']) ? $data['cc'] : 0) {
                     if (!is_object($service->location)) {
                         $ccLocation = isset($data['cc_location']) ? $data['cc_location'] : '';
@@ -83,8 +93,13 @@ class ChildrensChurchInput extends AbstractInput
                 $service->cc_location = $ccLocation;
                 $service->cc_lesson = $data['cc_lesson'] ?: '';
                 $service->cc_staff = $data['cc_staff'] ?: '';
-                $service->notifyOfChanges(Auth::user(), '%s hat soeben über den Plan für die Kinderkirche folgende Änderungen an einem Gottesdienst vorgenommen');
+                $dirty = (count($service->getDirty()) > 0);
                 $service->save();
+
+                if ($dirty) {
+                    Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
+                }
+
             }
         }
         return redirect()->route('calendar')->with('success', 'Der Plan für die Kinderkirche wurde gespeichert.');
