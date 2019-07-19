@@ -24,7 +24,10 @@ namespace App\Inputs;
 use App\City;
 use App\Day;
 use App\Location;
+use App\Mail\ServiceUpdated;
 use App\Service;
+use App\Subscription;
+use App\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,9 +63,10 @@ class OrganistsInput extends AbstractInput
             ->get();
 
 
+        $users = User::all();
 
         $input = $this;
-        return view($this->getInputViewName(), compact('input', 'city', 'services', 'year', 'locations'));
+        return view($this->getInputViewName(), compact('input', 'city', 'services', 'year', 'locations', 'users'));
 
     }
 
@@ -70,12 +74,47 @@ class OrganistsInput extends AbstractInput
         $services = $request->get('service') ?: [];
         foreach ($services as $id => $data) {
             $service = Service::find($id);
-            if (null !== $service) {
-                $service->organist = $data['organist'] ?: '';
-                $service->description = $data['description'] ?: '';
-                $service->notifyOfChanges(Auth::user(), '%s hat soeben über den Organistenplan folgende Änderungen an einem Gottesdienst vorgenommen');
-                $service->save();
+
+            // get old data set for comparison
+            $oldInfo = $service->participantsText('O').$service->description;
+            $original = clone $service;
+            foreach (['P', 'O', 'M', 'A'] as $key) {
+                $originalParticipants[$key] = $original->participantsText($key);
             }
+
+            // participants first
+            $participants = [];
+            foreach ((isset($data['participants']) ? $data['participants'] : []) as $category => $participantList) {
+                foreach ($participantList as $participant) {
+                    if ((!is_numeric($participant)) || (User::find($participant) === false)) {
+                        $user = new User([
+                            'name' => $participant,
+                            'office' => '',
+                            'phone' => '',
+                            'address' => '',
+                            'preference_cities' => '',
+                            'first_name' => '',
+                            'last_name' => '',
+                            'title' => '',
+                        ]);
+                        $user->save();
+                        $participant = $user->id;
+                    }
+                    $participants[$category][$participant] = ['category' => $category];
+                }
+            }
+
+            $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
+
+            if (null !== $service) {
+                $service->description = $data['description'] ?: '';
+                $service->save();
+
+                if ($oldInfo != $service->participantsText('O') . $service->description) {
+                    Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
+                }
+            }
+
         }
         return redirect()->route('calendar')->with('success', 'Der Opferplan wurde gespeichert.');
     }
