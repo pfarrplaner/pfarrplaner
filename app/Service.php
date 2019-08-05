@@ -168,8 +168,8 @@ class Service extends Model
 
     public function descriptionText() {
         $desc = [];
-        if ($this->baptism) $desc[] = 'Taufen';
-        if ($this->eucharist) $desc[] = 'Abendmahl';
+        if ($this->baptism) $desc[] = 'mit Taufen';
+        if ($this->eucharist) $desc[] = 'mit Abendmahl';
         if ($this->getAttribute('description') != '') $desc[] = $this->getAttribute('description');
         return join('; ', $desc);
     }
