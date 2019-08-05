@@ -20,7 +20,7 @@
                     <td>{{$location->city->name}}</td>
                     <td>{{\Carbon\Carbon::createFromTimeString($location->default_time)->format('h:i') }} Uhr</td>
                     <td>
-                        @if(Auth::user()->isAdmin || (Auth::user()->canEditChurch && Auth::user()->cities->contains($location->city)))
+                        @if(Auth::user()->isAdmin || (Auth::user()->can('kirche-bearbeiten') && Auth::user()->cities->contains($location->city)))
                             <a href="{{ route('locations.edit',$location->id)}}" class="btn btn-primary" title="Bearbeiten"><span class="fa fa-edit"></span></a>
                             <form action="{{ route('locations.destroy', $location->id)}}" method="post">
                                 @csrf
