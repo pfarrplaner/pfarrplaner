@@ -244,6 +244,9 @@
                                             </div>
                                         @endif
                                         @endcanany
+                                        <div class="float-right service-calendar-button">
+                                            <a class="btn btn-sm btn-secondary" href="{{ route('services.ical', $service) }}" title="In Outlook übernehmen"><span class="fa fa-calendar-alt"></span></a>
+                                        </div>
                                         <div class="service-team service-pastor"><span
                                                     class="designation">P: </span>
                                             @if ($service->need_predicant)

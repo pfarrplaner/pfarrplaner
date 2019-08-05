@@ -14,6 +14,7 @@ use App\Vacations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\View;
 
 class ServiceController extends Controller
 {
@@ -319,5 +320,21 @@ class ServiceController extends Controller
             ->orderBy('time')
             ->get();
         return view('services.ajax.byCityAndDay', compact('services', 'day', 'vacations', 'city'));
+    }
+
+    /**
+     * Export a service as ical
+     * @param $service Service
+     */
+    public function ical($service) {
+        $services = [Service::findOrFail($service)];
+        $raw = View::make('ical.ical', ['services' => $services, 'token' => null]);
+
+        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        return response($raw, 200)
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', '0')
+            ->header('Content-Type', 'text/calendar')
+            ->header('Content-Disposition', 'inline; filename='.$service.'.ics');
     }
 }

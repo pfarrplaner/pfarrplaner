@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '05.08.2019'),
+                'text' => 'Einzelne Gottesdienste können nun per Klick in Outlook übernommen werden.'
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '18.07.2019'),
                 'text' => 'Pfarrer können Trauungen direkt vom Startbildschirm aus anlegen.'
             ],

@@ -200,6 +200,16 @@ span.vacation-conflict {
     font-style: italic;
 }
 
+.calendar-month .service-calendar-button {
+    display: none;
+}
+
+.calendar-month .service-entry:hover .service-calendar-button {
+    display: inherit;
+}
+
+
+
 .print-only {
     display: none;
 }

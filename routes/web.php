@@ -25,6 +25,7 @@ Route::resource('comments', 'CommentController')->middleware('auth');
 
 Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
+Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
 
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
