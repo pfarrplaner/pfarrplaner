@@ -208,6 +208,11 @@ span.vacation-conflict {
     display: inherit;
 }
 
+.instructions li {
+    margin-bottom: 1em;
+    font-weight: bold;
+}
+
 
 
 .print-only {

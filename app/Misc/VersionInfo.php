@@ -24,6 +24,11 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '06.08.2019'),
+                'text' => 'Eine automatisch aktualisierte Übersicht der nächsten Gottesdienste kann in die Homepage der Kirchengemeinde (Gemeindebaukasten) '
+                .'eingebunden werden. Mehr dazu aus der Kalenderansicht unter "Ausgaben..." > "Liste von Gottesdiensten"',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '05.08.2019'),
                 'text' => 'Einzelne Gottesdienste können nun per Klick in Outlook übernommen werden.'
             ],

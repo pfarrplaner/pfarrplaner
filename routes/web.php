@@ -27,6 +27,11 @@ Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
 
+// embed in web site:
+Route::get('services/embed/locations/{ids}/{limit?}', ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']);
+Route::get('services/embed/cities/{ids}/{limit?}', ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']);
+Route::get('services/embed/cc/cities/{ids}/{limit?}', ['as' => 'embed.table-cc', 'uses' => 'EmbedController@embedCCByCities']);
+
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
