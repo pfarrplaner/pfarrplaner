@@ -76,12 +76,13 @@
         </div>
         @can('gd-loeschen')
         <hr />
-        <form action="{{ route('services.destroy', $service->id)}}" method="post">
+        <form class="form-inline" style="display: inline;" action="{{ route('services.destroy', $service->id)}}" method="post">
             @csrf
             @method('DELETE')
             <button class="btn btn-danger" type="submit" title="Gottesdiensteintrag (UNWIDERRUFLICH!) löschen"><span class="fa fa-trash"></span> Gottesdiensteintrag löschen</button>
         </form>
-        @endif
+        @endcan
+        <a class="btn btn-secondary" href="{{ route('services.ical', $service) }}" title="In Outlook übernehmen"><span class="fa fa-calendar-alt"></span> In Outlook übernehmen</a>
 
         <script>
             function setDefaultTime() {
