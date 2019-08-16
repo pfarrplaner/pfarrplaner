@@ -31,6 +31,7 @@ Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'Servi
 Route::get('services/embed/locations/{ids}/{limit?}', ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']);
 Route::get('services/embed/cities/{ids}/{limit?}', ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']);
 Route::get('services/embed/cc/cities/{ids}/{limit?}', ['as' => 'embed.table-cc', 'uses' => 'EmbedController@embedCCByCities']);
+Route::get('user/embed/vacations/{user}', ['as' => 'embed.user.vacations', 'uses' => 'EmbedController@embedUserVacations' ]);
 
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');

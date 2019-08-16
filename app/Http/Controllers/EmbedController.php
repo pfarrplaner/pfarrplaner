@@ -11,6 +11,8 @@ namespace App\Http\Controllers;
 
 use App\Day;
 use App\Service;
+use App\User;
+use App\Vacations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -101,6 +103,20 @@ class EmbedController extends Controller
 
     }
 
+
+    /**
+     * Return a table of upcoming vacations and replacements for a specific user
+     * @param Request $request
+     * @param User $user
+     * @param $userId
+     */
+    public function embedUserVacations (Request $request, User $user) {
+        $start = Carbon::now();
+        $end = (clone $start)->addWeek(2);
+        $vacations = Vacations::getByPeriodAndUser($start, $end, $user);
+        return response()
+            ->view('embed.user.vacations', compact('vacations'));
+    }
 
 
 }
