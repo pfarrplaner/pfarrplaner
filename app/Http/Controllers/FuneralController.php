@@ -173,6 +173,7 @@ class FuneralController extends Controller
             'relative_address' => $request->get('relative_address') ?: '',
             'relative_zip' => $request->get('relative_zip') ?: '',
             'relative_city' => $request->get('relative_city') ?: '',
+            'relative_contact_data' => $request->get('relative_contact_data') ?: '',
             'wake_location' => $request->get('wake_location') ?: '',
         ]);
         if ($request->get('announcement')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
@@ -235,6 +236,7 @@ class FuneralController extends Controller
         $funeral->relative_address = $request->get('relative_address') ?: '';
         $funeral->relative_zip = $request->get('relative_zip') ?: '';
         $funeral->relative_city = $request->get('relative_city') ?: '';
+        $funeral->relative_contact_data = $request->get('relative_contact_data') ?: '';
         $funeral->wake_location = $request->get('wake_location') ?: '';
         if ($request->get('announcement') !='')  $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
         if ($request->get('wake') != '') $funeral->wake = Carbon::createFromFormat('d.m.Y', $request->get('wake'));

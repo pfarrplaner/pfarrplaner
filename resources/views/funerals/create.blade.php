@@ -75,6 +75,10 @@
                         <label for="relative_city">Ort</label>
                         <input type="text" class="form-control" name="relative_city" />
                     </div>
+                    <div class="form-group">
+                        <label for="relative_contact_data">Kontakt</label>
+                        <textarea class="form-control" name="relative_contact_data"></textarea>
+                    </div>
                     <button type="submit" class="btn btn-primary" id="submit">Hinzufügen</button>
                 </form>
             </div>

@@ -6,7 +6,7 @@
     @component('components.container')
         <div class="card">
             <div class="card-header">
-                Taufe bearbeiten
+                Bestattung bearbeiten
             </div>
             <div class="card-body">
                 @component('components.errors')
@@ -87,6 +87,10 @@
                             <div class="form-group">
                                 <label for="relative_city">Ort</label>
                                 <input type="text" class="form-control" name="relative_city"  value="{{ $funeral->relative_city }}"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="relative_contact_data">Kontakt</label>
+                                <textarea class="form-control" name="relative_contact_data">{{ $funeral->relative_contact_data }}</textarea>
                             </div>
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="comments">

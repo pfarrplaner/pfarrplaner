@@ -26,6 +26,7 @@ class Funeral extends Model
         'relative_address',
         'relative_zip',
         'relative_city',
+        'relative_contact_data',
     ];
 
     protected $dates = [
@@ -43,6 +44,7 @@ class Funeral extends Model
         'relative_address',
         'relative_zip',
         'relative_city',
+        'relative_contact_data',
     ];
 
     public function service() {

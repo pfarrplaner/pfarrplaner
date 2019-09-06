@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '06.09.2019'),
+                'text' => 'Bei Bestattungen können jetzt auch Kontaktdaten (Telefonnummer usw.) für die Angehörigen mit gespeichert werden.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '06.08.2019'),
                 'text' => 'Eine automatisch aktualisierte Übersicht der nächsten Gottesdienste kann in die Homepage der Kirchengemeinde (Gemeindebaukasten) '
                 .'eingebunden werden. Mehr dazu aus der Kalenderansicht unter "Ausgaben..." > "Liste von Gottesdiensten"',
