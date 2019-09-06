@@ -81,7 +81,7 @@
                     </div>
                     <div class="form-group">
                         <label for="appointment">Taufgespräch</label>
-                        <input type="text" class="form-control datepicker" name="appointment" placeholder="tt.mm.jjjj" />
+                        <input type="text" class="form-control datetimepicker datetimepicker-input" id="appointmentpicker" data-toggle="datetimepicker" data-target="#appointmentpicker" name="appointment" placeholder="tt.mm.jjjj HH:MM" />
                     </div>
                     <div class="form-group">
                         <div class="form-check">

@@ -90,9 +90,9 @@
                                 <label for="first_contact_on">Datum des Erstkontakts</label>
                                 <input type="text" class="form-control datepicker" name="first_contact_on" placeholder="tt.mm.jjjj"  value="{{ $baptism->first_contact_on ? $baptism->first_contact_on->format('d.m.Y') : ''}}"/>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group ">
                                 <label for="appointment">Taufgespräch</label>
-                                <input type="text" class="form-control datepicker" name="appointment" placeholder="tt.mm.jjjj"  value="{{ $baptism->appointment ? $baptism->appointment->format('d.m.Y') : ''}}"/>
+                                <input type="text" class="form-control datetimepicker datetimepicker-input" id="appointmentpicker" data-toggle="datetimepicker" data-target="#appointmentpicker" name="appointment" placeholder="tt.mm.jjjj HH:MM"  value="{{ $baptism->appointment ? $baptism->appointment->format('d.m.Y H:i') : ''}}"/>
                             </div>
                             <div class="form-group">
                                 <div class="form-check">

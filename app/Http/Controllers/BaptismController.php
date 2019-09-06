@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 
 class BaptismController extends Controller
 {
@@ -94,7 +95,7 @@ class BaptismController extends Controller
             $baptism->service_id = $serviceId;
         }
         if ($request->get('first_contact_on')) $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
-        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y', $request->get('appointment'));
+        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
 
         if ($request->hasFile('registration_document')) {
             $baptism->registration_document = $request->file('registration_document')->store('baptism', 'public');
@@ -177,7 +178,7 @@ class BaptismController extends Controller
         $baptism->candidate_email = $request->get('candidate_email') ?: '';
         $baptism->first_contact_with = $request->get('first_contact_with') ?: '';
         if ($request->get('first_contact_on')) $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
-        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y', $request->get('appointment'));
+        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
         $baptism->registered= $request->get('registered') ? 1 : 0;
         $baptism->signed= $request->get('signed') ? 1 : 0;
         $baptism->docs_ready= $request->get('docs_ready') ? 1 : 0;
@@ -216,5 +217,16 @@ class BaptismController extends Controller
         } else {
             return redirect(route('home'));
         }
+    }
+
+    public function appointmentIcal(Baptism $baptism) {
+        $service = Service::find($baptism->service_id);
+        $raw = View::make('baptisms.appointment.ical', compact('baptism', 'service'));
+        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        return response($raw, 200)
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', '0')
+            ->header('Content-Type', 'text/calendar')
+            ->header('Content-Disposition', 'inline; filename=Taufgespraech-'.$baptism->id.'.ics');
     }
 }

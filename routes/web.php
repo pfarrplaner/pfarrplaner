@@ -67,6 +67,7 @@ Route::resource('baptisms', 'BaptismController')->middleware('auth');
 Route::get('/baptism/add/{service}', ['as' => 'baptism.add', 'uses' => 'BaptismController@create'])->middleware('auth');
 Route::get('/baptism/destroy/{baptism}', ['as' => 'baptism.destroy', 'uses' => 'BaptismController@destroy']);
 Route::resource('funerals', 'FuneralController')->middleware('auth');
+Route::get('/baptism/{baptism}/appointment/ical', ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']);
 
 Route::get('/funeral/add/{service}', ['as' => 'funeral.add', 'uses' => 'FuneralController@create'])->middleware('auth');
 Route::get('/funeral/destroy/{funeral}', ['as' => 'funeral.destroy', 'uses' => 'FuneralController@destroy']);
@@ -137,4 +138,12 @@ Route::get('/helper/schedule/run' , function(){
 Route::get('/liturgyCache', function() {
     //\App\Liturgy::getDayInfo(\App\Day::find(144));
    dd(\Illuminate\Support\Facades\Cache::get('liturgicalDays'));
+});
+
+
+
+
+// tests with vue
+Route::get('vue', function(){
+   return response()->view('vue/app');
 });

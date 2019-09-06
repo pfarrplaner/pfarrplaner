@@ -25,6 +25,10 @@ class VersionInfo
         return collect([
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '06.09.2019'),
+                'text' => 'Bei Taufen kann zum Taufgespräch nun auch eine Uhrzeit angegeben werden. Das Taufgespräch kann dann mit einem Klick in den Outlookkalender übernommen werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '06.09.2019'),
                 'text' => 'Bei Bestattungen können jetzt auch Kontaktdaten (Telefonnummer usw.) für die Angehörigen mit gespeichert werden.',
             ],
             [
