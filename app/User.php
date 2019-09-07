@@ -6,7 +6,9 @@ use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -59,7 +61,9 @@ class User extends Authenticatable
 
     public function services()
     {
-        return $this->belongsToMany(Service::class)->withTimestamps();
+        return $this->belongsToMany(Service::class)
+            ->withTimestamps()
+            ->withPivot('category');
     }
 
     public function comments()
@@ -244,4 +248,29 @@ class User extends Authenticatable
             $this->setSubscription($city, $type);
         }
     }
+
+
+    public function getAllPermissionsAttribute() {
+        $permissions = [];
+        foreach (Permission::all() as $permission) {
+            if (Auth::user()->can($permission->name)) {
+                $permissions[] = $permission->name;
+            }
+        }
+        return $permissions;
+    }
+
+    public function getSortedCities() {
+        if ($this->hasSetting('sorted_cities')) {
+            $ids = explode(',', $this->getSetting('sorted_cities'));
+            return City::whereIn('id', $ids)->get()->sortBy(function($model) use ($ids) {
+                return array_search($model->getKey(), $ids);
+            });
+        } else {
+            $cities = City::all();
+            $this->setSetting('sorted_cities', join(',', $cities->pluck('id')->toArray()));
+            return $cities;
+        }
+    }
+
 }

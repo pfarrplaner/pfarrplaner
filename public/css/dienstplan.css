@@ -271,3 +271,43 @@ table.table .fa-check-circle {
 table.table .fa-times-circle {
     color: red;
 }
+
+
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ul.sortable {
+    min-height: 50px;
+    padding: 0;
+}
+
+ul.sortable li {
+    width: 100%;
+    border: solid 1px gray;
+    list-style: none;
+    padding: 5px;
+    margin: 1px;
+    border-radius: 3px;
+}
+
+ul.sortable li:hover {
+    cursor: move !important;
+}
+
+ul.sortable li.placeholder {
+    position: relative;
+    background-color: lightyellow;
+    border: none;
+    /** More li styles **/
+}
+ul.sortable li.placeholder:before {
+    position: absolute;
+    /** Define arrowhead **/
+}

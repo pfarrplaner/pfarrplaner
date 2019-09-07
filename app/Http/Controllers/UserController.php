@@ -121,8 +121,12 @@ class UserController extends Controller
 
     public function profile(Request $request) {
         $user = Auth::user();
+        $allCities = City::all();
         $cities = $user->cities;
-        return view('users.profile', compact('user', 'cities'));
+        $sortedCities = $user->getSortedCities();
+        $unusedCities = $allCities->whereNotIn('id', $sortedCities->pluck('id'));
+        $calendarView = $user->getSetting('calendar_view', 'calendar.month');
+        return view('users.profile', compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView'));
     }
 
     public function profileSave(Request $request) {
@@ -136,6 +140,10 @@ class UserController extends Controller
 
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
+
+        // set preferences
+        $user->setSetting('sorted_cities', $request->get('citySort'));
+        $user->setSetting('calendar_view', $request->get('calendar_view'));
 
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
@@ -211,7 +219,7 @@ class UserController extends Controller
         foreach ($allowedCities as $city) {
             if ($preferenceCities->contains($city)) $allowedCities->forget($city);
         }
-        return view('users.preferences', ['user' => $user, 'allowedCities' => $allowedCities, 'preferenceCities' => $preferenceCities]);
+        return view('users.preferences', compact('user', 'allowedCities', 'preferenceCities'));
     }
 
     public function savePreferences(Request $request, $id)

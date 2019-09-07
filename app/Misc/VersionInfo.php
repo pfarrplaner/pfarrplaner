@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '07.09.2019'),
+                'text' => 'Im <a href="'.route('user.profile').'">Benutzerprofil</a> (<span class="fa fa-user"></span> '.Auth::user()->fullName(false).' > Mein Profil) kann jetzt eingestellt werden, welche Kirchengemeinden im Kalender in welcher Reihenfolge angezeigt werden sollen. Außerdem kann dort eine neue, (experimentelle) vertikale Tabellendarstellung ausgewählt werden, die die Tage in Zeilen und die Kirchengemeinden in Spalten anordnet.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '06.09.2019'),
                 'text' => 'Bei Taufen kann zum Taufgespräch nun auch eine Uhrzeit angegeben werden. Das Taufgespräch kann dann mit einem Klick in den Outlookkalender übernommen werden.',
             ],

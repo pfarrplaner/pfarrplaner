@@ -101,7 +101,8 @@ class CalendarController extends Controller
             ->limit(1)
             ->get()->first();
 
-        $cities = City::all();
+        //$cities = City::all();
+        $cities = Auth::user()->getSortedCities();
 
         $allDays = Day::orderBy('date', 'ASC')->get();
         for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
@@ -111,6 +112,9 @@ class CalendarController extends Controller
             $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
         }
 
+        $viewName = Auth::user()->getSetting('calendar_view', 'calendar.month');
+
+
         $servicesList = [];
         $vacations = [];
         $liturgy = [];
@@ -118,15 +122,17 @@ class CalendarController extends Controller
             foreach ($days as $day) {
                 if (!isset($vacations[$day->id])) $vacations[$day->id] = $this->getVacationers($day);
                 if (!isset($liturgy[$day->id])) $liturgy[$day->id] = Liturgy::getDayInfo($day);
-                $servicesList[$city->id][$day->id] = Service::with('day', 'location')
-                    ->where('city_id', $city->id)
-                    ->where('day_id', '=', $day->id)
-                    ->orderBy('time')
-                    ->get();
+
+                    $servicesList[$city->id][$day->id] = Service::with('day', 'location')
+                        ->where('city_id', $city->id)
+                        ->where('day_id', '=', $day->id)
+                        ->orderBy('time')
+                        ->get();
             }
         }
 
-        return view('calendar.month', [
+
+        return view($viewName, [
             'year' => $year,
             'month' => $month,
             'years' => $years,
