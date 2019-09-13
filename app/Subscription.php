@@ -31,6 +31,7 @@ class Subscription extends Model
     {
         $subscribers = User::subscribedTo($service)->get();
         foreach ($subscribers as $subscriber) {
+            if (env('THIS_IS_MY_DEV_HOST')) $subscriber->email = 'chris@toph.de';
             Mail::to($subscriber)->send(new $mailClass($subscriber, $service, $data));
         }
     }
