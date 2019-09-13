@@ -6,6 +6,7 @@ use App\City;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
@@ -281,5 +282,38 @@ class UserController extends Controller
 
     public function savePreferences(Request $request, $id)
     {
+    }
+
+    public function join(User $user) {
+        $users = User::where('id', '!=', $user->id)->orderBy('name')->get();
+        return view('users.join', compact('user', 'users'));
+    }
+
+    public function doJoin(Request $request) {
+        $request->validate([
+            'user1' => 'required|integer',
+            'user2' => 'required|integer',
+        ]);
+
+        $user1Id = $request->get('user1');
+        $user2Id = $request->get('user2');
+
+        $user1 = User::findOrFail($user1Id);
+        $user2 = User::findOrFail($user2Id);
+
+        $this->authorize('delete', $user1);
+        $this->authorize('update', $user2);
+
+        if (null === $user1 || null === $user2)
+            return redirect()->route('home')->with('error', 'Ein Fehler ist aufgetreten.');
+
+        // replace all the pivot records
+
+        DB::statement('UPDATE service_user SET user_id=:user2Id WHERE user_id=:user1Id;', compact('user1Id', 'user2Id'));
+
+        // delete old user
+        $user1->delete();
+
+        return redirect()->route('users.index')->with('success', 'Die Benutzer wurden zusammengeführt.');
     }
 }

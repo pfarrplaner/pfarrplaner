@@ -19,6 +19,8 @@ Route::resource('days', 'DayController')->middleware('auth');
 Route::resource('users', 'UserController')->middleware('auth');
 Route::get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@profile'])->middleware('auth');
 Route::patch('user/profile', ['as' => 'user.profile.save', 'uses' => 'UserController@profileSave'])->middleware('auth');
+Route::post('user/{user}/join', ['as' => 'user.join', 'uses' => 'UserController@join'])->middleware('auth');
+Route::post('users/join', ['as' => 'users.join', 'uses' => 'UserController@doJoin'])->middleware('auth');
 
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');

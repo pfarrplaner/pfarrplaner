@@ -83,4 +83,29 @@ class UserPolicy
     {
         return $user->hasPermissionTo('benutzer-bearbeiten');
     }
+
+    /**
+     * Determine whether the user can choose another user to merge the two
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $model
+     * @return mixed
+     */
+    public function join(User $user, User $model) {
+        return $user->hasPermissionTo('benutzer-bearbeiten');
+    }
+
+    /**
+     * Determine whether the user can merge this user into another one
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $model
+     * @return mixed
+     */
+    public function doJoin(User $user, User $model) {
+        return true;
+    }
+
+
 }
+

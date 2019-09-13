@@ -102,6 +102,12 @@
                                         <button class="btn btn-sm btn-danger" type="submit" title="Löschen"><span class="fa fa-trash"></span></button>
                                     </form>
                                 @endcan
+                                @can('update', $user)
+                                        <form action="{{ route('user.join', $user->id)}}" method="post" class="form-inline" style="display:inline;">
+                                            @csrf
+                                            <button class="btn btn-sm btn-secondary" type="submit" title="Mit einer anderen Person zusammenführen"><span class="fa fa-object-group"></span></button>
+                                        </form>
+                                @endcan
                             </td>
                         </tr>
                     @endforeach

@@ -71,6 +71,9 @@
     <script>
         $(document).ready(function () {
             $('.fancy-select2').select2();
+            $('.fancy-selectize').selectize();
+
+
             $('.datepicker').datepicker({
                 format: 'dd.mm.yyyy',
                 language: 'de',
