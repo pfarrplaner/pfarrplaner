@@ -3,6 +3,7 @@
 namespace App;
 
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -34,7 +35,8 @@ class User extends Authenticatable
         'preference_cities',
         'canEditOfferings',
         'canEditCC',
-        'new_features'
+        'new_features',
+        'manage_absences',
     ];
 
     protected $dates = [
@@ -54,9 +56,24 @@ class User extends Authenticatable
     protected $orderBy = 'name';
     protected $orderDirection = 'ASC';
 
+    /**
+     * Cities to which the user has at least read access
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function cities()
     {
-        return $this->belongsToMany(City::class);
+        return $this->belongsToMany(City::class)
+            ->withPivot('permission');
+    }
+
+    public function visibleCities()
+    {
+        return $this->cities();
+    }
+
+    public function writableCities()
+    {
+        return $this->belongsToMany(City::class)->withPivot('permission')->withPivotValue('permission', 'w');
     }
 
     public function services()
@@ -99,15 +116,15 @@ class User extends Authenticatable
     public function lastName($withTitle = false)
     {
         if ($this->last_name) {
-            return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').$this->last_name;
+            return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->last_name;
         }
         $name = explode(' ', $this->name);
-        return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').end($name);
+        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . end($name);
     }
 
     public function fullName($withTitle = false)
     {
-        return ($withTitle ? ($this->title ? $this->title.' ' : ''): '').$this->name;
+        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->name;
     }
 
     public function userSettings()
@@ -172,7 +189,7 @@ class User extends Authenticatable
      */
     public function getSubscription($city)
     {
-        $subscription = $this->subscriptions()->where('city_id', is_int($city)? $city : $city->id)->first();
+        $subscription = $this->subscriptions()->where('city_id', is_int($city) ? $city : $city->id)->first();
         if (null === $subscription) {
             $subscription = new Subscription([
                 'user_id' => $this->id,
@@ -250,7 +267,8 @@ class User extends Authenticatable
     }
 
 
-    public function getAllPermissionsAttribute() {
+    public function getAllPermissionsAttribute()
+    {
         $permissions = [];
         foreach (Permission::all() as $permission) {
             if (Auth::user()->can($permission->name)) {
@@ -260,17 +278,57 @@ class User extends Authenticatable
         return $permissions;
     }
 
-    public function getSortedCities() {
+    public function getSortedCities()
+    {
         if ($this->hasSetting('sorted_cities')) {
             $ids = explode(',', $this->getSetting('sorted_cities'));
-            return City::whereIn('id', $ids)->get()->sortBy(function($model) use ($ids) {
+            return City::whereIn('id', $ids)->get()->sortBy(function ($model) use ($ids) {
                 return array_search($model->getKey(), $ids);
             });
         } else {
-            $cities = City::all();
+            // default if user preference not set:
+            $cities = $this->visibleCities;
             $this->setSetting('sorted_cities', join(',', $cities->pluck('id')->toArray()));
             return $cities;
         }
+    }
+
+
+    public function isAbsent($date, $returnAbsence = false)
+    {
+        if (!$this->manage_absences) return ($returnAbsence ? null : false);
+        if (!is_a($date, Carbon::class)) {
+            $date = new Carbon($date);
+        }
+        $absences = Absence::with('user', 'replacement')
+            ->where('user_id', $this->id)
+            ->where('from', '<=', $date)
+            ->where('to', '>=', $date)
+            ->first();
+        return (null !== $absences) ? ($returnAbsence ? $absences : null) : ($returnAbsence ? null : false);
+    }
+
+    public function isReplacement($date, $returnAbsence = false)
+    {
+        if (!$this->manage_absences) return ($returnAbsence ? null : false);
+        if (!is_a($date, Carbon::class)) {
+            $date = new Carbon($date);
+        }
+        $absences = Absence::where('replacement', $this->id)
+            ->where('from', '<=', $date)
+            ->where('to', '>=', $date)
+            ->first();
+        return (null !== $absences) ? ($returnAbsence ? $absences : null) : ($returnAbsence ? null : false);
+    }
+
+    public function isBusy($date, $returnServices = false)
+    {
+        $services = Service::whereHas('day', function ($query) use ($date) {
+            $query->where('date', $date);
+        })->whereHas('participants', function ($query) {
+            $query->where('user_id', $this->id);
+        })->get();
+        return (count($services) ? ($returnServices ? $services : null) : ($services ? null : false));
     }
 
 }

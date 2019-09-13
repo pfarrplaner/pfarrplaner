@@ -39,14 +39,31 @@
                     <input type="text" class="form-control" id="last_name" name="last_name" value=""/>
                 </div>
                 <div class="form-group"> <!-- Radio group !-->
-                    <label class="control-label">Gehört zu folgenden Kirchengemeinden:</label>
+                    <label class="control-label">Zugriff auf Kirchengemeinden:</label>
+                    <div class="row">
+                        <div class="col-sm-3"></div>
+                        <div class="col-sm-2">Schreiben</div>
+                        <div class="col-sm-2">Lesen</div>
+                        <div class="col-sm-2">Kein Zugriff</div>
+                    </div>
                     @foreach ($cities as $city)
-                        <div class="form-check">
-                            <input class="form-check-input check-city" data-city="{{ $city->id }}" type="checkbox" name="cities[]" value="{{ $city->id }}"
-                                   id="defaultCheck{{$city->id}}">
-                            <label class="form-check-label" for="defaultCheck{{$city->id}}">
-                                {{$city->name}}
-                            </label>
+                        <div class="form-group row" data-city="{{ $city->id }}">
+                            <label class="col-sm-3">{{ $city->name }}</label>
+                            <div class="col-sm-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input  check-city" type="radio" name="cityPermission[{{ $city->id }}][permission]" value="w" data-city-write="{{ $city->id  }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input  check-city" type="radio" name="cityPermission[{{ $city->id }}][permission]" value="r" data-city-read="{{ $city->id  }}">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input  check-city" type="radio" name="cityPermission[{{ $city->id }}][permission]" value="n" checked>
+                                </div>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -72,13 +89,6 @@
                         </div>
                     </div>
                 @endforeach
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="notifications" value="1"
-                           id="notifications">
-                    <label class="form-check-label" for="notifications">
-                        Dieser Benutzer wird per E-Mail benachrichtigt, wenn Gottesdienste seiner Gemeinde(n) geändert werden.
-                    </label>
-                </div>
                 <hr />
                 <div class="form-group">
                     <label for="roles[]">Benutzerrollen</label>
@@ -100,6 +110,15 @@
                     </select>
                 </div>
                 <hr />
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" name="manage_absences" value="1" />
+                        <label class="form-check-label" for="manage_absences">
+                            Urlaub für diesen Benutzer verwalten
+                        </label>
+                    </div>
+                </div>
+                <hr />
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
             </form>
         </div>
@@ -107,7 +126,8 @@
     <script>
         function toggleSubscriptionRows() {
             $('.city-subscription-row').each(function(){
-                if ($('input[data-city='+$(this).data('city')+']').prop('checked')) {
+                if (($('input[data-city-write='+$(this).data('city')+']').prop('checked'))
+                    || ($('input[data-city-read='+$(this).data('city')+']').prop('checked')))  {
                     $(this).show();
                 } else {
                     $(this).hide();

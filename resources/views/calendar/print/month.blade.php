@@ -115,19 +115,26 @@
                                 <div class="service-team service-pastor">
                                     <span class="designation">P: </span>
                                     <span class="name @if($highlight == $service->pastor) highlight @endif">
-                                        {{ $service->pastor }}</span>
+                                        {{ $service->participantsText('P') }}</span>
                                 </div>
                                 <div class="service-team service-organist">
                                     <span class="designation">O: </span>
                                     <span class="name @if($highlight == $service->organist) highlight @endif">
-                                        {{ $service->organist }}</span>
+                                        {{ $service->participantsText('O') }}</span>
                                 </div>
                                 <div class="service-team service-sacristan">
                                     <span class="designation">M: </span>
                                     <span class="name @if($highlight == $service->sacristan) highlight @endif">
-                                        {{ $service->sacristan }}</span>
+                                        {{ $service->participantsText('M') }}</span>
+                                </div>
+                                @if ($service->participantsText('A'))
+                                <div class="service-team">
+                                    <span class="designation">A: </span>
+                                    <span class="name @if($highlight == $service->sacristan) highlight @endif">
+                                        {{ $service->participantsText('A') }}</span>
                                 </div>
                                 <div class="service-description">{{ $service->description }}</div>
+                                @endif
                             </div>
                             @if ($service->id != $services[$city->id][$day->id]->last()->id) <br /> @endif
                         @endforeach

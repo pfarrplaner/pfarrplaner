@@ -23,7 +23,9 @@
         @else
             <span class="fa fa-times-circle"></span>
         @endif
-        &nbsp;{{$baptism->appointment->format('d.m.Y')}}
+        &nbsp;{{$baptism->appointment->format('d.m.Y, H:i')}}
+        <br />
+        <a class="btn btn-sm btn-secondary" href="{{ route('baptism.appointment.ical', $baptism) }}" title="Zu Outlook hinzufügen"><span class="fa fa-calendar-alt"></span></a>
     @else
         <span class="fa fa-times-circle"></span>&nbsp;noch nicht vereinbart
     @endif

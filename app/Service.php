@@ -66,6 +66,17 @@ class Service extends Model
         'cc_staff',
     ];
 
+    protected $appends = [
+        'pastors',
+        'organists',
+        'sacristans',
+        'otherParticipants',
+        'descriptionText',
+        'locationText',
+        'timeText',
+        'baptismsText'
+    ];
+
     private $auditData = [];
 
     public static function boot()
@@ -106,7 +117,7 @@ class Service extends Model
     }
 
     public function participants() {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('category');
     }
 
     public function users() {
@@ -139,6 +150,7 @@ class Service extends Model
         }
 
     }
+
 
     public function participantsText($category, $fullName = false, $withTitle = true) {
         $participants = $this->participantsByCategory($category);
@@ -278,6 +290,39 @@ class Service extends Model
         } else {
             return ($this->cc_location != $this->location->cc_default_location);
         }
+    }
+
+
+    public function getPastorsAttribute() {
+        return $this->pastors()->get();
+    }
+
+    public function getOrganistsAttribute() {
+        return $this->organists()->get();
+    }
+
+    public function getSacristansAttribute() {
+        return $this->sacristans()->get();
+    }
+
+    public function getOtherParticipantsAttribute() {
+        return $this->otherParticipants()->get();
+    }
+
+    public function getDescriptionTextAttribute() {
+        return $this->descriptionText();
+    }
+
+    public function getLocationTextAttribute() {
+        return $this->locationText();
+    }
+
+    public function getTimeTextAttribute() {
+        return $this->timeText();
+    }
+
+    public function getBaptismsTextAttribute() {
+        return $this->baptismsText(true);
     }
 
 }

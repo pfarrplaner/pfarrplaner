@@ -1,38 +1,42 @@
 @extends('layouts.app')
-
 @section('title', 'Kirchengemeinden')
 
+
 @section('content')
-
-    <!-- Bootstrap Boilerplate... -->
-
-    <div class="panel-body">
-        <!-- Display Validation Errors -->
-    @include('common.errors')
-
-    <!-- New Task Form -->
-        <form action="/city" method="POST" class="form-horizontal">
-        {{ csrf_field() }}
-
-        <!-- Task Name -->
-            <div class="form-group">
-                <label for="task-name" class="col-sm-3 control-label">Ort</label>
-
-                <div class="col-sm-6">
-                    <input type="text" name="name" id="city-name" class="form-control">
-                </div>
+    @component('components.container')
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Kirchengemeinde</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($cities as $city)
+                <tr>
+                    <td>{{$city->name}}</td>
+                    <td>
+                        @can('update', $city)
+                            <a href="{{ route('cities.edit',$city->id)}}" class="btn btn-sm btn-primary" title="Bearbeiten">
+                                <span class="fa fa-edit"></span>
+                            </a>
+                        @endcan
+                        @can('delete', $city)
+                            <form action="{{ route('cities.destroy', $city->id)}}" method="post" class="form-inline" style="display:inline;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-sm btn-danger" type="submit" title="Löschen"><span class="fa fa-trash"></span></button>
+                            </form>
+                        @endcan
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <hr/>
+        @can('create', \App\City::class)
+            <a class="btn btn-secondary" href="{{ route('cities.create') }}">Neue Kirchengemeinde hinzufügen</a>
+            @endcan
             </div>
-
-            <!-- Add Task Button -->
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-6">
-                    <button type="submit" class="btn btn-default">
-                        <i class="fa fa-plus"></i> Neuer Ort
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <!-- TODO: Current Tasks -->
+            @endcomponent
 @endsection

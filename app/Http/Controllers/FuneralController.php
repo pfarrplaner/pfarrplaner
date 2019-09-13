@@ -46,7 +46,7 @@ class FuneralController extends Controller
 
 
     public function wizardStep1(Request $request) {
-        $cities = Auth::user()->cities;
+        $cities = Auth::user()->writableCities;
         return view('funerals.wizard.step1', compact('cities'));
     }
 

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 use App\City;
 use App\Day;
+use App\Http\Controllers\Controller;
 use App\Liturgy;
 use App\Service;
 use Carbon\Carbon;
@@ -16,11 +17,6 @@ class CalendarController extends Controller
 {
 
     protected $vacationData = [];
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     protected function initializeMonth($year, $month)
     {
@@ -96,54 +92,7 @@ class CalendarController extends Controller
         }
 
         $days = $this->getDaysInMonth($year, $month);
-        $nextDay = Day::where('date', '>=', Carbon::createFromTimestamp(time()))
-            ->orderBy('date', 'ASC')
-            ->limit(1)
-            ->get()->first();
-
-        //$cities = City::all();
-        $cities = Auth::user()->getSortedCities();
-
-        $allDays = Day::orderBy('date', 'ASC')->get();
-        for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
-            $years[] = $i;
-        }
-        for ($i = 1; $i <= 12; $i++) {
-            $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
-        }
-
-        $viewName = Auth::user()->getSetting('calendar_view', 'calendar.month');
-
-
-        $servicesList = [];
-        $vacations = [];
-        $liturgy = [];
-        foreach ($cities as $city) {
-            foreach ($days as $day) {
-                if (!isset($vacations[$day->id])) $vacations[$day->id] = $this->getVacationers($day);
-                if (!isset($liturgy[$day->id])) $liturgy[$day->id] = Liturgy::getDayInfo($day);
-
-                    $servicesList[$city->id][$day->id] = Service::with('day', 'location')
-                        ->where('city_id', $city->id)
-                        ->where('day_id', '=', $day->id)
-                        ->orderBy('time')
-                        ->get();
-            }
-        }
-
-
-        return view($viewName, [
-            'year' => $year,
-            'month' => $month,
-            'years' => $years,
-            'months' => $months,
-            'days' => $days,
-            'cities' => $cities,
-            'services' => $servicesList,
-            'nextDay' => $nextDay,
-            'vacations' => $vacations,
-            'liturgy' => $liturgy,
-        ]);
+        return response()->json(compact('days'));
     }
 
 
@@ -194,7 +143,7 @@ class CalendarController extends Controller
         $name = explode(' ', Auth::user()->name);
         $name = end($name);
 
-        $cities = Auth::user()->getSortedCities();
+        $cities = City::all();
         return view('calendar.printsetup',
             ['cities' => $cities, 'year' => $year, 'month' => $month, 'lastName' => $name]);
     }

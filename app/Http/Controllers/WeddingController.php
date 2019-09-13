@@ -182,7 +182,7 @@ class WeddingController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function wizardStep1(Request $request) {
-        $cities = Auth::user()->cities;
+        $cities = Auth::user()->writableCities();
         return view('weddings.wizard.step1', compact('cities'));
     }
 

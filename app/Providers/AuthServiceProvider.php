@@ -28,7 +28,9 @@ class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Location::class => LocationPolicy::class,
         City::class => CityPolicy::class,
-        Service::class => ServicePolicy::class,
+        //Service::class => ServicePolicy::class,
+        '\App\Service' => ServicePolicy::class,
+        'App\Service' => ServicePolicy::class,
         Day::class => DayPolicy::class,
         Role::class => RolePolicy::class,
     ];
@@ -41,11 +43,9 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
         Gate::before(function($user, $ability) {
            if ($user->hasRole('Super-Administrator*in')) return true;
            if ($user->hasRole('Administrator*in') && ($ability != 'superadmin-bearbeiten') && ($ability != 'admin-bearbeiten')) return true;
-           return null;
         });
 
         Gate::define('calendar.month', 'App\Policies\CalendarPolicy@month');

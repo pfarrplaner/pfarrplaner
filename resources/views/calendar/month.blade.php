@@ -272,7 +272,7 @@
                                         @endcanany
                                     </div>
                                 @endforeach
-                                @if (Auth::user()->can('create', \App\Service::class) && Auth::user()->cities->contains($city))
+                                @if (Auth::user()->can('create', \App\Service::class) && Auth::user()->writableCities->contains($city))
                                     <a class="btn btn-success btn-sm btn-add-day" title="Neuen Gottesdiensteintrag hinzufügen"
                                        href="{{ route('services.add', ['date' => $day->id, 'city' => $city->id]) }}"><span
                                             class="fa fa-plus"></span></a>

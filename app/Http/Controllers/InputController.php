@@ -54,7 +54,7 @@ class InputController extends Controller
         $input = $this->getInputClass($input);
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
-        $cities = Auth::user()->cities;
+        $cities = Auth::user()->writableCities;
 
         return view('inputs.setup', [
             'input' => $input,

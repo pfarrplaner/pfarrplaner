@@ -42,7 +42,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        $cityOkay = (is_object($service->location) ? $user->writableCities->contains($service->location->city) : true);
         return $user->hasPermissionTo('gd-bearbeiten') && $cityOkay;
     }
 
@@ -55,7 +55,7 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        $cityOkay = (is_object($service->location) ? $user->writableCities->contains($service->location->city) : true);
         return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
     }
 
@@ -68,7 +68,7 @@ class ServicePolicy
      */
     public function restore(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        $cityOkay = (is_object($service->location) ? $user->writableCities->contains($service->location->city) : true);
         return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
     }
 
@@ -81,7 +81,7 @@ class ServicePolicy
      */
     public function forceDelete(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
+        $cityOkay = (is_object($service->location) ? $user->writableCities->contains($service->location->city) : true);
         return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
     }
 }

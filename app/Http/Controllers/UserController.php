@@ -24,8 +24,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('users.index', compact('users'));
+        $users = User::where('password', '!=', '')->orderBy('email')->get();
+        $otherPeople = User::where('password', '')->orWhereNull('password')->orderBy('name')->get();
+        return view('users.index', compact('users', 'otherPeople'));
     }
 
     /**
@@ -67,9 +68,10 @@ class UserController extends Controller
             'address' => $request->get('address') ?: '',
             'phone' => $request->get('phone') ?: '',
             'preference_cities' => '', // TODO: empty for now
+            'manage_absences' => $request->get('manage_absences') ? 1 : 0,
         ]);
         $user->save();
-        $user->cities()->sync($request->get('cities'));
+        $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
 
         // assign roles
         $roles = $request->get('roles');
@@ -119,17 +121,19 @@ class UserController extends Controller
         return view('users.edit', compact('user', 'cities', 'homescreen', 'roles'));
     }
 
-    public function profile(Request $request) {
+    public function profile(Request $request)
+    {
         $user = Auth::user();
-        $allCities = City::all();
-        $cities = $user->cities;
+        $allCities = $user->visibleCities;
+        $cities = $user->visibleCities;
         $sortedCities = $user->getSortedCities();
         $unusedCities = $allCities->whereNotIn('id', $sortedCities->pluck('id'));
         $calendarView = $user->getSetting('calendar_view', 'calendar.month');
         return view('users.profile', compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView'));
     }
 
-    public function profileSave(Request $request) {
+    public function profileSave(Request $request)
+    {
         $user = Auth::user();
         $user->email = $request->get('email');
         $user->office = $request->get('office') ?: '';
@@ -148,6 +152,42 @@ class UserController extends Controller
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
+    protected function updateCityPermissions(User $user, $permissions)
+    {
+        $previousCities = $user->visibleCities->pluck('id');
+        $addedCities = [];
+
+        foreach ($permissions as $cityId => $permission) {
+            if ($permission['permission'] == 'n') {
+                unset($permissions[$cityId]);
+            } else {
+                if (!$previousCities->contains($cityId)) $addedCities[] = $cityId;
+            }
+        }
+        $user->cities()->sync($permissions);
+
+        // update the user's own sorting (remove cities which are not allowed)
+        $cityIds = array_keys($permissions);
+        $userPref = explode(',',$user->getSetting('sorted_cities', ''));
+        if (!count($userPref)) {
+            $userPref = $cityIds;
+        } else {
+            foreach ($userPref as $key => $city) {
+                if (!in_array($city, $cityIds)) unset($userPref[$key]);
+            }
+            // make added cities visible without having to edit user preference in profile:
+            $userPref = array_merge($userPref, $addedCities);
+        }
+        $user->setSetting('sorted_cities', join(',', $userPref));
+
+        // update the user's subscriptions (remove cities which are not allowed)
+        $subscriptions = $user->subscriptions;
+        foreach ($subscriptions as $subscription) {
+            if (!in_array($subscription->city_id, $cityIds)) $subscription->delete();
+        }
+    }
+
+
     /**
      * Update the specified resource in storage.
      *
@@ -161,10 +201,14 @@ class UserController extends Controller
             'name' => 'required|max:255',
         ]);
 
+
         $user = User::find($id);
         $user->name = $request->get('name');
         $user->email = $request->get('email');
-        if ($password = $request->get('password') != '') $user->password = Hash::make($password);
+        //if ($password = $request->get('password') != '') $user->password = Hash::make($password);
+        if (($password = $request->get('password')) != '') {
+            $user->password = Hash::make($password);
+        }
         $user->title = $request->get('title') ?: '';
         $user->first_name = $request->get('first_name') ?: '';
         $user->last_name = $request->get('last_name') ?: '';
@@ -173,9 +217,10 @@ class UserController extends Controller
         $user->address = $request->get('address') ?: '';
         $user->phone = $request->get('phone') ?: '';
         $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
+        $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
         $user->save();
 
-        $user->cities()->sync($request->get('cities'));
+        $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
 
         // assign roles
         $roles = $request->get('roles');
@@ -224,6 +269,5 @@ class UserController extends Controller
 
     public function savePreferences(Request $request, $id)
     {
-
     }
 }

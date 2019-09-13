@@ -53,14 +53,17 @@
                     <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}"/>
                 </div>
                 <div class="form-group"> <!-- Radio group !-->
-                    <label class="control-label">Gehört zu folgenden Kirchengemeinden:</label>
+                    <label class="control-label">Zugriff auf Kirchengemeinden:</label>
                     @foreach ($cities as $city)
-                        <div class="form-check">
-                            <input class="form-check-input check-city" data-city="{{ $city->id }}" type="checkbox" name="cities[]" value="{{ $city->id }}"
-                                   id="defaultCheck{{$city->id}}" @if ($user->cities->contains($city)) checked @endif>
-                            <label class="form-check-label" for="defaultCheck{{$city->id}}">
-                                {{$city->name}}
-                            </label>
+                        <div class="form-group row" data-city="{{ $city->id }}">
+                            <label class="col-sm-3">{{ $city->name }}</label>
+                            <div class="col-sm-9">
+                                <select class="form-control check-city" name="cityPermission[{{ $city->id }}][permission]" data-city="{{ $city->id }}">
+                                    <option value="w" @if($user->writableCities->contains($city)) selected @endif data-city-write="{{ $city->id }}" style="background-color: green">Schreibzugriff</option>
+                                    <option value="r" @if($user->visibleCities->contains($city) && !$user->writableCities->contains($city)) selected @endif data-city-read="{{ $city->id }}" style="background-color: yellow">Lesezugriff</option>
+                                    <option value="n" @if(!$user->visibleCities->contains($city)) selected @endif data-city="{{ $city->id }}" style="background-color: red">Kein Zugriff</option>
+                                </select>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -69,16 +72,20 @@
                 </div>
                 @foreach ($cities as $city)
                 <div class="form-group row city-subscription-row" data-city="{{ $city->id }}">
-                    <label class="col-sm-2">{{ $city->name }}</label>
-                    <div class="col-sm-10">
+                    <label class="col-sm-3">{{ $city->name }}</label>
+                    <div class="col-sm-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="2" @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_ALL) checked @endif>
                             <label class="form-check-label" for="subscribe[{{ $city->id }}]" >alle Gottesdienste</label>
                         </div>
+                    </div>
+                    <div class="col-sm-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="1" @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_OWN) checked @endif>
                             <label class="form-check-label" for="subscribe[{{ $city->id }}]">eigene Gottesdienste</label>
                         </div>
+                    </div>
+                    <div class="col-sm-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="0" @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_NONE) checked @endif>
                             <label class="form-check-label" for="subscribe[{{ $city->id }}]">keine Gottesdienste</label>
@@ -107,6 +114,15 @@
                     </select>
                 </div>
                 <hr />
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" name="manage_absences" value="1" @if($user->manage_absences) checked @endif/>
+                        <label class="form-check-label" for="manage_absences">
+                            Urlaub für diesen Benutzer verwalten
+                        </label>
+                    </div>
+                </div>
+                <hr />
                 <button type="submit" class="btn btn-primary">Speichern</button>
             </form>
         </div>
@@ -114,11 +130,19 @@
         <script>
             function toggleSubscriptionRows() {
                 $('.city-subscription-row').each(function(){
-                    if ($('input[data-city='+$(this).data('city')+']').prop('checked')) {
+                    var value = $('select[data-city='+$(this).data('city')+']').val();
+                    if (value == 'r' | value=='w')  {
                         $(this).show();
                     } else {
                         $(this).hide();
                     }
+                    var color = '';
+                    switch (value) {
+                        case 'w': color = 'green'; break;
+                        case 'r': color = 'yellow'; break;
+                        case 'n': color = 'red'; break;
+                    }
+                    $('select[data-city='+$(this).data('city')+']').css('background-color', color);
                 });
             }
 

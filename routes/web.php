@@ -27,6 +27,10 @@ Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
 
+Route::resource('absences', 'AbsenceController')->middleware('auth');
+Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
+Route::get('absences/create/{year}/{month}/{user}', ['as' => 'absences.create', 'uses' => 'AbsenceController@create']);
+
 // embed in web site:
 Route::get('services/embed/locations/{ids}/{limit?}', ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']);
 Route::get('services/embed/cities/{ids}/{limit?}', ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']);
@@ -141,7 +145,10 @@ Route::get('/liturgyCache', function() {
 });
 
 
-
+// current tests
+Route::get('test', function(){
+    dd([Auth::user()->cities, Auth::user()->visibleCities, \Illuminate\Support\Facades\Auth::user()->writableCities], Auth::user()->can('update', \App\Service::find(303)));
+});
 
 // tests with vue
 Route::get('vue', function(){
