@@ -43,34 +43,14 @@
         <script>
             $(function() {
 
-                $('.peopleSelect').select2({
-                    placeholder: 'Eine oder mehrere Personen (keine Anmerkungen!)',
-                    allowClear: true,
-                    multiple: true,
-                    allowclear: true,
-                    tags: true,
-                    createTag: function (params) {
-                        return {
-                            id: params.term,
-                            text: params.term,
-                            newOption: true
+                $('.peopleSelect').selectize({
+                    create: true,
+                    render: {
+                        option_create: function (data, escape) {
+                            return '<div class="create">Neue Person anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                         }
-                    },
-                    templateResult: function (data) {
-                        var $result = $("<span></span>");
-
-                        $result.text(data.text);
-
-                        if (data.newOption) {
-                            $result.append(" <em>(Neue Person anlegen)</em>");
-                        }
-
-                        return $result;
                     },
                 });
-                // css fix for select2 when tabbing to anything else than home (why???)
-                $('.select2-container--default').css('width', '1068px');
-
 
                 $('#date-range12').dateRangePicker({
                     separator : ' - ',
