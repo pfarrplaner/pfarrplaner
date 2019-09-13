@@ -80,7 +80,7 @@ class HomeController extends Controller
     public function connectWithOutlook() {
         $user = Auth::user();
         $token = $user->getToken();
-        $cities = City::all();
+        $cities = Auth::user()->visibleCities;
         $name = explode(' ', Auth::user()->name);
         $name = end($name);
         return view('connectwithoutlook', ['user' => $user, 'token' => $token, 'cities' => $cities, 'name' => $name]);
