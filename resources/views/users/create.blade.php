@@ -40,29 +40,15 @@
                 </div>
                 <div class="form-group"> <!-- Radio group !-->
                     <label class="control-label">Zugriff auf Kirchengemeinden:</label>
-                    <div class="row">
-                        <div class="col-sm-3"></div>
-                        <div class="col-sm-2">Schreiben</div>
-                        <div class="col-sm-2">Lesen</div>
-                        <div class="col-sm-2">Kein Zugriff</div>
-                    </div>
                     @foreach ($cities as $city)
                         <div class="form-group row" data-city="{{ $city->id }}">
                             <label class="col-sm-3">{{ $city->name }}</label>
-                            <div class="col-sm-2">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input  check-city" type="radio" name="cityPermission[{{ $city->id }}][permission]" value="w" data-city-write="{{ $city->id  }}">
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input  check-city" type="radio" name="cityPermission[{{ $city->id }}][permission]" value="r" data-city-read="{{ $city->id  }}">
-                                </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input  check-city" type="radio" name="cityPermission[{{ $city->id }}][permission]" value="n" checked>
-                                </div>
+                            <div class="col-sm-9">
+                                <select class="form-control check-city" name="cityPermission[{{ $city->id }}][permission]" data-city="{{ $city->id }}">
+                                    <option value="w" data-city-write="{{ $city->id }}" style="background-color: green">Schreibzugriff</option>
+                                    <option value="r" data-city-read="{{ $city->id }}" style="background-color: yellow">Lesezugriff</option>
+                                    <option value="n" selected data-city="{{ $city->id }}" style="background-color: red">Kein Zugriff</option>
+                                </select>
                             </div>
                         </div>
                     @endforeach
@@ -92,7 +78,7 @@
                 <hr />
                 <div class="form-group">
                     <label for="roles[]">Benutzerrollen</label>
-                    <select class="form-control fancy-select2" name="roles[]" multiple>
+                    <select class="form-control fancy-selectize" name="roles[]" multiple>
                         @foreach($roles as $role)
                             <option>{{ $role->name }}</option>
                         @endforeach
@@ -126,12 +112,19 @@
     <script>
         function toggleSubscriptionRows() {
             $('.city-subscription-row').each(function(){
-                if (($('input[data-city-write='+$(this).data('city')+']').prop('checked'))
-                    || ($('input[data-city-read='+$(this).data('city')+']').prop('checked')))  {
+                var value = $('select[data-city='+$(this).data('city')+']').val();
+                if (value == 'r' | value=='w')  {
                     $(this).show();
                 } else {
                     $(this).hide();
                 }
+                var color = '';
+                switch (value) {
+                    case 'w': color = 'green'; break;
+                    case 'r': color = 'yellow'; break;
+                    case 'n': color = 'red'; break;
+                }
+                $('select[data-city='+$(this).data('city')+']').css('background-color', color);
             });
         }
 
