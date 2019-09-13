@@ -96,7 +96,7 @@
                 <hr />
                 <div class="form-group">
                     <label for="roles[]">Benutzerrollen</label>
-                    <select class="form-control fancy-select2" name="roles[]" multiple>
+                    <select class="form-control fancy-selectize" name="roles[]" multiple>
                         @foreach($roles as $role)
                             <option @if($user->roles->contains($role)) selected @endif>{{ $role->name }}</option>
                         @endforeach

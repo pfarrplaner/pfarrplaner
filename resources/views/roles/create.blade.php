@@ -39,28 +39,12 @@
         </div>
         <script>
             $(document).ready(function(){
-                $('.permissionSelect').select2({
-                    allowClear: true,
-                    multiple: true,
-                    allowclear: true,
-                    tags: true,
-                    createTag: function (params) {
-                        return {
-                            id: params.term,
-                            text: params.term,
-                            newOption: true
+                $('.permissionSelect').selectize({
+                    create: true,
+                    render: {
+                        option_create: function (data, escape) {
+                            return '<div class="create">Neue Berechtigung anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                         }
-                    },
-                    templateResult: function (data) {
-                        var $result = $("<span></span>");
-
-                        $result.text(data.text);
-
-                        if (data.newOption) {
-                            $result.append(" <em>(Neue Berechtigung anlegen)</em>");
-                        }
-
-                        return $result;
                     },
                 });
 

@@ -110,34 +110,6 @@
 
                 findEmpty();
 
-                /*
-                                $('.peopleSelect').select2({
-                                    placeholder: 'Eine oder mehrere Personen (keine Anmerkungen!)',
-                                    allowClear: true,
-                                    multiple: true,
-                                    allowclear: true,
-                                    tags: true,
-                                    createTag: function (params) {
-                                        return {
-                                            id: params.term,
-                                            text: params.term,
-                                            newOption: true
-                                        }
-                                    },
-                                    templateResult: function (data) {
-                                        var $result = $("<span></span>");
-
-                                        $result.text(data.text);
-
-                                        if (data.newOption) {
-                                            $result.append(" <em>(Neue Person anlegen)</em>");
-                                        }
-
-                                        return $result;
-                                    },
-                                });
-
-                */
                 $('.peopleSelect').selectize({
                     create: true,
                     render: {

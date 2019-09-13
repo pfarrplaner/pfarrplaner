@@ -22,7 +22,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="person"><span class="fa fa-user"></span>&nbsp;Nach dieser Person suchen</label>
-                        <select class="form-control fancy-select2" name="person" multiple />
+                        <select class="form-control fancy-selectize" name="person" />
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}" @if($user->id == Auth::user()->id) selected @endif>{{ $user->name }}</option>
                             @endforeach
