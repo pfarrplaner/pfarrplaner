@@ -311,3 +311,51 @@ ul.sortable li.placeholder:before {
     position: absolute;
     /** Define arrowhead **/
 }
+
+.tbl-absences .cal-cell {
+    font-size: 0.7em;
+    padding: 0;
+}
+
+.tbl-absences .cal-cell.day_Sun {
+    background-color: lightpink;
+}
+
+
+.tbl-absences th.cal-cell.day_Sun {
+    color: red;
+}
+
+.tbl-absences .cal-cell.today {
+    background-color: lightyellow;
+}
+
+.tbl-absences .cal-cell.holiday {
+    background-color: #e9fce9;
+}
+
+.tbl-absences .cal-cell.busy {
+    background-color: lightgreen;
+}
+
+.tbl-absences .cal-cell.absent {
+    background-color: orange;
+    border-right-color: orange;
+}
+
+.tbl-absences .cal-cell.absent:hover {
+    background-color: darkorange;
+    border-right-color: darkorange;
+    cursor: pointer;
+}
+
+.tbl-absences .cal-cell.replacement {
+    background-color: lightblue;
+    border-right-color: lightblue;
+}
+
+.date-picker-wrapper {
+    border: 0;
+    background-color: transparent;
+    padding-left: 0;
+}
