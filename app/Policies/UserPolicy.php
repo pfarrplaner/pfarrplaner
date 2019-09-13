@@ -9,6 +9,10 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
+    public function index(User $user, User $model) {
+        return $user->hasPermissionTo('benutzerliste-lokal-sehen') || $user->hasPermissionTo('benutzer-bearbeiten');
+    }
+
     /**
      * Determine whether the user can view the model.
      *

@@ -24,7 +24,19 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('password', '!=', '')->orderBy('email')->get();
+        if (Auth::user()->can('benutzer-bearbeiten')) {
+            $users = User::where('password', '!=', '')->orderBy('email')->get();
+        } elseif(Auth::user()->can('benutzerliste-lokal-sehen')) {
+            $cityIds = Auth::user()->writableCities->pluck('id');
+            $users = User::where('password', '!=', '')
+                ->select('users.*')
+                ->whereHas('cities', function($query) use ($cityIds){
+                    $query->whereIn('cities.id', $cityIds);
+                })
+                ->orderBy('email')->get();
+        } else {
+            return redirect()->route('home');
+        }
         $otherPeople = User::where('password', '')->orWhereNull('password')->orderBy('name')->get();
         return view('users.index', compact('users', 'otherPeople'));
     }

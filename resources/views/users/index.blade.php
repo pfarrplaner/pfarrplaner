@@ -8,9 +8,11 @@
             <li class="nav-item">
                 <a class="nav-link active" href="#users" role="tab" data-toggle="tab">Benutzer</a>
             </li>
+            @can('benutzer-bearbeiten')
             <li class="nav-item">
                 <a class="nav-link" href="#otherPeople" role="tab" data-toggle="tab">Weitere Personen</a>
             </li>
+            @endcan
         </ul>
 
         <div class="tab-content" style="padding-top: 15px;">
@@ -60,6 +62,7 @@
                     </tbody>
                 </table>
             </div>
+            @can('benutzer-bearbeiten')
             <div role="tabpanel" class="tab-pane fade" id="otherPeople">
                 <p>Hier findest du eine Übersicht von Personen, die irgendwo im Plan eingetragen wurden, aber keinen eigenen Benutzerzugang haben. Du kannst eine Person zum Benutzer machen, indem du ihr Benutzernamen und Passwort gibst.</p>
                 <div class="form-group">
@@ -105,6 +108,7 @@
                     </tbody>
                 </table>
             </div>
+            @endcan
         </div>
 
         <hr/>

@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '13.09.2019'),
+                'text' => 'Es ist jetzt möglich, Benutzer so anzulegen, dass sie nur bestimmte Gemeinden sehen. Wenn du die nötigen Rechte hast, kannst du im Menü unter <span class="fa fa-wrench"></span> Admin > <a href="'.route('users.index').'">Benutzer</a> sehen, wer welchen Zugriff auf deine Kirchengemeinde(n) hat.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '07.09.2019'),
                 'text' => 'Im <a href="'.route('user.profile').'">Benutzerprofil</a> (<span class="fa fa-user"></span> '.Auth::user()->fullName(false).' > Mein Profil) kann jetzt eingestellt werden, welche Kirchengemeinden im Kalender in welcher Reihenfolge angezeigt werden sollen. Außerdem kann dort eine neue, (experimentelle) vertikale Tabellendarstellung ausgewählt werden, die die Tage in Zeilen und die Kirchengemeinden in Spalten anordnet.',
             ],

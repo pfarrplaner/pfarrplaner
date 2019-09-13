@@ -27,7 +27,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('connectWithOutlook') }}"><span class="fa fa-calendar-alt" title="Mit Outlook verbinden"></span></a>
             </li>
-        @canany(['benutzer-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'rollen-bearbeiten'])
+        @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'rollen-bearbeiten'])
         <li class="nav-item dropdown">
             <a id="navbarDropdown2" class="nav-link dropdown-toggle" href="#" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -35,7 +35,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown2">
-                @can('benutzer-bearbeiten')
+                @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten'])
                 <a class="dropdown-item" href="{{ route('users.index') }}">
                     Benutzer
                 </a>
