@@ -164,27 +164,31 @@
                                         </button>
                                     </form>
                                 @endcan
-                                @if ($day->name)
-                                    <div class="day-name">{{ $day->name }}</div> @endif
-                                @if ($day->description)
+                            @if ($day->name)
+                                <div class="day-name" title="@if(isset($liturgy[$day->id]['litProfileGist'])){{ $liturgy[$day->id]['litProfileGist'] }}@endif">{{ $day->name }}</div>
+                            @else
+                                <div class="day-name" title="@if(isset($liturgy[$day->id]['litProfileGist'])){{ $liturgy[$day->id]['litProfileGist'] }}@endif">@if(isset($liturgy[$day->id]['title']))){{ $liturgy[$day->id]['title'] }}@endif</div>
+                            @endif
+                            @if ($day->description)
                                     <div class="day-description">{{ $day->description }}</div> @endif
-                                @if (isset($liturgy[$day->id]['perikope']))
-                                    <div class="liturgy">
-                                        <div class="liturgy-sermon">
-                                            <div class="liturgy-color"
-                                                 style="background-color: {{ $liturgy[$day->id]['litColor'].';'.($liturgy[$day->id]['litColor'] == 'white' ? 'border-color: darkgray;' : '') }}"
-                                                 title="{{ $liturgy[$day->id]['feastCircleName'] }}"></div>
-                                            {{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope']] }}
+                            @if (isset($liturgy[$day->id]['perikope']))
+                            <div class="liturgy">
+                            <div class="liturgy-sermon">
+                                <div class="liturgy-color"
+                                     style="background-color: {{ $liturgy[$day->id]['litColor'].';'.($liturgy[$day->id]['litColor'] == 'white' ? 'border-color: darkgray;' : '') }}"
+                                     title="{{ $liturgy[$day->id]['feastCircleName'] }}"></div>
+                                <a href="{{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope'].'Link'] }}" target="_blank" title="Klicken, um den Text in einem neuen Tab zu lesen">
+                                {{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope']] }}</a></div>
+                            </div>
+                            @endif
+                            @can('urlaub-lesen')
+                                @if (count($vacations[$day->id]))
+                                        @foreach ($vacations[$day->id] as $vacation) <div class="vacation" title = "{{ $vacation->user->fullName(true) }}: {{ $vacation->reason }} ({{ $vacation->from->format('d.m.Y') }} @if($vacation->to > $vacation->from) - {{ $vacation->to->format('d.m.Y') }}@endif) @if($vacation->replacement()->first()) V: {{ $vacation->replacement()->first()->fullName() }} @endif">
+                                            <span class="fa fa-globe-europe"></span> {{ $vacation->user->lastName() }}
                                         </div>
-                                    </div>
+                                    @endforeach
                                 @endif
-                                @can('urlaub-lesen')
-                                    @if (count($vacations[$day->id]))
-                                        @foreach ($vacations[$day->id] as $vacation)
-                                            <div class="vacation">{{ $vacation }}</div>
-                                        @endforeach
-                                    @endif
-                                @endcan
+                            @endcan
                             </th>
                             @foreach($cities as $city)
                                 <td class="@if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif
