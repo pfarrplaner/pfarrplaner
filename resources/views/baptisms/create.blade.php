@@ -25,6 +25,7 @@
                                     @foreach($baptismalServices as $baptismalService)
                                         <option value="{{$baptismalService->id}}">
                                             {{ $baptismalService->day->date->format('d.m.Y') }}, {{ $baptismalService->timeText() }} ({{ $baptismalService->locationText() }})
+                                            @if(isset($baptismalService->baptisms) && (count($baptismalService->baptisms) >0 )) --> bereits {{ count($baptismalService->baptisms) }} @if(count($baptismalService->baptisms) > 1) Taufen @else Taufe @endif eingetragen @endif
                                         </option>
                                     @endforeach
                                 </optgroup>
@@ -33,6 +34,7 @@
                                     @foreach($otherServices as $baptismalService)
                                         <option value="{{$baptismalService->id}}">
                                             {{ $baptismalService->day->date->format('d.m.Y') }}, {{ $baptismalService->timeText() }} ({{ $baptismalService->locationText() }})
+                                            @if(isset($baptismalService->baptisms) && (count($baptismalService->baptisms) >0 )) --> bereits {{ count($baptismalService->baptisms) }} @if(count($baptismalService->baptisms) > 1) Taufen @else Taufe @endif eingetragen @endif
                                         </option>
                                     @endforeach
                                 </optgroup>
