@@ -167,7 +167,7 @@
                             @if ($day->name)
                                 <div class="day-name" title="@if(isset($liturgy[$day->id]['litProfileGist'])){{ $liturgy[$day->id]['litProfileGist'] }}@endif">{{ $day->name }}</div>
                             @else
-                                <div class="day-name" title="@if(isset($liturgy[$day->id]['litProfileGist'])){{ $liturgy[$day->id]['litProfileGist'] }}@endif">@if(isset($liturgy[$day->id]['title']))){{ $liturgy[$day->id]['title'] }}@endif</div>
+                                <div class="day-name" title="@if(isset($liturgy[$day->id]['litProfileGist'])){{ $liturgy[$day->id]['litProfileGist'] }}@endif">@if(isset($liturgy[$day->id]['title'])){{ $liturgy[$day->id]['title'] }}@endif</div>
                             @endif
                             @if ($day->description)
                                     <div class="day-description">{{ $day->description }}</div> @endif
