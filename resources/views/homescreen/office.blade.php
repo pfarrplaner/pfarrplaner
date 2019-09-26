@@ -109,6 +109,9 @@
                                     @if ($loop->first)
                                         <td rowspan="{{ $service->baptisms->count() }}">
                                             @include('partials.service.edit-rites-block', ['service', $service])
+                                            @can('update', $baptism)
+                                                <a class="btn btn-sm btn-primary" href="{{route('baptisms.edit', $baptism)}}?back=/home" title="Beerdigung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-cross"></span></a>
+                                            @endcan
                                         </td>
                                     @endif
                                 </tr>
@@ -189,6 +192,9 @@
                                     @if ($loop->first)
                                         <td>
                                             @include('partials.service.edit-rites-block', ['service', $service])
+                                            @can('update', $funeral)
+                                                <a class="btn btn-sm btn-primary" href="{{route('funerals.edit', $funeral)}}?back=/home" title="Beerdigung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-cross"></span></a>
+                                            @endcan
                                         </td>
                                     @endif
                                 </tr>
@@ -229,6 +235,9 @@
                                     @if ($loop->first)
                                         <td rowspan="{{ $service->weddings->count() }}">
                                             @include('partials.service.edit-rites-block', ['service', $service])
+                                            @can('update', $wedding)
+                                                <a class="btn btn-sm btn-primary" href="{{route('weddings.edit', $wedding)}}?back=/home" title="Trauung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-ring"></span></a>
+                                            @endcan
                                         </td>
                                     @endif
                                 </tr>
