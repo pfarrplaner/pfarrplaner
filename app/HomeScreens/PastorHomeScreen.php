@@ -57,7 +57,7 @@ class PastorHomeScreen extends AbstractHomeScreen
         $baptisms->load('day');
 
         $baptismRequests = Baptism::whereNull('service_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->get();
 
 

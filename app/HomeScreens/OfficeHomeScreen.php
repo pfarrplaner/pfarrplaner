@@ -29,7 +29,7 @@ class OfficeHomeScreen extends AbstractHomeScreen
         $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
                     ->where('date', '<=', $end);
@@ -44,7 +44,7 @@ class OfficeHomeScreen extends AbstractHomeScreen
         $baptisms = Service::with(['baptisms', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('baptisms')
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
@@ -62,7 +62,7 @@ class OfficeHomeScreen extends AbstractHomeScreen
         $funerals = Service::with(['funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('funerals')
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start);
@@ -75,7 +75,7 @@ class OfficeHomeScreen extends AbstractHomeScreen
         $weddings = Service::with(['weddings', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('weddings')
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
