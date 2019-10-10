@@ -182,7 +182,7 @@ class WeddingController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function wizardStep1(Request $request) {
-        $cities = Auth::user()->writableCities();
+        $cities = Auth::user()->writableCities;
         return view('weddings.wizard.step1', compact('cities'));
     }
 
@@ -267,9 +267,6 @@ class WeddingController extends Controller
             'time' => $time,
             'special_location' => $specialLocation,
             'city_id' => $city->id,
-            'pastor' => '',
-            'organist' => '',
-            'sacristan' => '',
             'others' => '',
             'description' => '',
             'need_predicant' => 0,
@@ -293,5 +290,10 @@ class WeddingController extends Controller
     }
 
 
+    public function done(Wedding $wedding) {
+        $wedding->done = true;
+        $wedding->save();
+        return json_encode(true);
+    }
 
 }
