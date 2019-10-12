@@ -20,9 +20,6 @@ class Service extends Model
         'day_id' => 'Tag',
         'location_id' => 'Ort',
         'time' => 'Uhrzeit',
-        'pastor' => 'Pfarrer',
-        'organist' => 'Organist',
-        'sacristan' => 'Mesner',
         'description' => 'Besonderheiten',
         'city_id' => 'Kirchengemeinde',
         'special_location' => 'Ort (Freitext)',
@@ -45,9 +42,6 @@ class Service extends Model
         'day_id',
         'location_id',
         'time',
-        'pastor',
-        'organist',
-        'sacristan',
         'description',
         'city_id',
         'special_location',
@@ -141,6 +135,14 @@ class Service extends Model
         return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
     }
 
+    public function tags() {
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    public function serviceGroups() {
+        return $this->belongsToMany(ServiceGroup::class);
+    }
+
     public function participantsByCategory($category) {
         switch ($category) {
             case 'P': return $this->pastors;
@@ -152,13 +154,13 @@ class Service extends Model
     }
 
 
-    public function participantsText($category, $fullName = false, $withTitle = true) {
+    public function participantsText($category, $fullName = false, $withTitle = true, $glue = ', ') {
         $participants = $this->participantsByCategory($category);
         $names = [];
         foreach ($participants as $participant) {
             $names[] = ($fullName ? $participant->fullName($withTitle) : $participant->lastName($withTitle));
         }
-        return join(', ', $names);
+        return join($glue, $names);
     }
 
     public function syncParticipantsByCategory ($category, $participantIds) {
@@ -186,8 +188,13 @@ class Service extends Model
         return join('; ', $desc);
     }
 
-    public function timeText($uhr = true)  {
-        return strftime('%H:%M', strtotime($this->time)).($uhr ? ' Uhr' : '');
+    public function timeText($uhr = true, $separator=':', $skipMinutes = false)  {
+        $time = strtotime($this->time);
+        $format = '%H'.$separator.'%M';
+        if ($skipMinutes) {
+            if ((int)strftime('%M', $time) == 0) $format = '%H';
+        }
+        return strftime($format, $time).($uhr ? ' Uhr' : '');
     }
 
     public function offeringText() {
