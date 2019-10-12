@@ -33,8 +33,11 @@ Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
 Route::get('absences/create/{year}/{month}/{user}', ['as' => 'absences.create', 'uses' => 'AbsenceController@create']);
 
+Route::resource('tags', 'TagController')->middleware('auth');
+
 // embed in web site:
 Route::get('services/embed/locations/{ids}/{limit?}', ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']);
+Route::get('services/embed/baptismalServices/{ids}/{limit?}/{maxBaptisms?}', ['as' => 'embed.table-baptismalservices', 'uses' => 'EmbedController@embedByBaptismalServices']);
 Route::get('services/embed/cities/{ids}/{limit?}', ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']);
 Route::get('services/embed/cc/cities/{ids}/{limit?}', ['as' => 'embed.table-cc', 'uses' => 'EmbedController@embedCCByCities']);
 Route::get('user/embed/vacations/{user}', ['as' => 'embed.user.vacations', 'uses' => 'EmbedController@embedUserVacations' ]);
@@ -74,6 +77,9 @@ Route::get('/baptism/add/{service}', ['as' => 'baptism.add', 'uses' => 'BaptismC
 Route::get('/baptism/destroy/{baptism}', ['as' => 'baptism.destroy', 'uses' => 'BaptismController@destroy']);
 Route::resource('funerals', 'FuneralController')->middleware('auth');
 Route::get('/baptism/{baptism}/appointment/ical', ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']);
+Route::post('/baptism/done/{baptism}', ['as' => 'baptism.done', 'uses' => 'BaptismController@done']);
+
+
 
 Route::get('/funeral/add/{service}', ['as' => 'funeral.add', 'uses' => 'FuneralController@create'])->middleware('auth');
 Route::get('/funeral/destroy/{funeral}', ['as' => 'funeral.destroy', 'uses' => 'FuneralController@destroy']);
@@ -81,10 +87,12 @@ Route::get('/funeral/{funeral}/Formular KRA.pdf', ['as' => 'funeral.form', 'uses
 Route::get('/funeral/wizard', ['as' => 'funerals.wizard', 'uses' => 'FuneralController@wizardStep1']);
 Route::post('/funeral/wizard/step2', ['as' => 'funerals.wizard.step2', 'uses' => 'FuneralController@wizardStep2']);
 Route::post('/funeral/wizard/step3', ['as' => 'funerals.wizard.step3', 'uses' => 'FuneralController@wizardStep3']);
+Route::post('/funeral/done/{funeral}', ['as' => 'funeral.done', 'uses' => 'FuneralController@done']);
 
 Route::get('/wedding/wizard', ['as' => 'weddings.wizard', 'uses' => 'WeddingController@wizardStep1']);
 Route::post('/wedding/wizard/step2', ['as' => 'weddings.wizard.step2', 'uses' => 'WeddingController@wizardStep2']);
 Route::post('/wedding/wizard/step3', ['as' => 'weddings.wizard.step3', 'uses' => 'WeddingController@wizardStep3']);
+Route::post('/wedding/done/{wedding}', ['as' => 'wedding.done', 'uses' => 'WeddingController@done']);
 
 
 
@@ -108,6 +116,7 @@ Route::get('/logout', function() { Auth::logout(); return redirect()->route('log
 
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
+Route::get('/ical/urlaub/{locationIds}/{cityIds}/{token}', ['uses' => 'ICalController@absences'])->name('ical.absences');
 Route::get('/connectWithOutlook', ['uses' => 'HomeController@connectWithOutlook'])->name('connectWithOutlook');
 
 
