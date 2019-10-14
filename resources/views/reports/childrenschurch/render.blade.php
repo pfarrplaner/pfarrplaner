@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <title>Kinderkirche {{ $city->name }} :: Dienstplan Online</title>
+    <title>Kinderkirche {{ $city->name }} :: Pfarrplaner</title>
     <style>
         body, * {
             font-family: helveticacondensed;

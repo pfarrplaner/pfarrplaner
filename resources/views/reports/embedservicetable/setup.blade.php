@@ -25,10 +25,11 @@
                         <select class="form-control" name="listType">
                             <option value="table-cities">Gottesdienste in einer oder mehreren Kirchengemeinden</option>
                             <option value="table-locations">Gottesdienste in einer oder mehreren Kirchen</option>
+                            <option value="table-baptismalservices">Taufgottesdienste in einer oder mehreren Kirchengemeinden</option>
                             <option value="table-cc">Kinderkirche in einer oder mehreren Kirchengemeinden</option>
                         </select>
                     </div>
-                    <div class="form-group form-group-hideable for-table-cities for-table-cc">
+                    <div class="form-group form-group-hideable for-table-cities for-table-cc  for-table-baptismalservices">
                         <label class="control-label">Folgende Kirchengemeinden mit einbeziehen:</label>
                         @foreach ($cities as $city)
                             <div class="form-check">
@@ -51,6 +52,10 @@
                                 </label>
                             </div>
                         @endforeach
+                    </div>
+                    <div class="from-group from-group-hideable for-table-baptismalservices">
+                        <label for="maxBaptisms">Maximale Anzahl von Taufen pro Gottesdienst</label>
+                        <input type="text" class="form-control" name="maxBaptisms" value="3" placeholder="Leer lassen, um keine 'Ampel' einzublenden" />
                     </div>
                     <div class="form-group">
                         <label for="cors-origin">Aufrufende Website:</label>
