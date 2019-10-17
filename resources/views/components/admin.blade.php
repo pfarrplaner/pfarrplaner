@@ -55,6 +55,17 @@
                     Kirchen
                 </a>
                 @endcan
+                @can('tags-bearbeiten')
+                    <a class="dropdown-item" href="{{ route('tags.index') }}">
+                        Kennzeichnungen
+                    </a>
+                @endcan
+                @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten', 'rollen-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'tags-bearbeiten'])
+                    <div class="dropdown-divider"></div>
+                @endcanany
+                    <a class="dropdown-item" href="{{ route('calendar', ['slave' => 1]) }}" target="_blank">
+                        Automatische Kalenderansicht öffnen
+                    </a>
             </div>
         </li>
         @endcanany
