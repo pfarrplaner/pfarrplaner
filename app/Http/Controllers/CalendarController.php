@@ -144,6 +144,11 @@ class CalendarController extends Controller
         $slave = $request->get('slave', 0);
         $highlight = $request->get('highlight', 0);
 
+        // save current display settings for slave displays to follow
+        Auth::user()->setSetting('display-timestamp', time());
+        Auth::user()->setSetting('display-month', $month);
+        Auth::user()->setSetting('display-year', $year);
+
         return view($viewName, compact(
             'year', 'month', 'years', 'months', 'days', 'cities',
                    'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave'
