@@ -8,7 +8,9 @@ use App\Location;
 use App\Mail\ServiceCreated;
 use App\Mail\ServiceUpdated;
 use App\Service;
+use App\ServiceGroup;
 use App\Subscription;
+use App\Tag;
 use App\User;
 use App\Vacations;
 use Illuminate\Http\Request;
@@ -80,9 +82,6 @@ class ServiceController extends Controller
             'time' => $time,
             'special_location' => $specialLocation,
             'city_id' => $request->get('city_id'),
-            'pastor' => '',
-            'organist' => '',
-            'sacristan' => '',
             'others' => '',
             'description' => $request->get('description') ?: '',
             'need_predicant' => $request->get('need_predicant') ? 1 : 0,
@@ -127,6 +126,11 @@ class ServiceController extends Controller
         $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
         $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
 
+        $tags = $request->get('tags') ?: [];
+        $service->tags()->sync($tags);
+
+        $serviceGroups = $request->get('serviceGroups') ?: [];
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
 
         //$service->location_id = $location->id;
         //$service->day_id = $day->id;
@@ -169,10 +173,12 @@ class ServiceController extends Controller
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::where('city_id', '=', $service->city_id)->get();
         $users = User::all()->sortBy('name');
+        $tags = Tag::all();
+        $serviceGroups = ServiceGroup::all();
 
         $backRoute = $request->get('back') ?: '';
 
-        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute'));
+        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute', 'tags', 'serviceGroups'));
     }
 
     /**
@@ -193,7 +199,6 @@ class ServiceController extends Controller
         foreach (['P', 'O', 'M', 'A'] as $key) {
             $originalParticipants[$key] = $original->participantsText($key);
         }
-
 
         // participants first
         $participants = [];
@@ -245,9 +250,6 @@ class ServiceController extends Controller
         $service->day_id = $day->id;
         $service->location_id = $locationId;
         $service->time = $time;
-        $service->pastor = $request->get('pastor') ?: '';
-        $service->organist = $request->get('organist') ?: '';
-        $service->sacristan = $request->get('sacristan') ?: '';
         $service->description = $request->get('description') ?: '';
         $service->city_id = $request->get('city_id');
         $service->special_location = $specialLocation;
@@ -264,6 +266,12 @@ class ServiceController extends Controller
         $service->cc_location = $ccLocation;
         $service->cc_lesson = $request->get('cc_lesson') ?: '';
         $service->cc_staff = $request->get('cc_staff') ?: '';
+
+        $tags = $request->get('tags') ?: [];
+        $service->tags()->sync($tags);
+
+        $serviceGroups = $request->get('serviceGroups') ?: [];
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
 
         // notify:
         // (needs to happen before save, so the model is still dirty
@@ -306,8 +314,10 @@ class ServiceController extends Controller
 
         $locations = Location::where('city_id', '=', $city->id)->get();
         $users = User::all()->sortBy('name');
+        $tags = Tag::all();
+        $serviceGroups = ServiceGroup::all();
 
-        return view('services.create', compact('day', 'city', 'days', 'locations', 'users'));
+        return view('services.create', compact('day', 'city', 'days', 'locations', 'users', 'tags', 'serviceGroups'));
     }
 
     public function servicesByCityAndDay($cityId, $dayId) {
