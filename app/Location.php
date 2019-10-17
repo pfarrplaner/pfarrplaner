@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $fillable = ['name', 'city_id', 'default_time', 'cc_default_location'];
+    protected $fillable = ['name', 'city_id', 'default_time', 'cc_default_location', 'alternate_location_id', 'general_location_name'];
 
     public function city() {
         return $this->belongsTo(City::class);
@@ -14,6 +14,10 @@ class Location extends Model
 
     public function services() {
         return $this->hasMany(Service::class);
+    }
+
+    public function alternateLocation() {
+        return $this->belongsTo(Location::class, 'alternate_location_id');
     }
 
 }

@@ -11,4 +11,18 @@ class ServiceGroup extends Model
     public function services() {
         return $this->belongsToMany(Service::class);
     }
+
+    public static function createIfMissing($list) {
+        $result = [];
+        foreach ($list as $element) {
+            if (is_numeric($element)) {
+                $result[] = $element;
+            } else {
+                $sg = new ServiceGroup(['name' => $element]);
+                $sg->save();
+                $result[] = $sg->id;
+            }
+        }
+        return $result;
+    }
 }

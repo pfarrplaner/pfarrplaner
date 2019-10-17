@@ -60,7 +60,12 @@ class AbstractReport
         return view($this->getSetupViewName(), $data);
     }
 
+    public function renderView($view, $data = []) {
+        $data = array_merge(['report' => $this->getKey()], $data);
+        return view($this->getViewName($view), $data);
+    }
+
     public function setup() {
-        return $this->renderSetupView();
+        return $this->renderView('setup');
     }
 }

@@ -53,4 +53,16 @@ class ReportsController extends Controller
             return redirect()->route('home');
         }
     }
+
+    public function step (Request $request, $report, $step) {
+        $reportClass = 'App\\Reports\\' . ucfirst($report) . 'Report';
+        if (class_exists($reportClass)) {
+            /** @var AbstractReport $report */
+            $report = new $reportClass();
+            if (method_exists($report, $step)) {
+                return $report->$step($request);
+            }
+        }
+        return redirect()->route('home');
+    }
 }

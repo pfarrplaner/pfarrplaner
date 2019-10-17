@@ -31,7 +31,7 @@ class AbstractPDFDocumentReport extends AbstractReport
     public function sendToBrowser($filename, $data, $layout) {
         $pdf = PDF::loadView($this->getRenderViewName(), $data, [], array_merge([
             'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
-        ], $layout));
+        ], $layout), $layout);
         return $pdf->stream($filename);
 
     }
