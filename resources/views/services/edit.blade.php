@@ -65,9 +65,9 @@
                     <hr />
                     <input type="hidden" name="routeBack" value="{{ $backRoute }}" />
                     @can('update', $service)
-                    <button style="display: none;" type="submit" class="btn btn-primary btnSave" @if($backRoute) data-route="{{ $backRoute }}" @endif>Speichern und schließen</button>
-                    <button style="display: none;" type="submit" class="btn btn-primary btnSave" data-route="{{ route('services.edit', ['service' => $service->id]) }}">Speichern</button>
-                    <a id="btnBack" class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}" @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Schließen</a>
+                    <button type="submit" class="btn btn-primary btnSave" @if($backRoute) data-route="{{ $backRoute }}" @endif>Speichern und schließen</button>
+                    <button type="submit" class="btn btn-primary btnSave" data-route="{{ route('services.edit', ['service' => $service->id]) }}">Speichern</button>
+                    <a id="btnBack" class="btn btn-warning" @if ($backRoute)href="{{ $backRoute }}" @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Schließen ohne Änderungen</a>
                     @else
                         <a class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}" @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Zurück</a>
                     @endcan
@@ -169,9 +169,11 @@
                 originalFormData = $('form#frmEdit').serialize();
 
                 // dirty handler:
-                $(":input:not(:button):not([type=hidden])").change(dirtHandler);
-                $(":input:not(:button):not([type=hidden])").click(dirtHandler);
-                $(":input:not(:button):not([type=hidden])").on('keyup', dirtHandler);
+                /*
+                $(":input:not(button):not([type=hidden])").change(dirtHandler);
+                $(":input:not(button):not([type=hidden])").click(dirtHandler);
+                $(":input:not(button):not([type=hidden])").on('keyup', dirtHandler);
+                */
 
             });
 

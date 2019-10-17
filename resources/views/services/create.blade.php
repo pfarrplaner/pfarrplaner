@@ -128,6 +128,36 @@
                                 <label for="description">Anmerkungen</label>
                                 <input type="text" class="form-control" name="description" @canany(['gd-allgemein-beabeiten', 'gd-anmerkungen-bearbeiten']) @else disabled @endcanany />
                             </div>
+                            <div class="form-group">
+                                <label for="tags">Kennzeichnungen</label>
+                                <select class="form-control fancy-selectize" name="tags[]" multiple>
+                                    <option></option>
+                                    @foreach ($tags as $tag)
+                                        <option value="{{ $tag->id }}">{{ $tag->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="tags">Dieser Gottesdienst gehört zu folgenden Gruppen</label>
+                                <select class="form-control" name="serviceGroups[]" multiple id="selectServiceGroups">
+                                    <option></option>
+                                    @foreach ($serviceGroups as $serviceGroup)
+                                        <option value="{{ $serviceGroup->id }}">{{ $serviceGroup->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <script>
+                                $(document).ready(function(){
+                                    $('#selectServiceGroups').selectize({
+                                        create: true,
+                                        render: {
+                                            option_create: function (data, escape) {
+                                                return '<div class="create">Neue Gruppe anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                                            }
+                                        },
+                                    });
+                                });
+                            </script>
                         </div>
                         @canany(['gd-opfer-lesen','gd-opfer-bearbeiten'])
                         <div role="tabpanel" class="tab-pane fade" id="offerings">
