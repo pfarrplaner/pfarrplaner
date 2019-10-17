@@ -57,8 +57,8 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'noreply@tailfingen.de'),
-        'name' => env('MAIL_FROM_NAME', 'Dienstplan Online'),
+        'address' => env('MAIL_FROM_ADDRESS', 'noreply@pfarrplaner.de'),
+        'name' => env('MAIL_FROM_NAME', 'Pfarrplaner'),
     ],
 
     /*
