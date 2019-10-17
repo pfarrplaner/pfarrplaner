@@ -32,7 +32,7 @@
                     <tbody>
                     @foreach($users as $user)
                         <tr>
-                            <td>{{$user->name}}<br />
+                            <td>{{$user->name}}@if($user->title) ({{ $user->title }}) @endif <br />
                                 @foreach($user->roles as $role)
                                     <span class="badge badge-info" title="@foreach($role->permissions()->get() as $p) {{ $p->name }} @endforeach">{{ $role->name }}</span>
                                 @endforeach
@@ -47,6 +47,9 @@
                                 @can('update', $user)
                                     <a href="{{ route('users.edit',$user->id)}}" class="btn btn-sm btn-primary" title="Bearbeiten">
                                         <span class="fa fa-edit"></span>
+                                    </a>
+                                    <a href="{{ route('user.services', $user->id) }}" class="btn btn-sm btn-secondary" title="Gottesdienste anzeigen">
+                                        <span class="fa fa-search"></span>
                                     </a>
                                 @endcan
                                 @can('delete', $user)
@@ -79,7 +82,7 @@
                     <tbody>
                     @foreach($otherPeople as $user)
                         <tr>
-                            <td>{{$user->name}}<br />
+                            <td>{{$user->name}}@if($user->title) ({{ $user->title }}) @endif <br />
                                 @foreach($user->roles as $role)
                                     <span class="badge badge-info">{{ $role->name }}</span>
                                 @endforeach
@@ -103,6 +106,9 @@
                                     </form>
                                 @endcan
                                 @can('update', $user)
+                                    <a href="{{ route('user.services', $user->id) }}" class="btn btn-sm btn-secondary" title="Gottesdienste anzeigen">
+                                        <span class="fa fa-search"></span>
+                                    </a>
                                         <form action="{{ route('user.join', $user->id)}}" method="post" class="form-inline" style="display:inline;">
                                             @csrf
                                             <button class="btn btn-sm btn-secondary" type="submit" title="Mit einer anderen Person zusammenführen"><span class="fa fa-object-group"></span></button>
