@@ -177,7 +177,7 @@ class Service extends Model
     }
 
     public function locationText() {
-        return $this->special_location ?: $this->location->name;
+        return $this->special_location ?: (is_object( $this->location) ? $this->location->name : '');
     }
 
     public function descriptionText() {
@@ -188,13 +188,13 @@ class Service extends Model
         return join('; ', $desc);
     }
 
-    public function timeText($uhr = true, $separator=':', $skipMinutes = false)  {
+    public function timeText($uhr = true, $separator=':', $skipMinutes = false, $nbsp = false)  {
         $time = strtotime($this->time);
-        $format = '%H'.$separator.'%M';
+        $format = '%k'.$separator.'%M';
         if ($skipMinutes) {
             if ((int)strftime('%M', $time) == 0) $format = '%H';
         }
-        return strftime($format, $time).($uhr ? ' Uhr' : '');
+        return trim(strftime($format, $time).($uhr ? ($nbsp ? '&nbsp;' : ' ').'Uhr' : ''));
     }
 
     public function offeringText() {
