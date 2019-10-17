@@ -142,6 +142,20 @@ span.vacation-conflict {
     background-color: lightgreen;
 }
 
+.calendar-month .service-entry {
+    background-color: #f3f3f3;
+    -webkit-transition: background 0.5s linear;
+    -moz-transition: background 0.5s linear;
+    -ms-transition: background 0.5s linear;
+    -o-transition: background 0.5s linear;
+    transition: background 0.5s linear;
+}
+
+.calendar-month .service-entry.highlighted {
+    background-color: yellow;
+}
+
+
 
 .calendar-month .service-entry.editable:hover {
     border-color: #a1cbef;
@@ -317,6 +331,8 @@ ul.sortable li.placeholder:before {
 .tbl-absences .cal-cell {
     font-size: 0.7em;
     padding: 0;
+    max-width: 15px;
+    overflow: hidden;
 }
 
 .tbl-absences .cal-cell.day_Sun {
@@ -356,8 +372,23 @@ ul.sortable li.placeholder:before {
     border-right-color: lightblue;
 }
 
+.tbl-absences .cal-cell.selected {
+    background-color: blue !important;
+}
+
 .date-picker-wrapper {
     border: 0;
     background-color: transparent;
     padding-left: 0;
+}
+
+.loader {
+    width:800px;
+    height:500px;
+    margin:0 auto;
+    position:absolute;
+    left:50%;
+    top:50%;
+    margin-left:-400px;
+    margin-top:-400px;
 }

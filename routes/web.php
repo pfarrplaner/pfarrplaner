@@ -59,8 +59,9 @@ Route::get('/ajax/liturgicalInfo/{dayId}/', ['uses' => 'LiturgicalDaysController
 
 
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
-Route::get('/reports/setup/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
+Route::get('/report/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
+Route::post('/report/{report}/{step}', ['as' => 'report.step', 'uses' => 'ReportsController@step']);
 
 Route::get('/input/{input}', ['as' => 'inputs.setup', 'uses' => 'InputController@setup']);
 Route::post('/input/collect/{input}', ['as' => 'inputs.input', 'uses' => 'InputController@input']);
@@ -135,6 +136,9 @@ Route::get('/showLimitedColumns/{switch}', function($switch){
     Session::put('showLimitedDays', (bool)$switch);
     return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
 })->middleware('auth')->name('showLimitedColumns');
+
+// last service updated (timestamp)
+Route::get('/lastUpdate', ['as' => 'lastUpdate', 'uses' => 'ServiceController@lastUpdate']);
 
 
 // utility to create storage link

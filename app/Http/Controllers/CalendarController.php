@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Absence;
 use App\City;
 use App\Day;
 use App\Liturgy;
@@ -68,6 +69,7 @@ class CalendarController extends Controller
     protected function getVacationers(Day $day)
     {
         $vacationers = [];
+        /*
         if (env('VACATION_URL')) {
             if (!count($this->vacationData)) {
                 $this->vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
@@ -82,10 +84,18 @@ class CalendarController extends Controller
                 }
             }
         }
+        **/
+        $absences = Absence::with('user')
+            ->where('from', '<=', $day->date)
+            ->where('to', '>=', $day->date)
+            ->get();
+        foreach ($absences as $absence) {
+            $vacationers[$absence->user->lastName()] = $absence;
+        }
         return $vacationers;
     }
 
-    public function month($year = 0, $month = 0)
+    public function month(Request $request, $year = 0, $month = 0)
     {
         if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
             return $r;
@@ -115,7 +125,7 @@ class CalendarController extends Controller
         $viewName = Auth::user()->getSetting('calendar_view', 'calendar.month');
 
 
-        $servicesList = [];
+        $services = [];
         $vacations = [];
         $liturgy = [];
         foreach ($cities as $city) {
@@ -123,7 +133,7 @@ class CalendarController extends Controller
                 if (!isset($vacations[$day->id])) $vacations[$day->id] = $this->getVacationers($day);
                 if (!isset($liturgy[$day->id])) $liturgy[$day->id] = Liturgy::getDayInfo($day);
 
-                    $servicesList[$city->id][$day->id] = Service::with('day', 'location')
+                    $services[$city->id][$day->id] = Service::with('day', 'location')
                         ->where('city_id', $city->id)
                         ->where('day_id', '=', $day->id)
                         ->orderBy('time')
@@ -131,19 +141,14 @@ class CalendarController extends Controller
             }
         }
 
+        $slave = $request->get('slave', 0);
+        $highlight = $request->get('highlight', 0);
 
-        return view($viewName, [
-            'year' => $year,
-            'month' => $month,
-            'years' => $years,
-            'months' => $months,
-            'days' => $days,
-            'cities' => $cities,
-            'services' => $servicesList,
-            'nextDay' => $nextDay,
-            'vacations' => $vacations,
-            'liturgy' => $liturgy,
-        ]);
+        return view($viewName, compact(
+            'year', 'month', 'years', 'months', 'days', 'cities',
+                   'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave'
+            )
+        );
     }
 
 

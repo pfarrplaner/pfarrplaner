@@ -347,4 +347,30 @@ class ServiceController extends Controller
             ->header('Content-Type', 'text/calendar')
             ->header('Content-Disposition', 'inline; filename='.$service.'.ics');
     }
+
+
+    /**
+     * Return timestamp of last update
+     */
+    public function lastUpdate() {
+        $lastUpdated = Service::whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->orderBy('updated_at', 'DESC')
+            ->first();
+        $lastCreated = Service::whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->orderBy('created_at', 'DESC')
+            ->first();
+
+        if ($lastUpdated->updated_at > $lastCreated->created_at) {
+            $service = $lastUpdated;
+            $timestamp = $service->updated_at;
+        } else {
+            $service = $lastCreated;
+            $timestamp = $service->created_at;
+        }
+
+        $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');
+        $route = route('calendar', ['year' => $service->day->date->format('Y'), 'month' => $service->day->date->format('m'), 'highlight' => $service->id, 'slave' => 1]);
+
+        return response()->json(compact('route', 'update', 'service'));
+    }
 }
