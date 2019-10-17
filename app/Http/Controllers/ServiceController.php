@@ -13,6 +13,7 @@ use App\Subscription;
 use App\Tag;
 use App\User;
 use App\Vacations;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -368,8 +369,16 @@ class ServiceController extends Controller
             $timestamp = $service->created_at;
         }
 
-        $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');
         $route = route('calendar', ['year' => $service->day->date->format('Y'), 'month' => $service->day->date->format('m'), 'highlight' => $service->id, 'slave' => 1]);
+
+        // tie in automatic month switching
+        $timestamp2 = Carbon::createFromTimestamp(Auth::user()->getSetting('display-timestamp'));
+        if ($timestamp2 > $timestamp) {
+            $timestamp = $timestamp2;
+            $route = route('calendar', ['year' => Auth::user()->getSetting('display-year'), 'month' => Auth::user()->getSetting('display-month'), 'slave' => 1]);
+        }
+
+        $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');
 
         return response()->json(compact('route', 'update', 'service'));
     }
