@@ -39,18 +39,32 @@ class CalendarController extends Controller
         }
     }
 
-    protected function redirectIfMissingParameters($route, $year, $month)
+    protected function redirectIfMissingParameters(Request $request, $route, $year, $month)
     {
+        $defaultMonth = Auth::user()->getSetting('display-month', date('m'));
+        $defaultYear = Auth::user()->getSetting('display-year', date('Y'));
+
         if ($month == 13) {
-            return redirect()->route($route, ['year' => ++$year, 'month' => 1]);
+            $year++;
+            $month = 1;
         }
         if (($year > 0) && ($month == 0)) {
-            return redirect()->route($route, ['year' => --$year, 'month' => 12]);
+            $year--;
+            $month = 12;
         }
+
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
-            return redirect()->route($route, ['year' => date('Y'), 'month' => date('m')]);
+            $year = $defaultYear;
+            $month = $defaultMonth;
+        } else {
+            return false;
         }
-        return false;
+
+        $data = compact('month', 'year');
+        $slave = $request->get('slave', 0);
+        if ($slave) $data = array_merge($data, compact('slave'));
+
+        return redirect()->route($route, $data);
     }
 
     protected function getDaysInMonth($year, $month)
@@ -97,7 +111,7 @@ class CalendarController extends Controller
 
     public function month(Request $request, $year = 0, $month = 0)
     {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar', $year, $month))) {
             return $r;
         }
 
@@ -164,9 +178,9 @@ class CalendarController extends Controller
     }
 
 
-    public function monthJS($year = 0, $month = 0)
+    public function monthJS(Request $request, $year = 0, $month = 0)
     {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar', $year, $month))) {
             return $r;
         }
 
@@ -202,9 +216,9 @@ class CalendarController extends Controller
     }
 
 
-    public function printsetup($year = 0, $month = 0)
+    public function printsetup(Request $request, $year = 0, $month = 0)
     {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar.printsetup', $year, $month))) {
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar.printsetup', $year, $month))) {
             return $r;
         }
 
@@ -218,7 +232,7 @@ class CalendarController extends Controller
 
     public function print(Request $request, $year = 0, $month = 0)
     {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar.print', $year, $month))) {
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar.print', $year, $month))) {
             return $r;
         }
 
