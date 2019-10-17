@@ -100,7 +100,15 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th class="no-print">Kirchengemeinde</th>
+                    <th class="no-print">
+                        @if ($slave)
+                            <div class="badge badge-info">
+                                <span id="heartbeat" class="fa fa-sync" ></span>
+                                 Auto-Update
+                                <br />
+                            </div><br />
+                        @endif
+                        Kirchengemeinde</th>
                     @foreach ($days as $day)
                         <th class="hide-buttons @if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif
                         @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) limited collapsed @endif
@@ -293,6 +301,7 @@
         var lastUpdate = null;
 
         function checkForUpdates() {
+            $('#heartbeat').removeClass('fa-sync').addClass('fa-heart').css('color','red');
             fetch('{{ route('lastUpdate') }}')
                 .then(response => response.json())
                 .then(data => {
@@ -306,8 +315,8 @@
                             window.location.href = data.route;
                         }
                     }
+                    $('#heartbeat').removeClass('fa-heart').addClass('fa-sync').css('color','#fff');
                 })
-
         }
 
         $(document).ready(function () {
