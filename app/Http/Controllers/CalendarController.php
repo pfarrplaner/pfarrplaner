@@ -44,6 +44,10 @@ class CalendarController extends Controller
         $defaultMonth = Auth::user()->getSetting('display-month', date('m'));
         $defaultYear = Auth::user()->getSetting('display-year', date('Y'));
 
+        $initialYear = $year;
+        $initialMonth = $month;
+
+
         if ($month == 13) {
             $year++;
             $month = 1;
@@ -56,7 +60,9 @@ class CalendarController extends Controller
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
             $year = $defaultYear;
             $month = $defaultMonth;
-        } else {
+        }
+
+        if (($year == $initialYear) && ($month == $initialMonth)) {
             return false;
         }
 
@@ -161,8 +167,8 @@ class CalendarController extends Controller
         // save current display settings for slave displays to follow
         if (!$slave) {
             $user = Auth::user();
-            $currentDisplayMonth = $user->getSetting('display-month');
-            $currentDisplayYear = $user->getSetting('display-year');
+            $currentDisplayMonth = $user->getSetting('display-month', 999);
+            $currentDisplayYear = $user->getSetting('display-year', 999);
             if (($month != $currentDisplayMonth) || ($year != $currentDisplayYear)) {
                 $user->setSetting('display-timestamp', time());
                 $user->setSetting('display-month', $month);
