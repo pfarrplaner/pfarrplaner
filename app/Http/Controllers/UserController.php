@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Service;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -64,13 +65,11 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'email' => 'email',
         ]);
 
         $user = new User([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
             'cities' => $request->get('cities'),
             'title' => $request->get('title') ?: '',
             'first_name' => $request->get('first_name') ?: '',
@@ -82,8 +81,18 @@ class UserController extends Controller
             'preference_cities' => '', // TODO: empty for now
             'manage_absences' => $request->get('manage_absences') ? 1 : 0,
         ]);
+
+        if (($user->email != '') && ($request->get('password', '') != '')) {
+            $user->password = Hash::make($request->get('password'));
+        }
+
         $user->save();
+
+
         $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
+
+        $user->homeCities()->sync($request->get('homeCities') ?: []);
+
 
         // assign roles
         $roles = $request->get('roles');
@@ -234,6 +243,8 @@ class UserController extends Controller
 
         $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
 
+        $user->homeCities()->sync($request->get('homeCities') ?: []);
+
         // assign roles
         $roles = $request->get('roles');
         if (is_array($roles) && count($roles)) {
@@ -314,5 +325,18 @@ class UserController extends Controller
         $user1->delete();
 
         return redirect()->route('users.index')->with('success', 'Die Benutzer wurden zusammengeführt.');
+    }
+
+
+    public function services(User $user) {
+        $services = Service::with('location', 'day', 'participants')
+            ->select('services.*')
+            ->join('days', 'days.id', '=', 'services.day_id')
+            ->whereHas('participants', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->orderBy('days.date', 'ASC')
+            ->orderBy('time')
+            ->get();
+        return view('users.services', compact('user', 'services'));
     }
 }

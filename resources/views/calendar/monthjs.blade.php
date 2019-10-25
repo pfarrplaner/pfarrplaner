@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ $months[(int)$month] }} {{ $year }} :: Dienstplan Online</title>
+    <title>{{ $months[(int)$month] }} {{ $year }} :: Pfarrplaner</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -36,7 +36,7 @@
 <div id="app">
     <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
         <a class="navbar-brand" href="{{ url('/') }}">
-            <span class="fa fa-home"></span> {{ config('app.name', 'Dienstplan Online') }}
+            <span class="fa fa-home"></span> {{ config('app.name', 'Pfarrplaner') }}
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false"

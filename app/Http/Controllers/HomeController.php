@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Location;
 use App\Misc\VersionInfo;
+use App\Service;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -89,5 +92,28 @@ class HomeController extends Controller
     public function whatsnew() {
         $messages = VersionInfo::getMessages()->sortByDesc('date');
         return view('whatsnew', compact('messages'));
+    }
+
+    public function counters($counter) {
+        $data = [];
+        switch ($counter) {
+            case 'users':
+                $count = count(User::where('password', '!=', '')->get());
+                break;
+            case 'services':
+                $count = count(Service::whereHas('day', function($query) { $query->where('date', '>=', Carbon::now()); })->get());
+                break;
+            case 'locations':
+                $count = count(Location::all());
+                break;
+            case 'cities':
+                $count = count(City::all());
+                break;
+            case 'online':
+                $data['users'] = visitor()->onlineVisitors(User::class);
+                $count = count($data['users']);
+                break;
+        }
+        return response()->json(compact('count', 'data'));
     }
 }

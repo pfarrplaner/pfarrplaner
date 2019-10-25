@@ -38,7 +38,7 @@ class MinistryHomeScreen extends AbstractHomeScreen
             ->orderBy('time', 'ASC')
             ->get();
 
-        return view('homescreen.ministry', compact('user', 'services'));
+        return $this->renderView('homescreen.ministry', compact('user', 'services'));
     }
 
 }

@@ -21,6 +21,7 @@ Route::get('user/profile', ['as' => 'user.profile', 'uses' => 'UserController@pr
 Route::patch('user/profile', ['as' => 'user.profile.save', 'uses' => 'UserController@profileSave'])->middleware('auth');
 Route::post('user/{user}/join', ['as' => 'user.join', 'uses' => 'UserController@join'])->middleware('auth');
 Route::post('users/join', ['as' => 'users.join', 'uses' => 'UserController@doJoin'])->middleware('auth');
+Route::get('user/{user}/services', ['as' => 'user.services', 'uses' => 'UserController@services'])->middleware('auth');
 
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
@@ -67,7 +68,7 @@ Route::get('/input/{input}', ['as' => 'inputs.setup', 'uses' => 'InputController
 Route::post('/input/collect/{input}', ['as' => 'inputs.input', 'uses' => 'InputController@input']);
 Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputController@save']);
 
-Route::get('/vertretungen', ['as' => 'absences', 'uses' => 'PublicController@absences']);
+//Route::get('/vertretungen', ['as' => 'absences', 'uses' => 'PublicController@absences']);
 
 Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses' => 'DownloadController@download'])->middleware('auth');
 
@@ -117,7 +118,7 @@ Route::get('/logout', function() { Auth::logout(); return redirect()->route('log
 
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
-Route::get('/ical/urlaub/{locationIds}/{cityIds}/{token}', ['uses' => 'ICalController@absences'])->name('ical.absences');
+Route::get('/ical/urlaub/{user}/{token}', ['uses' => 'ICalController@absences'])->name('ical.absences');
 Route::get('/connectWithOutlook', ['uses' => 'HomeController@connectWithOutlook'])->name('connectWithOutlook');
 
 
@@ -139,6 +140,10 @@ Route::get('/showLimitedColumns/{switch}', function($switch){
 
 // last service updated (timestamp)
 Route::get('/lastUpdate', ['as' => 'lastUpdate', 'uses' => 'ServiceController@lastUpdate']);
+
+
+// counters
+Route::get('/counter/{counter}', ['as' => 'counter', 'uses' => 'HomeController@counters']);
 
 
 // utility to create storage link

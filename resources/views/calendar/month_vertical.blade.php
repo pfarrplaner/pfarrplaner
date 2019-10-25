@@ -1,45 +1,12 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ $months[(int)$month] }} {{ $year }} :: Dienstplan Online</title>
-
-    <!-- Scripts -->
-    <script
-            src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <!-- Styles -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="{{ asset('css/dienstplan.css') }}" rel="stylesheet">
+@extends('layouts.app', ['noNavBar' => $slave])
 
 
-</head>
-<body>
-<div id="app">
-    <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            <span class="fa fa-home"></span> {{ config('app.name', 'Dienstplan Online') }}
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="{{ __('Toggle navigation') }}">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+@section('title')
+    {{ $months[(int)$month] }} {{ $year }}
+@endsection
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Left Side Of Navbar -->
+@section('navbar')
+    <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 @auth
                     <div class="button-row no-print btn-toolbar" role="toolbar">
@@ -111,13 +78,13 @@
                     </div>
                 @endauth
             </ul>
+@endsection
 
-            @component('components.admin')
-            @endcomponent
-        </div>
-    </nav>
-
-    <main class="py-1">
+@section('content')
+    <div class="loader">
+        <h1>Die Kalenderansicht wird geladen... <span class="fa fa-spin fa-spinner"></span></h1>
+    </div>
+    <div class="page" style="display: none;">
         <div class="calendar-month">
             @if(session()->get('success'))
                 <div class="alert alert-success">
@@ -181,14 +148,16 @@
                                 {{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope']] }}</a></div>
                             </div>
                             @endif
-                            @can('urlaub-lesen')
-                                @if (count($vacations[$day->id]))
-                                        @foreach ($vacations[$day->id] as $vacation) <div class="vacation" title = "{{ $vacation->user->fullName(true) }}: {{ $vacation->reason }} ({{ $vacation->from->format('d.m.Y') }} @if($vacation->to > $vacation->from) - {{ $vacation->to->format('d.m.Y') }}@endif) @if($vacation->replacement()->first()) V: {{ $vacation->replacement()->first()->fullName() }} @endif">
-                                            <span class="fa fa-globe-europe"></span> {{ $vacation->user->lastName() }}
-                                        </div>
-                                    @endforeach
-                                @endif
-                            @endcan
+                                    @can('urlaub-lesen')
+                                        @if (isset($vacations[$day->id]) && count($vacations[$day->id]))
+                                            @foreach ($vacations[$day->id] as $vacation)
+                                                <div class="vacation"
+                                                     title="{{ $vacation->user->fullName(true) }}: {{ $vacation->reason }} ({{ $vacation->durationText() }}) [{{ $vacation->replacementText('V:') }}]">
+                                                    <span class="fa fa-globe-europe"></span> {{ $vacation->user->lastName() }}
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    @endcan
                             </th>
                             @foreach($cities as $city)
                                 <td class="@if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif
@@ -327,9 +296,17 @@
 
             // open limited days with services that belong to me
             $('.limited .service-entry.mine').parent().parent().removeClass('collapsed');
+
+
+            $(".loader").delay(800).fadeOut(400, function () {
+                $(".page").fadeIn(400);
+                if (slave) {
+                    var t = setInterval(checkForUpdates, 2000);
+                }
+            });
+
+
         });
 
     </script>
-</div>
-</body>
-</html>
+@endsection

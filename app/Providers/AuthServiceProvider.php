@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Absence;
 use App\City;
 use App\Day;
 use App\Location;
+use App\Policies\AbsencePolicy;
 use App\Policies\CityPolicy;
 use App\Policies\DayPolicy;
 use App\Policies\LocationPolicy;
@@ -33,6 +35,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Service' => ServicePolicy::class,
         Day::class => DayPolicy::class,
         Role::class => RolePolicy::class,
+        Absence::class => AbsencePolicy::class,
     ];
 
     /**

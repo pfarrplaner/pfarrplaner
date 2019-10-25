@@ -81,7 +81,7 @@ class SecretaryHomeScreen extends AbstractHomeScreen
             ->get();
         $weddings->load('day');
 
-        return view('homescreen.secretary', compact('user', 'services', 'funerals', 'baptisms', 'weddings'));
+        return $this->renderView('homescreen.secretary', compact('user', 'services', 'funerals', 'baptisms', 'weddings'));
     }
 
 }

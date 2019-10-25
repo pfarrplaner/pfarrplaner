@@ -77,6 +77,16 @@
                 @endforeach
                 <hr />
                 <div class="form-group">
+                    <label for="homeCities">Dieser Benutzer gehört zu folgenden Kirchengemeinden:</label>
+                    <select class="form-control fancy-selectize" name="homeCities[]" multiple>
+                        <option></option>
+                        @foreach ($cities as $city)
+                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <hr />
+                <div class="form-group">
                     <label for="roles[]">Benutzerrollen</label>
                     <select class="form-control fancy-selectize" name="roles[]" multiple>
                         @foreach($roles as $role)
@@ -93,6 +103,7 @@
                         <option value="homescreen:ministry">Zusammenfassung für andere Beteiligte</option>
                         <option value="homescreen:secretary">Zusammenfassung für Sekretär</option>
                         <option value="homescreen:office">Zusammenfassung für Kirchenpflege/Kirchenregisteramt</option>
+                        <option value="homescreen:admin">Zusammenfassung für Administrator*innen</option>
                     </select>
                 </div>
                 <hr />

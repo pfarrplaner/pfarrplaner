@@ -29,6 +29,11 @@
                 <a class="nav-link" href="#weddings" role="tab" data-toggle="tab">Meine Trauungen @if($weddings->count())<span class="badge badge-primary">{{ $weddings->count() }}</span> @endif </a>
             </li>
             @endcanany
+            @if(Auth::user()->manage_absences)
+                <li class="nav-item" id="absenceTab">
+                    <a class="nav-link" href="#absences" role="tab" data-toggle="tab">Mein Urlaub</a>
+                </li>
+            @endif
         </ul>
 
         <div class="tab-content">
@@ -242,6 +247,9 @@
                 </div>
             </div>
             @endcanany
+            @if(Auth::user()->manage_absences)
+                @include('homescreen.tabs.absences')
+            @endif
         </div>
     @endcomponent
 @endsection

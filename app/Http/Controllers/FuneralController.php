@@ -119,9 +119,6 @@ class FuneralController extends Controller
             'time' => $time,
             'special_location' => $specialLocation,
             'city_id' => $city->id,
-            'pastor' => '',
-            'organist' => '',
-            'sacristan' => '',
             'others' => '',
             'description' => '',
             'need_predicant' => 0,
@@ -279,4 +276,12 @@ class FuneralController extends Controller
         header('Expires: 0');
         return $pdf->download($filename);
     }
+
+
+    public function done(Funeral $funeral) {
+        $funeral->done = true;
+        $funeral->save();
+        return json_encode(true);
+    }
+
 }

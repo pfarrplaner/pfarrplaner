@@ -119,4 +119,23 @@ class EmbedController extends Controller
     }
 
 
+    public function embedByBaptismalServices(Request $request, User $user, $ids, $limit =10, $maxBaptisms=0) {
+        $ids = explode(',', $ids);
+        $title = $request->has('title') ? $request->get('title') : '';
+        $services = Service::with('location', 'baptisms')
+            ->select('services.*')
+            ->join('days', 'services.day_id', '=', 'days.id')
+            ->where('baptism', true)
+            ->whereIn('city_id', $ids)
+            ->whereHas('day', function($query) {
+                $query->where('date', '>=', Carbon::now());
+            })
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC')
+            ->limit($limit)
+            ->get();
+
+        return view('embed.services.baptismalServices', compact('services', 'ids', 'title', 'maxBaptisms'));
+    }
+
 }

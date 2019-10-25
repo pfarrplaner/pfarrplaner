@@ -33,8 +33,8 @@
                     @foreach($users as $user)
                         <tr>
                             <td>{{$user->name}}@if($user->title) ({{ $user->title }}) @endif <br />
-                                @foreach($user->roles as $role)
-                                    <span class="badge badge-info" title="@foreach($role->permissions()->get() as $p) {{ $p->name }} @endforeach">{{ $role->name }}</span>
+                                @foreach($user->homeCities as $city)
+                                    <span class="badge badge-secondary">{{ $city->name }}</span>
                                 @endforeach
                             </td>
                             <td>
@@ -42,7 +42,11 @@
                                     <span class="badge @if($user->writableCities->contains($city)) badge-success @else badge-warning @endif">{{ $city->name }}</span>
                                 @endforeach
                             </td>
-                            <td>{{$user->email}}</td>
+                            <td>{{$user->email}}<br />
+                                @foreach($user->roles as $role)
+                                    <span class="badge badge-info" title="@foreach($role->permissions()->get() as $p) {{ $p->name }} @endforeach">{{ $role->name }}</span>
+                                @endforeach
+                            </td>
                             <td>
                                 @can('update', $user)
                                     <a href="{{ route('users.edit',$user->id)}}" class="btn btn-sm btn-primary" title="Bearbeiten">
@@ -88,8 +92,8 @@
                                 @endforeach
                             </td>
                             <td>
-                                @foreach($user->visibleCities as $city)
-                                    <span class="badge @if($user->writableCities->contains($city)) badge-success @else badge-warning @endif">{{ $city->name }}</span>
+                                @foreach($user->homeCities as $city)
+                                    <span class="badge badge-secondary">{{ $city->name }}</span>
                                 @endforeach
                             </td>
                             <td>

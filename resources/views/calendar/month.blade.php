@@ -157,10 +157,10 @@
                                 </div>
                             @endif
                             @can('urlaub-lesen')
-                                @if (count($vacations[$day->id]))
+                                @if (isset($vacations[$day->id]) && count($vacations[$day->id]))
                                     @foreach ($vacations[$day->id] as $vacation)
                                         <div class="vacation"
-                                             title="{{ $vacation->user->fullName(true) }}: {{ $vacation->reason }} ({{ $vacation->from->format('d.m.Y') }} @if($vacation->to > $vacation->from) - {{ $vacation->to->format('d.m.Y') }}@endif) @if($vacation->replacement()->first()) V: {{ $vacation->replacement()->first()->fullName() }} @endif">
+                                             title="{{ $vacation->user->fullName(true) }}: {{ $vacation->reason }} ({{ $vacation->durationText() }}) [{{ $vacation->replacementText('V:') }}]">
                                             <span class="fa fa-globe-europe"></span> {{ $vacation->user->lastName() }}
                                         </div>
                                     @endforeach

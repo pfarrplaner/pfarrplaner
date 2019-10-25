@@ -229,4 +229,10 @@ class BaptismController extends Controller
             ->header('Content-Type', 'text/calendar')
             ->header('Content-Disposition', 'inline; filename=Taufgespraech-'.$baptism->id.'.ics');
     }
+
+    public function done(Baptism $baptism) {
+        $baptism->done = true;
+        $baptism->save();
+        return json_encode(true);
+    }
 }

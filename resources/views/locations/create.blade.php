@@ -33,6 +33,19 @@
                     <label for="cc_default_location">Wenn parallel Kinderkirche stattfindet, dann normalerweise hier:</label>
                     <input type="text" class="form-control" id="cc_default_location" name="cc_default_location"/>
                 </div>
+                <div class="form-group">
+                    <label for="alternate_location_id">Alternativer Ort, wenn hier kein Gottesdienst stattfindet:</label>
+                    <select class="form-control" name="alternate_location_id">
+                        <option></option>
+                        @foreach($alternateLocations as $alternateLocation)
+                            <option value="{{ $alternateLocation->id }}">{{ $alternateLocation->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="general_location_name">Allgemeine Ortsangabe:</label>
+                    <input type="text" class="form-control" id="general_location_name" name="general_location_name" placeholder="z.B.: in Tailfingen"/>
+                </div>
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
             </form>
         </div>

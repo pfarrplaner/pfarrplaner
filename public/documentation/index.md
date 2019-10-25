@@ -1,11 +1,11 @@
-Bedienungsanleitung zu Dienstplan Online
+Bedienungsanleitung zu Pfarrplaner
 ========================================
 
 [TOC]
 
 # Benutzerkonto
 
-Für die Benutzung von Dienstplan Online benötigen Sie in der Regel ein
+Für die Benutzung von Pfarrplaner benötigen Sie in der Regel ein
 Benutzerkonto. Dieses erhalten Sie von Ihrem Administrator. Eine eigene
 Registrierung als Benutzer ist nicht möglich.
 
@@ -21,7 +21,7 @@ unterschiedliche Felder bearbeiten oder Funktionen verwenden.
 
 ## Anmelden
 
-Beim Aufruf der Startseite von Dienstplan Online sehen Sie zunächst eine
+Beim Aufruf der Startseite von Pfarrplaner sehen Sie zunächst eine
 Anmeldeseite. Geben Sie als Benutzernamen Ihre E-Mailadresse ein. Nach
 der Eingabe des Passworts klicken Sie auf "Anmelden."
 
@@ -72,7 +72,7 @@ sie eine Leseberechtigung haben, angezeigt.
 ## Zur Übersicht zurückkehren
 
 Solange Sie angemeldet sind, können Sie jederzeit durch einen Klick auf
-das Logo "Dienstplan Online" oben links zu dieser Übersichtsseite
+das Logo "Pfarrplaner" oben links zu dieser Übersichtsseite
 zurückkehren.
 
 ![home-logo](img/home-logo.png)
@@ -94,7 +94,7 @@ Von links nach rechts können Sie hier folgende Aktionen ausführen:
 
 | Schaltfläche                                      | Aktion                                                                                                                                                                      |
 |:--------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ![home-screen](img/home-logo.png)                 | Mit einem Klick auf das Logo "Dienstplan Online" kehren Sie zur Übersichtsseite zurück.                                                                                     |
+| ![home-screen](img/home-logo.png)                 | Mit einem Klick auf das Logo "Pfarrplaner" kehren Sie zur Übersichtsseite zurück.                                                                                     |
 | ![btn-prev-month](img/btn-prev-month.png)         | Den vorhergehenden Monat anzeigen                                                                                                                                           |
 | ![btn-today](img/btn-today.png)                   | Zum aktuellen Monat gehen                                                                                                                                                   |
 | ![btn-month](img/btn-month.png)                   | Ein Klick auf den Monatsnamen erlaubt Ihnen, direkt den angezeigten Monat auszuwählen.                                                                                      |
@@ -104,7 +104,7 @@ Von links nach rechts können Sie hier folgende Aktionen ausführen:
 | ![btn-print-month](img/btn-print-month.png)       | Druckausgabe für den angezeigten Monat                                                                                                                                      |
 | ![btn-export-formats](img/btn-export-formats.png) | [Vorhandene Daten in verschiedenen Formaten ausgeben](#ausgabemöglichkeiten)                                                                                                |
 | ![btn-inputs](img/btn-inputs.png)                 | [Sammeleingabeformulare](#sammeleingaben) für verschiedene Felder anzeigen. Je nach [Benutzerrechten](#benutzerrechte) finden Sie hier unterschiedliche Möglichkeiten.      |
-| ![btn-whatsnew](img/btn-whatsnew.png)             | Dienstplan online wird ständig weiterentwickelt. Ein Klick auf diese Schaltfläche zeigt Ihnen, welche Neuerungen zuletzt dazukamen.                                         |
+| ![btn-whatsnew](img/btn-whatsnew.png)             | Pfarrplaner wird ständig weiterentwickelt. Ein Klick auf diese Schaltfläche zeigt Ihnen, welche Neuerungen zuletzt dazukamen.                                         |
 | ![btn-outlook](img/btn-outlook.png)               | [Kalender zur Anzeige in Microsoft Outlook vorbereiten](#kalender-in-microsoft-outlook-einbinden)                                                                           |
 | ![btn-admin](img/btn-admin.png)                   | Je nach [Benutzerrechten](#benutzerrechte) können Sie hier verschiedene [Administratorfunktionen](#administration) aufrufen.                                                |
 | ![btn-user](img/btn-user.png)                     | [Ändern Sie Ihr Passwort](#passwort-ändern) oder [melden Sie sich ab](#abmelden) .                                                                                          |

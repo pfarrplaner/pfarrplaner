@@ -372,10 +372,10 @@ class ServiceController extends Controller
         $route = route('calendar', ['year' => $service->day->date->format('Y'), 'month' => $service->day->date->format('m'), 'highlight' => $service->id, 'slave' => 1]);
 
         // tie in automatic month switching
-        $timestamp2 = Carbon::createFromTimestamp(Auth::user()->getSetting('display-timestamp'));
+        $timestamp2 = Carbon::createFromTimestamp(Auth::user()->getSetting('display-timestamp', 0));
         if ($timestamp2 > $timestamp) {
             $timestamp = $timestamp2;
-            $route = route('calendar', ['year' => Auth::user()->getSetting('display-year'), 'month' => Auth::user()->getSetting('display-month'), 'slave' => 1]);
+            $route = route('calendar', ['year' => Auth::user()->getSetting('display-year', date('Y')), 'month' => Auth::user()->getSetting('display-month', date('m')), 'slave' => 1]);
         }
 
         $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');

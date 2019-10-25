@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>window.Laravel = {csrfToken: '{{ csrf_token() }}'}</script>
 
-    <title>Calendar Test :: Dienstplan Online</title>
+    <title>Calendar Test :: Pfarrplaner</title>
 
     <!-- Scripts -->
     <script

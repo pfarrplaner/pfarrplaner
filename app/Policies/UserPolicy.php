@@ -107,5 +107,20 @@ class UserPolicy
     }
 
 
+    /**
+     * Determine wether the user can edit another users absences
+     * @param User $user
+     * @param User $model
+     */
+    public function editAbsences (User $user, User $model) {
+        if ($user->id == $model->id) return true;
+        if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {
+            if (!$model->hasRole('Pfarrer*in')) {
+                if (count($user->writableCities->intersect($model->homeCities))) return $true;
+            }
+        }
+        return false;
+    }
+
 }
 

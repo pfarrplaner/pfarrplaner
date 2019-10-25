@@ -1,51 +1,12 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ $months[(int)$month] }} {{ $year }} :: Dienstplan Online</title>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script
-            src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"
-            integrity="sha256-59IZ5dbLyByZgSsRE3Z0TjDuX7e1AiqW5bZ8Bg50dsU=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/locale/de.js"
-            integrity="sha256-wUoStqxFxc33Uz7o+njPIobHc4HJjMQqMXNRDy7X3ps=" crossorigin="anonymous"></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
-          integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/dienstplan.css') }}" rel="stylesheet">
+@extends('layouts.app')
 
 
-</head>
-<body>
-<div id="app">
-    <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
-        <a class="navbar-brand" href="{{ url('/') }}">
-            <span class="fa fa-home"></span> {{ config('app.name', 'Dienstplan Online') }}
-        </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="{{ __('Toggle navigation') }}">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+@section('title')
+    {{ $months[(int)$month] }} {{ $year }}
+@endsection
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <!-- Left Side Of Navbar -->
+@section('navbar')
+    <!-- Left Side Of Navbar -->
             <ul class="navbar-nav mr-auto">
                 @auth
                     <div class="button-row no-print btn-toolbar" role="toolbar">
@@ -93,12 +54,9 @@
                     </div>
                 @endauth
             </ul>
+@endsection
 
-            @component('components.admin')
-            @endcomponent
-        </div>
-    </nav>
-
+@section('content')
     <main class="py-1">
         <div class="table-responsive tbl-absences">
             <table class="table table-bordered">
@@ -129,9 +87,10 @@
                 </thead>
                 <tbody>
                     @foreach($users as $user)
-                        <tr>
                             <th>{{ $user->fullName(false) }}
-                                <a class="btn btn-sm btn-success" href="{{ route('absences.create', ['year' => $year, 'month' => $month, 'user' => $user->id]) }}"><span class="fa fa-plus"></span></a></th>
+                                @if($user->id == Auth::user()->id || (Auth::user()->hasPermissionTo('fremden-urlaub-bearbeiten') && (count(Auth::user()->writableCities->intersect($user->homeCities)))))
+                                    <a class="btn btn-sm btn-success" href="{{ route('absences.create', ['year' => $year, 'month' => $month, 'user' => $user->id]) }}"><span class="fa fa-plus"></span></a></th>
+                                @endif
                             <?php $today = clone($start); $thisHoliday = null; ?>
                             @while($today <= $end)
                                 <td class="cal-cell
@@ -141,28 +100,25 @@
 @if ($today->between($holiday['start'], $holiday['end'])) holiday <?php $thisHoliday = $holiday; ?> @endif
 @endforeach
 @if($services = $user->isBusy($today, true)) busy @endif
-@if ($absence = $user->isAbsent($today, true)) absent has-absence @endif
-@if ($replacement = $user->isReplacement($today, true)) replacement has-absence @endif
+@if ($absence = $user->isAbsent($today, true)) absent has-absence
+    @if($user->id == Auth::user()->id || (Auth::user()->can('editAbsences', $user))) editable @endif
+    @if($absence->getReplacingUserIds()->contains(Auth::user()->id)) replacing @endif
+@endif
                                         "
                                 @if(is_object($absence))
                                     data-absence="{{ $absence->id }}"
-                                    data-edit-route="{{ route('absences.edit', ['absence' => $absence, 'startMonth' => $month.'-'.$year]) }}"
-                                    title = "{{ $absence->reason }}  @if($absence->replacement()->first()) V: {{ $absence->replacement()->first()->fullName() }} @endif"
-                                    colspan="{{ $absence->to->diffInDays($absence->from)+1  }}" <?php $today->addDays($absence->to->diffInDays($absence->from)) ?>
+                                    @if($user->id == Auth::user()->id || (Auth::user()->can('editAbsences', $user)))
+                                        data-edit-route="{{ route('absences.edit', ['absence' => $absence, 'startMonth' => $month.'-'.$year]) }}"
+                                    @endif
+                                    title = "{{ $absence->reason }} ({{ $absence->from->format('d.m.Y') }} @if($absence->to > $absence->from) - {{ $absence->to->format('d.m.Y') }}@endif) V: {{ $absence->replacementText() }}"
+                                    colspan="{{ $absence->showableDays($start, $end)  }}" <?php $today->addDays($absence->showableDays($start, $end)-1) ?>
                                 @endif
-                                @if(is_object($replacement))
-                                    data-absence="{{ $replacement->id }}"
-                                    data-edit-route="{{ route('absences.edit', ['absence' => $replacement, 'startMonth' => $month.'-'.$year]) }}"
-                                    title = "Vertretung für {{ $replacement->user()->first()->fullName() }}"
-                                    colspan="{{ $replacement->to->diffInDays($replacement->from)+1  }}" <?php $today->addDays($replacement->to->diffInDays($replacement->from)) ?>
-                                @endif
-                                @if((!is_object($absence)) && (!is_object($replacement)) && (is_object($thisHoliday)))
+                                @if((!is_object($absence)) && (is_object($thisHoliday)))
                                     title = "{{ $thisHoliday['name'] }}"
                                 @endif
                                 >
                                     @if(is_object($absence))
-                                        <span class="absence">{{ $absence->reason }}<br />@if($absence->replacement()->first()) V: {{ $absence->replacement()->first()->fullName() }} @endif</span>
-                                        @elseif (is_object($replacement)) V: {{ $replacement->user()->first()->last_name }}
+                                        <span class="absence"><b>{{ $absence->user->lastName() }} {{ $absence->reason }}</b><br /><i>V: {{ $absence->replacementText() }}</i></span>
                                         @else &nbsp;
                                         @endif
                                 </td>
@@ -174,14 +130,16 @@
             </table>
         </div>
     </main>
+    <hr />
+    <b>Adresse, um diesen Kalender in Outlook zu abonnieren:</b><br />
+    <input class="form-control" type="text" value="{{ route('ical.absences', ['user' => \Illuminate\Support\Facades\Auth::user()->id, 'token' => \Illuminate\Support\Facades\Auth::user()->getToken()]) }}" />
     <script>
-        $(document).ready(function(){
-            $('td.has-absence').click(function(){
-                window.location.href=$(this).data('edit-route');
+        $(document).ready(function() {
+            $('td.has-absence').click(function () {
+                if ($(this).data('edit-route')) {
+                    window.location.href = $(this).data('edit-route');
+                }
             });
-        })
+        });
     </script>
-
-</div>
-</body>
-</html>
+@endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Absence;
 use App\Day;
+use App\Replacement;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -29,16 +30,65 @@ class AbsenceController extends Controller
         return $holidays;
     }
 
+
+
+    protected function redirectIfMissingParameters(Request $request, $route, $year, $month)
+    {
+        $defaultMonth = Auth::user()->getSetting('display-month', date('m'));
+        $defaultYear = Auth::user()->getSetting('display-year', date('Y'));
+
+        $initialYear = $year;
+        $initialMonth = $month;
+
+
+        if ($month == 13) {
+            $year++;
+            $month = 1;
+        }
+        if (($year > 0) && ($month == 0)) {
+            $year--;
+            $month = 12;
+        }
+
+        if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
+            $year = $defaultYear;
+            $month = $defaultMonth;
+        }
+
+        if (($year == $initialYear) && ($month == $initialMonth)) {
+            return false;
+        }
+
+        $data = compact('month', 'year');
+        $slave = $request->get('slave', 0);
+        if ($slave) $data = array_merge($data, compact('slave'));
+
+        return redirect()->route($route, $data);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index($year = 0, $month = 0)
+    public function index(Request $request, $year = 0, $month = 0)
     {
-        $users = User::where('manage_absences', 1)->get();
-        $year = $year ?: date('Y');
-        $month = $month ?: date('m');
+
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'absences.index', $year, $month))) {
+            return $r;
+        }
+
+        /**
+        $users = User::where('manage_absences', 1)
+            ->whereHas('cities', function ($query) {
+                $query->whereIn('cities.id', Auth::user()->cities);
+            })
+            ->get();
+         */
+
+        $users = Auth::user()->getViewableAbsenceUsers();
+
         $now = new Carbon($year.'-'.$month.'-01 0:00:00');
         $start = (clone $now)->subMonth(1);
         $end = (clone $now)->addMonth(2)->subDay(1);
@@ -93,10 +143,11 @@ class AbsenceController extends Controller
             'user_id' => $request->get('user_id'),
             'reason' => $request->get('reason') ?: '',
         ]);
-        if ($request->has('replacement')) $absence->replacement = $request->get('replacement');
         $absence->save();
 
-        return redirect()->route('absences.index', ['year' => $request->get('year'), 'month' => $request->get('month')]);
+        $this->setupReplacements($absence, $request->get('replacement') ?: []);
+
+        return redirect()->route('absences.index', ['month' => $absence->from->format('m'), 'year' => $absence->from->format('Y')]);
     }
 
     /**
@@ -118,6 +169,7 @@ class AbsenceController extends Controller
      */
     public function edit(Request $request, Absence $absence)
     {
+        $absence->load('replacements');
         if ($request->has('startMonth')) {
             list($month, $year) = explode('-', $request->get('startMonth'));
         }
@@ -125,6 +177,26 @@ class AbsenceController extends Controller
         if (!$month) $year = date('m');
         $users = User::all();
         return view('absences.edit', compact('absence', 'month', 'year', 'users'));
+    }
+
+    protected function setupReplacements(Absence $absence, $data)
+    {
+        $absence->load('replacements');
+        if (count($absence->replacements)) {
+            foreach ($absence->replacements as $replacement) {
+                $replacement->delete();
+            }
+        }
+        foreach ($data as $replacementData) {
+            $replacement = new Replacement([
+                'absence_id' => $absence->id,
+                'from' => max(Carbon::createFromFormat('d.m.Y', $replacementData['from']), $absence->from),
+                'to' => min(Carbon::createFromFormat('d.m.Y', $replacementData['to']), $absence->to),
+            ]);
+            $replacement->save();
+            $replacement->users()->sync($replacementData['user']);
+            $replacementIds[] = $replacement->id;
+        }
     }
 
     /**
@@ -143,9 +215,9 @@ class AbsenceController extends Controller
         $absence->from = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('from').' 0:00:00');
         $absence->to = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('to').' 0:00:00');
         $absence->reason = $request->get('reason') ?: '';
-        $absence->replacement = $request->get('replacement') ?: '';
         $absence->save();
-        return redirect()->route('absences.index', ['month' => $request->get('month'), 'year' => $request->get('year')]);
+        $this->setupReplacements($absence, $request->get('replacement') ?: []);
+        return redirect()->route('absences.index', ['month' => $absence->from->format('m'), 'year' => $absence->from->format('Y')]);
     }
 
     /**

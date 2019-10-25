@@ -92,7 +92,7 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->get();
         $weddings->load('day');
 
-        return view('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
+        return $this->renderView('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
     }
 
 }

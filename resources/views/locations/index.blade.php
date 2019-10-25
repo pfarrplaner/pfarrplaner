@@ -33,9 +33,9 @@
             @endforeach
             </tbody>
         </table>
-        @if (Auth::user()->isAdmin)
+        @can('kirche-bearbeiten')
             <hr/>
             <a class="btn btn-secondary" href="{{ route('locations.create') }}">Neue Kirche hinzufügen</a>
-        @endif
+        @endcan
     @endcomponent
 @endsection

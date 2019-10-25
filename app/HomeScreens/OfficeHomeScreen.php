@@ -45,7 +45,9 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('baptisms')
+            ->whereHas('baptisms', function($query) {
+                $query->where('done', 0);
+            })
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
                     ->where('date', '<=', $end);
@@ -63,7 +65,9 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('funerals')
+            ->whereHas('funerals', function($query) {
+                $query->where('done', 0);
+            })
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start);
             })
@@ -76,7 +80,9 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('weddings')
+            ->whereHas('weddings', function($query) {
+                $query->where('done', 0);
+            })
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
                     ->where('date', '<=', $end);
@@ -87,7 +93,7 @@ class OfficeHomeScreen extends AbstractHomeScreen
         $weddings->load('day');
 
 
-        return view('homescreen.office', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
+        return $this->renderView('homescreen.office', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
     }
 
 }

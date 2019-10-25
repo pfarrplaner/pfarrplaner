@@ -24,6 +24,26 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '25.10.2019'),
+                'text' => 'Der Pfarrplaner kann jetzt zur <a href="'.route('absences.index').'">Urlaubsplanung</a> für freigeschaltete Benutzer genutzt werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '17.10.2019'),
+                'text' => 'Unter "Admin > <a href="'.route('calendar', ['year' => null, 'month' => null, 'slave' => 1]).'">Automatische Kalenderansicht öffnen</a> kann ein neues Kalenderfenster geöffnet werden, das automatisch allen Änderungen folgt (z.B. zur Anzeige auf dem Beamer).',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '17.10.2019'),
+                'text' => 'Der Pfarrplaner ist auf die Domain www.pfarrplaner.de umgezogen. Alle bisherigen Links funktionieren aber weiterhin',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '27.09.2019'),
+                'text' => 'Unter "Sammeleingabe > <a href="'.route('inputs.setup', ['input' => 'multipleServices']).'">Mehrere Gottesdienste anlegen</a> angelegte Gottesdienste können nun auf andere Wochentage außer Sonntag gelegt werden. Außerdem wird eine Sammelbenachrichtigung per E-Mail versendet.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '27.09.2019'),
+                'text' => 'Unter "Sammeleingabe > <a href="'.route('inputs.setup', ['input' => 'multipleServices']).'">Mehrere Gottesdienste anlegen</a> können nun viele Gottesdienste auf einmal angelegt werden (z.B. für das neue Jahr).',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '13.09.2019'),
                 'text' => 'Es ist jetzt möglich, Benutzer so anzulegen, dass sie nur bestimmte Gemeinden sehen. Wenn du die nötigen Rechte hast, kannst du im Menü unter <span class="fa fa-wrench"></span> Admin > <a href="'.route('users.index').'">Benutzer</a> sehen, wer welchen Zugriff auf deine Kirchengemeinde(n) hat.',
             ],

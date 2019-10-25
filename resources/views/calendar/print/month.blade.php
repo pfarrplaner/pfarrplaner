@@ -109,9 +109,16 @@
                     <td>
                         @foreach ($services[$city->id][$day->id] as $service)
                             <div class="service-entry">
+                                @if (!is_object($service->location))
+                                <div class="service-time service-special-time">
+                                    {{ $service->timeText() }}</div>
+                                </div>
+                                @else
                                 <div class="service-time @if($service->time !== $service->location->default_time) service-special-time @endif">
-                                    {{ strftime('%H:%M', strtotime($service->time)) }} Uhr</div>
-                                <div class="service-location">{{ $service->location->name }}</div>
+                                    {{ $service->timeText() }}</div>
+                                </div>
+                                @endif
+                                <div class="service-location">{{ $service->locationText }}</div>
                                 <div class="service-team service-pastor">
                                     <span class="designation">P: </span>
                                     <span class="name @if($highlight == $service->pastor) highlight @endif">
@@ -145,7 +152,7 @@
     </table>
 </div>
 <htmlpagefooter name="page-footer">
-    <span class="footer">Quelle: Dienstplan online | Erstellt am {{ strftime('%A, %d. %B %Y') }} von {{ Auth::user()->name }}</span>
+    <span class="footer">Quelle: Pfarrplaner | Erstellt am {{ strftime('%A, %d. %B %Y') }} von {{ Auth::user()->name }}</span>
 </htmlpagefooter>
 </body>
 </html>

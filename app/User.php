@@ -7,14 +7,17 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Shetabit\Visitor\Traits\Visitable;
+use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles;
+    use Notifiable, HasRoles, Visitable, Visitor;
 
     /**
      * The attributes that are mass assignable.
@@ -74,6 +77,10 @@ class User extends Authenticatable
     public function writableCities()
     {
         return $this->belongsToMany(City::class)->withPivot('permission')->withPivotValue('permission', 'w');
+    }
+
+    public function homeCities() {
+        return $this->belongsToMany(City::class, 'user_home');
     }
 
     public function services()
@@ -300,7 +307,7 @@ class User extends Authenticatable
         if (!is_a($date, Carbon::class)) {
             $date = new Carbon($date);
         }
-        $absences = Absence::with('user', 'replacement')
+        $absences = Absence::with('user')
             ->where('user_id', $this->id)
             ->where('from', '<=', $date)
             ->where('to', '>=', $date)
@@ -329,6 +336,63 @@ class User extends Authenticatable
             $query->where('user_id', $this->id);
         })->get();
         return (count($services) ? ($returnServices ? $services : null) : ($services ? null : false));
+    }
+
+    public function getIsAdminAttribute() {
+        return $this->hasRole('Administrator*in') || $this->hasRole('Super-Administrator*in');
+    }
+
+    /**
+     * Find all users for which this user may see the absences
+     *
+     * Permission logic:
+     * (A) Pastors may see all fellow pastors in their district (cities with view rights) and all staff in their home cities
+     * (B) Staff may see all fellow staff in their home city, if "fremden-urlaub-bearbeiten" permission is set
+     * (C) All others only see themselves
+     * (D) Users without the manage_absences flag see nothing at all
+     */
+    public function getViewableAbsenceUsers() {
+        if (!$this->manage_absences) {
+            if (!$this->isAdmin) {
+                return new Collection();
+            } else {
+                return User::where('manage_absences', 1)->orderBy('last_name')->orderBy('first_name')->get();
+            }
+        }
+        $ids = [];
+        $ids[] = $this->id;
+
+        $userQuery = User::where('manage_absences', 1)
+            ->where('id', $this->id);
+
+        if ($this->hasRole('Pfarrer*in') || $this->hasPermissionTo('fremden-urlaub-bearbeiten')) {
+            $userQuery->orWhereHas('homeCities', function ($query)  {
+                    $query->whereIn('cities.id', $this->homeCities->pluck('id'));
+                });
+        }
+
+        //$users = $userQuery->get();
+
+
+        if ($this->hasRole('Pfarrer*in')) {
+
+
+            $userQuery->orWhere(function($query2){
+                $query2->whereHas('roles', function($query){
+                    $query->where('name', 'Pfarrer*in');
+                });
+                $query2->whereHas('homeCities', function ($query)  {
+                    $query->whereIn('cities.id', $this->cities->pluck('id'));
+                });
+            });
+
+        }
+
+        $userQuery->orderBy('last_name');
+        $userQuery->orderBy('first_name');
+        $users = $userQuery->get();
+
+        return $users;
     }
 
 }

@@ -178,6 +178,7 @@ return [
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         AustinHeap\Database\Encryption\EncryptionServiceProvider::class,
         \Spatie\Permission\PermissionServiceProvider::class,
+        Shetabit\Visitor\Provider\VisitorServiceProvider::class,
     ],
 
     /*
@@ -228,6 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
         'DatabaseEncryption' => AustinHeap\Database\EncryptionFacade::class,
+        'Visitor' => Shetabit\Visitor\Facade\Visitor::class,
     ],
 
 ];
