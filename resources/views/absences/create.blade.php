@@ -16,7 +16,8 @@
                     <div class="form-group">
                         <label for="user_id">Anlegen für:</label>
                         <select class="form-control fancy-selectize" name="user_id">
-                            @foreach($users as $user)
+                            @foreach($users as $thisUser)
+                                <option value="{{ $thisUser->id }}" @if($user->id == $thisUser->id) selected @endif>{{ $thisUser->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -26,7 +27,6 @@
                         <input type="hidden" name="year" value="{{ $year }}" />
                         <input type="hidden" id="from" name="from" />
                         <input type="hidden" id="to" name="to" />
-                        <input type="hidden" name="user_id" value="{{ $user->id }}" />
                         <div id="date-range12"></div>
                         <div id="date-range12-container"></div>
                     </div>
