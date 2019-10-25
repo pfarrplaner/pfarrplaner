@@ -5,7 +5,7 @@ PRODID:{{ route('ical.absences', ['userId' => $user->id, 'token' => $token]) }}
 METHOD:PUBLISH
 @foreach($absences as $absence)BEGIN:VEVENT
 UID:{{ $absence->id }}{{ '@' }}absences.{{ parse_url(env('APP_URL'), PHP_URL_HOST) }}
-SUMMARY:{{ wordwrap($absence->fullDescription()) }}
+SUMMARY: {{ $absence->fullDescription() }}
 CLASS:PUBLIC
 DTSTART;VALUE=DATE:{{ $absence->from->format('Ymd') }}
 DTEND;VALUE=DATE:{{ $absence->to->format('Ymd') }}
