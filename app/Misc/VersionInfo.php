@@ -24,6 +24,14 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '29.10.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Liste der Angehörigen", das alle Angehörigen der vergangenen Beerdigungen auflistet, um diese zum Ewigkeitssonntag einzuladen.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '29.10.2019'),
+                'text' => 'Bessere Möglichkeiten zum Export nach Outlook (rechts oben auf <a href="'.route('connectWithOutlook').'"><span class="fa fa-calendar-alt"></span></a> klicken).',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '25.10.2019'),
                 'text' => 'Der Pfarrplaner kann jetzt zur <a href="'.route('absences.index').'">Urlaubsplanung</a> für freigeschaltete Benutzer genutzt werden.',
             ],
