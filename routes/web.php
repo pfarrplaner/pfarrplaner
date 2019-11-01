@@ -119,7 +119,13 @@ Route::get('/logout', function() { Auth::logout(); return redirect()->route('log
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
 Route::get('/ical/urlaub/{user}/{token}', ['uses' => 'ICalController@absences'])->name('ical.absences');
-Route::get('/connectWithOutlook', ['uses' => 'HomeController@connectWithOutlook'])->name('connectWithOutlook');
+
+
+Route::get('/ical/connect', ['uses' => 'ICalController@connect'])->name('connectWithOutlook');
+Route::get('/ical/setup/{key}', ['uses' => 'ICalController@setup'])->name('ical.setup');
+Route::get('/ical/link/{key}', ['uses' => 'ICalController@link'])->name('ical.link');
+Route::post('/ical/link/{key}', ['uses' => 'ICalController@link'])->name('ical.link');
+Route::get('/ical/export/{user}/{token}/{key}', ['uses' => 'ICalController@export'])->name('ical.export');
 
 
 Route::get('/whatsnew', ['as' => 'whatsnew', 'uses' => 'HomeController@whatsnew'])->middleware('auth');

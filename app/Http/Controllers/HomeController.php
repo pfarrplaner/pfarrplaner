@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\CalendarLinks\AbstractCalendarLink;
 use App\City;
+use App\CalendarLinks\CalendarLinks;
 use App\Location;
 use App\Misc\VersionInfo;
 use App\Service;
@@ -81,12 +83,14 @@ class HomeController extends Controller
     }
 
     public function connectWithOutlook() {
+        /*
         $user = Auth::user();
         $token = $user->getToken();
         $cities = Auth::user()->visibleCities;
         $name = explode(' ', Auth::user()->name);
         $name = end($name);
         return view('connectwithoutlook', ['user' => $user, 'token' => $token, 'cities' => $cities, 'name' => $name]);
+        */
     }
 
     public function whatsnew() {

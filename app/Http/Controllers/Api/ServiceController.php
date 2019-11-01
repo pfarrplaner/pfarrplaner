@@ -13,6 +13,8 @@ use App\City;
 use App\Day;
 use App\Http\Controllers\Controller;
 use App\Service;
+use App\User;
+use Carbon\Carbon;
 
 class ServiceController extends Controller
 {
@@ -29,6 +31,19 @@ class ServiceController extends Controller
     public function show(Service $service) {
         $service->load(['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms']);
         return response()->json($service);
+    }
+
+
+    public function byUser(User $user) {
+        $services = Service::select('services.*')
+            ->with('location', 'city', 'participants', 'funerals', 'baptisms', 'weddings')
+            ->join('days', 'days.id', 'services.day_id')
+        ->whereHas('participants', function($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->whereHas('day', function($query) {
+                $query->where('date', '>=', Carbon::now());
+            })->orderBy('days.date')->get();
+        return response()->json(compact('services'));
     }
 
 }

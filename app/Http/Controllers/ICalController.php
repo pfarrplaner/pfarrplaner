@@ -3,20 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Absence;
+use App\CalendarLinks\AbstractCalendarLink;
+use App\CalendarLinks\CalendarLinks;
 use App\City;
 use App\Service;
 use App\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
 class ICalController extends Controller
 {
+    /** @var User $user  */
+    protected $user = null;
+
     protected function checkToken($token)
     {
         $users = User::all();
         $found = false;
         foreach ($users as $user) {
-            $found = $found || ($user->getToken() == $token);
+            if ($user->getToken() == $token) {
+                $found = true;
+                $this->user = $user;
+            }
         }
         if (!$found) die('wrong token');
     }
@@ -80,5 +89,38 @@ class ICalController extends Controller
         header('Content-Type: text/calendar');
         $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
         die($raw);
+    }
+
+
+    public function connect() {
+        $calendarLinks = CalendarLinks::all();
+        /** @var AbstractCalendarLink $calendarLink */
+        return view('ical.choice', compact('calendarLinks'));
+
+    }
+
+
+    public function setup ($key) {
+        $calendarLink = CalendarLinks::findKey($key);
+        return $calendarLink->setupView();
+    }
+
+    public function link(Request $request, $key) {
+        /** @var AbstractCalendarLink $calendarLink */
+        $calendarLink = CalendarLinks::findKey($key);
+        $calendarLink->setDataFromRequest($request);
+        return view('ical.link', compact('calendarLink'));
+    }
+
+    public function export(Request $request, User $user, $token, $key) {
+        if ($token != $user->getToken()) {
+            return abort(403);
+        }
+        /** @var AbstractCalendarLink $calendarLink */
+        $calendarLink = CalendarLinks::findKey($key);
+        return response($calendarLink->export($request, $user))
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', 0)
+            ->header('Content-Type', 'text/calendar');
     }
 }
