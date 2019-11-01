@@ -5,6 +5,7 @@ namespace App;
 use App\Mail\ServiceUpdated;
 use App\Traits\HasCommentsTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
