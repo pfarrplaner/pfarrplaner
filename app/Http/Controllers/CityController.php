@@ -49,6 +49,7 @@ class CityController extends Controller
         ]);
         $city = new City([
             'name' => $request->get('name'),
+            'public_events_calendar_url' => $request->get('public_events_calendar_url') ?: '',
         ]);
         $city->save();
         return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
@@ -81,6 +82,7 @@ class CityController extends Controller
         ]);
         $city = City::find($id);
         $city->name = $request->get('name');
+        $city->public_events_calendar_url = $request->get('public_events_calendar_url') ?: '';
         $city->save();
 
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde geändert.');

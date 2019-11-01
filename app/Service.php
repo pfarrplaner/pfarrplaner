@@ -332,4 +332,10 @@ class Service extends Model
         return $this->baptismsText(true);
     }
 
+
+    public function scopeRegularForCity(Builder $query, City $city) {
+        return $query->where('city_id', $city->id)
+            ->whereDoesntHave('funerals')
+            ->whereDoesntHave('weddings');
+    }
 }

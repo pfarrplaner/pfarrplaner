@@ -48,6 +48,10 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="at_text">Ortsangabe, wenn ein Gottesdienst hier stattfindet:</label>
+                    <input type="text" class="form-control" id="at_text" name="at_text" placeholder="z.B.: in der Peterskirche; auf dem Friedhof; im Gemeindezentrum Stiegel" value="{{ $location->at_text }}"/>
+                </div>
+                <div class="form-group">
                     <label for="general_location_name">Allgemeine Ortsangabe:</label>
                     <input type="text" class="form-control" id="general_location_name" name="general_location_name" placeholder="z.B.: in Tailfingen" value="{{ $location->general_location_name }}"/>
                 </div>

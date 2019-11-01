@@ -55,6 +55,7 @@ class LocationController extends Controller
             'city_id' => $request->get('city_id'),
             'default_time' => $request->get('default_time'),
             'cc_default_location' => $request->get('cc_default_location') ?: '',
+            'at_text' => $request->get('at_text') ?: '',
             'alternate_location_id' => $request->get('alternate_location_id') ?: null,
             'general_location_name' => $request->get('general_location_name') ?: '',
         ]);
@@ -107,6 +108,7 @@ class LocationController extends Controller
         $location->city_id = $request->get('city_id');
         $location->default_time = $request->get('default_time');
         $location->cc_default_location = $request->get('cc_default_location') ?: '';
+        $location->at_text = $request->get('at_text') ?: '';
         $location->alternate_location_id = $request->get('alternate_location_id') ?: null;
         $location->general_location_name = $request->get('general_location_name') ?: '';
         $location->save();
