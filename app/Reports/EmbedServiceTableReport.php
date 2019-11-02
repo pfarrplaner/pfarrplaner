@@ -17,7 +17,7 @@ class EmbedServiceTableReport extends AbstractEmbedReport
 {
 
     public $title = 'Liste von Gottesdiensten';
-    public $group = 'HTML-Code für die Website (Gemeindebaukasten)';
+    public $group = 'Website (Gemeindebaukasten)';
     public $description = 'Erzeugt HTML-Code für die Einbindung einer Gottesdiensttabelle in die Website der Gemeinde';
     public $icon = 'fa fa-file-code';
 
