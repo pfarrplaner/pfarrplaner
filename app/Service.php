@@ -358,4 +358,11 @@ class Service extends Model
                 ->where('date', '<=', $end);
         });
     }
+
+    public function scopeOrdered(Builder $query) {
+        return $query->select('services.*')
+            ->join('days', 'services.day_id', 'days.id')
+            ->orderBy('days.date')
+            ->orderBy('time');
+    }
 }

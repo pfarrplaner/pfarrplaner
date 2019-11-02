@@ -138,16 +138,8 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             })
             ->get();
 
-        $events = [];
-        if ($service->city->public_events_calendar_url != '') {
-            $calendar = new EventCalendarImport($service->city->public_events_calendar_url);
-            $events = $calendar->getEvents($service->day->date, $nextWeek->copy()->addDay(1)->subSecond(1), true);
-        }
-
-        foreach ($services as $thisService) {
-            $events[$thisService->trueDate()->format('YmdHis')][] = $thisService;
-        }
-        ksort($events);
+        $calendar = new EventCalendarImport($service->city->public_events_calendar_url);
+        $events = $calendar->mix($services, $service->day->date, $nextWeek->copy()->addDay(1)->subSecond(1), true);
 
         $this->section = $this->wordDocument->addSection([
             'orientation' => 'portrait',

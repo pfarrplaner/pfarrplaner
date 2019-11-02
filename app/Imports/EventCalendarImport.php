@@ -25,6 +25,17 @@ class EventCalendarImport
 
     }
 
+    public function mix($services, Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array {
+        if ($this->url) $events = $this->getEvents($weekStart, $weekEnd, $removeServices);
+
+        foreach ($services as $thisService) {
+            $events[$thisService->trueDate()->format('YmdHis')][] = $thisService;
+        }
+
+        ksort($events);
+        return $events;
+    }
+
     public function getEvents(Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
         $events = json_decode(file_get_contents($this->url), true);

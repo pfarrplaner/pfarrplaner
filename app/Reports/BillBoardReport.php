@@ -76,16 +76,8 @@ class BillBoardReport extends AbstractWordDocumentReport
             ->dateRange($start, $end)
             ->get();
 
-        $events = [];
-        if ($city->public_events_calendar_url != '') {
-            $calendar = new EventCalendarImport($city->public_events_calendar_url);
-            $events = $calendar->getEvents($start, $end->copy()->subDay(1), true);
-        }
-
-        foreach ($services as $thisService) {
-            $events[$thisService->trueDate()->format('YmdHis')][] = $thisService;
-        }
-        ksort($events);
+        $calendar = new EventCalendarImport($city->public_events_calendar_url);
+        $events = $calendar->mix($services, $start, $end->subDay(1), true);
 
         $this->section = $this->wordDocument->addSection([
             'orientation' => 'portrait',
