@@ -47,7 +47,7 @@ class EmbedServiceTableReport extends AbstractEmbedReport
 
         $randomId = uniqid();
 
-        return view('reports.render.embedservicetable', compact('url', 'randomId'));
+        return view('reports.embedservicetable.render', compact('url', 'randomId'));
     }
 
 
