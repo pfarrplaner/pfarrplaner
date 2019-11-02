@@ -25,6 +25,10 @@ class VersionInfo
         return collect([
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
+                'text' => 'Jeder Gottesdienst hat nun ein Feld "Interne Anmerkungen" für Beschreibungen, die nicht veröffentlicht werden sollen, aber intern im Pfarrplaner angezeigt werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
                 'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Kirchzettel", das automatisch den wöchtentlichen Ausgang für den Schaukasten zusammenstellt. Dabei können Veranstaltungen aus einem Gemeindekalender auf Sharepoint übernommen werden. (Das muss allerdings erst eingerichtet werden. Bei Fragen dazu bitte an den Christoph Fischer wenden).',
             ],
             [

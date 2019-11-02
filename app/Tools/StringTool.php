@@ -34,4 +34,13 @@ class StringTool
     {
         return ($count == 1) ? $singular : $plural;
     }
+
+    public static function trimToLen($s, $maxLength) {
+        if (strlen($s) > $maxLength)
+        {
+            $offset = ($maxLength - 3) - strlen($s);
+            $s = substr($s, 0, strrpos($s, ' ', $offset)) . '...';
+        }
+        return $s;
+    }
 }

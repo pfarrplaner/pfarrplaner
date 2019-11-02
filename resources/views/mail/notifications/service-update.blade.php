@@ -148,6 +148,13 @@
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->descriptionText() }}</td>
                                                                             </tr>
                                                                         @endif
+                                                                        @if(isset($changes['description']))
+                                                                            <tr>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Interne Anmerkungen</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->internal_remarks }}</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->internal_remarks }}</td>
+                                                                            </tr>
+                                                                        @endif
                                                                         @if(isset($changes['offerings_counter1']))
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Opferzähler*in 1</td>

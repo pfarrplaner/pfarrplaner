@@ -235,6 +235,7 @@
                                                             class="designation">M: </span>@foreach($service->sacristans as $participant){{ $participant->lastName(true) }}@if($loop->last) @else
                                                         | @endif @endforeach</div>
                                                 <div class="service-description">{{ $service->descriptionText() }}</div>
+                                                @if($service->internal_remarks)<div class="service-description" title="{{ $service->internal_remarks }}"><span class="fa fa-eye-slash" title="Anmerkung nur für den internen Gebrauch"></span> {{ \App\Tools\StringTool::trimToLen($service->internal_remarks, 150) }}</div>@endif
                                                 @canany(['gd-kasualien-lesen', 'gd-kasualien-nur-statistik'])
                                                     @if($service->baptisms->count())
                                                         <div class="service-description">

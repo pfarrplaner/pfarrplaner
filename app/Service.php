@@ -37,6 +37,7 @@ class Service extends Model
         'cc_location' => 'Ort der Kinderkirche',
         'cc_lesson' => 'Lektion für die Kinderkirche',
         'cc_staff' => 'Mitarbeiter in der Kinderkirche',
+        'internal_remarks' => 'Interne Anmerkungen'
     );
 
     protected $fillable = [
@@ -59,6 +60,7 @@ class Service extends Model
         'cc_location',
         'cc_lesson',
         'cc_staff',
+        'internal_remarks',
     ];
 
     protected $appends = [

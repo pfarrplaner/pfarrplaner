@@ -23,6 +23,7 @@
 <div class="service-team service-sacristan"><span
             class="designation">M: </span>{{ $service->participantsText('M') }}</div>
 <div class="service-description">{{ $service->descriptionText() }}</div>
+@if($service->internal_remarks)<div class="service-description" title="{{ $service->internal_remarks }}"><span class="fa fa-eye-slash" title="Anmerkung nur für den internen Gebrauch"></span> {{ \App\Tools\StringTool::trimToLen($service->internal_remarks, 150) }}</div>@endif
 <div class="service-description">
 @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen', 'gd-kasualien-barbeiten'])
 @if($service->baptisms->count())

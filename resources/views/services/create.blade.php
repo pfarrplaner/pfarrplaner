@@ -129,6 +129,10 @@
                                 <input type="text" class="form-control" name="description" @canany(['gd-allgemein-beabeiten', 'gd-anmerkungen-bearbeiten']) @else disabled @endcanany />
                             </div>
                             <div class="form-group">
+                                <label for="internal_remarks">Interne Anmerkungen</label>
+                                <textarea rows="5" class="form-control" name="internal_remarks"></textarea>
+                            </div>
+                            <div class="form-group">
                                 <label for="tags">Kennzeichnungen</label>
                                 <select class="form-control fancy-selectize" name="tags[]" multiple>
                                     <option></option>
