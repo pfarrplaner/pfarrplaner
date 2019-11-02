@@ -339,4 +339,12 @@ class Service extends Model
             ->whereDoesntHave('funerals')
             ->whereDoesntHave('weddings');
     }
+
+    public function trueDate() {
+        return Carbon::createFromTimeString($this->day->date->format('Y-m-d').' '.$this->time);
+    }
+
+    public function atText() {
+        return is_object($this->location) ? $this->location->atText() : '('.$this->locationText().')';
+    }
 }

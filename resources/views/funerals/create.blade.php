@@ -20,6 +20,14 @@
                         <input type="text" class="form-control" name="buried_name" placeholder="Nachname, Vorname"/>
                     </div>
                     <div class="form-group">
+                        <label for="dob">Geburtsdatum</label>
+                        <input type="text" class="form-control datepicker" name="dob" />
+                    </div>
+                    <div class="form-group">
+                        <label for="dod">Sterbedatum</label>
+                        <input type="text" class="form-control datepicker" name="dod" />
+                    </div>
+                    <div class="form-group">
                         <label for="buried_address">Adresse</label>
                         <input type="text" class="form-control" name="buried_address" />
                     </div>
@@ -75,10 +83,16 @@
                         <label for="relative_city">Ort</label>
                         <input type="text" class="form-control" name="relative_city" />
                     </div>
+                    <hr />
                     <div class="form-group">
                         <label for="relative_contact_data">Kontakt</label>
                         <textarea class="form-control" name="relative_contact_data"></textarea>
                     </div>
+                    <div class="form-group">
+                        <label for="appointment">Trauergespräch</label>
+                        <input type="text" class="form-control datetimepicker" name="appointment" />
+                    </div>
+                    <hr />
                     <button type="submit" class="btn btn-primary" id="submit">Hinzufügen</button>
                 </form>
             </div>

@@ -31,9 +31,10 @@ class Subscription extends Model
     {
         $subscribers = User::subscribedTo($service)->get();
         foreach ($subscribers as $subscriber) {
-            if (env('THIS_IS_MY_DEV_HOST')) $subscriber->email = 'chris@toph.de';
-            if ($subscriber->email && filter_var($subscriber->email, FILTER_VALIDATE_EMAIL)) {
-                Mail::to($subscriber)->send(new $mailClass($subscriber, $service, $data));
+            if (!env('THIS_IS_MY_DEV_HOST')) {
+                if ($subscriber->email && filter_var($subscriber->email, FILTER_VALIDATE_EMAIL)) {
+                    Mail::to($subscriber)->send(new $mailClass($subscriber, $service, $data));
+                }
             }
         }
     }

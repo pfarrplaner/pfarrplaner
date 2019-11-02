@@ -33,6 +33,14 @@
                                 <input type="text" class="form-control" name="buried_name" placeholder="Nachname, Vorname" value="{{ $funeral->buried_name }}"/>
                             </div>
                             <div class="form-group">
+                                <label for="dob">Geburtsdatum</label>
+                                <input type="text" class="form-control datepicker" name="dob" value="@if(isset($funeral->dob)){{ $funeral->dob->format('d.m.Y') }}@endif"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="dod">Sterbedatum</label>
+                                <input type="text" class="form-control datepicker" name="dod" value="@if(isset($funeral->dod)){{ $funeral->dod->format('d.m.Y') }}@endif"/>
+                            </div>
+                            <div class="form-group">
                                 <label for="buried_address">Adresse</label>
                                 <input type="text" class="form-control" name="buried_address" value="{{ $funeral->buried_address }}"/>
                             </div>
@@ -88,10 +96,16 @@
                                 <label for="relative_city">Ort</label>
                                 <input type="text" class="form-control" name="relative_city"  value="{{ $funeral->relative_city }}"/>
                             </div>
+                            <hr />
                             <div class="form-group">
                                 <label for="relative_contact_data">Kontakt</label>
                                 <textarea class="form-control" name="relative_contact_data">{{ $funeral->relative_contact_data }}</textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="appointment">Trauergespräch</label>
+                                <input type="text" class="form-control datetimepicker" name="appointment" value="@if(isset($funeral->appointment)){{ $funeral->appointment->format('d.m.Y H:i') }}@endif"/>
+                            </div>
+                            <hr />
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="comments">
                             @include('partials.comments.list', ['owner' => $funeral, 'ownerClass' => 'App\\Funeral'])
