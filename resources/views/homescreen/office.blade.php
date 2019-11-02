@@ -113,7 +113,7 @@
                                     @include('partials.baptism.details', ['baptism' => $baptism])
                                     <td>
                                         @include('partials.service.edit-rites-block', ['service', $service])
-                                        @can('update', $baptism)
+                                        @can('gd-kasualien-bearbeiten')
                                             <a class="btn btn-sm btn-primary" href="{{route('baptisms.edit', $baptism)}}?back=/home" title="Beerdigung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-cross"></span></a>
                                         @endcan
                                         @hasrole('Kirchenregisteramt')
@@ -173,6 +173,7 @@
                             <th>Person</th>
                             <th>Bestattungsart</th>
                             <th>Trauergespräch</th>
+                            <th>Abkündigung</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -197,7 +198,7 @@
                                     </td>
                                     <td>
                                         @include('partials.service.edit-rites-block', ['service', $service])
-                                        @can('update', $funeral)
+                                        @can('gd-kasualien-bearbeiten')
                                             <a class="btn btn-sm btn-primary" href="{{route('funerals.edit', $funeral)}}?back=/home" title="Beerdigung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-cross"></span></a>
                                         @endcan
                                         @hasrole('Kirchenregisteramt')
@@ -241,7 +242,7 @@
                                     @include('partials.wedding.details', ['wedding' => $wedding])
                                     <td>
                                         @include('partials.service.edit-rites-block', ['service', $service])
-                                        @can('update', $wedding)
+                                        @can('gd-kasualien-bearbeiten')
                                             <a class="btn btn-sm btn-primary" href="{{route('weddings.edit', $wedding)}}?back=/home" title="Trauung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-ring"></span></a>
                                         @endcan
                                         @hasrole('Kirchenregisteramt')

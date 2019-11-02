@@ -77,12 +77,11 @@ Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses
 Route::resource('baptisms', 'BaptismController')->middleware('auth');
 Route::get('/baptism/add/{service}', ['as' => 'baptism.add', 'uses' => 'BaptismController@create'])->middleware('auth');
 Route::get('/baptism/destroy/{baptism}', ['as' => 'baptism.destroy', 'uses' => 'BaptismController@destroy']);
-Route::resource('funerals', 'FuneralController')->middleware('auth');
 Route::get('/baptism/{baptism}/appointment/ical', ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']);
 Route::post('/baptism/done/{baptism}', ['as' => 'baptism.done', 'uses' => 'BaptismController@done']);
 
 
-
+Route::resource('funerals', 'FuneralController')->middleware('auth');
 Route::get('/funeral/add/{service}', ['as' => 'funeral.add', 'uses' => 'FuneralController@create'])->middleware('auth');
 Route::get('/funeral/destroy/{funeral}', ['as' => 'funeral.destroy', 'uses' => 'FuneralController@destroy']);
 Route::get('/funeral/{funeral}/Formular KRA.pdf', ['as' => 'funeral.form', 'uses' => 'FuneralController@pdfForm']);
@@ -90,6 +89,7 @@ Route::get('/funeral/wizard', ['as' => 'funerals.wizard', 'uses' => 'FuneralCont
 Route::post('/funeral/wizard/step2', ['as' => 'funerals.wizard.step2', 'uses' => 'FuneralController@wizardStep2']);
 Route::post('/funeral/wizard/step3', ['as' => 'funerals.wizard.step3', 'uses' => 'FuneralController@wizardStep3']);
 Route::post('/funeral/done/{funeral}', ['as' => 'funeral.done', 'uses' => 'FuneralController@done']);
+Route::get('/funeral/{funeral}/appointment/ical', ['as' => 'funeral.appointment.ical', 'uses' => 'FuneralController@appointmentIcal']);
 
 Route::get('/wedding/wizard', ['as' => 'weddings.wizard', 'uses' => 'WeddingController@wizardStep1']);
 Route::post('/wedding/wizard/step2', ['as' => 'weddings.wizard.step2', 'uses' => 'WeddingController@wizardStep2']);

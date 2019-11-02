@@ -103,7 +103,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="appointment">Trauergespräch</label>
-                                <input type="text" class="form-control datetimepicker" name="appointment" value="@if(isset($funeral->appointment)){{ $funeral->appointment->format('d.m.Y H:i') }}@endif"/>
+                                <input type="text" class="form-control datetimepicker" name="appointment" value="@if(isset($funeral->appointment)){{ $funeral->appointment->format('d.m.Y H:i') }}@endif" placeholder="TT.MM.JJJJ HH:MM"/>
                             </div>
                             <hr />
                         </div>

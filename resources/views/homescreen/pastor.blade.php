@@ -106,7 +106,7 @@
                                     @if ($loop->first)
                                         <td rowspan="{{ $service->baptisms->count() }}">
                                             @include('partials.service.edit-rites-block', ['service', $service])
-                                            @can('update', $baptism)
+                                            @can('gd-kasualien-bearbeiten')
                                                 <a class="btn btn-sm btn-primary" href="{{route('baptisms.edit', $baptism)}}?back=/home" title="Taufe bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-water"></span></a>
                                             @endcan
                                         </td>
@@ -164,6 +164,7 @@
                             <th>Person</th>
                             <th>Bestattungsart</th>
                             <th>Trauergespräch</th>
+                            <th>Abkündigung</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -188,7 +189,7 @@
                                         <td rowspan="{{ $service->funerals->count() }}">
                                             <a class="btn btn-sm btn-secondary" href="{{ route('calendar', ['month' => $service->day->date->format('m'), 'year' => $service->day->date->format('Y')]) }}" title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
                                             <a class="btn btn-sm btn-primary" href="{{route('services.edit', $service->id).'#rites'}}" title="Bearbeiten"><span class="fa fa-edit"></span></a>
-                                            @can('update', $funeral)
+                                            @can('gd-kasualien-bearbeiten')
                                                 <a class="btn btn-sm btn-primary" href="{{route('funerals.edit', $funeral)}}?back=/home" title="Beerdigung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-cross"></span></a>
                                             @endcan
                                         </td>
@@ -234,7 +235,7 @@
                                     @if ($loop->first)
                                         <td rowspan="{{ $service->weddings->count() }}">
                                             @include('partials.service.edit-rites-block', ['service', $service])
-                                            @can('update', $wedding)
+                                            @can('gd-kasualien-bearbeiten')
                                                 <a class="btn btn-sm btn-primary" href="{{route('weddings.edit', $wedding)}}?back=/home" title="Trauung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-ring"></span></a>
                                             @endcan
                                         </td>

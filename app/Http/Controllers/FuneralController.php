@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 use PDF;
 
 class FuneralController extends Controller
@@ -289,5 +290,18 @@ class FuneralController extends Controller
         $funeral->save();
         return json_encode(true);
     }
+
+
+    public function appointmentIcal(Funeral $funeral) {
+        $service = Service::find($funeral->service_id);
+        $raw = View::make('funerals.appointment.ical', compact('funeral', 'service'));
+        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        return response($raw, 200)
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', '0')
+            ->header('Content-Type', 'text/calendar')
+            ->header('Content-Disposition', 'inline; filename=Trauergespraech-'.$funeral->id.'.ics');
+    }
+
 
 }
