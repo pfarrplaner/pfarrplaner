@@ -35,6 +35,7 @@ Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'Ab
 Route::get('absences/create/{year}/{month}/{user}', ['as' => 'absences.create', 'uses' => 'AbsenceController@create']);
 
 Route::resource('tags', 'TagController')->middleware('auth');
+Route::resource('parishes', 'ParishController')->middleware('auth');
 
 // embed in web site:
 Route::get('services/embed/locations/{ids}/{limit?}', ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']);
@@ -174,7 +175,6 @@ Route::get('/liturgyCache', function() {
 
 // current tests
 Route::get('test', function(){
-    dd([Auth::user()->cities, Auth::user()->visibleCities, \Illuminate\Support\Facades\Auth::user()->writableCities], Auth::user()->can('update', \App\Service::find(303)));
 });
 
 // tests with vue

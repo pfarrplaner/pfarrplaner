@@ -60,6 +60,11 @@
                         Kennzeichnungen
                     </a>
                 @endcan
+                @can('pfarraemter-bearbeiten')
+                    <a class="dropdown-item" href="{{ route('parishes.index') }}">
+                        Pfarrämter
+                    </a>
+                @endcan
                 @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten', 'rollen-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'tags-bearbeiten'])
                     <div class="dropdown-divider"></div>
                 @endcanany
