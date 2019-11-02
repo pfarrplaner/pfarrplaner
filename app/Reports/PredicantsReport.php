@@ -52,8 +52,8 @@ class PredicantsReport extends AbstractWordDocumentReport
             'end' => 'required|date|date_format:d.m.Y',
         ]);
 
-        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')))
-            ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')))
+        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start').'0:00:00'))
+            ->where('date', '<=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end').' 23:59:59'))
             ->orderBy('date', 'ASC')
             ->get();
 
