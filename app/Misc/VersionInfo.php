@@ -25,6 +25,10 @@ class VersionInfo
         return collect([
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Kirchzettel", das automatisch den wöchtentlichen Ausgang für den Schaukasten zusammenstellt. Dabei können Veranstaltungen aus einem Gemeindekalender auf Sharepoint übernommen werden. (Das muss allerdings erst eingerichtet werden. Bei Fragen dazu bitte an den Christoph Fischer wenden).',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
                 'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Bekanntgaben", das automatisch die Bekanntgaben für einen Gottesdienst zusammenstellt. Dabei können Veranstaltungen aus einem Gemeindekalender auf Sharepoint übernommen werden. (Das muss allerdings erst eingerichtet werden. Bei Fragen dazu bitte an den Christoph Fischer wenden).',
             ],
             [

@@ -21,6 +21,10 @@ class EventCalendarImport
         $this->url = $url;
     }
 
+    public function getMixedEvents() {
+
+    }
+
     public function getEvents(Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
         $events = json_decode(file_get_contents($this->url), true);

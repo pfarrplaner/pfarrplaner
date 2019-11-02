@@ -347,4 +347,15 @@ class Service extends Model
     public function atText() {
         return is_object($this->location) ? $this->location->atText() : '('.$this->locationText().')';
     }
+
+    public function scopeInCity(Builder $query, $city) {
+        return $query->where('city_id', $city->id);
+    }
+
+    public function scopeDateRange(Builder $query, Carbon $start, Carbon $end) {
+        return $query->whereHas('day', function ($query2) use ($start, $end) {
+            $query2->where('date', '>=', $start)
+                ->where('date', '<=', $end);
+        });
+    }
 }
