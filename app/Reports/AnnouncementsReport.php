@@ -57,11 +57,17 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         return $this->renderSetupView(compact('cities'));
     }
 
-    public function configure(Request $request)
-    {
+    public function configure(Request $request) {
         $request->validate(['city' => 'required|int']);
         $city = City::findOrFail($request->get('city'));
+        $request->session()->put('city', $city->id);
+        return redirect()->route('report.step', ['report' => $this->getKey(), 'step' => 'configure2']);
+    }
 
+
+    public function configure2(Request $request)
+    {
+        $city = City::findOrFail($request->session()->get('city'));
         $services = Service::with(['day', 'location'])
             ->regularForCity($city)
             ->select('services.*')
@@ -79,6 +85,14 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     {
         $request->validate(['service' => 'required|int']);
         $service = Service::findOrFail($request->get('service'));
+        $request->session()->put('service', $service->id);
+        return redirect()->route('report.step', ['report' => $this->getKey(), 'step' => 'postInput']);
+    }
+
+
+    public function postInput(Request $request)
+    {
+        $service = Service::findOrFail($request->session()->get('service'));
 
         $lastDayWithServices = Day::whereHas('services', function ($query) use ($service) {
             $query->regularForCity($service->city);
@@ -96,7 +110,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             'lastService' => 'required|date|date_format:d.m.Y',
         ]);
 
-        $service = Service::findOrFail($request->get('service'));
+        $service = Service::findOrFail($request->session()->get('service'));
         $lastService = $request->get('lastService');
         $offerings = $request->get('offerings');
         $offeringText = $request->get('offering_text') ?: '';
@@ -386,7 +400,7 @@ in guten und in schweren Tagen.');
         if (count($funerals)) {
             $this->renderParagraph(self::NO_INDENT, [['Bestattungen', self::BOLD_UNDERLINE]]);
 
-            $funeralArray = [];
+            $funeralArray = ['past' => [], 'future' => []];
             foreach ($funerals as $funeral) {
                 $key = ($funeral->service->trueDate() < $service->trueDate()) ? 'past' : 'future';
                 $funeralArray[$key][] = $funeral;
