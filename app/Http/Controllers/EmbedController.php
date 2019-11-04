@@ -39,7 +39,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('location_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now('Europe/Berlin'));
             })
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
@@ -62,7 +62,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now('Europe/Berlin'));
             })
             ->doesntHave('funerals')
             ->doesntHave('weddings')
@@ -89,7 +89,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now('Europe/Berlin'));
             })
             ->doesntHave('funerals')
             ->doesntHave('weddings')
@@ -128,7 +128,7 @@ class EmbedController extends Controller
             ->where('baptism', true)
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now('Europe/Berlin'));
             })
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
