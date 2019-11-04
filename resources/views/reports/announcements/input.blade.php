@@ -17,6 +17,7 @@
                     <div class="form-group">
                         <label class="control-label" for="lastService">Herzlichen Dank für das Opfer der Gottesdienste vom...</label>
                         <input class="form-control datepicker" type="text" name="lastService" value="{{ $lastDayWithServices->date->format('d.m.Y') }}" placeholder="TT.MM.JJJJ" />
+                        @component('components.validation', ['name' => 'lastService']) @endcomponent
                     </div>
                     <div class="form-group">
                         <label class="control-label" for="offerings">...in Höhe von ... €.</label>
@@ -25,6 +26,7 @@
                     <div class="form-group">
                         <label class="control-label" for="offering_text">Text zum Opfer</label>
                         <textarea class="form-control" type="text" name="offering_text" placeholder="Wenn vorhanden, z.B. Anschreiben des Landesbischofs"></textarea>
+                        @component('components.validation', ['name' => 'offering_text']) @endcomponent
                     </div>
                     <button type="submit" class="btn btn-primary">Erstellen</button>
                 </form>

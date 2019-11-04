@@ -105,12 +105,13 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     public function render(Request $request)
     {
         $request->validate([
-            'service' => 'required|integer',
             'offerings' => 'required|string',
             'lastService' => 'required|date|date_format:d.m.Y',
         ]);
 
-        $service = Service::findOrFail($request->session()->get('service'));
+        $service = Service::findOrFail($request->session()->pull('service'));
+        $request->session()->pull('city');
+
         $lastService = $request->get('lastService');
         $offerings = $request->get('offerings');
         $offeringText = $request->get('offering_text') ?: '';

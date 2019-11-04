@@ -22,6 +22,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        @component('components.validation', ['name' => 'city']) @endcomponent
                     </div>
                     <button type="submit" class="btn btn-primary">Weiter &gt;</button>
                 </form>

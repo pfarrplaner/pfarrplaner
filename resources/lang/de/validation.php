@@ -173,5 +173,10 @@ return [
         'time'                  => 'Uhrzeit',
         'available'             => 'verfügbar',
         'size'                  => 'Größe',
+        'city_id'               => 'Kirchengemeinde',
+        'offering_goal'         => 'Opferzweck',
+        'lastService'           => 'Datum des letzten Gottesdienstes',
+        'offerings'             => 'Opfersumme',
+        'offering_text'         => 'Text zum Opfer'
     ],
 ];
