@@ -30,8 +30,9 @@ class StringTool
         return '';
     }
 
-    public static function pluralString($count, $singular, $plural)
+    public static function pluralString($count, $singular, $plural, $zeroString = '')
     {
+        if ($count == 0 ) return $zeroString ?: $plural;
         return ($count == 1) ? $singular : $plural;
     }
 
