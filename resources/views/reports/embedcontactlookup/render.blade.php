@@ -23,7 +23,15 @@
                             </li>
                             <li>Kopiere den folgenden Code komplett in das Feld "HTML-Code":
                                 <div class="form-group">
-                            <textarea id="code" class="form-control" rows="10"><script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script><script defer>$(document).ready(function () {fetch('{{ $url }}').then((res) => {return res.text();}).then((data) => {$('#{{ $randomId }}').html(data);});});</script><div id="{{ $randomId }}">Bitte warten, Daten werden geladen...</div></textarea>
+                            <textarea id="code" class="form-control" rows="10"><script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
+<script defer>$(document).ready(function () {
+        var url = '{{ $url }}';
+        var parish;
+        if (parish=localStorage.getItem('parish')) url = url + '&parish='+parish;
+        fetch(url).then((res) => {return res.text();}).then((data) => {$('#{{ $randomId }}').html(data);});});
+</script>
+<div id="{{ $randomId }}">Bitte warten, Daten werden geladen...</div>
+                            </textarea>
                                 </div>
                                 <div class="form-group">
                                     <button id="btnCopy" class="btn btn-secondary btn-sm"><span class="fa fa-copy"></span> Code kopieren</button>

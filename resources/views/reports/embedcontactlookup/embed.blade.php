@@ -1,4 +1,4 @@
-@if ($street == '')
+@if (!$parish)
 <div id="{{ $randomId }}" class="row ctype-textbox listtype-none showmobdesk-0">
     <div id="c1050561" class="col s12 bullme ">
         <div class="card-panel default">
@@ -36,14 +36,20 @@
     });
 </script>
 @else
-    <?php $parish = \App\Parish::byAddress($street, $number)->first() ?>
     <div id="{{ $randomId }}" class="row ctype-textbox listtype-none showmobdesk-0">
         <div id="c1050561" class="col s12 bullme ">
             <div class="card-panel default">
 
                 <p class="bodytext"><b>Ihr Ansprechpartner</b></p>
-                <p class="bodytext">{{ $parish->name }}</p>
+                <p class="bodytext"><b>{{ $parish->name }}</b><br />
+                    {{ $parish->address }}<br />
+                    {{ $parish->zip }} {{ $parish->city }}<br />
+                    Fon {{ $parish->phone }} | E-Mail <a href="mailto:{{ $parish->email }}">{{ $parish->email }}</a>
+                </p>
             </div>
         </div>
     </div>
+    <script defer>
+        localStorage.setItem('parish', '{{ $parish->id }}');
+    </script>
 @endif
