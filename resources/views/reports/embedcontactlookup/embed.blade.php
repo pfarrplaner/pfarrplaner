@@ -44,27 +44,35 @@
         <div id="c1050561" class="col s12 bullme ">
             <div class="card-panel default">
 
-                <p class="bodytext"><b>{{ \App\Tools\StringTool::pluralString(count($parish->users), 'Ihr', 'Ihre') }}
-                        Ansprechpartner</b></p><br />
-                @foreach ($parish->users as $user)
-                    <div>
-                        @if ($user->image)
-                            <div style="float: left; width: 90px;">
-                                <img width="80px" src="{{ url('storage/'.$user->image) }}"/>
+                <p class="bodytext"><b>Bitte wenden Sie sich an:</b></p>
+                @if(count($parish->users))
+                    <br/>
+                    @foreach ($parish->users as $user)
+                        <div>
+                            @if ($user->image)
+                                <div style="float: left; width: 90px;">
+                                    <img width="80px" src="{{ url('storage/'.$user->image) }}"/>
+                                </div>
+                            @endif
+                            <div style="float:left;">
+                                <p class="bodytext"><b>{{ $user->fullName(true) }}</b><br/>
+                                    {{ $parish->name }}<br/>
+                                    {{ $parish->address }}<br/>
+                                    {{ $parish->zip }} {{ $parish->city }}<br/>
+                                    Fon {{ $parish->phone }}<br/>E-Mail <a
+                                            href="mailto:{{ $parish->email }}">{{ $parish->email }}</a>
+                                </p>
                             </div>
-                        @endif
-                        <div style="float:left;">
-                            <p class="bodytext"><b>{{ $user->fullName(true) }}</b><br/>
-                                {{ $parish->name }}<br/>
-                                {{ $parish->address }}<br/>
-                                {{ $parish->zip }} {{ $parish->city }}<br/>
-                                Fon {{ $parish->phone }}<br />E-Mail <a
-                                        href="mailto:{{ $parish->email }}">{{ $parish->email }}</a>
-                            </p>
                         </div>
-                    </div>
-                    <div style="clear: both;"></div>
-                @endforeach
+                        <div style="clear: both;"></div>
+                    @endforeach
+                @else
+                    <p class="bodytext"><b>{{ $parish->name }}</b><br/>
+                        {{ $parish->address }}<br/>
+                        {{ $parish->zip }} {{ $parish->city }}<br/>
+                        Fon {{ $parish->phone }}<br/>E-Mail <a
+                                href="mailto:{{ $parish->email }}">{{ $parish->email }}</a>
+                @endif
             </div>
         </div>
     </div>
