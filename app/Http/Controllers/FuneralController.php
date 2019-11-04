@@ -174,11 +174,21 @@ class FuneralController extends Controller
             'relative_contact_data' => $request->get('relative_contact_data') ?: '',
             'wake_location' => $request->get('wake_location') ?: '',
         ]);
-        if ($request->get('announcement')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
-        if ($request->get('wake')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
-        if ($request->get('dob')) $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
-        if ($request->get('dod')) $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
-        if ($request->get('appointment')) $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('appointment').':00');
+        if ($request->get('announcement') != '') $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
+        if ($request->get('wake') != '') $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
+        if ($request->get('dob') != '') $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
+        if ($request->get('dod') != '') $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
+
+
+        $appointment = $request->get('appointment');
+        if (!preg_match('/\d+.\d+.\d+ \d+:\d+/', $appointment)) {
+            if (preg_match('/\d+.\d+.\d+/', $appointment)) {
+                $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment.' 00:00:00');
+            }
+        } else {
+            $appointment .= ':00';
+            $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
+        }
         $funeral->save();
 
         // delayed notification after wizard completion:
@@ -241,9 +251,18 @@ class FuneralController extends Controller
         $funeral->wake_location = $request->get('wake_location') ?: '';
         if ($request->get('announcement') !='')  $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
         if ($request->get('wake') != '') $funeral->wake = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
-        if ($request->get('dob')) $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
-        if ($request->get('dod')) $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
-        if ($request->get('appointment')) $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('appointment').':00');
+        if ($request->get('dob') != '') $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
+        if ($request->get('dod') != '') $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
+
+        $appointment = $request->get('appointment');
+        if (!preg_match('/\d+.\d+.\d+ \d+:\d+/', $appointment)) {
+            if (preg_match('/\d+.\d+.\d+/', $appointment)) {
+                $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment.' 00:00:00');
+            }
+        } else {
+            $appointment .= ':00';
+            $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
+        }
         $funeral->save();
 
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
