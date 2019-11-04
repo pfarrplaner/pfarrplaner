@@ -11,7 +11,7 @@
         <div class="card-body">
             @component('components.errors')
             @endcomponent
-            <form method="post" action="{{ route('users.store') }}">
+            <form method="post" action="{{ route('users.store') }}"  enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for="name">Name:</label>
@@ -37,6 +37,10 @@
                 <div class="form-group">
                     <label for="last_name">Nachname:</label>
                     <input type="text" class="form-control" id="last_name" name="last_name" value=""/>
+                </div>
+                <div class="form-group">
+                    <label for="image">Bild:</label>
+                    <input type="file" class="form-control" id="image" name="image"/>
                 </div>
                 <div class="form-group"> <!-- Radio group !-->
                     <label class="control-label">Zugriff auf Kirchengemeinden:</label>
@@ -82,6 +86,15 @@
                         <option></option>
                         @foreach ($cities as $city)
                             <option value="{{ $city->id }}">{{ $city->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="parishes">Dieser Benutzer hat folgende Pfarrämter inne:</label>
+                    <select class="form-control fancy-selectize" name="parishes[]" multiple>
+                        <option></option>
+                        @foreach ($parishes as $parish)
+                            <option value="{{ $parish->id }}">{{ $parish->name }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Parish;
 use App\Service;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -52,7 +54,8 @@ class UserController extends Controller
     {
         $cities = City::all();
         $roles = Role::all()->sortBy('name');
-        return view('users.create', compact('cities', 'roles'));
+        $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
+        return view('users.create', compact('cities', 'roles', 'parishes'));
     }
 
     /**
@@ -86,12 +89,18 @@ class UserController extends Controller
             $user->password = Hash::make($request->get('password'));
         }
 
+        if ($request->hasFile('image')) {
+            $user->image = $request->file('image')->store('user-images', 'public');
+        }
+
+
         $user->save();
 
 
         $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
 
         $user->homeCities()->sync($request->get('homeCities') ?: []);
+        $user->parishes()->sync($request->get('parishes') ?: []);
 
 
         // assign roles
@@ -138,8 +147,9 @@ class UserController extends Controller
         $user = User::find($id);
         $cities = City::all();
         $roles = Role::all()->sortBy('name');
+        $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
         $homescreen = $user->getSetting('homeScreen', 'route:calendar');
-        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles'));
+        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes'));
     }
 
     public function profile(Request $request)
@@ -222,7 +232,6 @@ class UserController extends Controller
             'name' => 'required|max:255',
         ]);
 
-
         $user = User::find($id);
         $user->name = $request->get('name');
         $user->email = $request->get('email');
@@ -239,11 +248,25 @@ class UserController extends Controller
         $user->phone = $request->get('phone') ?: '';
         $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
         $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
+
+
+        if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
+            if ($user->image != '') {
+                Storage::delete($user->image);
+            }
+            $user->image = '';
+        }
+        if ($request->hasFile('image')) {
+            $user->image = $request->file('image')->store('user-images', 'public');
+        }
+
+
         $user->save();
 
         $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
 
         $user->homeCities()->sync($request->get('homeCities') ?: []);
+        $user->parishes()->sync($request->get('parishes') ?: []);
 
         // assign roles
         $roles = $request->get('roles');

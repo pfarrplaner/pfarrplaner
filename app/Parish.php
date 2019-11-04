@@ -28,6 +28,10 @@ class Parish extends Model
         return $this->hasMany(StreetRange::class);
     }
 
+    public function users() {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
     public function importStreetsFromCSV($csv)
     {
         /** @var StreetRange $streetRange */
