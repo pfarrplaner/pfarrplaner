@@ -50,7 +50,7 @@ class ParishController extends Controller
         $parish = new Parish([
            'city_id' => $owningCity->id,
            'name' => $request->get('name'),
-           'code' => $request->get('name'),
+           'code' => $request->get('code'),
            'address' => $request->get('address', ''),
            'zip' => $request->get('zip', ''),
            'city' => $request->get('city', ''),
