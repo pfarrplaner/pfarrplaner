@@ -63,9 +63,9 @@ Route::get('/ajax/liturgicalInfo/{dayId}/', ['uses' => 'LiturgicalDaysController
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
 Route::get('/report/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
+Route::get('/report/{report}/embed', ['as' => 'report.embed', 'uses' => 'ReportsController@embed'])->middleware('cors');
 Route::post('/report/{report}/{step}', ['as' => 'report.step', 'uses' => 'ReportsController@step']);
 Route::get('/report/{report}/{step}', ['as' => 'report.step', 'uses' => 'ReportsController@step']);
-Route::get('/report/{report}/embed', ['as' => 'report.embed', 'uses' => 'ReportsController@embed'])->middleware('cors');
 
 Route::get('/input/{input}', ['as' => 'inputs.setup', 'uses' => 'InputController@setup']);
 Route::post('/input/collect/{input}', ['as' => 'inputs.input', 'uses' => 'InputController@input']);
