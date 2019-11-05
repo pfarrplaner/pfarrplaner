@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Kirche bearbeiten')
+@section('title', 'Kirche / Gottesdienstort bearbeiten')
 
 @section('content')
     @component('components.container')
     <div class="card">
         <div class="card-header">
-            Kirche bearbeiten
+            Kirche / Gottesdienstort bearbeiten
         </div>
         <div class="card-body">
             @component('components.errors')
@@ -32,7 +32,7 @@
                 </div>
                 <div class="form-group">
                     <label for="default_time">Gottesdienst um:</label>
-                    <input type="text" class="form-control" name="default_time" value="{{ Carbon\Carbon::createFromTimeString($location->default_time)->format('h:i')}}" />
+                    <input type="text" class="form-control" name="default_time" value="{{ Carbon\Carbon::createFromTimeString($location->default_time)->format('H:i')}}" />
                 </div>
                 <div class="form-group">
                     <label for="cc_default_location">Wenn parallel Kinderkirche stattfindet, dann normalerweise hier:</label>

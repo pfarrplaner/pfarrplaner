@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Kirche anlegen')
+@section('title', 'Kirche / Gottesdienstort anlegen')
 
 @section('content')
     @component('components.container')
     <div class="card">
         <div class="card-header">
-            Kirche hinzufügen
+            Kirche / Gottesdienstort hinzufügen
         </div>
         <div class="card-body">
             @component('components.errors')

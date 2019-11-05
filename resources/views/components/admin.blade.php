@@ -52,7 +52,7 @@
                 @endcan
                 @can('kirche-bearbeiten')
                 <a class="dropdown-item" href="{{ route('locations.index') }}">
-                    Kirchen
+                    Kirchen / Gottesdienstorte
                 </a>
                 @endcan
                 @can('tags-bearbeiten')

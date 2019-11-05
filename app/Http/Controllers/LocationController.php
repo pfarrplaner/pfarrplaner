@@ -53,7 +53,7 @@ class LocationController extends Controller
         $location = new Location([
             'name' => $request->get('name'),
             'city_id' => $request->get('city_id'),
-            'default_time' => $request->get('default_time'),
+            'default_time' => $request->get('default_time').':00',
             'cc_default_location' => $request->get('cc_default_location') ?: '',
             'at_text' => $request->get('at_text') ?: '',
             'alternate_location_id' => $request->get('alternate_location_id') ?: null,
@@ -106,7 +106,7 @@ class LocationController extends Controller
         $location = Location::find($id);
         $location->name = $request->get('name');
         $location->city_id = $request->get('city_id');
-        $location->default_time = $request->get('default_time');
+        $location->default_time = $request->get('default_time').':00';
         $location->cc_default_location = $request->get('cc_default_location') ?: '';
         $location->at_text = $request->get('at_text') ?: '';
         $location->alternate_location_id = $request->get('alternate_location_id') ?: null;

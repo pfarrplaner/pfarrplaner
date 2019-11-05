@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Kirchen')
+@section('title', 'Kirchen / Gottesdienstorte')
 
 @section('content')
     @component('components.container')
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>Kirche</th>
+                <th>Kirche / Gottesdienstort</th>
                 <th>Kirchengemeinde</th>
                 <th>Gottesdienst um</th>
                 <th></th>
@@ -18,7 +18,7 @@
                 <tr>
                     <td>{{$location->name}}</td>
                     <td>{{$location->city->name}}</td>
-                    <td>{{\Carbon\Carbon::createFromTimeString($location->default_time)->format('h:i') }} Uhr</td>
+                    <td>{{\Carbon\Carbon::createFromTimeString($location->default_time)->format('H:i') }} Uhr</td>
                     <td>
                         @if(Auth::user()->isAdmin || (Auth::user()->can('kirche-bearbeiten') && Auth::user()->cities->contains($location->city)))
                             <a href="{{ route('locations.edit',$location->id)}}" class="btn btn-primary" title="Bearbeiten"><span class="fa fa-edit"></span></a>
@@ -35,7 +35,7 @@
         </table>
         @can('kirche-bearbeiten')
             <hr/>
-            <a class="btn btn-secondary" href="{{ route('locations.create') }}">Neue Kirche hinzufügen</a>
+            <a class="btn btn-secondary" href="{{ route('locations.create') }}">Neue Kirche / neuen Gottesdienstort hinzufügen</a>
         @endcan
     @endcomponent
 @endsection

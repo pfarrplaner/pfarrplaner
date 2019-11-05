@@ -48,7 +48,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="location_id">Kirche</label>
+                                <label for="location_id">Kirche / Gottesdienstort</label>
                                 <select class="form-control" name="location_id" @cannot('gd-allgemein-bearbeiten') disabled @endcannot>
                                     @foreach($locations as $thisLocation)
                                         <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
