@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '07.11.2019'),
+                'text' => 'Jeder Gottesdienst hat nun ein Feld "Opferbetrag", in dem die Höhe des eingesammelten Opfers vermerkt werden kann (z.B. für Bekanntmachungen). Dieses Feld kann auch über die Sammeleingabe Opferplan bearbeitet werden.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
                 'text' => 'Jeder Gottesdienst hat nun ein Feld "Interne Anmerkungen" für Beschreibungen, die nicht veröffentlicht werden sollen, aber intern im Pfarrplaner angezeigt werden.',
             ],

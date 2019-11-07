@@ -94,12 +94,27 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     {
         $service = Service::findOrFail($request->session()->get('service'));
 
-        $lastDayWithServices = Day::whereHas('services', function ($query) use ($service) {
+        $lastDaysWithServices = Day::whereHas('services', function ($query) use ($service) {
             $query->regularForCity($service->city);
         })->where('date', '<', $service->day->date)
-            ->orderBy('date', 'DESC')->first();
+            ->orderBy('date', 'DESC')->limit(10)->get();
 
-        return $this->renderView('input', compact('service', 'lastDayWithServices'));
+
+        // add up all offerings for the day
+        $offerings = [];
+        foreach ($lastDaysWithServices as $day) {
+            $dayServices = Service::where('day_id', $day->id)
+                ->where('city_id', $service->city->id)
+                ->get();
+            $amount = 0;
+            foreach ($dayServices as $dayService) {
+                //$amount += (float)filter_var(strtr($dayService->offering_amount, [',' => '.', ' ' => '', '€' => '']), FILTER_SANITIZE_NUMBER_FLOAT);
+                $amount += (float)strtr($dayService->offering_amount, [' ' => '', '€' => '']);
+            }
+            $offerings[$day->id] = trim(money_format('%=*^#0.2n', $amount));
+        }
+
+        return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
     }
 
     public function render(Request $request)

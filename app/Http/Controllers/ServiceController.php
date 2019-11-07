@@ -98,6 +98,7 @@ class ServiceController extends Controller
             'cc_lesson' => $request->get('cc_lesson') ?: '',
             'cc_staff' => $request->get('cc_staff') ?: '',
             'internal_remarks' => $request->get('internal_remarks') ?: '',
+            'offering_amount' => $request->get('offering_amount', ''),
         ]);
 
         $service->save();
@@ -269,6 +270,7 @@ class ServiceController extends Controller
         $service->cc_lesson = $request->get('cc_lesson') ?: '';
         $service->cc_staff = $request->get('cc_staff') ?: '';
         $service->internal_remarks = $request->get('internal_remarks') ?: '';
+        $service->offering_amount = $request->get('offering_amount', '');
 
         $tags = $request->get('tags') ?: [];
         $service->tags()->sync($tags);

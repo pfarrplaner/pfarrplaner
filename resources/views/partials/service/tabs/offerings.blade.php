@@ -36,4 +36,8 @@
         <label for="offering_description">Anmerkungen zum Opfer</label>
         <input class="form-control" type="text" name="offering_description" value="{{ $service->offering_description }}" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
     </div>
+    <div class="form-group">
+        <label for="offering_amount">Betrag</label>
+        <input class="form-control" type="text" name="offering_amount" value="{{ $service->offering_amount }}" @cannot('gd-opfer-bearbeiten') disabled @endcannot />
+    </div>
 </div>

@@ -83,6 +83,7 @@ class OfferingsInput extends AbstractInput
                 $service->offering_description = $data['offering_description'] ?: '';
                 $service->offerings_counter1 = $data['offerings_counter1'] ?: '';
                 $service->offerings_counter2 = $data['offerings_counter2'] ?: '';
+                $service->offering_amount = $data['offering_amount'] ?: '';
                 $dirty = (count($service->getDirty()) > 0);
                 $service->save();
 

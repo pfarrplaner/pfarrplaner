@@ -29,6 +29,7 @@
                             <th>Anmerkungen</th>
                             <th>Opferzähler 1</th>
                             <th>Opferzähler 2</th>
+                            <th>Betrag</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -79,8 +80,12 @@
                                         <input type="text" class="form-control" name="service[{{$service->id}}][offerings_counter2]" value="{{ $service->offerings_counter2 }}" />
                                     </div>
                                 </td>
-
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="service[{{$service->id}}][offering_amount]" value="{{ $service->offering_amount }}" />
+                                    </div>
                                 </td>
+
                             </tr>
                         @endforeach
                         </tbody>
