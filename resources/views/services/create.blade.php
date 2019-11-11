@@ -126,7 +126,7 @@
                             <br />
                             <div class="form-group">
                                 <label for="description">Anmerkungen</label>
-                                <input type="text" class="form-control" name="description" @canany(['gd-allgemein-beabeiten', 'gd-anmerkungen-bearbeiten']) @else disabled @endcanany />
+                                <input type="text" class="form-control" name="description" @if(!(\Illuminate\Support\Facades\Auth::user()->can('gd-allgemein-bearbeiten') || $user->can('gd-anmerkungen-bearbeiten'))) disabled @endif/>
                             </div>
                             <div class="form-group">
                                 <label for="internal_remarks">Interne Anmerkungen</label>
