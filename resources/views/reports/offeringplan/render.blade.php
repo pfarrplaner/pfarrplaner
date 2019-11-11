@@ -20,6 +20,13 @@
 <h1>Opferplan {{ $year }} für {{ $city->name }}</h1>
 <hr/>
 
+
+<htmlpagefooter name="myFooter2">
+    <div style="width: 100%; font-size: 8pt; text-align: right;">Seite {PAGENO}/{nbpg}</div>
+</htmlpagefooter>
+<sethtmlpagefooter name="myFooter2" value="on" />
+
+
 @if($count)
 
     <table class="table table-fluid table-striped" cellspacing="0" border="0">

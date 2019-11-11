@@ -34,14 +34,15 @@
                         </thead>
                         <tbody>
                         @foreach($services as $service)
-                            <tr>
+                            <tr data-service="{{$service->id}}">
                                 <th>
                                     {{ $service->day->date->format('d.m.Y') }}, {{ strftime('%H:%M Uhr', strtotime($service->time)) }}<br />
                                     {{ $service->locationText() }}
                                 </th>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="service[{{$service->id}}][offering_goal]" value="{{ $service->offering_goal }}" />
+                                        <input type="text" class="form-control" id="service_{{ $service->id }}_offering_goal" name="service[{{$service->id}}][offering_goal]" value="{{ $service->offering_goal }}" />
+                                        @if ($loop->index >0)<a href="#" class="btn btn-sm btn-secondary btnCopyPrevious" title="Inhalte der vorherigen Zeile kopieren"><span class="fa fa-copy"></span> Vorherige übernehmen</a>@endif
                                     </div>
                                 </td>
                                 <td>
@@ -67,22 +68,22 @@
                                     </div>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="service[{{$service->id}}][offering_description]" value="{{ $service->offering_description }}" />
+                                        <input type="text" class="form-control" id="service_{{ $service->id }}_offering_description" name="service[{{$service->id}}][offering_description]" value="{{ $service->offering_description }}" />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="service[{{$service->id}}][offerings_counter1]" value="{{ $service->offerings_counter1 }}" />
+                                        <input type="text" class="form-control" id="service_{{ $service->id }}_offerings_counter1" name="service[{{$service->id}}][offerings_counter1]" value="{{ $service->offerings_counter1 }}" />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="service[{{$service->id}}][offerings_counter2]" value="{{ $service->offerings_counter2 }}" />
+                                        <input type="text" class="form-control" id="service_{{ $service->id }}_offerings_counter2" name="service[{{$service->id}}][offerings_counter2]" value="{{ $service->offerings_counter2 }}" />
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="service[{{$service->id}}][offering_amount]" value="{{ $service->offering_amount }}" />
+                                        <input type="text" class="form-control"  id="service_{{ $service->id }}_offering_amount" name="service[{{$service->id}}][offering_amount]" value="{{ $service->offering_amount }}" />
                                     </div>
                                 </td>
 
@@ -96,4 +97,20 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function(){
+            $('.btnCopyPrevious').click(function(e){
+                e.preventDefault();
+                var thisService = $(this).parent().parent().parent().data('service');
+                var prevService = $(this).parent().parent().parent().prev().data('service');
+
+                $('#service_'+thisService+'_offering_goal').val($('#service_'+prevService+'_offering_goal').val());
+                $('#service_'+thisService+'_offering_description').val($('#service_'+prevService+'_offering_description').val());
+                $('#service_'+thisService+'_offerings_counter1').val($('#service_'+prevService+'_offerings_counter1').val());
+                $('#service_'+thisService+'_offerings_counter2').val($('#service_'+prevService+'_offerings_counter2').val());
+
+                $('input:radio[name="service['+thisService+'][offering_type]"]').val([$('input[name="service['+prevService+'][offering_type]"]:checked').val()]);
+            });
+        });
+    </script>
 @endsection

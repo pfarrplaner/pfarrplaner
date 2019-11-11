@@ -81,7 +81,7 @@ class OfferingPlanReport extends AbstractPDFDocumentReport
         $minDate = min($dates);
         $maxDate = max($dates);
 
-        return $this->sendToBrowser(
+        return $this->sendToFile(
             $year . ' Opferplan ' . $city->name . '.pdf',
             [
                 'start' => $minDate,
