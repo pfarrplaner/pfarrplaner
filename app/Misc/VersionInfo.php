@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '11.11.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Opferplan", mit dem der komplette Opferplan für ein Jahr ausgedruckt werden kann.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '07.11.2019'),
                 'text' => 'Jeder Gottesdienst hat nun ein Feld "Opferbetrag", in dem die Höhe des eingesammelten Opfers vermerkt werden kann (z.B. für Bekanntmachungen). Dieses Feld kann auch über die Sammeleingabe Opferplan bearbeitet werden.',
             ],
