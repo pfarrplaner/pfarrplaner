@@ -17,9 +17,8 @@
     </style>
 </head>
 <body>
-<h1>Opferplan {{ $year }} für {{ $city->name }}</h1>
-<hr/>
-
+<h1 style="margin-bottom: 0cm; padding-bottom: 0;">Opferplan {{ $year }} für {{ $city->name }}</h1>
+<p style="font-size: 0.6em; color: gray; margin-top: 0;">Stand: {{strftime('%A, %d. %B %Y, %H:%M Uhr')}}</p>
 
 <htmlpagefooter name="myFooter2">
     <div style="width: 100%; font-size: 8pt; text-align: right;">Seite {PAGENO}/{nbpg}</div>
@@ -52,7 +51,7 @@
                         @if ($service->descriptionText() != '')<br />{{ $service->descriptionText }}</small>@endif
                     </td>
                     <td valign="top">{{ $service->offering_goal }}</td>
-                    <td valign="top" style="width: 1.3cm;"><small>@if($service->offering_type == 'PO')Pflicht @else @if($service->offering_type == 'EO')empf. @else eig.@endif @endif</small>
+                    <td valign="top" style="width: 1.3cm;"><small>@if($service->offering_type == 'PO')Pflicht @else @if($service->offering_type == 'eO')empf. @else eig.@endif @endif</small>
                     </td>
                     <td valign="top">{{ $service->offering_description }}</td>
                     <td valign="top"><small>{{ $service->offerings_counter1 }}</small></td>
@@ -63,10 +62,9 @@
         </tbody>
     </table>
     <br />
-    <p style="font-size: 0.6em; color: gray;">Erstellt mit {{ env('APP_NAME') }} am {{strftime('%A, %d. %B %Y um %H:%M Uhr')}} @auth von {{ Auth::user()->name }} @endauth</p>
 
 @else
-    <p>In dem angegebenen Zeitraum wurden keine Termine für die Kinderkirche gefunden.</p>
+    <p>In dem angegebenen Zeitraum wurden keine Gottesdienste gefunden.</p>
 @endif
 
 </body>
