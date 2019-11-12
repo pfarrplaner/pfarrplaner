@@ -116,7 +116,7 @@ class UserPolicy
         if ($user->id == $model->id) return true;
         if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {
             if (!$model->hasRole('Pfarrer*in')) {
-                if (count($user->writableCities->intersect($model->homeCities))) return $true;
+                if (count($user->writableCities->intersect($model->homeCities))) return true;
             }
         }
         return false;
