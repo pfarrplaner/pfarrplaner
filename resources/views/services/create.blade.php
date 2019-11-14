@@ -13,6 +13,7 @@
                 @component('components.errors')
                 @endcomponent
                 <form method="post" action="{{ route('services.store') }}">
+                    @csrf
                     @tabheaders
                         @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
                         @tabheader(['id' => 'special', 'title' => 'Besonderheiten']) @endtabheader
@@ -27,7 +28,7 @@
                     @tabs
                         @tab(['id' => 'home', 'active' => true])
                             @hidden(['name' => 'city_id', 'value' => $city->id]) @endhidden
-                            @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days]) @enddayselect
+                            @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $day]) @enddayselect
                             @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endlocationselect
                             @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endinput
                             @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endinput
@@ -35,6 +36,7 @@
                             @checkbox(['name' => 'need_predicant', 'label' => 'Für diesen Gottesdienst wird ein Prädikant benötigt.', 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')]) @endcheckbox
                             @peopleselect(['name' => 'participants[O][]', 'label' => 'Organist*in', 'people' => $users, 'enabled' => Auth::user()->can('gd-organist-bearbeiten')]) @endpeopleselect
                             @peopleselect(['name' => 'participants[M][]', 'label' => 'Mesner*in', 'people' => $users,  'enabled' => Auth::user()->can('gd-mesner-bearbeiten')]) @endpeopleselect
+                            @component('components.service.otherParticipantsWithText', ['users' => $users]) @endcomponent
                             @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endpeopleselect
                         @endtab
                         @tab(['id' => 'special'])

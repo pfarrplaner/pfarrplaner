@@ -48,6 +48,7 @@
                             @checkbox(['name' => 'need_predicant', 'label' => 'Für diesen Gottesdienst wird ein Prädikant benötigt.', 'value' => $service->need_predicant, 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')]) @endcheckbox
                             @peopleselect(['name' => 'participants[O][]', 'label' => 'Organist*in', 'people' => $users, 'value' => $service->organists, 'enabled' => Auth::user()->can('gd-organist-bearbeiten')]) @endpeopleselect
                             @peopleselect(['name' => 'participants[M][]', 'label' => 'Mesner*in', 'people' => $users, 'value' => $service->sacristans, 'enabled' => Auth::user()->can('gd-mesner-bearbeiten')]) @endpeopleselect
+                            @component('components.service.otherParticipantsWithText', ['users' => $users, 'service' => $service, 'ministries' => $ministries]) @endcomponent
                             @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'value' => $service->otherParticipants, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endpeopleselect
                         @endtab
                         @tab(['id' => 'special', 'active' => ($tab=='special')])
@@ -194,6 +195,8 @@
                 $(":input:not(button):not([type=hidden])").click(dirtHandler);
                 $(":input:not(button):not([type=hidden])").on('keyup', dirtHandler);
                 */
+
+
 
             });
 

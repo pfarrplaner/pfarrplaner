@@ -234,6 +234,9 @@
                                                 <div class="service-team service-sacristan"><span
                                                             class="designation">M: </span>@foreach($service->sacristans as $participant){{ $participant->lastName(true) }}@if($loop->last) @else
                                                         | @endif @endforeach</div>
+                                                    @foreach($service->ministries() as $ministry => $people)
+                                                        <div class="service-team"><span class="designation">{{ $ministry }}: </span>{{ $people->implode('planName', ' | ') }}</div>
+                                                    @endforeach
                                                 <div class="service-description">{{ $service->descriptionText() }}</div>
                                                 @if($service->internal_remarks)<div class="service-description" title="{{ $service->internal_remarks }}"><span class="fa fa-eye-slash" title="Anmerkung nur für den internen Gebrauch"></span> {{ \App\Tools\StringTool::trimToLen($service->internal_remarks, 150) }}</div>@endif
                                                 @canany(['gd-kasualien-lesen', 'gd-kasualien-nur-statistik'])

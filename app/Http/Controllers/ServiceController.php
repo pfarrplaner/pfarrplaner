@@ -7,6 +7,7 @@ use App\Day;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Mail\ServiceUpdated;
+use App\Participant;
 use App\Service;
 use App\ServiceGroup;
 use App\Subscription;
@@ -104,31 +105,7 @@ class ServiceController extends Controller
         $service->setDefaultOfferingValues();
         $service->save();
 
-        // participants:
-        $participants = [];
-        foreach (($request->get('participants') ?: []) as $category => $participantList) {
-            foreach ($participantList as $participant) {
-                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
-                    $user = new User([
-                        'name' => $participant,
-                        'office' => '',
-                        'phone' => '',
-                        'address' => '',
-                        'preference_cities' => '',
-                        'first_name' => '',
-                        'last_name' => '',
-                        'title' => '',
-                    ]);
-                    $user->save();
-                    $participant = $user->id;
-                }
-                $participants[$category][$participant] = ['category' => $category];
-            }
-        }
-        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
-        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
-        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
-        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
+        $participants = $this->associateParticipants($request, $service);
 
         $tags = $request->get('tags') ?: [];
         $service->tags()->sync($tags);
@@ -180,6 +157,12 @@ class ServiceController extends Controller
         $service = Service::find($id);
         $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
+        $ministries = Participant::all()
+            ->pluck('category')
+            ->unique()
+            ->reject(function($value, $key){
+                return in_array($value, ['P', 'O', 'M', 'A']);
+            });
 
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::where('city_id', '=', $service->city_id)->get();
@@ -189,16 +172,16 @@ class ServiceController extends Controller
 
         $backRoute = $request->get('back') ?: '';
 
-        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute', 'tags', 'serviceGroups'));
+        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute', 'tags', 'serviceGroups', 'ministries'));
     }
 
     protected function createUserIfNotExists($participant) {
         if ((!is_numeric($participant)) || (User::find($participant) === false)) {
             $tmp = explode(' ', $participant);
             $title = $firstName = $lastName = '';
-            if (count($tmp) == 3) $title = array_slice($tmp);
-            if (count($tmp) == 2) $firstName = array_slice($tmp);
-            $lastName = array_slice($tmp);
+            if (count($tmp) == 3) $title = array_shift($tmp);
+            if (count($tmp) == 2) $firstName = array_shift($tmp);
+            $lastName = array_shift($tmp);
             $user = new User([
                 'name' => $participant,
                 'office' => '',
@@ -224,15 +207,15 @@ class ServiceController extends Controller
             }
         }
 
-        /*
-        $ministries = $request->get('ministries', []);
+        $ministries = $request->get('ministries') ?: [];
         foreach ($ministries as $ministry) {
-            foreach ($ministry['people'] as $participant) {
-                $participant = $this->createUserIfNotExists($participant);
-                $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
+            if (isset($ministry['people'])) {
+                foreach ($ministry['people'] as $participant) {
+                    $participant = $this->createUserIfNotExists($participant);
+                    $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
+                }
             }
         }
-        */
         if (count($participants)) {
             $service->participants()->sync([]);
             foreach ($participants as $category => $participant) {

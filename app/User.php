@@ -399,4 +399,8 @@ class User extends Authenticatable
         return $users;
     }
 
+    public function getPlanNameAttribute() {
+        return $this->lastName(true);
+    }
+
 }

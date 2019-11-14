@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('partials.form.input', 'input');
         Blade::component('partials.form.hidden', 'hidden');
         Blade::component('partials.form.textarea', 'textarea');
+        Blade::component('partials.form.select', 'select');
         Blade::component('partials.form.selectize', 'selectize');
         Blade::component('partials.form.dayselect', 'dayselect');
         Blade::component('partials.form.locationselect', 'locationselect');
