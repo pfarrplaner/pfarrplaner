@@ -133,6 +133,13 @@ class ServiceController extends Controller
         $tags = $request->get('tags') ?: [];
         $service->tags()->sync($tags);
 
+
+        if (count($service->pastors)) {
+            $service->need_predicant = false;
+            $service->save();
+        }
+
+
         $serviceGroups = $request->get('serviceGroups') ?: [];
         $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
 
@@ -304,6 +311,8 @@ class ServiceController extends Controller
         $service->internal_remarks = $request->get('internal_remarks') ?: '';
         $service->offering_amount = $request->get('offering_amount', '');
         $service->setDefaultOfferingValues();
+
+        if (count($service->pastors)) $service->need_predicant = false;
 
         $tags = $request->get('tags') ?: [];
         $service->tags()->sync($tags);
