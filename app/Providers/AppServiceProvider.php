@@ -19,6 +19,11 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('partials.form.tabs', 'tabs');
         Blade::component('partials.form.tab', 'tab');
         Blade::component('partials.form.input', 'input');
+        Blade::component('partials.form.hidden', 'hidden');
+        Blade::component('partials.form.dayselect', 'dayselect');
+        Blade::component('partials.form.locationselect', 'locationselect');
+        Blade::component('partials.form.peopleselect', 'peopleselect');
+        Blade::component('partials.form.checkbox', 'checkbox');
     }
 
     /**

@@ -19,41 +19,37 @@
                     @method('PATCH')
                     @csrf
 
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link @if($tab == 'home') active @endif" href="#home" role="tab" data-toggle="tab">Allgemeines</a>
-                        </li>
-                        <li class="nav-item  ">
-                            <a class="nav-link @if($tab == 'special') active @endif" href="#special" role="tab" data-toggle="tab">Besonderheiten</a>
-                        </li>
+                    @tabheaders
+                        @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => ($tab=='home' || $tab == '')]) @endtabheader
+                        @tabheader(['id' => 'special', 'title' => 'Besonderheiten', 'active' => ($tab=='special')]) @endtabheader
                         @canany(['gd-opfer-lesen','gd-opfer-bearbeiten'])
-                        <li class="nav-item ">
-                            <a class="nav-link @if($tab == 'offerings') active @endif" href="#offerings" role="tab" data-toggle="tab">Opfer</a>
-                        </li>
+                            @tabheader(['id' => 'offerings', 'title' => 'Opfer', 'active' => ($tab=='offerings')]) @endtabheader
                         @endcanany
                         @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten', 'gd-kasualien-nur-statistik'])
-                        <li class="nav-item ">
-                            <a class="nav-link @if($tab == 'rites') active @endif" href="#rites" role="tab" data-toggle="tab">Kasualien</a>
-                        </li>
+                            @tabheader(['id' => 'rites', 'title' => 'Kasualien', 'active' => ($tab=='rites')]) @endtabheader
                         @endcan
                         @canany(['gd-kinderkirche-lesen', 'gd-kinderkirche-bearbeiten'])
-                        <li class="nav-item ">
-                            <a class="nav-link @if($tab == 'cc') active @endif" href="#cc" role="tab" data-toggle="tab">Kinderkirche</a>
-                        </li>
+                            @tabheader(['id' => 'cc', 'title' => 'Kinderkirche', 'active' => ($tab=='cc')]) @endtabheader
                         @endcanany
-                        <li class="nav-item">
-                            <a class="nav-link @if($tab == 'comments') active @endif" href="#comments" role="tab" data-toggle="tab">Kommentare <span class="badge badge-primary" id="commentCount">{{ $service->commentsForCurrentUser->count() }}</span></a>
-                        </li>
+                        @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments')]) @endtabheader
                         @can('admin')
-                        <li class="nav-item">
-                            <a class="nav-link @if($tab == 'history') active @endif" href="#history" role="tab" data-toggle="tab">Bearbeitungen</a>
-                        </li>
+                            @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
                         @endcan('admin')
-                    </ul>
+                    @endtabheaders
 
-                    <div class="tab-content">
-                        <br />
-                        @include('partials.service.tabs.home')
+                    @tabs
+                        @tab(['id' => 'home', 'active' => ($tab=='home' || $tab == '')])
+                            @hidden(['name' => 'city_id', 'value' => $service->city_id]) @endhidden
+                            @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $service->day]) @enddayselect
+                            @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'value' => $service->location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endlocationselect
+                            @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'value' => $service->special_location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endinput
+                            @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'value' => $service->timeText(false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endinput
+                            @peopleselect(['name' => 'participants[P][]', 'label' => 'Pfarrer*in', 'people' => $users, 'value' => $service->pastors, 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')]) @endpeopleselect
+                            @checkbox(['name' => 'need_predicant', 'label' => 'Für diesen Gottesdienst wird ein Prädikant benötigt.', 'value' => $service->need_predicant, 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')]) @endcheckbox
+                            @peopleselect(['name' => 'participants[O][]', 'label' => 'Organist*in', 'people' => $users, 'value' => $service->organists, 'enabled' => Auth::user()->can('gd-organist-bearbeiten')]) @endpeopleselect
+                            @peopleselect(['name' => 'participants[M][]', 'label' => 'Mesner*in', 'people' => $users, 'value' => $service->sacristans, 'enabled' => Auth::user()->can('gd-mesner-bearbeiten')]) @endpeopleselect
+                            @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'value' => $service->otherParticipants, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endpeopleselect
+                        @endtab
                         @include('partials.service.tabs.special')
                         @include('partials.service.tabs.offerings')
                         @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten', 'gd-kasualien-nur-statistik'])
@@ -64,7 +60,7 @@
                             @include('partials.service.tabs.history')
                         @endcan
                         @include('partials.service.tabs.comments')
-                    </div>
+                    @endtabs
 
                     <hr />
                     <input type="hidden" name="routeBack" value="{{ $backRoute }}" />

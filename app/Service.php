@@ -210,9 +210,9 @@ class Service extends Model
         return join('; ', $desc);
     }
 
-    public function timeText($uhr = true, $separator=':', $skipMinutes = false, $nbsp = false)  {
+    public function timeText($uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
         $time = strtotime($this->time);
-        $format = '%k'.$separator.'%M';
+        $format = ($leadingZero ? '%H' : '%k').$separator.'%M';
         if ($skipMinutes) {
             if ((int)strftime('%M', $time) == 0) $format = '%H';
         }
