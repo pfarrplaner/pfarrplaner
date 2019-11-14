@@ -1,5 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
 
+ul.nav-tabs {
+    margin-bottom: 15px;
+}
+
 .hide-buttons .btn {
     display: none;
 }
