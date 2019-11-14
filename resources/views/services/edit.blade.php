@@ -50,12 +50,32 @@
                             @peopleselect(['name' => 'participants[M][]', 'label' => 'Mesner*in', 'people' => $users, 'value' => $service->sacristans, 'enabled' => Auth::user()->can('gd-mesner-bearbeiten')]) @endpeopleselect
                             @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'value' => $service->otherParticipants, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endpeopleselect
                         @endtab
-                        @include('partials.service.tabs.special')
-                        @include('partials.service.tabs.offerings')
+                        @tab(['id' => 'special', 'active' => ($tab=='special')])
+                            @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'value' => $service->baptism]) @endcheckbox
+                            @checkbox(['name' => 'eucharist', 'label' => 'Dies ist ein Abendmahlsgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'value' => $service->eucharist]) @endcheckbox
+                            @input(['name' => 'description', 'label' => 'Anmerkungen', 'value' => $service->description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')]) @endinput
+                            @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'value' => $service->internal_remarks, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')]) @endtextarea
+                            @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags, 'value' => $service->tags, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endselectize
+                            @selectize(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'value' => $service->serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endselectize
+                        @endtab
+                        @tab(['id' => 'offerings', 'active' => ($tab=='offerings')])
+                            @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'value' => $service->offerings_counter1, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offerings_counter2', 'label' => 'Opferzähler*in 2', 'value' => $service->offerings_counter2, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offerings_goal', 'label' => 'Opferzweck', 'value' => $service->offering_goal, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @radiogroup(['name' => 'offering_type', 'label' => 'Opfertyp', 'items' => ['eigener Beschluss' => '', 'empfohlenes Opfer' => 'eO', 'Pflichtopfer' => 'PO'], 'value' => $service->offering_type, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endradiogroup
+                            @input(['name' => 'offerings_description', 'label' => 'Anmerkungen zum Opfer', 'value' => $service->offering_description, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offerings_amount', 'label' => 'Opfersumme', 'value' => $service->offering_amount, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                        @endtab
                         @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten', 'gd-kasualien-nur-statistik'])
                             @include('partials.service.tabs.rites')
                         @endcanany
-                        @include('partials.service.tabs.cc')
+                        @tab(['id' => 'cc', 'active' => ($tab=='cc')])
+                            @checkbox(['name' => 'cc', 'label' => 'Parallel findet Kinderkirche statt.', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten'), 'value' => $service->cc]) @endcheckbox
+                            <br />
+                            @input(['name' => 'cc_location', 'label' => 'Ort der Kinderkirche', 'placeholder' => 'Leer lassen für ', 'value' => $service->cc_location, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
+                            @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'value' => $service->cc_lesson, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
+                            @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'value' => $service->cc_staff, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
+                        @endtab
                         @can('admin')
                             @include('partials.service.tabs.history')
                         @endcan
