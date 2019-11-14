@@ -191,6 +191,10 @@ class FuneralController extends Controller
         }
         $funeral->save();
 
+        $funeral->service->setDefaultOfferingValues();
+        $funeral->service->save();
+
+
         // delayed notification after wizard completion:
         if ($request->get('wizard') == 1) {
             Subscription::send(Service::find($serviceId), ServiceCreated::class);
@@ -264,6 +268,9 @@ class FuneralController extends Controller
             $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
         }
         $funeral->save();
+        $funeral->service->setDefaultOfferingValues();
+        $funeral->service->save();
+
 
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }

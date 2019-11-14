@@ -25,7 +25,6 @@
 </htmlpagefooter>
 <sethtmlpagefooter name="myFooter2" value="on" />
 
-
 @if($count)
 
     <table class="table table-fluid table-striped" cellspacing="0" border="0">
@@ -62,6 +61,18 @@
         </tbody>
     </table>
     <br />
+
+    @if($city->default_offering_goal)
+        <p><b>Opferzweck, soweit nicht anders angegeben:</b><br /> {{ $city->default_offering_goal }} @if($city->default_offering_description)({{ $city->default_offering_description }}) @endif</p>
+    @endif
+    @if($city->default_funeral_offering_goal)
+        <p><b>Opferzweck bei Beerdigungen (soweit nicht anders angegeben):</b><br /> {{ $city->default_funeral_offering_goal }} @if($city->default_funeral_offering_description)({{ $city->default_funeral_offering_description }}) @endif</p>
+    @endif
+    @if($city->default_wedding_offering_goal)
+        <p><b>Opferzweck bei Trauungen (soweit nicht anders angegeben):</b><br /> {{ $city->default_wedding_offering_goal }} @if($city->default_wedding_offering_description)({{ $city->default_wedding_offering_description }}) @endif</p>
+    @endif
+
+
 
 @else
     <p>In dem angegebenen Zeitraum wurden keine Gottesdienste gefunden.</p>

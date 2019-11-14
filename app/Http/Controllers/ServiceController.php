@@ -101,6 +101,7 @@ class ServiceController extends Controller
             'offering_amount' => $request->get('offering_amount', ''),
         ]);
 
+        $service->setDefaultOfferingValues();
         $service->save();
 
         // participants:
@@ -184,6 +185,56 @@ class ServiceController extends Controller
         return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute', 'tags', 'serviceGroups'));
     }
 
+    protected function createUserIfNotExists($participant) {
+        if ((!is_numeric($participant)) || (User::find($participant) === false)) {
+            $tmp = explode(' ', $participant);
+            $title = $firstName = $lastName = '';
+            if (count($tmp) == 3) $title = array_slice($tmp);
+            if (count($tmp) == 2) $firstName = array_slice($tmp);
+            $lastName = array_slice($tmp);
+            $user = new User([
+                'name' => $participant,
+                'office' => '',
+                'phone' => '',
+                'address' => '',
+                'preference_cities' => '',
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'title' => $title,
+            ]);
+            $user->save();
+            $participant = $user->id;
+        }
+        return $participant;
+    }
+
+    protected function associateParticipants(Request $request, Service $service) {
+        $participants = [];
+        foreach (($request->get('participants') ?: []) as $category => $participantList) {
+            foreach ($participantList as $participant) {
+                $participant = $this->createUserIfNotExists($participant);
+                $participants[$category][$participant]['category'] = $category;
+            }
+        }
+
+        /*
+        $ministries = $request->get('ministries', []);
+        foreach ($ministries as $ministry) {
+            foreach ($ministry['people'] as $participant) {
+                $participant = $this->createUserIfNotExists($participant);
+                $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
+            }
+        }
+        */
+        if (count($participants)) {
+            $service->participants()->sync([]);
+            foreach ($participants as $category => $participant) {
+                $service->participants()->attach($participant);
+            }
+        }
+        return $participants;
+    }
+
     /**
      * Update the specified resource in storage.
      *
@@ -203,32 +254,13 @@ class ServiceController extends Controller
             $originalParticipants[$key] = $original->participantsText($key);
         }
 
-        // participants first
-        $participants = [];
-        foreach (($request->get('participants') ?: []) as $category => $participantList) {
-            foreach ($participantList as $participant) {
-                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
-                    $user = new User([
-                        'name' => $participant,
-                        'office' => '',
-                        'phone' => '',
-                        'address' => '',
-                        'preference_cities' => '',
-                        'first_name' => '',
-                        'last_name' => '',
-                        'title' => '',
-                    ]);
-                    $user->save();
-                    $participant = $user->id;
-                }
-                $participants[$category][$participant] = ['category' => $category];
-            }
-        }
-
+        $participants = $this->associateParticipants($request, $service);
+/*
         $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
         $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
         $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
         $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
+*/
         $service->save();
 
 
@@ -271,6 +303,7 @@ class ServiceController extends Controller
         $service->cc_staff = $request->get('cc_staff') ?: '';
         $service->internal_remarks = $request->get('internal_remarks') ?: '';
         $service->offering_amount = $request->get('offering_amount', '');
+        $service->setDefaultOfferingValues();
 
         $tags = $request->get('tags') ?: [];
         $service->tags()->sync($tags);

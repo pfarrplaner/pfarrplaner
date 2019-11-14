@@ -7,6 +7,7 @@ use App\Traits\HasCommentsTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
@@ -156,6 +157,22 @@ class Service extends Model
             case 'A': return $this->otherParticipants;
         }
 
+    }
+
+    public function participantsWithMinistry() {
+        return $this->belongsToMany(User::class)
+            ->withPivot('category')
+            ->wherePivotIn('category', ['P', 'O', 'M', 'A'], 'and', 'NotIn')
+            ->withTimestamps();
+    }
+
+    public function ministries() {
+        $ministries = [];
+        foreach ($this->participantsWithMinistry as $participant) {
+            if (!isset($ministries[$participant->pivot->category])) $ministries[$participant->pivot->category] = new Collection();
+            $ministries[$participant->pivot->category]->push($participant);
+        }
+        return $ministries;
     }
 
 
@@ -368,5 +385,25 @@ class Service extends Model
             ->join('days', 'services.day_id', 'days.id')
             ->orderBy('days.date')
             ->orderBy('time');
+    }
+
+
+    public function setDefaultOfferingValues() {
+        if ($this->offering_goal == '') {
+            if ((count($this->funerals) >0) && $this->city->default_funeral_offering_goal != '') {
+                $this->offering_goal = $this->city->default_funeral_offering_goal;
+                $this->offering_description = $this->city->default_funeral_offering_description;
+                return;
+            }
+            if ((count($this->weddings) >0) && $this->city->default_wedding_offering_goal != '') {
+                $this->offering_goal = $this->city->default_wedding_offering_goal;
+                $this->offering_description = $this->city->default_wedding_offering_description;
+                return;
+            }
+            if ($this->city->default_offering_goal != '') {
+                $this->offering_goal = $this->city->default_offering_goal;
+                $this->offering_description = $this->city->default_offering_description;
+            }
+        }
     }
 }

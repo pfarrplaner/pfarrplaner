@@ -11,21 +11,38 @@
             <div class="card-body">
                 @component('components.errors')
                 @endcomponent
-                <form method="post" action="{{ route('cities.update', $city->id) }}">
+                <form method="post" action="{{ route('cities.update', $city->id) }}" id="frm">
                     @method('PATCH')
                     @csrf
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" name="name" value="{{ $city->name }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="public_events_calendar_url">URL für einen öffentlichen Kalender auf elkw.de</label>
-                        <input type="text" class="form-control" name="public_events_calendar_url" value="{{ $city->public_events_calendar_url }}"/>
-                    </div>
+                    @tabheaders
+                        @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
+                        @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
+                    @endtabheaders
+                    @tabs
+                        @tab(['id' => 'home', 'active' => true])
+                            @input(['name' => 'name', 'label' => 'Ort', 'value' => $city->name, 'enabled' => Auth::user()->can('ort-bearbeiten')]) @endinput
+                            @input(['name' => 'public_events_calendar_url', 'label' => 'URL für einen öffentlichen Kalender auf elkw.de', 'value' => $city->public_events_calendar_url, 'enabled' => Auth::user()->can('ort-bearbeiten')]) @endinput
+                        @endtab
+                        @tab(['id' => 'offerings'])
+                            @input(['name' => 'default_offering_goal', 'label' => 'Opferzweck, wenn nicht angegeben', 'value' => $city->default_offering_goal]) @endinput
+                            @input(['name' => 'default_offering_description', 'label' => 'Opferbeschreibung bei leerem Opferzweck', 'value' => $city->default_offering_description]) @endinput
+                            @input(['name' => 'default_funeral_offering_goal', 'label' => 'Opferzweck für Beerdigungen', 'value' => $city->default_funeral_offering_goal]) @endinput
+                            @input(['name' => 'default_funeral_offering_description', 'label' => 'Opferbeschreibung für Beerdigungen', 'value' => $city->default_funeral_offering_description]) @endinput
+                            @input(['name' => 'default_wedding_offering_goal', 'label' => 'Opferzweck für Trauungen', 'value' => $city->default_wedding_offering_goal]) @endinput
+                            @input(['name' => 'default_wedding_offering_description', 'label' => 'Opferbeschreibung für Trauungen', 'value' => $city->default_wedding_offering_description]) @endinput
+                        @endtab
+                    @endtabs
                     <hr/>
-                    <button type="submit" class="btn btn-primary">Speichern</button>
+                    <button id="btnSubmit" type="submit" class="btn btn-primary">Speichern</button>
                 </form>
             </div>
         </div>
+        <script>
+            $(document).ready(function(){
+                $('#btnSubmit').click(function(e){
+                    $('input').removeAttr('disabled');
+                });
+            });
+        </script>
     @endcomponent
 @endsection

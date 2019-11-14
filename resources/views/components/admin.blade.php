@@ -45,7 +45,7 @@
                         Benutzerrollen
                     </a>
                 @endcan
-                @can('ort-bearbeiten')
+                @canany(['ort-bearbeiten', 'gd-opfer-bearbeiten'])
                 <a class="dropdown-item" href="{{ route('cities.index') }}">
                     Kirchengemeinden
                 </a>

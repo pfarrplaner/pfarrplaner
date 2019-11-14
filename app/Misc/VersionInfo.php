@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '14.11.2019'),
+                'text' => 'Für jede <a href="'.route('cities.index').'">Kirchengemeinde</a> können nun Standard-Opferzwecke für Beerdigungen und Trauungen angegeben werden. Diese werden im Opferplan separat aufgelistet und bei entsprechenden Gottesdiensten mit leerem Opferzweck-Feld automatisch eingesetzt.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '11.11.2019'),
                 'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Opferplan", mit dem der komplette Opferplan für ein Jahr ausgedruckt werden kann.',
             ],

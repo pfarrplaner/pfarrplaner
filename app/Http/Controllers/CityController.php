@@ -50,6 +50,12 @@ class CityController extends Controller
         $city = new City([
             'name' => $request->get('name'),
             'public_events_calendar_url' => $request->get('public_events_calendar_url') ?: '',
+            'default_offering_goal' => $request->get('default_offering_goal', ''),
+            'default_offering_description' => $request->get('default_offering_description', ''),
+            'default_funeral_offering_goal' => $request->get('default_funeral_offering_goal', ''),
+            'default_funeral_offering_description' => $request->get('default_funeral_offering_description', ''),
+            'default_wedding_offering_goal' => $request->get('default_wedding_offering_goal', ''),
+            'default_wedding_offering_description' => $request->get('default_wedding_offering_description', '')
         ]);
         $city->save();
         return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
@@ -83,6 +89,12 @@ class CityController extends Controller
         $city = City::find($id);
         $city->name = $request->get('name');
         $city->public_events_calendar_url = $request->get('public_events_calendar_url') ?: '';
+        $city->default_offering_goal = $request->get('default_offering_goal', '');
+        $city->default_offering_description = $request->get('default_offering_description', '');
+        $city->default_funeral_offering_goal = $request->get('default_funeral_offering_goal', '');
+        $city->default_funeral_offering_description = $request->get('default_funeral_offering_description', '');
+        $city->default_wedding_offering_goal = $request->get('default_wedding_offering_goal', '');
+        $city->default_wedding_offering_description = $request->get('default_wedding_offering_description', '');
         $city->save();
 
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde geändert.');

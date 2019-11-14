@@ -84,6 +84,9 @@ class WeddingController extends Controller
 
         $wedding->save();
 
+        $wedding->service->setDefaultOfferingValues();
+        $wedding->service->save();
+
 
         // delayed notification after wizard completion:
         if ($request->get('wizard') == 1) {
@@ -158,6 +161,11 @@ class WeddingController extends Controller
         }
 
         $wedding->save();
+
+        $wedding->service->setDefaultOfferingValues();
+        $wedding->service->save();
+
+
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
         //
     }

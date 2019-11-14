@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\City;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CityController extends Controller
 {
@@ -16,7 +17,7 @@ class CityController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request) {
-        return  City::all();
+        return  Auth::user()->cities;
     }
 
 
