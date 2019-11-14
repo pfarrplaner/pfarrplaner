@@ -30,7 +30,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/dienstplan.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/pfarrplaner.css') }}" rel="stylesheet">
 
 
 </head>

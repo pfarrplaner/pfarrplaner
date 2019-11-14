@@ -40,7 +40,7 @@
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.20.0/daterangepicker.min.css" />
-    <link href="{{ asset('css/dienstplan.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/pfarrplaner.css') }}" rel="stylesheet">
     @yield('styles', '')
 
 
