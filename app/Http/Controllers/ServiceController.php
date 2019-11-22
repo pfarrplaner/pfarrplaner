@@ -342,12 +342,21 @@ class ServiceController extends Controller
 
         $days = Day::orderBy('date', 'ASC')->get();
 
+        $ministries = Participant::all()
+            ->pluck('category')
+            ->unique()
+            ->reject(function($value, $key){
+                return in_array($value, ['P', 'O', 'M', 'A']);
+            });
+
+
+
         $locations = Location::where('city_id', '=', $city->id)->get();
         $users = User::all()->sortBy('name');
         $tags = Tag::all();
         $serviceGroups = ServiceGroup::all();
 
-        return view('services.create', compact('day', 'city', 'days', 'locations', 'users', 'tags', 'serviceGroups'));
+        return view('services.create', compact('day', 'city', 'days', 'locations', 'users', 'tags', 'serviceGroups', 'ministries'));
     }
 
     public function servicesByCityAndDay($cityId, $dayId) {

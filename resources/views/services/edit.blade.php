@@ -62,10 +62,10 @@
                         @tab(['id' => 'offerings', 'active' => ($tab=='offerings')])
                             @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'value' => $service->offerings_counter1, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
                             @input(['name' => 'offerings_counter2', 'label' => 'Opferzähler*in 2', 'value' => $service->offerings_counter2, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                            @input(['name' => 'offerings_goal', 'label' => 'Opferzweck', 'value' => $service->offering_goal, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offering_goal', 'label' => 'Opferzweck', 'value' => $service->offering_goal, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
                             @radiogroup(['name' => 'offering_type', 'label' => 'Opfertyp', 'items' => ['eigener Beschluss' => '', 'empfohlenes Opfer' => 'eO', 'Pflichtopfer' => 'PO'], 'value' => $service->offering_type, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endradiogroup
-                            @input(['name' => 'offerings_description', 'label' => 'Anmerkungen zum Opfer', 'value' => $service->offering_description, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                            @input(['name' => 'offerings_amount', 'label' => 'Opfersumme', 'value' => $service->offering_amount, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offering_description', 'label' => 'Anmerkungen zum Opfer', 'value' => $service->offering_description, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offering_amount', 'label' => 'Opfersumme', 'value' => $service->offering_amount, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
                         @endtab
                         @canany(['gd-kasualien-lesen','gd-kasualien-bearbeiten', 'gd-kasualien-nur-statistik'])
                             @include('partials.service.tabs.rites')

@@ -36,7 +36,7 @@
                             @checkbox(['name' => 'need_predicant', 'label' => 'Für diesen Gottesdienst wird ein Prädikant benötigt.', 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')]) @endcheckbox
                             @peopleselect(['name' => 'participants[O][]', 'label' => 'Organist*in', 'people' => $users, 'enabled' => Auth::user()->can('gd-organist-bearbeiten')]) @endpeopleselect
                             @peopleselect(['name' => 'participants[M][]', 'label' => 'Mesner*in', 'people' => $users,  'enabled' => Auth::user()->can('gd-mesner-bearbeiten')]) @endpeopleselect
-                            @component('components.service.otherParticipantsWithText', ['users' => $users]) @endcomponent
+                            @component('components.service.otherParticipantsWithText', ['users' => $users, 'ministries' => $ministries]) @endcomponent
                             @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endpeopleselect
                         @endtab
                         @tab(['id' => 'special'])
@@ -50,10 +50,10 @@
                         @tab(['id' => 'offerings'])
                             @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
                             @input(['name' => 'offerings_counter2', 'label' => 'Opferzähler*in 2',  'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                            @input(['name' => 'offerings_goal', 'label' => 'Opferzweck', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offering_goal', 'label' => 'Opferzweck', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
                             @radiogroup(['name' => 'offering_type', 'label' => 'Opfertyp', 'items' => ['eigener Beschluss' => '', 'empfohlenes Opfer' => 'eO', 'Pflichtopfer' => 'PO'], 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endradiogroup
-                            @input(['name' => 'offerings_description', 'label' => 'Anmerkungen zum Opfer', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                            @input(['name' => 'offerings_amount', 'label' => 'Opfersumme', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offering_description', 'label' => 'Anmerkungen zum Opfer', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                            @input(['name' => 'offering_amount', 'label' => 'Opfersumme', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
                         @endtab
                         @tab(['id' => 'cc'])
                             @checkbox(['name' => 'cc', 'label' => 'Parallel findet Kinderkirche statt.', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endcheckbox
