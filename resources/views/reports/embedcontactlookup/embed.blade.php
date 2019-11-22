@@ -1,6 +1,6 @@
-@if (!$parish)
-    <div id="{{ $randomId }}" class="row ctype-textbox listtype-none showmobdesk-0">
-        <div id="c1050561" class="col s12 bullme ">
+<div id="{{ $randomId }}">
+    <div id="{{ $randomId }}_form" class="row ctype-textbox listtype-none showmobdesk-0" @if ($parish) style="display: none; "@endif>
+        <div id="{{ $randomId }}_c1050561" class="col s12 bullme ">
             <div class="card-panel default">
 
                 <p class="bodytext"><b>Ihr Ansprechpartner</b></p>
@@ -39,9 +39,19 @@
 
         });
     </script>
-@else
-    <div id="{{ $randomId }}" class="row ctype-textbox listtype-none showmobdesk-0">
-        <div id="c1050561" class="col s12 bullme ">
+@if ($parish)
+    <script>
+        localStorage.setItem('parish', '{{ $parish->id }}');
+        function clearContactForm_{{ $randomId }}(e) {
+            e.preventDefault();
+            localStorage.removeItem('parish');
+            $('#{{ $randomId }}_info').hide();
+            $('#{{ $randomId }}_form').show();
+        }
+
+    </script>
+    <div id="{{ $randomId }}_info" class="row ctype-textbox listtype-none showmobdesk-0">
+        <div id="{{ $randomId }}_c1050561" class="col s12 bullme ">
             <div class="card-panel default">
 
                 <p class="bodytext"><b>Bitte wenden Sie sich an:</b></p>
@@ -51,7 +61,7 @@
                         <div>
                             @if ($user->image)
                                 <div style="float: left; width: 90px;">
-                                    <img width="80px" src="{{ url('storage/'.$user->image) }}"/>
+                                    <img width="80px" src="{{ url('storage/'.$user->image) }}" align="top"/>
                                 </div>
                             @endif
                             <div style="float:left;">
@@ -73,10 +83,11 @@
                         Fon {{ $parish->phone }}<br/>E-Mail <a
                                 href="mailto:{{ $parish->email }}">{{ $parish->email }}</a>
                 @endif
+                    <div style="width: 100%; text-align: right;">
+                        <a id="{{ $randomId }}_clearContactForm" href="#" onclick="clearContactForm_{{ $randomId }}(event);" style="font-size: 0.8em; color: #c7c7c7;">Mit anderer Adresse suchen</a>
+                    </div>
             </div>
         </div>
     </div>
-    <script defer>
-        localStorage.setItem('parish', '{{ $parish->id }}');
-    </script>
 @endif
+</div>
