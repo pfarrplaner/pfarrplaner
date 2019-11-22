@@ -15,6 +15,9 @@ class City extends Model
         'default_funeral_offering_description',
         'default_wedding_offering_goal',
         'default_wedding_offering_description',
+        'op_domain',
+        'op_customer_key',
+        'op_customer_token',
     ];
 
     protected $orderBy = 'name';
