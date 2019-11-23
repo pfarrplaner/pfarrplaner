@@ -113,7 +113,7 @@ class PublicController extends Controller
         }
 
         if ($request->is('*/pdf')) {
-            $pdf = Pdf::loadView('reports.render.childrenschurch', [
+            $pdf = Pdf::loadView('reports.childrenschurch.render', [
                 'start' => $minDate,
                 'end' => $maxDate,
                 'city' => $city,
