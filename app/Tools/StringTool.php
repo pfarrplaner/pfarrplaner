@@ -44,4 +44,14 @@ class StringTool
         }
         return $s;
     }
+
+    public static function timeText($time, $uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
+        if (!is_numeric($time)) $time = strtotime($time);
+        $format = ($leadingZero ? '%H' : '%k').$separator.'%M';
+        if ($skipMinutes) {
+            if ((int)strftime('%M', $time) == 0) $format = '%H';
+        }
+        return trim(strftime($format, $time).($uhr ? ($nbsp ? '&nbsp;' : ' ').'Uhr' : ''));
+
+    }
 }
