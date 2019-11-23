@@ -26,7 +26,7 @@
                         <tbody>
                         @foreach($services as $service)
                             <tr>
-                                <td colspan="3" class="service-row @if($service->cc) cc @else no-cc @endif">
+                                <td colspan="4" class="service-row @if($service->cc) cc @else no-cc @endif">
                                     <input type="checkbox" name="service[{{$service->id}}][cc]" class="ccbox" @if($service->cc) checked @endif  data-service="{{ $service->id }}"/>
                                     {{ strftime('%A, %d.%m.%Y', $service->day->date->getTimestamp()) }}, {{ $service->ccTimeText(false, true) }} ({{ $service->locationText() }})
                                 </td>
