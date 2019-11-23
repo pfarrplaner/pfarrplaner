@@ -25,8 +25,11 @@ class EventCalendarImport
 
     }
 
-    public function mix($services, Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array {
-        if ($this->url) $events = $this->getEvents($weekStart, $weekEnd, $removeServices);
+    public function mix($services, Carbon $weekStart, Carbon $weekEnd, $removeServices = false, $skipCalender = false): array {
+        $events = [];
+        if (!$skipCalender) {
+            if ($this->url) $events = $this->getEvents($weekStart, $weekEnd, $removeServices);
+        }
 
         foreach ($services as $thisService) {
             $events[$thisService->trueDate()->format('YmdHis')][] = $thisService;
@@ -42,6 +45,7 @@ class EventCalendarImport
 
         $filteredEvents = [];
         foreach ($events as $key => $event) {
+            $event['record_type'] = 'Outlook_Event';
             $event['start'] = $this->sanitizeTimeString($event['start']);
             $event['end'] = $this->sanitizeTimeString($event['end']);
 

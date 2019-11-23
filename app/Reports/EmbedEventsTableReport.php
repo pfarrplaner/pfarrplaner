@@ -11,6 +11,7 @@ namespace App\Reports;
 
 use App\City;
 use App\Imports\EventCalendarImport;
+use App\Imports\OPEventsImport;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -63,8 +64,18 @@ class EmbedEventsTableReport extends AbstractEmbedReport
             ->get();
 
         $calendar = new EventCalendarImport($city->public_events_calendar_url);
-        $events = $calendar->mix($services, $start, $end, true);
+        $events = $calendar->mix($services, $start, $end, true, ($request->get('mixOutlook', 1) != 0));
 
-        return $this->renderView('embed', compact('start', 'days', 'city', 'events'));
+        // mix OP events?
+        if ($request->get('mixOP')) {
+            $op = new OPEventsImport($city);
+            $events = $op->mix($events, $start, $end);
+        }
+
+        $customerToken = $city->op_customer_token;
+        $customerKey = $city->op_customer_key;
+        $randomId = uniqid();
+
+        return $this->renderView('embed', compact('start', 'days', 'city', 'events', 'customerKey', 'customerToken', 'randomId'));
     }
 }
