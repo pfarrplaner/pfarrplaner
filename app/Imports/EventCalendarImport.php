@@ -25,14 +25,20 @@ class EventCalendarImport
 
     }
 
-    public function mix($services, Carbon $weekStart, Carbon $weekEnd, $removeServices = false, $skipCalender = false): array {
-        $events = [];
-        if (!$skipCalender) {
-            if ($this->url) $events = $this->getEvents($weekStart, $weekEnd, $removeServices);
-        }
-
-        foreach ($services as $thisService) {
-            $events[$thisService->trueDate()->format('YmdHis')][] = $thisService;
+    /**
+     * Mix an array of events into another array of events
+     * @param $events
+     * @param Carbon $weekStart
+     * @param Carbon $weekEnd
+     * @param bool $removeServices
+     * @return array
+     */
+    public function mix($events, Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array {
+        $theseEvents = $this->getEvents($weekStart, $weekEnd, $removeServices);
+        foreach ($theseEvents as $dateCode => $subEvents) {
+            foreach ($subEvents as $event) {
+                $events[$dateCode][] = $event;
+            }
         }
 
         ksort($events);

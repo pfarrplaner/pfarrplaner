@@ -63,10 +63,15 @@ class EmbedEventsTableReport extends AbstractEmbedReport
             ->ordered()
             ->get();
 
-        $calendar = new EventCalendarImport($city->public_events_calendar_url);
-        $events = $calendar->mix($services, $start, $end, true, ($request->get('mixOutlook', 1) != 0));
+        $events = [];
 
-        // mix OP events?
+        $calendar = new EventCalendarImport($city->public_events_calendar_url);
+        $events = $calendar->mix($events, $start, $end, true, ($request->get('mixOutlook', 1) != 0));
+
+        // mix in services
+        $events = Service::mix($events, $services, $start, $end);
+
+        // mix in OP events?
         if ($request->get('mixOP')) {
             $op = new OPEventsImport($city);
             $events = $op->mix($events, $start, $end);

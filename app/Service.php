@@ -406,4 +406,26 @@ class Service extends Model
             }
         }
     }
+
+
+    /**
+     * Mix a collection of services into an array of events
+     * @param $events
+     * @param $services
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return mixed
+     */
+    public static function mix($events, $services, Carbon $start, Carbon $end) {
+
+        foreach ($services as $service) {
+            if (($service->day->date <= $end) && ($service->day->date >= $start)) {
+                $events[$service->trueDate()->format('YmdHis')][] = $service;
+            }
+        }
+
+        ksort($events);
+        return $events;
+
+    }
 }
