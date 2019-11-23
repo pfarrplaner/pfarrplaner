@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '23.11.2019'),
+                'text' => 'Für die Kinderkirche kann nun auch eine abweichende Uhrzeit angegeben werden.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '14.11.2019'),
                 'text' => 'Gottesdiensten können nun neben den bereits bestehenden Diensten weitere, beliebig benannte Dienste zugeordnet werden (z.B. Schriftlesung)',
             ],
