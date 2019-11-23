@@ -177,11 +177,24 @@ class ServiceController extends Controller
 
     protected function createUserIfNotExists($participant) {
         if ((!is_numeric($participant)) || (User::find($participant) === false)) {
-            $tmp = explode(' ', $participant);
             $title = $firstName = $lastName = '';
-            if (count($tmp) == 3) $title = array_shift($tmp);
-            if (count($tmp) == 2) $firstName = array_shift($tmp);
-            $lastName = array_shift($tmp);
+            if (false === strpos($participant, '_')) {
+                // split participant name into its parts
+                $tmp = explode(' ', $participant);
+                if (count($tmp) == 3) {
+                    $title = array_shift($tmp);
+                }
+                if (count($tmp) == 2) {
+                    $firstName = array_shift($tmp);
+                }
+                $lastName = array_shift($tmp);
+            } elseif ((substr($participant, 0, 1) == '"') && (substr($participant, -1, 1)=='"')) {
+                // allow submitting participant names in double quotes ("participant name"), which will prevent splitting
+                $participant = substr($participant, 1, -1);
+            } else {
+                // allow submitting participant name with an underscore, which will prevent splitting
+                $participant = str_replace('_', ' ', $participant);
+            }
             $user = new User([
                 'name' => $participant,
                 'office' => '',
