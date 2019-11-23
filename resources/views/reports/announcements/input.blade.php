@@ -32,6 +32,8 @@
                         <textarea class="form-control" type="text" name="offering_text" placeholder="Wenn vorhanden, z.B. Anschreiben des Landesbischofs"></textarea>
                         @component('components.validation', ['name' => 'offering_text']) @endcomponent
                     </div>
+                    @checkbox(['name' => 'mix_outlook', 'label' => 'Veranstaltungen aus dem Outlook-Kalender mit aufnehmen.', 'value' => true]) @endcheckbox
+                    @checkbox(['name' => 'mix_op', 'label' => 'Veranstaltungen aus dem Online-Planer mit aufnehmen.', 'value' => false]) @endcheckbox
                     <button type="submit" class="btn btn-primary">Erstellen</button>
                 </form>
             </div>

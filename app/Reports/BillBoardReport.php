@@ -26,6 +26,7 @@ use App\City;
 use App\Day;
 use App\Funeral;
 use App\Imports\EventCalendarImport;
+use App\Imports\OPEventsImport;
 use App\Service;
 use App\Tools\StringTool;
 use App\Wedding;
@@ -76,8 +77,30 @@ class BillBoardReport extends AbstractWordDocumentReport
             ->dateRange($start, $end)
             ->get();
 
-        $calendar = new EventCalendarImport($city->public_events_calendar_url);
-        $events = $calendar->mix($services, $start, $end->subDay(1), true);
+        $events = [];
+
+        if ($request->get('mix_outlook', false)) {
+            $calendar = new EventCalendarImport($city->public_events_calendar_url);
+            $events = $calendar->mix($events, $start, $end->copy()->subDay(1), true);
+        }
+
+        $events = Service::mix($events, $services, $start, $end);
+
+        if ($request->get('mix_op', false)) {
+            $op = new OPEventsImport($city);
+            $events = $op->mix($events, $start, $end);
+        }
+        if ($request->get('mix_outlook', false)) {
+            $calendar = new EventCalendarImport($city->public_events_calendar_url);
+            $events = $calendar->mix($events, $start, $end->copy()->subDay(1), true);
+        }
+
+        $events = Service::mix($events, $services, $start, $end);
+
+        if ($request->get('mix_op', false)) {
+            $op = new OPEventsImport($city);
+            $events = $op->mix($events, $start, $end);
+        }
 
         $this->section = $this->wordDocument->addSection([
             'orientation' => 'portrait',
@@ -150,7 +173,7 @@ class BillBoardReport extends AbstractWordDocumentReport
                     $day = Day::where('date', $eventStart->copy()->setTime(0,0,0))->first();
                     if ($day) {
                         $dayTitle = $day->name;
-                    } elseif (is_array($event) && $event['allDay']) {
+                    } elseif (is_array($event) && (isset($event['allDay']) && $event['allDay'])) {
                         $dayTitle = $event['title'];
                     } else {
                         $dayTitle = '';
@@ -162,7 +185,7 @@ class BillBoardReport extends AbstractWordDocumentReport
                         [($dayTitle ? $dayTitle : ''), self::BOLD_UNDERLINE],
                     ]);
 
-                    $done = $event['allDay'];
+                    $done = (isset($event['allDay']) && $event['allDay']);
                 }
 
                 if (!$done) {

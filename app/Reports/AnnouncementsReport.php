@@ -26,6 +26,7 @@ use App\City;
 use App\Day;
 use App\Funeral;
 use App\Imports\EventCalendarImport;
+use App\Imports\OPEventsImport;
 use App\Service;
 use App\Tools\StringTool;
 use App\Wedding;
@@ -125,7 +126,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         ]);
 
         $service = Service::findOrFail($request->session()->pull('service'));
-        $request->session()->pull('city');
+        $city = City::findOrFail($request->session()->pull('city'));
 
         $lastService = $request->get('lastService');
         $offerings = $request->get('offerings');
@@ -168,8 +169,19 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             })
             ->get();
 
-        $calendar = new EventCalendarImport($service->city->public_events_calendar_url);
-        $events = $calendar->mix($services, $service->day->date, $nextWeek->copy()->addDay(1)->subSecond(1), true);
+        $events = [];
+
+        if ($request->get('mix_outlook', false)) {
+            $calendar = new EventCalendarImport($city->public_events_calendar_url);
+            $events = $calendar->mix($events, $service->day->date, $nextWeek, true);
+        }
+
+        $events = Service::mix($events, $services, $service->day->date, $nextWeek);
+
+        if ($request->get('mix_op', false)) {
+            $op = new OPEventsImport($city);
+            $events = $op->mix($events, $service->day->date, $nextWeek);
+        }
 
         $this->section = $this->wordDocument->addSection([
             'orientation' => 'portrait',
@@ -286,7 +298,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                     if (is_array($event)) {
                         $textRun = $this->renderParagraph(self::INDENT, [
                             [
-                                ($event['allDay']) ? '' : strftime('%H.%M Uhr', $eventStart->getTimestamp()) . "\t",
+                                (isset($event['allDay']) && $event['allDay']) ? '' : strftime('%H.%M Uhr', $eventStart->getTimestamp()) . "\t",
                                 []
                             ],
                             [
@@ -311,7 +323,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                         ]);
                     }
 
-                    if ($event['allDay']) {
+                    if ((isset($event['allDay']) && $event['allDay'])) {
                         $textRun = $this->renderParagraph();
                     }
 
