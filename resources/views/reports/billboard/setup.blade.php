@@ -30,7 +30,7 @@
                     @checkbox(['name' => 'mix_outlook', 'label' => 'Veranstaltungen aus dem Outlook-Kalender mit aufnehmen.', 'value' => true]) @endcheckbox
                     @checkbox(['name' => 'mix_op', 'label' => 'Veranstaltungen aus dem Online-Planer mit aufnehmen.', 'value' => false]) @endcheckbox
                     <hr />
-                    <button type="submit" class="btn btn-primary">Weiter &gt;</button>
+                    <button type="submit" class="btn btn-primary">Erstellen</button>
                 </form>
             </div>
         </div>
