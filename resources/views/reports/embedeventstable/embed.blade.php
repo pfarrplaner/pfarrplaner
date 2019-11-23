@@ -20,7 +20,7 @@
                 @foreach ($events as $theseEvents)
                     @foreach($theseEvents as $event)
                         <?php $eventStart = is_array($event) ? $event['start'] : $event->day->date ?>
-                        <tr @if (is_array($event) && ($event['record_type'] == 'OP_Event'))class="clickable" data-id="{{ $event['event_id'] }}" id="{{ $randomId }}_{{ $event['event_id'] }}_row"@endif>
+                        <tr @if (is_array($event) && ($event['record_type'] == 'OP_Event'))class="clickable" data-id="{{ $event['event_id'] }}" id="{{ $randomId }}_{{ $event['event_id'] }}_row" title="Klicken, um mehr zu erfahren"@endif>
                             @if ($lastDate != $eventStart->format('Ymd') )
                                 <?php $lastDate = $eventStart->format('Ymd') ?>
                                 <td valign="top"
