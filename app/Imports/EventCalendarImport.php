@@ -69,7 +69,9 @@ class EventCalendarImport
 
             if (($event['start'] >= $weekStart) and ($event['start'] <= $weekEnd)) {
                 if (!($event['allDay'] && ($event['place'] == ''))) {
-                    if ((!$removeServices) || (strtoupper(substr($event['title'], 0, 2)) != 'GD')) {
+                    if ((!$removeServices) || ((strtoupper(substr($event['title'], 0, 2)) != 'GD')
+                            && (strtoupper(substr($event['title'], 0, 13)) != 'GOTTESDIENST ')
+                        && (strtoupper($event['title']) != 'GOTTESDIENST'))) {
                         $filteredEvents[$event['start']->format('YmdHis')][] = $event;
                     }
                 }

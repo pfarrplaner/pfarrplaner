@@ -25,6 +25,10 @@ class VersionInfo
         return collect([
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '23.11.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Terminliste", mit dem eine Worddatei mit Gottesdiensten und Terminen für einen bestimmten Zeitraum erzeugt werden kann.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '23.11.2019'),
                 'text' => 'Für die Kinderkirche kann nun auch eine abweichende Uhrzeit angegeben werden.',
             ],
             [
