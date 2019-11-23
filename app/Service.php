@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Mail\ServiceUpdated;
+use App\Tools\StringTool;
 use App\Traits\HasCommentsTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,6 +39,7 @@ class Service extends Model
         'cc_location' => 'Ort der Kinderkirche',
         'cc_lesson' => 'Lektion für die Kinderkirche',
         'cc_staff' => 'Mitarbeiter in der Kinderkirche',
+        'cc_alt_time' => 'Alternative Uhrzeit für die Kinderkirche',
         'internal_remarks' => 'Interne Anmerkungen',
         'offering_amount' => 'Opferbetrag',
     );
@@ -59,6 +61,7 @@ class Service extends Model
         'offering_type',
         'others',
         'cc',
+        'cc_alt_time',
         'cc_location',
         'cc_lesson',
         'cc_staff',
@@ -211,12 +214,7 @@ class Service extends Model
     }
 
     public function timeText($uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
-        $time = strtotime($this->time);
-        $format = ($leadingZero ? '%H' : '%k').$separator.'%M';
-        if ($skipMinutes) {
-            if ((int)strftime('%M', $time) == 0) $format = '%H';
-        }
-        return trim(strftime($format, $time).($uhr ? ($nbsp ? '&nbsp;' : ' ').'Uhr' : ''));
+        return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
     }
 
     public function offeringText() {
@@ -262,7 +260,23 @@ class Service extends Model
         if ((count($elements) == 1) && ($x != '')) $elements[0] = 'GD mit '.$elements[0];
         return join(' / ', $elements) ?: 'GD';
     }
-    
+
+
+    public function ccTime($emptyIfNotSet = false) {
+        if ($this->cc_alt_time == '00:00:00') $this->cc_alt_time = null;
+        if (null === $this->cc_alt_time) {
+            if ($emptyIfNotSet) return null;
+            $t = $this->time;
+        } else {
+            $t = $this->cc_alt_time;
+        }
+        return new Carbon($this->day->date->format('Y-m-d').' '.$t);
+    }
+
+    public function ccTimeText($emptyIfNotSet = false, $uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
+        if (null === $this->ccTime($emptyIfNotSet)) return '';
+        return StringTool::timeText($this->ccTime(false), $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
+    }
     
     /**
      * Check if service description contains a specific text (case-insensitive!)
@@ -319,6 +333,10 @@ class Service extends Model
         } else {
             return ($this->cc_location != $this->location->cc_default_location);
         }
+    }
+
+    function ccLocationText() {
+        return ($this->cc_location ?: $this->locationText());
     }
 
 

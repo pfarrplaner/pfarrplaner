@@ -28,7 +28,7 @@
                             <tr>
                                 <td colspan="3" class="service-row @if($service->cc) cc @else no-cc @endif">
                                     <input type="checkbox" name="service[{{$service->id}}][cc]" class="ccbox" @if($service->cc) checked @endif  data-service="{{ $service->id }}"/>
-                                    {{ strftime('%A, %d.%m.%Y', $service->day->date->getTimestamp()) }}, {{ strftime('%H:%M Uhr', strtotime($service->time)) }} ({{ $service->locationText() }})
+                                    {{ strftime('%A, %d.%m.%Y', $service->day->date->getTimestamp()) }}, {{ $service->ccTimeText(false, true) }} ({{ $service->locationText() }})
                                 </td>
                             </tr>
                             <tr class="data-row @if($service->cc) cc @else no-cc @endif">
@@ -37,6 +37,9 @@
                                         <label for="cc_location">Ort der Kinderkirche</label>
                                         <input type="text" id="#service{{$service->id}}-location" class="form-control location-input" name="service[{{$service->id}}][cc_location]" value="{{ $service->cc_location }}" @if($service->special_location=='')placeholder="Leer lassen für {{ $service->location->cc_default_location }}"@endif/>
                                     </div>
+                                </td>
+                                <td>
+                                    @input(['name' => 'cc_alt_time', 'label' => 'Vom Gottesdienst abweichende Uhrzeit (sonst leer lassen)', 'placeholder' => 'HH:MM', 'value' => $service->ccTimeText(true, false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
                                 </td>
                                 <td>
                                     <div class="form-group">

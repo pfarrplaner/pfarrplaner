@@ -102,6 +102,10 @@ class ServiceController extends Controller
             'offering_amount' => $request->get('offering_amount', ''),
         ]);
 
+        if ($t = $request->get('cc_alt_time', false)) {
+            $service->cc_alt_time = $t;
+        }
+
         $service->setDefaultOfferingValues();
         $service->save();
 
@@ -303,10 +307,13 @@ class ServiceController extends Controller
         $service->cc = $request->get('cc') ? 1 : 0;
         $service->cc_location = $ccLocation;
         $service->cc_lesson = $request->get('cc_lesson') ?: '';
+        $service->cc_alt_time = $request->get('cc_alt_time') ?: '';
         $service->cc_staff = $request->get('cc_staff') ?: '';
         $service->internal_remarks = $request->get('internal_remarks') ?: '';
         $service->offering_amount = $request->get('offering_amount', '');
         $service->setDefaultOfferingValues();
+
+
 
         if (count($service->pastors)) $service->need_predicant = false;
 

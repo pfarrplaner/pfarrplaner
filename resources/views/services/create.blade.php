@@ -56,8 +56,9 @@
                             @input(['name' => 'offering_amount', 'label' => 'Opfersumme', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
                         @endtab
                         @tab(['id' => 'cc'])
-                            @checkbox(['name' => 'cc', 'label' => 'Parallel findet Kinderkirche statt.', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endcheckbox
+                            @checkbox(['name' => 'cc', 'label' => 'Kinderkirche wird angeboten', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endcheckbox
                             <br />
+                            @input(['name' => 'cc_alt_time', 'label' => 'Vom Gottesdienst abweichende Uhrzeit (sonst leer lassen)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
                             @input(['name' => 'cc_location', 'label' => 'Ort der Kinderkirche', 'placeholder' => 'Leer lassen für ', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
                             @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
                             @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput

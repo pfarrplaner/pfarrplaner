@@ -19,9 +19,9 @@
                     @foreach ($dayServices as $service)
                         <tr>
                             <td valign="top" width="10%">{{ $service->day->date->format('d.m.Y') }}</td>
-                            <td valign="top" width="10%">{{ strftime('%H:%M', strtotime($service->time)) }} Uhr</td>
+                            <td valign="top" width="10%">{{ $service->ccTimeText(false, true) }}</td>
                             <td valign="top" width="20%"
-                                @if($service->hasNonStandardCCLocation()) style="color: red;" @endif>{{ $service->cc_location }}</td>
+                                @if($service->hasNonStandardCCLocation()) style="color: red;" @endif>{{ $service->ccLocationText() }}</td>
                             <td valign="top" width="30%">{{ $service->cc_lesson }}</td>
                             <td valign="top" width="30%">{{ $service->cc_staff }} </td>
                         </tr>
