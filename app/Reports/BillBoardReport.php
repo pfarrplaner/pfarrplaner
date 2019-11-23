@@ -90,17 +90,6 @@ class BillBoardReport extends AbstractWordDocumentReport
             $op = new OPEventsImport($city);
             $events = $op->mix($events, $start, $end);
         }
-        if ($request->get('mix_outlook', false)) {
-            $calendar = new EventCalendarImport($city->public_events_calendar_url);
-            $events = $calendar->mix($events, $start, $end->copy()->subDay(1), true);
-        }
-
-        $events = Service::mix($events, $services, $start, $end);
-
-        if ($request->get('mix_op', false)) {
-            $op = new OPEventsImport($city);
-            $events = $op->mix($events, $start, $end);
-        }
 
         $this->section = $this->wordDocument->addSection([
             'orientation' => 'portrait',
