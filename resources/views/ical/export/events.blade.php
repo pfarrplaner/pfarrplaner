@@ -7,8 +7,8 @@ BEGIN:VEVENT
 @if (is_object($event))
 UID:{{ $event->id }}{{ '@' }}{{ parse_url(env('APP_URL'), PHP_URL_HOST) }}
 LOCATION:{{ $event->locationText() }}
-SUMMARY:{{ wordwrap($event->titleText().' P: '.$event->participantsText('P').' O: '.$event->participantsText('O').' M: '.$event->participantsText('M').($event->description ? ' ('.$event->description.')' : ''), 64, "\r\n  ") }}
-DESCRIPTION: {{ wordwrap ($event->descriptionText(), 62, "\r\n  ") }}
+SUMMARY:{{ $event->titleText().' P: '.$event->participantsText('P').' O: '.$event->participantsText('O').' M: '.$event->participantsText('M').($event->description ? ' ('.$event->description.')' : '') }}
+DESCRIPTION: {{ wordwrap ($event->descriptionText(), 62, "\r\n  ") }} @if(isset($event->internal_remarks)) \n\nInterne Anmerkungen:\n {{ $event->internal_remarks }} @endif
 CLASS:PUBLIC
 DTSTART:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->day->date->format('Y-m-d').' '.$event->timeText(false).':00', 'Europe/Berlin')->setTimezone('UTC')->format('Ymd\THis\Z') }}
 DTEND:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->day->date->format('Y-m-d').' '.$event->timeText(false).':00', 'Europe/Berlin')->addHour(1)->setTimezone('UTC')->format('Ymd\THis\Z') }}
@@ -27,10 +27,12 @@ DTSTAMP:{{ $event->updated_at->setTimezone('UTC')->format('Ymd\THis\Z') }}
     @if($event['record_type'] == 'OP_Event')
         DTSTART:{{ $event['start']->setTimezone('UTC')->format('Ymd\THis\Z') }}
         @if(isset($event['end']))DTEND:{{ $event['end']->setTimezone('UTC')->format('Ymd\THis\Z') }}
+        @else DTEND:{{ $event['start']->copy()->addHour(1)->setTimeZone('UTC')->format('Ymd\THis\Z') }}
         @endif
     @else
         DTSTART:{{ $event['start']->setTimeZone('UTC')->format('Ymd\THis\Z') }}
         @if(isset($event['end']))DTEND:{{ $event['end']->setTimeZone('UTC')->format('Ymd\THis\Z') }}
+        @else DTEND:{{ $event['start']->copy()->addHour(1)->setTimeZone('UTC')->format('Ymd\THis\Z') }}
         @endif
     @endif
     DTSTAMP:{{ Carbon\Carbon::now()->setTimezone('UTC')->format('Ymd\THis\Z') }}
