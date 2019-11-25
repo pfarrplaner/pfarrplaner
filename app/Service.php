@@ -437,8 +437,10 @@ class Service extends Model
     public static function mix($events, $services, Carbon $start, Carbon $end) {
 
         foreach ($services as $service) {
-            if (($service->day->date <= $end) && ($service->day->date >= $start)) {
-                $events[$service->trueDate()->format('YmdHis')][] = $service;
+            if (is_object($service->day)) {
+                if (($service->day->date <= $end) && ($service->day->date >= $start)) {
+                    $events[$service->trueDate()->format('YmdHis')][] = $service;
+                }
             }
         }
 
