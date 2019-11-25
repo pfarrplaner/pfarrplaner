@@ -24,6 +24,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => Carbon::createFromFormat('d.m.Y', '25.11.2019'),
+                'text' => 'Beim Export nach Outlook (rechts oben auf <a href="'.route('connectWithOutlook').'"><span class="fa fa-calendar-alt"></span></a> klicken) kann nun ein kombinierter Veranstaltungskalender für eine Gemeinde erzeugt werden. Dieser kombiniert Einträge aus dem Pfarrplaner, aus einem freigegebenen Outlookkalender und aus dem Online-Planer des Gemeindebaukastens.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '23.11.2019'),
                 'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Terminliste", mit dem eine Worddatei mit Gottesdiensten und Terminen für einen bestimmten Zeitraum erzeugt werden kann.',
             ],

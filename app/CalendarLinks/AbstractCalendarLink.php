@@ -122,7 +122,8 @@ class AbstractCalendarLink
         $data = $this->getRenderData($request, $user);
         $calendarLink = $this;
         $raw = View::make('ical.export.'.$this->viewName, compact('calendarLink', 'data'));
-        return str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        $s = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', str_replace(' ,', ',', $raw)))));
+        return preg_replace('/^(\s*)/m', '', $s);
     }
 
 

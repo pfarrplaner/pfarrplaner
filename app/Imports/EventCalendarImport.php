@@ -89,7 +89,7 @@ class EventCalendarImport
      */
     protected function sanitizeTimeString(string $time): \DateTime
     {
-        return Carbon::createFromTimeString(substr($time, 0, -1), new \DateTimeZone('UTC'));
+        return Carbon::createFromTimeString(substr($time, 0, -1), new \DateTimeZone('Europe/Berlin'));
     }
 
     /**
