@@ -15,6 +15,7 @@ class EventCalendarImport
 {
 
     protected $url = '';
+    public $timeZone = 'UTC';
 
     public function __construct($url)
     {
@@ -89,7 +90,7 @@ class EventCalendarImport
      */
     protected function sanitizeTimeString(string $time): \DateTime
     {
-        return Carbon::createFromTimeString(substr($time, 0, -1), new \DateTimeZone('Europe/Berlin'));
+        return Carbon::createFromTimeString(substr($time, 0, -1), new \DateTimeZone($this->timeZone));
     }
 
     /**

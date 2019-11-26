@@ -52,6 +52,7 @@ class CityEventsCalendarLink extends AbstractCalendarLink
 
         if (isset($city->public_events_calendar_url)) {
             $calendar = new EventCalendarImport($city->public_events_calendar_url);
+            $calendar->timeZone = 'Europe/Berlin';
             $events = $calendar->mix($events, $start, $end, true);
         }
 
