@@ -41,16 +41,28 @@ class OPEventsImport
     }
 
 
+    protected function fixTimeAndDates(&$event) {
+        $event['start'] = new Carbon($event['startdate'], 'Europe/Berlin');
+        if (null !== $event['timestart']) $event['start']->setTimeFromTimeString($event['timestart']);
+        if ($event['enddate']) $event['end'] = new Carbon($event['enddate'], 'Europe/Berlin');
+        if (null !== $event['timeend']) {
+            $event['end']->setTimeFromTimeString($event['timeend']);
+        } else {
+            unset($event['end']);
+        }
+        if (isset($event['end']) && ($event['end'] <= $event['start'])) {
+            $event['end'] = $event['start']->copy()->addHour(1);
+        }
+    }
+
     public function mix($events, Carbon $start, Carbon $end) {
         $myEvents = $this->getEvents();
         foreach ($myEvents['data'] as $myEvent) {
             $myEvent['record_type'] = 'OP_Event';
-            $myEvent['start'] = new Carbon($myEvent['startdate'], 'Europe/Berlin');
-            if ($myEvent['enddate']) $myEvent['end'] = new Carbon($myEvent['enddate'], 'Europe/Berlin');
+            $this->fixTimeAndDates($myEvent);
             if (($myEvent['start']) <= $end && ((!isset($myEvent['end']) || ($myEvent['end'] >= $start)))) {
                 foreach ($myEvent['event_dates'] as $key => $date) {
-                    $myEvent['event_dates'][$key]['start'] = new Carbon($date['startdate'], 'Europe/Berlin');
-                    if ($date['enddate']) $myEvent['event_dates'][$key]['end'] = new Carbon($date['enddate'], 'Europe/Berlin');
+                    $this->fixTimeAndDates($myEvent['event_dates'][$key]);
                 }
                 $myEvent['place'] = $myEvent['locationtitle'] . ($myEvent['locationlocation'] ? ', ' . $myEvent['locationlocation'] : '');
                 $events[$myEvent['start']->format('YmdHis')][] = $myEvent;
