@@ -178,7 +178,7 @@ Route::get('/liturgyCache', function() {
 Route::get('test', function(\Illuminate\Http\Request $request){
     $city = \App\City::find($request->get('city'));
     $op = new \App\Imports\OPEventsImport($city);
-    dd($op->mix([], \Carbon\Carbon::now(), \Carbon\Carbon::now()->addWeeks(2)));
+    dd($op->mix([], \Carbon\Carbon::now()->subDays(0), \Carbon\Carbon::now()->addWeeks(2)));
 });
 
 // tests with vue

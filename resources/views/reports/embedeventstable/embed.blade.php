@@ -59,7 +59,7 @@
                                                         @if(isset($event['teaser'])){!! $event['teaser'] !!}@endif
                                                     </div>
                                                     <dl style="padding: 3%;">
-                                                        <dt style="display: inline-block; width: 29%; vertical-align:top; margin-bottom: 10px;"><b>Termine:</b></dt>
+                                                        <dt style="display: inline-block; width: 29%; vertical-align:top; margin-bottom: 10px;"><b>@if(count($event['event_dates']) > 1)Termine:@else Termin:@endif</b></dt>
                                                         <dd style="display: inline-block; width: 65%; vertical-align:top; margin-bottom: 10px;">
                                                             @foreach($event['event_dates'] as $date)
                                                                 <span @if($date['eventdate_id'] == $event['eventdate_id']) style="font-weight: bold;" @endif>
