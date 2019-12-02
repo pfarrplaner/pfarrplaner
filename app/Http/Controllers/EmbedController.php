@@ -71,7 +71,7 @@ class EmbedController extends Controller
             ->limit($limit)
             ->get();
         return response()
-            ->view('embed.services.table', compact('services', 'locationIds', 'title'));
+            ->view('embed.services.table', compact('services', 'ids', 'title'));
 
     }
 
@@ -99,7 +99,7 @@ class EmbedController extends Controller
             ->limit($limit)
             ->get();
         return response()
-            ->view('embed.services.ccTable', compact('services', 'locationIds', 'title'));
+            ->view('embed.services.ccTable', compact('services', 'ids', 'title'));
 
     }
 
