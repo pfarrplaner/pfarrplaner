@@ -176,9 +176,10 @@ Route::get('/liturgyCache', function() {
 
 // current tests
 Route::get('test', function(\Illuminate\Http\Request $request){
-    $city = \App\City::find($request->get('city'));
-    $op = new \App\Imports\OPEventsImport($city);
-    dd($op->mix([], \Carbon\Carbon::now()->subDays(0), \Carbon\Carbon::now()->addWeeks(2)));
+    Mail::raw('Test', function($message){
+        $message->from('noreply@pfarrplaner.de');
+        $message->to('chris@toph.de')->subject('Testing');
+    });
 });
 
 // tests with vue

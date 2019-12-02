@@ -14,6 +14,7 @@ use App\Service;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Rap2hpoutre\LaravelLogViewer\LaravelLogViewer;
 
 class AdminHomeScreen extends AbstractHomeScreen
 {
@@ -40,48 +41,11 @@ class AdminHomeScreen extends AbstractHomeScreen
 
         $end = Carbon::now()->addYear(1);
 
-        $baptisms = Service::with(['baptisms', 'location', 'day'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('baptisms')
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
-            ->get();
-        $baptisms->load('day');
+        $logViewer = new LaravelLogViewer();
+        $logViewer->setFolder('apache2handler');
+        $logs = $logViewer->all();
 
-        $funerals = Service::with(['funerals', 'location', 'day'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('funerals')
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start);
-            })
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
-            ->get();
-        $funerals->load('day');
-
-        $weddings = Service::with(['weddings', 'location', 'day'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('weddings')
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
-            ->get();
-        $weddings->load('day');
-
-        return $this->renderView('homescreen.admin', compact('user', 'services', 'funerals', 'baptisms', 'weddings'));
+        return $this->renderView('homescreen.admin', compact('user', 'logs'));
     }
 
 }

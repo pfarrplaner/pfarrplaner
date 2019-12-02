@@ -179,6 +179,7 @@ return [
         AustinHeap\Database\Encryption\EncryptionServiceProvider::class,
         \Spatie\Permission\PermissionServiceProvider::class,
         Shetabit\Visitor\Provider\VisitorServiceProvider::class,
+        Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
     ],
 
     /*
