@@ -180,6 +180,7 @@ return [
         \Spatie\Permission\PermissionServiceProvider::class,
         Shetabit\Visitor\Provider\VisitorServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
+        SquareBoat\Sneaker\SneakerServiceProvider::class,
     ],
 
     /*

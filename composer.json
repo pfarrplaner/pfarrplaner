@@ -22,6 +22,7 @@
         "shetabit/visitor": "^2.0",
         "spatie/laravel-backup": "^5.1.12",
         "spatie/laravel-permission": "^2.37",
+        "squareboat/sneaker": "^5.0",
         "staudenmeir/belongs-to-through": "^2.3",
         "venturecraft/revisionable": "1.*"
     },

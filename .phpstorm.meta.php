@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2019-12-02 10:21:32.
+    * Generated on 2019-12-02 14:46:35.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -154,6 +154,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
@@ -308,6 +309,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
@@ -462,6 +464,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
@@ -616,6 +619,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
@@ -770,6 +774,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
@@ -924,6 +929,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
@@ -1078,6 +1084,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
@@ -1232,6 +1239,7 @@ namespace PHPSTORM_META {
         'session' => \Illuminate\Session\SessionManager::class,
         'session.store' => \Illuminate\Session\Store::class,
         'shetabit-visitor' => \Shetabit\Visitor\Visitor::class,
+        'sneaker' => \SquareBoat\Sneaker\Sneaker::class,
         'swift.mailer' => \Swift_Mailer::class,
         'swift.transport' => \Illuminate\Mail\TransportManager::class,
         'translation.loader' => \Illuminate\Translation\FileLoader::class,
