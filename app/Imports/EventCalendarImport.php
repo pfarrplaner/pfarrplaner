@@ -10,6 +10,7 @@ namespace App\Imports;
 
 
 use Carbon\Carbon;
+use Psy\Exception\ErrorException;
 
 class EventCalendarImport
 {
@@ -48,7 +49,11 @@ class EventCalendarImport
 
     public function getEvents(Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
-        $events = json_decode(file_get_contents($this->url), true);
+        try {
+            $events = json_decode(file_get_contents($this->url), true);
+        } catch (\ErrorException $e) {
+            $events = [];
+        }
 
         $filteredEvents = [];
         foreach ($events as $key => $event) {
