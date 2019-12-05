@@ -186,3 +186,8 @@ Route::get('test', function(\Illuminate\Http\Request $request){
 Route::get('vue', function(){
    return response()->view('vue/app');
 });
+
+// revisions
+Route::resource('revisions', 'RevisionController');
+Route::post('revisions', 'RevisionController@index')->name('revisions.index.post');
+Route::post('revisions/revert', 'RevisionController@revert')->name('revisions.revert');
