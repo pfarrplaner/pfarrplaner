@@ -30,7 +30,7 @@ class VersionInfo
         return collect([
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '25.11.2019'),
-                'text' => 'Beim Export nach Outlook (rechts oben auf <a href="'.route('connectWithOutlook').'"><span class="fa fa-calendar-alt"></span></a> klicken) kann nun ein kombinierter Veranstaltungskalender für eine Gemeinde erzeugt werden. Dieser kombiniert Einträge aus dem Pfarrplaner, aus einem freigegebenen Outlookkalender und aus dem Online-Planer des Gemeindebaukastens.',
+                'text' => 'Beim Export nach Outlook (rechts oben auf <a href="'.route('ical.connect').'"><span class="fa fa-calendar-alt"></span></a> klicken) kann nun ein kombinierter Veranstaltungskalender für eine Gemeinde erzeugt werden. Dieser kombiniert Einträge aus dem Pfarrplaner, aus einem freigegebenen Outlookkalender und aus dem Online-Planer des Gemeindebaukastens.',
             ],
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '23.11.2019'),
@@ -74,7 +74,7 @@ class VersionInfo
             ],
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '29.10.2019'),
-                'text' => 'Bessere Möglichkeiten zum Export nach Outlook (rechts oben auf <a href="'.route('connectWithOutlook').'"><span class="fa fa-calendar-alt"></span></a> klicken).',
+                'text' => 'Bessere Möglichkeiten zum Export nach Outlook (rechts oben auf <a href="'.route('ical.connect').'"><span class="fa fa-calendar-alt"></span></a> klicken).',
             ],
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '25.10.2019'),

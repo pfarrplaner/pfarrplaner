@@ -124,7 +124,7 @@ Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@b
 Route::get('/ical/urlaub/{user}/{token}', ['uses' => 'ICalController@absences'])->name('ical.absences');
 
 
-Route::get('/ical/connect', ['uses' => 'ICalController@connect'])->name('connectWithOutlook');
+Route::get('/ical/connect', ['uses' => 'ICalController@connect'])->name('ical.connect');
 Route::get('/ical/setup/{key}', ['uses' => 'ICalController@setup'])->name('ical.setup');
 Route::get('/ical/link/{key}', ['uses' => 'ICalController@link'])->name('ical.link');
 Route::post('/ical/link/{key}', ['uses' => 'ICalController@link'])->name('ical.link');

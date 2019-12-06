@@ -75,7 +75,7 @@ class MenuBuilder
         $menu[] = [
             'text' => 'Outlook-Export',
             'icon' => 'fa fa-calendar-alt',
-            'url' => route('connectWithOutlook'),
+            'url' => route('ical.connect'),
         ];
 
 

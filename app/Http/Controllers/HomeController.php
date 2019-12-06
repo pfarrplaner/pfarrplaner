@@ -82,14 +82,14 @@ class HomeController extends Controller
         return redirect()->back()->with("success","Password changed successfully !");
     }
 
-    public function connectWithOutlook() {
+    public function connect() {
         /*
         $user = Auth::user();
         $token = $user->getToken();
         $cities = Auth::user()->visibleCities;
         $name = explode(' ', Auth::user()->name);
         $name = end($name);
-        return view('connectwithoutlook', ['user' => $user, 'token' => $token, 'cities' => $cities, 'name' => $name]);
+        return view('ical.connect', ['user' => $user, 'token' => $token, 'cities' => $cities, 'name' => $name]);
         */
     }
 

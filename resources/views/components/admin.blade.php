@@ -25,7 +25,7 @@
                 <a class="nav-link" href="{{ route('whatsnew') }}"><span class="fa fa-sun" title="Neue Funktionen"></span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('connectWithOutlook') }}"><span class="fa fa-calendar-alt" title="Mit Outlook verbinden"></span></a>
+                <a class="nav-link" href="{{ route('ical.connect') }}"><span class="fa fa-calendar-alt" title="Mit Outlook verbinden"></span></a>
             </li>
         @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'rollen-bearbeiten'])
         <li class="nav-item dropdown">
