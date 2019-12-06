@@ -4,15 +4,9 @@
 
 
 @section('content')
-    @component('components.container')
+    <form method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
         <div class="card">
-            <div class="card-header">
-                Benutzer bearbeiten
-            </div>
             <div class="card-body">
-                @component('components.errors')
-                @endcomponent
-                <form method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PATCH')
                     <div class="form-group">
@@ -193,50 +187,53 @@
                             </label>
                         </div>
                     </div>
-                    <hr/>
+            </div>
+            <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Speichern</button>
-                </form>
             </div>
         </div>
-        <script>
-            function toggleSubscriptionRows() {
-                $('.city-subscription-row').each(function () {
-                    var value = $('select[data-city=' + $(this).data('city') + ']').val();
-                    if (value == 'r' | value == 'w') {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                    var color = '';
-                    switch (value) {
-                        case 'w':
-                            color = 'green';
-                            break;
-                        case 'r':
-                            color = 'yellow';
-                            break;
-                        case 'n':
-                            color = 'red';
-                            break;
-                    }
-                    $('select[data-city=' + $(this).data('city') + ']').css('background-color', color);
-                });
-            }
+    </form>
+@endsection
 
-            $(document).ready(function () {
-
-                $('#btnRemoveAttachment').click(function () {
-                    $('#linkToAttachment').after('<input type="file" name="image" class="form-control" /><input type="hidden" name="removeAttachment" value="1" />');
-                    $('#linkToAttachment').hide();
-                    $('#btnRemoveAttachment').hide();
-                });
-
-
-                toggleSubscriptionRows();
-                $('.check-city').change(function () {
-                    toggleSubscriptionRows();
-                });
+@section('scripts')
+    <script>
+        function toggleSubscriptionRows() {
+            $('.city-subscription-row').each(function () {
+                var value = $('select[data-city=' + $(this).data('city') + ']').val();
+                if (value == 'r' | value == 'w') {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+                var color = '';
+                switch (value) {
+                    case 'w':
+                        color = 'green';
+                        break;
+                    case 'r':
+                        color = 'yellow';
+                        break;
+                    case 'n':
+                        color = 'red';
+                        break;
+                }
+                $('select[data-city=' + $(this).data('city') + ']').css('background-color', color);
             });
-        </script>
-    @endcomponent
+        }
+
+        $(document).ready(function () {
+
+            $('#btnRemoveAttachment').click(function () {
+                $('#linkToAttachment').after('<input type="file" name="image" class="form-control" /><input type="hidden" name="removeAttachment" value="1" />');
+                $('#linkToAttachment').hide();
+                $('#btnRemoveAttachment').hide();
+            });
+
+
+            toggleSubscriptionRows();
+            $('.check-city').change(function () {
+                toggleSubscriptionRows();
+            });
+        });
+    </script>
 @endsection

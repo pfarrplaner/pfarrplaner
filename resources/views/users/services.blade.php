@@ -3,7 +3,7 @@
 
 
 @section('content')
-    @component('components.container')
+    @component('components.ui.card')
         <table class="table table-striped" id="tblUsers">
             <thead>
             <tr>
@@ -19,7 +19,7 @@
                     <td>{{ $service->timeText() }}</td>
                     <td>{{ $service->locationText() }}</td>
                     <td>{{ $service->descriptionText() }}</td>
-                    <td>
+                    <td class="text-right">
                         @can('update', $service)
                             <a href="{{ route('services.edit',$service->id)}}" class="btn btn-sm btn-primary"
                                title="Bearbeiten">
