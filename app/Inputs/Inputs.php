@@ -38,4 +38,13 @@ class Inputs
         ksort($inputs);
         return $inputs;
     }
+
+    public static function get($input): AbstractInput {
+        $inputClass = 'App\\Inputs\\' . ucfirst($input) . 'Input';
+        if (class_exists($inputClass)) {
+            $input = new $inputClass();
+            return $input;
+        }
+        return null;
+    }
 }

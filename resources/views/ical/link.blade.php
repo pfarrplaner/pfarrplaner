@@ -5,12 +5,9 @@
     @component('components.container')
         <div class="card">
             <div class="card-header">
-                Mit Outlook verbinden
+                So kannst du deinen neuen Kalender in Microsoft Outlook einbinden
             </div>
             <div class="card-body">
-                @component('components.errors')
-                @endcomponent
-                <h3>So gehen Sie zum Einbinden in Microsoft Outlook vor</h3>
                 <ol class="steps">
                     <li>Öffne Microsoft Outlook und wechsle zur Kalenderansicht.</li>
                     <li>Wähle "Start &gt; Kalender öffnen &gt; Aus dem Internet..."</li>

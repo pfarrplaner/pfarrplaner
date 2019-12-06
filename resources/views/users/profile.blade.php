@@ -189,48 +189,51 @@
                 </form>
             </div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
-        <script>
-            function setCitySortValue() {
-                var value = [];
-                $('#userCities li').each(function () {
-                    if ($(this).data('city')) value.push($(this).data('city'));
-                });
-                $('input[name=citySort]').val(value.join(','));
-            }
-
-            $(document).ready(function () {
-                setCitySortValue();
-            });
-
-            $('.citySort').sortable({
-                group: 'citySort',
-                pullPlaceholder: false,
-                // animation on drop
-                onDrop: function ($item, container, _super) {
-                    _super($item, container);
-                    setCitySortValue();
-                },
-
-                // set $item relative to cursor position
-                onDragStart: function ($item, container, _super) {
-                    var offset = $item.offset(),
-                        pointer = container.rootGroup.pointer;
-
-                    adjustment = {
-                        left: pointer.left - offset.left,
-                        top: pointer.top - offset.top
-                    };
-
-                    _super($item, container);
-                },
-                onDrag: function ($item, position) {
-                    $item.css({
-                        left: position.left - adjustment.left,
-                        top: position.top - adjustment.top
-                    });
-                }
-            });
-        </script>
     @endcomponent
+@endsection
+
+@section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
+    <script>
+        function setCitySortValue() {
+            var value = [];
+            $('#userCities li').each(function () {
+                if ($(this).data('city')) value.push($(this).data('city'));
+            });
+            $('input[name=citySort]').val(value.join(','));
+        }
+
+        $(document).ready(function () {
+            setCitySortValue();
+        });
+
+        $('.citySort').sortable({
+            group: 'citySort',
+            pullPlaceholder: false,
+            // animation on drop
+            onDrop: function ($item, container, _super) {
+                _super($item, container);
+                setCitySortValue();
+            },
+
+            // set $item relative to cursor position
+            onDragStart: function ($item, container, _super) {
+                var offset = $item.offset(),
+                    pointer = container.rootGroup.pointer;
+
+                adjustment = {
+                    left: pointer.left - offset.left,
+                    top: pointer.top - offset.top
+                };
+
+                _super($item, container);
+            },
+            onDrag: function ($item, position) {
+                $item.css({
+                    left: position.left - adjustment.left,
+                    top: position.top - adjustment.top
+                });
+            }
+        });
+    </script>
 @endsection

@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Auth;
 class VersionInfo
 {
 
+    public static function version() {
+        $data = json_decode(file_get_contents(base_path('composer.json')), true);
+        return $data['version'];
+    }
+
     /**
      * Get version "what's new" messages
      * @return Collection

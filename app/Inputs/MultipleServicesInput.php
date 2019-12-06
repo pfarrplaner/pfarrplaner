@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Auth;
 class MultipleServicesInput extends AbstractInput
 {
 
-    public $title = 'Mehrere Gottesdienste anlegen';
+    public $title = 'Mehrere Gottesdienste';
 
     public function canEdit(): bool
     {
