@@ -2,15 +2,68 @@
 
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
+Breadcrumbs::for('absences.index', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('Urlaub', route('absences.index'));
+});
+
+Breadcrumbs::for('absences.create', function (BreadcrumbsGenerator $trail, $year, $month, $user) {
+    $trail->parent('absences.index');
+    $trail->push('Urlaub eintragen', route('absences.create', compact('year', 'month', 'user')));
+});
+
+Breadcrumbs::for('absences.edit', function (BreadcrumbsGenerator $trail, $absence) {
+    if (!is_numeric($absence)) $absence = $absence->id;
+    $trail->parent('absences.index');
+    $trail->push('Urlaub bearbeiten', route('absences.edit', $absence));
+});
+
+
 Breadcrumbs::for('admin', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Administration');
+});
+
+Breadcrumbs::for('baptism.add', function (BreadcrumbsGenerator $trail, $service) {
+    $trail->parent('services.edit', $service);
+    $trail->push('Neue Taufe', route('baptism.add', $service));
+});
+
+Breadcrumbs::for('baptisms.create', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('Neue Taufe', route('baptisms.create'));
+});
+
+Breadcrumbs::for('baptisms.edit', function (BreadcrumbsGenerator $trail, $baptism) {
+    $trail->parent('services.edit', $baptism->service->id);
+    $trail->push('Taufe von '.$baptism->candidate_name, route('baptisms.edit', $baptism));
 });
 
 Breadcrumbs::for('calendar', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Gottesdienste', route('calendar'));
 });
+
+Breadcrumbs::for('funeral.add', function (BreadcrumbsGenerator $trail, $service) {
+    $trail->parent('services.edit', $service);
+    $trail->push('Neue Bestattung', route('funeral.add', $service));
+});
+
+Breadcrumbs::for('funerals.edit', function (BreadcrumbsGenerator $trail, $funeral) {
+    $trail->parent('services.edit', $funeral->service->id);
+    $trail->push('Beerdigung von '.$funeral->buried_name, route('funerals.edit', $funeral));
+});
+
+Breadcrumbs::for('funerals.wizard', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('Neue Bestattung', route('funerals.wizard'));
+});
+
+Breadcrumbs::for('funerals.wizard.step2', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('funerals.wizard');
+    $trail->push('Ortsangaben', route('funerals.wizard.step2'));
+});
+
 
 Breadcrumbs::for('locations.index', function (BreadcrumbsGenerator $trail) {
     $trail->parent('admin');
@@ -201,41 +254,6 @@ Breadcrumbs::for('user.profile', function (BreadcrumbsGenerator $trail) {
 Breadcrumbs::for('user.services', function (BreadcrumbsGenerator $trail, $user) {
     $trail->parent('users.edit', $user);
     $trail->push('Gottesdienste', route('user.services', $user));
-});
-
-Breadcrumbs::for('funeral.add', function (BreadcrumbsGenerator $trail, $service) {
-    $trail->parent('services.edit', $service);
-    $trail->push('Neue Bestattung', route('funeral.add', $service));
-});
-
-Breadcrumbs::for('funerals.edit', function (BreadcrumbsGenerator $trail, $funeral) {
-    $trail->parent('services.edit', $funeral->service->id);
-    $trail->push('Beerdigung von '.$funeral->buried_name, route('funerals.edit', $funeral));
-});
-
-Breadcrumbs::for('funerals.wizard', function (BreadcrumbsGenerator $trail) {
-    $trail->parent('home');
-    $trail->push('Neue Bestattung', route('funerals.wizard'));
-});
-
-Breadcrumbs::for('funerals.wizard.step2', function (BreadcrumbsGenerator $trail) {
-    $trail->parent('funerals.wizard');
-    $trail->push('Ortsangaben', route('funerals.wizard.step2'));
-});
-
-Breadcrumbs::for('baptism.add', function (BreadcrumbsGenerator $trail, $service) {
-    $trail->parent('services.edit', $service);
-    $trail->push('Neue Taufe', route('baptism.add', $service));
-});
-
-Breadcrumbs::for('baptisms.create', function (BreadcrumbsGenerator $trail) {
-    $trail->parent('home');
-    $trail->push('Neue Taufe', route('baptisms.create'));
-});
-
-Breadcrumbs::for('baptisms.edit', function (BreadcrumbsGenerator $trail, $baptism) {
-    $trail->parent('services.edit', $baptism->service->id);
-    $trail->push('Taufe von '.$baptism->candidate_name, route('baptisms.edit', $baptism));
 });
 
 Breadcrumbs::for('wedding.add', function (BreadcrumbsGenerator $trail, $service) {
