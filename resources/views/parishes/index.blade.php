@@ -2,9 +2,17 @@
 
 @section('title', 'Pfarrämter')
 
+@section('navbar-left')
+    @can('parishes-bearbeiten')
+        <li class="nav-item">
+            <a class="btn btn-success" href="{{ route('parishes.create') }}">Neues Pfarramt hinzufügen</a>
+        </li>
+    @endcan
+@endsection
+
 @section('content')
-    @component('components.container')
-        <table class="table table-striped">
+    @component('components.ui.card')
+        <table class="table table-striped table-hover">
             <thead>
             <tr>
                 <th>Pfarramt</th>
@@ -17,13 +25,15 @@
                 <tr>
                     <td>{{$parish->name}}</td>
                     <td>{{$parish->owningCity->name}}</td>
-                    <td>
+                    <td class="text-right" style="min-width: 100px;">
                         @can('parishes-bearbeiten')
-                            <a href="{{ route('parishes.edit',$parish->id)}}" class="btn btn-primary" title="Bearbeiten"><span class="fa fa-edit"></span></a>
-                            <form action="{{ route('parishes.destroy', $parish->id)}}" method="post">
+                            <a href="{{ route('parishes.edit',$parish->id)}}" class="btn btn-primary"
+                               title="Bearbeiten"><span class="fa fa-edit"></span></a>
+                            <form action="{{ route('parishes.destroy', $parish->id)}}" method="post" style="display: inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-danger" type="submit" title="Löschen"><span class="fa fa-trash"></span></button>
+                                <button class="btn btn-danger" type="submit" title="Löschen"><span
+                                            class="fa fa-trash"></span></button>
                             </form>
                         @endcan
                     </td>
@@ -31,9 +41,5 @@
             @endforeach
             </tbody>
         </table>
-        @can('parishes-bearbeiten')
-            <hr/>
-            <a class="btn btn-secondary" href="{{ route('parishes.create') }}">Neues Pfarramt hinzufügen</a>
-        @endcan
     @endcomponent
 @endsection

@@ -88,6 +88,22 @@ Breadcrumbs::for('login', function (BreadcrumbsGenerator $trail) {
     $trail->push('Anmelden');
 });
 
+Breadcrumbs::for('parishes.index', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('admin');
+    $trail->push('Pfarrämter', route('parishes.index'));
+});
+
+Breadcrumbs::for('parishes.create', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('parishes.index');
+    $trail->push('Neues Pfarramt', route('parishes.create'));
+});
+
+Breadcrumbs::for('parishes.edit', function (BreadcrumbsGenerator $trail, $parish) {
+    $parish = \App\Parish::find($parish)->first();
+    $trail->parent('parishes.index');
+    $trail->push($parish->name, route('parishes.edit', $parish));
+});
+
 Breadcrumbs::for('reports.list', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Ausgabeformate', route('reports.list'));
