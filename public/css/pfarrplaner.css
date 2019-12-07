@@ -41,6 +41,7 @@ ul.nav-tabs {
 .calendar-month td,
 .calendar-month thead th {
     vertical-align: top;
+    padding: 1px;
 }
 
 .calendar-month th .btn {
@@ -87,9 +88,57 @@ ul.nav-tabs {
     color: red;
 }
 
-.calendar-month .day-name {
-    font-weight: normal;
+
+.calendar-month th .card-effect
+{
+    position: relative;
 }
+.calendar-month th .card-effect:before, .calendar-month th .card-effect:after
+{
+    z-index: -1;
+    position: absolute;
+    content: "";
+    bottom: 15px;
+    left: 10px;
+    width: 50%;
+    top: 80%;
+    max-width:300px;
+    background: #777;
+    box-shadow: 0 15px 10px #777;
+    transform: rotate(-3deg);
+}
+.effect2:after
+{
+    transform: rotate(3deg);
+    right: 10px;
+    left: auto;
+}
+
+.calendar-month th .card-header {
+    padding: 0;
+    text-align: center;
+    background-color: black;
+    color: white;
+    font-size: .7rem;
+}
+
+.calendar-month th .day-header-So {
+    background-color: red;
+}
+
+.calendar-month th .card-body {
+    padding: 1px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.calendar-month th .card-footer {
+    padding: 0;
+    text-align: center;
+    font-size: .6rem;
+}
+
+
 
 .calendar-month .day-description {
     font-weight: normal;
@@ -113,7 +162,7 @@ span.vacation-conflict {
 }
 
 .calendar-month .liturgy {
-    font-size: 0.7em;
+    font-size: 0.6em;
     font-weight: normal;
 }
 
@@ -135,24 +184,14 @@ span.vacation-conflict {
 }
 
 .calendar-month .service-entry {
-    background-color: #f3f3f3;
+    background-color: white;
     border: solid 1px darkgray;
     padding: 5px;
-    border-radius: 5px;
     margin-bottom: 3px;
 }
 
 .calendar-month .service-entry.mine {
     background-color: lightgreen;
-}
-
-.calendar-month .service-entry {
-    background-color: #f3f3f3;
-    -webkit-transition: background 0.5s linear;
-    -moz-transition: background 0.5s linear;
-    -ms-transition: background 0.5s linear;
-    -o-transition: background 0.5s linear;
-    transition: background 0.5s linear;
 }
 
 .calendar-month .service-entry.highlighted {

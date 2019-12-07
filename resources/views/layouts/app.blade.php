@@ -69,8 +69,7 @@
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-navbar" href="{{ route('logout') }}">
-                        <i class="fa fa-power-off"></i>
-                        Abmelden
+                        <i class="fa fa-power-off"></i><span class="d-none d-md-inline"> Abmelden</span>
                     </a>
                 </li>
             @endauth

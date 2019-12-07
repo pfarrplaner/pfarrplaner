@@ -7,6 +7,10 @@ Breadcrumbs::for('admin', function (BreadcrumbsGenerator $trail) {
     $trail->push('Administration');
 });
 
+Breadcrumbs::for('calendar', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('Gottesdienste');
+});
 
 Breadcrumbs::for('locations.index', function (BreadcrumbsGenerator $trail) {
     $trail->parent('admin');
@@ -144,6 +148,12 @@ Breadcrumbs::for('roles.edit', function (BreadcrumbsGenerator $trail, \Spatie\Pe
     $trail->push($role->name, route('roles.edit', $role));
 });
 
+Breadcrumbs::for('services.edit', function (BreadcrumbsGenerator $trail, $service) {
+    $trail->parent('calendar');
+    $trail->push('#'.$service, route('services.edit', $service));
+});
+
+
 Breadcrumbs::for('tags.index', function (BreadcrumbsGenerator $trail) {
     $trail->parent('admin');
     $trail->push('Kennzeichnungen', route('tags.index'));
@@ -174,6 +184,12 @@ Breadcrumbs::for('users.edit', function (BreadcrumbsGenerator $trail, $user) {
     $user = \App\User::find($user)->first();
     $trail->parent('users.index');
     $trail->push($user->fullName(), route('users.edit', $user));
+});
+
+Breadcrumbs::for('user.profile', function (BreadcrumbsGenerator $trail) {
+    $user = Auth::user();
+    $trail->parent('home');
+    $trail->push($user->fullName(), route('user.profile', $user));
 });
 
 Breadcrumbs::for('user.services', function (BreadcrumbsGenerator $trail, $user) {
