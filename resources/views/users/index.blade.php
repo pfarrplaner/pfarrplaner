@@ -4,7 +4,7 @@
 @section('navbar-left')
     @can('create', \App\User::class)
         <li class="nav-item">
-            <a class="btn btn-navbar" href="{{ route('users.create') }}"><i class="fa fa-user-plus"></i> Neuen Benutzer
+            <a class="btn btn-success" href="{{ route('users.create') }}"><i class="fa fa-user-plus"></i> Neuen Benutzer
                 hinzufügen</a>
         </li>
     @endcan

@@ -5,7 +5,7 @@
 @section('navbar-left')
     @can('create', \Spatie\Permission\Models\Role::class)
         <li class="nav-item">
-            <a class="btn btn-navbar" href="{{ route('roles.create') }}">Neue Rolle hinzufügen</a>
+            <a class="btn btn-success" href="{{ route('roles.create') }}">Neue Rolle hinzufügen</a>
         </li>
     @endcan
 @endsection

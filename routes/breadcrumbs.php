@@ -8,23 +8,21 @@ Breadcrumbs::for('admin', function (BreadcrumbsGenerator $trail) {
 });
 
 
-Breadcrumbs::for('cities.index', function (BreadcrumbsGenerator $trail) {
+Breadcrumbs::for('locations.index', function (BreadcrumbsGenerator $trail) {
     $trail->parent('admin');
-    $trail->push('Kirchengemeinden', route('cities.index'));
+    $trail->push('Kirchen und Gottesdienstorte', route('locations.index'));
 });
 
-Breadcrumbs::for('cities.create', function (BreadcrumbsGenerator $trail) {
-    $trail->parent('cities.index');
-    $trail->push('Neue Kirchengemeinde', route('cities.create'));
+Breadcrumbs::for('locations.create', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('locations.index');
+    $trail->push('Neuer Ort', route('locations.create'));
 });
 
-Breadcrumbs::for('cities.edit', function (BreadcrumbsGenerator $trail, $city) {
-    $city = \App\City::find($city);
-    $trail->parent('cities.index');
-    $trail->push($city->name, route('cities.edit', $city));
+Breadcrumbs::for('locations.edit', function (BreadcrumbsGenerator $trail, $location) {
+    $location = \App\Location::find($location);
+    $trail->parent('locations.index');
+    $trail->push($location->name, route('locations.edit', $location));
 });
-
-
 
 Breadcrumbs::for('home', function (BreadcrumbsGenerator $trail) {
     $trail->push('<i class="fa fa-home" title="Zurück zur Übersicht"></i>', route('home'));
@@ -68,6 +66,22 @@ Breadcrumbs::for('inputs.setup', function (BreadcrumbsGenerator $trail, $input) 
 Breadcrumbs::for('inputs.input', function (BreadcrumbsGenerator $trail, $input) {
     $trail->parent('inputs.setup', $input);
     $trail->push('Eingabe', route('inputs.input', $input));
+});
+
+Breadcrumbs::for('cities.index', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('admin');
+    $trail->push('Kirchengemeinden', route('cities.index'));
+});
+
+Breadcrumbs::for('cities.create', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('cities.index');
+    $trail->push('Neue Kirchengemeinde', route('cities.create'));
+});
+
+Breadcrumbs::for('cities.edit', function (BreadcrumbsGenerator $trail, $city) {
+    $city = \App\City::find($city);
+    $trail->parent('cities.index');
+    $trail->push($city->name, route('cities.edit', $city));
 });
 
 Breadcrumbs::for('login', function (BreadcrumbsGenerator $trail) {

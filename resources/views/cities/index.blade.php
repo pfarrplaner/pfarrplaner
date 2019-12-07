@@ -5,7 +5,7 @@
 @section('navbar-left')
     @can('create', \App\City::class)
         <li class="nav-item">
-            <a class="btn btn-navbar" href="{{ route('cities.create') }}">Neue Kirchengemeinde hinzufügen</a>
+            <a class="btn btn-success" href="{{ route('cities.create') }}">Neue Kirchengemeinde hinzufügen</a>
         </li>
     @endcan
 @endsection
