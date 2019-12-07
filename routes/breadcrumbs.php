@@ -128,6 +128,21 @@ Breadcrumbs::for('roles.edit', function (BreadcrumbsGenerator $trail, \Spatie\Pe
     $trail->push($role->name, route('roles.edit', $role));
 });
 
+Breadcrumbs::for('tags.index', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('admin');
+    $trail->push('Kennzeichnungen', route('tags.index'));
+});
+
+Breadcrumbs::for('tags.create', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('tags.index');
+    $trail->push('Neue Kennzeichnung', route('tags.create'));
+});
+
+Breadcrumbs::for('tags.edit', function (BreadcrumbsGenerator $trail, $tag) {
+    $tag = \App\Tag::find($tag)->first();
+    $trail->parent('tags.index');
+    $trail->push($tag->name, route('tags.edit', $tag));
+});
 
 Breadcrumbs::for('users.index', function (BreadcrumbsGenerator $trail) {
     $trail->parent('admin');

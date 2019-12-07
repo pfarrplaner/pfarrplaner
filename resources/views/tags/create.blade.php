@@ -1,34 +1,24 @@
 @extends('layouts.app')
 
-@section('title', 'Tag anlegen')
+@section('title', 'Kennzeichnung anlegen')
 
 @section('content')
-    @component('components.container')
-    <div class="card">
-        <div class="card-header">
-            Tag hinzufügen
-        </div>
-        <div class="card-body">
-            @component('components.errors')
-            @endcomponent
-            <form method="post" action="{{ route('tags.store') }}">
-                <div class="form-group">
-                    @csrf
-                    <label for="name">Name:</label>
-                    <input type="text" class="form-control" id="name" name="name"/>
-                </div>
-                <div class="form-group">
-                    <label for="code">Code:</label>
-                    <input type="text" class="form-control" name="code"/>
-                </div>
+    <form method="post" action="{{ route('tags.store') }}">
+        @csrf
+        @component('components.ui.card')
+            @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
-            </form>
-        </div>
-    </div>
+            @endslot
+            @input(['name' => 'name', 'label' => 'Name:']) @endinput
+            @input(['name' => 'code', 'label' => 'Code:']) @endinput
+        @endcomponent
+    </form>
+@endsection
+
+@section('scripts')
     <script>
-        $(document).ready(function($){
+        $(document).ready(function ($) {
             $('#name').focus();
         });
     </script>
-    @endcomponent
 @endsection
