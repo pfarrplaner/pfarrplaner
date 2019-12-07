@@ -375,12 +375,7 @@ class User extends Authenticatable
                 });
         }
 
-        //$users = $userQuery->get();
-
-
         if ($this->hasRole('Pfarrer*in')) {
-
-
             $userQuery->orWhere(function($query2){
                 $query2->whereHas('roles', function($query){
                     $query->where('name', 'Pfarrer*in');
@@ -389,7 +384,6 @@ class User extends Authenticatable
                     $query->whereIn('cities.id', $this->cities->pluck('id'));
                 });
             });
-
         }
 
         $userQuery->orderBy('last_name');

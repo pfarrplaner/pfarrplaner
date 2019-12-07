@@ -62,26 +62,17 @@
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th rowspan="2">Name</th>
-                    @for($m=1; $m<=3; $m++)
-                        <th colspan="{{ (clone $start)->addMonth($m)->subDay(1)->format('d') }}">{{ $months[(clone $start)->addMonth($m-1)->format('n')] }}</th>
-                    @endfor
-                </tr>
-                <tr>
-                    @for($m=1; $m<=3; $m++)
-                        @for($d=1;$d<=(clone $start)->addMonth($m)->subDay(1)->format('d'); $d++)
-                            <th class="cal-cell
-                            {{ $today = (clone $start)->addMonth($m-1)->addDay($d-1) }}
-
-                            @foreach($holidays as $holiday)
+                    <th></th>
+                    <?php $today = $start->copy()->subDay(1) ?>
+                    @for($d=1;$d<=$end->format('d'); $d++)
+                        <?php $today->addDay(1); ?>
+                        <th class="cal-cell
+                        day_{{ $today->format('D') }}
+                        @foreach($holidays as $holiday)
                             @if ($today->between($holiday['start'], $holiday['end'])) holiday @endif
-                            @endforeach
-
-                                    day_{{ $today->format('D') }}
-
-                            @if($today->isToday())today @endif
-                                    ">{{ sprintf('%02d', $d)}}</th>
-                        @endfor
+                        @endforeach
+                        @if($today->isToday())today @endif
+                                ">{!! $today->formatLocalized('%a<br />%d') !!}</th>
                     @endfor
                 </tr>
                 </thead>
@@ -93,14 +84,14 @@
                                href="{{ route('absences.create', ['year' => $year, 'month' => $month, 'user' => $user->id]) }}"><span
                                         class="fa fa-plus"></span></a></th>
                     @endif
-                    <?php $today = clone($start); $thisHoliday = null; ?>
+                    <?php $today = $start->copy(); $thisHoliday = null; ?>
                     @while($today <= $end)
                         <td class="cal-cell
-                                day_{{ $today->format('D') }}
                         @if($today->isToday())today @endif
                         @foreach($holidays as $holiday)
                         @if ($today->between($holiday['start'], $holiday['end'])) holiday <?php $thisHoliday = $holiday; ?> @endif
                         @endforeach
+                        day_{{ $today->format('D') }}
                         @if($services = $user->isBusy($today, true)) busy @endif
                         @if ($absence = $user->isAbsent($today, true)) absent has-absence
     @if($user->id == Auth::user()->id || (Auth::user()->can('editAbsences', $user))) editable @endif

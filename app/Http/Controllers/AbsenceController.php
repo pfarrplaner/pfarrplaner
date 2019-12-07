@@ -90,8 +90,8 @@ class AbsenceController extends Controller
         $users = Auth::user()->getViewableAbsenceUsers();
 
         $now = new Carbon($year.'-'.$month.'-01 0:00:00');
-        $start = (clone $now)->subMonth(1);
-        $end = (clone $now)->addMonth(2)->subDay(1);
+        $start = $now->copy();
+        $end = $now->copy()->addMonth(1)->subDay(1);
 
         $holidays = $this->getHolidays($start, $end);
 

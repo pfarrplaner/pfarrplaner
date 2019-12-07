@@ -378,7 +378,9 @@ ul.sortable li.placeholder:before {
     overflow: hidden;
 }
 
-.tbl-absences .cal-cell.day_Sun {
+.tbl-absences td.cal-cell.day_Sun,
+.tbl-absences th.cal-cell.day_Sun
+{
     background-color: lightpink;
 }
 
@@ -395,9 +397,15 @@ ul.sortable li.placeholder:before {
     background-color: #e9fce9;
 }
 
-.tbl-absences .cal-cell.busy {
+.tbl-absences td.cal-cell.busy {
     background-color: lightgreen;
 }
+
+.tbl-absences td.cal-cell.busy.day_Sun {
+    background-color: #ff6666;
+}
+
+
 
 .tbl-absences .cal-cell.absent {
     background-color: orange;
