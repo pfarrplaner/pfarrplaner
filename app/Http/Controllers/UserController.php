@@ -176,10 +176,6 @@ class UserController extends Controller
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
 
-        // set preferences
-        $user->setSetting('sorted_cities', $request->get('citySort'));
-        $user->setSetting('calendar_view', $request->get('calendar_view'));
-
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
 

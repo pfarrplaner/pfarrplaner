@@ -17,9 +17,6 @@
                     <a class="nav-link active" href="#profile" role="tab" data-toggle="tab">Profil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#view" role="tab" data-toggle="tab">Anzeige</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="#notifications" role="tab"
                        data-toggle="tab">Benachrichtigungen</a>
                 </li>
@@ -83,151 +80,10 @@
                         </div>
                     @endforeach
                 </div>
-                <div role="tabpanel" class="tab-pane fade" id="view">
-                    <label>Kirchengemeinden anzeigen</label>
-                    <p>Hier kannst du festlegen, welche Kirchengemeinden in welcher Reihenfolge im Kalender
-                        angezeigt werden sollen. Schiebe dazu einfach die einzelnen Gemeindenamen mit der Maus
-                        an die gewünschte Stelle.</p>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <label for="userCities">Anzeigen</label>
-                            <ul id="userCities" class="sortable citySort">
-                                @foreach($sortedCities as $city)
-                                    <li data-city="{{ $city->id }}"><span
-                                                class="fa fa-church"></span> {{ $city->name }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        <div class="col-sm-6">
-                            <label for="unusedCities">Nicht anzeigen</label>
-                            <ul id="unusedCities" class="sortable citySort">
-                                @foreach($unusedCities as $city)
-                                    <li data-city="{{ $city->id }}"><span
-                                                class="fa fa-church"></span> {{ $city->name }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    </div>
-                    <input type="hidden" name="citySort" value=""/>
-
-                    <hr/>
-
-                    <label>Kalenderansicht</label>
-                    <div class="row">
-                        <div class="col-6">
-                            <label>
-                                <input type="radio" name="calendar_view" value="calendar.month"
-                                       @if($calendarView == 'calendar.month')checked @endif/>
-                                <div style="border: solid 1px #dddddd; padding: 3px; border-radius: 3px; display: inline-block;">
-                                    <b>Horizontal</b><br/>Tage in Spalten, Kirchengemeinden in Zeilen
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th><span class="fa fa-calendar-day"></span></th>
-                                                <th><span class="fa fa-calendar-day"></span></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th><span class="fa fa-church"></span></th>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <th><span class="fa fa-church"></span></th>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="col-6">
-                            <label>
-                                <input type="radio" name="calendar_view" value="calendar.month_vertical"
-                                       @if($calendarView == 'calendar.month_vertical')checked @endif/>
-                                <div style="border: solid 1px #dddddd; padding: 3px; border-radius: 3px; display: inline-block;">
-                                    <b>Vertikal</b><br/>Kirchengemeinden in Spalten, Tage in Zeilen
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th></th>
-                                                <th><span class="fa fa-church"></span></th>
-                                                <th><span class="fa fa-church"></span></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr>
-                                                <th><span class="fa fa-calendar-day"></span></th>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <th><span class="fa fa-calendar-day"></span></th>
-                                                <td>&nbsp;</td>
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                </div>
             </div>
         @endcomponent
     </form>
 @endsection
 
 @section('scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
-    <script>
-        function setCitySortValue() {
-            var value = [];
-            $('#userCities li').each(function () {
-                if ($(this).data('city')) value.push($(this).data('city'));
-            });
-            $('input[name=citySort]').val(value.join(','));
-        }
-
-        $(document).ready(function () {
-            setCitySortValue();
-        });
-
-        $('.citySort').sortable({
-            group: 'citySort',
-            pullPlaceholder: false,
-            // animation on drop
-            onDrop: function ($item, container, _super) {
-                _super($item, container);
-                setCitySortValue();
-            },
-
-            // set $item relative to cursor position
-            onDragStart: function ($item, container, _super) {
-                var offset = $item.offset(),
-                    pointer = container.rootGroup.pointer;
-
-                adjustment = {
-                    left: pointer.left - offset.left,
-                    top: pointer.top - offset.top
-                };
-
-                _super($item, container);
-            },
-            onDrag: function ($item, position) {
-                $item.css({
-                    left: position.left - adjustment.left,
-                    top: position.top - adjustment.top
-                });
-            }
-        });
-    </script>
 @endsection

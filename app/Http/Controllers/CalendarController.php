@@ -125,14 +125,18 @@ class CalendarController extends Controller
             Session::put('showLimitedDays', false);
         }
 
+        $user = Auth::user();
+
         $days = $this->getDaysInMonth($year, $month);
         $nextDay = Day::where('date', '>=', Carbon::createFromTimestamp(time()))
             ->orderBy('date', 'ASC')
             ->limit(1)
             ->get()->first();
 
-        //$cities = City::all();
-        $cities = Auth::user()->getSortedCities();
+        // city sorting
+        if ($request->has('sort')) $user->setSetting('sorted_cities', $request->get('sort'));
+        $cities = $sortedCities = $user->getSortedCities();
+        $unusedCities = $user->cities->whereNotIn('id', $sortedCities->pluck('id'));
 
         $allDays = Day::orderBy('date', 'ASC')->get();
         for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
@@ -142,7 +146,12 @@ class CalendarController extends Controller
             $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
         }
 
-        $viewName = Auth::user()->getSetting('calendar_view', 'calendar.month');
+        // determine orientation and view name;
+        $defaultOrientation = $user->getSetting('calendar_view') == 'month_vertical' ? 'vertical' : 'horizontal';
+        $orientation = $request->get('orientation', $defaultOrientation);
+        $user->setSetting('calendar_view', $orientation);
+
+
 
 
         $services = [];
@@ -176,51 +185,13 @@ class CalendarController extends Controller
             }
         }
 
-        return view($viewName, compact(
+        return view('calendar.month', compact(
             'year', 'month', 'years', 'months', 'days', 'cities',
-                   'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave'
+                   'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave', 'orientation',
+                'sortedCities', 'unusedCities'
             )
         );
     }
-
-
-    public function monthJS(Request $request, $year = 0, $month = 0)
-    {
-        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar', $year, $month))) {
-            return $r;
-        }
-
-        if (!Session::has('showLimitedDays')) {
-            Session::put('showLimitedDays', false);
-        }
-
-        $days = $this->getDaysInMonth($year, $month);
-        $nextDay = Day::where('date', '>=', Carbon::createFromTimestamp(time()))
-            ->orderBy('date', 'ASC')
-            ->limit(1)
-            ->get()->first();
-
-        $cities = City::all();
-
-        $allDays = Day::orderBy('date', 'ASC')->get();
-        for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
-            $years[] = $i;
-        }
-        for ($i = 1; $i <= 12; $i++) {
-            $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
-        }
-
-        return view('calendar.monthjs', [
-            'year' => $year,
-            'month' => $month,
-            'years' => $years,
-            'months' => $months,
-            'days' => $days,
-            'cities' => $cities,
-            'nextDay' => $nextDay,
-        ]);
-    }
-
 
     public function printsetup(Request $request, $year = 0, $month = 0)
     {

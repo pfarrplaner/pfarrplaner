@@ -37,6 +37,8 @@
                             {{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope']] }}</a>
                     </div>
                 </div>
+                @else
+                <div class="liturgy"></div>
             @endif
         </div>
         @if ($day->name)

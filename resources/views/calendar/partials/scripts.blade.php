@@ -4,6 +4,11 @@
     <script>var slave = 0;</script>
 @endif
 <script>
+
+    var month =  {{ $month }};
+    var year =  {{ $year }};
+    var route = '{{ route('calendar', compact('year', 'month')) }}';
+
     function setLimitedColumnStatus() {
         if ($('.btn-toggle-limited-days').find('span').first().hasClass('fa-square')) {
             $('.btn-toggle-limited-days').attr('title', 'Alle ausgeblendeten Tage einblenden');
@@ -37,29 +42,7 @@
             })
     }
 
-    $(document).ready(function () {
-
-        // toggle for limited days
-        $('.limited').on('click', function (e) {
-            if (e.target !== this) return;
-            $('[data-day=' + $(this).data('day') + ']').toggleClass('collapsed');
-        })
-
-        // toggle all limited days
-        $('.btn-toggle-limited-days').on('click', function (e) {
-            e.preventDefault();
-            $(this).find('span').toggleClass('fa-square').toggleClass('fa-check-square');
-            setLimitedColumnStatus();
-        });
-        setLimitedColumnStatus();
-
-        // open limited days with services that belong to me
-        $('.limited .service-entry.mine').parent().parent().removeClass('collapsed');
-
-        if (slave) {
-            var t = setInterval(checkForUpdates, 2000);
-        }
-    });
-
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js"></script>
+<script src="{{ asset('js/pfarrplaner/calendar.month.js') }}"></script>
 <script src="{{ asset('js/pfarrplaner/loader.js') }}"></script>

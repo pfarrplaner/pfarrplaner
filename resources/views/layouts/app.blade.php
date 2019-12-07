@@ -171,7 +171,9 @@
     </div>
     <!-- Control Sidebar -->
     <aside class="control-sidebar control-sidebar-dark">
-    @yield('control-sidebar')
+        <div class="p-3 control-sidebar-content">
+            @yield('control-sidebar')
+        </div>
     <!-- Control sidebar content goes here -->
     </aside>
     <!-- /.control-sidebar -->
