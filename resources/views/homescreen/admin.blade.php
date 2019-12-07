@@ -3,7 +3,7 @@
 @section('title', 'Herzlich willkommen')
 
 @section('content')
-    @component('components.container')
+    @component('components.ui.card')
         <h1>Willkommen, {{ $user->name }}!</h1>
         <a class="btn btn-primary btn-lg" href="{{ route('calendar') }}"><span class="fa fa-calendar"></span> Zum Kalender</a>
         <a class="btn btn-secondary btn-lg" href="{{ route('baptisms.create') }}"><span class="fa fa-water"></span> Taufe anlegen...</a>
@@ -57,63 +57,65 @@
                 @endif
             </div>
         @endforeach
-        <hr />
-
-        <script>
-
-            function ucfirst(s) {
-                return s[0].toUpperCase() + s.slice(1);
-            }
-
-            function updateSingleCounter(tag) {
-                var id = '#ctr'+ucfirst(tag);
-                fetch($(id).data('update-route')).then(
-                    response => response.json()
-                ).then(function(response) {
-                    $(id+' .count-numbers').html(response.count);
-                });
-            }
-
-            function updateCounters() {
-                updateSingleCounter('users');
-                updateSingleCounter('services');
-                updateSingleCounter('cities');
-
-                fetch($('#ctrOnline').data('update-route')).then(
-                    response => response.json()
-                ).then(function(response) {
-                    $('#ctrOnline .count-numbers').html(response.count);
-                    $('#onlineUsers').html('');
-                    var t = [];
-                    $.each(response.data.users, function(user) {
-                        t.push(this.name+' ('+this.email+')');
-                        $('#onlineUsers').html($('#onlineUsers').html()+' <span class="badge badge-secondary" title="'+this.email+'">'+this.name+'</span>');
-                        $('#ctrOnline').attr('title', t.join('; '));
-                    })
-                });
-
-
-            }
-
-            function enableStackTraceButtons() {
-                $('.btnToggleStack').click(function(e){
-                    e.preventDefault();
-                    $(this).parent().find('pre').first().toggle();
-                });
-            }
-
-
-            $(document).ready(function(){
-                setTimeout(updateCounters, 1000);
-                updateCounters();
-                enableStackTraceButtons();
-
-                $('.card-counter').click(function(e) {
-                    if ($(this).data('route')) {
-                        window.location.href=$(this).data('route');
-                    }
-                });
-            });
-        </script>
     @endcomponent
+@endsection
+
+@section('scripts')
+    <script>
+
+        function ucfirst(s) {
+            return s[0].toUpperCase() + s.slice(1);
+        }
+
+        function updateSingleCounter(tag) {
+            var id = '#ctr'+ucfirst(tag);
+            fetch($(id).data('update-route')).then(
+                response => response.json()
+            ).then(function(response) {
+                $(id+' .count-numbers').html(response.count);
+            });
+        }
+
+        function updateCounters() {
+            updateSingleCounter('users');
+            updateSingleCounter('services');
+            updateSingleCounter('cities');
+
+            fetch($('#ctrOnline').data('update-route')).then(
+                response => response.json()
+            ).then(function(response) {
+                $('#ctrOnline .count-numbers').html(response.count);
+                $('#onlineUsers').html('');
+                var t = [];
+                $.each(response.data.users, function(user) {
+                    t.push(this.name+' ('+this.email+')');
+                    $('#onlineUsers').html($('#onlineUsers').html()+' <span class="badge badge-secondary" title="'+this.email+'">'+this.name+'</span>');
+                    $('#ctrOnline').attr('title', t.join('; '));
+                })
+            });
+
+
+        }
+
+        function enableStackTraceButtons() {
+            $('.btnToggleStack').click(function(e){
+                e.preventDefault();
+                $(this).parent().find('pre').first().toggle();
+            });
+        }
+
+
+        $(document).ready(function(){
+            setTimeout(updateCounters, 1000);
+            updateCounters();
+            enableStackTraceButtons();
+
+            $('.card-counter').click(function(e) {
+                if ($(this).data('route')) {
+                    window.location.href=$(this).data('route');
+                }
+            });
+        });
+    </script>
+
 @endsection

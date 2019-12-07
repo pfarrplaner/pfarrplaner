@@ -3,7 +3,7 @@
 @section('title', 'Herzlich willkommen')
 
 @section('content')
-    @component('components.container')
+    @component('components.ui.card')
         <h1>Willkommen, {{ $user->name }}!</h1>
         <a class="btn btn-primary btn-lg" href="{{ route('calendar') }}"><span class="fa fa-calendar"></span> Zum Kalender</a>
         <hr />
