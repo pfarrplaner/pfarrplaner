@@ -147,7 +147,7 @@ class CalendarController extends Controller
         }
 
         // determine orientation and view name;
-        $defaultOrientation = $user->getSetting('calendar_view') == 'month_vertical' ? 'vertical' : 'horizontal';
+        $defaultOrientation = $user->getSetting('calendar_view', 'horizontal') == 'month_vertical' ? 'vertical' : 'horizontal';
         $orientation = $request->get('orientation', $defaultOrientation);
         $user->setSetting('calendar_view', $orientation);
 
