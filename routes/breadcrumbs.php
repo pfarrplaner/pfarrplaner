@@ -2,6 +2,30 @@
 
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
+Breadcrumbs::for('admin', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('Administration');
+});
+
+
+Breadcrumbs::for('cities.index', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('admin');
+    $trail->push('Kirchengemeinden', route('cities.index'));
+});
+
+Breadcrumbs::for('cities.create', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('cities.index');
+    $trail->push('Neue Kirchengemeinde', route('cities.create'));
+});
+
+Breadcrumbs::for('cities.edit', function (BreadcrumbsGenerator $trail, $city) {
+    $city = \App\City::find($city);
+    $trail->parent('cities.index');
+    $trail->push($city->name, route('cities.edit', $city));
+});
+
+
+
 Breadcrumbs::for('home', function (BreadcrumbsGenerator $trail) {
     $trail->push('<i class="fa fa-home" title="Zurück zur Übersicht"></i>', route('home'));
 });
@@ -46,6 +70,10 @@ Breadcrumbs::for('inputs.input', function (BreadcrumbsGenerator $trail, $input) 
     $trail->push('Eingabe', route('inputs.input', $input));
 });
 
+Breadcrumbs::for('login', function (BreadcrumbsGenerator $trail) {
+    $trail->push('Anmelden');
+});
+
 Breadcrumbs::for('reports.list', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Ausgabeformate', route('reports.list'));
@@ -71,10 +99,21 @@ Breadcrumbs::for('reports.render', function (BreadcrumbsGenerator $trail, $repor
     $trail->push('Einbetten', route('reports.render', ['report' => $report->getKey()]));
 });
 
-Breadcrumbs::for('admin', function (BreadcrumbsGenerator $trail) {
-    $trail->parent('home');
-    $trail->push('Administration');
+Breadcrumbs::for('roles.index', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('admin');
+    $trail->push('Benutzerrollen', route('roles.index'));
 });
+
+Breadcrumbs::for('roles.create', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('roles.index');
+    $trail->push('Neue Benutzerrolle', route('roles.create'));
+});
+
+Breadcrumbs::for('roles.edit', function (BreadcrumbsGenerator $trail, \Spatie\Permission\Models\Role $role) {
+    $trail->parent('roles.index');
+    $trail->push($role->name, route('roles.edit', $role));
+});
+
 
 Breadcrumbs::for('users.index', function (BreadcrumbsGenerator $trail) {
     $trail->parent('admin');

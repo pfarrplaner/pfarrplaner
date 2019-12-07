@@ -3,8 +3,10 @@
 
 @section('navbar-left')
     @can('create', \App\User::class)
-        <a class="btn btn-navbar" href="{{ route('users.create') }}"><i class="fa fa-user-plus"></i> Neuen Benutzer
-            hinzufügen</a>
+        <li class="nav-item">
+            <a class="btn btn-navbar" href="{{ route('users.create') }}"><i class="fa fa-user-plus"></i> Neuen Benutzer
+                hinzufügen</a>
+        </li>
     @endcan
 @endsection
 
@@ -30,7 +32,7 @@
                 </div>
             @endcomponent
             @component('components.ui.card')
-                <table class="table table-striped" id="tblUsers">
+                <table class="table table-striped table-hover" id="tblUsers">
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -87,9 +89,11 @@
         </div>
         @can('benutzer-bearbeiten')
             <div role="tabpanel" class="tab-pane fade" id="otherPeople">
-                <div class="alert alert-info">Hier findest du eine Übersicht von Personen, die irgendwo im Plan eingetragen wurden, aber keinen
+                <div class="alert alert-info">Hier findest du eine Übersicht von Personen, die irgendwo im Plan
+                    eingetragen wurden, aber keinen
                     eigenen Benutzerzugang haben. Du kannst eine Person zum Benutzer machen, indem du ihr
-                    Benutzernamen und Passwort gibst.</div>
+                    Benutzernamen und Passwort gibst.
+                </div>
                 @component('components.ui.card')
                     @slot('cardHeader')Suchen @endslot
                     <div class="form-group">
@@ -98,7 +102,7 @@
                     </div>
                 @endcomponent
                 @component('components.ui.card')
-                    <table class="table table-striped" id="tblPeople">
+                    <table class="table table-striped table-hover" id="tblPeople">
                         <thead>
                         <tr>
                             <th>Name</th>

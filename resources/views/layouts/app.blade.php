@@ -49,27 +49,31 @@
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
-            @yield('navbar-left')
+            @auth
+                @yield('navbar-left')
+            @endauth
         </ul>
 
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            <!-- Notifications Dropdown Menu -->
-            @component('components.ui.notifications')
-            @endcomponent
-            @component('components.ui.whatsnew')
-            @endcomponent
-            <li class="nav-item" id="toggleControlSidebar" style="display: none;">
-                <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
-                            class="fas fa-cogs"></i></a>
-            </li>
-            <li class="nav-item">
-                <a class="btn btn-navbar">
-                    <i class="fa fa-power-off"></i>
-                    Abmelden
-                </a>
-            </li>
+            @auth
+                <!-- Notifications Dropdown Menu -->
+                @component('components.ui.notifications')
+                @endcomponent
+                @component('components.ui.whatsnew')
+                @endcomponent
+                <li class="nav-item" id="toggleControlSidebar" style="display: none;">
+                    <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
+                                class="fas fa-cogs"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-navbar" href="{{ route('logout') }}">
+                        <i class="fa fa-power-off"></i>
+                        Abmelden
+                    </a>
+                </li>
+            @endauth
         </ul>
     </nav>
     <!-- /.navbar -->
@@ -85,6 +89,7 @@
 
         <!-- Sidebar -->
         <div class="sidebar">
+            @auth
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
@@ -136,6 +141,7 @@
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->
+            @endauth
         </div>
         <!-- /.sidebar -->
     </aside>
