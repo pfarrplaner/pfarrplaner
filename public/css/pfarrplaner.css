@@ -30,6 +30,24 @@ ul.nav-tabs {
     background-color: #DCD0FF;
 }
 
+body.slave nav,
+body.slave aside,
+body.slave footer {
+    display: none;
+}
+
+body.slave .content-wrapper {
+    min-height: 100vh;
+    margin-left: 0px !important;
+    font-size: .8rem;
+}
+
+body.calendar .content,
+body.calendar .container-fluid {
+    margin: 0;
+    padding: 0;
+}
+
 body.calendar .content-header {
     display: none;
 }

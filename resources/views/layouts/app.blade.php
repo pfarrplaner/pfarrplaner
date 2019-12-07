@@ -39,7 +39,7 @@
     <meta name="msapplication-config" content="/img/favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 </head>
-<body class="hold-transition sidebar-mini sidebar-collapse {{ strtolower(str_replace('.', '-', Request::route()->getName())) }} @if(isset($slave)) slave @endif">
+<body class="hold-transition sidebar-mini sidebar-collapse {{ strtolower(str_replace('.', '-', Request::route()->getName())) }} @if(isset($slave) && $slave) slave @endif">
 
 <div class="wrapper">
     <!-- Navbar -->
@@ -178,13 +178,6 @@
     </aside>
     <!-- /.control-sidebar -->
 
-    <!-- Main Footer -->
-    <footer class="main-footer">
-        <strong>{!!  env('APP_COPYRIGHTS') !!}</strong>
-        <div class="float-right d-none d-sm-inline-block">
-            <b>Version</b> {{ \App\Misc\VersionInfo::version() }}
-        </div>
-    </footer>
 </div>
 <!-- ./wrapper -->
 

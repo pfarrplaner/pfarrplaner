@@ -48,6 +48,5 @@
                 </tbody>
             </table>
         </div>
-        <hr/>
     </div>
 @endcomponent

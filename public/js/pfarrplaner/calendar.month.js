@@ -22,9 +22,6 @@ $(document).ready(function () {
 
     if (slave) {
         var t = setInterval(checkForUpdates, 2000);
-
-        $('nav, aside, footer').hide();
-        $('.content-wrapper').attr('style', 'min-height: 100vh; margin-left: 0px !important; font-size: .8rem;');
     }
 
 
