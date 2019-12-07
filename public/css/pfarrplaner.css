@@ -401,13 +401,17 @@ ul.sortable li.placeholder:before {
 }
 
 .tbl-absences td.cal-cell.day_Sun,
-.tbl-absences th.cal-cell.day_Sun
+.tbl-absences th.cal-cell.day_Sun,
+.tbl-absences td.cal-cell.day_So,
+.tbl-absences th.cal-cell.day_So
 {
     background-color: lightpink;
 }
 
 
-.tbl-absences th.cal-cell.day_Sun {
+.tbl-absences th.cal-cell.day_Sun,
+.tbl-absences th.cal-cell.day_So
+{
     color: red;
 }
 
@@ -423,7 +427,8 @@ ul.sortable li.placeholder:before {
     background-color: lightgreen;
 }
 
-.tbl-absences td.cal-cell.busy.day_Sun {
+.tbl-absences td.cal-cell.busy.day_Sun,
+.tbl-absences td.cal-cell.busy.day_So {
     background-color: #ff6666;
 }
 
