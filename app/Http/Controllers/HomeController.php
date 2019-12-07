@@ -65,7 +65,7 @@ class HomeController extends Controller
     public function changePassword(Request $request){
         if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
             // The passwords matches
-            return redirect()->back()->with("error","Your current password does not matches with the password you provided. Please try again.");
+            return redirect()->back()->with("error","Your current password does not match with the password you provided. Please try again.");
         }
         if(strcmp($request->get('current-password'), $request->get('new-password')) == 0){
             //Current password and new password are same
@@ -95,6 +95,7 @@ class HomeController extends Controller
 
     public function whatsnew() {
         $messages = VersionInfo::getMessages()->sortByDesc('date');
+        Auth::user()->setSetting('new_features', \Carbon\Carbon::now());
         return view('whatsnew', compact('messages'));
     }
 
@@ -120,4 +121,5 @@ class HomeController extends Controller
         }
         return response()->json(compact('count', 'data'));
     }
+
 }

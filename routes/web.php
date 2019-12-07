@@ -191,3 +191,7 @@ Route::get('vue', function(){
 Route::resource('revisions', 'RevisionController');
 Route::post('revisions', 'RevisionController@index')->name('revisions.index.post');
 Route::post('revisions/revert', 'RevisionController@revert')->name('revisions.revert');
+
+
+// new features
+Route::get('featues', 'HomeController@features');

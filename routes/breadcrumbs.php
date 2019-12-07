@@ -261,6 +261,11 @@ Breadcrumbs::for('wedding.add', function (BreadcrumbsGenerator $trail, $service)
     $trail->push('Neue Trauung', route('wedding.add', $service));
 });
 
+Breadcrumbs::for('whatsnew', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('Neue Features', route('whatsnew'));
+});
+
 Breadcrumbs::for('weddings.edit', function (BreadcrumbsGenerator $trail, $wedding) {
     $trail->parent('services.edit', $wedding->service->id);
     $trail->push('Trauung von '.$wedding->spouse1_name.' & '.$wedding->spouse2_name, route('weddings.edit', $wedding));

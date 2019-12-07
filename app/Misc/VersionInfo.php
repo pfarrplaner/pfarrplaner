@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2019-12-07 16:00', 'Europe/Berlin'),
+                'text' => 'Der Pfarrplaner erscheint seit heute im neuen, übersichtlicheren Layout.',
+            ],
+            [
                 'date' => Carbon::createFromFormat('d.m.Y', '25.11.2019'),
                 'text' => 'Beim Export nach Outlook (rechts oben auf <a href="'.route('ical.connect').'"><span class="fa fa-calendar-alt"></span></a> klicken) kann nun ein kombinierter Veranstaltungskalender für eine Gemeinde erzeugt werden. Dieser kombiniert Einträge aus dem Pfarrplaner, aus einem freigegebenen Outlookkalender und aus dem Online-Planer des Gemeindebaukastens.',
             ],

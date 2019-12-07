@@ -59,8 +59,6 @@
         <ul class="navbar-nav ml-auto">
             @auth
                 <!-- Notifications Dropdown Menu -->
-                @component('components.ui.notifications')
-                @endcomponent
                 @component('components.ui.whatsnew')
                 @endcomponent
                 <li class="nav-item" id="toggleControlSidebar" style="display: none;">
@@ -165,6 +163,7 @@
         <!-- Main content -->
         <div class="content">
             <div class="container-fluid">
+                @include('components.flashmessage')
                 @yield('content')
             </div>
         </div>
