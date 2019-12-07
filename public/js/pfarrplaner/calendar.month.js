@@ -18,7 +18,9 @@ $(document).ready(function () {
     setLimitedColumnStatus();
 
     // open limited days with services that belong to me
-    $('.limited .service-entry.mine').parent().parent().removeClass('collapsed');
+    $('.limited .service-entry.mine').each(function(){
+        $('[data-day=' + $(this).data('day') + ']').removeClass('collapsed');
+    });
 
     if (slave) {
         var t = setInterval(checkForUpdates, 2000);

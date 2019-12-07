@@ -75,6 +75,11 @@ body.calendar .content-header {
     background-color: #DCD0FF;
 }
 
+.calendar-month th.collapsed .card,
+.calendar-month th.collapsed .vacation {
+    display: none;
+}
+
 
 .calendar-month th.limited.collapsed,
 .calendar-month td.limited.collapsed {
