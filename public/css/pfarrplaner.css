@@ -30,6 +30,10 @@ ul.nav-tabs {
     background-color: #DCD0FF;
 }
 
+body.calendar .content-header {
+    display: none;
+}
+
 .calendar-month {
     padding: 0 5px;
 }
