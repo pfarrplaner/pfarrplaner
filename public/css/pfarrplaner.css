@@ -32,15 +32,21 @@ ul.nav-tabs {
 
 body.slave nav,
 body.slave aside,
-body.slave footer {
+body.slave footer,
+body.login nav,
+body.login footer {
     display: none;
 }
 
-body.slave .content-wrapper {
+
+body.slave .content-wrapper,
+body.login .content-wrapper {
     min-height: 100vh;
     margin-left: 0px !important;
     font-size: .8rem;
 }
+
+
 
 body.calendar .content,
 body.calendar .container-fluid {
