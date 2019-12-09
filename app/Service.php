@@ -453,6 +453,35 @@ class Service extends Model
     }
 
 
+    public function associateParticipants(Request $request, Service $service) {
+        $participants = [];
+        foreach (($request->get('participants') ?: []) as $category => $participantList) {
+            foreach ($participantList as $participant) {
+                $participant = $this->createUserIfNotExists($participant);
+                $participants[$category][$participant]['category'] = $category;
+            }
+        }
+
+        $ministries = $request->get('ministries') ?: [];
+        foreach ($ministries as $ministry) {
+            if (isset($ministry['people'])) {
+                foreach ($ministry['people'] as $participant) {
+                    $participant = $this->createUserIfNotExists($participant);
+                    $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
+                }
+            }
+        }
+        if (count($participants)) {
+            $this->participants()->sync([]);
+            foreach ($participants as $category => $participant) {
+                $this->participants()->attach($participant);
+            }
+        }
+        return $participants;
+    }
+    
+    
+
     /**
      * Mix a collection of services into an array of events
      * @param $events

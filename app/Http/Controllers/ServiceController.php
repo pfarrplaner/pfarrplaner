@@ -63,7 +63,7 @@ class ServiceController extends Controller
         $service->setDefaultOfferingValues();
         $service->save();
 
-        $this->associateParticipants($request, $service);
+        $service->associateParticipants($request, $service);
         if (count($service->pastors)) {
             $service->need_predicant = false;
             $service->save();
@@ -105,8 +105,7 @@ class ServiceController extends Controller
     public function edit(Request $request, $id, $tab = 'home')
     {
 
-        $service = Service::find($id);
-        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
+        $service = Service::with(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings'])->find($id);
 
         $ministries = Participant::all()
             ->pluck('category')
@@ -162,32 +161,6 @@ class ServiceController extends Controller
         return $participant;
     }
 
-    protected function associateParticipants(Request $request, Service $service) {
-        $participants = [];
-        foreach (($request->get('participants') ?: []) as $category => $participantList) {
-            foreach ($participantList as $participant) {
-                $participant = $this->createUserIfNotExists($participant);
-                $participants[$category][$participant]['category'] = $category;
-            }
-        }
-
-        $ministries = $request->get('ministries') ?: [];
-        foreach ($ministries as $ministry) {
-            if (isset($ministry['people'])) {
-                foreach ($ministry['people'] as $participant) {
-                    $participant = $this->createUserIfNotExists($participant);
-                    $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
-                }
-            }
-        }
-        if (count($participants)) {
-            $service->participants()->sync([]);
-            foreach ($participants as $category => $participant) {
-                $service->participants()->attach($participant);
-            }
-        }
-        return $participants;
-    }
 
     /**
      * Update the specified resource in storage.
@@ -204,8 +177,8 @@ class ServiceController extends Controller
             $originalParticipants[$key] = $original->participantsText($key);
         }
 
-        $participants = $this->associateParticipants($request, $service);
         $service->save();
+        $participants = $service->associateParticipants($request, $service);
 
 
         $day = Day::find($request->get('day_id'));
