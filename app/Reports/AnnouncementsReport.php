@@ -74,12 +74,12 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             ->select('services.*')
             ->join('days', 'services.day_id', 'days.id')
             ->whereHas('day', function ($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now()->subHours(8));
             })->orderBy('days.date')
             ->orderBy('time')
             ->get();
 
-        return $this->renderView('configure', compact('cities', 'services'));
+        return $this->renderView('configure', compact('city', 'services'));
     }
 
     public function input(Request $request)
