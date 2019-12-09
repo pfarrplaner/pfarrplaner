@@ -582,3 +582,16 @@ ul.sortable li.placeholder:before {
     cursor: inherit;
     display: block;
 }
+
+
+body.sidebar-collapse .main-sidebar .hidden-collapsed {
+    display: none;
+}
+
+body.sidebar-collapse .main-sidebar:hover .hidden-collapsed {
+    display: block;
+}
+
+body.sidebar-collapse .main-sidebar:hover .sidebar-form label {
+    color: gray;
+}

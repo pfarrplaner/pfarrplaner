@@ -137,6 +137,14 @@
             </nav>
             <!-- /.sidebar-menu -->
             @endauth
+            @guest
+                <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed">
+                    @csrf
+                    @input(['name' => 'email', 'label' => 'Benutzername']) @endinput
+                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password']) @endinput
+                    <input type="submit" class="btn btn-primary" value="Anmelden" />
+                </form>
+            @endguest
         </div>
         <!-- /.sidebar -->
     </aside>
