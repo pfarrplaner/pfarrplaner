@@ -35,7 +35,13 @@ Breadcrumbs::for('baptisms.create', function (BreadcrumbsGenerator $trail) {
 });
 
 Breadcrumbs::for('baptisms.edit', function (BreadcrumbsGenerator $trail, $baptism) {
-    $trail->parent('services.edit', $baptism->service->id);
+    if (!is_object($baptism)) $baptism = Baptism::find($baptism);
+    if (is_object($baptism->service)) {
+        $trail->parent('services.edit', $baptism->service->id);
+    } else {
+        $trail->parent('home');
+        $trail->push('Taufanfragen');
+    }
     $trail->push('Taufe von '.$baptism->candidate_name, route('baptisms.edit', $baptism));
 });
 
