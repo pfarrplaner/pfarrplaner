@@ -49,9 +49,7 @@
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
-            @auth
-                @yield('navbar-left')
-            @endauth
+            @yield('navbar-left')
         </ul>
 
 

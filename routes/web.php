@@ -51,15 +51,6 @@ Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])
 Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name('calendar.printsetup');
 Route::post('/calendar/{year?}/{month?}/print', ['uses' => 'CalendarController@print'])->name('calendar.print');
 
-
-// Calendar (JS version)
-Route::get('/calendarjs/{year?}/{month?}', ['uses' => 'CalendarController@monthJS'])->name('calendarjs');
-Route::get('/ajax/servicesByCityAndDay/{cityId}/{dayId}/', ['uses' => 'ServiceController@servicesByCityAndDay'])->name('servicesByCityAndDay');
-Route::get('/ajax/vacationsByDay/{dayId}/', ['uses' => 'VacationController@vacationsByDay'])->name('vacationsByDay');
-Route::get('/ajax/liturgicalInfo/{dayId}/', ['uses' => 'LiturgicalDaysController@info'])->name('liturgicalInfo');
-
-
-
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
 Route::get('/report/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
@@ -153,39 +144,6 @@ Route::get('/lastUpdate', ['as' => 'lastUpdate', 'uses' => 'ServiceController@la
 
 // counters
 Route::get('/counter/{counter}', ['as' => 'counter', 'uses' => 'HomeController@counters']);
-
-
-// utility to create storage link
-Route::get('/createStorageLink', function () {
-    Artisan::call('storage:link');
-});
-
-// helper routes
-Route::get('/helper/schedule/run' , function(){
-    ignore_user_abort(true);
-    Artisan::call('schedule:run');
-    return 'OK';
-});
-
-
-Route::get('/liturgyCache', function() {
-    //\App\Liturgy::getDayInfo(\App\Day::find(144));
-   dd(\Illuminate\Support\Facades\Cache::get('liturgicalDays'));
-});
-
-
-// current tests
-Route::get('test', function(\Illuminate\Http\Request $request){
-    Mail::raw('Test', function($message){
-        $message->from('noreply@pfarrplaner.de');
-        $message->to('chris@toph.de')->subject('Testing');
-    });
-});
-
-// tests with vue
-Route::get('vue', function(){
-   return response()->view('vue/app');
-});
 
 // revisions
 Route::resource('revisions', 'RevisionController');

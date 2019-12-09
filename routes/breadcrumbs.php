@@ -44,6 +44,12 @@ Breadcrumbs::for('calendar', function (BreadcrumbsGenerator $trail) {
     $trail->push('Gottesdienste', route('calendar'));
 });
 
+Breadcrumbs::for('cc-public', function (BreadcrumbsGenerator $trail, $city) {
+    $trail->parent('home');
+    $trail->push('Kinderkirche', route('cc-public', $city));
+});
+
+
 Breadcrumbs::for('funeral.add', function (BreadcrumbsGenerator $trail, $service) {
     $trail->parent('services.edit', $service);
     $trail->push('Neue Bestattung', route('funeral.add', $service));

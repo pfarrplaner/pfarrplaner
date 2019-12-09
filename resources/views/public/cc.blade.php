@@ -2,14 +2,15 @@
 
 @section('title')Kinderkirche {{ $city->name }}@endsection
 
-@section('content')
-    @component('components.container')
-        <h1>Kinderkirche {{ $city->name }}</h1>
-        <p><b>Von {{ $start->format('d.m.Y') }} bis {{ $end->format('d.m.Y') }}</b></p>
+@section('navbar-left')
+    <li class="nav-item">
         <a class="btn btn-primary btn-lg" href="{{ route('cc-public-pdf', $city->name) }}"><span
                     class="fa fa-file-pdf"></span> Als PDF herunterladen</a>
-        <hr/>
+    </li>
+@endsection
 
+@section('content')
+    @component('components.ui.card')
         @if($count)
 
             <table class="table table-fluid table-striped">
