@@ -139,7 +139,7 @@ class BaptismController extends Controller
         }
         $baptismalServices = $baptismalServicesQuery->get();
 
-        $cities = City::all();
+        $cities = Auth::user()->writableCities;
 
         $otherServices = $this->getBaptismalServices(0);
         return view('baptisms.edit', compact('baptism', 'baptismalServices', 'otherServices', 'cities'));

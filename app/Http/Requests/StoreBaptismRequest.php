@@ -39,7 +39,7 @@ class StoreBaptismRequest extends FormRequest
     {
         return [
             'service' => 'nullable|exists:services,id',
-            'candidate_name' => 'required',
+            'candidate_name' => 'required|regex:/^(\w*), (\w*)$/i',
             'candidate_email' => 'nullable|email',
             'candidate_zip' => 'nullable|zip',
             'candidate_phone' => 'nullable|phone_number',
