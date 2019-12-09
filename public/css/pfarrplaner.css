@@ -599,3 +599,8 @@ body.sidebar-collapse .main-sidebar:hover .sidebar-form label {
 body.login .main-sidebar:hover .login-form.hidden-collapsed {
     display: none !important;
 }
+
+.form-group.required label:after {
+    content: ' *';
+    color: red;
+}

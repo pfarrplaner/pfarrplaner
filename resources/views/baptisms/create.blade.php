@@ -18,7 +18,7 @@
                     @else
                         <div class="form-group">
                             <label for="service">Taufgottesdienst</label>
-                            <select name="service" class="form-control">
+                            <select name="service" class="form-control fancy-selectize" @if ($errors->has('service'))is-invalid @endif>
                                 <option value="">-- noch kein Datum festgelegt --</option>
                                 <optgroup label="Taufgottesdienste">
                                     @foreach($baptismalServices as $baptismalService)
@@ -50,99 +50,39 @@
                                     @endforeach
                                 </optgroup>
                             </select>
+                            @if($errors->has('service'))
+                                @foreach($errors->get('service') as $message)
+                                    <div class="invalid-feedback">{!! $message !!}</div>
+                                @endforeach
+                            @endif
                         </div>
                     @endif
-                    <div id="citySelect" class="form-group" @if (null !== $service) style="display:none;" @endif>
-                        <label for="city_id">Kirchengemeinde</label>
-                        <select class="form-control" name="city_id">
-                            @foreach ($cities as $city)
-                                <option value="{{ $city->id }}">{{ $city->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="candidate_name">Name des Täuflings</label>
-                        <input type="text" class="form-control" name="candidate_name" placeholder="Nachname, Vorname"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="candidate_address">Adresse</label>
-                        <input type="text" class="form-control" name="candidate_address"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="candidate_zip">PLZ</label>
-                        <input type="text" class="form-control" name="candidate_zip"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="candidate_city">Ort</label>
-                        <input type="text" class="form-control" name="candidate_city"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="candidate_phone">Telefon</label>
-                        <input type="text" class="form-control" name="candidate_phone"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="candidate_email">E-Mail</label>
-                        <input type="text" class="form-control" name="candidate_email"/>
-                    </div>
+                    @if(null === $service)
+                        @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect']) @endselectize
+                    @endif
+                    @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1]) @endinput
+                    @input(['name' => 'candidate_address', 'label' => 'Adresse']) @endinput
+                    @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$']) @endinput
+                    @input(['name' => 'candidate_city', 'label' => 'Ort']) @endinput
+                    @input(['name' => 'candidate_phone', 'label' => 'Telefon']) @endinput
+                    @input(['name' => 'candidate_email', 'label' => 'E-Mail']) @endinput
                 @endcomponent
 
             </div>
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Vorbereitung @endslot
-                        <div class="form-group">
-                            <label for="first_contact_with">Erstkontakt mit</label>
-                            <input type="text" class="form-control" name="first_contact_with"
-                                   value="{{ Auth::user()->name }}"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="first_contact_on">Datum des Erstkontakts</label>
-                            <input type="text" class="form-control datepicker" name="first_contact_on"
-                                   placeholder="tt.mm.jjjj"
-                                   value="{{ date('d.m.Y') }}"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="appointment">Taufgespräch</label>
-                            <input type="text" class="form-control datetimepicker datetimepicker-input"
-                                   id="appointmentpicker"
-                                   data-toggle="datetimepicker" data-target="#appointmentpicker" name="appointment"
-                                   placeholder="tt.mm.jjjj HH:MM"/>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input type="checkbox" name="registered" value="1" autocomplete="off">
-                                <label class="form-check-label">
-                                    Anmeldung erhalten
-                                </label>
-                            </div>
-                        </div>
+                    @input(['name' => 'first_contact_with', 'label' => 'Erstkontakt mit']) @endinput
+                    @input(['name' => 'first_contact_on', 'label' => 'Erstkontakt am', 'placeholder' => 'tt.mm.jjjj', 'value' => date('d.m.Y'), 'class' => 'datepicker']) @endinput
+                    @datetimepicker(['name' => 'appointment', 'label' => 'Taufgespräch', 'placeholder' => 'tt.mm.jjjj HH:MM']) @enddatetimepicker
+                    @checkbox(['name' => 'registered', 'label' => 'Anmeldung erhalten']) @endcheckbox
                 @endcomponent
                 @component('components.ui.card')
                     @slot('cardHeader')Dokumente @endslot
-                        <div class="form-group">
-                            <label for="registration_document">PDF des Anmeldedokuments</label>
-                            <input type="file" name="registration_document" class="form-control"/>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input type="checkbox" name="signed" value="1" autocomplete="off">
-                                <label class="form-check-label">
-                                    Anmeldung unterschrieben
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input type="checkbox" name="docs_ready" value="1" autocomplete="off">
-                                <label class="form-check-label">
-                                    Urkunden gedruckt
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="docs_where">Wo sind die Urkunden hinterlegt?</label>
-                            <input type="text" class="form-control" name="docs_where"/>
-                        </div>
+                    @upload(['name' => 'registration_document', 'label' => 'PDF des Anmeldedokuments']) @endupload
+                    @checkbox(['name' => 'signed', 'label' => 'Anmeldung unterschrieben']) @endcheckbox
+                    @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt']) @endcheckbox
+                    @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?']) @endinput
                 @endcomponent
 
             </div>

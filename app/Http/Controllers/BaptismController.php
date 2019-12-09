@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Baptism;
 use App\City;
+use App\Http\Requests\StoreBaptismRequest;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -65,16 +66,11 @@ class BaptismController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreBaptismRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBaptismRequest $request)
     {
-        $request->validate([
-            'candidate_name' => 'required',
-            'city_id' => 'required|integer',
-        ]);
-
         $baptism = new Baptism([
             'city_id' => $request->get('city_id'),
             'candidate_name' => $request->get('candidate_name') ?: '',
@@ -152,17 +148,12 @@ class BaptismController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreBaptismRequest  $request
      * @param  \App\Baptism  $baptism
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Baptism $baptism)
+    public function update(StoreBaptismRequest $request, Baptism $baptism)
     {
-        $request->validate([
-            'candidate_name' => 'required',
-            'city_id' => 'required|integer',
-        ]);
-
         $serviceId = $request->get('service');
         if ($serviceId) {
             $baptism->service_id = $serviceId;

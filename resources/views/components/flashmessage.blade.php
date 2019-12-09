@@ -19,6 +19,10 @@
 @endforeach
 
 @if ($errors->any())
+    <div class="alert alert-danger alert-block">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        Bitte überprüfe deine Eingaben.
+    </div>
     @foreach($errors->all() as $message)
         <div class="alert alert-danger alert-block">
             <button type="button" class="close" data-dismiss="alert">×</button>
