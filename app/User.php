@@ -189,6 +189,42 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class);
     }
 
+    public static function createIfNotExists($name) {
+        if ((!is_numeric($name)) || (User::find($name) === false)) {
+            $title = $firstName = $lastName = '';
+            if (false === strpos($name, '_')) {
+                // split participant name into its parts
+                $tmp = explode(' ', $name);
+                if (count($tmp) == 3) {
+                    $title = array_shift($tmp);
+                }
+                if (count($tmp) == 2) {
+                    $firstName = array_shift($tmp);
+                }
+                $lastName = array_shift($tmp);
+            } elseif ((substr($name, 0, 1) == '"') && (substr($name, -1, 1)=='"')) {
+                // allow submitting participant names in double quotes ("participant name"), which will prevent splitting
+                $name = substr($name, 1, -1);
+            } else {
+                // allow submitting participant name with an underscore, which will prevent splitting
+                $name = str_replace('_', ' ', $name);
+            }
+            $user = new User([
+                'name' => $name,
+                'office' => '',
+                'phone' => '',
+                'address' => '',
+                'preference_cities' => '',
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'title' => $title,
+            ]);
+            $user->save();
+            $name = $user->id;
+        }
+        return $name;
+    }
+
 
     /**
      * Get a single subscription for a specific city

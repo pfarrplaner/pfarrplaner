@@ -453,11 +453,11 @@ class Service extends Model
     }
 
 
-    public function associateParticipants(Request $request, Service $service) {
+    public function associateParticipants(StoreServiceRequest $request, Service $service) {
         $participants = [];
         foreach (($request->get('participants') ?: []) as $category => $participantList) {
             foreach ($participantList as $participant) {
-                $participant = $this->createUserIfNotExists($participant);
+                $participant = User::createIfNotExists($participant);
                 $participants[$category][$participant]['category'] = $category;
             }
         }
@@ -466,7 +466,7 @@ class Service extends Model
         foreach ($ministries as $ministry) {
             if (isset($ministry['people'])) {
                 foreach ($ministry['people'] as $participant) {
-                    $participant = $this->createUserIfNotExists($participant);
+                    $participant = User::createIfNotExists($participant);
                     $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
                 }
             }
@@ -478,6 +478,13 @@ class Service extends Model
             }
         }
         return $participants;
+    }
+    
+    public function checkIfPredicantNeeded() {
+        if (count($this->pastors)) {
+            $this->need_predicant = false;
+            $this->save();
+        }
     }
     
     

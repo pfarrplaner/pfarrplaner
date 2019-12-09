@@ -64,10 +64,7 @@ class ServiceController extends Controller
         $service->save();
 
         $service->associateParticipants($request, $service);
-        if (count($service->pastors)) {
-            $service->need_predicant = false;
-            $service->save();
-        }
+        $service->checkIfPredicantNeeded();
 
 
         $tags = $request->get('tags') ?: [];
@@ -125,42 +122,6 @@ class ServiceController extends Controller
         return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute', 'tags', 'serviceGroups', 'ministries'));
     }
 
-    protected function createUserIfNotExists($participant) {
-        if ((!is_numeric($participant)) || (User::find($participant) === false)) {
-            $title = $firstName = $lastName = '';
-            if (false === strpos($participant, '_')) {
-                // split participant name into its parts
-                $tmp = explode(' ', $participant);
-                if (count($tmp) == 3) {
-                    $title = array_shift($tmp);
-                }
-                if (count($tmp) == 2) {
-                    $firstName = array_shift($tmp);
-                }
-                $lastName = array_shift($tmp);
-            } elseif ((substr($participant, 0, 1) == '"') && (substr($participant, -1, 1)=='"')) {
-                // allow submitting participant names in double quotes ("participant name"), which will prevent splitting
-                $participant = substr($participant, 1, -1);
-            } else {
-                // allow submitting participant name with an underscore, which will prevent splitting
-                $participant = str_replace('_', ' ', $participant);
-            }
-            $user = new User([
-                'name' => $participant,
-                'office' => '',
-                'phone' => '',
-                'address' => '',
-                'preference_cities' => '',
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'title' => $title,
-            ]);
-            $user->save();
-            $participant = $user->id;
-        }
-        return $participant;
-    }
-
 
     /**
      * Update the specified resource in storage.
@@ -171,67 +132,20 @@ class ServiceController extends Controller
      */
     public function update(StoreServiceRequest $request, Service $service)
     {
-        $id = $service->id;
         $original = clone $service;
         foreach (['P', 'O', 'M', 'A'] as $key) {
             $originalParticipants[$key] = $original->participantsText($key);
         }
 
-        $service->save();
-        $participants = $service->associateParticipants($request, $service);
+        $service->associateParticipants($request, $service);
+        $service->checkIfPredicantNeeded();
 
-
-        $day = Day::find($request->get('day_id'));
-
-        if ($specialLocation = ($request->get('special_location') ?: '')) {
-            $locationId = 0;
-            $time = $request->get('time') ?: '';
-            $ccLocation = $request->get('cc_location') ?: '';
-        } else {
-            $locationId = $request->get('location_id') ?: 0;
-            if ($locationId) {
-                $location = Location::find($locationId);
-                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
-                $time = $request->get('time') ?: $location->default_time;
-            } else {
-                $time = $request->get('time') ?: '';
-                $ccLocation = $request->get('cc_location') ?: '';
-            }
-        }
-
-        $service->day_id = $day->id;
-        $service->location_id = $locationId;
-        $service->time = $time;
-        $service->description = $request->get('description') ?: '';
-        $service->city_id = $request->get('city_id');
-        $service->special_location = $specialLocation;
-        $service->need_predicant = $request->get('need_predicant') ? 1 : 0;
-        $service->baptism = $request->get('baptism') ? 1 : 0;
-        $service->eucharist = $request->get('eucharist') ? 1 : 0;
-        $service->offerings_counter1 = $request->get('offerings_counter1') ?: '';
-        $service->offerings_counter2 = $request->get('offerings_counter2') ?: '';
-        $service->offering_goal = $request->get('offering_goal') ?: '';
-        $service->offering_description = $request->get('offering_description') ?: '';
-        $service->offering_type = $request->get('offering_type') ?: '';
-        $service->others = $request->get('others') ?: '';
-        $service->cc = $request->get('cc') ? 1 : 0;
-        $service->cc_location = $ccLocation;
-        $service->cc_lesson = $request->get('cc_lesson') ?: '';
-        $service->cc_alt_time = $request->get('cc_alt_time') ?: '';
-        $service->cc_staff = $request->get('cc_staff') ?: '';
-        $service->internal_remarks = $request->get('internal_remarks') ?: '';
-        $service->offering_amount = $request->get('offering_amount', '');
+        $service->fill($request->all());
+        $service->setTimeAndPlaceFromRequest($request);
         $service->setDefaultOfferingValues();
 
-
-
-        if (count($service->pastors)) $service->need_predicant = false;
-
-        $tags = $request->get('tags') ?: [];
-        $service->tags()->sync($tags);
-
-        $serviceGroups = $request->get('serviceGroups') ?: [];
-        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
+        $service->tags()->sync($request->get('tags') ?: []);
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
 
         // notify:
         // (needs to happen before save, so the model is still dirty
@@ -244,7 +158,7 @@ class ServiceController extends Controller
             return redirect($route)->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
         } else {
             // default: redirect to calendar
-            return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+            return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->dayction->date->month])
                 ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
 
         }
