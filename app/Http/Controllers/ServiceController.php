@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Day;
+use App\Http\Requests\StoreServiceRequest;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Mail\ServiceUpdated;
@@ -51,88 +52,34 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  StoreServiceRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
-        $request->validate([
-            'day_id' => 'required|integer',
-        ]);//
 
-        if ($specialLocation = ($request->get('special_location') ?: '')) {
-            $locationId = 0;
-            $time = $request->get('time') ?: '';
-            $ccLocation = $request->get('cc_location') ?: '';
-        } else {
-            $locationId = $request->get('location_id') ?: 0;
-            if ($locationId) {
-                $location = Location::find($locationId);
-                $time = $request->get('time') ?: $location->default_time;
-                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
-            } else {
-                $time = $request->get('time') ?: '';
-                $ccLocation = $request->get('cc_location') ?: '';
-            }
-        }
-
-        $day = Day::find($request->get('day_id'));
-
-        $service = new Service([
-            'day_id' => $day->id,
-            'location_id' => $locationId,
-            'time' => $time,
-            'special_location' => $specialLocation,
-            'city_id' => $request->get('city_id'),
-            'others' => '',
-            'description' => $request->get('description') ?: '',
-            'need_predicant' => $request->get('need_predicant') ? 1 : 0,
-            'baptism' => $request->get('baptism') ? 1 : 0,
-            'eucharist' => $request->get('eucharist') ? 1 : 0,
-            'offerings_counter1' => $request->get('offerings_counter1') ?: '',
-            'offerings_counter2' => $request->get('offerings_counter2') ?: '',
-            'offering_goal' => $request->get('offering_goal') ?: '',
-            'offering_description' => $request->get('offering_description') ?: '',
-            'offering_type' => $request->get('offering_type') ?: '',
-            'cc' => $request->get('cc') ? 1: 0,
-            'cc_location' => $ccLocation,
-            'cc_lesson' => $request->get('cc_lesson') ?: '',
-            'cc_staff' => $request->get('cc_staff') ?: '',
-            'internal_remarks' => $request->get('internal_remarks') ?: '',
-            'offering_amount' => $request->get('offering_amount', ''),
-        ]);
-
-        if ($t = $request->get('cc_alt_time', false)) {
-            $service->cc_alt_time = $t;
-        }
-
+        $service = new Service($request->all());
+        $service->setTimeAndPlaceFromRequest($request);
         $service->setDefaultOfferingValues();
         $service->save();
 
-        $participants = $this->associateParticipants($request, $service);
-
-        $tags = $request->get('tags') ?: [];
-        $service->tags()->sync($tags);
-
-
+        $this->associateParticipants($request, $service);
         if (count($service->pastors)) {
             $service->need_predicant = false;
             $service->save();
         }
 
 
+        $tags = $request->get('tags') ?: [];
+        $service->tags()->sync($tags);
+
         $serviceGroups = $request->get('serviceGroups') ?: [];
         $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
 
-        //$service->location_id = $location->id;
-        //$service->day_id = $day->id;
-        //$service->notifyOfCreation(Auth::user(), '%s hat soeben folgenden Gottesdienst angelegt:');
-
         // notify:
-        // (needs to happen before save, so the model is still dirty
         Subscription::send($service, ServiceCreated::class);
 
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+        return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month])
             ->with('success', 'Der Gottesdienst wurde hinzugefügt');
     }
 
@@ -245,29 +192,19 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  StoreServiceRequest $request
+     * @param  Service $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreServiceRequest $request, Service $service)
     {
-        $request->validate([
-            'day_id' => 'required|integer',
-        ]);//
-
-        $service = Service::find($id);
+        $id = $service->id;
         $original = clone $service;
         foreach (['P', 'O', 'M', 'A'] as $key) {
             $originalParticipants[$key] = $original->participantsText($key);
         }
 
         $participants = $this->associateParticipants($request, $service);
-/*
-        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
-        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
-        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
-        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
-*/
         $service->save();
 
 

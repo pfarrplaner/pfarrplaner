@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Http\Requests\StoreServiceRequest;
 use App\Mail\ServiceUpdated;
 use App\Tools\StringTool;
 use App\Traits\HasCommentsTrait;
@@ -78,6 +79,10 @@ class Service extends Model
         'locationText',
         'timeText',
         'baptismsText'
+    ];
+
+    protected $attributes = [
+        'offering_type' => 'eO',
     ];
 
     private $auditData = [];
@@ -199,6 +204,28 @@ class Service extends Model
             case 'M': return $this->sacristans()->sync($participants);
             case 'A': return $this->otherParticipants()->sync($participants);
         }
+    }
+
+    public function setTimeAndPlaceFromRequest(StoreServiceRequest $request) {
+        if ($specialLocation = ($request->get('special_location') ?: '')) {
+            $locationId = 0;
+            $time = $request->get('time') ?: '';
+            $ccLocation = $request->get('cc_location') ?: '';
+        } else {
+            $locationId = $request->get('location_id') ?: 0;
+            if ($locationId) {
+                $location = Location::find($locationId);
+                $time = $request->get('time') ?: $location->default_time;
+                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
+            } else {
+                $time = $request->get('time') ?: '';
+                $ccLocation = $request->get('cc_location') ?: '';
+            }
+        }
+
+        $this->location_id = $locationId;
+        $this->time = $time;
+        $this->special_location = $specialLocation;
     }
 
     public function locationText() {
