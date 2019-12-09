@@ -138,7 +138,7 @@
             <!-- /.sidebar-menu -->
             @endauth
             @guest
-                <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed">
+                <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed login-form">
                     @csrf
                     @input(['name' => 'email', 'label' => 'Benutzername']) @endinput
                     @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password']) @endinput

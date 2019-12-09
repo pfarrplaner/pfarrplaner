@@ -595,3 +595,7 @@ body.sidebar-collapse .main-sidebar:hover .hidden-collapsed {
 body.sidebar-collapse .main-sidebar:hover .sidebar-form label {
     color: gray;
 }
+
+body.login .main-sidebar:hover .login-form.hidden-collapsed {
+    display: none !important;
+}
