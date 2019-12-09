@@ -60,7 +60,7 @@
                     @if(null === $service)
                         @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect']) @endselectize
                     @endif
-                    @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1]) @endinput
+                    @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1, 'placeholder' => 'Nachname, Vorname']) @endinput
                     @input(['name' => 'candidate_address', 'label' => 'Adresse']) @endinput
                     @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$']) @endinput
                     @input(['name' => 'candidate_city', 'label' => 'Ort']) @endinput
