@@ -10,6 +10,7 @@ namespace App\Imports;
 
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Psy\Exception\ErrorException;
 
 class EventCalendarImport
@@ -49,11 +50,18 @@ class EventCalendarImport
 
     public function getEvents(Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
-        try {
-            $events = json_decode(file_get_contents($this->url), true);
-        } catch (\ErrorException $e) {
-            $events = [];
+        $cacheKey = 'EventCalendarImport_'.$this->url;
+        if (Cache::has($cacheKey)) {
+            $events = Cache::get($cacheKey);
+        } else {
+            try {
+                $events = json_decode(file_get_contents($this->url), true);
+                Cache::store($cacheKey, $events, 60);
+            } catch (\ErrorException $e) {
+                $events = [];
+            }
         }
+
 
         $filteredEvents = [];
         foreach ($events as $key => $event) {
