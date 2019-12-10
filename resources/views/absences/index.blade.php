@@ -52,7 +52,7 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="btn btn-navbar" href="{{ route('ical.link', 'absences') }}">In Outlook abonnieren</a>
+        <a class="btn btn-navbar" href="{{ route('ical.export', ['user' => Auth::user(), 'token' => Auth::user()->getToken(), 'key' => 'absences']) }}">In Outlook abonnieren</a>
     </li>
 @endsection
 
