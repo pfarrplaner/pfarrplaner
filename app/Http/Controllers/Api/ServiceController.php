@@ -12,6 +12,7 @@ namespace App\Http\Controllers\Api;
 use App\City;
 use App\Day;
 use App\Http\Controllers\Controller;
+use App\Liturgy;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
@@ -36,13 +37,19 @@ class ServiceController extends Controller
 
     public function byUser(User $user) {
         $services = Service::select('services.*')
-            ->with('location', 'city', 'participants', 'funerals', 'baptisms', 'weddings')
+            ->with('location', 'city', 'participants', 'funerals', 'baptisms', 'weddings', 'day')
             ->join('days', 'days.id', 'services.day_id')
         ->whereHas('participants', function($query) use ($user) {
             $query->where('user_id', $user->id);
         })->whereHas('day', function($query) {
                 $query->where('date', '>=', Carbon::now());
             })->orderBy('days.date')->get();
+
+
+        foreach ($services as $service) {
+            $liturgy = Liturgy::getDayInfo($service->day);
+            if (isset($liturgy['title']) && ($service->day->name == '')) $service->day->name = $liturgy['title'];
+        }
         return response()->json(compact('services'));
     }
 

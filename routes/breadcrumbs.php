@@ -24,6 +24,11 @@ Breadcrumbs::for('admin', function (BreadcrumbsGenerator $trail) {
     $trail->push('Administration');
 });
 
+Breadcrumbs::for('apitoken', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('API Token', route('apitoken'));
+});
+
 Breadcrumbs::for('baptism.add', function (BreadcrumbsGenerator $trail, $service) {
     $trail->parent('services.edit', $service);
     $trail->push('Neue Taufe', route('baptism.add', $service));

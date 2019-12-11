@@ -153,3 +153,6 @@ Route::post('revisions/revert', 'RevisionController@revert')->name('revisions.re
 
 // new features
 Route::get('featues', 'HomeController@features');
+
+// api token
+Route::get('apiToken', 'ApiTokenController@update')->name('apitoken');
