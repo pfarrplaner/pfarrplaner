@@ -29,6 +29,21 @@ Breadcrumbs::for('apitoken', function (BreadcrumbsGenerator $trail) {
     $trail->push('API Token', route('apitoken'));
 });
 
+Breadcrumbs::for('days.edit', function(BreadcrumbsGenerator $trail, $day) {
+    $trail->parent('calendar');
+    $trail->push('Tag bearbeiten', route('days.edit', $day));
+});
+
+Breadcrumbs::for('days.create', function(BreadcrumbsGenerator $trail) {
+    $trail->parent('calendar');
+    $trail->push('Tag hinzufügen', route('days.create'));
+});
+
+Breadcrumbs::for('days.add', function(BreadcrumbsGenerator $trail, $year, $month) {
+    $trail->parent('calendar');
+    $trail->push('Tag hinzufügen', route('days.add', compact('year', 'month')));
+});
+
 Breadcrumbs::for('baptism.add', function (BreadcrumbsGenerator $trail, $service) {
     $trail->parent('services.edit', $service);
     $trail->push('Neue Taufe', route('baptism.add', $service));
