@@ -12,6 +12,7 @@ namespace App\Imports;
 use App\City;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Cache;
 
 class OPEventsImport
 {
@@ -31,7 +32,7 @@ class OPEventsImport
             $events = Cache::get($cacheKey);
         } else {
             $events = json_decode($this->getUrl($url), true);
-            Cache::store($cacheKey, $events, 60);
+            Cache::put($cacheKey, $events, 15);
         }
         return $events;
     }

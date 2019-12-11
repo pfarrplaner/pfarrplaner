@@ -158,7 +158,7 @@ class ServiceController extends Controller
             return redirect($route)->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
         } else {
             // default: redirect to calendar
-            return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->dayction->date->month])
+            return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month])
                 ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
 
         }

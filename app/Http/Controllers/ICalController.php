@@ -8,8 +8,10 @@ use App\CalendarLinks\CalendarLinks;
 use App\City;
 use App\Service;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 
 class ICalController extends Controller
@@ -116,11 +118,30 @@ class ICalController extends Controller
         if ($token != $user->getToken()) {
             return abort(403);
         }
+
         /** @var AbstractCalendarLink $calendarLink */
         $calendarLink = CalendarLinks::findKey($key);
-        return response($calendarLink->export($request, $user))
+
+
+        $expires = 0;
+        if ($key == 'cityEvents') {
+            $expires = Carbon::now()->addMinutes(60)->format('D, d M Y H:i:s \G\M\T');
+            $cacheKey = 'ical_export_'.$key.'_'.$token;
+            if (Cache::has($cacheKey)) {
+                $data = Cache::get($cacheKey);
+            } else {
+                $data = $calendarLink->export($request, $user);
+                Cache::put($cacheKey, $data, 60);
+            }
+
+        } else {
+            $data = $calendarLink->export($request, $user);
+        }
+
+
+        return response($data)
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-            ->header('Expires', 0)
+            ->header('Expires', $expires)
             ->header('Content-Type', 'text/calendar');
     }
 }

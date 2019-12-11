@@ -56,7 +56,7 @@ class EventCalendarImport
         } else {
             try {
                 $events = json_decode(file_get_contents($this->url), true);
-                Cache::store($cacheKey, $events, 60);
+                Cache::put($cacheKey, $events, 15);
             } catch (\ErrorException $e) {
                 $events = [];
             }
