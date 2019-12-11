@@ -30,8 +30,10 @@ class ServiceController extends Controller
     }
 
     public function show(Service $service) {
-        $service->load(['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms']);
-        return response()->json($service);
+        $service->load(['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms', 'day', 'tags', 'serviceGroups']);
+        $service->liturgy = Liturgy::getDayInfo($service->day);
+        if (isset($liturgy['title']) && ($service->day->name == '')) $service->day->name = $liturgy['title'];
+            return response()->json($service);
     }
 
 
@@ -47,10 +49,9 @@ class ServiceController extends Controller
 
 
         foreach ($services as $service) {
-            $liturgy = Liturgy::getDayInfo($service->day);
-            if (isset($liturgy['title']) && ($service->day->name == '')) $service->day->name = $liturgy['title'];
+            $service->liturgy = Liturgy::getDayInfo($service->day);
         }
-        return response()->json(compact('services'));
+        return response()->json(compact('services'))->header('Access-Control-Allow-Origin', '*');
     }
 
 }

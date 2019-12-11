@@ -19,6 +19,8 @@ class Service extends Model
     use \Venturecraft\Revisionable\RevisionableTrait;
     use HasCommentsTrait;
 
+    public $liturgy = [];
+
     protected $revisionEnabled = true;
     protected $revisionFormattedFieldNames = array(
         'day_id' => 'Tag',
@@ -78,7 +80,8 @@ class Service extends Model
         'descriptionText',
         'locationText',
         'timeText',
-        'baptismsText'
+        'baptismsText',
+        'liturgy'
     ];
 
     protected $attributes = [
@@ -510,5 +513,9 @@ class Service extends Model
         ksort($events);
         return $events;
 
+    }
+
+    public function getLiturgyAttribute() {
+        return $this->liturgy;
     }
 }
