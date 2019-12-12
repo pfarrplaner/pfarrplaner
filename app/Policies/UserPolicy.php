@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Providers\AuthServiceProvider;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -9,7 +10,8 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function index(User $user, User $model) {
+    public function index(User $user) {
+        if ($user->hasRole('Administrator*in')) return true;
         return $user->hasPermissionTo('benutzerliste-lokal-sehen') || $user->hasPermissionTo('benutzer-bearbeiten');
     }
 
@@ -45,7 +47,14 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        return $user->hasPermissionTo('benutzer-bearbeiten');
+        if ($model->hasRole(AuthServiceProvider::SUPER)) return false;
+        if ($user->hasRole(AuthServiceProvider::ADMIN)) return true;
+        if ($user->hasPermissionTo('benutzer-bearbeiten')) {
+            foreach ($model->homeCities as $city) {
+                if ($city->administeredBy($user)) return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -57,7 +66,13 @@ class UserPolicy
      */
     public function delete(User $user, User $model)
     {
-        return $user->hasPermissionTo('benutzer-bearbeiten');
+        if ($model->hasRole(AuthServiceProvider::SUPER)) return false;
+        if ($user->hasRole(AuthServiceProvider::ADMIN) || $user->hasPermissionTo('benutzer-bearbeiten')) {
+            foreach ($model->homeCities as $city) {
+                if ($city->administeredBy($user)) return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -92,7 +107,8 @@ class UserPolicy
      * @return mixed
      */
     public function join(User $user, User $model) {
-        return $user->hasPermissionTo('benutzer-bearbeiten');
+        if ($user->hasRole(AuthServiceProvider::ADMIN)) return true;
+        if ($user->hasPermissionTo('benutzer-bearbeiten')) return true;
     }
 
     /**
@@ -114,7 +130,7 @@ class UserPolicy
      */
     public function editAbsences (User $user, User $model) {
         if ($user->id == $model->id) return true;
-        if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {
+        if ($user->hasPermissionTo('fremden-urlaub-bearbeiten') || ($user->hasRole(AuthServiceProvider::ADMIN))) {
             if (!$model->hasRole('Pfarrer*in')) {
                 if (count($user->writableCities->intersect($model->homeCities))) return true;
             }

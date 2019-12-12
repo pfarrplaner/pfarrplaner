@@ -9,10 +9,16 @@
 namespace App\UI;
 
 
+use App\City;
 use App\Inputs\AbstractInput;
 use App\Inputs\Inputs;
+use App\Location;
+use App\Parish;
+use App\Tag;
+use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Spatie\Permission\Models\Role;
 
 class MenuBuilder
 {
@@ -81,42 +87,42 @@ class MenuBuilder
 
         $adminMenu = [];
         $user = Auth::user();
-        if ($user->can('benutzerliste-lokal-sehen') || $user->can('benutzer-bearbeiten')) {
+        if ($user->can('index', User::class)) {
             $adminMenu[] = [
                 'text' => 'Benutzer',
                 'icon' => 'fa fa-users',
                 'url' => route('users.index'),
             ];
         }
-        if ($user->can('rollen-bearbeiten')) {
+        if ($user->can('index', Role::class)) {
             $adminMenu[] = [
                 'text' => 'Benutzerrollen',
                 'icon' => 'fa fa-user-tag',
                 'url' => route('roles.index'),
             ];
         }
-        if ($user->can('ort-bearbeiten') || $user->can('gd-opfer-bearbeiten')) {
+        if ($user->can('index', City::class)) {
             $adminMenu[] = [
                 'text' => 'Kirchengemeinden',
                 'icon' => 'fa fa-church',
                 'url' => route('cities.index'),
             ];
         }
-        if ($user->can('kirche-bearbeiten')) {
+        if ($user->can('index', Location::class)) {
             $adminMenu[] = [
                 'text' => 'Kirche / GD-Orte',
                 'icon' => 'fa fa-map-marker',
                 'url' => route('locations.index'),
             ];
         }
-        if ($user->can('tags-bearbeiten')) {
+        if ($user->can('index', Tag::class)) {
             $adminMenu[] = [
                 'text' => 'Kennzeichnungen',
                 'icon' => 'fa fa-tag',
                 'url' => route('tags.index'),
             ];
         }
-        if ($user->can('pfarraemter-bearbeiten')) {
+        if ($user->can('index', Parish::class)) {
             $adminMenu[] = [
                 'text' => 'Pfarrämter',
                 'icon' => 'fa fa-building',

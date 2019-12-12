@@ -25,22 +25,38 @@
                     @input(['name' => 'first_name', 'label' => 'Vorname']) @endinput
                     @input(['name' => 'last_name', 'label' => 'Nachname']) @endinput
                     @upload(['name' => 'image', 'label' => 'Bild']) @endupload
-                    @selectize(['name' => 'homeCities[]', 'label' => 'Dieser Benutzer gehört zu folgenden Kirchengemeinden', 'items' => $cities]) @endselectize
+                    @selectize(['name' => 'homeCities[]', 'label' => 'Dieser Benutzer gehört zu folgenden Kirchengemeinden', 'items' => Auth::user()->adminCities]) @endselectize
                     @selectize(['name' => 'parishes[]', 'label' => 'Dieser Benutzer hat folgende Pfarrämter inne', 'items' => $parishes]) @endselectize
+                    @selectize(['name' => 'roles[]', 'label' => 'Benutzerrollen', 'items' => $roles]) @endselectize
+                    <div class="form-group">
+                        <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
+                        <select class="form-control" name="homescreen">
+                            <option value="route:calendar" selected>Kalender</option>
+                            <option value="homescreen:pastor">Zusammenfassung für Pfarrer</option>
+                            <option value="homescreen:ministry">Zusammenfassung für andere Beteiligte</option>
+                            <option value="homescreen:secretary">Zusammenfassung für Sekretär</option>
+                            <option value="homescreen:office">Zusammenfassung für Kirchenpflege/Kirchenregisteramt</option>
+                            <option value="homescreen:admin">Zusammenfassung für Administrator*innen</option>
+                        </select>
+                    </div>
                 @endtab
                 @tab(['id' => 'permissions'])
                 <div class="form-group">
                     <label class="control-label">Zugriff auf Kirchengemeinden:</label>
                     @foreach ($cities as $city)
+                        @if($city->administeredBy(Auth::user()))
                         <div class="form-group row" data-city="{{ $city->id }}">
                             <label class="col-sm-3">{{ $city->name }}</label>
                             <div class="col-sm-9">
                                 <select class="form-control check-city"
-                                        name="cityPermission[{{ $city->id }}][permission]" data-city="{{ $city->id }}">
+                                        name="cityPermission[{{ $city->id }}][permission]" data-city="{{ $city->id }}"  style="color: white;">
+                                    <option value="a" data-city-write="{{ $city->id }}" style="background-color: purple; color: white;">
+                                        Administrator
+                                    </option>
                                     <option value="w" data-city-write="{{ $city->id }}" style="background-color: green">
                                         Schreibzugriff
                                     </option>
-                                    <option value="r" data-city-read="{{ $city->id }}" style="background-color: yellow">
+                                    <option value="r" data-city-read="{{ $city->id }}" style="background-color: orange">
                                         Lesezugriff
                                     </option>
                                     <option value="n" selected data-city="{{ $city->id }}"
@@ -49,11 +65,13 @@
                                 </select>
                             </div>
                         </div>
+                        @endif
                     @endforeach
                     <div class="form-group">
                         <label>Benutzer wird bei Änderungen an Gottesdiensten per E-Mail benachrichtigt für:</label>
                     </div>
                     @foreach ($cities as $city)
+                        @if($city->administeredBy(Auth::user()))
                         <div class="form-group row city-subscription-row" data-city="{{ $city->id }}">
                             <label class="col-sm-2">{{ $city->name }}</label>
                             <div class="col-sm-10">
@@ -77,19 +95,8 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     @endforeach
-                    @selectize(['name' => 'roles[]', 'label' => 'Benutzerrollen', 'items' => $roles]) @endselectize
-                    <div class="form-group">
-                        <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
-                        <select class="form-control" name="homescreen">
-                            <option value="route:calendar" selected>Kalender</option>
-                            <option value="homescreen:pastor">Zusammenfassung für Pfarrer</option>
-                            <option value="homescreen:ministry">Zusammenfassung für andere Beteiligte</option>
-                            <option value="homescreen:secretary">Zusammenfassung für Sekretär</option>
-                            <option value="homescreen:office">Zusammenfassung für Kirchenpflege/Kirchenregisteramt</option>
-                            <option value="homescreen:admin">Zusammenfassung für Administrator*innen</option>
-                        </select>
-                    </div>
                 </div>
                 @endtab
                 @tab(['id' => 'absences'])
@@ -106,18 +113,21 @@
         function toggleSubscriptionRows() {
             $('.city-subscription-row').each(function () {
                 var value = $('select[data-city=' + $(this).data('city') + ']').val();
-                if (value == 'r' | value == 'w') {
+                if (value == 'r' | value == 'w' | value == 'a') {
                     $(this).show();
                 } else {
                     $(this).hide();
                 }
                 var color = '';
                 switch (value) {
+                    case 'a':
+                        color = 'purple';
+                        break;
                     case 'w':
                         color = 'green';
                         break;
                     case 'r':
-                        color = 'yellow';
+                        color = 'orange';
                         break;
                     case 'n':
                         color = 'red';

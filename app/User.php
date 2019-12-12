@@ -76,7 +76,16 @@ class User extends Authenticatable
 
     public function writableCities()
     {
-        return $this->belongsToMany(City::class)->withPivot('permission')->withPivotValue('permission', 'w');
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
+    }
+
+    public function writableCitiesWithoutAdmin()
+    {
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w']);
+    }
+
+    public function adminCities() {
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
     }
 
     public function homeCities() {
@@ -435,6 +444,68 @@ class User extends Authenticatable
 
     public function getPlanNameAttribute() {
         return $this->lastName(true);
+    }
+
+
+    /**
+     * Update this users permissions from an array
+     * Format [ city_id => ['permission' => level]]
+     * @param $permissions
+     */
+    public function updateCityPermissions($permissions)
+    {
+        // check user rights, remove entries for cities without admin rights
+        foreach ($permissions as $cityId => $permission) {
+            $city = City::find($cityId);
+            if (!$city->administeredBy($this)) unset($permission);
+        }
+
+        // add missing cities
+        foreach ($this->visibleCities as $city) {
+            if (!isset($permissions[$city->id])) {
+                $permissions[$city->id] = ['permission' => $city->pivot->permission];
+            }
+        }
+
+        foreach ($permissions as $cityId => $permission) {
+            if ($permission['permission'] == 'n') {
+                unset($permissions[$cityId]);
+            }
+        }
+        $result = $this->cities()->sync($permissions);
+
+        // update the user's own sorting (remove cities which are not allowed)
+        $thisPref = explode(',',$this->getSetting('sorted_cities', ''));
+        if (!count($thisPref)) {
+            $thisPref = $result['attached'];
+        } else {
+            foreach ($thisPref as $key => $city) {
+                if (in_array($city, $result['detached'])) unset($thisPref[$key]);
+            }
+            // make added cities visible without having to edit user preference in profile:
+            $thisPref = array_merge($thisPref, $result['attached']);
+        }
+        $this->setSetting('sorted_cities', join(',', $thisPref));
+
+        // update the user's subscriptions (remove cities which are not allowed)
+        $subscriptions = $this->subscriptions;
+        foreach ($subscriptions as $subscription) {
+            if (in_array($subscription->city_id, $result['detached'])) $subscription->delete();
+        }
+    }
+
+    /**
+     * Check if another user has admin rights for this user
+     * This is the case, if the other user administers one of this users homeCities
+     * @param $user User User to be checked for admin rights
+     * @return bool True if other user has admin rights for this one
+     */
+    public function administeredBy($user) {
+        if ($user->hasRole('Super-Administrator*in')) return true;
+        foreach ($this->homeCities as $city) {
+            if ($city->administeredBy($user)) return true;
+        }
+        return false;
     }
 
 }

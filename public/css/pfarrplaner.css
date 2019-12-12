@@ -604,3 +604,7 @@ body.login .main-sidebar:hover .login-form.hidden-collapsed {
     content: ' *';
     color: red;
 }
+
+.badge-permission-a {
+    background-color: purple !important;
+}

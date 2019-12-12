@@ -51,7 +51,7 @@
                             </td>
                             <td>
                                 @foreach($user->visibleCities as $city)
-                                    <span class="badge @if($user->writableCities->contains($city)) badge-success @else badge-warning @endif">{{ $city->name }}</span>
+                                    <span class="badge @if($user->writableCities->contains($city)) badge-success @else badge-warning @endif badge-permission-{{ $city->pivot->permission }}">{{ $city->name }}</span>
                                 @endforeach
                             </td>
                             <td>{{$user->email}}<br/>

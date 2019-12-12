@@ -26,9 +26,11 @@
                     <td>{{$parish->name}}</td>
                     <td>{{$parish->owningCity->name}}</td>
                     <td class="text-right" style="min-width: 100px;">
-                        @can('parishes-bearbeiten')
+                        @can('update', $parish)
                             <a href="{{ route('parishes.edit',$parish->id)}}" class="btn btn-primary"
                                title="Bearbeiten"><span class="fa fa-edit"></span></a>
+                        @endcan
+                        @can('delete', $parish)
                             <form action="{{ route('parishes.destroy', $parish->id)}}" method="post" style="display: inline-block;">
                                 @csrf
                                 @method('DELETE')

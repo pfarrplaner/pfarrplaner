@@ -10,10 +10,13 @@ use App\Policies\AbsencePolicy;
 use App\Policies\CityPolicy;
 use App\Policies\DayPolicy;
 use App\Policies\LocationPolicy;
+use App\Policies\ParishPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\ServicePolicy;
+use App\Policies\TagPolicy;
 use App\Policies\UserPolicy;
 use App\Service;
+use App\Tag;
 use App\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -21,6 +24,10 @@ use Spatie\Permission\Models\Role;
 
 class AuthServiceProvider extends ServiceProvider
 {
+
+    public const SUPER = 'Super-Administrator*in';
+    public const ADMIN = 'Administrator*in';
+
     /**
      * The policy mappings for the application.
      *
@@ -36,6 +43,8 @@ class AuthServiceProvider extends ServiceProvider
         Day::class => DayPolicy::class,
         Role::class => RolePolicy::class,
         Absence::class => AbsencePolicy::class,
+        Parish::class => ParishPolicy::class,
+        Tag::class => TagPolicy::class,
     ];
 
     /**
@@ -46,9 +55,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        // Super-Administrator*in can do everything
         Gate::before(function($user, $ability) {
-           if ($user->hasRole('Super-Administrator*in')) return true;
-           if ($user->hasRole('Administrator*in') && ($ability != 'superadmin-bearbeiten') && ($ability != 'admin-bearbeiten')) return true;
+           if ($user->hasRole(self::SUPER)) return true;
         });
 
         Gate::define('calendar.month', 'App\Policies\CalendarPolicy@month');
