@@ -32,7 +32,7 @@ class ServiceController extends Controller
     public function show(Service $service) {
         $service->load(['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms', 'day', 'tags', 'serviceGroups']);
         $service->liturgy = Liturgy::getDayInfo($service->day);
-        if (isset($liturgy['title']) && ($service->day->name == '')) $service->day->name = $liturgy['title'];
+        if (isset($liturgy['title']) && ($service->day->name == '')) $service->day->name = $service->liturgy['title'];
             return response()->json($service);
     }
 
