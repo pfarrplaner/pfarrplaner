@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Providers\AuthServiceProvider;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -506,6 +507,17 @@ class User extends Authenticatable
             if ($city->administeredBy($user)) return true;
         }
         return false;
+    }
+
+    public function getWritableCitiesAttribute()
+    {
+        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) return City::all();
+        return $this->writableCities()->get();
+    }
+
+    public function getAdminCitiesAttribute() {
+        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) return City::all();
+        return $this->adminCities()->get();
     }
 
 }
