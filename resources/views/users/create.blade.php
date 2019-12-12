@@ -135,6 +135,7 @@
                         </label>
                     </div>
                 </div>
+                @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users]) @endpeopleselect
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
@@ -170,6 +171,7 @@
         }
 
         $(document).ready(function () {
+            $('.peopleSelect').selectize({});
             toggleSubscriptionRows();
             $('.check-city').change(function () {
                 toggleSubscriptionRows();

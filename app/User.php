@@ -99,6 +99,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Parish::class)->withTimestamps();
     }
 
+    public function approvers() {
+        return $this->belongsToMany(User::class, 'user_approver', 'user_id', 'approver_id');
+    }
+
     public function canEditField($field)
     {
         return $this->isAdmin || in_array($field, $this->getEditableFields());

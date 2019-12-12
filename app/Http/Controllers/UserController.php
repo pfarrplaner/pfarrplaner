@@ -55,7 +55,8 @@ class UserController extends Controller
         $cities = City::all();
         $roles = Role::all()->sortBy('name');
         $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
-        return view('users.create', compact('cities', 'roles', 'parishes'));
+        $users = User::all();
+        return view('users.create', compact('cities', 'roles', 'parishes', 'users'));
     }
 
     /**
@@ -115,6 +116,7 @@ class UserController extends Controller
                 unset($roles[$key]);
         }
         $user->syncRoles($request->get('roles') ?: []);
+        $user->approvers()->sync($request->get('approvers') ?: []);
 
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
@@ -149,7 +151,8 @@ class UserController extends Controller
         $roles = Role::all()->sortBy('name');
         $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
         $homescreen = $user->getSetting('homeScreen', 'route:calendar');
-        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes'));
+        $users = User::all();
+        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes', 'users'));
     }
 
     public function profile(Request $request)
@@ -263,6 +266,7 @@ class UserController extends Controller
 
         $user->homeCities()->sync($request->get('homeCities') ?: []);
         $user->parishes()->sync($request->get('parishes') ?: []);
+        $user->approvers()->sync($request->get('approvers') ?: []);
 
         // assign roles
         $roles = $request->get('roles');

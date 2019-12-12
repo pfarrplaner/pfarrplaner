@@ -187,6 +187,7 @@
                             </label>
                         </div>
                     </div>
+                @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->approvers]) @endpeopleselect
             </div>
             <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Speichern</button>
@@ -222,6 +223,9 @@
         }
 
         $(document).ready(function () {
+
+            $('.peopleSelect').selectize({});
+
 
             $('#btnRemoveAttachment').click(function () {
                 $('#linkToAttachment').after('<input type="file" name="image" class="form-control" /><input type="hidden" name="removeAttachment" value="1" />');
