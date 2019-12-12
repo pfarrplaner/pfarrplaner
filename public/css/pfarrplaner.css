@@ -608,3 +608,15 @@ body.login .main-sidebar:hover .login-form.hidden-collapsed {
 .badge-permission-a {
     background-color: purple !important;
 }
+
+.badge-permission-w {
+    background-color: green !important;
+}
+
+.badge-permission-r {
+    background-color: orange !important;
+}
+
+.badge-permission-n {
+    background-color: red !important;
+}
