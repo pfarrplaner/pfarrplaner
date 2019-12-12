@@ -9,8 +9,8 @@
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
             @endslot
-            @input(['name' => 'name', 'label' => 'Name:']) @endinput
-            @input(['name' => 'code', 'label' => 'Code:']) @endinput
+            @input(['name' => 'name', 'label' => 'Name:'])
+            @input(['name' => 'code', 'label' => 'Code:'])
         @endcomponent
     </form>
 @endsection

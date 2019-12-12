@@ -25,12 +25,12 @@
             @tabs
                 @if ($user->administeredBy(Auth::user()))
                     @tab(['id' => 'home', 'active' => true])
-                        @input(['name' => 'name', 'label' => 'Name', 'value' => $user->name]) @endinput
-                        @input(['name' => 'email', 'label' => 'E-Mailadresse', 'value' => $user->email]) @endinput
-                        @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password', 'placeholder' => ($user->password != '' ? 'Nur eingeben, wenn Passwort geändert werden soll' : 'Passwort setzen, um diese Person als Benutzer anzulegen')]) @endinput
-                        @input(['name' => 'title', 'label' => 'Titel', 'value' => $user->title]) @endinput
-                        @input(['name' => 'first_name', 'label' => 'Vorname', 'value' => $user->first_name]) @endinput
-                        @input(['name' => 'last_name', 'label' => 'Nachname', 'value' => $user->last_name]) @endinput
+                        @input(['name' => 'name', 'label' => 'Name', 'value' => $user->name])
+                        @input(['name' => 'email', 'label' => 'E-Mailadresse', 'value' => $user->email])
+                        @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password', 'placeholder' => ($user->password != '' ? 'Nur eingeben, wenn Passwort geändert werden soll' : 'Passwort setzen, um diese Person als Benutzer anzulegen')])
+                        @input(['name' => 'title', 'label' => 'Titel', 'value' => $user->title])
+                        @input(['name' => 'first_name', 'label' => 'Vorname', 'value' => $user->first_name])
+                        @input(['name' => 'last_name', 'label' => 'Nachname', 'value' => $user->last_name])
                         <div class="form-group">
                             <label for="image">Bild:</label>
                             @if ($user->image)
@@ -42,9 +42,9 @@
                                 <input type="file" class="form-control" id="image" name="image"/>
                             @endif
                         </div>
-                        @selectize(['name' => 'homeCities[]', 'label' => 'Dieser Benutzer gehört zu folgenden Kirchengemeinden', 'items' => Auth::user()->adminCities, 'value' => $user->homeCities]) @endselectize
-                        @selectize(['name' => 'parishes[]', 'label' => 'Dieser Benutzer hat folgende Pfarrämter inne', 'items' => $parishes, 'value' => $user->parishes]) @endselectize
-                        @selectize(['name' => 'roles[]', 'label' => 'Benutzerrollen', 'items' => $roles, 'value' => $user->roles]) @endselectize
+                        @selectize(['name' => 'homeCities[]', 'label' => 'Dieser Benutzer gehört zu folgenden Kirchengemeinden', 'items' => Auth::user()->adminCities, 'value' => $user->homeCities])
+                        @selectize(['name' => 'parishes[]', 'label' => 'Dieser Benutzer hat folgende Pfarrämter inne', 'items' => $parishes, 'value' => $user->parishes])
+                        @selectize(['name' => 'roles[]', 'label' => 'Benutzerrollen', 'items' => $roles, 'value' => $user->roles])
                         <div class="form-group">
                             <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
                             <select class="form-control" name="homescreen">
@@ -74,7 +74,7 @@
                 @endif
                 @tab(['id' => 'permissions', 'active' => !$user->administeredBy(Auth::user())])
                 @if ((!$user->administeredBy(Auth::user())) && ($user->password == ''))
-                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password', 'placeholder' => ($user->password != '' ? 'Nur eingeben, wenn Passwort geändert werden soll' : 'Passwort setzen, um diese Person als Benutzer anzulegen')]) @endinput
+                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password', 'placeholder' => ($user->password != '' ? 'Nur eingeben, wenn Passwort geändert werden soll' : 'Passwort setzen, um diese Person als Benutzer anzulegen')])
                 @endif
                 <div class="form-group">
                     <label class="control-label">Zugriff auf Kirchengemeinden:</label>
@@ -152,8 +152,8 @@
             @endtab
                 @if ($user->administeredBy(Auth::user()))
                     @tab(['id' => 'absences'])
-                        @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten', 'value' => $user->manage_absences]) @endcheckbox
-                        @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->approvers]) @endpeopleselect
+                        @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten', 'value' => $user->manage_absences])
+                        @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->approvers])
                     @endtab
                 @endif
             @endtabs

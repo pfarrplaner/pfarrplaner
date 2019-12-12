@@ -19,18 +19,18 @@ class AppServiceProvider extends ServiceProvider
         Blade::component('partials.form.tabheaders', 'tabheaders');
         Blade::component('partials.form.tabs', 'tabs');
         Blade::component('partials.form.tab', 'tab');
-        Blade::component('partials.form.input', 'input');
-        Blade::component('partials.form.file', 'upload');
-        Blade::component('partials.form.datetimepicker', 'datetimepicker');
-        Blade::component('partials.form.hidden', 'hidden');
-        Blade::component('partials.form.textarea', 'textarea');
-        Blade::component('partials.form.select', 'select');
-        Blade::component('partials.form.selectize', 'selectize');
-        Blade::component('partials.form.dayselect', 'dayselect');
-        Blade::component('partials.form.locationselect', 'locationselect');
-        Blade::component('partials.form.peopleselect', 'peopleselect');
-        Blade::component('partials.form.checkbox', 'checkbox');
-        Blade::component('partials.form.radiogroup', 'radiogroup');
+        Blade::include('partials.form.input', 'input');
+        Blade::include('partials.form.file', 'upload');
+        Blade::include('partials.form.datetimepicker', 'datetimepicker');
+        Blade::include('partials.form.hidden', 'hidden');
+        Blade::include('partials.form.textarea', 'textarea');
+        Blade::include('partials.form.select', 'select');
+        Blade::include('partials.form.selectize', 'selectize');
+        Blade::include('partials.form.dayselect', 'dayselect');
+        Blade::include('partials.form.locationselect', 'locationselect');
+        Blade::include('partials.form.peopleselect', 'peopleselect');
+        Blade::include('partials.form.checkbox', 'checkbox');
+        Blade::include('partials.form.radiogroup', 'radiogroup');
 
         Validator::extend('phone_number', function($attribute, $value, $parameters)
         {

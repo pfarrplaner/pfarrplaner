@@ -140,8 +140,8 @@
             @guest
                 <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed login-form">
                     @csrf
-                    @input(['name' => 'email', 'label' => 'E-Mailadresse']) @endinput
-                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password']) @endinput
+                    @input(['name' => 'email', 'label' => 'E-Mailadresse'])
+                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password'])
                     <input type="submit" class="btn btn-primary" value="Anmelden" />
                 </form>
             @endguest

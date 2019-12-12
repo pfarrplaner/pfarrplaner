@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Day;
 use App\Funeral;
+use App\Http\Requests\FuneralStoreRequest;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Service;
@@ -148,10 +149,10 @@ class FuneralController extends Controller
         /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  FuneralStoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FuneralStoreRequest $request)
     {
         $request->validate([
             'buried_name' => 'required',
@@ -230,14 +231,13 @@ class FuneralController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  FuneralStoreRequest $request
      * @param  \App\Funeral  $funeral
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Funeral $funeral)
+    public function update(FuneralStoreRequest $request, Funeral $funeral)
     {
         $request->validate([
-            'buried_name' => 'required',
             'service' => 'required|int',
         ]);
         $serviceId = $request->get('service');

@@ -47,33 +47,33 @@
                         </select>
                     </div>
                     @if(!isset($service))
-                        @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect', 'value' => $baptism->city_id]) @endselectize
+                        @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect', 'value' => $baptism->city_id])
                     @endif
-                    @hidden(['name' => 'city_id', 'id' => 'cityHidden', 'value' => $baptism->city_id]) @endhidden
-                    @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1, 'placeholder' => 'Nachname, Vorname', 'value' => $baptism->candidate_name]) @endinput
-                    @input(['name' => 'candidate_address', 'label' => 'Adresse', 'value' => $baptism->candidate_address]) @endinput
-                    @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$', 'value' => $baptism->candidate_zip]) @endinput
-                    @input(['name' => 'candidate_city', 'label' => 'Ort', 'value' => $baptism->candidate_city]) @endinput
-                    @input(['name' => 'candidate_phone', 'label' => 'Telefon', 'value' => $baptism->candidate_phone]) @endinput
-                    @input(['name' => 'candidate_email', 'label' => 'E-Mail', 'value' => $baptism->candidate_email]) @endinput
+                    @hidden(['name' => 'city_id', 'id' => 'cityHidden', 'value' => $baptism->city_id])
+                    @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1, 'placeholder' => 'Nachname, Vorname', 'value' => $baptism->candidate_name])
+                    @input(['name' => 'candidate_address', 'label' => 'Adresse', 'value' => $baptism->candidate_address])
+                    @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$', 'value' => $baptism->candidate_zip])
+                    @input(['name' => 'candidate_city', 'label' => 'Ort', 'value' => $baptism->candidate_city])
+                    @input(['name' => 'candidate_phone', 'label' => 'Telefon', 'value' => $baptism->candidate_phone])
+                    @input(['name' => 'candidate_email', 'label' => 'E-Mail', 'value' => $baptism->candidate_email])
                 @endcomponent
             </div>
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Vorbereitung @endslot
                         @slot('cardHeader')Vorbereitung @endslot
-                        @input(['name' => 'first_contact_with', 'label' => 'Erstkontakt mit', 'value' => $baptism->first_contact_with]) @endinput
-                        @input(['name' => 'first_contact_on', 'label' => 'Erstkontakt am', 'placeholder' => 'tt.mm.jjjj', 'value' => date('d.m.Y'), 'class' => 'datepicker', 'value' => (is_object($baptism->first_contact) ? $baptism->first_contact_on->format('d.m.Y')  : '')]) @endinput
-                        @datetimepicker(['name' => 'appointment', 'label' => 'Taufgespräch', 'placeholder' => 'tt.mm.jjjj HH:MM', 'value' => (is_object($baptism->appointment) ? $baptism->appointment->format('d.m.Y H:i') : '')]) @enddatetimepicker
-                        @checkbox(['name' => 'registered', 'label' => 'Anmeldung erhalten', 'value' => $baptism->registered]) @endcheckbox
+                        @input(['name' => 'first_contact_with', 'label' => 'Erstkontakt mit', 'value' => $baptism->first_contact_with])
+                        @input(['name' => 'first_contact_on', 'label' => 'Erstkontakt am', 'placeholder' => 'tt.mm.jjjj', 'value' => date('d.m.Y'), 'class' => 'datepicker', 'value' => (is_object($baptism->first_contact) ? $baptism->first_contact_on->format('d.m.Y')  : '')])
+                        @datetimepicker(['name' => 'appointment', 'label' => 'Taufgespräch', 'placeholder' => 'tt.mm.jjjj HH:MM', 'value' => (is_object($baptism->appointment) ? $baptism->appointment->format('d.m.Y H:i') : '')])
+                        @checkbox(['name' => 'registered', 'label' => 'Anmeldung erhalten', 'value' => $baptism->registered])
                 @endcomponent
                 @component('components.ui.card')
                     @slot('cardHeader')Dokumente @endslot
                         @slot('cardHeader')Dokumente @endslot
-                        @upload(['name' => 'registration_document', 'label' => 'PDF des Anmeldedokuments', 'value' => $baptism->registration_document]) @endupload
-                        @checkbox(['name' => 'signed', 'label' => 'Anmeldung unterschrieben', 'value' => $baptism->signed]) @endcheckbox
-                        @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt', 'value' => $baptism->docs_ready]) @endcheckbox
-                        @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?', 'value' => $baptism->docs_where]) @endinput
+                        @upload(['name' => 'registration_document', 'label' => 'PDF des Anmeldedokuments', 'value' => $baptism->registration_document])
+                        @checkbox(['name' => 'signed', 'label' => 'Anmeldung unterschrieben', 'value' => $baptism->signed])
+                        @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt', 'value' => $baptism->docs_ready])
+                        @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?', 'value' => $baptism->docs_where])
                 @endcomponent
                 @component('components.ui.card')
                     @slot('cardHeader')Kommentare @endslot

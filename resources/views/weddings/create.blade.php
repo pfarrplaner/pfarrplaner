@@ -5,7 +5,7 @@
 @section('content')
     <form method="post" action="{{ route('weddings.store') }}" enctype="multipart/form-data">
         @csrf
-        @hidden(['name' => 'service', 'value' => $service->id]) @endhidden
+        @hidden(['name' => 'service', 'value' => $service->id])
         <div class="row">
             <div class="col-md-6">
                 @component('components.ui.card')

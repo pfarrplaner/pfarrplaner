@@ -58,31 +58,31 @@
                         </div>
                     @endif
                     @if(null === $service)
-                        @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect']) @endselectize
+                        @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect'])
                     @endif
-                    @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1, 'placeholder' => 'Nachname, Vorname']) @endinput
-                    @input(['name' => 'candidate_address', 'label' => 'Adresse']) @endinput
-                    @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$']) @endinput
-                    @input(['name' => 'candidate_city', 'label' => 'Ort']) @endinput
-                    @input(['name' => 'candidate_phone', 'label' => 'Telefon']) @endinput
-                    @input(['name' => 'candidate_email', 'label' => 'E-Mail']) @endinput
+                    @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1, 'placeholder' => 'Nachname, Vorname'])
+                    @input(['name' => 'candidate_address', 'label' => 'Adresse'])
+                    @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$'])
+                    @input(['name' => 'candidate_city', 'label' => 'Ort'])
+                    @input(['name' => 'candidate_phone', 'label' => 'Telefon'])
+                    @input(['name' => 'candidate_email', 'label' => 'E-Mail'])
                 @endcomponent
 
             </div>
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Vorbereitung @endslot
-                    @input(['name' => 'first_contact_with', 'label' => 'Erstkontakt mit']) @endinput
-                    @input(['name' => 'first_contact_on', 'label' => 'Erstkontakt am', 'placeholder' => 'tt.mm.jjjj', 'value' => date('d.m.Y'), 'class' => 'datepicker']) @endinput
-                    @datetimepicker(['name' => 'appointment', 'label' => 'Taufgespräch', 'placeholder' => 'tt.mm.jjjj HH:MM']) @enddatetimepicker
-                    @checkbox(['name' => 'registered', 'label' => 'Anmeldung erhalten']) @endcheckbox
+                    @input(['name' => 'first_contact_with', 'label' => 'Erstkontakt mit'])
+                    @input(['name' => 'first_contact_on', 'label' => 'Erstkontakt am', 'placeholder' => 'tt.mm.jjjj', 'value' => date('d.m.Y'), 'class' => 'datepicker'])
+                    @datetimepicker(['name' => 'appointment', 'label' => 'Taufgespräch', 'placeholder' => 'tt.mm.jjjj HH:MM'])
+                    @checkbox(['name' => 'registered', 'label' => 'Anmeldung erhalten'])
                 @endcomponent
                 @component('components.ui.card')
                     @slot('cardHeader')Dokumente @endslot
-                    @upload(['name' => 'registration_document', 'label' => 'PDF des Anmeldedokuments']) @endupload
-                    @checkbox(['name' => 'signed', 'label' => 'Anmeldung unterschrieben']) @endcheckbox
-                    @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt']) @endcheckbox
-                    @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?']) @endinput
+                    @upload(['name' => 'registration_document', 'label' => 'PDF des Anmeldedokuments'])
+                    @checkbox(['name' => 'signed', 'label' => 'Anmeldung unterschrieben'])
+                    @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt'])
+                    @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?'])
                 @endcomponent
 
             </div>

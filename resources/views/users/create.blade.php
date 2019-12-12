@@ -18,16 +18,16 @@
 
             @tabs
                 @tab(['id' => 'home', 'active' => true])
-                    @input(['name' => 'name', 'label' => 'Name']) @endinput
-                    @input(['name' => 'email', 'label' => 'E-Mailadresse']) @endinput
-                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password']) @endinput
-                    @input(['name' => 'title', 'label' => 'Titel']) @endinput
-                    @input(['name' => 'first_name', 'label' => 'Vorname']) @endinput
-                    @input(['name' => 'last_name', 'label' => 'Nachname']) @endinput
-                    @upload(['name' => 'image', 'label' => 'Bild']) @endupload
-                    @selectize(['name' => 'homeCities[]', 'label' => 'Dieser Benutzer gehört zu folgenden Kirchengemeinden', 'items' => Auth::user()->adminCities]) @endselectize
-                    @selectize(['name' => 'parishes[]', 'label' => 'Dieser Benutzer hat folgende Pfarrämter inne', 'items' => $parishes]) @endselectize
-                    @selectize(['name' => 'roles[]', 'label' => 'Benutzerrollen', 'items' => $roles]) @endselectize
+                    @input(['name' => 'name', 'label' => 'Name'])
+                    @input(['name' => 'email', 'label' => 'E-Mailadresse'])
+                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password'])
+                    @input(['name' => 'title', 'label' => 'Titel'])
+                    @input(['name' => 'first_name', 'label' => 'Vorname'])
+                    @input(['name' => 'last_name', 'label' => 'Nachname'])
+                    @upload(['name' => 'image', 'label' => 'Bild'])
+                    @selectize(['name' => 'homeCities[]', 'label' => 'Dieser Benutzer gehört zu folgenden Kirchengemeinden', 'items' => Auth::user()->adminCities])
+                    @selectize(['name' => 'parishes[]', 'label' => 'Dieser Benutzer hat folgende Pfarrämter inne', 'items' => $parishes])
+                    @selectize(['name' => 'roles[]', 'label' => 'Benutzerrollen', 'items' => $roles])
                     <div class="form-group">
                         <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
                         <select class="form-control" name="homescreen">
@@ -100,8 +100,8 @@
                 </div>
                 @endtab
                 @tab(['id' => 'absences'])
-                    @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten']) @endcheckbox
-                    @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users]) @endpeopleselect
+                    @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten'])
+                    @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users])
                 @endtab
             @endtabs
         @endcomponent

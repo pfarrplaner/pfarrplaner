@@ -10,8 +10,8 @@
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Speichern</button>
             @endslot
-            @input(['label' =>  'Name', 'name' => 'name', 'value' => $role->name]) @endinput
-            @selectize(['label' => 'Berechtigungen', 'name'=> 'permissions[]', 'items' => $permissions, 'value' => $role->permissions]) @endselectize
+            @input(['label' =>  'Name', 'name' => 'name', 'value' => $role->name])
+            @selectize(['label' => 'Berechtigungen', 'name'=> 'permissions[]', 'items' => $permissions, 'value' => $role->permissions])
         @endcomponent
     </form>
 @endsection
