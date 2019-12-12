@@ -10,7 +10,7 @@
             @endslot
             @csrf
             @input(['label' =>  'Name', 'name' => 'name']) @endinput
-            @selectize(['label' => 'Berechtigungen', 'name'=> 'permissions', 'items' => $permissions]) @endselectize
+            @selectize(['label' => 'Berechtigungen', 'name'=> 'permissions[]', 'items' => $permissions]) @endselectize
         @endcomponent
     </form>
 @endsection
