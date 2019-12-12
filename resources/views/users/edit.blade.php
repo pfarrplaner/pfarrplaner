@@ -5,49 +5,27 @@
 
 @section('content')
     <form method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
-        <div class="card">
-            <div class="card-body">
-                    @csrf
-                    @method('PATCH')
-                    <div class="form-group">
-                        <label for="name">Name:</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-Mailadresse:</label>
-                        <input type="text" class="form-control" id="email" name="email" value="{{ $user->email }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Neues Passwort:</label>
-                        <input type="text" class="form-control" id="password" name="password" value=""/>
-                    </div>
-                    <hr/>
-                    <div class="form-group">
-                        <label for="title">Titel:</label>
-                        <input type="text" class="form-control" id="title" name="title" value="{{ $user->title }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="first_name">Vorname:</label>
-                        <input type="text" class="form-control" id="first_name" name="first_name"
-                               value="{{ $user->first_name }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="last_name">Nachname:</label>
-                        <input type="text" class="form-control" id="last_name" name="last_name"
-                               value="{{ $user->last_name }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="office">Pfarramt/Büro:</label>
-                        <input type="text" class="form-control" id="office" name="office" value="{{ $user->office }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Adresse:</label>
-                        <textarea name="address" class="form-control">{{ $user->address }}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Telefon:</label>
-                        <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}"/>
-                    </div>
+        @csrf
+        @method('PATCH')
+        @component('components.ui.card')
+            @slot('cardFooter')
+                <button type="submit" class="btn btn-primary">Speichern</button>
+            @endslot
+
+            @tabheaders
+            @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
+            @tabheader(['id' => 'permissions', 'title' => 'Berechtigungen']) @endtabheader
+            @tabheader(['id' => 'absences', 'title' => 'Urlaub']) @endtabheader
+            @endtabheaders
+
+            @tabs
+                @tab(['id' => 'home', 'active' => true])
+                    @input(['name' => 'name', 'label' => 'Name', 'value' => $user->name]) @endinput
+                    @input(['name' => 'email', 'label' => 'E-Mailadresse', 'value' => $user->email]) @endinput
+                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password']) @endinput
+                    @input(['name' => 'title', 'label' => 'Titel', 'value' => $user->title]) @endinput
+                    @input(['name' => 'first_name', 'label' => 'Vorname', 'value' => $user->first_name]) @endinput
+                    @input(['name' => 'last_name', 'label' => 'Nachname', 'value' => $user->last_name]) @endinput
                     <div class="form-group">
                         <label for="image">Bild:</label>
                         @if ($user->image)
@@ -59,7 +37,11 @@
                             <input type="file" class="form-control" id="image" name="image"/>
                         @endif
                     </div>
-                    <div class="form-group"> <!-- Radio group !-->
+                    @selectize(['name' => 'homeCities[]', 'label' => 'Dieser Benutzer gehört zu folgenden Kirchengemeinden', 'items' => $cities, 'value' => $user->homeCities]) @endselectize
+                    @selectize(['name' => 'parishes[]', 'label' => 'Dieser Benutzer hat folgende Pfarrämter inne', 'items' => $parishes, 'value' => $user->parishes]) @endselectize
+                @endtab
+                @tab(['id' => 'permissions'])
+                    <div class="form-group">
                         <label class="control-label">Zugriff auf Kirchengemeinden:</label>
                         @foreach ($cities as $city)
                             <div class="form-group row" data-city="{{ $city->id }}">
@@ -121,37 +103,7 @@
                             </div>
                         </div>
                     @endforeach
-                    <hr/>
-                    <div class="form-group">
-                        <label for="homeCities">Dieser Benutzer gehört zu folgenden Kirchengemeinden:</label>
-                        <select class="form-control fancy-selectize" name="homeCities[]" multiple>
-                            <option></option>
-                            @foreach ($cities as $city)
-                                <option value="{{ $city->id }}"
-                                        @if($user->homeCities->contains($city)) selected @endif>{{ $city->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="parishes">Dieser Benutzer hat folgende Pfarrämter inne:</label>
-                        <select class="form-control fancy-selectize" name="parishes[]" multiple>
-                            <option></option>
-                            @foreach ($parishes as $parish)
-                                <option value="{{ $parish->id }}"
-                                        @if ($user->parishes->contains($parish)) selected @endif>{{ $parish->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <hr/>
-                    <div class="form-group">
-                        <label for="roles[]">Benutzerrollen</label>
-                        <select class="form-control fancy-selectize" name="roles[]" multiple>
-                            @foreach($roles as $role)
-                                <option @if($user->roles->contains($role)) selected @endif>{{ $role->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <hr/>
+                    @selectize(['name' => 'roles[]', 'label' => 'Benutzerrollen', 'items' => $roles, 'value' => $user->roles]) @endselectize
                     <div class="form-group">
                         <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
                         <select class="form-control" name="homescreen">
@@ -177,22 +129,13 @@
                             </option>
                         </select>
                     </div>
-                    <hr/>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" name="manage_absences" value="1"
-                                   @if($user->manage_absences) checked @endif/>
-                            <label class="form-check-label" for="manage_absences">
-                                Urlaub für diesen Benutzer verwalten
-                            </label>
-                        </div>
-                    </div>
-                @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->approvers]) @endpeopleselect
-            </div>
-            <div class="card-footer">
-                    <button type="submit" class="btn btn-primary">Speichern</button>
-            </div>
-        </div>
+                @endtab
+                @tab(['id' => 'absences'])
+                    @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten', 'value' => $user->manage_absences]) @endcheckbox
+                    @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->approvers]) @endpeopleselect
+                @endtab
+            @endtabs
+        @endcomponent
     </form>
 @endsection
 
