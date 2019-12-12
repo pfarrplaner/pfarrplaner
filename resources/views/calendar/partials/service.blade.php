@@ -23,7 +23,7 @@
         <span class="separator">|</span>
         <div class="service-location">{{ $service->location->name }}</div>
     @endif
-    @if($service->cc) <img src="{{ env('APP_URL') }}img/cc.png"
+    @if($service->cc) <img src="{{ asset('img/cc.png') }}"
                            title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
     @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen'])
         @if($service->weddings->count())
