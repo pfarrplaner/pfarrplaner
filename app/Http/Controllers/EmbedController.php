@@ -11,6 +11,8 @@ namespace App\Http\Controllers;
 
 use App\Day;
 use App\Service;
+use App\User;
+use App\Vacations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -37,7 +39,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('location_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
             })
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
@@ -60,7 +62,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
             })
             ->doesntHave('funerals')
             ->doesntHave('weddings')
@@ -69,7 +71,7 @@ class EmbedController extends Controller
             ->limit($limit)
             ->get();
         return response()
-            ->view('embed.services.table', compact('services', 'locationIds', 'title'));
+            ->view('embed.services.table', compact('services', 'ids', 'title'));
 
     }
 
@@ -87,7 +89,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
             })
             ->doesntHave('funerals')
             ->doesntHave('weddings')
@@ -97,10 +99,43 @@ class EmbedController extends Controller
             ->limit($limit)
             ->get();
         return response()
-            ->view('embed.services.ccTable', compact('services', 'locationIds', 'title'));
+            ->view('embed.services.ccTable', compact('services', 'ids', 'title'));
 
     }
 
 
+    /**
+     * Return a table of upcoming vacations and replacements for a specific user
+     * @param Request $request
+     * @param User $user
+     * @param $userId
+     */
+    public function embedUserVacations (Request $request, User $user) {
+        $start = Carbon::now();
+        $end = (clone $start)->addWeek(2);
+        $vacations = Vacations::getByPeriodAndUser($start, $end, $user);
+        return response()
+            ->view('embed.user.vacations', compact('vacations'));
+    }
+
+
+    public function embedByBaptismalServices(Request $request, User $user, $ids, $limit =10, $maxBaptisms=0) {
+        $ids = explode(',', $ids);
+        $title = $request->has('title') ? $request->get('title') : '';
+        $services = Service::with('location', 'baptisms')
+            ->select('services.*')
+            ->join('days', 'services.day_id', '=', 'days.id')
+            ->where('baptism', true)
+            ->whereIn('city_id', $ids)
+            ->whereHas('day', function($query) {
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
+            })
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC')
+            ->limit($limit)
+            ->get();
+
+        return view('embed.services.baptismalServices', compact('services', 'ids', 'title', 'maxBaptisms'));
+    }
 
 }

@@ -47,7 +47,7 @@ class Wedding extends Model
     ];
 
     public function service() {
-        $this->belongsTo(Service::class);
+        return $this->belongsTo(Service::class);
     }
 
 }

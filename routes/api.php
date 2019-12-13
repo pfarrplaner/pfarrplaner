@@ -18,3 +18,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
  */
+
+
+Route::namespace('Api')->group(function () {
+    Route::resource('cities', 'CityController');
+    Route::get('calendar/month/{year}/{month}', ['as' => 'api.calendar.month', 'uses' => 'CalendarController@month']);
+    Route::get('servicesByDayAndCity/{day}/{city}', ['as' => 'services.byDayAndCity', 'uses' => 'ServiceController@byDayAndCity']);
+    Route::get('service/{service}', ['as' => 'service.show', 'uses' => 'ServiceController@show']);
+
+
+
+    Route::middleware('auth:api')->group(function (){
+        Route::get('user/{user}/services', ['as' => 'api.user.services', 'uses' => 'ServiceController@byUser']);
+    });
+
+});
+
+
+
+
+

@@ -48,6 +48,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'local-backup' => [
+            'driver' => 'local',
+            'root' => env('BACKUP_LOCAL_PATH')
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
@@ -61,8 +66,14 @@ return [
             'secret' => env('AWS_SECRET_ACCESS_KEY'),
             'region' => env('AWS_DEFAULT_REGION'),
             'bucket' => env('AWS_BUCKET'),
-            'url' => env('AWS_URL'),
         ],
+
+        'backup' => [
+            'driver' => 'sftp',
+            'host' => env('SFTP_BACKUP_HOST'),
+            'username' => env('SFTP_BACKUP_USER'),
+            'password' => env('SFTP_BACKUP_PASSWORD'),
+        ]
 
     ],
 

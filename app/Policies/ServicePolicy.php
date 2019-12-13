@@ -10,6 +10,10 @@ class ServicePolicy
 {
     use HandlesAuthorization;
 
+    protected function hasCityPermission($user, $service) {
+        return $user->writableCities->pluck('id')->contains($service->city_id);
+    }
+
     /**
      * Determine whether the user can view the service.
      *
@@ -42,8 +46,7 @@ class ServicePolicy
      */
     public function update(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
-        return $user->hasPermissionTo('gd-bearbeiten') && $cityOkay;
+        return $user->hasPermissionTo('gd-bearbeiten') && $this->hasCityPermission($user, $service);
     }
 
     /**
@@ -55,8 +58,7 @@ class ServicePolicy
      */
     public function delete(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
-        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
+        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $this->hasCityPermission($user, $service);
     }
 
     /**
@@ -68,8 +70,7 @@ class ServicePolicy
      */
     public function restore(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
-        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
+        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $this->hasCityPermission($user, $service);
     }
 
     /**
@@ -81,7 +82,6 @@ class ServicePolicy
      */
     public function forceDelete(User $user, Service $service)
     {
-        $cityOkay = (is_object($service->location) ? $user->cities->contains($service->location->city) : true);
-        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $cityOkay;
+        return $user->hasPermissionTo('gd-allgemein-bearbeiten') && $this->hasCityPermission($user, $service);
     }
 }

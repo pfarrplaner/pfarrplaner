@@ -31,7 +31,7 @@
                         <label style="display:block;">Anzeige</label>
                         <div class="form-check">
                             <input type="radio" name="day_type" value="{{ \App\Day::DAY_TYPE_DEFAULT }}"
-                                   autocomplete="off" checked>
+                                   autocomplete="off" checked id="check-type-default">
                             <label class="form-check-label">
                                 Diesen Tag für alle Gemeinden anzeigen
                             </label>
@@ -57,5 +57,22 @@
                 </form>
             </div>
         </div>
+        <script>
+            $(document).ready(function(){
+                $('.city-check').change(function(){
+                   var limit = false;
+                   $('.city-check').each(function(){
+                      limit = limit || $(this).prop('checked');
+                   });
+                   if (limit) {
+                       $('#check-type-limited').prop('checked', true);
+                       $('#check-type-default').prop('checked', false);
+                   } else {
+                       $('#check-type-limited').prop('checked', false);
+                       $('#check-type-default').prop('checked', true);
+                   }
+                });
+            });
+        </script>
     @endcomponent
 @endsection

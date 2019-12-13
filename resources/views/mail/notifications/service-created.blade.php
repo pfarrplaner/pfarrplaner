@@ -789,6 +789,14 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;"
+                                                                                align="left" valign="top">Interne Anmerkungen
+                                                                            </td>
+                                                                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;"
+                                                                                align="left"
+                                                                                valign="top">{{ $service->internal_remarks }}</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;"
                                                                                 align="left" valign="top">Opferzähler*in
                                                                                 1
                                                                             </td>
@@ -1277,7 +1285,7 @@
                                             werden willst.
                                         @endif
                                         Diese Einstellung kannst du selbst <a href="{{ route('user.profile') }}">in
-                                            deinem Benutzerprofil bei Dienstplan Online</a> ändern.
+                                            deinem Benutzerprofil bei Pfarrplaner</a> ändern.
                                     </div>
                                     <div class="hr " style="width: 100%; margin: 20px 0; border: 0;">
                                         <table border="0" cellpadding="0" cellspacing="0"
@@ -1298,7 +1306,7 @@
                                         <tbody>
                                         <tr>
                                             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"
-                                                align="left">© 2019 Dienstplan Online
+                                                align="left">© 2019 Pfarrplaner
                                             </td>
                                             <td class="text-right"
                                                 style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"

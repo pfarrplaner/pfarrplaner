@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Baptism;
 use App\City;
+use App\Http\Requests\StoreBaptismRequest;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 
 class BaptismController extends Controller
 {
@@ -56,7 +58,7 @@ class BaptismController extends Controller
         $baptismalServices = $this->getBaptismalServices();
         $otherServices = $this->getBaptismalServices(0);
 
-        $cities = City::all();
+        $cities = Auth::user()->writableCities;
 
         return view('baptisms.create', compact('service', 'baptismalServices', 'otherServices', 'cities'));
     }
@@ -64,16 +66,11 @@ class BaptismController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreBaptismRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreBaptismRequest $request)
     {
-        $request->validate([
-            'candidate_name' => 'required',
-            'city_id' => 'required|integer',
-        ]);
-
         $baptism = new Baptism([
             'city_id' => $request->get('city_id'),
             'candidate_name' => $request->get('candidate_name') ?: '',
@@ -94,7 +91,7 @@ class BaptismController extends Controller
             $baptism->service_id = $serviceId;
         }
         if ($request->get('first_contact_on')) $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
-        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y', $request->get('appointment'));
+        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
 
         if ($request->hasFile('registration_document')) {
             $baptism->registration_document = $request->file('registration_document')->store('baptism', 'public');
@@ -142,7 +139,7 @@ class BaptismController extends Controller
         }
         $baptismalServices = $baptismalServicesQuery->get();
 
-        $cities = City::all();
+        $cities = Auth::user()->writableCities;
 
         $otherServices = $this->getBaptismalServices(0);
         return view('baptisms.edit', compact('baptism', 'baptismalServices', 'otherServices', 'cities'));
@@ -151,17 +148,12 @@ class BaptismController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreBaptismRequest  $request
      * @param  \App\Baptism  $baptism
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Baptism $baptism)
+    public function update(StoreBaptismRequest $request, Baptism $baptism)
     {
-        $request->validate([
-            'candidate_name' => 'required',
-            'city_id' => 'required|integer',
-        ]);
-
         $serviceId = $request->get('service');
         if ($serviceId) {
             $baptism->service_id = $serviceId;
@@ -177,7 +169,7 @@ class BaptismController extends Controller
         $baptism->candidate_email = $request->get('candidate_email') ?: '';
         $baptism->first_contact_with = $request->get('first_contact_with') ?: '';
         if ($request->get('first_contact_on')) $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
-        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y', $request->get('appointment'));
+        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
         $baptism->registered= $request->get('registered') ? 1 : 0;
         $baptism->signed= $request->get('signed') ? 1 : 0;
         $baptism->docs_ready= $request->get('docs_ready') ? 1 : 0;
@@ -216,5 +208,22 @@ class BaptismController extends Controller
         } else {
             return redirect(route('home'));
         }
+    }
+
+    public function appointmentIcal(Baptism $baptism) {
+        $service = Service::find($baptism->service_id);
+        $raw = View::make('baptisms.appointment.ical', compact('baptism', 'service'));
+        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        return response($raw, 200)
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', '0')
+            ->header('Content-Type', 'text/calendar')
+            ->header('Content-Disposition', 'inline; filename=Taufgespraech-'.$baptism->id.'.ics');
+    }
+
+    public function done(Baptism $baptism) {
+        $baptism->done = true;
+        $baptism->save();
+        return json_encode(true);
     }
 }

@@ -21,7 +21,7 @@ class LocationController extends Controller
      */
     public function index()
     {
-        $locations = Location::all();
+        $locations = Location::whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
         return view('locations.index', compact('locations'));
     }
 
@@ -32,8 +32,9 @@ class LocationController extends Controller
      */
     public function create()
     {
-        $cities = City::all();
-        return view('locations.create', compact('cities'));
+        $cities = Auth::user()->writableCities;
+        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->get();
+        return view('locations.create', compact('cities', 'alternateLocations'));
     }
 
     /**
@@ -52,8 +53,11 @@ class LocationController extends Controller
         $location = new Location([
             'name' => $request->get('name'),
             'city_id' => $request->get('city_id'),
-            'default_time' => $request->get('default_time'),
+            'default_time' => $request->get('default_time').':00',
             'cc_default_location' => $request->get('cc_default_location') ?: '',
+            'at_text' => $request->get('at_text') ?: '',
+            'alternate_location_id' => $request->get('alternate_location_id') ?: null,
+            'general_location_name' => $request->get('general_location_name') ?: '',
         ]);
         $location->save();
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde gespeichert');
@@ -78,11 +82,10 @@ class LocationController extends Controller
      */
     public function edit($id)
     {
-        $cities = City::all();
+        $cities = Auth::user()->writableCities;
         $location = Location::find($id);
-        if (!(Auth::user()->isAdmin || (Auth::user()->canEditChurch && Auth::user()->cities->contains($location->city))))
-            return redirect()->back()->with('error', 'Sie haben keine Berechtigung für die gewählte Aktion');
-        return view('locations.edit', ['cities' => $cities, 'location' => $location]);
+        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->where('id', '!=', $location->id)->get();
+        return view('locations.edit', compact('cities', 'location', 'alternateLocations'));
     }
 
     /**
@@ -103,8 +106,11 @@ class LocationController extends Controller
         $location = Location::find($id);
         $location->name = $request->get('name');
         $location->city_id = $request->get('city_id');
-        $location->default_time = $request->get('default_time');
+        $location->default_time = $request->get('default_time').':00';
         $location->cc_default_location = $request->get('cc_default_location') ?: '';
+        $location->at_text = $request->get('at_text') ?: '';
+        $location->alternate_location_id = $request->get('alternate_location_id') ?: null;
+        $location->general_location_name = $request->get('general_location_name') ?: '';
         $location->save();
 
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde geändert.');

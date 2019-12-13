@@ -1,0 +1,606 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
+
+ul.nav-tabs {
+    margin-bottom: 15px;
+}
+
+.hide-buttons .btn {
+    display: none;
+}
+
+.hide-buttons:hover .btn {
+    display: inline;
+}
+
+.button-row {
+    margin: 0 0 3px 5px;
+}
+
+.button-row .btn-default {
+    border-color: rgba(0,0,0,.2);;
+    background-color: #ffffff;
+    color: rgba(0,0,0,.5);
+}
+
+.button-row .btn-default:hover {
+    color: rgba(0,0,0,.7);
+}
+
+.button-row .btn-toggle-limited-days {
+    background-color: #DCD0FF;
+}
+
+body.slave nav,
+body.slave aside,
+body.slave footer,
+body.login nav,
+body.login footer {
+    display: none;
+}
+
+
+body.slave .content-wrapper,
+body.login .content-wrapper {
+    min-height: 100vh;
+    margin-left: 0px !important;
+    font-size: .8rem;
+}
+
+
+
+body.calendar .content,
+body.calendar .container-fluid {
+    margin: 0;
+    padding: 0;
+}
+
+body.calendar .content-header {
+    display: none;
+}
+
+.calendar-month {
+    padding: 0 5px;
+}
+
+.calendar-month h1 {
+    margin-left: 5px;
+}
+
+.calendar-month td,
+.calendar-month thead th {
+    vertical-align: top;
+    padding: 1px;
+}
+
+.calendar-month th .btn {
+    font-size: 0.5em;
+}
+
+.calendar-month th.limited,
+.calendar-month td.limited.for-city {
+    background-color: #DCD0FF;
+}
+
+.calendar-month th.collapsed .card,
+.calendar-month th.collapsed .vacation {
+    display: none;
+}
+
+
+.calendar-month th.limited.collapsed,
+.calendar-month td.limited.collapsed {
+    width: 10px !important;
+    max-width: 10px !important;
+    overflow: hidden;
+    border-left: solid 1px #F8FAFC;
+    border-right: solid 1px #F8FAFC;
+}
+
+.calendar-month th.limited.collapsed .celldata,
+.calendar-month td.limited.collapsed .celldata {
+    display: none;
+}
+
+
+.calendar-month td.limited.collapsed:not(.for-city){
+    background-color: #e7e7e7 !important;
+}
+
+.calendar-month td.limited.not-my-city .btn-add-day,
+.calendar-month td.limited:not(.for-city) .btn-add-day {
+    display: none;
+}
+
+.calendar-month th.limited.not-for-city,
+.calendar-month td.limited.not-for-city {
+    display: none;
+}
+
+
+.calendar-month .special-weekday {
+    color: red;
+}
+
+
+.calendar-month th .card-effect
+{
+    position: relative;
+}
+.calendar-month th .card-effect:before, .calendar-month th .card-effect:after
+{
+    z-index: -1;
+    position: absolute;
+    content: "";
+    bottom: 15px;
+    left: 10px;
+    width: 50%;
+    top: 80%;
+    max-width:300px;
+    background: #777;
+    box-shadow: 0 15px 10px #777;
+    transform: rotate(-3deg);
+}
+.effect2:after
+{
+    transform: rotate(3deg);
+    right: 10px;
+    left: auto;
+}
+
+.calendar-month th .card-header {
+    padding: 0;
+    text-align: center;
+    background-color: black;
+    color: white;
+    font-size: .7rem;
+}
+
+.calendar-month th .day-header-So {
+    background-color: red;
+}
+
+.calendar-month th .card-body {
+    padding: 1px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.calendar-month th .card-footer {
+    padding: 0;
+    text-align: center;
+    font-size: .6rem;
+}
+
+
+
+.calendar-month .day-description {
+    font-weight: normal;
+    font-style: italic;
+}
+
+.calendar-month .vacation  {
+    display: inline-block;
+    font-weight: normal;
+    background-color: orange;
+    font-size: 0.7em;
+    padding: 2px;
+    border: solid 1px darkorange;
+    border-radius: 2px;
+}
+
+span.vacation-conflict {
+    background-color: orange;
+    text-decoration: underline;
+    text-decoration-color: red;
+}
+
+.calendar-month .liturgy {
+    font-size: 0.6em;
+    font-weight: normal;
+}
+
+.calendar-month .liturgy-sermon,
+.calendar-month .liturgy-color {
+    display: inline-block;
+}
+
+.calendar-month .liturgy-color {
+    width: 10px;
+    height: 10px;
+    border: solid 1px transparent;
+    border-radius: 5px;
+}
+
+.calendar-month td.now,
+.calendar-month th.now {
+    background-color: lightyellow;
+}
+
+.calendar-month .service-entry {
+    background-color: white;
+    border: solid 1px darkgray;
+    padding: 5px;
+    margin-bottom: 3px;
+}
+
+.calendar-month .service-entry.mine {
+    background-color: lightgreen;
+}
+
+.calendar-month .service-entry.highlighted {
+    background-color: yellow;
+}
+
+
+
+.calendar-month .service-entry.editable:hover {
+    border-color: #a1cbef;
+    outline: 0;
+    box-shadow: 0 0 0 .2rem rgba(52,144,220,.25);
+}
+
+.calendar-month .service-entry.funeral {
+    background-color: darkgray;
+    color: white;
+}
+
+.calendar-month .service-entry.funeral.mine {
+    background-color: #a9cda9;
+    color: black;
+}
+
+.calendar-month .service-entry h3 {
+    margin-top: 15px;
+}
+
+.calendar-month .service-entry .separator {
+    color: gray;
+}
+
+.calendar-month .service-time, .calendar-month .service-location {
+    display: inline;
+}
+
+.calendar-month .service-time.service-special-time {
+    color: red;
+    font-weight: bold;
+}
+
+.calendar-month .service-special-location {
+    color: red;
+    font-weight: bold;
+}
+
+.calendar-month .service-pastor {
+    font-weight: bold;
+}
+
+.calendar-month .need-predicant {
+    font-weight: bold;
+    color: red;
+}
+
+.calendar-month .designation {
+    font-weight: normal;
+}
+
+.calendar-month .service-team, .calendar-month .service-description {
+    font-size: 0.8em;
+}
+
+.calendar-month .service-description {
+    font-style: italic;
+}
+
+.calendar-month .service-calendar-button {
+    display: none;
+}
+
+.calendar-month .service-entry:hover .service-calendar-button {
+    display: inherit;
+}
+
+.instructions li {
+    margin-bottom: 1em;
+    font-weight: bold;
+}
+
+
+
+.print-only {
+    display: none;
+}
+
+.revisions {
+    font-size: 0.6em;
+}
+
+@media print {
+    .btn, .no-print {
+        display: none;
+    }
+
+    .print-only {
+        display: unset;
+    }
+}
+
+pre {
+    border: solid 1px darkgray;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+ol.steps li {
+    margin-bottom: 20px;
+}
+
+ol.steps img {
+    margin-top: 20px;
+}
+
+.service-row.cc {
+    background-color: lightgreen;
+}
+
+.service-row.no-cc {
+    color: darkgray;
+}
+
+.data-row.no-cc {
+    display: none;
+}
+
+
+table.table tr.past td {
+    background-color: dimgray;
+}
+
+table.table .fa-check-circle {
+    color: green;
+}
+
+table.table .fa-times-circle {
+    color: red;
+}
+
+
+body.dragging, body.dragging * {
+    cursor: move !important;
+}
+
+.dragged {
+    position: absolute;
+    opacity: 0.5;
+    z-index: 2000;
+}
+
+ul.sortable {
+    min-height: 50px;
+    padding: 0;
+}
+
+ul.sortable li {
+    width: 100%;
+    border: solid 1px gray;
+    list-style: none;
+    padding: 5px;
+    margin: 1px;
+    border-radius: 3px;
+}
+
+ul.sortable li:hover {
+    cursor: move !important;
+}
+
+ul.sortable li.placeholder {
+    position: relative;
+    background-color: lightyellow;
+    border: none;
+    /** More li styles **/
+}
+ul.sortable li.placeholder:before {
+    position: absolute;
+    /** Define arrowhead **/
+}
+
+.tbl-absences .cal-cell {
+    font-size: 0.7em;
+    padding: 0;
+    max-width: 15px;
+    overflow: hidden;
+}
+
+.tbl-absences td.cal-cell.day_Sun,
+.tbl-absences th.cal-cell.day_Sun,
+.tbl-absences td.cal-cell.day_So,
+.tbl-absences th.cal-cell.day_So
+{
+    background-color: lightpink;
+}
+
+
+.tbl-absences th.cal-cell.day_Sun,
+.tbl-absences th.cal-cell.day_So
+{
+    color: red;
+}
+
+.tbl-absences .cal-cell.today {
+    background-color: lightyellow;
+}
+
+.tbl-absences .cal-cell.holiday {
+    background-color: #e9fce9;
+}
+
+.tbl-absences td.cal-cell.busy {
+    background-color: lightgreen;
+}
+
+.tbl-absences td.cal-cell.busy.day_Sun,
+.tbl-absences td.cal-cell.busy.day_So {
+    background-color: #ff6666;
+}
+
+
+
+.tbl-absences .cal-cell.absent {
+    background-color: orange;
+    border-right-color: orange;
+}
+
+.tbl-absences .cal-cell.absent:hover {
+}
+
+.tbl-absences .cal-cell.absent.editable:hover {
+    background-color: darkorange;
+    border-right-color: darkorange;
+    cursor: pointer;
+}
+
+.tbl-absences .cal-cell.replacing {
+    background-color: lightblue;
+    border-right-color: lightblue;
+}
+
+.tbl-absences .cal-cell.selected {
+    background-color: blue !important;
+}
+
+.date-picker-wrapper {
+    border: 0;
+    background-color: transparent;
+    padding-left: 0;
+}
+
+.loader {
+    position:fixed;
+    padding:0;
+    padding-top: 10em;
+    margin:0;
+
+    top:0;
+    left:0;
+
+    width: 100%;
+    height: 100%;
+    background:rgba(255,255,255,0.8);
+    text-align: center;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#date-range12-container .month-wrapper {
+    border: 0;
+}
+
+#absenceTab a {
+    background-color: sandybrown;
+}
+
+#absenceTab a.active {
+    background-color: orange;
+}
+
+.card-counter{
+    box-shadow: 2px 2px 10px #DADADA;
+    margin: 5px;
+    padding: 20px 10px;
+    background-color: #fff;
+    height: 100px;
+    border-radius: 5px;
+    transition: .3s linear all;
+}
+
+.card-counter:hover{
+    box-shadow: 4px 4px 20px #DADADA;
+    transition: .3s linear all;
+    cursor: pointer;
+}
+
+.card-counter.primary{
+    background-color: #007bff;
+    color: #FFF;
+}
+
+.card-counter.danger{
+    background-color: #ef5350;
+    color: #FFF;
+}
+
+.card-counter.success{
+    background-color: #66bb6a;
+    color: #FFF;
+}
+
+.card-counter.info{
+    background-color: #26c6da;
+    color: #FFF;
+}
+
+.card-counter i{
+    font-size: 5em;
+    opacity: 0.2;
+}
+
+.card-counter .count-numbers{
+    position: absolute;
+    right: 35px;
+    top: 20px;
+    font-size: 32px;
+    display: block;
+}
+
+.card-counter .count-name{
+    position: absolute;
+    right: 35px;
+    top: 65px;
+    font-style: italic;
+    text-transform: capitalize;
+    opacity: 0.5;
+    display: block;
+    font-size: 18px;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+
+body.sidebar-collapse .main-sidebar .hidden-collapsed {
+    display: none;
+}
+
+body.sidebar-collapse .main-sidebar:hover .hidden-collapsed {
+    display: block;
+}
+
+body.sidebar-collapse .main-sidebar:hover .sidebar-form label {
+    color: gray;
+}
+
+body.login .main-sidebar:hover .login-form.hidden-collapsed {
+    display: none !important;
+}
+
+.form-group.required label:after {
+    content: ' *';
+    color: red;
+}

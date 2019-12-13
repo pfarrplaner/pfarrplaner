@@ -10,7 +10,7 @@ class ReportsController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth', ['except' => ['embed']]);
     }
 
     public function list()
@@ -52,5 +52,29 @@ class ReportsController extends Controller
         } else {
             return redirect()->route('home');
         }
+    }
+
+    public function step (Request $request, $report, $step) {
+        $reportClass = 'App\\Reports\\' . ucfirst($report) . 'Report';
+        if (class_exists($reportClass)) {
+            /** @var AbstractReport $report */
+            $report = new $reportClass();
+            if (method_exists($report, $step)) {
+                return $report->$step($request);
+            }
+        }
+        return redirect()->route('home');
+    }
+
+    public function embed(Request $request, $report) {
+        $reportClass = 'App\\Reports\\' . ucfirst($report) . 'Report';
+        if (class_exists($reportClass)) {
+            /** @var AbstractReport $report */
+            $report = new $reportClass();
+            if (method_exists($report, 'embed')) {
+                return $report->embed($request);
+            }
+        }
+        return abort(404);
     }
 }

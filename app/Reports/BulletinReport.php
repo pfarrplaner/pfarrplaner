@@ -27,6 +27,7 @@ use App\Liturgy;
 use App\Service;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
@@ -42,7 +43,7 @@ class BulletinReport extends AbstractWordDocumentReport
 
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
-        $cities = City::all();
+        $cities = Auth::user()->cities;
         return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities, 'formats' => $this->formats]);
     }
 

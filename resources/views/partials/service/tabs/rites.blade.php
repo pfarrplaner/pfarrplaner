@@ -59,6 +59,7 @@
                 <tr>
                     <th>Person</th>
                     <th>Bestattungsart</th>
+                    <th>Trauergespräch</th>
                     <th>Abkündigung</th>
                     <th></th>
                 </tr>

@@ -39,12 +39,16 @@ class AbstractReport
         ]));
     }
 
+    public function getViewName($view) {
+        return 'reports.'.strtolower($this->getKey().'.'.strtolower($view));
+    }
+
     public function getSetupViewName() {
-        return 'reports.setup.'.strtolower($this->getKey());
+        return $this->getViewName('setup');
     }
 
     public function getRenderViewName() {
-        return 'reports.render.'.strtolower($this->getKey());
+        return $this->getViewName('render');
     }
 
     public function render(Request $request) {
@@ -56,7 +60,12 @@ class AbstractReport
         return view($this->getSetupViewName(), $data);
     }
 
+    public function renderView($view, $data = []) {
+        $data = array_merge(['report' => $this->getKey()], $data);
+        return view($this->getViewName($view), $data);
+    }
+
     public function setup() {
-        return $this->renderSetupView();
+        return $this->renderView('setup');
     }
 }

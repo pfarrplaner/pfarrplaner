@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Parish;
+use App\Service;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -24,8 +28,21 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('users.index', compact('users'));
+        if (Auth::user()->can('benutzer-bearbeiten')) {
+            $users = User::where('password', '!=', '')->orderBy('email')->get();
+        } elseif(Auth::user()->can('benutzerliste-lokal-sehen')) {
+            $cityIds = Auth::user()->writableCities->pluck('id');
+            $users = User::where('password', '!=', '')
+                ->select('users.*')
+                ->whereHas('cities', function($query) use ($cityIds){
+                    $query->whereIn('cities.id', $cityIds);
+                })
+                ->orderBy('email')->get();
+        } else {
+            return redirect()->route('home');
+        }
+        $otherPeople = User::where('password', '')->orWhereNull('password')->orderBy('name')->get();
+        return view('users.index', compact('users', 'otherPeople'));
     }
 
     /**
@@ -37,7 +54,8 @@ class UserController extends Controller
     {
         $cities = City::all();
         $roles = Role::all()->sortBy('name');
-        return view('users.create', compact('cities', 'roles'));
+        $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
+        return view('users.create', compact('cities', 'roles', 'parishes'));
     }
 
     /**
@@ -50,14 +68,11 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|max:255',
-            'email' => 'email',
-            'cities' => 'required',
         ]);
 
         $user = new User([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => Hash::make($request->get('password')),
             'cities' => $request->get('cities'),
             'title' => $request->get('title') ?: '',
             'first_name' => $request->get('first_name') ?: '',
@@ -67,9 +82,26 @@ class UserController extends Controller
             'address' => $request->get('address') ?: '',
             'phone' => $request->get('phone') ?: '',
             'preference_cities' => '', // TODO: empty for now
+            'manage_absences' => $request->get('manage_absences') ? 1 : 0,
         ]);
+
+        if (($user->email != '') && ($request->get('password', '') != '')) {
+            $user->password = Hash::make($request->get('password'));
+        }
+
+        if ($request->hasFile('image')) {
+            $user->image = $request->file('image')->store('user-images', 'public');
+        }
+
+
         $user->save();
-        $user->cities()->sync($request->get('cities'));
+
+
+        $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
+
+        $user->homeCities()->sync($request->get('homeCities') ?: []);
+        $user->parishes()->sync($request->get('parishes') ?: []);
+
 
         // assign roles
         $roles = $request->get('roles');
@@ -115,17 +147,24 @@ class UserController extends Controller
         $user = User::find($id);
         $cities = City::all();
         $roles = Role::all()->sortBy('name');
+        $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
         $homescreen = $user->getSetting('homeScreen', 'route:calendar');
-        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles'));
+        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes'));
     }
 
-    public function profile(Request $request) {
+    public function profile(Request $request)
+    {
         $user = Auth::user();
-        $cities = $user->cities;
-        return view('users.profile', compact('user', 'cities'));
+        $allCities = $user->visibleCities;
+        $cities = $user->visibleCities;
+        $sortedCities = $user->getSortedCities();
+        $unusedCities = $allCities->whereNotIn('id', $sortedCities->pluck('id'));
+        $calendarView = $user->getSetting('calendar_view', 'calendar.month');
+        return view('users.profile', compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView'));
     }
 
-    public function profileSave(Request $request) {
+    public function profileSave(Request $request)
+    {
         $user = Auth::user();
         $user->email = $request->get('email');
         $user->office = $request->get('office') ?: '';
@@ -139,6 +178,42 @@ class UserController extends Controller
 
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
+
+    protected function updateCityPermissions(User $user, $permissions)
+    {
+        $previousCities = $user->visibleCities->pluck('id');
+        $addedCities = [];
+
+        foreach ($permissions as $cityId => $permission) {
+            if ($permission['permission'] == 'n') {
+                unset($permissions[$cityId]);
+            } else {
+                if (!$previousCities->contains($cityId)) $addedCities[] = $cityId;
+            }
+        }
+        $user->cities()->sync($permissions);
+
+        // update the user's own sorting (remove cities which are not allowed)
+        $cityIds = array_keys($permissions);
+        $userPref = explode(',',$user->getSetting('sorted_cities', ''));
+        if (!count($userPref)) {
+            $userPref = $cityIds;
+        } else {
+            foreach ($userPref as $key => $city) {
+                if (!in_array($city, $cityIds)) unset($userPref[$key]);
+            }
+            // make added cities visible without having to edit user preference in profile:
+            $userPref = array_merge($userPref, $addedCities);
+        }
+        $user->setSetting('sorted_cities', join(',', $userPref));
+
+        // update the user's subscriptions (remove cities which are not allowed)
+        $subscriptions = $user->subscriptions;
+        foreach ($subscriptions as $subscription) {
+            if (!in_array($subscription->city_id, $cityIds)) $subscription->delete();
+        }
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -156,7 +231,10 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name = $request->get('name');
         $user->email = $request->get('email');
-        if ($password = $request->get('password') != '') $user->password = Hash::make($password);
+        //if ($password = $request->get('password') != '') $user->password = Hash::make($password);
+        if (($password = $request->get('password')) != '') {
+            $user->password = Hash::make($password);
+        }
         $user->title = $request->get('title') ?: '';
         $user->first_name = $request->get('first_name') ?: '';
         $user->last_name = $request->get('last_name') ?: '';
@@ -165,9 +243,26 @@ class UserController extends Controller
         $user->address = $request->get('address') ?: '';
         $user->phone = $request->get('phone') ?: '';
         $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
+        $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
+
+
+        if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
+            if ($user->image != '') {
+                Storage::delete($user->image);
+            }
+            $user->image = '';
+        }
+        if ($request->hasFile('image')) {
+            $user->image = $request->file('image')->store('user-images', 'public');
+        }
+
+
         $user->save();
 
-        $user->cities()->sync($request->get('cities'));
+        $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
+
+        $user->homeCities()->sync($request->get('homeCities') ?: []);
+        $user->parishes()->sync($request->get('parishes') ?: []);
 
         // assign roles
         $roles = $request->get('roles');
@@ -211,11 +306,56 @@ class UserController extends Controller
         foreach ($allowedCities as $city) {
             if ($preferenceCities->contains($city)) $allowedCities->forget($city);
         }
-        return view('users.preferences', ['user' => $user, 'allowedCities' => $allowedCities, 'preferenceCities' => $preferenceCities]);
+        return view('users.preferences', compact('user', 'allowedCities', 'preferenceCities'));
     }
 
     public function savePreferences(Request $request, $id)
     {
+    }
 
+    public function join(User $user) {
+        $users = User::where('id', '!=', $user->id)->orderBy('name')->get();
+        return view('users.join', compact('user', 'users'));
+    }
+
+    public function doJoin(Request $request) {
+        $request->validate([
+            'user1' => 'required|integer',
+            'user2' => 'required|integer',
+        ]);
+
+        $user1Id = $request->get('user1');
+        $user2Id = $request->get('user2');
+
+        $user1 = User::findOrFail($user1Id);
+        $user2 = User::findOrFail($user2Id);
+
+        $this->authorize('delete', $user1);
+        $this->authorize('update', $user2);
+
+        if (null === $user1 || null === $user2)
+            return redirect()->route('home')->with('error', 'Ein Fehler ist aufgetreten.');
+
+        // replace all the pivot records
+
+        DB::statement('UPDATE service_user SET user_id=:user2Id WHERE user_id=:user1Id;', compact('user1Id', 'user2Id'));
+
+        // delete old user
+        $user1->delete();
+
+        return redirect()->route('users.index')->with('success', 'Die Benutzer wurden zusammengeführt.');
+    }
+
+
+    public function services(User $user) {
+        $services = Service::with('location', 'day', 'participants')
+            ->select('services.*')
+            ->join('days', 'days.id', '=', 'services.day_id')
+            ->whereHas('participants', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->orderBy('days.date', 'ASC')
+            ->orderBy('time')
+            ->get();
+        return view('users.services', compact('user', 'services'));
     }
 }

@@ -78,11 +78,12 @@ class OfferingsInput extends AbstractInput
                     $originalParticipants[$key] = $original->participantsText($key);
                 }
 
-                $service->offering_goal = $data['offering_goal'] ?: '';
+                $service->offering_goal = isset($data['offering_goal']) ? $data['offering_goal'] : '';
                 $service->offering_type = isset($data['offering_type']) ? $data['offering_type'] : '';
-                $service->offering_description = $data['offering_description'] ?: '';
-                $service->offerings_counter1 = $data['offerings_counter1'] ?: '';
-                $service->offerings_counter2 = $data['offerings_counter2'] ?: '';
+                $service->offering_description = isset($data['offering_description']) ? $data['offering_description'] : '';
+                $service->offerings_counter1 = isset($data['offerings_counter1']) ? $data['offerings_counter1'] : '';
+                $service->offerings_counter2 = isset($data['offerings_counter2']) ? $data['offerings_counter2'] : '';
+                $service->offering_amount = isset($data['offering_amount']) ? $data['offering_amount'] : '';
                 $dirty = (count($service->getDirty()) > 0);
                 $service->save();
 

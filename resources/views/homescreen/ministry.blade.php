@@ -3,7 +3,7 @@
 @section('title', 'Herzlich willkommen')
 
 @section('content')
-    @component('components.container')
+    @component('components.ui.card')
         <h1>Willkommen, {{ $user->name }}!</h1>
         <a class="btn btn-primary btn-lg" href="{{ route('calendar') }}"><span class="fa fa-calendar"></span> Zum Kalender</a>
         <hr />
@@ -12,6 +12,11 @@
             <li class="nav-item active">
                 <a class="nav-link active" href="#services" role="tab" data-toggle="tab">Meine Gottesdienste @if($services->count())<span class="badge badge-primary">{{ $services->count() }}</span> @endif </a>
             </li>
+            @if(Auth::user()->manage_absences)
+                <li class="nav-item" id="absenceTab">
+                    <a class="nav-link" href="#absences" role="tab" data-toggle="tab">Mein Urlaub</a>
+                </li>
+            @endif
         </ul>
 
         <div class="tab-content">
@@ -48,6 +53,9 @@
                     </table>
                 </div>
             </div>
+            @if(Auth::user()->manage_absences)
+                @include('homescreen.tabs.absences')
+            @endif
         </div>
     @endcomponent
 @endsection

@@ -4,13 +4,18 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Day;
+use App\Http\Requests\StoreServiceRequest;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Mail\ServiceUpdated;
+use App\Participant;
 use App\Service;
+use App\ServiceGroup;
 use App\Subscription;
+use App\Tag;
 use App\User;
 use App\Vacations;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -47,96 +52,31 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  StoreServiceRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
-        $request->validate([
-            'day_id' => 'required|integer',
-        ]);//
 
-        if ($specialLocation = ($request->get('special_location') ?: '')) {
-            $locationId = 0;
-            $time = $request->get('time') ?: '';
-            $ccLocation = $request->get('cc_location') ?: '';
-        } else {
-            $locationId = $request->get('location_id') ?: 0;
-            if ($locationId) {
-                $location = Location::find($locationId);
-                $time = $request->get('time') ?: $location->default_time;
-                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
-            } else {
-                $time = $request->get('time') ?: '';
-                $ccLocation = $request->get('cc_location') ?: '';
-            }
-        }
-
-        $day = Day::find($request->get('day_id'));
-
-        $service = new Service([
-            'day_id' => $day->id,
-            'location_id' => $locationId,
-            'time' => $time,
-            'special_location' => $specialLocation,
-            'city_id' => $request->get('city_id'),
-            'pastor' => '',
-            'organist' => '',
-            'sacristan' => '',
-            'others' => '',
-            'description' => $request->get('description') ?: '',
-            'need_predicant' => $request->get('need_predicant') ? 1 : 0,
-            'baptism' => $request->get('baptism') ? 1 : 0,
-            'eucharist' => $request->get('eucharist') ? 1 : 0,
-            'offerings_counter1' => $request->get('offerings_counter1') ?: '',
-            'offerings_counter2' => $request->get('offerings_counter2') ?: '',
-            'offering_goal' => $request->get('offering_goal') ?: '',
-            'offering_description' => $request->get('offering_description') ?: '',
-            'offering_type' => $request->get('offering_type') ?: '',
-            'cc' => $request->get('cc') ? 1: 0,
-            'cc_location' => $ccLocation,
-            'cc_lesson' => $request->get('cc_lesson') ?: '',
-            'cc_staff' => $request->get('cc_staff') ?: '',
-        ]);
-
+        $service = new Service($request->all());
+        $service->setTimeAndPlaceFromRequest($request);
+        $service->setDefaultOfferingValues();
         $service->save();
 
-        // participants:
-        $participants = [];
-        foreach (($request->get('participants') ?: []) as $category => $participantList) {
-            foreach ($participantList as $participant) {
-                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
-                    $user = new User([
-                        'name' => $participant,
-                        'office' => '',
-                        'phone' => '',
-                        'address' => '',
-                        'preference_cities' => '',
-                        'first_name' => '',
-                        'last_name' => '',
-                        'title' => '',
-                    ]);
-                    $user->save();
-                    $participant = $user->id;
-                }
-                $participants[$category][$participant] = ['category' => $category];
-            }
-        }
-        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
-        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
-        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
-        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
+        $service->associateParticipants($request, $service);
+        $service->checkIfPredicantNeeded();
 
 
-        //$service->location_id = $location->id;
-        //$service->day_id = $day->id;
-        //$service->notifyOfCreation(Auth::user(), '%s hat soeben folgenden Gottesdienst angelegt:');
+        $tags = $request->get('tags') ?: [];
+        $service->tags()->sync($tags);
+
+        $serviceGroups = $request->get('serviceGroups') ?: [];
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
 
         // notify:
-        // (needs to happen before save, so the model is still dirty
         Subscription::send($service, ServiceCreated::class);
 
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+        return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month])
             ->with('success', 'Der Gottesdienst wurde hinzugefügt');
     }
 
@@ -162,108 +102,50 @@ class ServiceController extends Controller
     public function edit(Request $request, $id, $tab = 'home')
     {
 
-        $service = Service::find($id);
-        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
+        $service = Service::with(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings'])->find($id);
 
+        $ministries = Participant::all()
+            ->pluck('category')
+            ->unique()
+            ->reject(function($value, $key){
+                return in_array($value, ['P', 'O', 'M', 'A']);
+            });
 
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::where('city_id', '=', $service->city_id)->get();
         $users = User::all()->sortBy('name');
+        $tags = Tag::all();
+        $serviceGroups = ServiceGroup::all();
 
         $backRoute = $request->get('back') ?: '';
 
-        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute'));
+        return view('services.edit', compact('service', 'days', 'locations', 'users', 'tab', 'backRoute', 'tags', 'serviceGroups', 'ministries'));
     }
+
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  StoreServiceRequest $request
+     * @param  Service $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreServiceRequest $request, Service $service)
     {
-        $request->validate([
-            'day_id' => 'required|integer',
-        ]);//
-
-        $service = Service::find($id);
         $original = clone $service;
         foreach (['P', 'O', 'M', 'A'] as $key) {
             $originalParticipants[$key] = $original->participantsText($key);
         }
 
+        $service->associateParticipants($request, $service);
+        $service->checkIfPredicantNeeded();
 
-        // participants first
-        $participants = [];
-        foreach (($request->get('participants') ?: []) as $category => $participantList) {
-            foreach ($participantList as $participant) {
-                if ((!is_numeric($participant)) || (User::find($participant) === false)) {
-                    $user = new User([
-                        'name' => $participant,
-                        'office' => '',
-                        'phone' => '',
-                        'address' => '',
-                        'preference_cities' => '',
-                        'first_name' => '',
-                        'last_name' => '',
-                        'title' => '',
-                    ]);
-                    $user->save();
-                    $participant = $user->id;
-                }
-                $participants[$category][$participant] = ['category' => $category];
-            }
-        }
+        $service->fill($request->all());
+        $service->setTimeAndPlaceFromRequest($request);
+        $service->setDefaultOfferingValues();
 
-        $service->pastors()->sync(isset($participants['P']) ? $participants['P'] : []);
-        $service->organists()->sync(isset($participants['O']) ? $participants['O'] : []);
-        $service->sacristans()->sync(isset($participants['M']) ? $participants['M'] : []);
-        $service->otherParticipants()->sync(isset($participants['A']) ? $participants['A'] : []);
-        $service->save();
-
-
-        $day = Day::find($request->get('day_id'));
-
-        if ($specialLocation = ($request->get('special_location') ?: '')) {
-            $locationId = 0;
-            $time = $request->get('time') ?: '';
-            $ccLocation = $request->get('cc_location') ?: '';
-        } else {
-            $locationId = $request->get('location_id') ?: 0;
-            if ($locationId) {
-                $location = Location::find($locationId);
-                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
-                $time = $request->get('time') ?: $location->default_time;
-            } else {
-                $time = $request->get('time') ?: '';
-                $ccLocation = $request->get('cc_location') ?: '';
-            }
-        }
-
-        $service->day_id = $day->id;
-        $service->location_id = $locationId;
-        $service->time = $time;
-        $service->pastor = $request->get('pastor') ?: '';
-        $service->organist = $request->get('organist') ?: '';
-        $service->sacristan = $request->get('sacristan') ?: '';
-        $service->description = $request->get('description') ?: '';
-        $service->city_id = $request->get('city_id');
-        $service->special_location = $specialLocation;
-        $service->need_predicant = $request->get('need_predicant') ? 1 : 0;
-        $service->baptism = $request->get('baptism') ? 1 : 0;
-        $service->eucharist = $request->get('eucharist') ? 1 : 0;
-        $service->offerings_counter1 = $request->get('offerings_counter1') ?: '';
-        $service->offerings_counter2 = $request->get('offerings_counter2') ?: '';
-        $service->offering_goal = $request->get('offering_goal') ?: '';
-        $service->offering_description = $request->get('offering_description') ?: '';
-        $service->offering_type = $request->get('offering_type') ?: '';
-        $service->others = $request->get('others') ?: '';
-        $service->cc = $request->get('cc') ? 1 : 0;
-        $service->cc_location = $ccLocation;
-        $service->cc_lesson = $request->get('cc_lesson') ?: '';
-        $service->cc_staff = $request->get('cc_staff') ?: '';
+        $service->tags()->sync($request->get('tags') ?: []);
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
 
         // notify:
         // (needs to happen before save, so the model is still dirty
@@ -276,7 +158,7 @@ class ServiceController extends Controller
             return redirect($route)->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
         } else {
             // default: redirect to calendar
-            return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+            return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month])
                 ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
 
         }
@@ -304,10 +186,21 @@ class ServiceController extends Controller
 
         $days = Day::orderBy('date', 'ASC')->get();
 
+        $ministries = Participant::all()
+            ->pluck('category')
+            ->unique()
+            ->reject(function($value, $key){
+                return in_array($value, ['P', 'O', 'M', 'A']);
+            });
+
+
+
         $locations = Location::where('city_id', '=', $city->id)->get();
         $users = User::all()->sortBy('name');
+        $tags = Tag::all();
+        $serviceGroups = ServiceGroup::all();
 
-        return view('services.create', compact('day', 'city', 'days', 'locations', 'users'));
+        return view('services.create', compact('day', 'city', 'days', 'locations', 'users', 'tags', 'serviceGroups', 'ministries'));
     }
 
     public function servicesByCityAndDay($cityId, $dayId) {
@@ -336,5 +229,39 @@ class ServiceController extends Controller
             ->header('Expires', '0')
             ->header('Content-Type', 'text/calendar')
             ->header('Content-Disposition', 'inline; filename='.$service.'.ics');
+    }
+
+
+    /**
+     * Return timestamp of last update
+     */
+    public function lastUpdate() {
+        $lastUpdated = Service::whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->orderBy('updated_at', 'DESC')
+            ->first();
+        $lastCreated = Service::whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->orderBy('created_at', 'DESC')
+            ->first();
+
+        if ($lastUpdated->updated_at > $lastCreated->created_at) {
+            $service = $lastUpdated;
+            $timestamp = $service->updated_at;
+        } else {
+            $service = $lastCreated;
+            $timestamp = $service->created_at;
+        }
+
+        $route = route('calendar', ['year' => $service->day->date->format('Y'), 'month' => $service->day->date->format('m'), 'highlight' => $service->id, 'slave' => 1]);
+
+        // tie in automatic month switching
+        $timestamp2 = Carbon::createFromTimestamp(Auth::user()->getSetting('display-timestamp', 0));
+        if ($timestamp2 > $timestamp) {
+            $timestamp = $timestamp2;
+            $route = route('calendar', ['year' => Auth::user()->getSetting('display-year', date('Y')), 'month' => Auth::user()->getSetting('display-month', date('m')), 'slave' => 1]);
+        }
+
+        $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');
+
+        return response()->json(compact('route', 'update', 'service'));
     }
 }

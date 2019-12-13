@@ -22,17 +22,25 @@
 namespace App\Reports;
 
 use Illuminate\Support\Facades\Auth;
+use Mpdf\Mpdf;
 use PDF;
 
 class AbstractPDFDocumentReport extends AbstractReport
 {
     public $icon = 'fa fa-file-pdf';
 
-    public function sendToBrowser($filename, $data, $layout) {
+    public function renderPDF($data, $layout) {
         $pdf = PDF::loadView($this->getRenderViewName(), $data, [], array_merge([
             'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
-        ], $layout));
-        return $pdf->stream($filename);
+        ], $layout), $layout);
+        return $pdf;
+    }
 
+    public function sendToBrowser($filename, $data, $layout) {
+        return $this->renderPDF($data, $layout)->stream($filename);
+    }
+
+    public function sendToFile($filename, $data, $layout) {
+        return $this->renderPDF($data, $layout)->download($filename);
     }
 }

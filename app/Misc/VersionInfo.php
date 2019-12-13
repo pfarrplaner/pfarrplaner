@@ -16,6 +16,11 @@ use Illuminate\Support\Facades\Auth;
 class VersionInfo
 {
 
+    public static function version() {
+        $data = json_decode(file_get_contents(base_path('composer.json')), true);
+        return $data['version'];
+    }
+
     /**
      * Get version "what's new" messages
      * @return Collection
@@ -23,6 +28,94 @@ class VersionInfo
     public static function getMessages()
     {
         return collect([
+            [
+                'date' => new Carbon('2019-12-07 16:00', 'Europe/Berlin'),
+                'text' => 'Der Pfarrplaner erscheint seit heute im neuen, übersichtlicheren Layout.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '25.11.2019'),
+                'text' => 'Beim Export nach Outlook (rechts oben auf <a href="'.route('ical.connect').'"><span class="fa fa-calendar-alt"></span></a> klicken) kann nun ein kombinierter Veranstaltungskalender für eine Gemeinde erzeugt werden. Dieser kombiniert Einträge aus dem Pfarrplaner, aus einem freigegebenen Outlookkalender und aus dem Online-Planer des Gemeindebaukastens.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '23.11.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Terminliste", mit dem eine Worddatei mit Gottesdiensten und Terminen für einen bestimmten Zeitraum erzeugt werden kann.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '23.11.2019'),
+                'text' => 'Für die Kinderkirche kann nun auch eine abweichende Uhrzeit angegeben werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '14.11.2019'),
+                'text' => 'Gottesdiensten können nun neben den bereits bestehenden Diensten weitere, beliebig benannte Dienste zugeordnet werden (z.B. Schriftlesung)',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '14.11.2019'),
+                'text' => 'Für jede <a href="'.route('cities.index').'">Kirchengemeinde</a> können nun Standard-Opferzwecke für Beerdigungen und Trauungen angegeben werden. Diese werden im Opferplan separat aufgelistet und bei entsprechenden Gottesdiensten mit leerem Opferzweck-Feld automatisch eingesetzt.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '11.11.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Opferplan", mit dem der komplette Opferplan für ein Jahr ausgedruckt werden kann.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '07.11.2019'),
+                'text' => 'Jeder Gottesdienst hat nun ein Feld "Opferbetrag", in dem die Höhe des eingesammelten Opfers vermerkt werden kann (z.B. für Bekanntmachungen). Dieses Feld kann auch über die Sammeleingabe Opferplan bearbeitet werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
+                'text' => 'Jeder Gottesdienst hat nun ein Feld "Interne Anmerkungen" für Beschreibungen, die nicht veröffentlicht werden sollen, aber intern im Pfarrplaner angezeigt werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Kirchzettel", das automatisch den wöchtentlichen Ausgang für den Schaukasten zusammenstellt. Dabei können Veranstaltungen aus einem Gemeindekalender auf Sharepoint übernommen werden. (Das muss allerdings erst eingerichtet werden. Bei Fragen dazu bitte an den Christoph Fischer wenden).',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '02.11.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Bekanntgaben", das automatisch die Bekanntgaben für einen Gottesdienst zusammenstellt. Dabei können Veranstaltungen aus einem Gemeindekalender auf Sharepoint übernommen werden. (Das muss allerdings erst eingerichtet werden. Bei Fragen dazu bitte an den Christoph Fischer wenden).',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '29.10.2019'),
+                'text' => 'Es gibt jetzt ein <a href="'.route('reports.list').'"> Ausgabeformat</a> namens "Liste der Angehörigen", das alle Angehörigen der vergangenen Beerdigungen auflistet, um diese zum Ewigkeitssonntag einzuladen.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '29.10.2019'),
+                'text' => 'Bessere Möglichkeiten zum Export nach Outlook (rechts oben auf <a href="'.route('ical.connect').'"><span class="fa fa-calendar-alt"></span></a> klicken).',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '25.10.2019'),
+                'text' => 'Der Pfarrplaner kann jetzt zur <a href="'.route('absences.index').'">Urlaubsplanung</a> für freigeschaltete Benutzer genutzt werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '17.10.2019'),
+                'text' => 'Unter "Admin > <a href="'.route('calendar', ['year' => null, 'month' => null, 'slave' => 1]).'">Automatische Kalenderansicht öffnen</a> kann ein neues Kalenderfenster geöffnet werden, das automatisch allen Änderungen folgt (z.B. zur Anzeige auf dem Beamer).',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '17.10.2019'),
+                'text' => 'Der Pfarrplaner ist auf die Domain www.pfarrplaner.de umgezogen. Alle bisherigen Links funktionieren aber weiterhin',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '27.09.2019'),
+                'text' => 'Unter "Sammeleingabe > <a href="'.route('inputs.setup', ['input' => 'multipleServices']).'">Mehrere Gottesdienste anlegen</a> angelegte Gottesdienste können nun auf andere Wochentage außer Sonntag gelegt werden. Außerdem wird eine Sammelbenachrichtigung per E-Mail versendet.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '27.09.2019'),
+                'text' => 'Unter "Sammeleingabe > <a href="'.route('inputs.setup', ['input' => 'multipleServices']).'">Mehrere Gottesdienste anlegen</a> können nun viele Gottesdienste auf einmal angelegt werden (z.B. für das neue Jahr).',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '13.09.2019'),
+                'text' => 'Es ist jetzt möglich, Benutzer so anzulegen, dass sie nur bestimmte Gemeinden sehen. Wenn du die nötigen Rechte hast, kannst du im Menü unter <span class="fa fa-wrench"></span> Admin > <a href="'.route('users.index').'">Benutzer</a> sehen, wer welchen Zugriff auf deine Kirchengemeinde(n) hat.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '07.09.2019'),
+                'text' => 'Im <a href="'.route('user.profile').'">Benutzerprofil</a> (<span class="fa fa-user"></span> '.Auth::user()->fullName(false).' > Mein Profil) kann jetzt eingestellt werden, welche Kirchengemeinden im Kalender in welcher Reihenfolge angezeigt werden sollen. Außerdem kann dort eine neue, (experimentelle) vertikale Tabellendarstellung ausgewählt werden, die die Tage in Zeilen und die Kirchengemeinden in Spalten anordnet.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '06.09.2019'),
+                'text' => 'Bei Taufen kann zum Taufgespräch nun auch eine Uhrzeit angegeben werden. Das Taufgespräch kann dann mit einem Klick in den Outlookkalender übernommen werden.',
+            ],
+            [
+                'date' => Carbon::createFromFormat('d.m.Y', '06.09.2019'),
+                'text' => 'Bei Bestattungen können jetzt auch Kontaktdaten (Telefonnummer usw.) für die Angehörigen mit gespeichert werden.',
+            ],
             [
                 'date' => Carbon::createFromFormat('d.m.Y', '06.08.2019'),
                 'text' => 'Eine automatisch aktualisierte Übersicht der nächsten Gottesdienste kann in die Homepage der Kirchengemeinde (Gemeindebaukasten) '

@@ -2,8 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\CalendarLinks\AbstractCalendarLink;
 use App\City;
+use App\CalendarLinks\CalendarLinks;
+use App\Location;
 use App\Misc\VersionInfo;
+use App\Service;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,7 +65,7 @@ class HomeController extends Controller
     public function changePassword(Request $request){
         if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
             // The passwords matches
-            return redirect()->back()->with("error","Your current password does not matches with the password you provided. Please try again.");
+            return redirect()->back()->with("error","Your current password does not match with the password you provided. Please try again.");
         }
         if(strcmp($request->get('current-password'), $request->get('new-password')) == 0){
             //Current password and new password are same
@@ -77,17 +82,44 @@ class HomeController extends Controller
         return redirect()->back()->with("success","Password changed successfully !");
     }
 
-    public function connectWithOutlook() {
+    public function connect() {
+        /*
         $user = Auth::user();
         $token = $user->getToken();
-        $cities = City::all();
+        $cities = Auth::user()->visibleCities;
         $name = explode(' ', Auth::user()->name);
         $name = end($name);
-        return view('connectwithoutlook', ['user' => $user, 'token' => $token, 'cities' => $cities, 'name' => $name]);
+        return view('ical.connect', ['user' => $user, 'token' => $token, 'cities' => $cities, 'name' => $name]);
+        */
     }
 
     public function whatsnew() {
         $messages = VersionInfo::getMessages()->sortByDesc('date');
+        Auth::user()->setSetting('new_features', \Carbon\Carbon::now());
         return view('whatsnew', compact('messages'));
     }
+
+    public function counters($counter) {
+        $data = [];
+        switch ($counter) {
+            case 'users':
+                $count = count(User::where('password', '!=', '')->get());
+                break;
+            case 'services':
+                $count = count(Service::whereHas('day', function($query) { $query->where('date', '>=', Carbon::now()); })->get());
+                break;
+            case 'locations':
+                $count = count(Location::all());
+                break;
+            case 'cities':
+                $count = count(City::all());
+                break;
+            case 'online':
+                $data['users'] = visitor()->onlineVisitors(User::class);
+                $count = count($data['users']);
+                break;
+        }
+        return response()->json(compact('count', 'data'));
+    }
+
 }

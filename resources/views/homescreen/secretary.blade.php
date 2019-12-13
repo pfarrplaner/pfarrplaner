@@ -3,7 +3,7 @@
 @section('title', 'Herzlich willkommen')
 
 @section('content')
-    @component('components.container')
+    @component('components.ui.card')
         <h1>Willkommen, {{ $user->name }}!</h1>
         <a class="btn btn-primary btn-lg" href="{{ route('calendar') }}"><span class="fa fa-calendar"></span> Zum Kalender</a>
         <a class="btn btn-secondary btn-lg" href="{{ route('baptisms.create') }}"><span class="fa fa-water"></span> Taufe anlegen...</a>
@@ -26,6 +26,11 @@
                 <a class="nav-link" href="#weddings" role="tab" data-toggle="tab">Trauungen @if($weddings->count())<span class="badge badge-primary">{{ $weddings->count() }}</span> @endif </a>
             </li>
             @endcanany
+            @if(Auth::user()->manage_absences)
+                <li class="nav-item" id="absenceTab">
+                    <a class="nav-link" href="#absences" role="tab" data-toggle="tab">Mein Urlaub</a>
+                </li>
+            @endif
         </ul>
 
         <div class="tab-content">
@@ -98,6 +103,9 @@
                                     @if ($loop->first)
                                         <td rowspan="{{ $service->baptisms->count() }}">
                                             @include('partials.service.edit-rites-block', ['service', $service])
+                                            @can('gd-kasualien-bearbeiten')
+                                                <a class="btn btn-sm btn-primary" href="{{route('baptisms.edit', $baptism)}}?back=/home" title="Beerdigung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-cross"></span></a>
+                                            @endcan
                                         </td>
                                     @endif
                                 </tr>
@@ -121,6 +129,7 @@
                             <th>Person</th>
                             <th>Bestattungsart</th>
                             <th>Trauergespräch</th>
+                            <th>Abkündigung</th>
                             <th></th>
                         </tr>
                         </thead>
@@ -140,6 +149,9 @@
                                     @if ($loop->first)
                                         <td rowspan="{{ $service->funerals->count() }}">
                                             @include('partials.service.edit-rites-block', ['service', $service])
+                                            @can('gd-kasualien-bearbeiten')
+                                                <a class="btn btn-sm btn-primary" href="{{route('funerals.edit', $funeral)}}?back=/home" title="Beerdigung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-cross"></span></a>
+                                            @endcan
                                         </td>
                                     @endif
                                 </tr>
@@ -180,6 +192,9 @@
                                     @if ($loop->first)
                                         <td rowspan="{{ $service->weddings->count() }}">
                                             @include('partials.service.edit-rites-block', ['service', $service])
+                                            @can('gd-kasualien-bearbeiten')
+                                                <a class="btn btn-sm btn-primary" href="{{route('weddings.edit', $wedding)}}?back=/home" title="Trauung bearbeiten"><span class="fa fa-edit"></span> <span class="fa fa-ring"></span></a>
+                                            @endcan
                                         </td>
                                     @endif
                                 </tr>
@@ -190,6 +205,9 @@
                 </div>
             </div>
             @endcanany
+            @if(Auth::user()->manage_absences)
+                @include('homescreen.tabs.absences')
+            @endif
         </div>
     @endcomponent
 @endsection

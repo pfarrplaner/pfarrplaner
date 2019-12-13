@@ -3,15 +3,9 @@
 @section('title', 'Benutzer hinzufügen')
 
 @section('content')
-    @component('components.container')
-    <div class="card">
-        <div class="card-header">
-            Benutzer hinzufügen
-        </div>
-        <div class="card-body">
-            @component('components.errors')
-            @endcomponent
-            <form method="post" action="{{ route('users.store') }}">
+    <form method="post" action="{{ route('users.store') }}" enctype="multipart/form-data">
+        <div class="card">
+            <div class="card-body">
                 @csrf
                 <div class="form-group">
                     <label for="name">Name:</label>
@@ -25,7 +19,7 @@
                     <label for="password">Passwort:</label>
                     <input type="password" class="form-control" id="password" name="password"/>
                 </div>
-                <hr />
+                <hr/>
                 <div class="form-group">
                     <label for="title">Titel:</label>
                     <input type="text" class="form-control" id="title" name="title" value=""/>
@@ -38,15 +32,29 @@
                     <label for="last_name">Nachname:</label>
                     <input type="text" class="form-control" id="last_name" name="last_name" value=""/>
                 </div>
+                <div class="form-group">
+                    <label for="image">Bild:</label>
+                    <input type="file" class="form-control" id="image" name="image"/>
+                </div>
                 <div class="form-group"> <!-- Radio group !-->
-                    <label class="control-label">Gehört zu folgenden Kirchengemeinden:</label>
+                    <label class="control-label">Zugriff auf Kirchengemeinden:</label>
                     @foreach ($cities as $city)
-                        <div class="form-check">
-                            <input class="form-check-input check-city" data-city="{{ $city->id }}" type="checkbox" name="cities[]" value="{{ $city->id }}"
-                                   id="defaultCheck{{$city->id}}">
-                            <label class="form-check-label" for="defaultCheck{{$city->id}}">
-                                {{$city->name}}
-                            </label>
+                        <div class="form-group row" data-city="{{ $city->id }}">
+                            <label class="col-sm-3">{{ $city->name }}</label>
+                            <div class="col-sm-9">
+                                <select class="form-control check-city"
+                                        name="cityPermission[{{ $city->id }}][permission]" data-city="{{ $city->id }}">
+                                    <option value="w" data-city-write="{{ $city->id }}" style="background-color: green">
+                                        Schreibzugriff
+                                    </option>
+                                    <option value="r" data-city-read="{{ $city->id }}" style="background-color: yellow">
+                                        Lesezugriff
+                                    </option>
+                                    <option value="n" selected data-city="{{ $city->id }}"
+                                            style="background-color: red">Kein Zugriff
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                     @endforeach
                 </div>
@@ -58,37 +66,55 @@
                         <label class="col-sm-2">{{ $city->name }}</label>
                         <div class="col-sm-10">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="2" />
-                                <label class="form-check-label" for="subscribe[{{ $city->id }}]" >alle Gottesdienste</label>
+                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]"
+                                       value="2"/>
+                                <label class="form-check-label" for="subscribe[{{ $city->id }}]">alle
+                                    Gottesdienste</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="1" checked />
-                                <label class="form-check-label" for="subscribe[{{ $city->id }}]">eigene Gottesdienste</label>
+                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="1"
+                                       checked/>
+                                <label class="form-check-label" for="subscribe[{{ $city->id }}]">eigene
+                                    Gottesdienste</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]" value="0" />
-                                <label class="form-check-label" for="subscribe[{{ $city->id }}]">keine Gottesdienste</label>
+                                <input class="form-check-input" type="radio" name="subscribe[{{ $city->id }}]"
+                                       value="0"/>
+                                <label class="form-check-label" for="subscribe[{{ $city->id }}]">keine
+                                    Gottesdienste</label>
                             </div>
                         </div>
                     </div>
                 @endforeach
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="notifications" value="1"
-                           id="notifications">
-                    <label class="form-check-label" for="notifications">
-                        Dieser Benutzer wird per E-Mail benachrichtigt, wenn Gottesdienste seiner Gemeinde(n) geändert werden.
-                    </label>
+                <hr/>
+                <div class="form-group">
+                    <label for="homeCities">Dieser Benutzer gehört zu folgenden Kirchengemeinden:</label>
+                    <select class="form-control fancy-selectize" name="homeCities[]" multiple>
+                        <option></option>
+                        @foreach ($cities as $city)
+                            <option value="{{ $city->id }}">{{ $city->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-                <hr />
+                <div class="form-group">
+                    <label for="parishes">Dieser Benutzer hat folgende Pfarrämter inne:</label>
+                    <select class="form-control fancy-selectize" name="parishes[]" multiple>
+                        <option></option>
+                        @foreach ($parishes as $parish)
+                            <option value="{{ $parish->id }}">{{ $parish->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <hr/>
                 <div class="form-group">
                     <label for="roles[]">Benutzerrollen</label>
-                    <select class="form-control fancy-select2" name="roles[]" multiple>
+                    <select class="form-control fancy-selectize" name="roles[]" multiple>
                         @foreach($roles as $role)
                             <option>{{ $role->name }}</option>
                         @endforeach
                     </select>
                 </div>
-                <hr />
+                <hr/>
                 <div class="form-group">
                     <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
                     <select class="form-control" name="homescreen">
@@ -97,30 +123,57 @@
                         <option value="homescreen:ministry">Zusammenfassung für andere Beteiligte</option>
                         <option value="homescreen:secretary">Zusammenfassung für Sekretär</option>
                         <option value="homescreen:office">Zusammenfassung für Kirchenpflege/Kirchenregisteramt</option>
+                        <option value="homescreen:admin">Zusammenfassung für Administrator*innen</option>
                     </select>
                 </div>
-                <hr />
+                <hr/>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" name="manage_absences" value="1"/>
+                        <label class="form-check-label" for="manage_absences">
+                            Urlaub für diesen Benutzer verwalten
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
-            </form>
+            </div>
         </div>
-    </div>
+    </form>
+@endsection
+
+@section('scripts')
     <script>
         function toggleSubscriptionRows() {
-            $('.city-subscription-row').each(function(){
-                if ($('input[data-city='+$(this).data('city')+']').prop('checked')) {
+            $('.city-subscription-row').each(function () {
+                var value = $('select[data-city=' + $(this).data('city') + ']').val();
+                if (value == 'r' | value == 'w') {
                     $(this).show();
                 } else {
                     $(this).hide();
                 }
+                var color = '';
+                switch (value) {
+                    case 'w':
+                        color = 'green';
+                        break;
+                    case 'r':
+                        color = 'yellow';
+                        break;
+                    case 'n':
+                        color = 'red';
+                        break;
+                }
+                $('select[data-city=' + $(this).data('city') + ']').css('background-color', color);
             });
         }
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             toggleSubscriptionRows();
-            $('.check-city').change(function(){
+            $('.check-city').change(function () {
                 toggleSubscriptionRows();
             });
         });
     </script>
-    @endcomponent
 @endsection

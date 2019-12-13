@@ -2,10 +2,14 @@
 
 namespace App;
 
+use App\Http\Requests\StoreServiceRequest;
 use App\Mail\ServiceUpdated;
+use App\Tools\StringTool;
 use App\Traits\HasCommentsTrait;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
@@ -20,9 +24,6 @@ class Service extends Model
         'day_id' => 'Tag',
         'location_id' => 'Ort',
         'time' => 'Uhrzeit',
-        'pastor' => 'Pfarrer',
-        'organist' => 'Organist',
-        'sacristan' => 'Mesner',
         'description' => 'Besonderheiten',
         'city_id' => 'Kirchengemeinde',
         'special_location' => 'Ort (Freitext)',
@@ -39,15 +40,15 @@ class Service extends Model
         'cc_location' => 'Ort der Kinderkirche',
         'cc_lesson' => 'Lektion für die Kinderkirche',
         'cc_staff' => 'Mitarbeiter in der Kinderkirche',
+        'cc_alt_time' => 'Alternative Uhrzeit für die Kinderkirche',
+        'internal_remarks' => 'Interne Anmerkungen',
+        'offering_amount' => 'Opferbetrag',
     );
 
     protected $fillable = [
         'day_id',
         'location_id',
         'time',
-        'pastor',
-        'organist',
-        'sacristan',
         'description',
         'city_id',
         'special_location',
@@ -61,9 +62,27 @@ class Service extends Model
         'offering_type',
         'others',
         'cc',
+        'cc_alt_time',
         'cc_location',
         'cc_lesson',
         'cc_staff',
+        'internal_remarks',
+        'offering_amount',
+    ];
+
+    protected $appends = [
+        'pastors',
+        'organists',
+        'sacristans',
+        'otherParticipants',
+        'descriptionText',
+        'locationText',
+        'timeText',
+        'baptismsText'
+    ];
+
+    protected $attributes = [
+        'offering_type' => 'eO',
     ];
 
     private $auditData = [];
@@ -106,7 +125,7 @@ class Service extends Model
     }
 
     public function participants() {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class)->withTimestamps()->withPivot('category');
     }
 
     public function users() {
@@ -130,6 +149,14 @@ class Service extends Model
         return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
     }
 
+    public function tags() {
+        return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
+    public function serviceGroups() {
+        return $this->belongsToMany(ServiceGroup::class);
+    }
+
     public function participantsByCategory($category) {
         switch ($category) {
             case 'P': return $this->pastors;
@@ -140,13 +167,30 @@ class Service extends Model
 
     }
 
-    public function participantsText($category, $fullName = false, $withTitle = true) {
+    public function participantsWithMinistry() {
+        return $this->belongsToMany(User::class)
+            ->withPivot('category')
+            ->wherePivotIn('category', ['P', 'O', 'M', 'A'], 'and', 'NotIn')
+            ->withTimestamps();
+    }
+
+    public function ministries() {
+        $ministries = [];
+        foreach ($this->participantsWithMinistry as $participant) {
+            if (!isset($ministries[$participant->pivot->category])) $ministries[$participant->pivot->category] = new Collection();
+            $ministries[$participant->pivot->category]->push($participant);
+        }
+        return $ministries;
+    }
+
+
+    public function participantsText($category, $fullName = false, $withTitle = true, $glue = ', ') {
         $participants = $this->participantsByCategory($category);
         $names = [];
         foreach ($participants as $participant) {
             $names[] = ($fullName ? $participant->fullName($withTitle) : $participant->lastName($withTitle));
         }
-        return join(', ', $names);
+        return join($glue, $names);
     }
 
     public function syncParticipantsByCategory ($category, $participantIds) {
@@ -162,8 +206,30 @@ class Service extends Model
         }
     }
 
+    public function setTimeAndPlaceFromRequest(StoreServiceRequest $request) {
+        if ($specialLocation = ($request->get('special_location') ?: '')) {
+            $locationId = 0;
+            $time = $request->get('time') ?: '';
+            $ccLocation = $request->get('cc_location') ?: '';
+        } else {
+            $locationId = $request->get('location_id') ?: 0;
+            if ($locationId) {
+                $location = Location::find($locationId);
+                $time = $request->get('time') ?: $location->default_time;
+                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
+            } else {
+                $time = $request->get('time') ?: '';
+                $ccLocation = $request->get('cc_location') ?: '';
+            }
+        }
+
+        $this->location_id = $locationId;
+        $this->time = $time;
+        $this->special_location = $specialLocation;
+    }
+
     public function locationText() {
-        return $this->special_location ?: $this->location->name;
+        return $this->special_location ?: (is_object( $this->location) ? $this->location->name : '');
     }
 
     public function descriptionText() {
@@ -174,8 +240,8 @@ class Service extends Model
         return join('; ', $desc);
     }
 
-    public function timeText($uhr = true)  {
-        return strftime('%H:%M', strtotime($this->time)).($uhr ? ' Uhr' : '');
+    public function timeText($uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
+        return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
     }
 
     public function offeringText() {
@@ -221,7 +287,23 @@ class Service extends Model
         if ((count($elements) == 1) && ($x != '')) $elements[0] = 'GD mit '.$elements[0];
         return join(' / ', $elements) ?: 'GD';
     }
-    
+
+
+    public function ccTime($emptyIfNotSet = false) {
+        if ($this->cc_alt_time == '00:00:00') $this->cc_alt_time = null;
+        if (null === $this->cc_alt_time) {
+            if ($emptyIfNotSet) return null;
+            $t = $this->time;
+        } else {
+            $t = $this->cc_alt_time;
+        }
+        return new Carbon($this->day->date->format('Y-m-d').' '.$t);
+    }
+
+    public function ccTimeText($emptyIfNotSet = false, $uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
+        if (null === $this->ccTime($emptyIfNotSet)) return '';
+        return StringTool::timeText($this->ccTime(false), $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
+    }
     
     /**
      * Check if service description contains a specific text (case-insensitive!)
@@ -280,4 +362,153 @@ class Service extends Model
         }
     }
 
+    function ccLocationText() {
+        return ($this->cc_location ?: $this->locationText());
+    }
+
+
+    public function getPastorsAttribute() {
+        return $this->pastors()->get();
+    }
+
+    public function getOrganistsAttribute() {
+        return $this->organists()->get();
+    }
+
+    public function getSacristansAttribute() {
+        return $this->sacristans()->get();
+    }
+
+    public function getOtherParticipantsAttribute() {
+        return $this->otherParticipants()->get();
+    }
+
+    public function getDescriptionTextAttribute() {
+        return $this->descriptionText();
+    }
+
+    public function getLocationTextAttribute() {
+        return $this->locationText();
+    }
+
+    public function getTimeTextAttribute() {
+        return $this->timeText();
+    }
+
+    public function getBaptismsTextAttribute() {
+        return $this->baptismsText(true);
+    }
+
+
+    public function scopeRegularForCity(Builder $query, City $city) {
+        return $query->where('city_id', $city->id)
+            ->whereDoesntHave('funerals')
+            ->whereDoesntHave('weddings');
+    }
+
+    public function trueDate() {
+        return Carbon::createFromTimeString($this->day->date->format('Y-m-d').' '.$this->time);
+    }
+
+    public function atText() {
+        return is_object($this->location) ? $this->location->atText() : '('.$this->locationText().')';
+    }
+
+    public function scopeInCity(Builder $query, $city) {
+        return $query->where('city_id', $city->id);
+    }
+
+    public function scopeDateRange(Builder $query, Carbon $start, Carbon $end) {
+        return $query->whereHas('day', function ($query2) use ($start, $end) {
+            $query2->where('date', '>=', $start)
+                ->where('date', '<=', $end);
+        });
+    }
+
+    public function scopeOrdered(Builder $query) {
+        return $query->select('services.*')
+            ->join('days', 'services.day_id', 'days.id')
+            ->orderBy('days.date')
+            ->orderBy('time');
+    }
+
+
+    public function setDefaultOfferingValues() {
+        if ($this->offering_goal == '') {
+            if ((count($this->funerals) >0) && $this->city->default_funeral_offering_goal != '') {
+                $this->offering_goal = $this->city->default_funeral_offering_goal;
+                $this->offering_description = $this->city->default_funeral_offering_description;
+                return;
+            }
+            if ((count($this->weddings) >0) && $this->city->default_wedding_offering_goal != '') {
+                $this->offering_goal = $this->city->default_wedding_offering_goal;
+                $this->offering_description = $this->city->default_wedding_offering_description;
+                return;
+            }
+            if ($this->city->default_offering_goal != '') {
+                $this->offering_goal = $this->city->default_offering_goal;
+                $this->offering_description = $this->city->default_offering_description;
+            }
+        }
+    }
+
+
+    public function associateParticipants(StoreServiceRequest $request, Service $service) {
+        $participants = [];
+        foreach (($request->get('participants') ?: []) as $category => $participantList) {
+            foreach ($participantList as $participant) {
+                $participant = User::createIfNotExists($participant);
+                $participants[$category][$participant]['category'] = $category;
+            }
+        }
+
+        $ministries = $request->get('ministries') ?: [];
+        foreach ($ministries as $ministry) {
+            if (isset($ministry['people'])) {
+                foreach ($ministry['people'] as $participant) {
+                    $participant = User::createIfNotExists($participant);
+                    $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
+                }
+            }
+        }
+        if (count($participants)) {
+            $this->participants()->sync([]);
+            foreach ($participants as $category => $participant) {
+                $this->participants()->attach($participant);
+            }
+        }
+        return $participants;
+    }
+    
+    public function checkIfPredicantNeeded() {
+        if (count($this->pastors)) {
+            $this->need_predicant = false;
+            $this->save();
+        }
+    }
+    
+    
+
+    /**
+     * Mix a collection of services into an array of events
+     * @param $events
+     * @param $services
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return mixed
+     */
+    public static function mix($events, $services, Carbon $start, Carbon $end) {
+
+        foreach ($services as $service) {
+            if (is_object($service->day)) {
+                if (($service->day->date <= $end) && ($service->day->date >= $start)) {
+                    $events[$service->trueDate()->format('YmdHis')][] = $service;
+                }
+            }
+        }
+
+        ksort($events);
+        return $events;
+
+    }
 }

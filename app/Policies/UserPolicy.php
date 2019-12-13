@@ -9,6 +9,10 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
+    public function index(User $user, User $model) {
+        return $user->hasPermissionTo('benutzerliste-lokal-sehen') || $user->hasPermissionTo('benutzer-bearbeiten');
+    }
+
     /**
      * Determine whether the user can view the model.
      *
@@ -79,4 +83,44 @@ class UserPolicy
     {
         return $user->hasPermissionTo('benutzer-bearbeiten');
     }
+
+    /**
+     * Determine whether the user can choose another user to merge the two
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $model
+     * @return mixed
+     */
+    public function join(User $user, User $model) {
+        return $user->hasPermissionTo('benutzer-bearbeiten');
+    }
+
+    /**
+     * Determine whether the user can merge this user into another one
+     *
+     * @param  \App\User  $user
+     * @param  \App\User  $model
+     * @return mixed
+     */
+    public function doJoin(User $user, User $model) {
+        return true;
+    }
+
+
+    /**
+     * Determine wether the user can edit another users absences
+     * @param User $user
+     * @param User $model
+     */
+    public function editAbsences (User $user, User $model) {
+        if ($user->id == $model->id) return true;
+        if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {
+            if (!$model->hasRole('Pfarrer*in')) {
+                if (count($user->writableCities->intersect($model->homeCities))) return true;
+            }
+        }
+        return false;
+    }
+
 }
+

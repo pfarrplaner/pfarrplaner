@@ -22,7 +22,9 @@
 namespace App\Inputs;
 
 use App\City;
+use App\Day;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AbstractInput
 {
@@ -40,11 +42,28 @@ class AbstractInput
     }
 
     public function getInputViewName() {
-        return 'inputs.input.'.strtolower($this->getKey());
+        return $this->getViewName('input');
+    }
+
+    public function getViewName($viewName) {
+        return 'inputs.'.strtolower($this->getKey()).'.'.$viewName;
     }
 
     public function getValues(City $city, $days) {
         return [];
+    }
+
+    public function setup(Request $request) {
+        $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
+        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
+        $cities = Auth::user()->writableCities;
+
+        return view('inputs.setup', [
+            'input' => $this,
+            'minDate' => $minDate,
+            'maxDate' => $maxDate,
+            'cities' => $cities,
+        ]);
     }
 
     public function input(Request $request) {}

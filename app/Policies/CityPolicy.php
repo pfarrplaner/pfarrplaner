@@ -42,7 +42,11 @@ class CityPolicy
      */
     public function update(User $user, City $city)
     {
-        return $user->isAdmin;
+        if ($user->isAdmin) return true;
+        if (!$user->writableCities->contains($city)) return false;
+        if ($user->can('ort-bearbeiten')) return true;
+        if ($user->can('gd-opfer-bearbeiten')) return true;
+        return false;
     }
 
     /**

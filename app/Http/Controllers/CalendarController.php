@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Absence;
 use App\City;
 use App\Day;
 use App\Liturgy;
@@ -38,18 +39,38 @@ class CalendarController extends Controller
         }
     }
 
-    protected function redirectIfMissingParameters($route, $year, $month)
+    protected function redirectIfMissingParameters(Request $request, $route, $year, $month)
     {
+        $defaultMonth = Auth::user()->getSetting('display-month', date('m'));
+        $defaultYear = Auth::user()->getSetting('display-year', date('Y'));
+
+        $initialYear = $year;
+        $initialMonth = $month;
+
+
         if ($month == 13) {
-            return redirect()->route($route, ['year' => ++$year, 'month' => 1]);
+            $year++;
+            $month = 1;
         }
         if (($year > 0) && ($month == 0)) {
-            return redirect()->route($route, ['year' => --$year, 'month' => 12]);
+            $year--;
+            $month = 12;
         }
+
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
-            return redirect()->route($route, ['year' => date('Y'), 'month' => date('m')]);
+            $year = $defaultYear;
+            $month = $defaultMonth;
         }
-        return false;
+
+        if (($year == $initialYear) && ($month == $initialMonth)) {
+            return false;
+        }
+
+        $data = compact('month', 'year');
+        $slave = $request->get('slave', 0);
+        if ($slave) $data = array_merge($data, compact('slave'));
+
+        return redirect()->route($route, $data);
     }
 
     protected function getDaysInMonth($year, $month)
@@ -68,6 +89,7 @@ class CalendarController extends Controller
     protected function getVacationers(Day $day)
     {
         $vacationers = [];
+        /*
         if (env('VACATION_URL')) {
             if (!count($this->vacationData)) {
                 $this->vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
@@ -82,12 +104,20 @@ class CalendarController extends Controller
                 }
             }
         }
+        **/
+        $absences = Absence::with('user')
+            ->where('from', '<=', $day->date)
+            ->where('to', '>=', $day->date)
+            ->get();
+        foreach ($absences as $absence) {
+            $vacationers[$absence->user->lastName()] = $absence;
+        }
         return $vacationers;
     }
 
-    public function month($year = 0, $month = 0)
+    public function month(Request $request, $year = 0, $month = 0)
     {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar', $year, $month))) {
             return $r;
         }
 
@@ -95,13 +125,18 @@ class CalendarController extends Controller
             Session::put('showLimitedDays', false);
         }
 
+        $user = Auth::user();
+
         $days = $this->getDaysInMonth($year, $month);
         $nextDay = Day::where('date', '>=', Carbon::createFromTimestamp(time()))
             ->orderBy('date', 'ASC')
             ->limit(1)
             ->get()->first();
 
-        $cities = City::all();
+        // city sorting
+        if ($request->has('sort')) $user->setSetting('sorted_cities', $request->get('sort'));
+        $cities = $sortedCities = $user->getSortedCities();
+        $unusedCities = $user->cities->whereNotIn('id', $sortedCities->pluck('id'));
 
         $allDays = Day::orderBy('date', 'ASC')->get();
         for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
@@ -111,91 +146,70 @@ class CalendarController extends Controller
             $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
         }
 
-        $servicesList = [];
+        // determine orientation and view name;
+        $defaultOrientation = $user->getSetting('calendar_view', 'horizontal') == 'month_vertical' ? 'vertical' : 'horizontal';
+        $orientation = $request->get('orientation', $defaultOrientation);
+        $user->setSetting('calendar_view', $orientation);
+
+
+
+
+        $services = [];
         $vacations = [];
         $liturgy = [];
         foreach ($cities as $city) {
             foreach ($days as $day) {
                 if (!isset($vacations[$day->id])) $vacations[$day->id] = $this->getVacationers($day);
                 if (!isset($liturgy[$day->id])) $liturgy[$day->id] = Liturgy::getDayInfo($day);
-                $servicesList[$city->id][$day->id] = Service::with('day', 'location')
-                    ->where('city_id', $city->id)
-                    ->where('day_id', '=', $day->id)
-                    ->orderBy('time')
-                    ->get();
+
+                    $services[$city->id][$day->id] = Service::with('day', 'location')
+                        ->where('city_id', $city->id)
+                        ->where('day_id', '=', $day->id)
+                        ->orderBy('time')
+                        ->get();
             }
         }
 
-        return view('calendar.month', [
-            'year' => $year,
-            'month' => $month,
-            'years' => $years,
-            'months' => $months,
-            'days' => $days,
-            'cities' => $cities,
-            'services' => $servicesList,
-            'nextDay' => $nextDay,
-            'vacations' => $vacations,
-            'liturgy' => $liturgy,
-        ]);
+        $slave = $request->get('slave', 0);
+        $highlight = $request->get('highlight', 0);
+
+        // save current display settings for slave displays to follow
+        if (!$slave) {
+            $user = Auth::user();
+            $currentDisplayMonth = $user->getSetting('display-month', 999);
+            $currentDisplayYear = $user->getSetting('display-year', 999);
+            if (($month != $currentDisplayMonth) || ($year != $currentDisplayYear)) {
+                $user->setSetting('display-timestamp', time());
+                $user->setSetting('display-month', $month);
+                $user->setSetting('display-year', $year);
+            }
+        }
+
+        return view('calendar.month', compact(
+            'year', 'month', 'years', 'months', 'days', 'cities',
+                   'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave', 'orientation',
+                'sortedCities', 'unusedCities'
+            )
+        );
     }
 
-
-    public function monthJS($year = 0, $month = 0)
+    public function printsetup(Request $request, $year = 0, $month = 0)
     {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
-            return $r;
-        }
-
-        if (!Session::has('showLimitedDays')) {
-            Session::put('showLimitedDays', false);
-        }
-
-        $days = $this->getDaysInMonth($year, $month);
-        $nextDay = Day::where('date', '>=', Carbon::createFromTimestamp(time()))
-            ->orderBy('date', 'ASC')
-            ->limit(1)
-            ->get()->first();
-
-        $cities = City::all();
-
-        $allDays = Day::orderBy('date', 'ASC')->get();
-        for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
-            $years[] = $i;
-        }
-        for ($i = 1; $i <= 12; $i++) {
-            $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
-        }
-
-        return view('calendar.monthjs', [
-            'year' => $year,
-            'month' => $month,
-            'years' => $years,
-            'months' => $months,
-            'days' => $days,
-            'cities' => $cities,
-            'nextDay' => $nextDay,
-        ]);
-    }
-
-
-    public function printsetup($year = 0, $month = 0)
-    {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar.printsetup', $year, $month))) {
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar.printsetup', $year, $month))) {
             return $r;
         }
 
         $name = explode(' ', Auth::user()->name);
         $name = end($name);
 
-        $cities = City::all();
+        $cities = Auth::user()->getSortedCities();
         return view('calendar.printsetup',
             ['cities' => $cities, 'year' => $year, 'month' => $month, 'lastName' => $name]);
     }
 
     public function print(Request $request, $year = 0, $month = 0)
     {
-        if (false !== ($r = $this->redirectIfMissingParameters('calendar.print', $year, $month))) {
+        if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar.print', $year, $month))) {
             return $r;
         }
 

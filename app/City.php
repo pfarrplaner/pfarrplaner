@@ -6,7 +6,19 @@ use Illuminate\Database\Eloquent\Model;
 
 class City extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = [
+        'name', 
+        'public_events_calendar_url',
+        'default_offering_goal',
+        'default_offering_description',
+        'default_funeral_offering_goal',
+        'default_funeral_offering_description',
+        'default_wedding_offering_goal',
+        'default_wedding_offering_description',
+        'op_domain',
+        'op_customer_key',
+        'op_customer_token',
+    ];
 
     protected $orderBy = 'name';
     protected $orderDirection = 'ASC';

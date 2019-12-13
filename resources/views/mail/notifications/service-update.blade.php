@@ -95,7 +95,7 @@
                                                                         @if($data['originalParticipants']['P'] != $service->participantsText('P'))
                                                                             <tr>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Pfarrer*in</td>
-                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $data['originalParticipants']['O'] }}</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $data['originalParticipants']['P'] }}</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->participantsText('P') }}</td>
                                                                             </tr>
                                                                         @endif
@@ -146,6 +146,13 @@
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Beschreibung</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->descriptionText() }}</td>
                                                                                 <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->descriptionText() }}</td>
+                                                                            </tr>
+                                                                        @endif
+                                                                        @if(isset($changes['description']))
+                                                                            <tr>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">Interne Anmerkungen</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $original->internal_remarks }}</td>
+                                                                                <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top">{{ $service->internal_remarks }}</td>
                                                                             </tr>
                                                                         @endif
                                                                         @if(isset($changes['offerings_counter1']))
@@ -514,7 +521,7 @@
                                         @elseif($user->getSubscriptionType($service->city) == \App\Subscription::SUBSCRIBE_OWN)
                                         Du erhältst diese Nachricht, weil du über Änderungen an Gottesdiensten in {{ $service->city->name }}, an denen du beteiligt bist, benachrichtigt werden willst.
                                         @endif
-                                        Diese Einstellung kannst du selbst <a href="{{ route('user.profile') }}">in deinem Benutzerprofil bei Dienstplan Online</a> ändern.
+                                        Diese Einstellung kannst du selbst <a href="{{ route('user.profile') }}">in deinem Benutzerprofil bei Pfarrplaner</a> ändern.
                                     </div>
                                     <div class="hr " style="width: 100%; margin: 20px 0; border: 0;">
                                         <table border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%;">
@@ -530,7 +537,7 @@
                                     <table class="table-unstyled text-muted " border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%; max-width: 100%; color: #636c72;" bgcolor="transparent">
                                         <tbody>
                                         <tr>
-                                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;" align="left">© 2019 Dienstplan Online</td>
+                                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;" align="left">© 2019 Pfarrplaner</td>
                                             <td class="text-right" style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;" align="right">
                                                 <a class="text-muted" href="{{ env('APP_URL') }}" style="color: #636c72;">Jetzt einloggen</a>
                                             </td>

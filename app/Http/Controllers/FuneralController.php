@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
 use PDF;
 
 class FuneralController extends Controller
@@ -46,7 +47,7 @@ class FuneralController extends Controller
 
 
     public function wizardStep1(Request $request) {
-        $cities = Auth::user()->cities;
+        $cities = Auth::user()->writableCities;
         return view('funerals.wizard.step1', compact('cities'));
     }
 
@@ -119,9 +120,6 @@ class FuneralController extends Controller
             'time' => $time,
             'special_location' => $specialLocation,
             'city_id' => $city->id,
-            'pastor' => '',
-            'organist' => '',
-            'sacristan' => '',
             'others' => '',
             'description' => '',
             'need_predicant' => 0,
@@ -173,11 +171,29 @@ class FuneralController extends Controller
             'relative_address' => $request->get('relative_address') ?: '',
             'relative_zip' => $request->get('relative_zip') ?: '',
             'relative_city' => $request->get('relative_city') ?: '',
+            'relative_contact_data' => $request->get('relative_contact_data') ?: '',
             'wake_location' => $request->get('wake_location') ?: '',
         ]);
-        if ($request->get('announcement')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
-        if ($request->get('wake')) $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
+        if ($request->get('announcement') != '') $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
+        if ($request->get('wake') != '') $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
+        if ($request->get('dob') != '') $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
+        if ($request->get('dod') != '') $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
+
+
+        $appointment = $request->get('appointment');
+        if (!preg_match('/\d+.\d+.\d+ \d+:\d+/', $appointment)) {
+            if (preg_match('/\d+.\d+.\d+/', $appointment)) {
+                $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment.' 00:00:00');
+            }
+        } else {
+            $appointment .= ':00';
+            $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
+        }
         $funeral->save();
+
+        $funeral->service->setDefaultOfferingValues();
+        $funeral->service->save();
+
 
         // delayed notification after wizard completion:
         if ($request->get('wizard') == 1) {
@@ -235,10 +251,26 @@ class FuneralController extends Controller
         $funeral->relative_address = $request->get('relative_address') ?: '';
         $funeral->relative_zip = $request->get('relative_zip') ?: '';
         $funeral->relative_city = $request->get('relative_city') ?: '';
+        $funeral->relative_contact_data = $request->get('relative_contact_data') ?: '';
         $funeral->wake_location = $request->get('wake_location') ?: '';
         if ($request->get('announcement') !='')  $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
         if ($request->get('wake') != '') $funeral->wake = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
+        if ($request->get('dob') != '') $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
+        if ($request->get('dod') != '') $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
+
+        $appointment = $request->get('appointment');
+        if (!preg_match('/\d+.\d+.\d+ \d+:\d+/', $appointment)) {
+            if (preg_match('/\d+.\d+.\d+/', $appointment)) {
+                $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment.' 00:00:00');
+            }
+        } else {
+            $appointment .= ':00';
+            $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
+        }
         $funeral->save();
+        $funeral->service->setDefaultOfferingValues();
+        $funeral->service->save();
+
 
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
@@ -277,4 +309,25 @@ class FuneralController extends Controller
         header('Expires: 0');
         return $pdf->download($filename);
     }
+
+
+    public function done(Funeral $funeral) {
+        $funeral->done = true;
+        $funeral->save();
+        return json_encode(true);
+    }
+
+
+    public function appointmentIcal(Funeral $funeral) {
+        $service = Service::find($funeral->service_id);
+        $raw = View::make('funerals.appointment.ical', compact('funeral', 'service'));
+        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        return response($raw, 200)
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Expires', '0')
+            ->header('Content-Type', 'text/calendar')
+            ->header('Content-Disposition', 'inline; filename=Trauergespraech-'.$funeral->id.'.ics');
+    }
+
+
 }

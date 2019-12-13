@@ -42,7 +42,7 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
 
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
-        $cities = City::all();
+        $cities = Auth::user()->cities;
         return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities]);
     }
 

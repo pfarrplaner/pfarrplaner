@@ -25,9 +25,9 @@
                 <a class="nav-link" href="{{ route('whatsnew') }}"><span class="fa fa-sun" title="Neue Funktionen"></span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('connectWithOutlook') }}"><span class="fa fa-calendar-alt" title="Mit Outlook verbinden"></span></a>
+                <a class="nav-link" href="{{ route('ical.connect') }}"><span class="fa fa-calendar-alt" title="Mit Outlook verbinden"></span></a>
             </li>
-        @canany(['benutzer-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'rollen-bearbeiten'])
+        @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'rollen-bearbeiten'])
         <li class="nav-item dropdown">
             <a id="navbarDropdown2" class="nav-link dropdown-toggle" href="#" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
@@ -35,7 +35,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown2">
-                @can('benutzer-bearbeiten')
+                @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten'])
                 <a class="dropdown-item" href="{{ route('users.index') }}">
                     Benutzer
                 </a>
@@ -45,16 +45,32 @@
                         Benutzerrollen
                     </a>
                 @endcan
-                @can('ort-bearbeiten')
+                @canany(['ort-bearbeiten', 'gd-opfer-bearbeiten'])
                 <a class="dropdown-item" href="{{ route('cities.index') }}">
                     Kirchengemeinden
                 </a>
                 @endcan
                 @can('kirche-bearbeiten')
                 <a class="dropdown-item" href="{{ route('locations.index') }}">
-                    Kirchen
+                    Kirchen / Gottesdienstorte
                 </a>
                 @endcan
+                @can('tags-bearbeiten')
+                    <a class="dropdown-item" href="{{ route('tags.index') }}">
+                        Kennzeichnungen
+                    </a>
+                @endcan
+                @can('pfarraemter-bearbeiten')
+                    <a class="dropdown-item" href="{{ route('parishes.index') }}">
+                        Pfarrämter
+                    </a>
+                @endcan
+                @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten', 'rollen-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'tags-bearbeiten'])
+                    <div class="dropdown-divider"></div>
+                @endcanany
+                    <a class="dropdown-item" href="{{ route('calendar', ['year' => null, 'month' => null, 'slave' => 1]) }}" target="_blank">
+                        Automatische Kalenderansicht öffnen
+                    </a>
             </div>
         </li>
         @endcanany

@@ -57,7 +57,7 @@ class PastorHomeScreen extends AbstractHomeScreen
         $baptisms->load('day');
 
         $baptismRequests = Baptism::whereNull('service_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->get();
 
 
@@ -92,7 +92,7 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->get();
         $weddings->load('day');
 
-        return view('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
+        return $this->renderView('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
     }
 
 }

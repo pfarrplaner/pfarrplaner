@@ -84,6 +84,9 @@ class WeddingController extends Controller
 
         $wedding->save();
 
+        $wedding->service->setDefaultOfferingValues();
+        $wedding->service->save();
+
 
         // delayed notification after wizard completion:
         if ($request->get('wizard') == 1) {
@@ -158,6 +161,11 @@ class WeddingController extends Controller
         }
 
         $wedding->save();
+
+        $wedding->service->setDefaultOfferingValues();
+        $wedding->service->save();
+
+
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
         //
     }
@@ -182,7 +190,7 @@ class WeddingController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function wizardStep1(Request $request) {
-        $cities = Auth::user()->cities;
+        $cities = Auth::user()->writableCities;
         return view('weddings.wizard.step1', compact('cities'));
     }
 
@@ -267,9 +275,6 @@ class WeddingController extends Controller
             'time' => $time,
             'special_location' => $specialLocation,
             'city_id' => $city->id,
-            'pastor' => '',
-            'organist' => '',
-            'sacristan' => '',
             'others' => '',
             'description' => '',
             'need_predicant' => 0,
@@ -293,5 +298,10 @@ class WeddingController extends Controller
     }
 
 
+    public function done(Wedding $wedding) {
+        $wedding->done = true;
+        $wedding->save();
+        return json_encode(true);
+    }
 
 }

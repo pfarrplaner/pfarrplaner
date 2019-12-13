@@ -45,4 +45,47 @@ class Vacations
         return $vacationers;
     }
 
+
+    protected static function findUserByLastName($lastName)
+    {
+        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
+    }
+
+
+
+    public static function getByPeriodAndUser($start, $end, User $user = null)
+    {
+        $vacations = [];
+        if (env('VACATION_URL')) {
+            $vacationData = self::getVacationDataFromCache();
+            foreach ($vacationData as $key => $datum) {
+                $vacStart = Carbon::createFromTimeString($datum['start']);
+                $vacEnd = Carbon::createFromTimeString($datum['end']);
+
+                if ($start->between($vacStart, $vacEnd) || $vacStart->between($start, $end)) {
+                    if (preg_match('/(?:U:|FB:) (\w*)/', $datum['title'], $tmp)) {
+                        preg_match('/V: ((?:\w|\/)*)/', $datum['title'], $tmp2);
+                        $sub = [];
+                        foreach (explode('/', $tmp2[1]) as $name) {
+                            $sub[] = self::findUserByLastName(trim($name));
+                        }
+
+                        $away = self::findUserByLastName($tmp[1]);
+
+                        if ((null === $user) || ($away->id == $user->id)) {
+                            $vacations[] = [
+                                'away' => $away,
+                                'substitute' => $sub,
+                                'start' => $vacStart,
+                                'end' => $vacEnd,
+                            ];
+
+                        }
+                    }
+                }
+            }
+        }
+        return $vacations;
+    }
+
 }

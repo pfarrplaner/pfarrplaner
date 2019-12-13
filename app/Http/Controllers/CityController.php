@@ -49,6 +49,16 @@ class CityController extends Controller
         ]);
         $city = new City([
             'name' => $request->get('name'),
+            'default_offering_goal' => $request->get('default_offering_goal', ''),
+            'default_offering_description' => $request->get('default_offering_description', ''),
+            'default_funeral_offering_goal' => $request->get('default_funeral_offering_goal', ''),
+            'default_funeral_offering_description' => $request->get('default_funeral_offering_description', ''),
+            'default_wedding_offering_goal' => $request->get('default_wedding_offering_goal', ''),
+            'default_wedding_offering_description' => $request->get('default_wedding_offering_description', ''),
+            'public_events_calendar_url' => $request->get('public_events_calendar_url') ?: '',
+            'op_domain' => $request->get('op_domain') ?: '',
+            'op_customer_key' => $request->get('op_customer_key') ?: '',
+            'op_customer_token' => $request->get('op_customer_token') ?: '',
         ]);
         $city->save();
         return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
@@ -81,6 +91,16 @@ class CityController extends Controller
         ]);
         $city = City::find($id);
         $city->name = $request->get('name');
+        $city->default_offering_goal = $request->get('default_offering_goal', '');
+        $city->default_offering_description = $request->get('default_offering_description', '');
+        $city->default_funeral_offering_goal = $request->get('default_funeral_offering_goal', '');
+        $city->default_funeral_offering_description = $request->get('default_funeral_offering_description', '');
+        $city->default_wedding_offering_goal = $request->get('default_wedding_offering_goal', '');
+        $city->default_wedding_offering_description = $request->get('default_wedding_offering_description', '');
+        $city->public_events_calendar_url = $request->get('public_events_calendar_url') ?: '';
+        $city->op_domain = $request->get('op_domain') ?: '';
+        $city->op_customer_key = $request->get('op_customer_key') ?: '';
+        $city->op_customer_token = $request->get('op_customer_token') ?: '';
         $city->save();
 
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde geändert.');

@@ -29,7 +29,7 @@ class SecretaryHomeScreen extends AbstractHomeScreen
         $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
                     ->where('date', '<=', $end);
@@ -43,7 +43,7 @@ class SecretaryHomeScreen extends AbstractHomeScreen
         $baptisms = Service::with(['baptisms', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('baptisms')
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
@@ -57,7 +57,7 @@ class SecretaryHomeScreen extends AbstractHomeScreen
         $funerals = Service::with(['funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('funerals')
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start);
@@ -70,7 +70,7 @@ class SecretaryHomeScreen extends AbstractHomeScreen
         $weddings = Service::with(['weddings', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $user->cities->pluck('id'))
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
             ->whereHas('weddings')
             ->whereHas('day', function ($query) use ($start, $end) {
                 $query->where('date', '>=', $start)
@@ -81,7 +81,7 @@ class SecretaryHomeScreen extends AbstractHomeScreen
             ->get();
         $weddings->load('day');
 
-        return view('homescreen.secretary', compact('user', 'services', 'funerals', 'baptisms', 'weddings'));
+        return $this->renderView('homescreen.secretary', compact('user', 'services', 'funerals', 'baptisms', 'weddings'));
     }
 
 }

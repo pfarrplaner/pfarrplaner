@@ -26,11 +26,18 @@ class Funeral extends Model
         'relative_address',
         'relative_zip',
         'relative_city',
+        'relative_contact_data',
+        'appointment',
+        'dob',
+        'dod',
     ];
 
     protected $dates = [
         'announcement',
         'wake',
+        'appointment',
+        'dob',
+        'dod',
     ];
 
     /** @var array  */
@@ -43,9 +50,17 @@ class Funeral extends Model
         'relative_address',
         'relative_zip',
         'relative_city',
+        'relative_contact_data',
     ];
 
     public function service() {
         return $this->belongsTo(Service::class);
+    }
+
+    public function age() {
+        if (($this->dob) && ($this->dod)) {
+            return $this->dod->diffInYears($this->dob);
+        }
+        return '';
     }
 }
