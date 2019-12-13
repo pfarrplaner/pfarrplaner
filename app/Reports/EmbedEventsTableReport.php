@@ -58,6 +58,8 @@ class EmbedEventsTableReport extends AbstractEmbedReport
         $end = $start->copy()->addDays($days)->setTime(23,59,59);
 
         $services = Service::with(['day', 'location'])
+            ->whereDoesntHave('funerals')
+            ->whereDoesntHave('weddings')
             ->regularForCity($city)
             ->dateRange($start, $end)
             ->ordered()
@@ -74,7 +76,7 @@ class EmbedEventsTableReport extends AbstractEmbedReport
         // mix in OP events?
         if ($request->get('mixOP')) {
             $op = new OPEventsImport($city);
-            $events = $op->mix($events, $start, $end);
+            $events = $op->mix($events, $start, $end, true);
         }
 
         $customerToken = $city->op_customer_token;
