@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -102,6 +103,11 @@ class UserController extends Controller
         if ($request->hasFile('image')) {
             $user->image = $request->file('image')->store('user-images', 'public');
         }
+
+        // api_token
+        if (($user->password != '') && ($user->api_token == '')) $user->api_token = Str::random(60);
+        if ($user->password == '') $user->api_token = '';
+
         $user->save();
 
 
@@ -188,6 +194,10 @@ class UserController extends Controller
         $user->address = $request->get('address') ?: '';
         $user->phone = $request->get('phone') ?: '';
         $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
+
+        // api_token
+        if ($request->get('api_token') != '') $user->api_token = $request->get('api_token');
+
         $user->save();
 
         // set subscriptions
@@ -228,7 +238,6 @@ class UserController extends Controller
             $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
             $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
 
-
             if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
                 if ($user->image != '') {
                     Storage::delete($user->image);
@@ -238,6 +247,10 @@ class UserController extends Controller
             if ($request->hasFile('image')) {
                 $user->image = $request->file('image')->store('user-images', 'public');
             }
+
+            // api_token
+            if (($user->password != '') && ($user->api_token == '')) $user->api_token = Str::random(60);
+            if ($user->password == '') $user->api_token = '';
 
 
             $user->save();

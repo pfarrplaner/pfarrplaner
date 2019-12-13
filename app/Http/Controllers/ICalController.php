@@ -24,7 +24,7 @@ class ICalController extends Controller
         $users = User::all();
         $found = false;
         foreach ($users as $user) {
-            if ($user->getToken() == $token) {
+            if ($user->api_token == $token) {
                 $found = true;
                 $this->user = $user;
             }

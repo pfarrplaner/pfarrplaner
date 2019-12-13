@@ -135,7 +135,7 @@ class User extends Authenticatable
 
     public function getToken()
     {
-        return md5($this->name . $this->password . env('TOKEN_SALT'));
+        return $this->api_token;
     }
 
     public function lastName($withTitle = false)
@@ -518,6 +518,20 @@ class User extends Authenticatable
     public function getAdminCitiesAttribute() {
         if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) return City::all();
         return $this->adminCities()->get();
+    }
+
+    public function approvableUsers() {
+        $id = $this->id;
+        return User::whereHas('approvers', function($query) use ($id) {
+            $query->where('approver_id', $id);
+        })->get();
+
+    }
+
+    public function absencesToBeApproved() {
+        $approvableUsers = $this->approvableUsers();
+        return Absence::whereIn('user_id', $approvableUsers->pluck('id'))
+            ->where('status', 'pending')->get();
     }
 
 }
