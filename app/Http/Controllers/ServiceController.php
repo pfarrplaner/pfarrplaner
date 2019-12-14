@@ -112,7 +112,7 @@ class ServiceController extends Controller
             });
 
         $days = Day::orderBy('date', 'ASC')->get();
-        $locations = Location::where('city_id', '=', $service->city_id)->get();
+        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $users = User::all()->sortBy('name');
         $tags = Tag::all();
         $serviceGroups = ServiceGroup::all();
@@ -195,7 +195,7 @@ class ServiceController extends Controller
 
 
 
-        $locations = Location::where('city_id', '=', $city->id)->get();
+        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $users = User::all()->sortBy('name');
         $tags = Tag::all();
         $serviceGroups = ServiceGroup::all();

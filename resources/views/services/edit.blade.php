@@ -120,7 +120,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script>
         function setDefaultTime() {
-            if ($('select[name=location_id]').val() == '') {
+            if ($('select[name=location_id]  option:selected').val() == 0) {
                 $('input[name=time]').attr('placeholder', 'HH:MM');
                 $('#special_location').show();
                 $('#special_location input').first().focus();

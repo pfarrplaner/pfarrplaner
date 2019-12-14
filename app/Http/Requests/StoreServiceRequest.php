@@ -31,7 +31,7 @@ class StoreServiceRequest extends FormRequest
     {
         return [
             'day_id' => 'required|integer|exists:days,id',
-            'location_id' => 'nullable|exists:locations,id',
+            'location_id' => 'nullable',
             'time' => 'nullable|date_format:"H:i"',
             'cc_alt_time' => 'nullable|date_format:"H:i"',
             'baptism' => 'nullable|integer|between:0,1',

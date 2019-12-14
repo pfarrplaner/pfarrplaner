@@ -48,7 +48,7 @@ class LocationController extends Controller
         $this->validate($request, [
             'name' => 'required|max:255',
             'city_id' => 'required|integer',
-            'default_time' => 'date_format:H:i',
+            'default_time' => 'nullable|date_format:H:i',
         ]);
         $location = new Location([
             'name' => $request->get('name'),
