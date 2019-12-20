@@ -8,7 +8,9 @@
         style="cursor: pointer;"
         title="Klicken, um diesen Eintrag zu bearbeiten"
         onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
-        @endcan>
+        @endcan
+        data-day="{{ $service->day->id }}"
+>
     @if (!is_object($service->location))
         <div class="service-time service-special-time">
             {{ strftime('%H:%M', strtotime($service->time)) }} Uhr
