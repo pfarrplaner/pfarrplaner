@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Absence;
 use App\Day;
 use App\Service;
 use App\User;
@@ -113,9 +114,10 @@ class EmbedController extends Controller
     public function embedUserVacations (Request $request, User $user) {
         $start = Carbon::now();
         $end = (clone $start)->addWeek(2);
-        $vacations = Vacations::getByPeriodAndUser($start, $end, $user);
+        //$vacations = Vacations::getByPeriodAndUser($start, $end, $user);
+        $vacations = Absence::with('replacements')->byUserAndPeriod($user, $start, $end)->get();
         return response()
-            ->view('embed.user.vacations', compact('vacations'));
+            ->view('embed.user.vacations', compact('user', 'vacations'));
     }
 
 
