@@ -49,7 +49,7 @@ class LocationPolicy
     public function update(User $user, Location $location)
     {
         if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
-        if ($user->can('kirche-bearbeiten') && $user->writableCities()->contains($location->city)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
         return false;
     }
 
@@ -63,7 +63,7 @@ class LocationPolicy
     public function delete(User $user, Location $location)
     {
         if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
-        if ($user->can('kirche-bearbeiten') && $user->writableCities()->contains($location->city)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
         return false;
     }
 
@@ -77,7 +77,7 @@ class LocationPolicy
     public function restore(User $user, Location $location)
     {
         if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
-        if ($user->can('kirche-bearbeiten') && $user->writableCities()->contains($location->city)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
         return false;
     }
 
@@ -91,7 +91,7 @@ class LocationPolicy
     public function forceDelete(User $user, Location $location)
     {
         if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
-        if ($user->can('kirche-bearbeiten') && $user->writableCities()->contains($location->city)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
         return false;
     }
 }
