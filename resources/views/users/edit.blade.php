@@ -14,7 +14,8 @@
 
             @tabheaders
                 @if ($user->administeredBy(Auth::user()))
-                    @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
+                    @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => $user->administeredBy(Auth::user())]) @endtabheader
+                    @tabheader(['id' => 'contact', 'title' => 'Kontaktdaten', 'active' => !$user->administeredBy(Auth::user())]) @endtabheader
                     @tabheader(['id' => 'permissions', 'title' => 'Berechtigungen']) @endtabheader
                     @tabheader(['id' => 'absences', 'title' => 'Urlaub']) @endtabheader
                 @else
@@ -72,7 +73,12 @@
                         </div>
                     @endtab
                 @endif
-                @tab(['id' => 'permissions', 'active' => !$user->administeredBy(Auth::user())])
+                @tab(['id' => 'contact', 'active' => !$user->administeredBy(Auth::user())])
+                    @input(['name' => 'office', 'label' => 'Dienststelle', 'value' => $user->office])
+                    @textarea(['name' => 'address', 'label' => 'Adresse', 'value' => $user->address])
+                    @input(['name' => 'phone', 'label' => 'Telefon', 'value' => $user->phone])
+                @endtab
+                @tab(['id' => 'permissions'])
                 @if ((!$user->administeredBy(Auth::user())) && ($user->password == ''))
                     @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password', 'placeholder' => ($user->password != '' ? 'Nur eingeben, wenn Passwort geändert werden soll' : 'Passwort setzen, um diese Person als Benutzer anzulegen')])
                 @endif

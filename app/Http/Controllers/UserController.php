@@ -96,6 +96,11 @@ class UserController extends Controller
             'manage_absences' => $request->get('manage_absences') ? 1 : 0,
         ]);
 
+        $user->office = $request->get('office', '');
+        $user->address = $request->get('address', '');
+        $user->phone = $request->get('phone', '');
+
+
         if (($user->email != '') && ($request->get('password', '') != '')) {
             $user->password = Hash::make($request->get('password'));
         }
@@ -237,6 +242,9 @@ class UserController extends Controller
             $user->phone = $request->get('phone') ?: '';
             $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
             $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
+            $user->office = $request->get('office', '');
+            $user->address = $request->get('address', '');
+            $user->phone = $request->get('phone', '');
 
             if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
                 if ($user->image != '') {

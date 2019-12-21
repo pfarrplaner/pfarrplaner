@@ -12,6 +12,7 @@
 
             @tabheaders
                 @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
+                @tabheader(['id' => 'contact', 'title' => 'Kontaktdaten']) @endtabheader
                 @tabheader(['id' => 'permissions', 'title' => 'Berechtigungen']) @endtabheader
                 @tabheader(['id' => 'absences', 'title' => 'Urlaub']) @endtabheader
             @endtabheaders
@@ -39,6 +40,11 @@
                             <option value="homescreen:admin">Zusammenfassung für Administrator*innen</option>
                         </select>
                     </div>
+                @endtab
+                @tab(['id' => 'contact'])
+                    @input(['name' => 'office', 'label' => 'Dienststelle'])
+                    @textarea(['name' => 'address', 'label' => 'Adresse'])
+                    @input(['name' => 'phone', 'label' => 'Telefon'])
                 @endtab
                 @tab(['id' => 'permissions'])
                 <div class="form-group">
