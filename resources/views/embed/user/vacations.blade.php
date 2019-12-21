@@ -13,7 +13,7 @@
                     @foreach($vacations->sortBy('from') as $vacation)
                         @foreach($vacation->replacements->sortBy('from') as $replacement)
                         <tr>
-                            <td valign="top">{{ $replacement->from->format('d.m.Y') }} @if($replacement->to > $replacement->from)- {{ $replacement->to->format('d.m.Y') }} @endif</td>
+                            <td valign="top" style="vertical-align: top;">{{ $replacement->from->format('d.m.Y') }} @if($replacement->to > $replacement->from)- {{ $replacement->to->format('d.m.Y') }} @endif</td>
                             <td valign="top">
                                     @foreach($replacement->users as $user)
                                         <b>{{ $user->fullName() }}</b>
