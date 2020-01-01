@@ -20,10 +20,10 @@ class AddUserFields extends Migration
             $table->timestamps();
         });
         Schema::table('users', function($table) {
-            $table->integer('isAdmin')->nullable;
-            $table->integer('canEditGeneral')->nullable;
-            $table->integer('canEditChurch')->nullable;
-            $table->string('canEditFields')->nullable;
+            $table->integer('isAdmin')->nullable()->default(0);
+            $table->integer('canEditGeneral')->nullable()->default(0);
+            $table->integer('canEditChurch')->nullable()->default(0);
+            $table->string('canEditFields')->nullable()->default(0);
         });
     }
 

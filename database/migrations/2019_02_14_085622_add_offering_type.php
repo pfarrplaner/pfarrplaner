@@ -14,7 +14,7 @@ class AddOfferingType extends Migration
     public function up()
     {
         Schema::table('services', function($table){
-            $table->string('offering_type')->nullable;
+            $table->string('offering_type')->nullable()->default('');
         });
     }
 
