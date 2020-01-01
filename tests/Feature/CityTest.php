@@ -24,19 +24,7 @@ class CityTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $response = $this->post(route('cities.store'), [
-            'name' => 'Stuttgart',
-            'public_events_calendar_url' => '',
-            'default_offering_goal' => '',
-            'default_offering_description' => '',
-            'default_funeral_offering_goal' => '',
-            'default_funeral_offering_description' => '',
-            'default_wedding_offering_goal' => '',
-            'default_wedding_offering_description' => '',
-            'op_domain' => '',
-            'op_customer_key' => '',
-            'op_customer_token' => '',
-        ]);
+        $response = $this->post(route('cities.store'), factory(City::class)->raw());
 
         $response->assertStatus(302);
         $this->assertCount(1, City::all());
@@ -49,19 +37,9 @@ class CityTest extends TestCase
      */
     public function testCityNeedsName()
     {
-        $response = $this->post(route('cities.store'), [
+        $response = $this->post(route('cities.store'), factory(City::class)->raw([
             'name' => '',
-            'public_events_calendar_url' => '',
-            'default_offering_goal' => '',
-            'default_offering_description' => '',
-            'default_funeral_offering_goal' => '',
-            'default_funeral_offering_description' => '',
-            'default_wedding_offering_goal' => '',
-            'default_wedding_offering_description' => '',
-            'op_domain' => '',
-            'op_customer_key' => '',
-            'op_customer_token' => '',
-        ]);
+        ]));
 
         $response->assertSessionHasErrors('name');
         $this->assertCount(0, City::all());
@@ -74,19 +52,9 @@ class CityTest extends TestCase
      */
     public function testCityNeedsNameShorterThan255()
     {
-        $response = $this->post(route('cities.store'), [
+        $response = $this->post(route('cities.store'), factory(City::class)->raw([
             'name' => str_random(256),
-            'public_events_calendar_url' => '',
-            'default_offering_goal' => '',
-            'default_offering_description' => '',
-            'default_funeral_offering_goal' => '',
-            'default_funeral_offering_description' => '',
-            'default_wedding_offering_goal' => '',
-            'default_wedding_offering_description' => '',
-            'op_domain' => '',
-            'op_customer_key' => '',
-            'op_customer_token' => '',
-        ]);
+        ]));
 
         $response->assertSessionHasErrors('name');
         $this->assertCount(0, City::all());
@@ -98,10 +66,7 @@ class CityTest extends TestCase
      * @test
      */
     public function testCityCanBeUpdated() {
-        $this->post(route('cities.store'), [
-            'name' => 'Stuttgart',
-        ]);
-        $city = City::first();
+        $city = factory(City::class)->create(['name' => 'Stuttgart']);
         $response = $this->patch(route('cities.update', $city->id), [
             'name' => 'München',
         ]);
@@ -117,10 +82,8 @@ class CityTest extends TestCase
      * @test
      */
     public function testCityCanBeDeleted() {
-        $this->post(route('cities.store'), [
-            'name' => 'Stuttgart',
-        ]);
-        $response = $this->delete(route('cities.destroy', City::first()->id));
+        $city = factory(City::class)->create();
+        $response = $this->delete(route('cities.destroy', $city->id));
         $response->assertStatus(302);
         $this->assertCount(0, City::all());
     }
