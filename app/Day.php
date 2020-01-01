@@ -21,4 +21,14 @@ class Day extends Model
         return $this->belongsToMany(City::class);
     }
 
+    /**
+     * @param string $date Date (Y-m-d)
+     * @return bool|\App\Day False if not found, Day if found
+     */
+    public static function existsForDate($date) {
+        $day = Day::where('date', $date)->first();
+        if (null === $day) return false;
+        return $day;
+    }
+
 }
