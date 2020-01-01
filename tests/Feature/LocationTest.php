@@ -88,5 +88,17 @@ class LocationTest extends TestCase
     }
 
 
+    /**
+     * Test if a location can be updated
+     * @return void
+     * @test
+     */
+    public function testLocationCanBeDeleted() {
+        $location = factory(Location::class)->create();
+        $this->assertTrue($location->exists);
+        $response = $this->delete(route('locations.destroy', $location->id));
+        $response->assertStatus(302);
+        $this->assertCount(0, Location::all());
+    }
 
 }
