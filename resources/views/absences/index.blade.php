@@ -6,6 +6,13 @@
 @endsection
 
 @section('navbar-left')
+    @if(count(Auth::user()->approvers) > 0)
+        <li class="nav-item">
+            <a class="btn btn-warning"
+               href="{{ route('absences.create', ['year' => $year, 'month' => $month, 'user' => Auth::user()->id]) }}">Urlaubsantrag
+                stellen</a></th>
+        </li>
+    @endif
     <li class="nav-item">
         <div class="button-row no-print btn-toolbar" role="toolbar">
             <div class="btn-group mr-2" role="group">
@@ -52,7 +59,9 @@
         </div>
     </li>
     <li class="nav-item">
-        <a class="btn btn-navbar" href="{{ route('ical.export', ['user' => Auth::user(), 'token' => Auth::user()->getToken(), 'key' => 'absences']) }}">In Outlook abonnieren</a>
+        <a class="btn btn-navbar"
+           href="{{ route('ical.export', ['user' => Auth::user(), 'token' => Auth::user()->getToken(), 'key' => 'absences']) }}">In
+            Outlook abonnieren</a>
     </li>
 @endsection
 
@@ -69,7 +78,7 @@
                         <th class="cal-cell
                         day_{{ $today->format('D') }}
                         @foreach($holidays as $holiday)
-                            @if ($today->between($holiday['start'], $holiday['end'])) holiday @endif
+                        @if ($today->between($holiday['start'], $holiday['end'])) holiday @endif
                         @endforeach
                         @if($today->isToday())today @endif
                                 ">{!! $today->formatLocalized('%a<br />%d') !!}</th>
@@ -79,10 +88,15 @@
                 <tbody>
                 @foreach($users as $user)
                     <th>{{ $user->fullName(false) }}
-                        @if($user->id == Auth::user()->id || (Auth::user()->hasPermissionTo('fremden-urlaub-bearbeiten') && (count(Auth::user()->writableCities->intersect($user->homeCities)))))
+                        @if(($user->id == Auth::user()->id) && (count($user->approvers) == 0))
                             <a class="btn btn-sm btn-success"
                                href="{{ route('absences.create', ['year' => $year, 'month' => $month, 'user' => $user->id]) }}"><span
                                         class="fa fa-plus"></span></a></th>
+                    @endif
+                    @if(Auth::user()->hasPermissionTo('fremden-urlaub-bearbeiten') && (count(Auth::user()->writableCities->intersect($user->homeCities))))
+                        <a class="btn btn-sm btn-success"
+                           href="{{ route('absences.create', ['year' => $year, 'month' => $month, 'user' => $user->id]) }}"><span
+                                    class="fa fa-plus"></span></a></th>
                     @endif
                     <?php $today = $start->copy(); $thisHoliday = null; ?>
                     @while($today <= $end)
@@ -91,10 +105,11 @@
                         @foreach($holidays as $holiday)
                         @if ($today->between($holiday['start'], $holiday['end'])) holiday <?php $thisHoliday = $holiday; ?> @endif
                         @endforeach
-                        day_{{ $today->format('D') }}
+                                day_{{ $today->format('D') }}
                         @if($services = $user->isBusy($today, true)) busy @endif
-                        @if ($absence = $user->isAbsent($today, true)) absent has-absence
-    @if($user->id == Auth::user()->id || (Auth::user()->can('editAbsences', $user))) editable @endif
+                        @if ($absence = $user->isAbsent($today, true)) absent has-absence absence-status-{{ $absence->status }}
+                        @if(Auth::user()->id == $user->id) @if(count($user->approvers) == 0 ))editable @endif
+                        @else (Auth::user()->can('editAbsences', $user)) editablem @endif
                         @if($absence->getReplacingUserIds()->contains(Auth::user()->id)) replacing @endif
                         @endif
                                 "
@@ -112,7 +127,10 @@
                                 @endif
                         >
                             @if(is_object($absence))
-                                <span class="absence"><b>{{ $absence->user->lastName() }} {{ $absence->reason }}</b><br/><i>V: {{ $absence->replacementText() }}</i></span>
+                                <span class="absence"><b>{{ $absence->user->lastName() }} {{ $absence->reason }}</b><br/>
+                                    @if($absence->status=='pending')[beantragt am {{ $absence->created_at->format('d.m.Y') }}, {{ count($absence->approvals) }}/{{ count($absence->user->approvers) }} Genehmigungen] <br />@endif @if($absence->status=='rejected')[abgelehnt] <br />@endif
+                                    @if($absence->replacementText()!='')<i>V: {{ $absence->replacementText() }}</i>@endif
+                                </span>
                             @else &nbsp;
                             @endif
                         </td>

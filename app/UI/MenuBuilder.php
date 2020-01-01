@@ -23,7 +23,8 @@ use Spatie\Permission\Models\Role;
 class MenuBuilder
 {
 
-    public static function sidebar() {
+    public static function sidebar()
+    {
         $config = self::configure();
 
         // TODO: check, if active
@@ -36,7 +37,8 @@ class MenuBuilder
      * Get menu configuration
      * @return array
      */
-    protected static function configure() : array {
+    protected static function configure(): array
+    {
         $menu = [];
         $menu[] = [
             'text' => 'Kalender',
@@ -44,12 +46,32 @@ class MenuBuilder
             'url' => route('calendar'),
             'icon_color' => 'blue',
         ];
-        $menu[] = [
+
+        $absenceMenu = [
             'text' => 'Urlaub',
             'icon' => 'fa fa-globe-europe',
             'url' => route('absences.index'),
             'icon_color' => 'orange',
         ];
+        if (count(Auth::user()->approvableUsers()) > 0) {
+            $absenceMenu['url'] = '';
+            $absenceMenu['submenu'] = [
+                [
+                    'text' => 'Urlaubskalender',
+                    'icon' => 'fa fa-globe-europe',
+                    'url' => route('absences.index'),
+                ],
+                [
+                    'text' => 'Urlaubsanträge',
+                    'icon' => 'fa fa-globe-europe',
+                    'url' => route('approvals.index'),
+                    'counter' => count(Auth::user()->absencesToBeApproved()),
+                    'counter_class' => 'info',
+                ],
+            ];
+        }
+
+        $menu[] = $absenceMenu;
 
 
         $inputMenu = [];
@@ -140,12 +162,13 @@ class MenuBuilder
         }
 
 
-
         return $menu;
     }
 
 
-    public static function breadcrumbs() {
+    public
+    static function breadcrumbs()
+    {
         $route = Request::route();
         dd($route);
     }

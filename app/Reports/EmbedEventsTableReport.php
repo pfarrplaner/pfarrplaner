@@ -54,7 +54,7 @@ class EmbedEventsTableReport extends AbstractEmbedReport
         $city = City::findOrFail($request->get('city'));
         $days = $request->get('days');
 
-        $start = Carbon::now('Europe/Berlin');
+        $start = Carbon::now('Europe/Berlin')->setTime(0,0,0);
         $end = $start->copy()->addDays($days)->setTime(23,59,59);
 
         $services = Service::with(['day', 'location'])
