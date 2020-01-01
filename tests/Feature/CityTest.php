@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\City;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -11,7 +12,13 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class CityTest extends TestCase
 {
 
-    use RefreshDatabase, WithoutMiddleware;
+    use RefreshDatabase;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->withoutMiddleware([Authenticate::class]);
+    }
 
 
     /**
@@ -66,13 +73,17 @@ class CityTest extends TestCase
      * @test
      */
     public function testCityCanBeUpdated() {
+        $this->withoutExceptionHandling();
         $city = factory(City::class)->create(['name' => 'Stuttgart']);
+
+        $this->assertTrue($city->update(['name' => 'New York']));
+
         $response = $this->patch(route('cities.update', $city->id), [
-            'name' => 'München',
+            'name' => 'Hamburg',
         ]);
 
         $response->assertStatus(302);
-        $this->assertEquals('München', City::first()->name);
+        $this->assertEquals('Hamburg', City::find($city->id)->name);
 
     }
 
