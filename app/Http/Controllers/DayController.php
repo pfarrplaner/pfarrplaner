@@ -168,7 +168,6 @@ class DayController extends Controller
         ]);
         $data['day_type'] = $data['day_type'] ?? Day::DAY_TYPE_DEFAULT;
         $data['cities'] = $data['cities'] ?? [];
-        $data['date'] = Carbon::createFromFormat('d.m.Y', $data['date'])->format('Y-m-d');
         $data['name'] = $data['name'] ?? Liturgy::getDayInfo($data['date'])['title'] ?? '';
         $data['description'] = $data['description'] ?? '';
         return $data;

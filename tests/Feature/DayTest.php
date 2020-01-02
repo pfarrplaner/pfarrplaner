@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\City;
 use App\Day;
 use App\Http\Middleware\Authenticate;
+use Carbon\Carbon;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,11 +30,11 @@ class DayTest extends TestCase
     public function testDayCanBeCreated()
     {
         $data = factory(Day::class)->raw(['day_type' => 0]);
-        $data['date'] = $data['date']->format('d.m.Y');
         $response = $this->post(route('days.store'), $data);
 
         $response->assertStatus(302);
         $this->assertCount(1, Day::all());
+        $this->assertInstanceOf(Carbon::class, Day::first()->date);
     }
 
     /**
@@ -44,7 +45,6 @@ class DayTest extends TestCase
     public function testLimitedDayCanBeCreated()
     {
         $data = factory(Day::class)->raw(['day_type' => 1]);
-        $data['date'] = $data['date']->format('d.m.Y');
         $data['cities'] = [factory(City::class)->create()->id];
         $response = $this->post(route('days.store'), $data);
 
@@ -60,7 +60,6 @@ class DayTest extends TestCase
     public function testLimitedDayCannotBeCreatedWithoutCities()
     {
         $data = factory(Day::class)->raw(['day_type' => 1]);
-        $data['date'] = $data['date']->format('d.m.Y');
         $response = $this->post(route('days.store'), $data);
 
         $response->assertSessionHasErrors('cities');

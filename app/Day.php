@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Day extends Model
@@ -29,6 +30,14 @@ class Day extends Model
         $day = Day::where('date', $date)->first();
         if (null === $day) return false;
         return $day;
+    }
+
+    /**
+     * Accept a d.m.Y-formatted string as date attribute
+     * @param string $date
+     */
+    public function setDateAttribute($date) {
+        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $date);
     }
 
 }
