@@ -28,7 +28,6 @@ class DayTest extends TestCase
      */
     public function testDayCanBeCreated()
     {
-        $this->withoutExceptionHandling();
         $data = factory(Day::class)->raw(['day_type' => 0]);
         $data['date'] = $data['date']->format('d.m.Y');
         $response = $this->post(route('days.store'), $data);
@@ -44,7 +43,6 @@ class DayTest extends TestCase
      */
     public function testLimitedDayCanBeCreated()
     {
-        $this->withoutExceptionHandling();
         $data = factory(Day::class)->raw(['day_type' => 1]);
         $data['date'] = $data['date']->format('d.m.Y');
         $data['cities'] = [factory(City::class)->create()->id];
@@ -112,7 +110,6 @@ class DayTest extends TestCase
      */
     public function testDayCanBeUpdated()
     {
-        $this->withoutExceptionHandling();
         $day = factory(Day::class)->create(['day_type' => 0]);
         $response = $this->patch(route('days.update', $day->id), [
             'date' => '01.01.1990',
@@ -129,7 +126,6 @@ class DayTest extends TestCase
      */
     public function testDayCanBeUpdatedWithMoreCities()
     {
-        $this->withoutExceptionHandling();
         $city1 = factory(City::class)->create()->id;
         $city2 = factory(City::class)->create()->id;
         $data = factory(Day::class)->raw(['day_type' => 1]);
@@ -153,7 +149,6 @@ class DayTest extends TestCase
      */
     public function testLimitedDayIsDeletedWhenNoMoreCitiesAreAttached()
     {
-        $this->withoutExceptionHandling();
         $city1 = factory(City::class)->create()->id;
         $city2 = factory(City::class)->create()->id;
         $data = factory(Day::class)->raw(['day_type' => 1]);
@@ -177,7 +172,6 @@ class DayTest extends TestCase
      */
     public function testDayCanBeDeleted()
     {
-        $this->withoutExceptionHandling();
         $day = factory(Day::class)->create(['day_type' => 0]);
         $response = $this->delete(route('days.destroy', $day->id));
         $response->assertStatus(302);

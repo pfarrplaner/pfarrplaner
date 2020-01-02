@@ -29,7 +29,6 @@ class LocationTest extends TestCase
      */
     public function testLocationCanBeCreated()
     {
-        $this->withoutExceptionHandling();
         $response = $this->post(route('locations.store'), factory(Location::class)->raw());
 
         $response->assertStatus(302);
@@ -80,7 +79,6 @@ class LocationTest extends TestCase
      */
     public function testLocationCanBeUpdated()
     {
-        $this->withoutExceptionHandling();
         $location = factory(Location::class)->create(['name' => 'Pauluskirche']);
         $response = $this->patch(route('locations.update', $location->id), factory(Location::class)->raw(['name' => 'Peterskirche']));
         $response->assertStatus(302);

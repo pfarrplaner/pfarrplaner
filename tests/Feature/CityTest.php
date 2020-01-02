@@ -28,9 +28,6 @@ class CityTest extends TestCase
      */
     public function testACityCanBeAdded()
     {
-
-        $this->withoutExceptionHandling();
-
         $response = $this->post(route('cities.store'), factory(City::class)->raw());
 
         $response->assertStatus(302);
@@ -73,7 +70,6 @@ class CityTest extends TestCase
      * @test
      */
     public function testCityCanBeUpdated() {
-        $this->withoutExceptionHandling();
         $city = factory(City::class)->create(['name' => 'Stuttgart']);
 
         $this->assertTrue($city->update(['name' => 'New York']));
