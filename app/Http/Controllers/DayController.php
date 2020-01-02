@@ -50,6 +50,9 @@ class DayController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateRequest();
+        if (($data['day_type'] ==  Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) {
+            return redirect()->back()->withInput()->withErrors(['cities' => 'Mindestens eine Kirchengemeinde muss ausgewählt werden.']);
+        }
 
         // check if day already exists in limited form for other churches...
         // ...if so, only attach new cities
