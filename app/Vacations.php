@@ -22,7 +22,7 @@ class Vacations
                 $vacationData[$key]['start'] = Carbon::createFromTimeString($datum['start']);
                 $vacationData[$key]['end'] = Carbon::createFromTimeString($datum['end']);
             }
-            Cache::put('vacationData', $vacationData, 180);
+            Cache::put('vacationData', $vacationData, 10000);
         } else {
             $vacationData = Cache::get('vacationData');
         }

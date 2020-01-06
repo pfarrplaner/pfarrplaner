@@ -131,7 +131,7 @@ class ICalController extends Controller
                 $data = Cache::get($cacheKey);
             } else {
                 $data = $calendarLink->export($request, $user);
-                Cache::put($cacheKey, $data, 60);
+                Cache::put($cacheKey, $data, 3600);
             }
 
         } else {

@@ -33,7 +33,7 @@ class OPEventsImport
             $events = Cache::get($cacheKey);
         } else {
             $events = json_decode($this->getUrl($url), true);
-            Cache::put($cacheKey, $events, 15);
+            Cache::put($cacheKey, $events, 900);
         }
         return $events;
     }
