@@ -47,7 +47,9 @@ class ServicePolicy
      */
     public function update(User $user, Service $service)
     {
-        return ($user->hasPermissionTo('gd-bearbeiten') || $user->hasRole(AuthServiceProvider::ADMIN)) && $this->hasCityPermission($user, $service);
+        if ($user->hasRole(AuthServiceProvider::ADMIN) && $this->hasCityPermission($user, $service)) return true;
+        if ($user->hasPermissionTo('gd-bearbeiten') && $this->hasCityPermission($user, $service)) return true;
+        return false;
     }
 
     /**
