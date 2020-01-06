@@ -63,15 +63,7 @@ class ServiceController extends Controller
         $service->setDefaultOfferingValues();
         $service->save();
 
-        $service->associateParticipants($request, $service);
-        $service->checkIfPredicantNeeded();
-
-
-        $tags = $request->get('tags') ?: [];
-        $service->tags()->sync($tags);
-
-        $serviceGroups = $request->get('serviceGroups') ?: [];
-        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
+        $this->updateFromRequest($request, $service);
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -137,15 +129,11 @@ class ServiceController extends Controller
             $originalParticipants[$key] = $original->participantsText($key);
         }
 
-        $service->associateParticipants($request, $service);
-        $service->checkIfPredicantNeeded();
-
         $service->fill($request->all());
         $service->setTimeAndPlaceFromRequest($request);
         $service->setDefaultOfferingValues();
 
-        $service->tags()->sync($request->get('tags') ?: []);
-        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
+        $this->updateFromRequest($request, $service);
 
         // notify:
         // (needs to happen before save, so the model is still dirty
@@ -263,5 +251,18 @@ class ServiceController extends Controller
         $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');
 
         return response()->json(compact('route', 'update', 'service'));
+    }
+
+    /**
+     * @param StoreServiceRequest $request
+     * @param Service $service
+     */
+    protected function updateFromRequest(StoreServiceRequest $request, Service $service): void
+    {
+        $service->associateParticipants($request, $service);
+        $service->checkIfPredicantNeeded();
+
+        $service->tags()->sync($request->get('tags') ?: []);
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
     }
 }
