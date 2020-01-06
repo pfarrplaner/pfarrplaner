@@ -20,7 +20,7 @@ class ServiceFeatureTest extends TestCase
     /** @var City */
     protected $city;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->withoutMiddleware(Authenticate::class);

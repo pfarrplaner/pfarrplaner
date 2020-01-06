@@ -14,7 +14,7 @@ class TagFeatureTest extends TestCase
 
     use RefreshDatabase;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->withoutMiddleware(Authenticate::class);
