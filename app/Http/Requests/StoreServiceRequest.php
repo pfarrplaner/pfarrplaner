@@ -33,14 +33,27 @@ class StoreServiceRequest extends FormRequest
             'day_id' => 'required|integer|exists:days,id',
             'location_id' => 'nullable',
             'time' => 'nullable|date_format:"H:i"',
-            'cc_alt_time' => 'nullable|date_format:"H:i"',
-            'baptism' => 'nullable|integer|between:0,1',
-            'eucharist' => 'nullable|integer|between:0,1',
-            'need_predicant' => 'nullable|integer|between:0,1',
-            'cc' => 'nullable|integer|between:0,1',
             'description' => 'nullable|string',
-            'offering_type' => [Rule::in(['eO', 'PO', ''])
-                ],
+            'city_id' => 'required|exists:cities,id',
+            'special_location' => 'nullable|string',
+            'need_predicant' => 'checkbox',
+            'baptism' => 'checkbox',
+            'eucharist' => 'checkbox',
+            'offerings_counter1' => 'nullable|string',
+            'offerings_counter2' => 'nullable|string',
+            'offering_goal' => 'nullable|string',
+            'offering_description' => 'nullable|string',
+            'offering_amount' => 'nullable',
+            'offering_type' => [
+                Rule::in(['eO', 'PO', ''])
+            ],
+            'others' => 'nullable|string',
+            'cc' => 'checkbox',
+            'cc_location' => 'nullable|string',
+            'cc_lesson' => 'nullable|string',
+            'cc_staff' => 'nullable|string',
+            'cc_alt_time' => 'nullable|date_format:"H:i"',
+            'internal_remarks' => 'nullable|string',
         ];
     }
 }
