@@ -32,6 +32,15 @@ class AppServiceProvider extends ServiceProvider
         Blade::include('partials.form.checkbox', 'checkbox');
         Blade::include('partials.form.radiogroup', 'radiogroup');
 
+
+        Validator::extendImplicit('checkbox', function($attribute, $value, $parameters, $validator)
+        {
+            $data = $oldData = $validator->getData();
+            $data[$attribute] = ($value == "1" || strtolower($value) == "true" || strtolower($value) == "on") ? 1: 0;
+            $validator->setData($data);
+            return true;
+        });
+
         Validator::extend('phone_number', function($attribute, $value, $parameters)
         {
             return preg_match('/^([0(+][0-9\.-\/ ()]{7,})$/i', $value);
