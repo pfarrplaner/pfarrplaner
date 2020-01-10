@@ -159,7 +159,7 @@ class User extends Authenticatable
     public function initialedName($withTitle = false)
     {
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '')
-            . ($this->first_name ? substr($this->first_name, 1) . '. ' : '')
+            . ($this->first_name ? substr($this->first_name, 0, 1) . '. ' : '')
             . $this->last_name;
     }
 
