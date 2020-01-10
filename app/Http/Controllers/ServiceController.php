@@ -58,7 +58,7 @@ class ServiceController extends Controller
     public function store(StoreServiceRequest $request)
     {
 
-        $service = new Service($request->all());
+        $service = new Service($request->validated());
         $service->setTimeAndPlaceFromRequest($request);
         $service->setDefaultOfferingValues();
         $service->save();
@@ -129,7 +129,7 @@ class ServiceController extends Controller
             $originalParticipants[$key] = $original->participantsText($key);
         }
 
-        $service->fill($request->all());
+        $service->fill($request->validated());
         $service->setTimeAndPlaceFromRequest($request);
         $service->setDefaultOfferingValues();
 
