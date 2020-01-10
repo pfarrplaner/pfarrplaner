@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-01-10 17:27', 'Europe/Berlin'),
+                'text' => 'In den Einstellungen der Kalenderansicht kann nun ein Filter für die angezeigten Gottesdienstorte eingerichtet werden.',
+            ],
+            [
                 'date' => new Carbon('2020-01-10 16:48', 'Europe/Berlin'),
                 'text' => 'In den Einstellungen der Kalenderansicht kann nun das anzuzeigende Namensformat gewählt werden.',
             ],
