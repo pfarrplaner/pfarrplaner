@@ -6,6 +6,7 @@ use App\Absence;
 use App\City;
 use App\Day;
 use App\Liturgy;
+use App\Location;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -160,7 +161,20 @@ class CalendarController extends Controller
         $user->setSetting('calendar_view', $orientation);
 
 
-
+        // all possible locations
+        $possibleLocations = Location::whereIn('city_id', $user->cities->pluck('id'))->get();
+        if ($request->has('filter_location')) {
+            if ($request->get('filter_location') == '') {
+                $filteredLocations = [];
+            } else {
+                $filteredLocations = (clone $possibleLocations)->filter(function($location) use ($request) {
+                    return in_array($location->id, explode(',', $request->get('filter_location')));
+                })->pluck('id')->toArray();
+            }
+            $user->setSetting('calendar_filter_locations', join(',', $filteredLocations));
+        } else {
+            $filteredLocations = explode(', ', $user->getSetting('calendar_filter_locations', $possibleLocations->pluck('id')->implode(',')));
+        }
 
         $services = [];
         $vacations = [];
@@ -170,11 +184,15 @@ class CalendarController extends Controller
                 if (!isset($vacations[$day->id])) $vacations[$day->id] = $this->getVacationers($day);
                 if (!isset($liturgy[$day->id])) $liturgy[$day->id] = Liturgy::getDayInfo($day);
 
-                    $services[$city->id][$day->id] = Service::with('day', 'location')
-                        ->where('city_id', $city->id)
-                        ->where('day_id', '=', $day->id)
-                        ->orderBy('time')
-                        ->get();
+                $dataSet = Service::with('day', 'location')
+                    ->where('city_id', $city->id)
+                    ->where('day_id', '=', $day->id)
+                    ->orderBy('time');
+                if (count($filteredLocations)) {
+                    $dataSet->whereIn('location_id', $filteredLocations);
+                }
+
+                $services[$city->id][$day->id] = $dataSet->get();
             }
         }
 
@@ -196,7 +214,7 @@ class CalendarController extends Controller
         return view('calendar.month', compact(
             'year', 'month', 'years', 'months', 'days', 'cities',
                    'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave', 'orientation',
-                'sortedCities', 'unusedCities', 'nameFormat'
+                'sortedCities', 'unusedCities', 'nameFormat', 'possibleLocations','filteredLocations'
             )
         );
     }

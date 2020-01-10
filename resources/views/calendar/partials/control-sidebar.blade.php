@@ -46,3 +46,13 @@
         <option @if($nameFormat == \App\Http\Controllers\CalendarController::NAME_FORMAT_FIRST_AND_LAST)selected @endif value="{{ \App\Http\Controllers\CalendarController::NAME_FORMAT_FIRST_AND_LAST }}">Pfr. Karl Müller</option>
     </select>
 </div>
+<hr class="mb-2">
+<div class="mb-1">
+    <h6>Nur folgende Orte anzeigen:</h6>
+    <select name="filter_location" id="ctrlFilterLocation" class="form-control" data-route="{{ route('calendar', ['year' => $year, 'month' => $month ]) }}" multiple placeholder="Leer lassen = alle anzeigen">
+        @foreach($possibleLocations as $location)
+            <option value="{{ $location->id }}" @if(in_array($location->id, $filteredLocations)) selected @endif>{{ $location->name }}</option>
+        @endforeach
+    </select>
+    <a id="applyFilter" class="btn btn-secondary btn-sm">Anwenden</a>
+</div>
