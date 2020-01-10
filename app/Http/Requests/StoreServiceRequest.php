@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Location;
 use App\Service;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -56,4 +57,36 @@ class StoreServiceRequest extends FormRequest
             'internal_remarks' => 'nullable|string',
         ];
     }
+
+    /**
+     * Return validated data with sensible defaults set
+     *
+     * @return array|void
+     */
+    public function validated()
+    {
+        $data = parent::validated();
+
+        // set time and place
+        if ($data['special_location'] = ($data['special_location'] ?? '')) {
+            $data['location_id'] = 0;
+            $data['time'] = $data['time'] ?: '';
+            $data['cc_location'] = $data['cc_location'] ?: '';
+        } else {
+            $locationId = $data['location_id'] ?: 0;
+            if ($locationId) {
+                $location = Location::find($locationId);
+                $data['location_id'] = $locationId;
+                $data['time'] = $data['time'] ?: $location->default_time;
+                $data['cc_location'] = $data['cc_location'] ?? ($data['cc'] ? $location->cc_default_location : '');
+            } else {
+                $data['time'] = $data['time'] ?: '';
+                $data['cc_location'] = $data['cc_location'] ?: '';
+            }
+        }
+
+        return $data;
+    }
+
+
 }

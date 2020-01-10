@@ -59,7 +59,6 @@ class ServiceController extends Controller
     {
 
         $service = new Service($request->validated());
-        $service->setTimeAndPlaceFromRequest($request);
         $service->setDefaultOfferingValues();
         $service->save();
 
@@ -130,7 +129,6 @@ class ServiceController extends Controller
         }
 
         $service->fill($request->validated());
-        $service->setTimeAndPlaceFromRequest($request);
         $service->setDefaultOfferingValues();
 
         $this->updateFromRequest($request, $service);

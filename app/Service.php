@@ -209,28 +209,6 @@ class Service extends Model
         }
     }
 
-    public function setTimeAndPlaceFromRequest(StoreServiceRequest $request) {
-        if ($specialLocation = ($request->get('special_location') ?: '')) {
-            $locationId = 0;
-            $time = $request->get('time') ?: '';
-            $ccLocation = $request->get('cc_location') ?: '';
-        } else {
-            $locationId = $request->get('location_id') ?: 0;
-            if ($locationId) {
-                $location = Location::find($locationId);
-                $time = $request->get('time') ?: $location->default_time;
-                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
-            } else {
-                $time = $request->get('time') ?: '';
-                $ccLocation = $request->get('cc_location') ?: '';
-            }
-        }
-
-        $this->location_id = $locationId;
-        $this->time = $time;
-        $this->special_location = $specialLocation;
-    }
-
     public function locationText() {
         return $this->special_location ?: (is_object( $this->location) ? $this->location->name : '');
     }
@@ -307,7 +285,7 @@ class Service extends Model
         if (null === $this->ccTime($emptyIfNotSet)) return '';
         return StringTool::timeText($this->ccTime(false), $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
     }
-    
+
     /**
      * Check if service description contains a specific text (case-insensitive!)
      * @param string $text Search for this text
@@ -482,15 +460,15 @@ class Service extends Model
         }
         return $participants;
     }
-    
+
     public function checkIfPredicantNeeded() {
         if (count($this->pastors)) {
             $this->need_predicant = false;
             $this->save();
         }
     }
-    
-    
+
+
 
     /**
      * Mix a collection of services into an array of events
