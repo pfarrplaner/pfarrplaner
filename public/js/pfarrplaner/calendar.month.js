@@ -73,5 +73,9 @@ $(document).ready(function () {
     });
 
 
+    $('#ctrlNameSort').change(function(){
+        window.location.href = $(this).data('route')+'?name_format='+$('#ctrlNameSort option:selected').val();
+    });
+
 });
 

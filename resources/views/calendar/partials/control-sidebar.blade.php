@@ -36,3 +36,13 @@
     </ul>
     <a id="applySorting" class="btn btn-secondary btn-sm" href="{{ route('calendar', ['year' => $year, 'month' => $month, 'sort' => $sortedCities->pluck('id')->implode(',') ]) }}">Anwenden</a>
 </div>
+<hr class="mb-2">
+<div class="mb-1">
+    <h6>Namen anzeigen als:</h6>
+    <?php $nameFormat = Auth::user()->getSetting('calendar_name_format'); ?>
+    <select name="name_sort" id="ctrlNameSort" class="form-control" data-route="{{ route('calendar', ['year' => $year, 'month' => $month ]) }}">
+        <option @if($nameFormat == \App\Http\Controllers\CalendarController::NAME_FORMAT_DEFAULT)selected @endif value="{{ \App\Http\Controllers\CalendarController::NAME_FORMAT_DEFAULT }}">Pfr. Müller</option>
+        <option @if($nameFormat == \App\Http\Controllers\CalendarController::NAME_FORMAT_INITIAL_AND_LAST)selected @endif value="{{ \App\Http\Controllers\CalendarController::NAME_FORMAT_INITIAL_AND_LAST }}">Pfr. K. Müller</option>
+        <option @if($nameFormat == \App\Http\Controllers\CalendarController::NAME_FORMAT_FIRST_AND_LAST)selected @endif value="{{ \App\Http\Controllers\CalendarController::NAME_FORMAT_FIRST_AND_LAST }}">Pfr. Karl Müller</option>
+    </select>
+</div>

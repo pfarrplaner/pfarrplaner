@@ -16,6 +16,10 @@ use PDF;
 class CalendarController extends Controller
 {
 
+    public const NAME_FORMAT_DEFAULT = 1;
+    public const NAME_FORMAT_INITIAL_AND_LAST = 2;
+    public const NAME_FORMAT_FIRST_AND_LAST = 3;
+
     protected $vacationData = [];
 
     public function __construct()
@@ -138,6 +142,10 @@ class CalendarController extends Controller
         $cities = $sortedCities = $user->getSortedCities();
         $unusedCities = $user->cities->whereNotIn('id', $sortedCities->pluck('id'));
 
+        // name_format parameter
+        $nameFormat = $request->has('name_format') ? $request->get('name_format') : $user->getSetting('calendar_name_format', self::NAME_FORMAT_DEFAULT);
+        $user->setSetting('calendar_name_format', $nameFormat);
+
         $allDays = Day::orderBy('date', 'ASC')->get();
         for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
             $years[] = $i;
@@ -188,7 +196,7 @@ class CalendarController extends Controller
         return view('calendar.month', compact(
             'year', 'month', 'years', 'months', 'days', 'cities',
                    'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave', 'orientation',
-                'sortedCities', 'unusedCities'
+                'sortedCities', 'unusedCities', 'nameFormat'
             )
         );
     }

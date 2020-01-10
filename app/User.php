@@ -85,11 +85,13 @@ class User extends Authenticatable
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w']);
     }
 
-    public function adminCities() {
+    public function adminCities()
+    {
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
     }
 
-    public function homeCities() {
+    public function homeCities()
+    {
         return $this->belongsToMany(City::class, 'user_home');
     }
 
@@ -105,11 +107,13 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
-    public function parishes() {
+    public function parishes()
+    {
         return $this->belongsToMany(Parish::class)->withTimestamps();
     }
 
-    public function approvers() {
+    public function approvers()
+    {
         return $this->belongsToMany(User::class, 'user_approver', 'user_id', 'approver_id');
     }
 
@@ -152,6 +156,13 @@ class User extends Authenticatable
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->name;
     }
 
+    public function initialedName($withTitle = false)
+    {
+        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '')
+            . ($this->first_name ? substr($this->first_name, 1) . '. ' : '')
+            . $this->last_name;
+    }
+
     public function userSettings()
     {
         return $this->hasMany(UserSetting::class);
@@ -161,11 +172,13 @@ class User extends Authenticatable
     {
         $setting = UserSetting::where('key', $key)->where('user_id', $this->id)->first();
         if ((!$setting) && (!is_null($default))) {
-            $setting = new UserSetting([
-                'user_id' => $this->id,
-                'key' => $key,
-                'value' => $default,
-            ]);
+            $setting = new UserSetting(
+                [
+                    'user_id' => $this->id,
+                    'key' => $key,
+                    'value' => $default,
+                ]
+            );
         }
         return ($returnObject ? $setting : $setting->value);
     }
@@ -181,11 +194,13 @@ class User extends Authenticatable
             $setting = $this->getSetting($key, null, true);
             $setting->value = $value;
         } else {
-            $setting = new UserSetting([
-                'user_id' => $this->id,
-                'key' => $key,
-                'value' => $value,
-            ]);
+            $setting = new UserSetting(
+                [
+                    'user_id' => $this->id,
+                    'key' => $key,
+                    'value' => $value,
+                ]
+            );
         }
         $setting->save();
     }
@@ -203,7 +218,8 @@ class User extends Authenticatable
         return $this->hasMany(Subscription::class);
     }
 
-    public static function createIfNotExists($name) {
+    public static function createIfNotExists($name)
+    {
         if ((!is_numeric($name)) || (User::find($name) === false)) {
             $title = $firstName = $lastName = '';
             if (false === strpos($name, '_')) {
@@ -216,23 +232,25 @@ class User extends Authenticatable
                     $firstName = array_shift($tmp);
                 }
                 $lastName = array_shift($tmp);
-            } elseif ((substr($name, 0, 1) == '"') && (substr($name, -1, 1)=='"')) {
+            } elseif ((substr($name, 0, 1) == '"') && (substr($name, -1, 1) == '"')) {
                 // allow submitting participant names in double quotes ("participant name"), which will prevent splitting
                 $name = substr($name, 1, -1);
             } else {
                 // allow submitting participant name with an underscore, which will prevent splitting
                 $name = str_replace('_', ' ', $name);
             }
-            $user = new User([
-                'name' => $name,
-                'office' => '',
-                'phone' => '',
-                'address' => '',
-                'preference_cities' => '',
-                'first_name' => $firstName,
-                'last_name' => $lastName,
-                'title' => $title,
-            ]);
+            $user = new User(
+                [
+                    'name' => $name,
+                    'office' => '',
+                    'phone' => '',
+                    'address' => '',
+                    'preference_cities' => '',
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'title' => $title,
+                ]
+            );
             $user->save();
             $name = $user->id;
         }
@@ -252,11 +270,13 @@ class User extends Authenticatable
     {
         $subscription = $this->subscriptions()->where('city_id', is_int($city) ? $city : $city->id)->first();
         if (null === $subscription) {
-            $subscription = new Subscription([
-                'user_id' => $this->id,
-                'city_id' => $city->id,
-                'subscription_type' => Subscription::SUBSCRIBE_OWN,
-            ]);
+            $subscription = new Subscription(
+                [
+                    'user_id' => $this->id,
+                    'city_id' => $city->id,
+                    'subscription_type' => Subscription::SUBSCRIBE_OWN,
+                ]
+            );
             $subscription->save();
         }
         return $subscription;
@@ -273,10 +293,12 @@ class User extends Authenticatable
         $city = is_int($city) ? City::find($city) : $city;
         $subscription = $this->getSubscription($city);
         if (null === $subscription) {
-            $subscription = new Subscription([
-                'user_id' => $this->id,
-                'city_id' => $city->id,
-            ]);
+            $subscription = new Subscription(
+                [
+                    'user_id' => $this->id,
+                    'city_id' => $city->id,
+                ]
+            );
         }
         $subscription->subscription_type = $type;
         $subscription->save();
@@ -308,16 +330,24 @@ class User extends Authenticatable
      */
     public function scopeSubscribedTo(Builder $query, Service $service)
     {
-        return $query->whereHas('subscriptions', function ($query) use ($service) {
-            $query->where('city_id', $service->city_id);
-            $query->where('subscription_type', Subscription::SUBSCRIBE_ALL);
-        })->orWhere(function ($query) use ($service) {
-            $query->whereIn('id', $service->participants->pluck('id'));
-            $query->whereHas('subscriptions', function ($query) use ($service) {
+        return $query->whereHas(
+            'subscriptions',
+            function ($query) use ($service) {
                 $query->where('city_id', $service->city_id);
-                $query->where('subscription_type', Subscription::SUBSCRIBE_OWN);
-            });
-        });
+                $query->where('subscription_type', Subscription::SUBSCRIBE_ALL);
+            }
+        )->orWhere(
+            function ($query) use ($service) {
+                $query->whereIn('id', $service->participants->pluck('id'));
+                $query->whereHas(
+                    'subscriptions',
+                    function ($query) use ($service) {
+                        $query->where('city_id', $service->city_id);
+                        $query->where('subscription_type', Subscription::SUBSCRIBE_OWN);
+                    }
+                );
+            }
+        );
     }
 
     public function setSubscriptionsFromArray($subscriptions)
@@ -343,9 +373,11 @@ class User extends Authenticatable
     {
         if ($this->hasSetting('sorted_cities')) {
             $ids = explode(',', $this->getSetting('sorted_cities'));
-            return City::whereIn('id', $ids)->get()->sortBy(function ($model) use ($ids) {
-                return array_search($model->getKey(), $ids);
-            });
+            return City::whereIn('id', $ids)->get()->sortBy(
+                function ($model) use ($ids) {
+                    return array_search($model->getKey(), $ids);
+                }
+            );
         } else {
             // default if user preference not set:
             $cities = $this->visibleCities;
@@ -357,7 +389,9 @@ class User extends Authenticatable
 
     public function isAbsent($date, $returnAbsence = false)
     {
-        if (!$this->manage_absences) return ($returnAbsence ? null : false);
+        if (!$this->manage_absences) {
+            return ($returnAbsence ? null : false);
+        }
         if (!is_a($date, Carbon::class)) {
             $date = new Carbon($date);
         }
@@ -371,7 +405,9 @@ class User extends Authenticatable
 
     public function isReplacement($date, $returnAbsence = false)
     {
-        if (!$this->manage_absences) return ($returnAbsence ? null : false);
+        if (!$this->manage_absences) {
+            return ($returnAbsence ? null : false);
+        }
         if (!is_a($date, Carbon::class)) {
             $date = new Carbon($date);
         }
@@ -384,15 +420,22 @@ class User extends Authenticatable
 
     public function isBusy($date, $returnServices = false)
     {
-        $services = Service::whereHas('day', function ($query) use ($date) {
-            $query->where('date', $date);
-        })->whereHas('participants', function ($query) {
-            $query->where('user_id', $this->id);
-        })->get();
+        $services = Service::whereHas(
+            'day',
+            function ($query) use ($date) {
+                $query->where('date', $date);
+            }
+        )->whereHas(
+            'participants',
+            function ($query) {
+                $query->where('user_id', $this->id);
+            }
+        )->get();
         return (count($services) ? ($returnServices ? $services : null) : ($services ? null : false));
     }
 
-    public function getIsAdminAttribute() {
+    public function getIsAdminAttribute()
+    {
         return $this->hasRole('Administrator*in') || $this->hasRole('Super-Administrator*in');
     }
 
@@ -405,7 +448,8 @@ class User extends Authenticatable
      * (C) All others only see themselves
      * (D) Users without the manage_absences flag see nothing at all
      */
-    public function getViewableAbsenceUsers() {
+    public function getViewableAbsenceUsers()
+    {
         if (!$this->manage_absences) {
             if (!$this->isAdmin) {
                 return new Collection();
@@ -420,20 +464,31 @@ class User extends Authenticatable
             ->where('id', $this->id);
 
         if ($this->hasRole('Pfarrer*in') || $this->hasPermissionTo('fremden-urlaub-bearbeiten')) {
-            $userQuery->orWhereHas('homeCities', function ($query)  {
+            $userQuery->orWhereHas(
+                'homeCities',
+                function ($query) {
                     $query->whereIn('cities.id', $this->homeCities->pluck('id'));
-                });
+                }
+            );
         }
 
         if ($this->hasRole('Pfarrer*in')) {
-            $userQuery->orWhere(function($query2){
-                $query2->whereHas('roles', function($query){
-                    $query->where('name', 'Pfarrer*in');
-                });
-                $query2->whereHas('homeCities', function ($query)  {
-                    $query->whereIn('cities.id', $this->cities->pluck('id'));
-                });
-            });
+            $userQuery->orWhere(
+                function ($query2) {
+                    $query2->whereHas(
+                        'roles',
+                        function ($query) {
+                            $query->where('name', 'Pfarrer*in');
+                        }
+                    );
+                    $query2->whereHas(
+                        'homeCities',
+                        function ($query) {
+                            $query->whereIn('cities.id', $this->cities->pluck('id'));
+                        }
+                    );
+                }
+            );
         }
 
         $userQuery->orderBy('last_name');
@@ -443,7 +498,8 @@ class User extends Authenticatable
         return $users;
     }
 
-    public function getPlanNameAttribute() {
+    public function getPlanNameAttribute()
+    {
         return $this->lastName(true);
     }
 
@@ -458,7 +514,9 @@ class User extends Authenticatable
         // check user rights, remove entries for cities without admin rights
         foreach ($permissions as $cityId => $permission) {
             $city = City::find($cityId);
-            if (!$city->administeredBy($this)) unset($permission);
+            if (!$city->administeredBy($this)) {
+                unset($permission);
+            }
         }
 
         // add missing cities
@@ -476,12 +534,14 @@ class User extends Authenticatable
         $result = $this->cities()->sync($permissions);
 
         // update the user's own sorting (remove cities which are not allowed)
-        $thisPref = explode(',',$this->getSetting('sorted_cities', ''));
+        $thisPref = explode(',', $this->getSetting('sorted_cities', ''));
         if (!count($thisPref)) {
             $thisPref = $result['attached'];
         } else {
             foreach ($thisPref as $key => $city) {
-                if (in_array($city, $result['detached'])) unset($thisPref[$key]);
+                if (in_array($city, $result['detached'])) {
+                    unset($thisPref[$key]);
+                }
             }
             // make added cities visible without having to edit user preference in profile:
             $thisPref = array_merge($thisPref, $result['attached']);
@@ -491,7 +551,9 @@ class User extends Authenticatable
         // update the user's subscriptions (remove cities which are not allowed)
         $subscriptions = $this->subscriptions;
         foreach ($subscriptions as $subscription) {
-            if (in_array($subscription->city_id, $result['detached'])) $subscription->delete();
+            if (in_array($subscription->city_id, $result['detached'])) {
+                $subscription->delete();
+            }
         }
     }
 
@@ -501,34 +563,48 @@ class User extends Authenticatable
      * @param $user User User to be checked for admin rights
      * @return bool True if other user has admin rights for this one
      */
-    public function administeredBy($user) {
-        if ($user->hasRole('Super-Administrator*in')) return true;
+    public function administeredBy($user)
+    {
+        if ($user->hasRole('Super-Administrator*in')) {
+            return true;
+        }
         foreach ($this->homeCities as $city) {
-            if ($city->administeredBy($user)) return true;
+            if ($city->administeredBy($user)) {
+                return true;
+            }
         }
         return false;
     }
 
     public function getWritableCitiesAttribute()
     {
-        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) return City::all();
+        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
+            return City::all();
+        }
         return $this->writableCities()->get();
     }
 
-    public function getAdminCitiesAttribute() {
-        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) return City::all();
+    public function getAdminCitiesAttribute()
+    {
+        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
+            return City::all();
+        }
         return $this->adminCities()->get();
     }
 
-    public function approvableUsers() {
+    public function approvableUsers()
+    {
         $id = $this->id;
-        return User::whereHas('approvers', function($query) use ($id) {
-            $query->where('approver_id', $id);
-        })->get();
-
+        return User::whereHas(
+            'approvers',
+            function ($query) use ($id) {
+                $query->where('approver_id', $id);
+            }
+        )->get();
     }
 
-    public function absencesToBeApproved() {
+    public function absencesToBeApproved()
+    {
         $approvableUsers = $this->approvableUsers();
         return Absence::whereIn('user_id', $approvableUsers->pluck('id'))
             ->where('status', 'pending')->get();
