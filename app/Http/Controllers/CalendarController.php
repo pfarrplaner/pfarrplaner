@@ -173,7 +173,7 @@ class CalendarController extends Controller
             }
             $user->setSetting('calendar_filter_locations', join(',', $filteredLocations));
         } else {
-            $filteredLocations = explode(', ', $user->getSetting('calendar_filter_locations', $possibleLocations->pluck('id')->implode(',')));
+            $filteredLocations = explode(', ', $user->getSetting('calendar_filter_locations', []));
         }
 
         $services = [];
