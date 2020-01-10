@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-01-10 16:48', 'Europe/Berlin'),
+                'text' => 'In den Einstellungen der Kalenderansicht kann nun das anzuzeigende Namensformat gewählt werden.',
+            ],
+            [
                 'date' => new Carbon('2019-12-07 16:00', 'Europe/Berlin'),
                 'text' => 'Der Pfarrplaner erscheint seit heute im neuen, übersichtlicheren Layout.',
             ],
@@ -230,76 +234,76 @@ class VersionInfo
                 <a href="'.url('kinderkirche/tailfingen').'">'.url('kinderkirche/tailfingen').'</a>) eingesehen werden.
         Außerdem steht der Plan unter "Ausgabe > Programm für die Kinderkirche" als PDF-Datei zur Verfügung.'
                             ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '28.02.2019'),
                     'text' => 'Der Plan für die Kinderkirche kann nun für ein ganzes Jahr unter "Sammeleingabe > Kinderkirche" bearbeitet werden.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '28.02.2019'),
                     'text' => 'Separate Benutzerrechte für die Bearbeitung von Informationen zu Opfer und Kinderkirche.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '28.02.2019'),
                     'text' => 'Neue Felder für weitere am Gottesdienst Beteiligte und Kinderkirche.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '22.02.2019'),
                     'text' => 'Das Gottesdienstformular ist übersichtlicher in mehrere Reiter unterteilt.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '22.02.2019'),
                     'text' => 'Der komplette Opferplan einer Gemeinde für ein Jahr kann jetzt unter "Sammeleingabe > Opferplan" auf einmal bearbeitet werden.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '22.02.2019'),
                     'text' => 'Die verschiedenen Ausgabeformate sind jetzt übersichtlicher auf einer separaten Seite angeordnet. Bei der
                 Ausgabe für den Gemeindebrief kann zwischen verschiedenen Formaten (Tailfingen, Truchtelfingen) gewählt werden.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '20.02.2019'),
                     'text' => 'Öffentlich (d.h. ohne Passwort) einsehbarer Vertretungsplan unter ' . url('vertretungen')
                 ],
-        
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '14.02.2019'),
                     'text' => 'Mit "Berichte &gt; Jahresplan der Gottesdienste" kann eine Exceldatei mit einem Jahresplan aller Gottesdienste (inkl. Opfer) erzeugt werden.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '14.02.2019'),
                     'text' => 'Zu den Gottesdiensten können nun auch Opferzweck, Opferzähler, usw. angegeben werden. "Taufe" und "Abendmahl" sind Ankreuzfelder geworden, die den
                 entsprechenden Text automatisch in die Anmerkungen einfügen und z.B. in Statistiken, usw. relevant sind.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '13.02.2019'),
                     'text' => 'Mit "Berichte &gt; Prädikantenanforderung" kann das Prädikantenformular für das Dekanat automatisch erstellt werden.'
                 ],
-            
-            
+
+
                 [
                     'date' => Carbon::createFromFormat('d.m.Y', '12.02.2019'),
                     'text' => 'Statt einen Pfarrer anzugeben, kann jetzt bei einem Gottesdienst angekreuzt werden, dass ein Prädikant benötigt wird. Dies wird im Kalender rot hervorgehoben.
         (Wenn der Eintrag "Prädikant benötigt" im Kalender nicht rot erscheint, Seite mit Strg+F5 neu laden.)'
                 ],
-            
+
 
         ]);
     }
