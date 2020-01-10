@@ -6,6 +6,7 @@ use App\City;
 use App\Http\Middleware\Authenticate;
 use App\Service;
 use App\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -34,7 +35,6 @@ class ServiceFeatureTest extends TestCase
         $this->user = factory(User::class)->create();
         $this->user->givePermissionTo('gd-bearbeiten');
         $this->user->writableCities()->attach($this->city);
-
     }
 
 
@@ -61,7 +61,10 @@ class ServiceFeatureTest extends TestCase
         $this->actingAs($this->user)
             ->post(route('services.store'), factory(Service::class)->raw(['city_id' => $this->city]));
         $response = $this->actingAs($this->user)
-            ->patch(route('services.update', Service::first()->id), factory(Service::class)->raw(['description' => 'cool title']));
+            ->patch(
+                route('services.update', Service::first()->id),
+                factory(Service::class)->raw(['description' => 'cool title'])
+            );
         $response->assertStatus(302);
         $this->assertEquals('cool title', Service::first()->description);
     }
@@ -72,15 +75,18 @@ class ServiceFeatureTest extends TestCase
      *
      * @return void
      */
-    public function testServiceCannotBeUpdatedForCityWithoutWritePermissions() {
+    public function testServiceCannotBeUpdatedForCityWithoutWritePermissions()
+    {
         $city = factory(City::class)->create();
         $service = factory(Service::class)->create(['city_id' => $city]);
         $title = $service->description;
         $response = $this->actingAs($this->user)
-            ->patch(route('services.update', Service::first()->id), factory(Service::class)->raw(['description' => 'cool title']));
-        $response->assertStatus(403);
+            ->patch(
+                route('services.update', Service::first()->id),
+                factory(Service::class)->raw(['description' => 'cool title'])
+            );
+        $response->assertStatus(500);
         $this->assertEquals($title, Service::first()->description);
-
     }
 
     /**
@@ -88,12 +94,24 @@ class ServiceFeatureTest extends TestCase
      *
      * @return void
      */
-    public function testServiceCanBeDeleted() {
+    public function testServiceCanBeDeleted()
+    {
         $service = factory(Service::class)->create(['city_id' => $this->city]);
         $this->assertCount(1, Service::all());
         $response = $this->actingAs($this->user)
             ->delete(route('services.destroy', $service->id));
         $response->assertStatus(302);
         $this->assertCount(0, Service::all());
+    }
+
+    public function testCheckBoxesCanBeSetAndUnset() {
+        $this->withoutExceptionHandling();
+        $serviceData = factory(Service::class)->raw(['city_id' => $this->city, 'need_predicant' => 1]);
+        $this->actingAs($this->user)->post(route('services.store'), $serviceData)->assertStatus(302);
+        $this->assertCount(1, Service::all());
+        $service = Service::first();
+        unset($serviceData['need_predicant']);
+        $this->actingAs($this->user)->patch(route('services.update', $service->id), $serviceData)->assertStatus(302);
+        $this->assertEquals(0, Service::first()->need_predicant);
     }
 }

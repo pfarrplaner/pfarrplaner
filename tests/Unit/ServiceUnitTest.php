@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Http\Requests\StoreServiceRequest;
 use App\Service;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -49,6 +50,18 @@ class ServiceUnitTest extends TestCase
         $this->assertCount(0, Service::all());
     }
 
+    public function testCheckBoxesCanBeSetAndUnset() {
+        $service = factory(Service::class)->raw(['need_predicant' => 1]);
+        $rules = (new StoreServiceRequest())->rules();
+        $validator = app('validator')->make($service, $rules);
+        $this->assertTrue($validator->passes());
+        $data = $validator->validate();
+        $this->assertEquals(1, $data['need_predicant']);
+        unset($service['need_predicant']);
+        $validator = app('validator')->make($service, $rules);
+        $data = $validator->validate();
+        $this->assertEquals(0, $data['need_predicant']);
+    }
 
 
 }
