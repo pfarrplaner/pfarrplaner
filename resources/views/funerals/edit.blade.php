@@ -23,7 +23,7 @@
                     <hr/>
                     @input(['name' => 'text', 'label'=> 'Text', 'value' => $funeral->text])
                     @input(['name' => 'announcement', 'label'=> 'Abkündigen am', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->announcement) ? $funeral->announcement->format('d.m.Y') : '')])
-                    @select(['name' => 'type', 'label' => 'Bestattungsart', 'items' => ['Erdbestattung', 'Trauerfeier', 'Trauerfeier mit Urnenbeisetzung', 'Urnenbeisetzung'], 'id' => 'selType'])
+                    @select(['name' => 'type', 'label' => 'Bestattungsart', 'items' => ['Erdbestattung', 'Trauerfeier', 'Trauerfeier mit Urnenbeisetzung', 'Urnenbeisetzung'], 'id' => 'selType', 'value' => $funeral->type])
                     @input(['name' => 'wake', 'label'=> 'Datum der vorhergehenden Trauerfeier', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'id' => 'dateWake', 'value' => (is_object($funeral->wake) ? $funeral->wake->format('d.m.Y') : '')])
                     @input(['name' => 'wake_location', 'label'=> 'Ort der vorhergehenden Trauerfeier', 'id' => 'locWake', 'value' => $funeral->wake_location])
                 @endcomponent
