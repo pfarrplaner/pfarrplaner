@@ -35,9 +35,9 @@
     @hasrole('Pfarrer*in')
         @if(count($wedding->attachments))
             @foreach($wedding->attachments as $attachment)
-                <a href="{{ route('attachment', $attachment->id) }}"
+                <a href="{{ route('attachment', $attachment->id) }}" class="btn-secondary btn-sm"
                    title="{{ $attachment->title }}, {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($attachment->file)) }}, {{ Storage::mimeType($attachment->file) }}">
-                    <span class="fa fa-paperclip"></span>
+                    <span class="fa {{ \App\Helpers\FileHelper::icon($attachment->file) }}"></span>
                 </a>
             @endforeach
         @endif
