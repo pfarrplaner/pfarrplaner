@@ -84,13 +84,15 @@
                     @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt'])
                     @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?'])
                 @endcomponent
-
+                @include('components.attachments')
             </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script>var attachments = 0;</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         function setCitySelect() {
             if ($('select[name=service]').val() == '') {

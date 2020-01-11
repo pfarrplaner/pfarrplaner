@@ -75,6 +75,11 @@
                         @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt', 'value' => $baptism->docs_ready])
                         @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?', 'value' => $baptism->docs_where])
                 @endcomponent
+                @include('components.attachments', ['object' => $baptism])
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
                 @component('components.ui.card')
                     @slot('cardHeader')Kommentare @endslot
                     @include('partials.comments.list', ['owner' => $baptism, 'ownerClass' => 'App\\Baptism'])
@@ -85,6 +90,8 @@
 @endsection
 
 @section('scripts')
+    <script>var attachments = {{ count($baptism->attachments) }};</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#btnRemoveAttachment').click(function () {
