@@ -123,21 +123,12 @@ class ServiceController extends Controller
      */
     public function update(StoreServiceRequest $request, Service $service)
     {
-        $original = clone $service;
-        foreach (['P', 'O', 'M', 'A'] as $key) {
-            $originalParticipants[$key] = $original->participantsText($key);
-        }
-
+        $service->trackChanges();
         $service->fill($request->validated());
         $service->setDefaultOfferingValues();
-
         $this->updateFromRequest($request, $service);
-
-        // notify:
-        // (needs to happen before save, so the model is still dirty
-        Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
-
         $service->save();
+        Subscription::send($service, ServiceUpdated::class);
 
         $route = $request->get('routeBack') ?: '';
         if ($route) {

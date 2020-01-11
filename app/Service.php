@@ -6,6 +6,7 @@ use App\Http\Requests\StoreServiceRequest;
 use App\Mail\ServiceUpdated;
 use App\Tools\StringTool;
 use App\Traits\HasCommentsTrait;
+use App\Traits\TracksChangesTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,13 +14,30 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Service extends Model
 {
-    use \Venturecraft\Revisionable\RevisionableTrait;
+    use RevisionableTrait;
     use HasCommentsTrait;
+    use TracksChangesTrait;
 
     public $liturgy = [];
+
+    protected $forceTracking = [
+        'participants',
+        'day',
+        'location',
+        'city',
+        'pastors',
+        'organists',
+        'sacristans',
+        'otherParticipants',
+        'participantsWithMinistry',
+        'funerals',
+        'baptisms',
+        'weddings'
+    ];
 
     protected $revisionEnabled = true;
     protected $revisionFormattedFieldNames = array(
@@ -81,7 +99,8 @@ class Service extends Model
         'locationText',
         'timeText',
         'baptismsText',
-        'liturgy'
+        'liturgy',
+        'ministriesByCategory',
     ];
 
     protected $attributes = [
@@ -184,6 +203,10 @@ class Service extends Model
             $ministries[$participant->pivot->category]->push($participant);
         }
         return $ministries;
+    }
+
+    public function getMinistriesByCategoryAttribute() {
+        return $this->ministries();
     }
 
 
@@ -378,6 +401,14 @@ class Service extends Model
 
     public function getBaptismsTextAttribute() {
         return $this->baptismsText(true);
+    }
+
+    public function getTimeAttribute() {
+        return isset($this->attributes['time']) ? substr($this->attributes['time'], 0, 5) : '';
+    }
+
+    public function setTimeAttribute($time) {
+        $this->attributes['time'] = substr($time, 0, 5);
     }
 
 
