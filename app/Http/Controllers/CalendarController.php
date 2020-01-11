@@ -275,6 +275,7 @@ class CalendarController extends Controller
      */
     protected function getLocationsFilter(Request $request, $possibleLocations, $user): array
     {
+        if (!$user->hasSetting('calendar_filter_locations')) $user->setSetting('calendar_filter_locations', '');
         if ($request->has('filter_location')) {
             if ($request->get('filter_location') == '') {
                 $filteredLocations = [];
