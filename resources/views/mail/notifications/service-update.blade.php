@@ -199,6 +199,8 @@
 
     @include('mail.layout.blocks.spacer')
 
+    @include('mail.notifications.service.overview')
+
 
     @if($user->can('gd-kasualien-lesen') || $user->can('gd-kasualien-bearbeiten'))
         @if($service->baptisms->count() || $service->funerals->count() || $service->weddings->count())
