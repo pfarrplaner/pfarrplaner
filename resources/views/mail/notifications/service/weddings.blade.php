@@ -24,6 +24,19 @@
             <td class="text-right" style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="right" valign="top">{{ $wedding->docs_ready ? '✔' : '✘' }}</td>
         </tr>
         <tr>
+            @component('mail.layout.blocks.cell')Dateianhänge @endcomponent
+            @component('mail.layout.blocks.cell')
+                @if(count($wedding->attachments))
+                    @foreach($wedding->attachments as $attachment)
+                        <a href="{{ route('attachment', $attachment->id) }}"  class="btn-secondary btn-sm"
+                           title="{{ $attachment->title }}, {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($attachment->file)) }}, {{ Storage::mimeType($attachment->file) }}">
+                            <span class="fa {{ \App\Helpers\FileHelper::icon($attachment->file) }}"></span>
+                        </a>
+                    @endforeach
+                @endif
+            @endcomponent
+        </tr>
+        <tr>
             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 1px; border-top-color: #e9ecef; border-top-style: solid; margin: 0; padding: 12px;" align="left" valign="top" colspan="2">
                 <a style="padding: 5px; border-radius: 5px; background-color: #a61380; color: white;" href="{{ route('weddings.edit', $wedding) }}">Trauung im Pfarrplaner öffnen</a>
             </td>

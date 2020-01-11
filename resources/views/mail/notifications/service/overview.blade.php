@@ -147,6 +147,19 @@
             @component('mail.layout.blocks.cell')Mitarbeiter der Kinderkirche @endcomponent
             @component('mail.layout.blocks.cell'){{ $service->cc_staff ? '✔' : '✘'}} @endcomponent
         </tr>
+        <tr>
+            @component('mail.layout.blocks.cell')Dateianhänge @endcomponent
+            @component('mail.layout.blocks.cell')
+                @if(count($service->attachments))
+                    @foreach($service->attachments as $attachment)
+                        <a href="{{ route('attachment', $attachment->id) }}"  class="btn-secondary btn-sm"
+                           title="{{ $attachment->title }}, {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($attachment->file)) }}, {{ Storage::mimeType($attachment->file) }}">
+                            <span class="fa {{ \App\Helpers\FileHelper::icon($attachment->file) }}"></span>
+                        </a>
+                    @endforeach
+                @endif
+            @endcomponent
+        </tr>
 
     @endcomponent
 
