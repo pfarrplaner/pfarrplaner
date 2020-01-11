@@ -5,6 +5,7 @@ namespace App;
 use App\Http\Requests\StoreServiceRequest;
 use App\Mail\ServiceUpdated;
 use App\Tools\StringTool;
+use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
 use App\Traits\TracksChangesTrait;
 use Carbon\Carbon;
@@ -21,6 +22,7 @@ class Service extends Model
     use RevisionableTrait;
     use HasCommentsTrait;
     use TracksChangesTrait;
+    use HasAttachmentsTrait;
 
     public $liturgy = [];
 

@@ -13,6 +13,7 @@ use App\Service;
 use App\ServiceGroup;
 use App\Subscription;
 use App\Tag;
+use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use App\Vacations;
 use Carbon\Carbon;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\View;
 
 class ServiceController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
 
     public function __construct()
     {
@@ -63,6 +66,7 @@ class ServiceController extends Controller
         $service->save();
 
         $this->updateFromRequest($request, $service);
+        $this->handleAttachments($request, $service);
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -128,6 +132,7 @@ class ServiceController extends Controller
         $service->setDefaultOfferingValues();
         $this->updateFromRequest($request, $service);
         $service->save();
+        $this->handleAttachments($request, $service);
         Subscription::send($service, ServiceUpdated::class);
 
         $route = $request->get('routeBack') ?: '';

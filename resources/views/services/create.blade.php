@@ -72,6 +72,7 @@
                     @component('components.service.otherParticipantsWithText', ['users' => $users, 'ministries' => $ministries]) @endcomponent
                     @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                 @endcomponent
+                @include('components.attachments')
             </div>
         </div>
     </form>
@@ -79,6 +80,8 @@
 
 
 @section('scripts')
+    <script>var attachments = 0;</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         function setDefaultTime() {
             if ($('select[name=location_id]').val() == '') {

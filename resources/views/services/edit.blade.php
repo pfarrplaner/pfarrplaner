@@ -111,12 +111,15 @@
                     @component('components.service.otherParticipantsWithText', ['users' => $users, 'service' => $service, 'ministries' => $ministries]) @endcomponent
                     @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'value' => $service->otherParticipants, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                 @endcomponent
+                @include('components.attachments', ['object' => $service])
             </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script>var attachments = {{ count($service->attachments) }};</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script>
         function setDefaultTime() {
