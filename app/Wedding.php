@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ class Wedding extends Model
 {
     use HasEncryptedAttributes;
     use HasCommentsTrait;
+    use HasAttachmentsTrait;
 
     protected $fillable = [
         'service_id',

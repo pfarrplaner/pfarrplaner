@@ -100,7 +100,12 @@
                         <input type="text" class="form-control" name="docs_where"/>
                     </div>
                 @endcomponent
+                @include('components.attachments')
             </div>
         </div>
     </form>
+@endsection
+@section('scripts')
+    <script>var attachments = 0;</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
 @endsection

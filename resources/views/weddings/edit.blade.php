@@ -126,17 +126,24 @@
                         <input type="text" class="form-control" name="docs_where"
                                value="{{ $wedding->docs_where }}"/>
                     </div>
+                @endcomponent
+                @include('components.attachments', ['object' => $wedding])
             </div>
-            @endcomponent
-            @component('components.ui.card')
-                @slot('cardHeader')Kommentare @endslot
-                @include('partials.comments.list', ['owner' => $wedding, 'ownerClass' => 'App\\Wedding'])
-            @endcomponent
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @component('components.ui.card')
+                    @slot('cardHeader')Kommentare @endslot
+                    @include('partials.comments.list', ['owner' => $wedding, 'ownerClass' => 'App\\Wedding'])
+                @endcomponent
+            </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script>var attachments = {{ count($wedding->attachments) }};</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#btnRemoveAttachment').click(function () {
