@@ -76,10 +76,6 @@
                     @input(['name' => 'first_contact_on', 'label' => 'Erstkontakt am', 'placeholder' => 'tt.mm.jjjj', 'value' => date('d.m.Y'), 'class' => 'datepicker'])
                     @datetimepicker(['name' => 'appointment', 'label' => 'Taufgespräch', 'placeholder' => 'tt.mm.jjjj HH:MM'])
                     @checkbox(['name' => 'registered', 'label' => 'Anmeldung erhalten'])
-                @endcomponent
-                @component('components.ui.card')
-                    @slot('cardHeader')Dokumente @endslot
-                    @upload(['name' => 'registration_document', 'label' => 'PDF des Anmeldedokuments'])
                     @checkbox(['name' => 'signed', 'label' => 'Anmeldung unterschrieben'])
                     @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt'])
                     @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?'])

@@ -66,11 +66,6 @@
                         @input(['name' => 'first_contact_on', 'label' => 'Erstkontakt am', 'placeholder' => 'tt.mm.jjjj', 'value' => date('d.m.Y'), 'class' => 'datepicker', 'value' => (is_object($baptism->first_contact) ? $baptism->first_contact_on->format('d.m.Y')  : '')])
                         @datetimepicker(['name' => 'appointment', 'label' => 'Taufgespräch', 'placeholder' => 'tt.mm.jjjj HH:MM', 'value' => (is_object($baptism->appointment) ? $baptism->appointment->format('d.m.Y H:i') : '')])
                         @checkbox(['name' => 'registered', 'label' => 'Anmeldung erhalten', 'value' => $baptism->registered])
-                @endcomponent
-                @component('components.ui.card')
-                    @slot('cardHeader')Dokumente @endslot
-                        @slot('cardHeader')Dokumente @endslot
-                        @upload(['name' => 'registration_document', 'label' => 'PDF des Anmeldedokuments', 'value' => $baptism->registration_document])
                         @checkbox(['name' => 'signed', 'label' => 'Anmeldung unterschrieben', 'value' => $baptism->signed])
                         @checkbox(['name' => 'docs_ready', 'label' => 'Urkunden gedruckt', 'value' => $baptism->docs_ready])
                         @input(['name' => 'docs_where', 'label' => 'Wo sind die Urkunden hinterlegt?', 'value' => $baptism->docs_where])

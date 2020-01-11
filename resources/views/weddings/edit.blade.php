@@ -89,43 +89,29 @@
                             </label>
                         </div>
                     </div>
-                @endcomponent
-                @component('components.ui.card')
-                    @slot('cardHeader')Dokumente @endslot
-                    <div class="form-group">
-                        <label for="registration_document">PDF des Anmeldedokuments</label>
-                        @if ($wedding->registration_document)
-                            <a id="linkToAttachment"
-                               href="{{ env('APP_URL').'storage/'.$wedding->registration_document }}">{{ $wedding->registration_document }}</a>
-                            <a class="btn btn-sm btn-danger" id="btnRemoveAttachment"
-                               title="Dokumentanhang entfernen"><span class="fa fa-trash"></span></a>
-                        @else
-                            <input type="file" name="registration_document" class="form-control"/>
-                        @endif
-                    </div>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" name="signed" value="1" autocomplete="off"
-                                   @if($wedding->signed) checked @endif>
-                            <label class="form-check-label">
-                                Anmeldung unterschrieben
-                            </label>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="signed" value="1" autocomplete="off"
+                                       @if($wedding->signed) checked @endif>
+                                <label class="form-check-label">
+                                    Anmeldung unterschrieben
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" name="docs_ready" value="1" autocomplete="off"
-                                   @if($wedding->docs_ready) checked @endif>
-                            <label class="form-check-label">
-                                Urkunden gedruckt
-                            </label>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="docs_ready" value="1" autocomplete="off"
+                                       @if($wedding->docs_ready) checked @endif>
+                                <label class="form-check-label">
+                                    Urkunden gedruckt
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="docs_where">Wo sind die Urkunden hinterlegt?</label>
-                        <input type="text" class="form-control" name="docs_where"
-                               value="{{ $wedding->docs_where }}"/>
-                    </div>
+                        <div class="form-group">
+                            <label for="docs_where">Wo sind die Urkunden hinterlegt?</label>
+                            <input type="text" class="form-control" name="docs_where"
+                                   value="{{ $wedding->docs_where }}"/>
+                        </div>
                 @endcomponent
                 @include('components.attachments', ['object' => $wedding])
             </div>
