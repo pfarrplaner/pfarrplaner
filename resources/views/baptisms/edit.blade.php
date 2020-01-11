@@ -87,6 +87,13 @@
 @section('scripts')
     <script>var attachments = {{ count($baptism->attachments) }};</script>
     <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script>
+        var commentRoute = '{{ route('comments.store') }}';
+        var commentOwner = '{{ $baptism->id }}';
+        var commentOwnerClass = 'App\\Baptism';
+    </script>
+    <script src="{{ asset('js/pfarrplaner/comments.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#btnRemoveAttachment').click(function () {

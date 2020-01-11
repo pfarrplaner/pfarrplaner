@@ -122,6 +122,12 @@
     <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script>
+        var commentRoute = '{{ route('comments.store') }}';
+        var commentOwner = '{{ $service->id }}';
+        var commentOwnerClass = 'App\\Service';
+    </script>
+    <script src="{{ asset('js/pfarrplaner/comments.js') }}"></script>
+    <script>
         function setDefaultTime() {
             if ($('select[name=location_id]  option:selected').val() == 0) {
                 $('input[name=time]').attr('placeholder', 'HH:MM');
