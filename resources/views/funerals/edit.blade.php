@@ -41,6 +41,14 @@
                 @include('components.attachments', ['object' => $funeral])
             </div>
         </div>
+        <div class="row">
+            <div class="col-12">
+                @component('components.ui.card')
+                    @slot('cardHeader')Kommentare @endslot
+                    @include('partials.comments.list', ['owner' => $funeral, 'ownerClass' => 'App\\Funeral'])
+                @endcomponent
+            </div>
+        </div>
     </form>
 @endsection
 
