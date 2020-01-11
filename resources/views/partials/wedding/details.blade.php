@@ -28,13 +28,22 @@
     @endif
 </td>
 <td>
-    @if ($wedding->registered) <span class="fa fa-check-circle"></span>&nbsp;Anmeldung erhalten
-    <br />
-    @if ($wedding->registration_document) <span class="fa fa-check-circle"></span>&nbsp;Formular erstellt @hasrole('Pfarrer*in') <a class="btn btn-sm btn-secondary" href="{{ route('download', ['storage' => dirname($wedding->registration_document), 'code' => pathinfo($wedding->registration_document, PATHINFO_FILENAME), 'prettyName' => $service->day->date->format('Ymd').' '.$wedding->candidate_name.' Taufanmeldung.pdf']) }}"><span class="fa fa-download" title="Formular als PDF-Datei herunterladen"></span></a> @endhasrole<br />
-    @if ($wedding->signed) <span class="fa fa-check-circle"></span>&nbsp;Anmeldung unterzeichnet @else <span class="fa fa-times-circle"></span>&nbsp;noch nicht unterzeichnet @endif<br />
-    @endif
-
+    @if ($wedding->registered) <span class="fa fa-check-circle"></span>&nbsp;Anmeldung erhalten<br />
+    @if ($wedding->signed) <span class="fa fa-check-circle"></span>&nbsp;Anmeldung unterzeichnet @else <span class="fa fa-times-circle"></span>&nbsp;noch nicht unterzeichnet @endif
     @else <span class="fa fa-times-circle"></span>&nbsp;Anmeldung noch nicht erhalten @endif
+    <br />
+    @hasrole('Pfarrer*in')
+        @if(count($wedding->attachments))
+            @foreach($wedding->attachments as $attachment)
+                <a href="{{ route('attachment', $attachment->id) }}"
+                   title="{{ $attachment->title }}, {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($attachment->file)) }}, {{ Storage::mimeType($attachment->file) }}">
+                    <span class="fa fa-paperclip"></span>
+                </a>
+            @endforeach
+        @endif
+        <br />
+    @endhasrole
+
 
 </td>
 <td>
