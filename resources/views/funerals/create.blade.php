@@ -13,7 +13,7 @@
                         <button type="submit" class="btn btn-primary" id="submit">Hinzufügen</button>
                     @endslot
                         @hidden(['name' => 'wizard', 'value' => $wizard])
-                        @hidden(['name' => 'service', 'value' => $service->id])
+                        @hidden(['name' => 'service_id', 'value' => $service->id])
                         @input(['name' => 'buried_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname'])
                         @input(['name' => 'dob', 'label'=> 'Geburtsdatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker'])
                         @input(['name' => 'dod', 'label'=> 'Sterbedatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker'])

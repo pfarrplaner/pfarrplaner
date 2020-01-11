@@ -13,7 +13,7 @@
                     @slot('cardFooter')
                         <button type="submit" class="btn btn-primary" id="submit">Speichern</button>
                     @endslot
-                    @hidden(['name' => 'service', 'value' => $service->id])
+                    @hidden(['name' => 'service_id', 'value' => $service->id])
                     @input(['name' => 'buried_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname', 'value' => $funeral->buried_name])
                     @input(['name' => 'dob', 'label'=> 'Geburtsdatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->dob) ? $funeral->dob->format('d.m.Y') : '')])
                     @input(['name' => 'dod', 'label'=> 'Sterbedatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->dod) ? $funeral->dod->format('d.m.Y') : '')])
