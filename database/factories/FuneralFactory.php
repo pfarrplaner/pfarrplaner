@@ -10,7 +10,7 @@ $factory->define(\App\Funeral::class, function (Faker $faker) {
         'buried_zip' => $faker->postcode,
         'buried_city' => $faker->city,
         'text' => $faker->sentence(3),
-        'announcement' => $faker->date(),
+        'announcement' => $faker->date('d.m.Y'),
         'type' => 'Erdbestattung',
         'wake' => null,
         'wake_location' => null,
@@ -19,9 +19,9 @@ $factory->define(\App\Funeral::class, function (Faker $faker) {
         'relative_zip' => $faker->postcode,
         'relative_city' => $faker->city,
         'relative_contact_data' => $faker->sentence,
-        'appointment' => $faker->dateTime,
-        'dob' => $faker->date,
-        'dod' => $faker->date,
+        'appointment' => $faker->date('d.m.Y H:i'),
+        'dob' => $faker->date('d.m.Y'),
+        'dod' => $faker->date('d.m.Y'),
         //
     ];
 });

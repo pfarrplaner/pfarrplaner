@@ -25,10 +25,19 @@ class FuneralStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'service' => 'int|required|exists:services,id',
-            'buried_name' => 'required',
-            'dob' => 'nullable|date_format:d.m.Y',
-            'dod' => 'nullable|date_format:d.m.Y',
+            'service_id' => 'required|int|exists:services,id',
+            'buried_name' => 'required|string',
+            'buried_address' => 'nullable|string',
+            'buried_zip' => 'nullable|zip',
+            'buried_city' => 'nullable|string',
+            'text' => 'nullable|string',
+            'type' => 'nullable|string',
+            'relative_name' => 'required|string',
+            'relative_address' => 'nullable|string',
+            'relative_zip' => 'nullable|zip',
+            'relative_city' => 'nullable|string',
+            'relative_contact_data' => 'nullable|string',
+            'wake_location' => 'nullable|string',
             'wake' => 'nullable|date_format:d.m.Y',
             'announcement' => 'nullable|date_format:d.m.Y',
             'appointment' => 'nullable|date_format:d.m.Y H:i',
