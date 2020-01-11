@@ -287,9 +287,9 @@ class CalendarController extends Controller
             }
             $user->setSetting('calendar_filter_locations', join(',', $filteredLocations));
         } else {
+            if ('' === $user->getSetting('calendar_filter_locations', '')) return [];
             $filteredLocations = explode(',', $user->getSetting('calendar_filter_locations', []));
         }
-        $user->setSetting('calendar_filter_locations', join(',', $filteredLocations));
         return $filteredLocations;
     }
 }
