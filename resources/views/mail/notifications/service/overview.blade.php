@@ -41,15 +41,15 @@
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Taufgottesdienst @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->baptism ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->baptism ? '✔' : '✘'}} @endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Abendmahl @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->eucharist ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->eucharist ? '✔' : '✘'}} @endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Prädikant benötigt @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->need_predicant ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->need_predicant ? '✔' : '✘'}} @endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Pfarrer*in @endcomponent
@@ -129,23 +129,23 @@
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Kinderkirche @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->cc ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->cc ? '✔' : '✘'}} @endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Uhrzeit der Kinderkirche @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->cc_alt_time ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->cc_alt_time ? '✔' : '✘'}} @endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Ort der Kinderkirche @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->cc_location ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->cc_location ? '✔' : '✘'}} @endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Thema der Kinderkirche @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->cc_lesson ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->cc_lesson ? '✔' : '✘'}} @endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Mitarbeiter der Kinderkirche @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->cc_staff ? '&#10004;' : '&#2713;'}} @endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->cc_staff ? '✔' : '✘'}} @endcomponent
         </tr>
 
     @endcomponent

@@ -80,8 +80,8 @@
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'need_predicant',
                      'key' => 'Prädikant benötigt',
-                     'old' => $original->need_predicant ? '&#10004;' : '&#2713;',
-                     'new' => $changed->need_predicant ? '&#10004;' : '&#2713;',
+                     'old' => $original->need_predicant ? '✔' : '✘',
+                     'new' => $changed->need_predicant ? '✔' : '✘',
                      ])
 
             @include('mail.notifications.service.changed-participants-list', [
@@ -104,15 +104,15 @@
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'baptism',
                      'key' => 'Taufgottesdienst',
-                     'old' => $original->baptism ? '&#10004;' : '&#2713;',
-                     'new' => $changed->baptism ? '&#10004;' : '&#2713;',
+                     'old' => $original->baptism ? '✔' : '✘',
+                     'new' => $changed->baptism ? '✔' : '✘',
                      ])
 
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'eucharist',
                      'key' => 'Abendmahlsgottesdienst',
-                     'old' => $original->eucharist ? '&#10004;' : '&#2713;',
-                     'new' => $changed->eucharist ? '&#10004;' : '&#2713;',
+                     'old' => $original->eucharist ? '✔' : '✘',
+                     'new' => $changed->eucharist ? '✔' : '✘',
                      ])
 
             @include('mail.notifications.service.changed-attribute', [
@@ -160,8 +160,8 @@
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'cc',
                      'key' => 'Kinderkirche',
-                     'old' => $original->cc ? '&#10004;' : '&#2713;',
-                     'new' => $changed->cc ? '&#10004;' : '&#2713;',
+                     'old' => $original->cc ? '✔' : '✘',
+                     'new' => $changed->cc ? '✔' : '✘',
                      ])
 
             @include('mail.notifications.service.changed-attribute', [
