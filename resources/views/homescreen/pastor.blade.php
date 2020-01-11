@@ -175,7 +175,7 @@
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="funerals">
                     <h2>Meine Beerdigungen</h2>
-                    <p>Angezeigt werden alle bereits bekannten Beerdigungen.</p>
+                    <p>Angezeigt werden alle bereits bekannten Beerdigungen, sowie die Beerdigungen der letzten 2 Wochen.</p>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -195,7 +195,7 @@
                             <tbody>
                             @foreach ($funerals as $service)
                                 @foreach($service->funerals as $funeral)
-                                    <tr>
+                                    <tr class="@if($service->day->date < \Carbon\Carbon::now())past @else future @endif">
                                         @if ($loop->first)
                                             <td rowspan="{{ $service->funerals->count() }}">{{ $service->day->date->format('d.m.Y') }}</td>
                                             <td rowspan="{{ $service->funerals->count() }}">{{ $service->timeText() }}</td>
