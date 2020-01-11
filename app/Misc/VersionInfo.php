@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-01-11 16:32', 'Europe/Berlin'),
+                'text' => 'Gottesdienste können nun beliebig viele Dateianhänge haben.',
+            ],
+            [
                 'date' => new Carbon('2020-01-11 16:27', 'Europe/Berlin'),
                 'text' => 'Kasualien können nun beliebig viele Dateianhänge haben.',
             ],
