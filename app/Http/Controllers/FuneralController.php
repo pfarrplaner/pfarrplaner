@@ -198,42 +198,11 @@ class FuneralController extends Controller
      */
     public function update(FuneralStoreRequest $request, Funeral $funeral)
     {
-        $request->validate([
-            'service' => 'required|int',
-        ]);
-        $serviceId = $request->get('service');
-        $funeral->buried_name = $request->get('buried_name') ?: '';
-        $funeral->buried_address = $request->get('buried_address') ?: '';
-        $funeral->buried_zip = $request->get('buried_zip') ?: '';
-        $funeral->buried_city = $request->get('buried_city') ?: '';
-        $funeral->text = $request->get('text') ?: '';
-        $funeral->type = $request->get('type') ?: '';
-        $funeral->relative_name = $request->get('relative_name') ?: '';
-        $funeral->relative_address = $request->get('relative_address') ?: '';
-        $funeral->relative_zip = $request->get('relative_zip') ?: '';
-        $funeral->relative_city = $request->get('relative_city') ?: '';
-        $funeral->relative_contact_data = $request->get('relative_contact_data') ?: '';
-        $funeral->wake_location = $request->get('wake_location') ?: '';
-        if ($request->get('announcement') !='')  $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
-        if ($request->get('wake') != '') $funeral->wake = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
-        if ($request->get('dob') != '') $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
-        if ($request->get('dod') != '') $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
-
-        $appointment = $request->get('appointment');
-        if (!preg_match('/\d+.\d+.\d+ \d+:\d+/', $appointment)) {
-            if (preg_match('/\d+.\d+.\d+/', $appointment)) {
-                $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment.' 00:00:00');
-            }
-        } else {
-            $appointment .= ':00';
-            $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
-        }
-        $funeral->save();
+        $funeral->update($request->validated());
         $funeral->service->setDefaultOfferingValues();
         $funeral->service->save();
 
-
-        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        return redirect(route('services.edit', ['service' => $funeral->service->id, 'tab' => 'rites']));
     }
 
     /**
