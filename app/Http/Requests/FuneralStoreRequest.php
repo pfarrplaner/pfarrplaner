@@ -17,6 +17,17 @@ class FuneralStoreRequest extends FormRequest
         return true;
     }
 
+    public function validated()
+    {
+        $data = parent::validated();
+        foreach (['buried_address', 'buried_zip', 'buried_city', 'text', 'type', 'relative_name', 'relative_address',
+                     'relative_zip', 'relative_city', 'wake_location'] as $key) {
+            $data[$key] = $data[$key] ?? '';
+        }
+        return $data;
+    }
+
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -32,7 +43,7 @@ class FuneralStoreRequest extends FormRequest
             'buried_city' => 'nullable|string',
             'text' => 'nullable|string',
             'type' => 'nullable|string',
-            'relative_name' => 'required|string',
+            'relative_name' => 'nullable|string',
             'relative_address' => 'nullable|string',
             'relative_zip' => 'nullable|zip',
             'relative_city' => 'nullable|string',

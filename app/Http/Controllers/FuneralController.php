@@ -10,6 +10,7 @@ use App\Location;
 use App\Mail\ServiceCreated;
 use App\Service;
 use App\Subscription;
+use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,6 +22,9 @@ use PDF;
 
 class FuneralController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -156,6 +160,7 @@ class FuneralController extends Controller
         $funeral = Funeral::create($request->validated());
         $funeral->service->setDefaultOfferingValues();
         $funeral->service->save();
+        $this->handleAttachments($request, $funeral);
 
         // delayed notification after wizard completion:
         if ($request->get('wizard') == 1) {
@@ -201,6 +206,7 @@ class FuneralController extends Controller
         $funeral->update($request->validated());
         $funeral->service->setDefaultOfferingValues();
         $funeral->service->save();
+        $this->handleAttachments($request, $funeral);
 
         return redirect(route('services.edit', ['service' => $funeral->service->id, 'tab' => 'rites']));
     }

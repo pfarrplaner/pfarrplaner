@@ -38,12 +38,15 @@
                     @textarea(['name' => 'relative_contact_data', 'label' => 'Kontakt'])
                     @datetimepicker(['name' => 'appointment', 'label' => 'Trauergespräch', 'placeholder' => 'TT.MM.JJJJ hh:mm'])
                 @endcomponent
+                @include('components.attachments')
             </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script>var attachments = 0;</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         function setFieldStates() {
             if ($('#selType_input option:selected').val() == 'Urnenbeisetzung') {

@@ -642,3 +642,7 @@ body.login .main-sidebar:hover .login-form.hidden-collapsed {
 .badge-permission-n {
     background-color: red !important;
 }
+
+.attachment-row {
+    cursor: pointer;
+}

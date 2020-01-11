@@ -38,12 +38,15 @@
                     @textarea(['name' => 'relative_contact_data', 'label' => 'Kontakt', 'value' => $funeral->relative_contact_data])
                     @datetimepicker(['name' => 'appointment', 'label' => 'Trauergespräch', 'placeholder' => 'TT.MM.JJJJ hh:mm', 'value' => (is_object($funeral->appointment) ? $funeral->appointment->format('d.m.Y H:i') : '')])
                 @endcomponent
+                @include('components.attachments', ['object' => $funeral])
             </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script>var attachments = {{ count($funeral->attachments) }};</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         function setFieldStates() {
             if ($('#selType_input option:selected').val() == 'Urnenbeisetzung') {
