@@ -85,7 +85,7 @@ class ServiceFeatureTest extends TestCase
                 route('services.update', Service::first()->id),
                 factory(Service::class)->raw(['description' => 'cool title'])
             );
-        $response->assertStatus(500);
+        $response->assertStatus(403);
         $this->assertEquals($title, Service::first()->description);
     }
 
