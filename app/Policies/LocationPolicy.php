@@ -10,6 +10,12 @@ class LocationPolicy
 {
     use HandlesAuthorization;
 
+    public function index(User $user) {
+        if ($user->hasRole('Administrator*in')) return true;
+        if ($user->can('ort-bearbeiten') || $user->can('gd-opfer-bearbeiten')) return true;
+        return false;
+    }
+
     /**
      * Determine whether the user can view the location.
      *
@@ -42,7 +48,9 @@ class LocationPolicy
      */
     public function update(User $user, Location $location)
     {
-        return $user->isAdmin || ($user->cities()->contains($location->city() && $user->canEditChurch) );
+        if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
+        return false;
     }
 
     /**
@@ -54,7 +62,9 @@ class LocationPolicy
      */
     public function delete(User $user, Location $location)
     {
-        return $user->isAdmin || ($user->cities()->contains($location->city() && $user->canEditChurch) );
+        if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
+        return false;
     }
 
     /**
@@ -66,7 +76,9 @@ class LocationPolicy
      */
     public function restore(User $user, Location $location)
     {
-        return $user->isAdmin || ($user->cities()->contains($location->city() && $user->canEditChurch) );
+        if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
+        return false;
     }
 
     /**
@@ -78,6 +90,8 @@ class LocationPolicy
      */
     public function forceDelete(User $user, Location $location)
     {
-        return $user->isAdmin || ($user->cities()->contains($location->city() && $user->canEditChurch) );
+        if ($user->hasRole('Administrator*in') && $location->city->administeredBy($user)) return true;
+        if ($user->can('kirche-bearbeiten') && $user->writableCities->contains($location->city)) return true;
+        return false;
     }
 }

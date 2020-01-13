@@ -9,8 +9,8 @@
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Speichern</button>
             @endslot
-            @input(['name' => 'name', 'label' => 'Name:', 'value' => $tag->name]) @endinput
-            @input(['name' => 'code', 'label' => 'Code:', 'value' => $tag->code]) @endinput
+            @input(['name' => 'name', 'label' => 'Name:', 'value' => $tag->name])
+            @input(['name' => 'code', 'label' => 'Code:', 'value' => $tag->code])
         @endcomponent
     </form>
 @endsection

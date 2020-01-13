@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Absence;
 use App\Day;
 use App\Service;
 use App\User;
@@ -39,7 +40,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('location_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
             })
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
@@ -62,7 +63,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
             })
             ->doesntHave('funerals')
             ->doesntHave('weddings')
@@ -89,7 +90,7 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
             })
             ->doesntHave('funerals')
             ->doesntHave('weddings')
@@ -113,9 +114,10 @@ class EmbedController extends Controller
     public function embedUserVacations (Request $request, User $user) {
         $start = Carbon::now();
         $end = (clone $start)->addWeek(2);
-        $vacations = Vacations::getByPeriodAndUser($start, $end, $user);
+        //$vacations = Vacations::getByPeriodAndUser($start, $end, $user);
+        $vacations = Absence::with('replacements')->byUserAndPeriod($user, $start, $end)->get();
         return response()
-            ->view('embed.user.vacations', compact('vacations'));
+            ->view('embed.user.vacations', compact('user', 'vacations'));
     }
 
 
@@ -128,7 +130,7 @@ class EmbedController extends Controller
             ->where('baptism', true)
             ->whereIn('city_id', $ids)
             ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->subHours(2));
+                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
             })
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')

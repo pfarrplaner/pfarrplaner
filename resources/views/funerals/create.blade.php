@@ -12,103 +12,54 @@
                     @slot('cardFooter')
                         <button type="submit" class="btn btn-primary" id="submit">Hinzufügen</button>
                     @endslot
-                    <input type="hidden" name="wizard" value="{{ $wizard }}"/>
-                    <input type="hidden" name="service" value="{{ $service->id }}"/>
-                    <div class="form-group">
-                        <label for="buried_name">Name</label>
-                        <input type="text" class="form-control" name="buried_name" placeholder="Nachname, Vorname"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="dob">Geburtsdatum</label>
-                        <input type="text" class="form-control datepicker" name="dob"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="dod">Sterbedatum</label>
-                        <input type="text" class="form-control datepicker" name="dod"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="buried_address">Adresse</label>
-                        <input type="text" class="form-control" name="buried_address"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="buried_zip">PLZ</label>
-                        <input type="text" class="form-control" name="buried_zip"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="buried_city">Ort</label>
-                        <input type="text" class="form-control" name="buried_city"/>
-                    </div>
+                        @hidden(['name' => 'wizard', 'value' => $wizard])
+                        @hidden(['name' => 'service_id', 'value' => $service->id])
+                        @input(['name' => 'buried_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname'])
+                        @input(['name' => 'dob', 'label'=> 'Geburtsdatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker'])
+                        @input(['name' => 'dod', 'label'=> 'Sterbedatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker'])
+                        @input(['name' => 'buried_address', 'label'=> 'Adresse'])
+                        @input(['name' => 'buried_zip', 'label'=> 'PLZ'])
+                        @input(['name' => 'buried_city', 'label'=> 'Ort'])
                     <hr/>
-                    <div class="form-group">
-                        <label for="text">Text</label>
-                        <input type="text" class="form-control" name="text"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="announcement">Abkündigen am</label>
-                        <input type="text" class="form-control datepicker" name="announcement" placeholder="tt.mm.jjjj"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Bestattungsart</label>
-                        <select id="selType" class="form-control" name="type">
-                            <option>Erdbestattung</option>
-                            <option>Trauerfeier</option>
-                            <option>Trauerfeier mit Urnenbeisetzung</option>
-                            <option>Urnenbeisetzung</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="wake">Datum der vorhergehenden Trauerfeier</label>
-                        <input id="dateWake" type="text" class="form-control datepicker" name="wake" placeholder="tt.mm.jjjj"
-                               disabled/>
-                    </div>
-                    <div class="form-group">
-                        <label for="wake_location">Ort der vorhergehenden Trauerfeier</label>
-                        <input id="locWake" type="text" class="form-control" name="wake_location" disabled/>
-                    </div>
+                        @input(['name' => 'text', 'label'=> 'Text'])
+                        @input(['name' => 'announcement', 'label'=> 'Abkündigen am', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker'])
+                        @select(['name' => 'type', 'label' => 'Bestattungsart', 'items' => ['Erdbestattung', 'Trauerfeier', 'Trauerfeier mit Urnenbeisetzung', 'Urnenbeisetzung'], 'id' => 'selType'])
+                        @input(['name' => 'wake', 'label'=> 'Datum der vorhergehenden Trauerfeier', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'id' => 'dateWake'])
+                        @input(['name' => 'wake_location', 'label'=> 'Ort der vorhergehenden Trauerfeier', 'id' => 'locWake'])
                 @endcomponent
             </div>
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Angehörige(r) @endslot
-                    <div class="form-group">
-                        <label for="relative_name">Name</label>
-                        <input type="text" class="form-control" name="relative_name" placeholder="Nachname, Vorname"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_address">Adresse</label>
-                        <input type="text" class="form-control" name="relative_address"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_zip">PLZ</label>
-                        <input type="text" class="form-control" name="relative_zip"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_city">Ort</label>
-                        <input type="text" class="form-control" name="relative_city"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_contact_data">Kontakt</label>
-                        <textarea class="form-control" name="relative_contact_data"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="appointment">Trauergespräch</label>
-                        <input type="text" class="form-control datetimepicker" name="appointment"/>
-                    </div>
+                    @input(['name' => 'relative_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname'])
+                    @input(['name' => 'relative_address', 'label'=> 'Adresse'])
+                    @input(['name' => 'relative_zip', 'label'=> 'PLZ'])
+                    @input(['name' => 'relative_city', 'label'=> 'Ort'])
+                    @textarea(['name' => 'relative_contact_data', 'label' => 'Kontakt'])
+                    @datetimepicker(['name' => 'appointment', 'label' => 'Trauergespräch', 'placeholder' => 'TT.MM.JJJJ hh:mm'])
                 @endcomponent
+                @include('components.attachments')
             </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script>var attachments = 0;</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         function setFieldStates() {
-            $('#dateWake').prop('disabled', ($('#selType').val() == 'Urnenbeisetzung' ? false : 'disabled'));
-            $('#locWake').prop('disabled', ($('#selType').val() == 'Urnenbeisetzung' ? false : 'disabled'));
+            if ($('#selType_input option:selected').val() == 'Urnenbeisetzung') {
+                $('#dateWake_input').prop('disabled', false);
+                $('#locWake_input').prop('disabled', false);
+            } else {
+                $('#dateWake_input').prop('disabled', 'disabled');
+                $('#locWake_input').prop('disabled', 'disabled');
+            }
         }
 
         $(document).ready(function () {
-            $('#selType').change(function () {
+            $('#selType_input').change(function () {
                 setFieldStates()
             });
             setFieldStates();

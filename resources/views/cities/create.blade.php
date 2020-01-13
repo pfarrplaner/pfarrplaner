@@ -16,21 +16,21 @@
         @endtabheaders
         @tabs
                 @tab(['id' => 'home', 'active' => true])
-                        @input(['name' => 'name', 'label' => 'Ort']) @endinput
+                        @input(['name' => 'name', 'label' => 'Ort'])
                 @endtab
                 @tab(['id' => 'offerings'])
-                        @input(['name' => 'default_offering_goal', 'label' => 'Opferzweck, wenn nicht angegeben']) @endinput
-                        @input(['name' => 'default_offering_description', 'label' => 'Opferbeschreibung bei leerem Opferzweck']) @endinput
-                        @input(['name' => 'default_funeral_offering_goal', 'label' => 'Opferzweck für Beerdigungen']) @endinput
-                        @input(['name' => 'default_funeral_offering_description', 'label' => 'Opferbeschreibung für Beerdigungen']) @endinput
-                        @input(['name' => 'default_wedding_offering_goal', 'label' => 'Opferzweck für Trauungen']) @endinput
-                        @input(['name' => 'default_wedding_offering_description', 'label' => 'Opferbeschreibung für Trauungen']) @endinput
+                        @input(['name' => 'default_offering_goal', 'label' => 'Opferzweck, wenn nicht angegeben'])
+                        @input(['name' => 'default_offering_description', 'label' => 'Opferbeschreibung bei leerem Opferzweck'])
+                        @input(['name' => 'default_funeral_offering_goal', 'label' => 'Opferzweck für Beerdigungen'])
+                        @input(['name' => 'default_funeral_offering_description', 'label' => 'Opferbeschreibung für Beerdigungen'])
+                        @input(['name' => 'default_wedding_offering_goal', 'label' => 'Opferzweck für Trauungen'])
+                        @input(['name' => 'default_wedding_offering_description', 'label' => 'Opferbeschreibung für Trauungen'])
                 @endtab
                 @tab(['id' => 'calendars'])
-                        @input(['name' => 'public_events_calendar_url', 'label' => 'URL für einen öffentlichen Kalender auf elkw.de']) @endinput
-                        @input(['name' => 'op_domain', 'label' => 'Domain für den Online-Planer']) @endinput
-                        @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer']) @endinput
-                        @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer']) @endinput
+                        @input(['name' => 'public_events_calendar_url', 'label' => 'URL für einen öffentlichen Kalender auf elkw.de'])
+                        @input(['name' => 'op_domain', 'label' => 'Domain für den Online-Planer'])
+                        @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer'])
+                        @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer'])
                 @endtab
         @endtabs
         @endcomponent

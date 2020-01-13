@@ -5,7 +5,9 @@ namespace App;
 use App\Http\Requests\StoreServiceRequest;
 use App\Mail\ServiceUpdated;
 use App\Tools\StringTool;
+use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
+use App\Traits\TracksChangesTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -13,11 +15,31 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
+use Venturecraft\Revisionable\RevisionableTrait;
 
 class Service extends Model
 {
-    use \Venturecraft\Revisionable\RevisionableTrait;
+    use RevisionableTrait;
     use HasCommentsTrait;
+    use TracksChangesTrait;
+    use HasAttachmentsTrait;
+
+    public $liturgy = [];
+
+    protected $forceTracking = [
+        'participants',
+        'day',
+        'location',
+        'city',
+        'pastors',
+        'organists',
+        'sacristans',
+        'otherParticipants',
+        'participantsWithMinistry',
+        'funerals',
+        'baptisms',
+        'weddings'
+    ];
 
     protected $revisionEnabled = true;
     protected $revisionFormattedFieldNames = array(
@@ -78,7 +100,9 @@ class Service extends Model
         'descriptionText',
         'locationText',
         'timeText',
-        'baptismsText'
+        'baptismsText',
+        'liturgy',
+        'ministriesByCategory',
     ];
 
     protected $attributes = [
@@ -183,6 +207,10 @@ class Service extends Model
         return $ministries;
     }
 
+    public function getMinistriesByCategoryAttribute() {
+        return $this->ministries();
+    }
+
 
     public function participantsText($category, $fullName = false, $withTitle = true, $glue = ', ') {
         $participants = $this->participantsByCategory($category);
@@ -204,28 +232,6 @@ class Service extends Model
             case 'M': return $this->sacristans()->sync($participants);
             case 'A': return $this->otherParticipants()->sync($participants);
         }
-    }
-
-    public function setTimeAndPlaceFromRequest(StoreServiceRequest $request) {
-        if ($specialLocation = ($request->get('special_location') ?: '')) {
-            $locationId = 0;
-            $time = $request->get('time') ?: '';
-            $ccLocation = $request->get('cc_location') ?: '';
-        } else {
-            $locationId = $request->get('location_id') ?: 0;
-            if ($locationId) {
-                $location = Location::find($locationId);
-                $time = $request->get('time') ?: $location->default_time;
-                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
-            } else {
-                $time = $request->get('time') ?: '';
-                $ccLocation = $request->get('cc_location') ?: '';
-            }
-        }
-
-        $this->location_id = $locationId;
-        $this->time = $time;
-        $this->special_location = $specialLocation;
     }
 
     public function locationText() {
@@ -304,7 +310,7 @@ class Service extends Model
         if (null === $this->ccTime($emptyIfNotSet)) return '';
         return StringTool::timeText($this->ccTime(false), $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
     }
-    
+
     /**
      * Check if service description contains a specific text (case-insensitive!)
      * @param string $text Search for this text
@@ -399,6 +405,14 @@ class Service extends Model
         return $this->baptismsText(true);
     }
 
+    public function getTimeAttribute() {
+        return isset($this->attributes['time']) ? substr($this->attributes['time'], 0, 5) : '';
+    }
+
+    public function setTimeAttribute($time) {
+        $this->attributes['time'] = substr($time, 0, 5);
+    }
+
 
     public function scopeRegularForCity(Builder $query, City $city) {
         return $query->where('city_id', $city->id)
@@ -479,15 +493,15 @@ class Service extends Model
         }
         return $participants;
     }
-    
+
     public function checkIfPredicantNeeded() {
         if (count($this->pastors)) {
             $this->need_predicant = false;
             $this->save();
         }
     }
-    
-    
+
+
 
     /**
      * Mix a collection of services into an array of events
@@ -510,5 +524,9 @@ class Service extends Model
         ksort($events);
         return $events;
 
+    }
+
+    public function getLiturgyAttribute() {
+        return $this->liturgy;
     }
 }

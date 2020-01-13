@@ -22,7 +22,7 @@ class Vacations
                 $vacationData[$key]['start'] = Carbon::createFromTimeString($datum['start']);
                 $vacationData[$key]['end'] = Carbon::createFromTimeString($datum['end']);
             }
-            Cache::put('vacationData', $vacationData, 180);
+            Cache::put('vacationData', $vacationData, 10000);
         } else {
             $vacationData = Cache::get('vacationData');
         }
@@ -55,37 +55,7 @@ class Vacations
 
     public static function getByPeriodAndUser($start, $end, User $user = null)
     {
-        $vacations = [];
-        if (env('VACATION_URL')) {
-            $vacationData = self::getVacationDataFromCache();
-            foreach ($vacationData as $key => $datum) {
-                $vacStart = Carbon::createFromTimeString($datum['start']);
-                $vacEnd = Carbon::createFromTimeString($datum['end']);
-
-                if ($start->between($vacStart, $vacEnd) || $vacStart->between($start, $end)) {
-                    if (preg_match('/(?:U:|FB:) (\w*)/', $datum['title'], $tmp)) {
-                        preg_match('/V: ((?:\w|\/)*)/', $datum['title'], $tmp2);
-                        $sub = [];
-                        foreach (explode('/', $tmp2[1]) as $name) {
-                            $sub[] = self::findUserByLastName(trim($name));
-                        }
-
-                        $away = self::findUserByLastName($tmp[1]);
-
-                        if ((null === $user) || ($away->id == $user->id)) {
-                            $vacations[] = [
-                                'away' => $away,
-                                'substitute' => $sub,
-                                'start' => $vacStart,
-                                'end' => $vacEnd,
-                            ];
-
-                        }
-                    }
-                }
-            }
-        }
-        return $vacations;
+        return Absence::with('replacements')->byUserAndPeriod($user, $start, $end);
     }
 
 }

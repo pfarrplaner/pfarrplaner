@@ -60,5 +60,10 @@
         @else
             Diese Ansicht wird automatisch aktualisiert.
         @endif
+        @if(count($filteredLocations))
+            <span style="color:red; padding: 7px;" title="Ein Filter ist aktiv! Nur Gottesdienst an folgenden Orten werden angezeigt: {{ \App\Location::whereIn('id', $filteredLocations)->get()->pluck('name')->join(', ') }}">
+                <span class="fa fa-filter"></span> Filter aktiv
+            </span>
+        @endif
     </div>
 @endauth

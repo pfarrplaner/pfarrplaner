@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Day;
+use App\Liturgy;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,54 +49,36 @@ class DayController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'date' => 'required|date|date_format:d.m.Y',
-        ]);
-
-        $today = Carbon::createFromFormat('d.m.Y', $request->get('date'))->setTime(0,0,0);
-
-        // limited event without churches will not be created
-        if (($request->get('day_type') == Day::DAY_TYPE_LIMITED) && (count($request->get('cities') ?: []) == 0))
-            return redirect()->route('calendar', ['year' => $today->year, 'month' => $today->month]);
+        $data = $this->validateRequest();
+        if (($data['day_type'] ==  Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) {
+            return redirect()->back()->withInput()->withErrors(['cities' => 'Mindestens eine Kirchengemeinde muss ausgewählt werden.']);
+        }
 
         // check if day already exists in limited form for other churches...
         // ...if so, only attach new cities
-        $day = Day::where('date', $today->format('Y-m-d'))->first();
-        if ($day) {
-            $cities = $request->get('cities') ?: [];
-            if (count($cities)) {
-                foreach ($cities as $city) $day->cities()->attach($city);
-            }
-            if ($x = $request->get('description')) $day->description = $x;
-            if ($x = $request->get('name')) $day->name = $x;
-            $day->save();
-            return redirect()->route('calendar', ['year' => $today->year, 'month' => $today->month])
-                ->with('success', 'Der '.$today->format('d.m.Y').' wurde der Liste hinzugefügt.');
+        $day = Day::existsForDate($data['date']);
+        if (false !== $day) {
+            $day->update($data);
+        } else {
+            // ...if not, create a new day record
+            $day = Day::create($data);
         }
 
-        // ...if not, create a new day record
-        $day = new Day([
-            'date' => $today->format('Y-m-d'),
-            'name' => $request->get('name') ?: '',
-            'description' => $request->get('description') ?: '',
-            'day_type' => $request->get('day_type') ?: 0,
-        ]);
-        if ($day->name == '') $day->name = $this->getLiturgicalFunction($day);
-        $day->save();
-        if ($request->get('day_type') == Day::DAY_TYPE_LIMITED) {
-            $day->cities()->sync($request->get('cities') ?: []);
+        if (count($data['cities'])) {
+            foreach ($data['cities'] as $city) $day->cities()->attach($city);
         }
-        return redirect()->route('calendar', ['year' => $today->year, 'month' => $today->month])
-            ->with('success', 'Der '.$today->format('d.m.Y').' wurde der Liste hinzugefügt.');
+
+        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+            ->with('success', $day->date->format('d.m.Y').' wurde der Liste hinzugefügt.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Day $day
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Day $day)
     {
         //
     }
@@ -103,78 +86,45 @@ class DayController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  \App\Day $day
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Day $day)
     {
-        $day = Day::find($id);
         $cities = City::all();
         return view('days.edit', compact('day', 'cities'));
     }
 
 
-    protected function getLiturgicalFunction(Day $day) {
-        if (isset($this->dataCache[$day->date->year])) {
-            $data = $this->dataCache[$day->date->year];
-        } else {
-            $this->dataCache[$day->date->year] = $data = json_decode(
-                file_get_contents(
-                    'https://www.kirchenjahr-evangelisch.de/service.php?o=lcf&f=gc&r=json&year='.$day->date->year.'&dl=user'),
-            true);
-        }
-        $names = [];
-        foreach ($data['content']['days'] as $dayData) {
-            if ($dayData['date'] == $day->date->format('d.m.Y')) $names[] = $dayData['title'];
-        }
-        return join(' / ', $names);
-    }
-
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  \App\Day $day
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Day $day)
     {
-        $request->validate([
-            'date' => 'required|date|date_format:d.m.Y',
-        ]);
+        $data = $this->validateRequest();
 
-        $day = Day::find($id);
 
-        // if no churches are left for a limited day, the record will be deleted
-        if (($request->get('day_type') == Day::DAY_TYPE_LIMITED) && (count($request->get('cities') ?: [])) == 0) {
-            $date = $day->date;
-            $day->delete();
-            return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month]);
-        }
+        $day->update($data);
+        $day->cities()->sync($data['cities']);
+        $date = $day->date;
+        if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) $day->delete();
 
-        // else update the existing record
-        $day->date = Carbon::createFromFormat('d.m.Y', $request->get('date'))->setTime(0,0,0);
-        $day->name = $request->get('name') ?: $this->getLiturgicalFunction($day);
-        $day->description = $request->get('description') ?: '';
-        $day->day_type = $request->get('day_type') ?: 0;
-        $day->save();
-        if ($request->get('day_type') == Day::DAY_TYPE_LIMITED) {
-            $day->cities()->sync($request->get('cities') ?: []);
-        }
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+        return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month])
             ->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  \App\Day $day
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Day $day)
     {
-        $day = Day::find($id);
-        /** @var Carbon $date */
         $date = $day->date;
 
         // limited and visible for other churches?
@@ -182,9 +132,7 @@ class DayController extends Controller
             foreach (Auth::user()->cities as $city) {
                 if ($day->cities->contains($city)) $day->cities()->detach($city->id);
             }
-            if (count($day->cities)) {
-                $day->save();
-            } else {
+            if (count($day->cities) == 0) {
                 $day->delete();
             }
         } else {
@@ -203,5 +151,25 @@ class DayController extends Controller
         }
         $cities = City::all();
         return view('days.create', ['year' => $year, 'month' => $month, 'cities' => $cities]);
+    }
+
+    /**
+     * Validate and format data
+     * @return array Validated data
+     */
+    protected function validateRequest(): array
+    {
+        $data = request()->validate([
+            'date' => 'required|date|date_format:d.m.Y',
+            'name' => 'nullable',
+            'description' => 'nullable',
+            'day_type' => 'nullable|int|in:0,1',
+            'cities.*' => 'nullable|int|exists:cities,id',
+        ]);
+        $data['day_type'] = $data['day_type'] ?? Day::DAY_TYPE_DEFAULT;
+        $data['cities'] = $data['cities'] ?? [];
+        $data['name'] = $data['name'] ?? Liturgy::getDayInfo($data['date'])['title'] ?? '';
+        $data['description'] = $data['description'] ?? '';
+        return $data;
     }
 }

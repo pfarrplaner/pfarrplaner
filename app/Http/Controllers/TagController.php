@@ -38,22 +38,11 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $request->validate([
-            'name' => 'string|required',
-        ]);
-
-        $code = Str::slug($request->get('code')) ?: Str::slug($request->get('name'));
-        $tag = new Tag([
-            'name' => $request->get('name'),
-            'code' => $code,
-        ]);
-        $tag->save();
-
+        Tag::create($this->validateRequest());
         return redirect()->route('tags.index')->with('success', 'Das Tag wurde angelegt.');
     }
 
@@ -82,20 +71,12 @@ class TagController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(Tag $tag)
     {
-        $request->validate([
-            'name' => 'string|required',
-        ]);
-
-        $tag->name = $request->get('name');
-        $tag->code = Str::slug($request->get('code')) ?: Str::slug($request->get('name'));
-        $tag->save();
-
+        $tag->update($this->validateRequest());
         return redirect()->route('tags.index')->with('success', 'Das Tag wurde geändert.');
     }
 
@@ -109,5 +90,19 @@ class TagController extends Controller
     {
         $tag->delete();
         return redirect()->route('tags.index')->with('success', 'Das Tag wurde gelöscht.');
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function validateRequest()
+    {
+        $data = request()->validate(
+            [
+                'name' => 'string|required',
+            ]
+        );
+        $data['code'] = Str::slug($data['name']);
+        return $data;
     }
 }

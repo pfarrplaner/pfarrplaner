@@ -8,7 +8,7 @@
             @endif
         </small>
         <hr />
-        {{ $comment->body }}
+        {!! nl2br($comment->body) !!}
         @if ($comment->user_id == \Illuminate\Support\Facades\Auth::user()->id)
             <br />
             <button class="btn btn-sm btn-secondary btnEditComment" title="Kommentar bearbeiten" data-comment-id="{{ $comment->id }}" data-route="{{ route('comments.edit', $comment->id) }}"><span class="fa fa-edit"></span></button>

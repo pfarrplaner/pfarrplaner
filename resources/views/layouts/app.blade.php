@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', '') :: Pfarrplaner</title>
+    <title>@yield('title', '') :: {{ config('app.name', 'Pfarrplaner') }}</title>
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
@@ -124,7 +124,12 @@
                                                 <a class="nav-link" href="{{ $item2['url'] }}">
                                                     @if(isset($item2['icon']))<i class="nav-icon {{ $item2['icon'] }}"
                                                                                  @if(isset($item2['icon_color']))style="color: {{ $item2['icon_color'] }};"@endif></i>@endif
-                                                    <p>{{ $item2['text'] }}</p>
+                                                    <p>
+                                                        {{ $item2['text'] }}
+                                                        @if(isset($item2['counter']))
+                                                            <span class="badge right @if(isset($item2['counter_class'])) badge-{{$item2['counter_class']}} @else badge-info @endif">{{ $item2['counter'] }}</span>
+                                                        @endif
+                                                    </p>
                                                 </a>
                                             </li>
                                         @endforeach
@@ -140,8 +145,8 @@
             @guest
                 <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed login-form">
                     @csrf
-                    @input(['name' => 'email', 'label' => 'E-Mailadresse']) @endinput
-                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password']) @endinput
+                    @input(['name' => 'email', 'label' => 'E-Mailadresse'])
+                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password'])
                     <input type="submit" class="btn btn-primary" value="Anmelden" />
                 </form>
             @endguest
@@ -210,5 +215,20 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.20.0/jquery.daterangepicker.min.js"></script>
 <script src="{{ asset('js/pfarrplaner/forms.js') }}"></script>
 @yield('scripts')
+@if(env('MATOMO_SITE') >0)
+<script>
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function() {
+        var u="//matomo.pfarrplaner.de/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '{{ env('MATOMO_SITE') }}']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+    })();
+</script>
+@endif
 </body>
 </html>

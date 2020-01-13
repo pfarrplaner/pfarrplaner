@@ -24,7 +24,7 @@ class ICalController extends Controller
         $users = User::all();
         $found = false;
         foreach ($users as $user) {
-            if ($user->getToken() == $token) {
+            if ($user->api_token == $token) {
                 $found = true;
                 $this->user = $user;
             }
@@ -131,7 +131,7 @@ class ICalController extends Controller
                 $data = Cache::get($cacheKey);
             } else {
                 $data = $calendarLink->export($request, $user);
-                Cache::put($cacheKey, $data, 60);
+                Cache::put($cacheKey, $data, 3600);
             }
 
         } else {

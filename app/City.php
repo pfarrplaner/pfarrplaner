@@ -30,4 +30,15 @@ class City extends Model
     public function services() {
         return $this->hasManyThrough(Service::class, Location::class);
     }
+
+    /**
+     * Check if this city is administered by a particular use
+     * @param User $user User
+     * @return bool True if user has admin rights here
+     */
+    public function administeredBy(User $user) {
+        if ($user->hasRole('Super-Administrator*in')) return true;
+        if (($city = $user->cities->where('id', $this->id)->first()) && ($city->pivot->permission == 'a')) return true;
+        return false;
+    }
 }

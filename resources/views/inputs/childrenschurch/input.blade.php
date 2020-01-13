@@ -32,7 +32,7 @@
                                 </div>
                             </td>
                             <td>
-                                @input(['name' => 'cc_alt_time', 'label' => 'Vom Gottesdienst abweichende Uhrzeit (sonst leer lassen)', 'placeholder' => 'HH:MM', 'value' => $service->ccTimeText(true, false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
+                                @input(['name' => 'cc_alt_time', 'label' => 'Vom Gottesdienst abweichende Uhrzeit (sonst leer lassen)', 'placeholder' => 'HH:MM', 'value' => $service->ccTimeText(true, false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                             </td>
                             <td>
                                 <div class="form-group">

@@ -67,8 +67,10 @@ class MultipleServicesInput extends AbstractInput
 
         $locations = Location::whereIn('id', $request->get('includeLocations') ?: [])->get();
 
-        $from = Carbon::parse(Carbon::createFromFormat('d.m.Y', $request->get('from'))->format('Y-m-d').' next '.$request->get('weekday'));
+        $from = Carbon::parse(Carbon::createFromFormat('d.m.Y', $request->get('from')));
+        while ($from->format('l') != $request->get('weekday')) $from->addDay(1);
         $to = Carbon::createFromFormat('d.m.Y', $request->get('to'));
+
 
         $today = $from->copy();
         $ctr = 0;
@@ -98,6 +100,7 @@ class MultipleServicesInput extends AbstractInput
         foreach ($data as $dayDate => $services) {
             // check if day already exists
             $day = Day::where('date', $dayDate)->first();
+            $type = Carbon::createFromFormat('Y-m-d', $dayDate)->dayOfWeek == 0 ? Day::DAY_TYPE_DEFAULT : Day::DAY_TYPE_LIMITED;
             if (null === $day) {
                 $day = new Day(['date' => $dayDate, 'day_type' => Day::DAY_TYPE_DEFAULT, 'name' => '', 'description' => '']);
                 $day->save();

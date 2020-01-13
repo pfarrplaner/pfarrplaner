@@ -40,26 +40,11 @@ class LocationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'city_id' => 'required|integer',
-            'default_time' => 'date_format:H:i',
-        ]);
-        $location = new Location([
-            'name' => $request->get('name'),
-            'city_id' => $request->get('city_id'),
-            'default_time' => $request->get('default_time').':00',
-            'cc_default_location' => $request->get('cc_default_location') ?: '',
-            'at_text' => $request->get('at_text') ?: '',
-            'alternate_location_id' => $request->get('alternate_location_id') ?: null,
-            'general_location_name' => $request->get('general_location_name') ?: '',
-        ]);
-        $location->save();
+        Location::create($this->validateRequest());
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde gespeichert');
     }
 
@@ -92,27 +77,12 @@ class LocationController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \App\Location $location
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Location $location)
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-            'city_id' => 'required|integer',
-            'default_time' => 'date_format:H:i',
-        ]);
-
-        $location = Location::find($id);
-        $location->name = $request->get('name');
-        $location->city_id = $request->get('city_id');
-        $location->default_time = $request->get('default_time').':00';
-        $location->cc_default_location = $request->get('cc_default_location') ?: '';
-        $location->at_text = $request->get('at_text') ?: '';
-        $location->alternate_location_id = $request->get('alternate_location_id') ?: null;
-        $location->general_location_name = $request->get('general_location_name') ?: '';
-        $location->save();
-
+        $location->update($this->validateRequest());
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde geändert.');
     }
 
@@ -127,5 +97,22 @@ class LocationController extends Controller
         $location = Location::find($id);
         $location->delete();
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde gelöscht.');
+    }
+
+    /**
+     * @return array
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    protected function validateRequest(): array
+    {
+        return request()->validate([
+            'name' => 'required|max:255',
+            'city_id' => 'required|integer',
+            'default_time' => 'nullable|date_format:H:i',
+            'cc_default_location' => 'nullable',
+            'alternate_location_id' => 'nullable',
+            'general_location_name' => 'nullable',
+            'at_text' => 'nullable',
+        ]);
     }
 }

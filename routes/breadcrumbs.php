@@ -9,7 +9,11 @@ Breadcrumbs::for('absences.index', function (BreadcrumbsGenerator $trail) {
 
 Breadcrumbs::for('absences.create', function (BreadcrumbsGenerator $trail, $year, $month, $user) {
     $trail->parent('absences.index');
-    $trail->push('Urlaub eintragen', route('absences.create', compact('year', 'month', 'user')));
+    if (count($user->approvers)>0) {
+        $trail->push('Urlaubsantrag stellen', route('absences.create', compact('year', 'month', 'user')));
+    } else {
+        $trail->push('Urlaub eintragen', route('absences.create', compact('year', 'month', 'user')));
+    }
 });
 
 Breadcrumbs::for('absences.edit', function (BreadcrumbsGenerator $trail, $absence) {
@@ -22,6 +26,31 @@ Breadcrumbs::for('absences.edit', function (BreadcrumbsGenerator $trail, $absenc
 Breadcrumbs::for('admin', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Administration');
+});
+
+Breadcrumbs::for('apitoken', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('home');
+    $trail->push('API Token', route('apitoken'));
+});
+
+Breadcrumbs::for('approvals.index', function (BreadcrumbsGenerator $trail) {
+    $trail->parent('absences.index');
+    $trail->push('Urlaubsanträge', route('approvals.index'));
+});
+
+Breadcrumbs::for('days.edit', function(BreadcrumbsGenerator $trail, $day) {
+    $trail->parent('calendar');
+    $trail->push('Tag bearbeiten', route('days.edit', $day));
+});
+
+Breadcrumbs::for('days.create', function(BreadcrumbsGenerator $trail) {
+    $trail->parent('calendar');
+    $trail->push('Tag hinzufügen', route('days.create'));
+});
+
+Breadcrumbs::for('days.add', function(BreadcrumbsGenerator $trail, $year, $month) {
+    $trail->parent('calendar');
+    $trail->push('Tag hinzufügen', route('days.add', compact('year', 'month')));
 });
 
 Breadcrumbs::for('baptism.add', function (BreadcrumbsGenerator $trail, $service) {
@@ -168,7 +197,7 @@ Breadcrumbs::for('parishes.create', function (BreadcrumbsGenerator $trail) {
 });
 
 Breadcrumbs::for('parishes.edit', function (BreadcrumbsGenerator $trail, $parish) {
-    $parish = \App\Parish::find($parish)->first();
+    $parish = \App\Parish::find($parish);
     $trail->parent('parishes.index');
     $trail->push($parish->name, route('parishes.edit', $parish));
 });
@@ -236,7 +265,7 @@ Breadcrumbs::for('tags.create', function (BreadcrumbsGenerator $trail) {
 });
 
 Breadcrumbs::for('tags.edit', function (BreadcrumbsGenerator $trail, $tag) {
-    $tag = \App\Tag::find($tag)->first();
+    $tag = \App\Tag::find($tag);
     $trail->parent('tags.index');
     $trail->push($tag->name, route('tags.edit', $tag));
 });
@@ -252,7 +281,7 @@ Breadcrumbs::for('users.create', function (BreadcrumbsGenerator $trail) {
 });
 
 Breadcrumbs::for('users.edit', function (BreadcrumbsGenerator $trail, $user) {
-    $user = \App\User::find($user)->first();
+    if (is_numeric($user)) $user = \App\User::find($user);
     $trail->parent('users.index');
     $trail->push($user->fullName(), route('users.edit', $user));
 });

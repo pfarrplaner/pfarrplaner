@@ -14,7 +14,7 @@ class AddPredicantField extends Migration
     public function up()
     {
         Schema::table('services', function($table){
-            $table->integer('need_predicant')->nullable;
+            $table->integer('need_predicant')->nullable()->default(0);
         });
     }
 

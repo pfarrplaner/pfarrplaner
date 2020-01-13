@@ -9,7 +9,7 @@
     @endif
     <th>Pfarrer</th>
     @if ($maxBaptisms >0 )
-        <th>Taufmöglichkeit</th>
+        <th colspan="2">Taufmöglichkeit</th>
     @endif
     </thead>
     <tbody>
@@ -27,9 +27,14 @@
             @endif
             <td>{{ $service->participantsText('P') }}</td>
 @if ($maxBaptisms >0 )
-            <td @if(count($service->baptisms) == 0) style="background-color: limegreen;" @elseif(count($service->baptisms) < $maxBaptisms) style="background-color: yellow" @else style="background-color: red" @endif>
-                @if(count($service->baptisms) == 0) Taufanmeldung möglich
-                @elseif(count($service->baptisms) < $maxBaptisms) Taufanmeldung möglich (bereits {{ count ($service->baptisms) }} {{ count ($service->baptisms) == 1 ? 'Taufe' : 'Taufen' }})
+            <td style="padding: 0; font-size: 30pt; font-weight: bold;">
+                @if(count($service->baptisms) == 0) <span style="color: limegreen;">&bull;</span>
+                @elseif(count($service->baptisms) < $maxBaptisms) <span style="color: orange;">&bull;</span>
+                @else <span style="color: red;">&bull;</span> @endif
+            </td>
+            <td>
+                @if(count($service->baptisms) == 0)Taufanmeldung möglich
+                @elseif(count($service->baptisms) < $maxBaptisms)Taufanmeldung möglich <br /><small>(bereits {{ count ($service->baptisms) }} {{ count ($service->baptisms) == 1 ? 'Taufe' : 'Taufen' }})</small>
                 @else Taufanmeldung nicht mehr möglich @endif
             </td>
 @endif

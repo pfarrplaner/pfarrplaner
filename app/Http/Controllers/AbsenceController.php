@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Absence;
+use App\Approval;
 use App\Day;
+use App\Events\AbsenceDemanded;
+use App\Events\AbsenceRejected;
 use App\Replacement;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Events\AbsenceApproved;
 
 class AbsenceController extends Controller
 {
@@ -119,7 +123,7 @@ class AbsenceController extends Controller
      */
     public function create($year, $month, User $user)
     {
-        $users = User::all();
+        $users = Auth::user()->getViewableAbsenceUsers();
         return view('absences.create', compact('month', 'year', 'users', 'user'));
     }
 
@@ -143,6 +147,14 @@ class AbsenceController extends Controller
             'user_id' => $request->get('user_id'),
             'reason' => $request->get('reason') ?: '',
         ]);
+
+        $absence->status = 'approved';
+        $user = User::find($request->get('user_id'));
+        if (count($user->approvers) > 0) {
+            $absence->status = 'pending';
+            event(new AbsenceDemanded($absence));
+        }
+
         $absence->save();
 
         $this->setupReplacements($absence, $request->get('replacement') ?: []);
@@ -175,7 +187,7 @@ class AbsenceController extends Controller
         }
         if (!$year) $year = date('Y');
         if (!$month) $year = date('m');
-        $users = User::all();
+        $users = Auth::user()->getViewableAbsenceUsers();
         return view('absences.edit', compact('absence', 'month', 'year', 'users'));
     }
 
@@ -230,5 +242,33 @@ class AbsenceController extends Controller
     {
         $absence->delete();
         return redirect()->route('absences.index', ['month' => $request->get('month'), 'year' => $request->get('year')]);
+    }
+
+    public function approve(Request $request, Absence $absence) {
+        $approval = Approval::create([
+            'status' => 'approved',
+            'user_id' => Auth::user()->id,
+            'absence_id' => $absence->id,
+        ]);
+        $approval->save();
+
+        $remaining = count($absence->user->approvers)-count($absence->approvals()->where('status', 'approved')->get());
+        if ($remaining == 0) {
+            $absence->status = 'approved';
+            $absence->save();
+            $success = 'Damit sind alle erforderlichen Genehmigungen vorhanden. Der Urlaub wurde in den Kalender eingetragen.';
+        } else {
+            $success = sprintf('Es fehlen noch %d weitere Genehmigungen.', $remaining);
+        }
+
+        event(new AbsenceApproved($absence, $approval));
+
+        return redirect()->route('approvals.index')->with('success', 'Du hast den Urlaubsantrag genehmigt. '.$success);
+    }
+
+    public function reject(Request $request, Absence $absence) {
+        event(new AbsenceRejected($absence));
+        $absence->delete();
+        return redirect()->route('approvals.index')->with('success', 'Du hast den Urlaubsantrag abgelehnt.');
     }
 }

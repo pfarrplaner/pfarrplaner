@@ -47,6 +47,7 @@
                                 <input type="text" class="form-control" id="phone" name="phone"
                                        value="{{ $user->phone }}"/>
                             </div>
+                            @input(['name' => 'api_token', 'label' => 'API-Token', 'value' => $user->api_token])
                         </div>
                         <div role="tabpanel" class="tab-pane fade" id="notifications">
 

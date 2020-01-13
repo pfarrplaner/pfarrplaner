@@ -17,8 +17,10 @@
                 </thead>
                 <tbody>
                 <?php $lastDate = ''; ?>
+
                 @foreach ($events as $theseEvents)
                     @foreach($theseEvents as $event)
+
                         <?php $eventStart = is_array($event) ? $event['start'] : $event->day->date ?>
                         <tr @if (is_array($event) && ($event['record_type'] == 'OP_Event'))class="clickable" data-id="{{ $event['event_id'] }}" id="{{ $randomId }}_{{ $event['event_id'] }}_row" title="Klicken, um mehr zu erfahren"@endif>
                             @if ($lastDate != $eventStart->format('Ymd') )
@@ -32,7 +34,7 @@
                                     {{ $eventStart->formatLocalized('%H.%M Uhr') }}
                                 @else{{ $event->trueDate()->formatLocalized('%H.%M Uhr') }}@endif</td>
                             <td valign="top" style="vertical-align:top;">
-                                @if (is_array($event))
+                                @if (!is_object($event))
                                     <div class="list-text" style="float: left; width: 70%;">
                                         <b>{{ $event['title'] }}</b>
                                         @if(isset($event['teaser']))<br/>{!! $event['teaser'] !!}@endif
@@ -62,16 +64,18 @@
                                                         <dt style="display: inline-block; width: 29%; vertical-align:top; margin-bottom: 10px;"><b>@if(count($event['event_dates']) > 1)Termine:@else Termin:@endif</b></dt>
                                                         <dd style="display: inline-block; width: 65%; vertical-align:top; margin-bottom: 10px;">
                                                             @foreach($event['event_dates'] as $date)
-                                                                <span @if($date['eventdate_id'] == $event['eventdate_id']) style="font-weight: bold;" @endif>
-                                                                {{ $date['start']->formatLocalized('%d.%m.%Y, %H:%M Uhr') }}
-                                                                @if (isset($date['end']))
-                                                                    - @if($date['startyearmonthdate'] != $date['endyearmonthdate'])
-                                                                        {{ $date['end']->formatLocalized('%d.%m.%Y, %H:%M Uhr') }}
-                                                                    @else
-                                                                        {{ $date['end']->formatLocalized('%H:%M Uhr') }}
-                                                                  @endif
+                                                                @if(isset($date['start']))
+                                                                    <span @if($date['eventdate_id'] == $event['eventdate_id']) style="font-weight: bold;" @endif>
+                                                                    {{ $date['start']->formatLocalized('%d.%m.%Y, %H:%M Uhr') }}
+                                                                    @if (isset($date['end']))
+                                                                        - @if($date['startyearmonthdate'] != $date['endyearmonthdate'])
+                                                                            {{ $date['end']->formatLocalized('%d.%m.%Y, %H:%M Uhr') }}
+                                                                        @else
+                                                                            {{ $date['end']->formatLocalized('%H:%M Uhr') }}
+                                                                      @endif
+                                                                    @endif
+                                                                    </span>
                                                                 @endif
-                                                                </span>
                                                             @endforeach
                                                         </dd>
                                                     </dl>
@@ -140,7 +144,7 @@
                                 @endif
                             </td>
                             <td valign="top" style="vertical-align:top;">
-                                @if (is_array($event)){{ $event['place'] }} @else {{ $event->locationText() }}@endif
+                                @if (is_array($event)) @if(isset($event['place'])){{ $event['place'] }} @else @dd ($event) @endif @else {{ $event->locationText() }}@endif
                             </td>
                         </tr>
                     @endforeach

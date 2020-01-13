@@ -61,7 +61,7 @@ class CityEventsCalendarLink extends AbstractCalendarLink
 
         if (isset($city->op_domain) && isset($city->op_customer_key) && isset($city->op_customer_token)) {
             $op = new OPEventsImport($city);
-            $events = $op->mix($events, $start, $end);
+            $events = $op->mix($events, $start, $end, true);
         }
 
         return $events;

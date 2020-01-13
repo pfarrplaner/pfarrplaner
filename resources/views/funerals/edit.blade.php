@@ -13,131 +13,66 @@
                     @slot('cardFooter')
                         <button type="submit" class="btn btn-primary" id="submit">Speichern</button>
                     @endslot
-                    <input type="hidden" name="service" value="{{ $service->id }}"/>
-                    <div class="form-group">
-                        <label for="buried_name">Name</label>
-                        <input type="text" class="form-control" name="buried_name"
-                               placeholder="Nachname, Vorname" value="{{ $funeral->buried_name }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="dob">Geburtsdatum</label>
-                        <input type="text" class="form-control datepicker" name="dob"
-                               value="@if(isset($funeral->dob)){{ $funeral->dob->format('d.m.Y') }}@endif"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="dod">Sterbedatum</label>
-                        <input type="text" class="form-control datepicker" name="dod"
-                               value="@if(isset($funeral->dod)){{ $funeral->dod->format('d.m.Y') }}@endif"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="buried_address">Adresse</label>
-                        <input type="text" class="form-control" name="buried_address"
-                               value="{{ $funeral->buried_address }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="buried_zip">PLZ</label>
-                        <input type="text" class="form-control" name="buried_zip"
-                               value="{{ $funeral->buried_zip }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="buried_city">Ort</label>
-                        <input type="text" class="form-control" name="buried_city"
-                               value="{{ $funeral->buried_city }}"/>
-                    </div>
+                    @hidden(['name' => 'service_id', 'value' => $service->id])
+                    @input(['name' => 'buried_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname', 'value' => $funeral->buried_name])
+                    @input(['name' => 'dob', 'label'=> 'Geburtsdatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->dob) ? $funeral->dob->format('d.m.Y') : '')])
+                    @input(['name' => 'dod', 'label'=> 'Sterbedatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->dod) ? $funeral->dod->format('d.m.Y') : '')])
+                    @input(['name' => 'buried_address', 'label'=> 'Adresse', 'value' => $funeral->buried_address])
+                    @input(['name' => 'buried_zip', 'label'=> 'PLZ', 'value' => $funeral->buried_zip])
+                    @input(['name' => 'buried_city', 'label'=> 'Ort', 'value' => $funeral->buried_city])
                     <hr/>
-                    <div class="form-group">
-                        <label for="text">Text</label>
-                        <input type="text" class="form-control" name="text" value="{{ $funeral->text }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="announcement">Abkündigen am</label>
-                        <input type="text" class="form-control datepicker" name="announcement"
-                               placeholder="tt.mm.jjjj"
-                               value="{{$funeral->announcement ? $funeral->announcement->format('d.m.Y') : ''}}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="type">Bestattungsart</label>
-                        <select id="selType" class="form-control" name="type">
-                            <option @if($funeral->type == 'Erdbestattung') selected @endif>Erdbestattung
-                            </option>
-                            <option @if($funeral->type == 'Trauerfeier') selected @endif>Trauerfeier</option>
-                            <option @if($funeral->type == 'Trauerfeier mit Urnenbeisetzung') selected @endif>
-                                Trauerfeier mit Urnenbeisetzung
-                            </option>
-                            <option @if($funeral->type == 'Urnenbeisetzung') selected @endif>Urnenbeisetzung
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="wake">Datum der vorhergehenden Trauerfeier</label>
-                        <input id="dateWake" type="text" class="form-control datepicker" name="wake"
-                               placeholder="tt.mm.jjjj"
-                               value="@if($funeral->type=='Urnenbeisetzung'){{$funeral->wake ? $funeral->wake->format('d.m.Y') : ''}}@endif"
-                               disabled/>
-                    </div>
-                    <div class="form-group">
-                        <label for="wake_location">Ort der vorhergehenden Trauerfeier</label>
-                        <input id="locWake" type="text" class="form-control" name="wake_location"
-                               value="@if($funeral->type=='Urnenbeisetzung'){{ $funeral->wake_location }}@endif"
-                               disabled/>
-                    </div>
+                    @input(['name' => 'text', 'label'=> 'Text', 'value' => $funeral->text])
+                    @input(['name' => 'announcement', 'label'=> 'Abkündigen am', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->announcement) ? $funeral->announcement->format('d.m.Y') : '')])
+                    @select(['name' => 'type', 'label' => 'Bestattungsart', 'items' => ['Erdbestattung', 'Trauerfeier', 'Trauerfeier mit Urnenbeisetzung', 'Urnenbeisetzung'], 'id' => 'selType', 'value' => $funeral->type])
+                    @input(['name' => 'wake', 'label'=> 'Datum der vorhergehenden Trauerfeier', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'id' => 'dateWake', 'value' => (is_object($funeral->wake) ? $funeral->wake->format('d.m.Y') : '')])
+                    @input(['name' => 'wake_location', 'label'=> 'Ort der vorhergehenden Trauerfeier', 'id' => 'locWake', 'value' => $funeral->wake_location])
                 @endcomponent
-
             </div>
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Angehörige(r) @endslot
-                    <div class="form-group">
-                        <label for="relative_name">Name</label>
-                        <input type="text" class="form-control" name="relative_name"
-                               placeholder="Nachname, Vorname" value="{{ $funeral->relative_name }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_address">Adresse</label>
-                        <input type="text" class="form-control" name="relative_address"
-                               value="{{ $funeral->relative_address }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_zip">PLZ</label>
-                        <input type="text" class="form-control" name="relative_zip"
-                               value="{{ $funeral->relative_zip }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_city">Ort</label>
-                        <input type="text" class="form-control" name="relative_city"
-                               value="{{ $funeral->relative_city }}"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="relative_contact_data">Kontakt</label>
-                        <textarea class="form-control"
-                                  name="relative_contact_data">{{ $funeral->relative_contact_data }}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="appointment">Trauergespräch</label>
-                        <input type="text" class="form-control datetimepicker" name="appointment"
-                               value="@if(isset($funeral->appointment)){{ $funeral->appointment->format('d.m.Y H:i') }}@endif"
-                               placeholder="TT.MM.JJJJ HH:MM"/>
-                    </div>
+                    @input(['name' => 'relative_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname', 'value' => $funeral->relative_name])
+                    @input(['name' => 'relative_address', 'label'=> 'Adresse', 'value' => $funeral->relative_address])
+                    @input(['name' => 'relative_zip', 'label'=> 'PLZ', 'value' => $funeral->relative_zip])
+                    @input(['name' => 'relative_city', 'label'=> 'Ort', 'value' => $funeral->relative_city])
+                    @textarea(['name' => 'relative_contact_data', 'label' => 'Kontakt', 'value' => $funeral->relative_contact_data])
+                    @datetimepicker(['name' => 'appointment', 'label' => 'Trauergespräch', 'placeholder' => 'TT.MM.JJJJ hh:mm', 'value' => (is_object($funeral->appointment) ? $funeral->appointment->format('d.m.Y H:i') : '')])
                 @endcomponent
+                @include('components.attachments', ['object' => $funeral])
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
                 @component('components.ui.card')
                     @slot('cardHeader')Kommentare @endslot
                     @include('partials.comments.list', ['owner' => $funeral, 'ownerClass' => 'App\\Funeral'])
                 @endcomponent
-
             </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script>
+        var commentRoute = '{{ route('comments.store') }}';
+        var commentOwner = '{{ $funeral->id }}';
+        var commentOwnerClass = 'App\\Funeral';
+    </script>
+    <script src="{{ asset('js/pfarrplaner/comments.js') }}"></script>
     <script>
         function setFieldStates() {
-            $('#dateWake').prop('disabled', ($('#selType').val() == 'Urnenbeisetzung' ? false : 'disabled'));
-            $('#locWake').prop('disabled', ($('#selType').val() == 'Urnenbeisetzung' ? false : 'disabled'));
+            if ($('#selType_input option:selected').val() == 'Urnenbeisetzung') {
+                $('#dateWake_input').prop('disabled', false);
+                $('#locWake_input').prop('disabled', false);
+            } else {
+                $('#dateWake_input').prop('disabled', 'disabled');
+                $('#locWake_input').prop('disabled', 'disabled');
+            }
         }
 
         $(document).ready(function () {
-            $('#selType').change(function () {
+            $('#selType_input').change(function () {
                 setFieldStates()
             });
             setFieldStates();

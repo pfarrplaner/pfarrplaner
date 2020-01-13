@@ -89,54 +89,54 @@
                             </label>
                         </div>
                     </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="signed" value="1" autocomplete="off"
+                                       @if($wedding->signed) checked @endif>
+                                <label class="form-check-label">
+                                    Anmeldung unterschrieben
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input type="checkbox" name="docs_ready" value="1" autocomplete="off"
+                                       @if($wedding->docs_ready) checked @endif>
+                                <label class="form-check-label">
+                                    Urkunden gedruckt
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="docs_where">Wo sind die Urkunden hinterlegt?</label>
+                            <input type="text" class="form-control" name="docs_where"
+                                   value="{{ $wedding->docs_where }}"/>
+                        </div>
                 @endcomponent
-                @component('components.ui.card')
-                    @slot('cardHeader')Dokumente @endslot
-                    <div class="form-group">
-                        <label for="registration_document">PDF des Anmeldedokuments</label>
-                        @if ($wedding->registration_document)
-                            <a id="linkToAttachment"
-                               href="{{ env('APP_URL').'storage/'.$wedding->registration_document }}">{{ $wedding->registration_document }}</a>
-                            <a class="btn btn-sm btn-danger" id="btnRemoveAttachment"
-                               title="Dokumentanhang entfernen"><span class="fa fa-trash"></span></a>
-                        @else
-                            <input type="file" name="registration_document" class="form-control"/>
-                        @endif
-                    </div>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" name="signed" value="1" autocomplete="off"
-                                   @if($wedding->signed) checked @endif>
-                            <label class="form-check-label">
-                                Anmeldung unterschrieben
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" name="docs_ready" value="1" autocomplete="off"
-                                   @if($wedding->docs_ready) checked @endif>
-                            <label class="form-check-label">
-                                Urkunden gedruckt
-                            </label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="docs_where">Wo sind die Urkunden hinterlegt?</label>
-                        <input type="text" class="form-control" name="docs_where"
-                               value="{{ $wedding->docs_where }}"/>
-                    </div>
+                @include('components.attachments', ['object' => $wedding])
             </div>
-            @endcomponent
-            @component('components.ui.card')
-                @slot('cardHeader')Kommentare @endslot
-                @include('partials.comments.list', ['owner' => $wedding, 'ownerClass' => 'App\\Wedding'])
-            @endcomponent
+        </div>
+        <div class="row">
+            <div class="col-12">
+                @component('components.ui.card')
+                    @slot('cardHeader')Kommentare @endslot
+                    @include('partials.comments.list', ['owner' => $wedding, 'ownerClass' => 'App\\Wedding'])
+                @endcomponent
+            </div>
         </div>
     </form>
 @endsection
 
 @section('scripts')
+    <script>var attachments = {{ count($wedding->attachments) }};</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+    <script>
+        var commentRoute = '{{ route('comments.store') }}';
+        var commentOwner = '{{ $wedding->id }}';
+        var commentOwnerClass = 'App\\Wedding';
+    </script>
+    <script src="{{ asset('js/pfarrplaner/comments.js') }}"></script>
     <script>
         $(document).ready(function () {
             $('#btnRemoveAttachment').click(function () {

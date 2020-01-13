@@ -42,25 +42,9 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-        ]);
-        $city = new City([
-            'name' => $request->get('name'),
-            'default_offering_goal' => $request->get('default_offering_goal', ''),
-            'default_offering_description' => $request->get('default_offering_description', ''),
-            'default_funeral_offering_goal' => $request->get('default_funeral_offering_goal', ''),
-            'default_funeral_offering_description' => $request->get('default_funeral_offering_description', ''),
-            'default_wedding_offering_goal' => $request->get('default_wedding_offering_goal', ''),
-            'default_wedding_offering_description' => $request->get('default_wedding_offering_description', ''),
-            'public_events_calendar_url' => $request->get('public_events_calendar_url') ?: '',
-            'op_domain' => $request->get('op_domain') ?: '',
-            'op_customer_key' => $request->get('op_customer_key') ?: '',
-            'op_customer_token' => $request->get('op_customer_token') ?: '',
-        ]);
-        $city->save();
+        City::create($this->validateRequest());
         return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
     }
 
@@ -80,45 +64,47 @@ class CityController extends Controller
     /**
      * Update the specified resource in storage.
      *
+     * @param \App\City $city
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(City $city)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-        ]);
-        $city = City::find($id);
-        $city->name = $request->get('name');
-        $city->default_offering_goal = $request->get('default_offering_goal', '');
-        $city->default_offering_description = $request->get('default_offering_description', '');
-        $city->default_funeral_offering_goal = $request->get('default_funeral_offering_goal', '');
-        $city->default_funeral_offering_description = $request->get('default_funeral_offering_description', '');
-        $city->default_wedding_offering_goal = $request->get('default_wedding_offering_goal', '');
-        $city->default_wedding_offering_description = $request->get('default_wedding_offering_description', '');
-        $city->public_events_calendar_url = $request->get('public_events_calendar_url') ?: '';
-        $city->op_domain = $request->get('op_domain') ?: '';
-        $city->op_customer_key = $request->get('op_customer_key') ?: '';
-        $city->op_customer_token = $request->get('op_customer_token') ?: '';
-        $city->save();
-
+        $city->update($this->validateRequest());
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde geändert.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param \App\City $city
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(City $city)
     {
-        $city = City::find($id);
         $city->delete();
-
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde gelöscht.');
     }
 
+    /**
+     * Validate a city request
+     * @return mixed
+     */
+    protected function validateRequest()
+    {
+        return request()->validate([
+            'name' => 'required|max:255',
+            'public_events_calendar_url' => 'nullable',
+            'default_offering_goal' => 'nullable',
+            'default_offering_description' => 'nullable',
+            'default_funeral_offering_goal' => 'nullable',
+            'default_funeral_offering_description' => 'nullable',
+            'default_wedding_offering_goal' => 'nullable',
+            'default_wedding_offering_description' => 'nullable',
+            'op_domain' => 'nullable',
+            'op_customer_key' => 'nullable',
+            'op_customer_token' => 'nullable',
+        ]);
+    }
 
 }

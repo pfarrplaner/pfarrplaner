@@ -13,6 +13,7 @@ use App\Service;
 use App\ServiceGroup;
 use App\Subscription;
 use App\Tag;
+use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use App\Vacations;
 use Carbon\Carbon;
@@ -23,6 +24,8 @@ use Illuminate\Support\Facades\View;
 
 class ServiceController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
 
     public function __construct()
     {
@@ -58,20 +61,12 @@ class ServiceController extends Controller
     public function store(StoreServiceRequest $request)
     {
 
-        $service = new Service($request->all());
-        $service->setTimeAndPlaceFromRequest($request);
+        $service = new Service($request->validated());
         $service->setDefaultOfferingValues();
         $service->save();
 
-        $service->associateParticipants($request, $service);
-        $service->checkIfPredicantNeeded();
-
-
-        $tags = $request->get('tags') ?: [];
-        $service->tags()->sync($tags);
-
-        $serviceGroups = $request->get('serviceGroups') ?: [];
-        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($serviceGroups));
+        $this->updateFromRequest($request, $service);
+        $this->handleAttachments($request, $service);
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -112,7 +107,7 @@ class ServiceController extends Controller
             });
 
         $days = Day::orderBy('date', 'ASC')->get();
-        $locations = Location::where('city_id', '=', $service->city_id)->get();
+        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $users = User::all()->sortBy('name');
         $tags = Tag::all();
         $serviceGroups = ServiceGroup::all();
@@ -132,26 +127,13 @@ class ServiceController extends Controller
      */
     public function update(StoreServiceRequest $request, Service $service)
     {
-        $original = clone $service;
-        foreach (['P', 'O', 'M', 'A'] as $key) {
-            $originalParticipants[$key] = $original->participantsText($key);
-        }
-
-        $service->associateParticipants($request, $service);
-        $service->checkIfPredicantNeeded();
-
-        $service->fill($request->all());
-        $service->setTimeAndPlaceFromRequest($request);
+        $service->trackChanges();
+        $service->fill($request->validated());
         $service->setDefaultOfferingValues();
-
-        $service->tags()->sync($request->get('tags') ?: []);
-        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
-
-        // notify:
-        // (needs to happen before save, so the model is still dirty
-        Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
-
+        $this->updateFromRequest($request, $service);
         $service->save();
+        $this->handleAttachments($request, $service);
+        Subscription::send($service, ServiceUpdated::class);
 
         $route = $request->get('routeBack') ?: '';
         if ($route) {
@@ -195,7 +177,7 @@ class ServiceController extends Controller
 
 
 
-        $locations = Location::where('city_id', '=', $city->id)->get();
+        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $users = User::all()->sortBy('name');
         $tags = Tag::all();
         $serviceGroups = ServiceGroup::all();
@@ -263,5 +245,18 @@ class ServiceController extends Controller
         $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');
 
         return response()->json(compact('route', 'update', 'service'));
+    }
+
+    /**
+     * @param StoreServiceRequest $request
+     * @param Service $service
+     */
+    protected function updateFromRequest(StoreServiceRequest $request, Service $service): void
+    {
+        $service->associateParticipants($request, $service);
+        $service->checkIfPredicantNeeded();
+
+        $service->tags()->sync($request->get('tags') ?: []);
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
     }
 }

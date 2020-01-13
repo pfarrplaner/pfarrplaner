@@ -21,6 +21,12 @@ class CityController extends Controller
     }
 
 
+    /**
+     * Get JSON record for a city
+     *
+     * @param  City $city
+     * @return \Illuminate\Http\Response
+     */
     public function show(City $city) {
         return response()->json(compact($city));
     }
@@ -43,13 +49,7 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|max:255',
-        ]);
-        $city = new City([
-            'name' => $request->get('name'),
-        ]);
-        $city->save();
+        City::create($this->validateRequest($request));
         return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
     }
 
@@ -57,46 +57,60 @@ class CityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  City $city
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(City $city)
     {
-        $city = City::find($id);
-
-        return view('cities.edit', compact('city'));    }
+        return view('cities.edit', compact('city'));
+    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  City $city
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, City $city)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-        ]);
-        $city = City::find($id);
-        $city->name = $request->get('name');
-        $city->save();
-
-        return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde geändert.');
+        $city->update($this->validateRequest($request));
+        return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  City $city
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(City $city)
     {
-        $city = City::find($id);
         $city->delete();
-
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde gelöscht.');
+    }
+
+    /**
+     * Validate a city request
+     * @param Request $request
+     * @return mixed
+     */
+    protected function validateRequest(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|max:255',
+            'public_events_calendar_url' => 'nullable',
+            'default_offering_goal' => 'nullable',
+            'default_offering_description' => 'nullable',
+            'default_funeral_offering_goal' => 'nullable',
+            'default_funeral_offering_description' => 'nullable',
+            'default_wedding_offering_goal' => 'nullable',
+            'default_wedding_offering_description' => 'nullable',
+            'op_domain' => 'nullable',
+            'op_customer_key' => 'nullable',
+            'op_customer_token' => 'nullable',
+        ]);
+        return $data;
     }
 
 

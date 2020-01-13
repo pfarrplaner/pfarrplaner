@@ -73,5 +73,15 @@ $(document).ready(function () {
     });
 
 
+    $('#ctrlNameSort').change(function(){
+        window.location.href = $(this).data('route')+'?name_format='+$('#ctrlNameSort option:selected').val();
+    });
+
+    $('#ctrlFilterLocation').selectize();
+    $('#applyFilter').click(function(e){
+        e.preventDefault();
+        window.location.href = $('#ctrlFilterLocation').data('route')+'?filter_location='+$('#ctrlFilterLocation').val().join(',');
+    });
+
 });
 

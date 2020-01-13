@@ -14,12 +14,12 @@ class AddServiceFields2 extends Migration
     public function up()
     {
         Schema::table('services', function($table){
-            $table->integer('baptism')->nullable;
-            $table->integer('eucharist')->nullable;
-            $table->string('offerings_counter1')->nullable;
-            $table->string('offerings_counter2')->nullable;
-            $table->string('offering_goal')->nullable;
-            $table->string('offering_description')->nullable;
+            $table->integer('baptism')->nullable()->default(0);
+            $table->integer('eucharist')->nullable()->default(0);
+            $table->string('offerings_counter1')->nullable()->default('');
+            $table->string('offerings_counter2')->nullable()->default('');
+            $table->string('offering_goal')->nullable()->default('');
+            $table->string('offering_description')->nullable()->default('');
         });
     }
 

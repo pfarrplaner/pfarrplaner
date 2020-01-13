@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -45,6 +46,15 @@ class UserController extends Controller
         return view('users.index', compact('users', 'otherPeople'));
     }
 
+    protected function getRoles() {
+        if (Auth::user()->hasRole('Super-Administrator*in')) {
+            $roles = Role::all();
+        } else {
+            $roles = Role::where('name', '!=', 'Super-Administrator*in')->get();
+        }
+        return $roles->sortBy('name');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -53,9 +63,10 @@ class UserController extends Controller
     public function create()
     {
         $cities = City::all();
-        $roles = Role::all()->sortBy('name');
         $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
-        return view('users.create', compact('cities', 'roles', 'parishes'));
+        $users = User::all();
+        $roles = $this->getRoles();
+        return view('users.create', compact('cities', 'roles', 'parishes', 'users'));
     }
 
     /**
@@ -85,6 +96,11 @@ class UserController extends Controller
             'manage_absences' => $request->get('manage_absences') ? 1 : 0,
         ]);
 
+        $user->office = $request->get('office', '');
+        $user->address = $request->get('address', '');
+        $user->phone = $request->get('phone', '');
+
+
         if (($user->email != '') && ($request->get('password', '') != '')) {
             $user->password = Hash::make($request->get('password'));
         }
@@ -93,20 +109,30 @@ class UserController extends Controller
             $user->image = $request->file('image')->store('user-images', 'public');
         }
 
+        // api_token
+        if (($user->password != '') && ($user->api_token == '')) $user->api_token = Str::random(60);
+        if ($user->password == '') $user->api_token = '';
 
         $user->save();
 
 
-        $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
+        $user->updateCityPermissions($request->get('cityPermission') ?: []);
+        $user->parishes()->sync($request->get('parishes') ?: []);
 
         $user->homeCities()->sync($request->get('homeCities') ?: []);
-        $user->parishes()->sync($request->get('parishes') ?: []);
+
+        if (count($user->homeCities) == 0) {
+            if (count(Auth::user()->adminCities)) $user->homeCities()->attach(Auth::user()->adminCities->first()->id);
+        }
+
+
+
 
 
         // assign roles
         $roles = $request->get('roles');
         if (is_array($roles) && count($roles)) {
-            if ((($key = array_search('Superadministrator*in', $roles)) !== false)
+            if ((($key = array_search('Super-Administrator*in', $roles)) !== false)
                 && (!$user->hasRole('Superadmininistrator*in')))
                 unset($roles[$key]);
             if ((($key = array_search('Administrator*in', $roles)) !== false)
@@ -115,6 +141,7 @@ class UserController extends Controller
                 unset($roles[$key]);
         }
         $user->syncRoles($request->get('roles') ?: []);
+        $user->approvers()->sync($request->get('approvers') ?: []);
 
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
@@ -149,7 +176,8 @@ class UserController extends Controller
         $roles = Role::all()->sortBy('name');
         $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
         $homescreen = $user->getSetting('homeScreen', 'route:calendar');
-        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes'));
+        $users = User::all();
+        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes', 'users'));
     }
 
     public function profile(Request $request)
@@ -171,6 +199,10 @@ class UserController extends Controller
         $user->address = $request->get('address') ?: '';
         $user->phone = $request->get('phone') ?: '';
         $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
+
+        // api_token
+        if ($request->get('api_token') != '') $user->api_token = $request->get('api_token');
+
         $user->save();
 
         // set subscriptions
@@ -179,40 +211,6 @@ class UserController extends Controller
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
-    protected function updateCityPermissions(User $user, $permissions)
-    {
-        $previousCities = $user->visibleCities->pluck('id');
-        $addedCities = [];
-
-        foreach ($permissions as $cityId => $permission) {
-            if ($permission['permission'] == 'n') {
-                unset($permissions[$cityId]);
-            } else {
-                if (!$previousCities->contains($cityId)) $addedCities[] = $cityId;
-            }
-        }
-        $user->cities()->sync($permissions);
-
-        // update the user's own sorting (remove cities which are not allowed)
-        $cityIds = array_keys($permissions);
-        $userPref = explode(',',$user->getSetting('sorted_cities', ''));
-        if (!count($userPref)) {
-            $userPref = $cityIds;
-        } else {
-            foreach ($userPref as $key => $city) {
-                if (!in_array($city, $cityIds)) unset($userPref[$key]);
-            }
-            // make added cities visible without having to edit user preference in profile:
-            $userPref = array_merge($userPref, $addedCities);
-        }
-        $user->setSetting('sorted_cities', join(',', $userPref));
-
-        // update the user's subscriptions (remove cities which are not allowed)
-        $subscriptions = $user->subscriptions;
-        foreach ($subscriptions as $subscription) {
-            if (!in_array($subscription->city_id, $cityIds)) $subscription->delete();
-        }
-    }
 
 
     /**
@@ -222,63 +220,77 @@ class UserController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|max:255',
-        ]);
+        if ($user->administeredBy(Auth::user())) {
+            $request->validate([
+                'name' => 'required|max:255',
+            ]);
 
-        $user = User::find($id);
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
-        //if ($password = $request->get('password') != '') $user->password = Hash::make($password);
-        if (($password = $request->get('password')) != '') {
-            $user->password = Hash::make($password);
-        }
-        $user->title = $request->get('title') ?: '';
-        $user->first_name = $request->get('first_name') ?: '';
-        $user->last_name = $request->get('last_name') ?: '';
-        $user->notifications = $request->get('notifications') ? 1 : 0;
-        $user->office = $request->get('office') ?: '';
-        $user->address = $request->get('address') ?: '';
-        $user->phone = $request->get('phone') ?: '';
-        $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
-        $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
-
-
-        if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
-            if ($user->image != '') {
-                Storage::delete($user->image);
+            $user->name = $request->get('name');
+            $user->email = $request->get('email');
+            //if ($password = $request->get('password') != '') $user->password = Hash::make($password);
+            if (($password = $request->get('password')) != '') {
+                $user->password = Hash::make($password);
             }
-            $user->image = '';
+            $user->title = $request->get('title') ?: '';
+            $user->first_name = $request->get('first_name') ?: '';
+            $user->last_name = $request->get('last_name') ?: '';
+            $user->notifications = $request->get('notifications') ? 1 : 0;
+            $user->office = $request->get('office') ?: '';
+            $user->address = $request->get('address') ?: '';
+            $user->phone = $request->get('phone') ?: '';
+            $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
+            $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
+            $user->office = $request->get('office', '');
+            $user->address = $request->get('address', '');
+            $user->phone = $request->get('phone', '');
+
+            if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
+                if ($user->image != '') {
+                    Storage::delete($user->image);
+                }
+                $user->image = '';
+            }
+            if ($request->hasFile('image')) {
+                $user->image = $request->file('image')->store('user-images', 'public');
+            }
+
+            // api_token
+            if (($user->password != '') && ($user->api_token == '')) $user->api_token = Str::random(60);
+            if ($user->password == '') $user->api_token = '';
+
+
+            $user->save();
+            $user->homeCities()->sync($request->get('homeCities') ?: []);
+            $user->parishes()->sync($request->get('parishes') ?: []);
+            $user->approvers()->sync($request->get('approvers') ?: []);
+            // assign roles
+            $roles = $request->get('roles');
+            if (is_array($roles) && count($roles)) {
+                if ((($key = array_search('Super-Administrator*in', $roles)) !== false)
+                    && (!$user->hasRole('Superadmininistrator*in')))
+                    unset($roles[$key]);
+                if ((($key = array_search('Administrator*in', $roles)) !== false)
+                    && (!$user->hasRole('Superadmininistrator*in'))
+                    && (!$user->hasRole('Administrator*in')))
+                    unset($roles[$key]);
+            }
+            $user->syncRoles($request->get('roles') ?: []);
+
+            // set subscriptions
+            $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
+        } else {
+            if (($password = $request->get('password')) != '') {
+                $user->password = Hash::make($password);
+                $user->save();
+                if (count($user->homeCities) == 0) {
+                    if (count(Auth::user()->adminCities)) $user->homeCities()->attach(Auth::user()->adminCities->first()->id);
+                }
+            }
         }
-        if ($request->hasFile('image')) {
-            $user->image = $request->file('image')->store('user-images', 'public');
-        }
 
-
-        $user->save();
-
-        $this->updateCityPermissions($user, $request->get('cityPermission') ?: []);
-
-        $user->homeCities()->sync($request->get('homeCities') ?: []);
-        $user->parishes()->sync($request->get('parishes') ?: []);
-
-        // assign roles
-        $roles = $request->get('roles');
-        if (is_array($roles) && count($roles)) {
-            if ((($key = array_search('Superadministrator*in', $roles)) !== false)
-                && (!$user->hasRole('Superadmininistrator*in')))
-                unset($roles[$key]);
-            if ((($key = array_search('Administrator*in', $roles)) !== false)
-                && (!$user->hasRole('Superadmininistrator*in'))
-                && (!$user->hasRole('Administrator*in')))
-                unset($roles[$key]);
-        }
-        $user->syncRoles($request->get('roles') ?: []);
-
-        // set subscriptions
-        $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
+        $user->updateCityPermissions($request->get('cityPermission') ?: []);
 
         if ($request->get('homescreen')) $user->setSetting('homeScreen', $request->get('homescreen'));
 

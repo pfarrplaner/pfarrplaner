@@ -18,6 +18,15 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        'App\Events\AbsenceDemanded' => [
+            'App\Listeners\SendApprovalNotification'
+        ],
+        'App\Events\AbsenceApproved' => [
+            'App\Listeners\SendApprovalNotification'
+        ],
+        'App\Events\AbsenceRejected' => [
+            'App\Listeners\SendRejectionNotification'
+        ],
     ];
 
     /**
