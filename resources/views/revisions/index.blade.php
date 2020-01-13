@@ -8,7 +8,7 @@
             @csrf
             <div class="row">
                 <div class="col-3 form-group">
-                    @selectize(['name' => 'key', 'label' => 'Schlüssel', 'items' => $keys]) @endselectize
+                    @selectize(['name' => 'key', 'label' => 'Schlüssel', 'items' => $keys])
                 </div>
                 <div class="col-3 form-group">
                     <label for="old">Alt</label>
@@ -27,7 +27,7 @@
         </form>
         <form method="post" action="{{ route('revisions.revert') }}">
             @csrf
-            @hidden(['name' => 'key', 'value' => $key]) @endhidden
+            @hidden(['name' => 'key', 'value' => $key])
             <table class="table table-striped" id="tblUsers">
                 <thead>
                 <tr>

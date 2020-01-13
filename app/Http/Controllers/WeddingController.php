@@ -6,6 +6,7 @@ use App\City;
 use App\Day;
 use App\Location;
 use App\Service;
+use App\Traits\HandlesAttachmentsTrait;
 use App\Wedding;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Storage;
 
 class WeddingController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
+
     /**
      * Display a listing of the resource.
      *
@@ -86,6 +90,7 @@ class WeddingController extends Controller
 
         $wedding->service->setDefaultOfferingValues();
         $wedding->service->save();
+        $this->handleAttachments($request, $wedding);
 
 
         // delayed notification after wizard completion:
@@ -164,6 +169,7 @@ class WeddingController extends Controller
 
         $wedding->service->setDefaultOfferingValues();
         $wedding->service->save();
+        $this->handleAttachments($request, $wedding);
 
 
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
@@ -36,4 +37,16 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
+
+    public function showLoginForm()
+    {
+        if (env('DEMO_MODE')) {
+            $users = User::with('roles', 'homeCities')->get();
+            return view('demo.login', compact('users'));
+        } else {
+            return view('auth.login');
+        }
+    }
+
+
 }

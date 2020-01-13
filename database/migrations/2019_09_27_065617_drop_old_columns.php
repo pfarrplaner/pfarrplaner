@@ -14,9 +14,7 @@ class DropOldColumns extends Migration
     public function up()
     {
         Schema::table('services', function (Blueprint $table) {
-            $table->dropColumn('pastor');
-            $table->dropColumn('organist');
-            $table->dropColumn('sacristan');
+            $table->dropColumn(['pastor', 'organist','sacristan']);
         });
     }
 

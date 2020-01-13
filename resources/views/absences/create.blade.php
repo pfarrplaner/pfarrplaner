@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Urlaub eintragen')
+@section('title')@if(count($user->approvers)>0)Urlaubsantrag für {{ $user->fullName() }} @else Urlaub eintragen @endif @endsection
 
 @section('content')
     <form method="post" action="{{ route('absences.store') }}">
@@ -9,15 +9,11 @@
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Speichern</button>
             @endslot
-            <div class="form-group">
-                <label for="user_id">Anlegen für:</label>
-                <select class="form-control fancy-selectize" name="user_id">
-                    @foreach($users as $thisUser)
-                        <option value="{{ $thisUser->id }}"
-                                @if($user->id == $thisUser->id) selected @endif>{{ $thisUser->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+            @if(count($users) == 1)
+                @hidden(['name' => 'user_id', 'value' => $users->first()->id])
+            @else
+                @selectize(['name' => 'user_id', 'label' => 'Urlaub für', 'items' => $users, 'value' => $user->id])
+            @endif
             <div class="form-group">
                 <label for="reason">Zeitraum:</label>
                 <input type="hidden" name="month" value="{{ $month }}"/>

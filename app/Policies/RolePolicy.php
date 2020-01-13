@@ -21,6 +21,11 @@ class RolePolicy
     {
         //
     }
+
+    public function index(User $user) {
+        return $user->hasPermissionTo('rollen-bearbeiten');
+    }
+
     /**
      * Determine whether the user can view the role.
      *
@@ -30,7 +35,7 @@ class RolePolicy
      */
     public function view(User $user, Role $role)
     {
-        return true;
+        return $user->hasPermissionTo('rollen-bearbeiten');
     }
 
     /**
@@ -53,8 +58,6 @@ class RolePolicy
      */
     public function update(User $user, Role $role)
     {
-        if ($role->name == 'Superadministrator*in') return $user->hasRole('Superadministrator*in');
-        if ($role->name == 'Administrator*in') return $user->hasRole('Superadministrator*in');
         return $user->hasPermissionTo('rollen-bearbeiten');
     }
 
@@ -67,9 +70,7 @@ class RolePolicy
      */
     public function delete(User $user, Role $role)
     {
-        if ($role->name == 'Superadministrator*in') return $user->hasRole('Superadministrator*in');
-        if ($role->name == 'Administrator*in') return $user->hasRole('Superadministrator*in');
-        return $user->hasPermissionTo('rollen-bearbeiten');
+        return false;
     }
 
     /**
@@ -81,9 +82,7 @@ class RolePolicy
      */
     public function restore(User $user, Role $role)
     {
-        if ($role->name == 'Superadministrator*in') return $user->hasRole('Superadministrator*in');
-        if ($role->name == 'Administrator*in') return $user->hasRole('Superadministrator*in');
-        return $user->hasPermissionTo('rollen-bearbeiten');
+        return false;
     }
 
     /**
@@ -95,9 +94,7 @@ class RolePolicy
      */
     public function forceDelete(User $user, Role $role)
     {
-        if ($role->name == 'Superadministrator*in') return $user->hasRole('Superadministrator*in');
-        if ($role->name == 'Administrator*in') return $user->hasRole('Superadministrator*in');
-        return $user->hasPermissionTo('rollen-bearbeiten');
+        return false;
     }
     
 }

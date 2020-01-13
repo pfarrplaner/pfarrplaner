@@ -33,6 +33,8 @@ Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'Servi
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
 Route::get('absences/create/{year}/{month}/{user}', ['as' => 'absences.create', 'uses' => 'AbsenceController@create']);
+Route::get('absence/{absence}/approve', 'AbsenceController@approve')->name('absence.approve');
+Route::get('absence/{absence}/reject', 'AbsenceController@approve')->name('absence.reject');
 
 Route::resource('tags', 'TagController')->middleware('auth');
 Route::resource('parishes', 'ParishController')->middleware('auth');
@@ -64,7 +66,8 @@ Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputContr
 
 //Route::get('/vertretungen', ['as' => 'absences', 'uses' => 'PublicController@absences']);
 
-Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses' => 'DownloadController@download'])->middleware('auth');
+Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses' => 'DownloadController@download']);
+Route::get('attachment/{attachment}', 'DownloadController@attachment')->name('attachment');
 
 
 // RITES (Kasualien)
@@ -153,3 +156,9 @@ Route::post('revisions/revert', 'RevisionController@revert')->name('revisions.re
 
 // new features
 Route::get('featues', 'HomeController@features');
+
+// api token
+Route::get('apiToken', 'ApiTokenController@update')->name('apitoken');
+
+// approvals
+Route::resource('approvals', 'ApprovalController');

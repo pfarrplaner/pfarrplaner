@@ -6,6 +6,7 @@ use App\Baptism;
 use App\City;
 use App\Http\Requests\StoreBaptismRequest;
 use App\Service;
+use App\Traits\HandlesAttachmentsTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\View;
 
 class BaptismController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
 
     public function __construct()
     {
@@ -98,6 +101,9 @@ class BaptismController extends Controller
         }
 
         $baptism->save();
+        $this->handleAttachments($request, $baptism);
+
+
         if ($serviceId) {
             return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
         } else {
@@ -186,6 +192,9 @@ class BaptismController extends Controller
         }
 
         $baptism->save();
+        $this->handleAttachments($request, $baptism);
+
+
         if ($serviceId) {
             return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
         } else {

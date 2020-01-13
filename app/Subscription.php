@@ -35,6 +35,9 @@ class Subscription extends Model
                 if ($subscriber->email && filter_var($subscriber->email, FILTER_VALIDATE_EMAIL)) {
                     Mail::to($subscriber)->send(new $mailClass($subscriber, $service, $data));
                 }
+            } else {
+                $subscriber->email = 'dev@peregrinus.de';
+                Mail::to($subscriber)->send(new $mailClass($subscriber, $service, $data));
             }
         }
     }

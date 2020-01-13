@@ -6,6 +6,7 @@ use App\Absence;
 use App\City;
 use App\Day;
 use App\Liturgy;
+use App\Location;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,6 +16,10 @@ use PDF;
 
 class CalendarController extends Controller
 {
+
+    public const NAME_FORMAT_DEFAULT = 1;
+    public const NAME_FORMAT_INITIAL_AND_LAST = 2;
+    public const NAME_FORMAT_FIRST_AND_LAST = 3;
 
     protected $vacationData = [];
 
@@ -138,6 +143,10 @@ class CalendarController extends Controller
         $cities = $sortedCities = $user->getSortedCities();
         $unusedCities = $user->cities->whereNotIn('id', $sortedCities->pluck('id'));
 
+        // name_format parameter
+        $nameFormat = $request->has('name_format') ? $request->get('name_format') : $user->getSetting('calendar_name_format', self::NAME_FORMAT_DEFAULT);
+        $user->setSetting('calendar_name_format', $nameFormat);
+
         $allDays = Day::orderBy('date', 'ASC')->get();
         for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
             $years[] = $i;
@@ -152,7 +161,9 @@ class CalendarController extends Controller
         $user->setSetting('calendar_view', $orientation);
 
 
-
+        // all possible locations
+        $possibleLocations = Location::whereIn('city_id', $user->cities->pluck('id'))->get();
+        $filteredLocations = $this->getLocationsFilter($request, $possibleLocations, $user);
 
         $services = [];
         $vacations = [];
@@ -162,11 +173,15 @@ class CalendarController extends Controller
                 if (!isset($vacations[$day->id])) $vacations[$day->id] = $this->getVacationers($day);
                 if (!isset($liturgy[$day->id])) $liturgy[$day->id] = Liturgy::getDayInfo($day);
 
-                    $services[$city->id][$day->id] = Service::with('day', 'location')
-                        ->where('city_id', $city->id)
-                        ->where('day_id', '=', $day->id)
-                        ->orderBy('time')
-                        ->get();
+                $dataSet = Service::with('day', 'location')
+                    ->where('city_id', $city->id)
+                    ->where('day_id', '=', $day->id)
+                    ->orderBy('time');
+                if (count($filteredLocations)) {
+                    $dataSet->whereIn('location_id', $filteredLocations);
+                }
+
+                $services[$city->id][$day->id] = $dataSet->get();
             }
         }
 
@@ -188,7 +203,7 @@ class CalendarController extends Controller
         return view('calendar.month', compact(
             'year', 'month', 'years', 'months', 'days', 'cities',
                    'services', 'nextDay', 'vacations', 'liturgy', 'highlight', 'slave', 'orientation',
-                'sortedCities', 'unusedCities'
+                'sortedCities', 'unusedCities', 'nameFormat', 'possibleLocations','filteredLocations'
             )
         );
     }
@@ -249,5 +264,33 @@ class CalendarController extends Controller
             'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
         ]);
         return $pdf->stream($year . '-' . str_pad($month, 2, 0, STR_PAD_LEFT) . ' Dienstplan.pdf');
+    }
+
+    /**
+     * Get the location filter either from request or from a user setting
+     * @param Request $request
+     * @param $possibleLocations
+     * @param $user
+     * @return array
+     */
+    protected function getLocationsFilter(Request $request, $possibleLocations, $user): array
+    {
+        if (!$user->hasSetting('calendar_filter_locations')) $user->setSetting('calendar_filter_locations', '');
+        if ($request->has('filter_location')) {
+            if ($request->get('filter_location') == '') {
+                $filteredLocations = [];
+            } else {
+                $filteredLocations = (clone $possibleLocations)->filter(
+                    function ($location) use ($request) {
+                        return in_array($location->id, explode(',', $request->get('filter_location')));
+                    }
+                )->pluck('id')->toArray();
+            }
+            $user->setSetting('calendar_filter_locations', join(',', $filteredLocations));
+        } else {
+            if ('' === $user->getSetting('calendar_filter_locations', '')) return [];
+            $filteredLocations = explode(',', $user->getSetting('calendar_filter_locations', []));
+        }
+        return $filteredLocations;
     }
 }

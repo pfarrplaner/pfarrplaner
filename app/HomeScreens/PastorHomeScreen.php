@@ -69,7 +69,7 @@ class PastorHomeScreen extends AbstractHomeScreen
                 $query->where('user_id', $user->id);
             })
             ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start);
+                $query->where('date', '>=', $start->copy()->subWeeks(2));
             })
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')

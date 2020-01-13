@@ -10,6 +10,11 @@ class CityPolicy
 {
     use HandlesAuthorization;
 
+    public function index(User $user) {
+        if ($user->hasRole('Administrator*in')) return true;
+        return false;
+    }
+
     /**
      * Determine whether the user can view the city.
      *
@@ -42,10 +47,8 @@ class CityPolicy
      */
     public function update(User $user, City $city)
     {
-        if ($user->isAdmin) return true;
-        if (!$user->writableCities->contains($city)) return false;
-        if ($user->can('ort-bearbeiten')) return true;
-        if ($user->can('gd-opfer-bearbeiten')) return true;
+        if (($user->can('gd-opfer-bearbeiten') || ($user->can('ort-bearbeiten '))) && $user->writableCities->contains($city)) return true;
+        if ($user->hasRole('Administrator*in') && $user->adminCities->contains($city)) return true;
         return false;
     }
 
@@ -58,7 +61,7 @@ class CityPolicy
      */
     public function delete(User $user, City $city)
     {
-        return $user->isAdmin;
+        return false;
     }
 
     /**
@@ -70,7 +73,7 @@ class CityPolicy
      */
     public function restore(User $user, City $city)
     {
-        return $user->isAdmin;
+        return false;
     }
 
     /**
@@ -82,6 +85,6 @@ class CityPolicy
      */
     public function forceDelete(User $user, City $city)
     {
-        return $user->isAdmin;
+        return false;
     }
 }

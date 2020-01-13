@@ -29,35 +29,35 @@
 
                     @tabs
                     @tab(['id' => 'home', 'active' => true])
-                    @hidden(['name' => 'city_id', 'value' => $city->id]) @endhidden
-                    @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $day]) @enddayselect
-                    @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endlocationselect
-                    @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endinput
-                    @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endinput
+                    @hidden(['name' => 'city_id', 'value' => $city->id])
+                    @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $day])
+                    @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'special'])
-                    @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ]) @endcheckbox
-                    @checkbox(['name' => 'eucharist', 'label' => 'Dies ist ein Abendmahlsgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ]) @endcheckbox
-                    @input(['name' => 'description', 'label' => 'Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')]) @endinput
-                    @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')]) @endtextarea
-                    @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags,  'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endselectize
-                    @selectize(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endselectize
+                    @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ])
+                    @checkbox(['name' => 'eucharist', 'label' => 'Dies ist ein Abendmahlsgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ])
+                    @input(['name' => 'description', 'label' => 'Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
+                    @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
+                    @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags,  'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @selectize(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'offerings'])
-                    @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                    @input(['name' => 'offerings_counter2', 'label' => 'Opferzähler*in 2',  'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                    @input(['name' => 'offering_goal', 'label' => 'Opferzweck', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                    @radiogroup(['name' => 'offering_type', 'label' => 'Opfertyp', 'items' => ['eigener Beschluss' => '', 'empfohlenes Opfer' => 'eO', 'Pflichtopfer' => 'PO'], 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endradiogroup
-                    @input(['name' => 'offering_description', 'label' => 'Anmerkungen zum Opfer', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
-                    @input(['name' => 'offering_amount', 'label' => 'Opfersumme', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')]) @endinput
+                    @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
+                    @input(['name' => 'offerings_counter2', 'label' => 'Opferzähler*in 2',  'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
+                    @input(['name' => 'offering_goal', 'label' => 'Opferzweck', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
+                    @radiogroup(['name' => 'offering_type', 'label' => 'Opfertyp', 'items' => ['eigener Beschluss' => '', 'empfohlenes Opfer' => 'eO', 'Pflichtopfer' => 'PO'], 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
+                    @input(['name' => 'offering_description', 'label' => 'Anmerkungen zum Opfer', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
+                    @input(['name' => 'offering_amount', 'label' => 'Opfersumme', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
                     @endtab
                     @tab(['id' => 'cc'])
-                    @checkbox(['name' => 'cc', 'label' => 'Kinderkirche wird angeboten', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endcheckbox
+                    @checkbox(['name' => 'cc', 'label' => 'Kinderkirche wird angeboten', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     <br/>
-                    @input(['name' => 'cc_alt_time', 'label' => 'Vom Gottesdienst abweichende Uhrzeit (sonst leer lassen)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
-                    @input(['name' => 'cc_location', 'label' => 'Ort der Kinderkirche', 'placeholder' => 'Leer lassen für ', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
-                    @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
-                    @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')]) @endinput
+                    @input(['name' => 'cc_alt_time', 'label' => 'Vom Gottesdienst abweichende Uhrzeit (sonst leer lassen)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
+                    @input(['name' => 'cc_location', 'label' => 'Ort der Kinderkirche', 'placeholder' => 'Leer lassen für ', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
+                    @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
+                    @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @endtab
                     @endtabs
                 @endcomponent
@@ -65,13 +65,14 @@
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Beteiligte Personen @endslot
-                    @peopleselect(['name' => 'participants[P][]', 'label' => 'Pfarrer*in', 'people' => $users, 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')]) @endpeopleselect
-                    @checkbox(['name' => 'need_predicant', 'label' => 'Für diesen Gottesdienst wird ein Prädikant benötigt.', 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')]) @endcheckbox
-                    @peopleselect(['name' => 'participants[O][]', 'label' => 'Organist*in', 'people' => $users, 'enabled' => Auth::user()->can('gd-organist-bearbeiten')]) @endpeopleselect
-                    @peopleselect(['name' => 'participants[M][]', 'label' => 'Mesner*in', 'people' => $users,  'enabled' => Auth::user()->can('gd-mesner-bearbeiten')]) @endpeopleselect
+                    @peopleselect(['name' => 'participants[P][]', 'label' => 'Pfarrer*in', 'people' => $users, 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')])
+                    @checkbox(['name' => 'need_predicant', 'label' => 'Für diesen Gottesdienst wird ein Prädikant benötigt.', 'enabled' => Auth::user()->can('gd-pfarrer-bearbeiten')])
+                    @peopleselect(['name' => 'participants[O][]', 'label' => 'Organist*in', 'people' => $users, 'enabled' => Auth::user()->can('gd-organist-bearbeiten')])
+                    @peopleselect(['name' => 'participants[M][]', 'label' => 'Mesner*in', 'people' => $users,  'enabled' => Auth::user()->can('gd-mesner-bearbeiten')])
                     @component('components.service.otherParticipantsWithText', ['users' => $users, 'ministries' => $ministries]) @endcomponent
-                    @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')]) @endpeopleselect
+                    @peopleselect(['name' => 'participants[A][]', 'label' => 'Sonstige Beteiligte', 'people' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                 @endcomponent
+                @include('components.attachments')
             </div>
         </div>
     </form>
@@ -79,6 +80,8 @@
 
 
 @section('scripts')
+    <script>var attachments = 0;</script>
+    <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
         function setDefaultTime() {
             if ($('select[name=location_id]').val() == '') {
@@ -125,6 +128,64 @@
             });
 
         });
+
+        var ctrMinistryRows = {{ isset($service) ? count($service->ministries()) : 0 }};
+
+        function enableMinistryRows() {
+            $('.btnDeleteMinistryRow').click(function(){
+                $(this).parent().parent().remove();
+            });
+
+            $('.ministryTitleSelect').selectize({
+                create: true,
+                placeholder: 'Auswählen oder eingeben',
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">' + escape(data.input) + '</div>';
+                    }
+                },
+            });
+        }
+
+        $(document).ready(function(){
+            enableMinistryRows();
+
+            $('#btnAddMinistryRow').click(function(e){
+                e.preventDefault();
+                ctrMinistryRows++;
+                $('#otherParticipantsWithText').append(
+                    '<div class="row form-group ministry-row" style="display:none;" id="ministryRow'+ctrMinistryRows+'">'
+                    +'<div class="col-5">'
+                    +'<input class="form-control" type="text" name="ministries['+ctrMinistryRows+'][description]" value="" />'
+                    +'</div>'
+                    +'<div class="col-6">'
+                    +'<select type="form-control" name="ministries['+ctrMinistryRows+'][people][]" id="ministrySelect'+ctrMinistryRows+'" multiple placeholder="Eine oder mehrere Personen (keine Anmerkungen!)">'
+                    +'</select>'
+                    +'</div>'
+                    +'<div class="col-1">'
+                    +'<button class="btnDeleteMinistryRow btn btn-danger" title="Zeile löschen"><span class="fa fa-trash"></span></button>'
+                    +'</div>'
+                    +'</div>'
+                );
+                $('#ministrySelect'+ctrMinistryRows).attr('disabled', $('#peopleTemplate_input').attr('disabled'));
+                $('#peopleTemplate_input option').each(function(){
+                    $('#ministrySelect'+ctrMinistryRows).append('<option value="'+$(this).attr('value')+'">'+$(this).html()+'</option>');
+                });
+                $('#ministrySelect'+ctrMinistryRows).selectize({
+                    create: true,
+                    render: {
+                        option_create: function (data, escape) {
+                            return '<div class="create">Neue Person anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                        }
+                    },
+                });
+                $('#ministryRow'+ctrMinistryRows).show();
+                enableMinistryRows();
+            });
+
+
+        });
+
 
     </script>
 @endsection

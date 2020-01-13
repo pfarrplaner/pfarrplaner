@@ -28,6 +28,10 @@ class Absence extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function approvals() {
+        return $this->hasMany(Approval::class);
+    }
+
     public function replacementText($prefix = '') {
         $prefix = $prefix ? $prefix.' ' : '';
         $replacements = $this->replacements;
@@ -82,16 +86,23 @@ class Absence extends Model
     }
 
 
-    public function scopeVisibleForUser($user)
+    public function scopeVisibleForUser($query, $user)
     {
         $userId = $user->id;
         $users = $user->getViewableAbsenceUsers();
 
-        return Absence::whereIn('user_id', $users->pluck('id'))
+        return $query->whereIn('user_id', $users->pluck('id'))
             ->orWhere(function ($query2)  use ($userId) {
                 $query2->whereHas('replacements', function ($query) use ($userId) {
                     $query->where('user_id', $userId);
                 });
             });
+    }
+
+
+    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end) {
+        return $query->where('user_id', $user->id)
+            ->where('from', '<=', $end)
+            ->where('to', '>=', $start);
     }
 }

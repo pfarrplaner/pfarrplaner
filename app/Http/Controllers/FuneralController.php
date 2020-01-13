@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Day;
 use App\Funeral;
+use App\Http\Requests\FuneralStoreRequest;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Service;
 use App\Subscription;
+use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -20,6 +22,9 @@ use PDF;
 
 class FuneralController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -114,7 +119,7 @@ class FuneralController extends Controller
         }
 
         // create the service
-        $service = new Service([
+        $service = Service::create([
             'day_id' => $day->id,
             'location_id' => $locationId,
             'time' => $time,
@@ -135,7 +140,6 @@ class FuneralController extends Controller
             'cc_lesson' => '',
             'cc_staff' => '',
         ]);
-        $service->save();
         if (Auth::user()->hasRole('Pfarrer*in')) {
             $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
         }
@@ -148,60 +152,23 @@ class FuneralController extends Controller
         /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  FuneralStoreRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(FuneralStoreRequest $request)
     {
-        $request->validate([
-            'buried_name' => 'required',
-            'service' => 'required|int',
-        ]);
-
-        $serviceId = $request->get('service');
-        $funeral = new Funeral([
-            'service_id' => $serviceId,
-            'buried_name' => $request->get('buried_name') ?: '',
-            'buried_address' => $request->get('buried_address') ?: '',
-            'buried_zip' => $request->get('buried_zip') ?: '',
-            'buried_city' => $request->get('buried_city') ?: '',
-            'text' => $request->get('text') ?: '',
-            'type' => $request->get('type') ?: '',
-            'relative_name' => $request->get('relative_name') ?: '',
-            'relative_address' => $request->get('relative_address') ?: '',
-            'relative_zip' => $request->get('relative_zip') ?: '',
-            'relative_city' => $request->get('relative_city') ?: '',
-            'relative_contact_data' => $request->get('relative_contact_data') ?: '',
-            'wake_location' => $request->get('wake_location') ?: '',
-        ]);
-        if ($request->get('announcement') != '') $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
-        if ($request->get('wake') != '') $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
-        if ($request->get('dob') != '') $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
-        if ($request->get('dod') != '') $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
-
-
-        $appointment = $request->get('appointment');
-        if (!preg_match('/\d+.\d+.\d+ \d+:\d+/', $appointment)) {
-            if (preg_match('/\d+.\d+.\d+/', $appointment)) {
-                $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment.' 00:00:00');
-            }
-        } else {
-            $appointment .= ':00';
-            $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
-        }
-        $funeral->save();
-
+        $funeral = Funeral::create($request->validated());
         $funeral->service->setDefaultOfferingValues();
         $funeral->service->save();
-
+        $this->handleAttachments($request, $funeral);
 
         // delayed notification after wizard completion:
         if ($request->get('wizard') == 1) {
-            Subscription::send(Service::find($serviceId), ServiceCreated::class);
+            Subscription::send($funeral->service, ServiceCreated::class);
             Session::remove('wizard');
         }
 
-        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        return redirect(route('services.edit', ['service' => $funeral->service->id, 'tab' => 'rites']));
     }
 
     /**
@@ -230,49 +197,18 @@ class FuneralController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  FuneralStoreRequest $request
      * @param  \App\Funeral  $funeral
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Funeral $funeral)
+    public function update(FuneralStoreRequest $request, Funeral $funeral)
     {
-        $request->validate([
-            'buried_name' => 'required',
-            'service' => 'required|int',
-        ]);
-        $serviceId = $request->get('service');
-        $funeral->buried_name = $request->get('buried_name') ?: '';
-        $funeral->buried_address = $request->get('buried_address') ?: '';
-        $funeral->buried_zip = $request->get('buried_zip') ?: '';
-        $funeral->buried_city = $request->get('buried_city') ?: '';
-        $funeral->text = $request->get('text') ?: '';
-        $funeral->type = $request->get('type') ?: '';
-        $funeral->relative_name = $request->get('relative_name') ?: '';
-        $funeral->relative_address = $request->get('relative_address') ?: '';
-        $funeral->relative_zip = $request->get('relative_zip') ?: '';
-        $funeral->relative_city = $request->get('relative_city') ?: '';
-        $funeral->relative_contact_data = $request->get('relative_contact_data') ?: '';
-        $funeral->wake_location = $request->get('wake_location') ?: '';
-        if ($request->get('announcement') !='')  $funeral->announcement = Carbon::createFromFormat('d.m.Y', $request->get('announcement'));
-        if ($request->get('wake') != '') $funeral->wake = Carbon::createFromFormat('d.m.Y', $request->get('wake'));
-        if ($request->get('dob') != '') $funeral->dob= Carbon::createFromFormat('d.m.Y', $request->get('dob'));
-        if ($request->get('dod') != '') $funeral->dod = Carbon::createFromFormat('d.m.Y', $request->get('dod'));
-
-        $appointment = $request->get('appointment');
-        if (!preg_match('/\d+.\d+.\d+ \d+:\d+/', $appointment)) {
-            if (preg_match('/\d+.\d+.\d+/', $appointment)) {
-                $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment.' 00:00:00');
-            }
-        } else {
-            $appointment .= ':00';
-            $funeral->appointment = Carbon::createFromFormat('d.m.Y H:i:s', $appointment);
-        }
-        $funeral->save();
+        $funeral->update($request->validated());
         $funeral->service->setDefaultOfferingValues();
         $funeral->service->save();
+        $this->handleAttachments($request, $funeral);
 
-
-        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        return redirect(route('services.edit', ['service' => $funeral->service->id, 'tab' => 'rites']));
     }
 
     /**

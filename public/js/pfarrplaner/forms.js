@@ -12,6 +12,7 @@ $(document).ready(function () {
         $(this).datetimepicker({
             locale: 'de',
             format: 'DD.MM.Y HH:mm',
+            placeholder: 'TT.MM.JJJJ HH:MM',
             icons: {
                 time: 'fa fa-clock',
                 date: 'fa fa-calendar',

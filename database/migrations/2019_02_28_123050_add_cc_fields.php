@@ -14,14 +14,14 @@ class AddCcFields extends Migration
     public function up()
     {
         Schema::table('locations', function($table) {
-            $table->string('cc_default_location');
+            $table->string('cc_default_location')->nullable()->default('');
         });
         Schema::table('services', function($table) {
-            $table->string('others')->nullable();
-            $table->integer('cc')->nullable();
-            $table->string('cc_location')->nullable();
-            $table->string('cc_lesson')->nullable();
-            $table->string('cc_staff')->nullable();
+            $table->string('others')->nullable()->default('');
+            $table->integer('cc')->nullable()->default(0);
+            $table->string('cc_location')->nullable()->default('');
+            $table->string('cc_lesson')->nullable()->default('');
+            $table->string('cc_staff')->nullable()->default('');
         });
     }
 

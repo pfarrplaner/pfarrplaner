@@ -3,25 +3,28 @@
     <div class="row ctype-textbox listtype-none showmobdesk-0">
         <div id="c1050561" class="col s12 bullme ">
             <div class="card-panel default">
-                <p class="bodytext" style="margin-top:5px;"><b>Bitte beachten Sie:</b> {{ $vacations[0]['away']->fullName(true) }} ist an folgenden Tagen nicht erreichbar und wird von Kollegen vertreten:</p>
+                <p class="bodytext" style="margin-top:5px;"><b>Bitte beachten Sie:</b> {{ $user->fullName(true) }} ist an folgenden Tagen nicht erreichbar und wird von Kollegen vertreten:</p>
                 <table class="" style="margin-top: 10px;">
                     <thead>
                     <th>Datum</th>
                     <th>Vertretung</th>
                     </thead>
                     <tbody>
-                    @foreach($vacations as $vacation)
+                    @foreach($vacations->sortBy('from') as $vacation)
+                        @foreach($vacation->replacements->sortBy('from') as $replacement)
                         <tr>
-                            <td>{{ $vacation['start']->format('d.m.Y') }} @if($vacation['end'] > $vacation['start'])- {{ $vacation['end']->format('d.m.Y') }} @endif</td>
-                            <td>
-                                @foreach($vacation['substitute'] as $sub)
-                                    <b>{{ $sub->fullName(true) }}</b><br />
-                                    {{ $sub->office }}<br />
-                                    Tel. {{ $sub->phone }}<br />
-                                    E-Mail <a href="mailto:{{$sub->email}}">{{ $sub->email }}</a> @if (!$loop->last) <br /><br />@endif
-                                @endforeach
+                            <td valign="top" style="vertical-align: top;">{{ $replacement->from->format('d.m.Y') }} @if($replacement->to > $replacement->from)- {{ $replacement->to->format('d.m.Y') }} @endif</td>
+                            <td valign="top">
+                                    @foreach($replacement->users as $user)
+                                        <b>{{ $user->fullName() }}</b>
+                                        @if($user->office)<br />{{ $user->office }}@endif
+                                        @if($user->address)<br />{{ $user->address }}@endif
+                                        @if($user->phone)<br />Tel. {{ $user->phone }}@endif
+                                        <br />E-Mail <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                                    @endforeach
                             </td>
                         </tr>
+                        @endforeach
                     @endforeach
                     </tbody>
                 </table>

@@ -8,7 +8,9 @@
         style="cursor: pointer;"
         title="Klicken, um diesen Eintrag zu bearbeiten"
         onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
-        @endcan>
+        @endcan
+        data-day="{{ $service->day->id }}"
+>
     @if (!is_object($service->location))
         <div class="service-time service-special-time">
             {{ strftime('%H:%M', strtotime($service->time)) }} Uhr
@@ -23,7 +25,7 @@
         <span class="separator">|</span>
         <div class="service-location">{{ $service->location->name }}</div>
     @endif
-    @if($service->cc) <img src="{{ env('APP_URL') }}img/cc.png"
+    @if($service->cc) <img src="{{ asset('img/cc.png') }}"
                            title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
     @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen'])
         @if($service->weddings->count())
@@ -48,11 +50,7 @@
         @if ($service->need_predicant)
             <span class="need-predicant">Prädikant benötigt</span>
         @else
-            @foreach($service->pastors as $participant)
-                <span @can('urlaub-lesen') @if (in_array($participant->lastName(), array_keys($vacations[$day->id]))) class="vacation-conflict"
-                      title="Konflikt mit Urlaub!" @endif @endcan>{{ $participant->lastName(true) }}</span>
-                @if($loop->last) @else | @endif
-            @endforeach
+            @include('calendar.partials.peoplelist', ['participants' => $service->pastors, 'vacation_check' => true])
         @endif
     </div>
     <div class="service-team service-organist"><span

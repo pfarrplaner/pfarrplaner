@@ -8,7 +8,7 @@ UID:{{ $absence->id }}{{ '@' }}absences.{{ parse_url(env('APP_URL'), PHP_URL_HOS
 SUMMARY: {{ $absence->fullDescription() }}
 CLASS:PUBLIC
 DTSTART;VALUE=DATE:{{ $absence->from->format('Ymd') }}
-DTEND;VALUE=DATE:{{ $absence->to->format('Ymd') }}
+DTEND;VALUE=DATE:{{ $absence->to->copy()->addDay(1)->fochrrmat('Ymd') }}
 DTSTAMP:{{ $absence->updated_at->setTimezone('UTC')->format('Ymd\THis\Z') }}
 END:VEVENT
 @endforeach

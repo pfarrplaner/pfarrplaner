@@ -96,6 +96,13 @@ body.calendar .content-header {
     border-right: solid 1px #F8FAFC;
 }
 
+.calendar-month th.limited.collapsed:hover,
+.calendar-month td.limited.collapsed:hover {
+    width: 50px !important;
+    max-width: 50px !important;
+}
+
+
 .calendar-month th.limited.collapsed .celldata,
 .calendar-month td.limited.collapsed .celldata {
     display: none;
@@ -353,7 +360,7 @@ ol.steps img {
 
 
 table.table tr.past td {
-    background-color: dimgray;
+    background-color: lightslategray;
 }
 
 table.table .fa-check-circle {
@@ -450,6 +457,7 @@ ul.sortable li.placeholder:before {
     border-right-color: orange;
 }
 
+
 .tbl-absences .cal-cell.absent:hover {
 }
 
@@ -458,6 +466,20 @@ ul.sortable li.placeholder:before {
     border-right-color: darkorange;
     cursor: pointer;
 }
+
+
+.tbl-absences .cal-cell.absent.absence-status-pending {
+    background-color: mediumpurple;
+    border-right-color: mediumpurple;
+}
+
+.tbl-absences .cal-cell.absent.editable.absence-status-pending:hover {
+    background-color: purple;
+    border-right-color: purple;
+    color: white;
+}
+
+
 
 .tbl-absences .cal-cell.replacing {
     background-color: lightblue;
@@ -603,4 +625,24 @@ body.login .main-sidebar:hover .login-form.hidden-collapsed {
 .form-group.required label:after {
     content: ' *';
     color: red;
+}
+
+.badge-permission-a {
+    background-color: purple !important;
+}
+
+.badge-permission-w {
+    background-color: green !important;
+}
+
+.badge-permission-r {
+    background-color: orange !important;
+}
+
+.badge-permission-n {
+    background-color: red !important;
+}
+
+.attachment-row {
+    cursor: pointer;
 }

@@ -34,8 +34,14 @@ class Liturgy
         return self::$instance;
     }
 
-    public static function getDayInfo(Day $day, $fallback = false): array {
-
+    /**
+     * Get all the liturgical info for a given day
+     * @param string|\App\Day $day
+     * @param bool $fallback
+     * @return array
+     */
+    public static function getDayInfo($day, $fallback = false): array {
+        if (!is_object($day)) $day = new Day(['date' => $day]);
         if (!Cache::has('liturgicalDays')) {
             $tmpData = json_decode(
                 file_get_contents(

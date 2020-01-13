@@ -9,30 +9,13 @@
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary" id="submit">Weiter &gt;</button>
             @endslot
-            <input type="hidden" name="city" value="{{ $city->id }}"/>
-            <input type="hidden" name="day" value="{{ $day->id }}"/>
-            <div class="form-group">
-                <label for="location_id">Kirche</label>
-                <select class="form-control" name="location_id" @cannot('gd-allgemein-bearbeiten') disabled @endcannot>
-                    @foreach($locations as $thisLocation)
-                        <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
-                                data-cc="{{ $thisLocation->cc_default_location }}"
-                                value="{{$thisLocation->id}}">{{$thisLocation->name}}</option>
-                    @endforeach
-                    <option value="">Freie Ortsangabe</option>
-                </select>
-            </div>
-            <div id="special_location" class="form-group">
-                <label for="special_location">Freie Ortsangabe</label>
-                <input id="special_location_input" class="form-control" type="text" name="special_location"
-                       @cannot('gd-allgemein-bearbeiten') disabled @endcannot/>
-                <input type="hidden" name="city_id" value="{{ $city->id }}"/>
-            </div>
-            <div class="form-group">
-                <label for="time">Uhrzeit (leer lassen für Standarduhrzeit)</label>
-                <input class="form-control" type="text" name="time" placeholder="HH:MM"
-                       @cannot('gd-allgemein-bearbeiten') disabled @endcannot />
-            </div>
+
+            @hidden(['name' => 'city', 'value'=> $city->id])
+            @hidden(['name' => 'day', 'value'=> $day->id])
+            @locationselect(['name' => 'location_id', 'label' => 'Kirche', 'locations' => $locations])
+            @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location'])
+            @hidden(['name' => 'city_id', 'value' => $city->id])
+            @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM'])
         @endcomponent
     </form>
 @endsection

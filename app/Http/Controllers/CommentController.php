@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Comment;
+use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,16 +40,10 @@ class CommentController extends Controller
         if ($request->has('body')) {
             $commentableType = $request->get('commentable_type');
             $commentableId = $request->get('commentable_id');
-            $owner = $commentableType::find($commentableId);
-            if (Auth::user()->can('update', $owner)) {
-                $comment = new Comment([
-                    'body' => $request->get('body'),
-                    'private' => $request->get('private'),
-                    'commentable_id' => $commentableId,
-                    'commentable_type' => $commentableType,
-                    'user_id' => Auth::user()->id,
-                ]);
-                $comment->save();
+            $owner = app($commentableType)->find($commentableId);
+            $owningService = is_a($owner, Service::class) ? $owner : $owner->service;
+            if (Auth::user()->can('update', $owningService)) {
+                $comment = $owner->comments()->create(['body' => $request->get('body'), 'private' => $request->get('private'), 'user_id' => Auth::user()->id]);
                 return view('partials.comments.single', compact('comment'));
             } else {
                 return '<div class="alert alert-danger">Leider hast du keine Berechtigung zum Kommentieren dieses Objekts.</div>';

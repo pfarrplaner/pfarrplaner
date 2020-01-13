@@ -14,7 +14,7 @@ class AddFuneralWakeLocation extends Migration
     public function up()
     {
         Schema::table('funerals', function($table) {
-            $table->string('wake_location')->nullable;
+            $table->string('wake_location')->nullable()->default('');
         });
     }
 

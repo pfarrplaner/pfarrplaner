@@ -29,8 +29,8 @@
                            value="{{ \Carbon\Carbon::now()->startOfMonth()->addMonth(2)->subDay(1)->format('d.m.Y') }}"
                            placeholder="TT.MM.JJJJ"/>
                 </div>
-                @checkbox(['name' => 'mix_outlook', 'label' => 'Veranstaltungen aus dem Outlook-Kalender mit aufnehmen.', 'value' => true]) @endcheckbox
-                @checkbox(['name' => 'mix_op', 'label' => 'Veranstaltungen aus dem Online-Planer mit aufnehmen.', 'value' => false]) @endcheckbox
+                @checkbox(['name' => 'mix_outlook', 'label' => 'Veranstaltungen aus dem Outlook-Kalender mit aufnehmen.', 'value' => true])
+                @checkbox(['name' => 'mix_op', 'label' => 'Veranstaltungen aus dem Online-Planer mit aufnehmen.', 'value' => false])
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Erstellen</button>

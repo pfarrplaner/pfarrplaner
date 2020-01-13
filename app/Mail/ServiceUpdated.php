@@ -11,8 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ServiceUpdated extends AbstractServiceMailable
 {
-    protected $original;
-    protected $changes;
 
     /**
      * Create a new message instance.
@@ -22,9 +20,6 @@ class ServiceUpdated extends AbstractServiceMailable
     public function __construct(User $user, Service $service, array $data)
     {
         parent::__construct($user, $service, $data);
-        $this->original = $this->data['original'];
-        $this->changes = $service->getDirty();
-
     }
 
     /**
@@ -40,12 +35,14 @@ class ServiceUpdated extends AbstractServiceMailable
         $ics = view('ical/ical', ['services' => [$this->service], 'token' => null, 'action' => null, 'key' => null])->render();
         $icsTitle = 'GD '.$this->service->day->date->format('Ymd').' '.$this->service->timeText(false).' '.$this->service->locationText().'.ics';
 
-        return $this->subject('Änderungen am Gottesdienst vom '.$this->original->day->date->format('d.m.Y').', '.$this->original->timeText().' ('.$this->original->locationText().')')
+        $diff = $this->service->diff();
+
+        return $this->subject('Änderungen am Gottesdienst vom '.$diff['original']->day->date->format('d.m.Y').', '.$diff['original']->timeText().' ('.$diff['original']->locationText().')')
             ->view('mail.notifications.service-update')->with([
             'service' => $this->service,
-            'original' => $this->original,
-            'changes' => $this->changes,
-            'data' => $this->data,
+            'original' => $diff['original'],
+            'changed' => $diff['changed'],
+            'changes' => $diff,
             'user' => $this->user,
         ])->attachData($ics, $icsTitle, [
                 'mime' => 'text/calendar',

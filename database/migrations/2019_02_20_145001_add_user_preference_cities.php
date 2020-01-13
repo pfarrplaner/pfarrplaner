@@ -14,10 +14,10 @@ class AddUserPreferenceCities extends Migration
     public function up()
     {
         Schema::table('users', function($table){
-            $table->string('office')->nullable;
-            $table->string('address')->nullable;
-            $table->string('phone')->nullable;
-            $table->string('preference_cities')->nullable;
+            $table->string('office')->nullable()->default('');
+            $table->string('address')->nullable()->default('');
+            $table->string('phone')->nullable()->default('');
+            $table->string('preference_cities')->nullable()->default('');
         });
     }
 
