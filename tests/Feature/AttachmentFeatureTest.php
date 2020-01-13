@@ -34,7 +34,7 @@ class AttachmentFeatureTest extends TestCase
     public function testFuneralAttachmentCanBeCreated()
     {
         $this->withoutExceptionHandling();
-        Storage::fake('funerals');
+        Storage::fake('fake');
         $raw = factory(Funeral::class)->raw();
         $raw['attachments'][] = UploadedFile::fake()->image('test.jpg');
 
@@ -54,7 +54,7 @@ class AttachmentFeatureTest extends TestCase
     public function testFuneralAttachmentCanBeRemoved()
     {
         $this->withoutExceptionHandling();
-        Storage::fake('funerals');
+        Storage::fake('fake');
         $raw = factory(Funeral::class)->raw();
         $raw['attachments'][] = UploadedFile::fake()->image('test.jpg');
 
