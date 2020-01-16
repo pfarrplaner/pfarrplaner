@@ -91,7 +91,7 @@
                                                         </div>
                                                     @endif
                                                     @if(isset($event['description']))
-                                                        <div class="event-text">{{$event['description']}}</div>
+                                                        <div class="event-text" style="padding:3%;">{!! $event['description'] !!}</div>
                                                     @endif
                                                     <dl style="padding: 3%;">
                                                         @if(isset($event['facilityorganizer']))
