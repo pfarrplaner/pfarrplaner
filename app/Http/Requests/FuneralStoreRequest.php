@@ -50,6 +50,8 @@ class FuneralStoreRequest extends FormRequest
             'relative_contact_data' => 'nullable|string',
             'wake_location' => 'nullable|string',
             'wake' => 'nullable|date_format:d.m.Y',
+            'dob' => 'nullable|date_format:d.m.Y',
+            'dod' => 'nullable|date_format:d.m.Y',
             'announcement' => 'nullable|date_format:d.m.Y',
             'appointment' => 'nullable|date_format:d.m.Y H:i',
         ];
