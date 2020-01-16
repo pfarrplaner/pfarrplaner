@@ -28,7 +28,7 @@
                                            class="form-control location-input"
                                            name="service[{{$service->id}}][cc_location]"
                                            value="{{ $service->cc_location }}"
-                                           @if($service->special_location=='')placeholder="Leer lassen für {{ $service->location->cc_default_location }}"@endif/>
+                                           @if(is_object($service->location))placeholder="Leer lassen für {{ $service->location->cc_default_location }}"@endif/>
                                 </div>
                             </td>
                             <td>
