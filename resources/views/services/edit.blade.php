@@ -23,7 +23,7 @@
 @endsection
 
 @section('content')
-    <form id="frmEdit" method="post" action="{{ route('services.update', $service->id) }}">
+    <form id="frmEdit" method="post" action="{{ route('services.update', $service->id) }}"  enctype="multipart/form-data">
         @method('PATCH')
         @csrf
         <div class="row">
