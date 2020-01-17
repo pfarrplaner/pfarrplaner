@@ -7,7 +7,7 @@
 
 
 @section('content')
-    <form method="post" action="{{ route('services.store') }}">
+    <form method="post" action="{{ route('services.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-md-6">
