@@ -54,14 +54,17 @@
         @endif
     </div>
     <div class="service-team service-organist"><span
-                class="designation">O: </span>@foreach($service->organists as $participant){{ $participant->lastName(true) }}@if($loop->last) @else
-            | @endif @endforeach</div>
+                class="designation">O: </span>
+        @include('calendar.partials.peoplelist', ['participants' => $service->organists, 'vacation_check' => false])
+    </div>
     <div class="service-team service-sacristan"><span
-                class="designation">M: </span>@foreach($service->sacristans as $participant){{ $participant->lastName(true) }}@if($loop->last) @else
-            | @endif @endforeach</div>
+                class="designation">M: </span>
+        @include('calendar.partials.peoplelist', ['participants' => $service->sacristans, 'vacation_check' => false])
+    </div>
     @foreach($service->ministries() as $ministry => $people)
         <div class="service-team"><span
-                    class="designation">{{ $ministry }}: </span>{{ $people->implode('planName', ' | ') }}
+                    class="designation">{{ $ministry }}: </span>
+            @include('calendar.partials.peoplelist', ['participants' => $people, 'vacation_check' => false])
         </div>
     @endforeach
     <div class="service-description">{{ $service->descriptionText() }}</div>
