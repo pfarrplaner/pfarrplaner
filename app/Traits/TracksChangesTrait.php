@@ -87,6 +87,11 @@ trait TracksChangesTrait
         return $diff;
     }
 
+    public function isChanged() {
+        $diff = $this->diff();
+        return ((count($diff['attributes']) + count($diff['relations'])) != 0);
+    }
+
 
 
 }

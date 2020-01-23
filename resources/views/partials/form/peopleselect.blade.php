@@ -4,9 +4,9 @@
         @foreach ($people as $user)
             <option value="{{ $user->id }}"
                     @if(isset($useItemId) && $useItemId)
-                        @if(isset($value) && $value->pluck('id')->contains($user->id)) selected @endif
+                        @if(isset($value) && $value->pluck('id')->contains($user->id)) selected="selected" @endif
                     @else
-                        @if(isset($value) && $value->contains($user)) selected @endif
+                        @if(isset($value) && $value->contains($user))  selected="selected" @endif
                     @endif
             >{{ $user->name }}</option>
         @endforeach

@@ -175,6 +175,10 @@ class Service extends Model
         return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
     }
 
+    public function ministryParticipants($ministry) {
+        return $this->belongsToMany(User::class)->wherePivot('category', $ministry)->withTimestamps();
+    }
+
     public function tags() {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
@@ -189,6 +193,8 @@ class Service extends Model
             case 'O': return $this->organists;
             case 'M': return $this->sacristans;
             case 'A': return $this->otherParticipants;
+            default:
+                return $this->ministries()[$category] ?? collect([]);
         }
 
     }

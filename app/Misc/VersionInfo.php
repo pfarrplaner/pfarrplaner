@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-01-23 11:30', 'Europe/Berlin'),
+                'text' => 'Mit dem Sammeleingabe <a href="/input/planning">"Planungstabelle"</a> können beliebige Dienstzuweisungen für alle Gottesdienste eines Jahres bearbeitet werden.',
+            ],
+            [
                 'date' => new Carbon('2020-01-23 08:50', 'Europe/Berlin'),
                 'text' => 'Gottesdienste können nun einen Titel (z.B. "Friedensgebet") haben.',
             ],
