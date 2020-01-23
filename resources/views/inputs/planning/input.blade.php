@@ -90,6 +90,7 @@
                     $('tr.data-row').show();
                     $('tr.data-row:not([data-location=\'' + $(this).val() + '\'])').hide();
                 } else {
+                    $('tr.data-row').show();
                 }
             });
 
