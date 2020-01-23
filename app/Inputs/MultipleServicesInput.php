@@ -102,8 +102,7 @@ class MultipleServicesInput extends AbstractInput
             $day = Day::where('date', $dayDate)->first();
             $type = Carbon::createFromFormat('Y-m-d', $dayDate)->dayOfWeek == 0 ? Day::DAY_TYPE_DEFAULT : Day::DAY_TYPE_LIMITED;
             if (null === $day) {
-                $day = new Day(['date' => $dayDate, 'day_type' => Day::DAY_TYPE_DEFAULT, 'name' => '', 'description' => '']);
-                $day->save();
+                $day = Day::create(['date' => $dayDate, 'day_type' => Day::DAY_TYPE_DEFAULT, 'name' => '', 'description' => '']);
             }
 
             if (null === $firstDay) $firstDay = $day;
