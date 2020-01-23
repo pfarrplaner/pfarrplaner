@@ -18,9 +18,8 @@
     <tbody>
     @foreach ($services as $service)
         <tr @if($loop->index % 2 == 0)class="even" @endif>
-            <td valign="top" width="10%">{{ $service->day->date->format('d.m.Y') }}</td>
-            <td valign="top" width="10%">{{ strftime('%H:%M', strtotime($service->time)) }} Uhr</td>
-            <td valign="top" width="15%">@if (!is_object($service->location)){{ $service->special_location }}@else{{$service->location->name}}@endif </td>
+            <td valign="top" width="20%">{{ $service->day->date->format('d.m.Y') }}<br />{{ $service->timeText() }}</td>
+            <td valign="top" width="20%">{{ $service->titleText(false) }}<br />{{ $service->locationText() }}</td>
             <td valign="top" width="15%"> P: {{ $service->participantsText('P') }} </td>
             <td valign="top" width="15%"> O: {{ $service->participantsText('O') }} </td>
             <td valign="top" width="15%"> M: {{ $service->participantsText('M') }} </td>

@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-01-23 08:50', 'Europe/Berlin'),
+                'text' => 'Gottesdienste können nun einen Titel (z.B. "Friedensgebet") haben.',
+            ],
+            [
                 'date' => new Carbon('2020-01-11 16:32', 'Europe/Berlin'),
                 'text' => 'Gottesdienste können nun beliebig viele Dateianhänge haben.',
             ],

@@ -27,6 +27,9 @@
     @endif
     @if($service->cc) <img src="{{ asset('img/cc.png') }}"
                            title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
+    @if($service->titleText(true, true) != 'GD')
+        <div class="service-description">{{ $service->titleText(true, true) }}</div>
+    @endif
     @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen'])
         @if($service->weddings->count())
             <div class="service-description">

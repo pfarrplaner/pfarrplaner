@@ -68,6 +68,7 @@
                     @tab(['id' => 'special', 'active' => ($tab=='special')])
                     @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'value' => $service->baptism])
                     @checkbox(['name' => 'eucharist', 'label' => 'Dies ist ein Abendmahlsgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'value' => $service->eucharist])
+                    @input(['name' => 'title', 'label' => 'Abweichender Titel', 'value' => $service->title, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @input(['name' => 'description', 'label' => 'Anmerkungen', 'value' => $service->description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'value' => $service->internal_remarks, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags, 'value' => $service->tags, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])

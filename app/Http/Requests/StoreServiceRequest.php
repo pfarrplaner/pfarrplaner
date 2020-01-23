@@ -55,6 +55,7 @@ class StoreServiceRequest extends FormRequest
             'cc_staff' => 'nullable|string',
             'cc_alt_time' => 'nullable|date_format:"H:i"',
             'internal_remarks' => 'nullable|string',
+            'title' => 'nullable|string',
         ];
     }
 

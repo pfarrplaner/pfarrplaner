@@ -4,6 +4,7 @@
 
 @section('content')
     <form method="post" action="{{ route('inputs.save', $input->getKey()) }}">
+        <input type="hidden" name="title" value="{{ $title }}" />
         <div class="card">
             <div class="card-body">
                 @csrf
@@ -24,14 +25,14 @@
                             </td>
                             <td>
                                 <input type="text" class="form-control"
-                                       name="service[{{$service['date']->format('Y-m-d')}}][{{ $service['index'] }}][time]"
+                                       name="service[{{$service['date']->format('d.m.Y')}}][{{ $service['index'] }}][time]"
                                        value="{{ substr($service['location']->default_time, 0, 5) }}"
                                        placeholder="HH:MM"/>
                             </td>
                             <td>
                                 {{ $service['location']->name }}
                                 <input type="hidden"
-                                       name="service[{{$service['date']->format('Y-m-d')}}][{{ $service['index'] }}][location]"
+                                       name="service[{{$service['date']->format('d.m.Y')}}][{{ $service['index'] }}][location]"
                                        value="{{ $service['location']->id }}"/>
                             </td>
                             <td>

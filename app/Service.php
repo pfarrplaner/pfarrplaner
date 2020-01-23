@@ -65,6 +65,7 @@ class Service extends Model
         'cc_alt_time' => 'Alternative Uhrzeit für die Kinderkirche',
         'internal_remarks' => 'Interne Anmerkungen',
         'offering_amount' => 'Opferbetrag',
+        'title' => 'Titel',
     );
 
     protected $fillable = [
@@ -90,6 +91,7 @@ class Service extends Model
         'cc_staff',
         'internal_remarks',
         'offering_amount',
+        'title',
     ];
 
     protected $appends = [
@@ -285,15 +287,28 @@ class Service extends Model
         return (join('; ', $weddings));
     }
 
-    public function titleText() {
+    public function titleText($short = true, $skipRites = false) {
         $elements = [];
-        if ($x = $this->weddingsText()) $elements[] = $x;
-        if ($x = $this->funeralsText()) $elements[] = $x;
-        if ($x = $this->baptismsText()) $elements[] = 'Taufe(n)';
-        if ((count($elements) == 1) && ($x != '')) $elements[0] = 'GD mit '.$elements[0];
-        return join(' / ', $elements) ?: 'GD';
+        if ($x = $this->title) $elements[] = $x;
+        if (!$skipRites) {
+            if ($x = $this->weddingsText()) $elements[] = $x;
+            if ($x = $this->funeralsText()) $elements[] = $x;
+            if ($x = $this->baptismsText()) $elements[] = 'Taufe(n)';
+        }
+        if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {
+            $elements[0] = ($short ? 'GD' : 'Gottesdienst').' mit '.$elements[0];
+        }
+        return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
     }
 
+
+    public function titleAndDescriptionCombinedText()
+    {
+        $description = [];
+        if (($x = $this->titleText(false, false)) != 'Gottesdienst') $description[] = $x;
+        if ($x = $this->descriptionText) $description[] = $x;
+        return join('; ', $description);
+    }
 
     public function ccTime($emptyIfNotSet = false) {
         if ($this->cc_alt_time == '00:00:00') $this->cc_alt_time = null;

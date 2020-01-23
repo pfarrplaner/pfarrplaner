@@ -38,6 +38,7 @@
                     @tab(['id' => 'special'])
                     @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ])
                     @checkbox(['name' => 'eucharist', 'label' => 'Dies ist ein Abendmahlsgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ])
+                    @input(['name' => 'title', 'label' => 'Abweichender Titel', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @input(['name' => 'description', 'label' => 'Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags,  'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])

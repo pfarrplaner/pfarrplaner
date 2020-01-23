@@ -17,6 +17,7 @@ class ServiceUnitTest extends TestCase
      * Test that a service can be created
      *
      * @return void
+     * @test
      */
     public function testServiceCanBeCreated()
     {
@@ -28,6 +29,7 @@ class ServiceUnitTest extends TestCase
      * Test that a service can be updated
      *
      * @return void
+     * @test
      */
     public function testServiceCanBeUpdated()
     {
@@ -41,6 +43,7 @@ class ServiceUnitTest extends TestCase
      * Test that a service can be deleted
      *
      * @return void
+     * @test
      */
     public function testServiceCanBeDeleted()
     {
@@ -50,6 +53,12 @@ class ServiceUnitTest extends TestCase
         $this->assertCount(0, Service::all());
     }
 
+    /**
+     * Test that checkbox fields can be set and unset
+     *
+     * @return void
+     * @test
+     */
     public function testCheckBoxesCanBeSetAndUnset() {
         $service = factory(Service::class)->raw(['need_predicant' => 1]);
         $rules = (new StoreServiceRequest())->rules();
@@ -61,6 +70,21 @@ class ServiceUnitTest extends TestCase
         $validator = app('validator')->make($service, $rules);
         $data = $validator->validate();
         $this->assertEquals(0, $data['need_predicant']);
+    }
+
+
+    /**
+     * Test that a service can have a title
+     *
+     * @return void
+     * @test
+     */
+    public function testServiceCanHaveTitle()
+    {
+        $data = factory(Service::class)->raw();
+        $data['title'] = 'Cool title';
+        $service = Service::create($data);
+        $this->assertEquals('Cool title', Service::first()->title);
     }
 
 

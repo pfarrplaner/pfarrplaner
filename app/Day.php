@@ -37,7 +37,11 @@ class Day extends Model
      * @param string $date
      */
     public function setDateAttribute($date) {
-        $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $date);
+        if (is_a($date, Carbon::class)) {
+            $this->attributes['date'] = $date;
+        } else {
+            $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $date);
+        }
     }
 
 }
