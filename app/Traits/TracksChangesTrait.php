@@ -55,11 +55,13 @@ trait TracksChangesTrait
 
         // unset updated_at, which will always be changed
         unset($data['attributes']['updated_at']);
+        if(!isset($this->dataBeforeChanges['attributes'])) $this->dataBeforeChanges['attributes'] = [];
+        if(!isset($this->dataBeforeChanges['relations'])) $this->dataBeforeChanges['relations'] = [];
 
         $diff = ['attributes' => [], 'relations' => []];
         foreach ($data['attributes'] as $attribute => $value) {
-            if ($value != $this->dataBeforeChanges['attributes'][$attribute]) {
-                $diff['attributes'][$attribute] = ['original' =>  $this->dataBeforeChanges['attributes'][$attribute], 'changed' => $value];
+            if ((!isset($this->dataBeforeChanges['attributes'][$attribute])) || ($value != $this->dataBeforeChanges['attributes'][$attribute])) {
+                $diff['attributes'][$attribute] = ['original' =>  ($this->dataBeforeChanges['attributes'][$attribute] ?? ''), 'changed' => $value];
             }
             $originalObj->$attribute = $this->dataBeforeChanges['attributes'][$attribute] ?? null;
             $changedObj->$attribute = $data['attributes'][$attribute] ?? null;
@@ -77,6 +79,7 @@ trait TracksChangesTrait
 
         /** @var Service $originalObj */
         $originalObj->setRelations($this->dataBeforeChanges['relations']);
+        /** @var Service $changedObj */
         $changedObj->setRelations($data['relations']);
         $diff['original'] = $originalObj;
         $diff['changed'] = $changedObj;
