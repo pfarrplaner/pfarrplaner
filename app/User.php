@@ -464,16 +464,18 @@ class User extends Authenticatable
             ->where('id', $this->id);
 
         if ($this->hasRole('Pfarrer*in') || $this->hasPermissionTo('fremden-urlaub-bearbeiten')) {
-            $userQuery->orWhereHas(
+            $newIds = User::whereHas(
                 'homeCities',
                 function ($query) {
                     $query->whereIn('cities.id', $this->homeCities->pluck('id'));
                 }
-            );
+            )->where('manage_absences', 1)
+            ->get()->pluck('id')->toArray();
+            $ids = array_merge($ids, $newIds);
         }
 
         if ($this->hasRole('Pfarrer*in')) {
-            $userQuery->orWhere(
+            $newIds = User::where(
                 function ($query2) {
                     $query2->whereHas(
                         'roles',
@@ -488,11 +490,16 @@ class User extends Authenticatable
                         }
                     );
                 }
-            );
+            )->get()->pluck('id')->toArray();
+            $ids = array_merge($ids, $newIds);
         }
 
+        $ids = array_unique($ids);
+
+        $userQuery = User::whereIn('id', $ids);
         $userQuery->orderBy('last_name');
         $userQuery->orderBy('first_name');
+
         $users = $userQuery->get();
 
         return $users;

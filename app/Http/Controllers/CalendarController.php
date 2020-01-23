@@ -110,9 +110,14 @@ class CalendarController extends Controller
             }
         }
         **/
+        $allowedIds = Auth::user()->getViewableAbsenceUsers()->pluck('id');
+
         $absences = Absence::with('user')
             ->where('from', '<=', $day->date)
             ->where('to', '>=', $day->date)
+            ->whereHas('user', function($query) use ($allowedIds) {
+                $query->whereIn('id', $allowedIds);
+            })
             ->get();
         foreach ($absences as $absence) {
             $vacationers[$absence->user->lastName()] = $absence;

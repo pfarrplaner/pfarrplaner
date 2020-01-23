@@ -162,3 +162,7 @@ Route::get('apiToken', 'ApiTokenController@update')->name('apitoken');
 
 // approvals
 Route::resource('approvals', 'ApprovalController');
+
+Route::get('/devtest', function(){
+    dd(\Illuminate\Support\Facades\Auth::user()->getViewableAbsenceUsers()->pluck('name'));
+});
