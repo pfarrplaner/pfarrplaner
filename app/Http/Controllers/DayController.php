@@ -36,7 +36,7 @@ class DayController extends Controller
      */
     public function create()
     {
-        $cities = City::all();
+        $cities = Auth::user()->writableCities;
         return view('days.create', compact('cities'));
         //
     }
@@ -63,10 +63,7 @@ class DayController extends Controller
             // ...if not, create a new day record
             $day = Day::create($data);
         }
-
-        if (count($data['cities'])) {
-            foreach ($data['cities'] as $city) $day->cities()->attach($city);
-        }
+        $this->updateAttachedCities($data, $day);
 
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', $day->date->format('d.m.Y').' wurde der Liste hinzugefügt.');
@@ -109,9 +106,9 @@ class DayController extends Controller
 
 
         $day->update($data);
-        $day->cities()->sync($data['cities']);
+        $this->updateAttachedCities($data, $day);
         $date = $day->date;
-        if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) $day->delete();
+        if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) $day->delete();
 
         return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month])
             ->with('success', 'Die Änderungen wurden gespeichert.');
@@ -149,7 +146,7 @@ class DayController extends Controller
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
             return redirect()->route('calendar', ['year' => date('Y'), 'month' => date('m')]);
         }
-        $cities = City::all();
+        $cities = Auth::user()->writableCities;
         return view('days.create', ['year' => $year, 'month' => $month, 'cities' => $cities]);
     }
 
@@ -167,9 +164,31 @@ class DayController extends Controller
             'cities.*' => 'nullable|int|exists:cities,id',
         ]);
         $data['day_type'] = $data['day_type'] ?? Day::DAY_TYPE_DEFAULT;
+        if ($data['day_type'] == Day::DAY_TYPE_LIMITED) {
+            request()->validate(['cities.*' => 'int|exists:cities,id']);
+        }
+
         $data['cities'] = $data['cities'] ?? [];
         $data['name'] = $data['name'] ?? Liturgy::getDayInfo($data['date'])['title'] ?? '';
         $data['description'] = $data['description'] ?? '';
         return $data;
+    }
+
+    /**
+     * @param array $data
+     * @param $day
+     */
+    protected function updateAttachedCities(array $data, $day): void
+    {
+// add checked cities
+        if (count($data['cities'])) {
+            foreach ($data['cities'] as $city) {
+                $day->cities()->attach($city);
+            }
+        }
+        // remove unchecked cities
+        foreach (Auth::user()->writableCities->pluck('id') as $cityId) {
+            if (!in_array($cityId, $data['cities'])) $day->cities()->detach($cityId);
+        }
     }
 }

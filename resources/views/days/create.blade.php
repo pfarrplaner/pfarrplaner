@@ -20,21 +20,17 @@
                        placeholder="leer lassen für automatischen Eintrag"/>
             </div>
             <div class="form-group">
-                <label for="description">Hinweise zum Tag</label>
-                <textarea class="form-control" name="description"></textarea>
-            </div>
-            <div class="form-group">
                 <label style="display:block;">Anzeige</label>
                 <div class="form-check">
                     <input type="radio" name="day_type" value="{{ \App\Day::DAY_TYPE_DEFAULT }}"
-                           autocomplete="off" checked id="check-type-default">
+                           autocomplete="off" id="check-type-default">
                     <label class="form-check-label">
                         Diesen Tag für alle Gemeinden anzeigen
                     </label>
                 </div>
                 <div class="form-check">
                     <input type="radio" name="day_type" value="{{ \App\Day::DAY_TYPE_LIMITED }}"
-                           autocomplete="off" id="check-type-limited">
+                           autocomplete="off" id="check-type-limited" checked>
                     <label class="form-check-label">
                         Diesen Tag nur für folgende Gemeinden anzeigen:
                     </label>
