@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Auth;
 class AbstractInput
 {
     public $title = '';
+    protected $setupView = 'inputs.setup';
 
     public function canEdit(): bool {
         return true;
@@ -58,7 +59,7 @@ class AbstractInput
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->writableCities;
 
-        return view('inputs.setup', [
+        return view($this->setupView, [
             'input' => $this,
             'minDate' => $minDate,
             'maxDate' => $maxDate,
