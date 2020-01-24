@@ -23,7 +23,7 @@
 @section('scripts')
     <script>
         function setDefaultTime() {
-            if ($('select[name=location_id]').val() == '') {
+            if ($('select[name=location_id]').val() == '0') {
                 $('input[name=time]').attr('placeholder', 'HH:MM');
                 $('#special_location').show();
                 $('#special_location input').first().focus();
