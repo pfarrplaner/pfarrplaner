@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title') Opferplan für {{ $city->name }}, {{ $year}} @endsection
+@section('title') Opferplan für {{ $cities->pluck('name')->join(', ') }} ({{ $year}}) @endsection
 
 @section('content')
     <form method="post" action="{{ route('inputs.save', $input->getKey()) }}">

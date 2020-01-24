@@ -34,6 +34,7 @@ class OfferingsInput extends AbstractInput
 {
 
     public $title = 'Opferplan';
+    protected $setupView = 'inputs.offerings.setup';
 
     public function canEdit(): bool
     {
@@ -43,16 +44,18 @@ class OfferingsInput extends AbstractInput
     public function input(Request $request) {
         $request->validate([
             'year' => 'int|required',
-            'city' => 'int|required',
+            'cities.*' => 'int|required|exists:cities,id',
         ]);
 
-        $city = City::find($request->get('city'));
+
+        $cityIds = $request->get('cities');
+        $cities = City::whereIn('id', $cityIds)->get();
         $year = $request->get('year');
 
         $services = Service::with('day', 'location')
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
-            ->where('city_id', $city->id)
+            ->whereIn('city_id', $cityIds)
             ->where('days.date', '>=', $year.'-01-01')
             ->where('days.date', '<=', $year.'-12-31')
             ->orderBy('days.date', 'ASC')
@@ -62,7 +65,7 @@ class OfferingsInput extends AbstractInput
 
 
         $input = $this;
-        return view($this->getInputViewName(), compact('input', 'city', 'services', 'year'));
+        return view($this->getInputViewName(), compact('input', 'cities', 'services', 'year'));
 
     }
 
