@@ -80,6 +80,12 @@ class User extends Authenticatable
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
     }
 
+    public function permissionForCity($city) {
+        if (is_numeric($city)) $city = City::find($city);
+        /** @var City $city */
+        return $this->cities()->where('cities.id', $city->id)->first()->pivot->permission ?? 'n';
+    }
+
     public function writableCitiesWithoutAdmin()
     {
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w']);
