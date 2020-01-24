@@ -286,6 +286,13 @@ Breadcrumbs::for('users.edit', function (BreadcrumbsGenerator $trail, $user) {
     $trail->push($user->fullName(), route('users.edit', $user));
 });
 
+Breadcrumbs::for('user.join', function (BreadcrumbsGenerator $trail, $user) {
+    $trail->parent('home');
+    $trail->push('Benutzer', route('users.index'));
+    $trail->push($user->fullName(), route('users.edit', $user));
+    $trail->push('Zusammenführen', route('user.join', $user));
+});
+
 Breadcrumbs::for('user.profile', function (BreadcrumbsGenerator $trail) {
     $user = Auth::user();
     $trail->parent('home');
