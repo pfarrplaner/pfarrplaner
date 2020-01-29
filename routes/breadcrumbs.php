@@ -224,7 +224,7 @@ Breadcrumbs::for('report.step', function (BreadcrumbsGenerator $trail, $report, 
 
 Breadcrumbs::for('reports.render', function (BreadcrumbsGenerator $trail, $report) {
     $trail->parent('reports.setup', $report);
-    $trail->push('Einbetten', route('reports.render', ['report' => $report->getKey()]));
+    $trail->push('Einbetten', route('reports.render', ['report' => $report]));
 });
 
 Breadcrumbs::for('roles.index', function (BreadcrumbsGenerator $trail) {
