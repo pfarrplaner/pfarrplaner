@@ -141,7 +141,7 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
         }
 
         // output
-        $filename = 'Opfersummen von ' . $start->format('Y-m-d') . ' bis ' . $start->format('Y-m-d') . ' -- ' . $cities->pluck('name')->join(', ');
+        $filename = 'Opfersummen von ' . $start->format('Y-m-d') . ' bis ' . $end->format('Y-m-d') . ' -- ' . $cities->pluck('name')->join(', ');
         $this->sendToBrowser($filename);
     }
 
