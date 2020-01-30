@@ -8,7 +8,7 @@
             <div class="card-body">
                 @csrf
                 <div class="form-group"> <!-- Radio group !-->
-                    <label class="control-label">Adressliste für Beerdigungen in folgender Kirchengemeinde
+                    <label class="control-label">Bericht für folgende Kirchengemeinden
                         erstellen:</label>
                     <select class="form-control fancy-selectize" name="cities[]" multiple>
                         @foreach ($cities as $city)
