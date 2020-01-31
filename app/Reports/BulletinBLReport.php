@@ -105,6 +105,9 @@ class BulletinBLReport extends AbstractPDFDocumentReport
             'end' => 'required|date|date_format:d.m.Y',
         ]);
 
+        $start = $request->get('start');
+        $end = $request->get('end');
+
         $includeCities = $request->get('includeCities');
 
         $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start').' 0:00:00'))
