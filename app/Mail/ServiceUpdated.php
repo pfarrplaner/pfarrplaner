@@ -37,6 +37,13 @@ class ServiceUpdated extends AbstractServiceMailable
 
         $diff = $this->service->diff();
 
+        if (!is_object($diff['original']->day)) {
+            $diff['original']->day = $this->service->day;
+        }
+        if (!is_object($diff['changed']->day)) {
+            $diff['changed']->day = $this->service->day;
+        }
+
         return $this->subject('Änderungen am Gottesdienst vom '.$diff['original']->day->date->format('d.m.Y').', '.$diff['original']->timeText().' ('.$diff['original']->locationText().')')
             ->view('mail.notifications.service-update')->with([
             'service' => $this->service,
