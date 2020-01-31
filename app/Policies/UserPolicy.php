@@ -35,6 +35,7 @@ class UserPolicy
      */
     public function create(User $user)
     {
+        if (count($user->adminCities)) return true;
         return $user->hasPermissionTo('benutzer-bearbeiten');
     }
 
@@ -49,6 +50,7 @@ class UserPolicy
     {
         if ($model->hasRole(AuthServiceProvider::SUPER)) return false;
         if ($user->hasRole(AuthServiceProvider::ADMIN)) return true;
+        if (count($user->adminCities->intersect($model->cities))) return true;
         if ($user->hasPermissionTo('benutzer-bearbeiten')) {
             foreach ($model->homeCities as $city) {
                 if ($city->administeredBy($user)) return true;
