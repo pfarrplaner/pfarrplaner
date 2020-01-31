@@ -166,3 +166,8 @@ Route::resource('approvals', 'ApprovalController');
 Route::get('/devtest', function(){
     dd(\Illuminate\Support\Facades\Auth::user()->getViewableAbsenceUsers()->pluck('name'));
 });
+
+// demo function for exception handling
+Route::get('panic', function(){
+    throw new Exception('Diese Fehlermeldung dient nur zu Demonstrationszwecken.');
+});
