@@ -101,11 +101,13 @@ class MultipleServicesInput extends AbstractInput
 
         $data = $request->get('service') ?: [];
         foreach ($data as $dayDate => $services) {
+
+            $dayDate = Carbon::createFromFormat('d.m.Y', $dayDate);
             // check if day already exists
-            $day = Day::where('date', $dayDate)->first();
-            $type = Carbon::createFromFormat('d.m.Y', $dayDate)->dayOfWeek == 0 ? Day::DAY_TYPE_DEFAULT : Day::DAY_TYPE_LIMITED;
+            $day = Day::where('date', $dayDate->format('Y-m-d'))->first();
             if (null === $day) {
                 $day = Day::create(['date' => $dayDate, 'day_type' => $type, 'name' => '', 'description' => '']);
+                $type = $dayDate->dayOfWeek == 0 ? Day::DAY_TYPE_DEFAULT : Day::DAY_TYPE_LIMITED;
             } else {
                 $type = $day->day_type;
             }
