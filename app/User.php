@@ -599,7 +599,7 @@ class User extends Authenticatable
 
     public function getAdminCitiesAttribute()
     {
-        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
+        if ($this->hasRole(AuthServiceProvider::SUPER)) {
             return City::all();
         }
         return $this->adminCities()->get();
