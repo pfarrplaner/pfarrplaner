@@ -21,6 +21,7 @@
                                         @if($user->address)<br />{{ $user->address }}@endif
                                         @if($user->phone)<br />Tel. {{ $user->phone }}@endif
                                         <br />E-Mail <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
+                                        @if(!$loop->last)<br /><br />@endif
                                     @endforeach
                             </td>
                         </tr>
