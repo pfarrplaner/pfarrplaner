@@ -18,7 +18,7 @@
                                     @foreach($replacement->users as $user)
                                         <b>{{ $user->fullName() }}</b>
                                         @if($user->office)<br />{{ $user->office }}@endif
-                                        @if($user->address)<br />{{ $user->address }}@endif
+                                        @if($user->address)<br />{!! nl2br($user->address) !!}@endif
                                         @if($user->phone)<br />Tel. {{ $user->phone }}@endif
                                         <br />E-Mail <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                                         @if(!$loop->last)<br /><br />@endif
