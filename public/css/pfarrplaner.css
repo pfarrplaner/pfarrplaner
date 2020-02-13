@@ -646,3 +646,7 @@ body.login .main-sidebar:hover .login-form.hidden-collapsed {
 .attachment-row {
     cursor: pointer;
 }
+
+tr.changed, tr.changed td, tr.changed th {
+    background-color: lightgreen;
+}

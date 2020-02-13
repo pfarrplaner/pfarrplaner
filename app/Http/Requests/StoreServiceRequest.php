@@ -73,7 +73,7 @@ class StoreServiceRequest extends FormRequest
             $data['location_id'] = 0;
             $data['time'] = $data['time'] ?: '';
             $data['cc_location'] = $data['cc_location'] ?: '';
-        } else {
+        } elseif (isset($data['location_id'])) {
             $locationId = $data['location_id'] ?: 0;
             if ($locationId) {
                 $location = Location::find($locationId);
