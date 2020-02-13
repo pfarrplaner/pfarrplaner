@@ -329,3 +329,9 @@ Breadcrumbs::for('weddings.wizard.step2', function (BreadcrumbsGenerator $trail)
     $trail->push('Ortsangaben', route('weddings.wizard.step2'));
 });
 
+Breadcrumbs::for('liturgyBlocks.index', function (BreadcrumbsGenerator $trail, $service) {
+    if (!is_numeric($service)) $service = $service->id;
+    $trail->parent('calendar');
+    $trail->push('#'.$service, route('services.edit', $service));
+    $trail->push('Liturgie', route('liturgyBlocks.index', $service));
+});

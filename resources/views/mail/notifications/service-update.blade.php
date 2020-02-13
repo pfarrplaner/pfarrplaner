@@ -11,9 +11,11 @@
             Änderungen an einem Gottesdienst
         @endslot
         @slot('subtitle')
-            {{ strftime('%A, %d. %B %Y', $service->day->date->timestamp) }}, {{ $service->timeText() }}<br>{{ $service->locationText() }}<br />
+            {{ strftime('%A, %d. %B %Y', $service->day->date->timestamp) }}, {{ $service->timeText() }}
+            <br>{{ $service->locationText() }}<br/>
             <small style="font-size: 8pt;">
-                Geändert am {{ date('d.m.Y') }} um {{ date('H:i') }} Uhr durch {{ \Illuminate\Support\Facades\Auth::user()->name }}
+                Geändert am {{ date('d.m.Y') }} um {{ date('H:i') }} Uhr
+                durch {{ \Illuminate\Support\Facades\Auth::user()->name }}
             </small>
         @endslot
 
@@ -70,12 +72,14 @@
                      'new' => $changed->internal_remarks,
                      ])
 
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Kirchengemeinde',
-                     'key' => 'city_id',
-                     'old' => $original->city->name,
-                     'new' => $changed->city->name,
-                     ])
+            @if(isset($original->city) && isset($changed->city))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'Kirchengemeinde',
+                         'key' => 'city_id',
+                         'old' => $original->city->name,
+                         'new' => $changed->city->name,
+                         ])
+            @endif
 
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'need_predicant',
@@ -211,9 +215,9 @@
                 @endslot
                 @slot('subtitle')
 
-                @include('mail.notifications.service.baptisms')
-                @include('mail.notifications.service.weddings')
-                @include('mail.notifications.service.funerals')
+                    @include('mail.notifications.service.baptisms')
+                    @include('mail.notifications.service.weddings')
+                    @include('mail.notifications.service.funerals')
 
                 @endslot
 
@@ -229,34 +233,54 @@
     @include('mail.notifications.service.comments')
     @include('mail.layout.blocks.spacer')
 
-    <table class="card w-100 " border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: separate !important; border-radius: 4px; width: 100%; overflow: hidden; border: 1px solid #dee2e6;" bgcolor="#ffffff">
+    <table class="card w-100 " border="0" cellpadding="0" cellspacing="0"
+           style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: separate !important; border-radius: 4px; width: 100%; overflow: hidden; border: 1px solid #dee2e6;"
+           bgcolor="#ffffff">
         <tbody>
         <tr>
-            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; width: 100%; margin: 0;" align="left">
+            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; width: 100%; margin: 0;"
+                align="left">
                 <div>
-                    <table class="card-body" border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%;">
+                    <table class="card-body" border="0" cellpadding="0" cellspacing="0"
+                           style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%;">
                         <tbody>
                         <tr>
-                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; width: 100%; margin: 0; padding: 20px;" align="left">
+                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; width: 100%; margin: 0; padding: 20px;"
+                                align="left">
                                 <div>
-                                    <h4 class="text-center" style="margin-top: 0; margin-bottom: 0; font-weight: 500; color: inherit; vertical-align: baseline; font-size: 24px; line-height: 28.8px;" align="center">Alle Gottesdienste in der Übersicht</h4>
-                                    <p class="text-center" style="line-height: 24px; font-size: 16px; margin: 0;" align="center">Unser Online-Dienstplan hilft dir, komplett den Überblick zu behalten</p>
-                                    <table class="s-2 w-100" border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
+                                    <h4 class="text-center"
+                                        style="margin-top: 0; margin-bottom: 0; font-weight: 500; color: inherit; vertical-align: baseline; font-size: 24px; line-height: 28.8px;"
+                                        align="center">Alle Gottesdienste in der Übersicht</h4>
+                                    <p class="text-center" style="line-height: 24px; font-size: 16px; margin: 0;"
+                                       align="center">Unser Online-Dienstplan hilft dir, komplett den Überblick zu
+                                        behalten</p>
+                                    <table class="s-2 w-100" border="0" cellpadding="0" cellspacing="0"
+                                           style="width: 100%;">
                                         <tbody>
                                         <tr>
-                                            <td height="8" style="border-spacing: 0px; border-collapse: collapse; line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;" align="left">
+                                            <td height="8"
+                                                style="border-spacing: 0px; border-collapse: collapse; line-height: 8px; font-size: 8px; width: 100%; height: 8px; margin: 0;"
+                                                align="left">
 
                                             </td>
                                         </tr>
                                         </tbody>
                                     </table>
 
-                                    <table class="btn btn-primary btn-lg mx-auto " align="center" border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: separate !important; border-radius: 4px; margin: 0 auto;">
+                                    <table class="btn btn-primary btn-lg mx-auto " align="center" border="0"
+                                           cellpadding="0" cellspacing="0"
+                                           style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: separate !important; border-radius: 4px; margin: 0 auto;">
                                         <tbody>
                                         <tr>
-                                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-radius: 4px; margin: 0;" align="center" bgcolor="#007bff">
-                                                @if($user->can('update', $service))<a href="{{ route('services.edit', $service) }}" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 4.8px; line-height: 30px; display: inline-block; font-weight: normal; white-space: nowrap; background-color: #a61380; color: #ffffff; padding: 8px 16px;">Diesen Gottesdienst ansehen</a>
-                                                @else <a href="{{ route('calendar') }}" style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 4.8px; line-height: 30px; display: inline-block; font-weight: normal; white-space: nowrap; background-color: #007bff; color: #ffffff; padding: 8px 16px; border: 1px solid #007bff;">Kalender öffnen</a>@endif
+                                            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-radius: 4px; margin: 0;"
+                                                align="center" bgcolor="#007bff">
+                                                @if($user->can('update', $service))<a
+                                                    href="{{ route('services.edit', $service) }}"
+                                                    style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 4.8px; line-height: 30px; display: inline-block; font-weight: normal; white-space: nowrap; background-color: #a61380; color: #ffffff; padding: 8px 16px;">Diesen
+                                                    Gottesdienst ansehen</a>
+                                                @else <a href="{{ route('calendar') }}"
+                                                         style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 4.8px; line-height: 30px; display: inline-block; font-weight: normal; white-space: nowrap; background-color: #007bff; color: #ffffff; padding: 8px 16px; border: 1px solid #007bff;">Kalender
+                                                    öffnen</a>@endif
                                             </td>
                                         </tr>
                                         </tbody>
@@ -278,21 +302,31 @@
 
 
 
-    <div class="text-center text-muted" style="color: #636c72; font-size: 8pt; line-height: 9pt; margin-top: 10px;" align="center">
+    <div class="text-center text-muted" style="color: #636c72; font-size: 8pt; line-height: 9pt; margin-top: 10px;"
+         align="center">
         @if($user->getSubscriptionType($service->city) == \App\Subscription::SUBSCRIBE_ALL)
-            Du erhältst diese Nachricht, weil du über alle Änderungen an Gottesdiensten in {{ $service->city->name }} benachrichtigt werden willst.
+            Du erhältst diese Nachricht, weil du über alle Änderungen an Gottesdiensten in {{ $service->city->name }}
+            benachrichtigt werden willst.
         @elseif($user->getSubscriptionType($service->city) == \App\Subscription::SUBSCRIBE_OWN)
-            Du erhältst diese Nachricht, weil du über Änderungen an Gottesdiensten in {{ $service->city->name }}, an denen du beteiligt bist, benachrichtigt werden willst.
+            Du erhältst diese Nachricht, weil du über Änderungen an Gottesdiensten in {{ $service->city->name }}, an
+            denen du beteiligt bist, benachrichtigt werden willst.
         @endif
-        Diese Einstellung kannst du selbst <a href="{{ route('user.profile') }}">in deinem Benutzerprofil bei Pfarrplaner</a> ändern.
+        Diese Einstellung kannst du selbst <a href="{{ route('user.profile') }}">in deinem Benutzerprofil bei
+            Pfarrplaner</a> ändern.
     </div>
     @include('mail.layout.blocks.hr')
 
-    <table class="table-unstyled text-muted " border="0" cellpadding="0" cellspacing="0" style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%; max-width: 100%; color: #636c72;" bgcolor="transparent">
+    <table class="table-unstyled text-muted " border="0" cellpadding="0" cellspacing="0"
+           style="font-family: Helvetica, Arial, sans-serif; mso-table-lspace: 0pt; mso-table-rspace: 0pt; border-spacing: 0px; border-collapse: collapse; width: 100%; max-width: 100%; color: #636c72;"
+           bgcolor="transparent">
         <tbody>
         <tr>
-            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;" align="left">© 2019 Pfarrplaner</td>
-            <td class="text-right" style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;" align="right">
+            <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"
+                align="left">© 2019 Pfarrplaner
+            </td>
+            <td class="text-right"
+                style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"
+                align="right">
                 <a class="text-muted" href="{{ env('APP_URL') }}" style="color: #636c72;">Jetzt einloggen</a>
             </td>
         </tr>
@@ -301,7 +335,9 @@
     <table class="s-4 w-100" border="0" cellpadding="0" cellspacing="0" style="width: 100%;">
         <tbody>
         <tr>
-            <td height="24" style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 24px; width: 100%; height: 24px; margin: 0;" align="left">
+            <td height="24"
+                style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 24px; width: 100%; height: 24px; margin: 0;"
+                align="left">
 
             </td>
         </tr>

@@ -26,7 +26,7 @@ class Service extends Model
 
     public $liturgy = [];
 
-    protected $forceTracking = [
+    protected $with = [
         'participants',
         'day',
         'location',

@@ -44,6 +44,7 @@ class OfferingsInput extends AbstractInput
     public function input(Request $request) {
         $request->validate([
             'year' => 'int|required',
+            'cities' => 'required',
             'cities.*' => 'int|required|exists:cities,id',
         ]);
 
