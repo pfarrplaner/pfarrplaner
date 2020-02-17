@@ -22,7 +22,7 @@ class UserUnitTest extends TestCase
     {
         $user = factory(User::class)->create();
         $this->assertNull($user->getHomeScreen());
-        $user->setSetting('homeScreen', 'pastor');
+        $user->setSetting('homeScreen', 'homescreen:pastor');
         $this->assertInstanceOf(PastorHomeScreen::class, $user->getHomeScreen());
     }
 }

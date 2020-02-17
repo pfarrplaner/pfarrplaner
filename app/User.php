@@ -226,9 +226,11 @@ class User extends Authenticatable
      */
     public function getHomeScreen() {
         $homeScreen = $this->getSetting('homeScreen', 'route:calendar');
-        $homeScreenClass = 'App\\HomeScreens\\'.ucfirst($homeScreen).'HomeScreen';
-        if (class_exists($homeScreenClass)) {
-            return new $homeScreenClass();
+        if (substr($homeScreen, 0, 11) == 'homescreen:') {
+            $homeScreenClass = 'App\\HomeScreens\\'.ucfirst(substr($homeScreen, 11)).'HomeScreen';
+            if (class_exists($homeScreenClass)) {
+                return new $homeScreenClass();
+            }
         }
         return null;
     }
