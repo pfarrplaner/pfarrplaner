@@ -14,43 +14,25 @@
                         <button type="submit" class="btn btn-primary">Speichern</button>
                     @endslot
 
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="#profile" role="tab" data-toggle="tab">Profil</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#notifications" role="tab"
-                               data-toggle="tab">Benachrichtigungen</a>
-                        </li>
-                    </ul>
 
-                    <div class="tab-content" style="padding-top: 15px;">
-                        <div role="tabpanel" class="tab-pane fade in active show" id="profile">
+                    @tabheaders
+                        @tabheader(['id' => 'profile', 'title' => 'Profile', 'active' => true]) @endtabheader
+                        @tabheader(['id' => 'notifications', 'title' => 'Benachrichtigungen']) @endtabheader
+                        @if(null !== $homeScreen)
+                            @tabheader(['id' => 'homescreen', 'title' => 'Startbildschirm']) @endtabheader
+                        @endif
+                    @endtabheaders
 
-                            <div class="form-group">
-                                <label for="email">E-Mailadresse:</label>
-                                <input type="text" class="form-control" id="email" name="email"
-                                       value="{{ $user->email }}"/>
-                            </div>
+                    @tabs
+                        @tab(['id' => 'profile', 'active' => true])
+                            @input(['label' => 'Name', 'name' => 'email', 'id' => 'email', 'value' => $user->email])
                             <hr/>
-                            <div class="form-group">
-                                <label for="office">Pfarramt/Büro:</label>
-                                <input type="text" class="form-control" id="office" name="office"
-                                       value="{{ $user->office }}"/>
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Adresse:</label>
-                                <textarea name="address" class="form-control">{{ $user->address }}</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="phone">Telefon:</label>
-                                <input type="text" class="form-control" id="phone" name="phone"
-                                       value="{{ $user->phone }}"/>
-                            </div>
+                            @input(['label' => 'Pfarramt/Büro', 'name' => 'office', 'value' => $user->office])
+                            @textarea(['label' => 'Adresse', 'name' => 'address', 'value' => $user->address])
+                            @input(['label' => 'Telefon', 'name' => 'phone', 'value' => $user->phone])
                             @input(['name' => 'api_token', 'label' => 'API-Token', 'value' => $user->api_token])
-                        </div>
-                        <div role="tabpanel" class="tab-pane fade" id="notifications">
-
+                        @endtab
+                        @tab(['id' => 'notifications'])
                             <div class="form-group">
                                 <label>Benachrichtige mich per E-Mail bei Änderungen an Gottesdiensten für:</label>
                             </div>
@@ -82,8 +64,14 @@
                                     </div>
                                 </div>
                             @endforeach
-                        </div>
-                    </div>
+                        @endtab
+                        @if(null !== $homeScreen)
+                            @tab(['id' => 'homescreen'])
+                                {!! $homeScreen->renderConfigurationView() !!}
+                            @endtab
+                        @endif
+                    @endtabs
+
                 @endcomponent
             </form>
 

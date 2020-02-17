@@ -13,10 +13,14 @@ use App\Baptism;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PastorHomeScreen extends AbstractHomeScreen
 {
+    protected $hasConfiguration = true;
+
     public function render()
     {
         /** @var User $user */
@@ -92,7 +96,22 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->get();
         $weddings->load('day');
 
-        return $this->renderView('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings'));
+        $missing = Service::withOpenMinistries(unserialize($user->getSetting('homeScreen_ministries', '')) ?: []);
+
+        return $this->renderView('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings', 'missing'));
+    }
+
+    public function renderConfigurationView()
+    {
+        return view('homescreen.pastor.config')->render();
+    }
+
+
+    public function setConfiguration(Request $request)
+    {
+        parent::setConfiguration($request);
+        $data = $request->get('homeScreen');
+        Auth::user()->setSetting('homeScreen_ministries', serialize($data['ministries']));
     }
 
 }

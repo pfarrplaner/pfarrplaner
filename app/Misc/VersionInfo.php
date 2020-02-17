@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-02-17 11:00', 'Europe/Berlin'),
+                'text' => 'Benutzer mit Startbildschirm können in ihrem <a href="/user/profile">Profil</a> einstellen, dass sie eine Liste aller Gottesdienste sehen wollen, bei denen bestimmte Felder nicht ausgefüllt sind. ',
+            ],
+            [
                 'date' => new Carbon('2020-01-23 11:30', 'Europe/Berlin'),
                 'text' => 'Mit dem Sammeleingabe <a href="/input/planning">"Planungstabelle"</a> können beliebige Dienstzuweisungen für alle Gottesdienste eines Jahres bearbeitet werden.',
             ],

@@ -13,10 +13,13 @@ use App\Baptism;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class MinistryHomeScreen extends AbstractHomeScreen
 {
+    protected $hasConfiguration = true;
+
     public function render()
     {
         /** @var User $user */
@@ -38,7 +41,23 @@ class MinistryHomeScreen extends AbstractHomeScreen
             ->orderBy('time', 'ASC')
             ->get();
 
-        return $this->renderView('homescreen.ministry', compact('user', 'services'));
+        $missing = Service::withOpenMinistries(unserialize($user->getSetting('homeScreen_ministries', '')) ?: []);
+
+        return $this->renderView('homescreen.ministry', compact('user', 'services', 'missing'));
     }
+
+    public function renderConfigurationView()
+    {
+        return view('homescreen.ministry.config')->render();
+    }
+
+
+    public function setConfiguration(Request $request)
+    {
+        parent::setConfiguration($request);
+        $data = $request->get('homeScreen');
+        Auth::user()->setSetting('homeScreen_ministries', serialize($data['ministries']));
+    }
+
 
 }

@@ -550,4 +550,51 @@ class Service extends Model
     public function getLiturgyAttribute() {
         return $this->liturgy;
     }
+
+
+    /**
+     * Return services with empty entries for specific ministries
+     * @param $ministries array
+     * @return array
+     */
+    public static function withOpenMinistries($ministries) {
+        $missing2 = [];
+
+        foreach ($ministries as $ministry) {
+            $missing2[$ministry] = Service::with(['location', 'day'])
+                ->whereDoesntHave(
+                    'participants',
+                    function ($query) use ($ministry) {
+                        $query->where('service_user.category', $ministry);
+                    }
+                )
+                ->whereIn('city_id', Auth::user()->writableCities->pluck('id'))
+                ->whereHas(
+                    'day',
+                    function ($query)  {
+                        $query->where('date', '>=', now());
+                    }
+                )
+                ->select(['services.*', 'days.date'])
+                ->join('days', 'days.id', '=', 'day_id')
+                ->orderBy('days.date', 'ASC')
+                ->orderBy('time', 'ASC')
+                ->get();
+        }
+
+        $missing = [];
+        foreach ($missing2 as $ministry => $services) {
+            foreach ($services as $service) {
+                if (isset($missing[$service->id])) {
+                    $missing[$service->id]['missing'][] = $ministry;
+                } else {
+                    $missing[$service->id] = [
+                        'missing' => [Ministry::title($ministry)],
+                        'service' => $service,
+                    ];
+                }
+            }
+        }
+        return $missing;
+    }
 }

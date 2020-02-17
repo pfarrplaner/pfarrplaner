@@ -31,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::include('partials.form.peopleselect', 'peopleselect');
         Blade::include('partials.form.checkbox', 'checkbox');
         Blade::include('partials.form.radiogroup', 'radiogroup');
+        Blade::include('partials.string.badges', 'badges');
 
 
         Validator::extendImplicit('checkbox', function($attribute, $value, $parameters, $validator)

@@ -69,8 +69,8 @@ abstract class AbstractHomeScreen
      * Get a view for configuration setttings
      * @return string
      */
-    protected function getConfigurationView() {
-        return '';
+    public function renderConfigurationView() {
+        return 'Für diesen Startbildschirm gibt es nichts zu konfigurieren.';
     }
 
 
@@ -78,7 +78,7 @@ abstract class AbstractHomeScreen
      * Save submitted configuration
      * @param Request $request Request
      */
-    protected function setConfiguration (Request $request) {
+    public function setConfiguration (Request $request) {
 
     }
 
