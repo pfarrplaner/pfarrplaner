@@ -57,16 +57,16 @@
                      'old' => $original->locationText(),
                      'new' => $changed->locationText(),
                      ])
-
+Service
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'Beschreibung',
                      'key' => 'description',
-                     'old' => $original->descriptionText(),
-                     'new' => $changed->descriptionText(),
+                     'old' => trim($original->descriptionText()),
+                     'new' => trim($changed->descriptionText()),
                      ])
 
             @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Beschreibung',
+                     'title' => 'Interne Anmerkungen',
                      'key' => 'internal_remarks',
                      'old' => $original->internal_remarks,
                      'new' => $changed->internal_remarks,

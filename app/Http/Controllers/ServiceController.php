@@ -133,15 +133,20 @@ class ServiceController extends Controller
         $this->updateFromRequest($request, $service);
         $service->save();
         $this->handleAttachments($request, $service);
-        Subscription::send($service, ServiceUpdated::class);
+
+        $success = '';
+        if ($service->isChanged()) {
+            Subscription::send($service, ServiceUpdated::class);
+            $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
+        }
 
         $route = $request->get('routeBack') ?: '';
         if ($route) {
-            return redirect($route)->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
+            return redirect($route)->with('success', $success);
         } else {
             // default: redirect to calendar
             return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month])
-                ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
+                ->with('success', $success);
 
         }
     }

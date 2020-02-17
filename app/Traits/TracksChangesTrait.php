@@ -60,11 +60,12 @@ trait TracksChangesTrait
 
         $diff = ['attributes' => [], 'relations' => []];
         foreach ($data['attributes'] as $attribute => $value) {
-            if ((!isset($this->dataBeforeChanges['attributes'][$attribute])) || ($value != $this->dataBeforeChanges['attributes'][$attribute])) {
-                $diff['attributes'][$attribute] = ['original' =>  ($this->dataBeforeChanges['attributes'][$attribute] ?? ''), 'changed' => $value];
+            if (!isset($this->dataBeforeChanges['attributes'][$attribute])) $this->dataBeforeChanges['attributes'][$attribute] = null;
+            if ($value != $this->dataBeforeChanges['attributes'][$attribute]) {
+                $diff['attributes'][$attribute] = ['original' =>  ($this->dataBeforeChanges['attributes'][$attribute] ?? ''), 'changed' => $value ?? ''];
             }
             $originalObj->$attribute = $this->dataBeforeChanges['attributes'][$attribute] ?? null;
-            $changedObj->$attribute = $data['attributes'][$attribute] ?? null;
+            $changedObj->$attribute = $value ?: null;
         }
         foreach ($data['relations'] as $relation => $value) {
             if (isset($this->dataBeforeChanges['relations'][$relation])) {
