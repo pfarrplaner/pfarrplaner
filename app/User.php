@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\HomeScreens\AbstractHomeScreen;
 use App\Providers\AuthServiceProvider;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Carbon\Carbon;
@@ -217,6 +218,19 @@ class User extends Authenticatable
             $setting = $this->getSetting($key, null, true);
             $setting->delete();
         }
+    }
+
+    /**
+     * Get an instance of the HomeScreen for this user
+     * @return AbstractHomeScreen|null
+     */
+    public function getHomeScreen() {
+        $homeScreen = $this->getSetting('homeScreen', 'route:calendar');
+        $homeScreenClass = 'App\\HomeScreens\\'.ucfirst($homeScreen).'HomeScreen';
+        if (class_exists($homeScreenClass)) {
+            return new $homeScreenClass();
+        }
+        return null;
     }
 
     public function subscriptions()
