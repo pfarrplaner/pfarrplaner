@@ -14,25 +14,45 @@ use Illuminate\Http\Request;
 */
 
 /**
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+ * Route::middleware('auth:api')->get('/user', function (Request $request) {
+ * return $request->user();
+ * });
  */
 
 
-Route::namespace('Api')->group(function () {
-    Route::resource('cities', 'CityController');
-    Route::get('calendar/month/{year}/{month}', ['as' => 'api.calendar.month', 'uses' => 'CalendarController@month']);
-    Route::get('servicesByDayAndCity/{day}/{city}', ['as' => 'services.byDayAndCity', 'uses' => 'ServiceController@byDayAndCity']);
-    Route::get('service/{service}', ['as' => 'service.show', 'uses' => 'ServiceController@show']);
-    Route::get('user/{user}/services', ['as' => 'api.user.services', 'uses' => 'ServiceController@byUser']);
+Route::namespace('Api')->group(
+    function () {
+        Route::resource('cities', 'CityController');
+        Route::get(
+            'calendar/month/{year}/{month}',
+            ['as' => 'api.calendar.month', 'uses' => 'CalendarController@month']
+        );
+        Route::get(
+            'servicesByDayAndCity/{day}/{city}',
+            ['as' => 'services.byDayAndCity', 'uses' => 'ServiceController@byDayAndCity']
+        );
+        Route::get('user/{user}/services', ['as' => 'api.user.services', 'uses' => 'ServiceController@byUser']);
 
+        Route::middleware('auth:api')->group(
+            function () {
+                // Services
+                Route::get('service/{service}', 'ServiceController@show')->name('service.show');
+                //Route::patch('service/{service}', 'ServiceController@update')->name('api.service.update')->middleware('auth');
+                Route::patch('service/{service}', 'ServiceController@update')->name('api.service.update')->middleware(
+                    'auth:api'
+                );
+            }
+        );
+    }
+);
 
+Route::get(
+    'test',
+    function () {
+        return response()->json();
+    }
+);
 
-    Route::middleware('auth:api')->group(function (){
-    });
-
-});
 
 
 

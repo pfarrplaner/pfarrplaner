@@ -488,7 +488,7 @@ class Service extends Model
     }
 
 
-    public function associateParticipants(StoreServiceRequest $request, Service $service) {
+    public function associateParticipants($request, Service $service) {
         $participants = [];
         foreach (($request->get('participants') ?: []) as $category => $participantList) {
             foreach ($participantList as $participant) {

@@ -125,6 +125,13 @@
     <script>
         $(document).ready(function () {
 
+            window.axios = axios;
+            window.axios.defaults.headers.common = {
+                'X-CSRF-TOKEN': Laravel.csrfToken,
+                'X-Requested-With': 'XMLHttpRequest',
+                'Authorization': 'Bearer ' + Laravel.apiToken,
+            };
+
             function hasChanges(input) {
                 if ((input.type == "text" || input.type == "textarea" || input.type == "hidden") && input.defaultValue != input.value) {
                     return true;
@@ -181,10 +188,15 @@
                         offering_type: $('input[name="service[' + service + '][offering_type]"]:checked').val(),
                         _method: 'patch',
                     }
-                    axios.post('/services/' + service, data).then((response) => {
+                    axios.post('/api/service/' + service, data).then((response) => {
                         saveCtr--;
-                        if (saveCtr == 0) window.location.href='{{ route('calendar') }}';
-                        $('#loader_text').html('Noch '+saveCtr+' Datensätze müssen gespeichert werden.');
+                        if (saveCtr == 0) {
+                            window.location.href='{{ route('calendar') }}';
+                            $('#loader_header').html('Fertig. Du wirst gleich weitergeleitet...');
+                            $('#loader_text').html('Alle geänderten Datensätze wurden gespeichert.');
+                        } else {
+                            $('#loader_text').html('Noch '+saveCtr+' Datensätze müssen gespeichert werden.');
+                        }
                         Promise.resolve(response);
                     });
                 });

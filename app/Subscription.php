@@ -33,11 +33,11 @@ class Subscription extends Model
         foreach ($subscribers as $subscriber) {
             if (!env('THIS_IS_MY_DEV_HOST')) {
                 if ($subscriber->email && filter_var($subscriber->email, FILTER_VALIDATE_EMAIL)) {
-                    Mail::to($subscriber)->send(new $mailClass($subscriber, $service, $data));
+                    Mail::to($subscriber)->queue(new $mailClass($subscriber, $service, $data));
                 }
             } else {
-                $subscriber->email = 'dev@peregrinus.de';
-                Mail::to($subscriber)->send(new $mailClass($subscriber, $service, $data));
+                $subscriber->email = 'chris@toph.de';
+                Mail::to($subscriber)->queue(new $mailClass($subscriber, $service, $data));
             }
         }
     }
