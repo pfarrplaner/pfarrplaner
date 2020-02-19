@@ -25,6 +25,24 @@
                         @endfor
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="ministries">Folgende Dienste mit einschließen:</label>
+                    <select id="selectMinistry" class="form-control fancy-selectize" name="ministries[]" multiple>
+                        @foreach (\App\Ministry::all() as $ministry)
+                            <option value="{{ $ministry }}">{{ $ministry }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Namen anzeigen als:</label>
+                    <?php $nameFormat = Auth::user()->getSetting('calendar_name_format'); ?>
+                    <select name="name_format" class="form-control">
+                        <option @if($nameFormat == \App\Http\Controllers\CalendarController::NAME_FORMAT_DEFAULT)selected @endif value="{{ \App\Http\Controllers\CalendarController::NAME_FORMAT_DEFAULT }}">Pfr. Müller</option>
+                        <option @if($nameFormat == \App\Http\Controllers\CalendarController::NAME_FORMAT_INITIAL_AND_LAST)selected @endif value="{{ \App\Http\Controllers\CalendarController::NAME_FORMAT_INITIAL_AND_LAST }}">Pfr. K. Müller</option>
+                        <option @if($nameFormat == \App\Http\Controllers\CalendarController::NAME_FORMAT_FIRST_AND_LAST)selected @endif value="{{ \App\Http\Controllers\CalendarController::NAME_FORMAT_FIRST_AND_LAST }}">Pfr. Karl Müller</option>
+                    </select>
+
+                </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Erstellen</button>
