@@ -21,6 +21,11 @@ class User extends Authenticatable
 {
     use Notifiable, HasRoles, Visitable, Visitor;
 
+    public const NAME_FORMAT_DEFAULT = 1;
+    public const NAME_FORMAT_INITIAL_AND_LAST = 2;
+    public const NAME_FORMAT_FIRST_AND_LAST = 3;
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -161,6 +166,24 @@ class User extends Authenticatable
     public function fullName($withTitle = false)
     {
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->name;
+    }
+
+    /**
+     * Get the user's name in one of the predefined formats
+     * @param int $format
+     * @param bool $withTitle
+     * @return string
+     */
+    public function formattedName($format = self::NAME_FORMAT_DEFAULT, $withTitle = true) {
+        switch ($format) {
+            case self::NAME_FORMAT_INITIAL_AND_LAST:
+                return $this->initialedName($withTitle);
+                break;
+            case self::NAME_FORMAT_FIRST_AND_LAST:
+                return $this->fullName($withTitle);
+                break;
+        }
+        return $this->lastName($withTitle);
     }
 
     public function initialedName($withTitle = false)
