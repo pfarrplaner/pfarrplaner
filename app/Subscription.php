@@ -36,7 +36,7 @@ class Subscription extends Model
                     Mail::to($subscriber)->queue(new $mailClass($subscriber, $service, $data));
                 }
             } else {
-                $subscriber->email = 'chris@toph.de';
+                $subscriber->email = 'dev@toph.de';
                 Mail::to($subscriber)->queue(new $mailClass($subscriber, $service, $data));
             }
         }
