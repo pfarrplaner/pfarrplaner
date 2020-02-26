@@ -206,7 +206,9 @@ class AbsenceController extends Controller
                 'to' => min(Carbon::createFromFormat('d.m.Y', $replacementData['to']), $absence->to),
             ]);
             $replacement->save();
-            $replacement->users()->sync($replacementData['user']);
+            if (isset($replacementData['user'])) {
+                $replacement->users()->sync($replacementData['user']);
+            }
             $replacementIds[] = $replacement->id;
         }
     }
