@@ -34,7 +34,7 @@ class CalendarController extends Controller
         while ($today->month == $month) {
             if ($today->dayOfWeek == 0) {
                 $day = new Day([
-                    'date' => $today->toDateString(),
+                    'date' => $today->format('d.m.Y'),
                     'name' => '',
                     'description' => '',
                 ]);
