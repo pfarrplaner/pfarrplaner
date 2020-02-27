@@ -146,6 +146,7 @@ class AbsenceController extends Controller
             'to' => Carbon::createFromFormat('d.m.Y H:i:s', ($request->get('to') ?: '').' 0:00:00'),
             'user_id' => $request->get('user_id'),
             'reason' => $request->get('reason') ?: '',
+            'replacement_notes' => $request->get('replacement_notes', ''),
         ]);
 
         $absence->status = 'approved';
@@ -182,6 +183,7 @@ class AbsenceController extends Controller
     public function edit(Request $request, Absence $absence)
     {
         $absence->load('replacements');
+        $year = $month = null;
         if ($request->has('startMonth')) {
             list($month, $year) = explode('-', $request->get('startMonth'));
         }
@@ -229,6 +231,7 @@ class AbsenceController extends Controller
         $absence->from = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('from').' 0:00:00');
         $absence->to = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('to').' 0:00:00');
         $absence->reason = $request->get('reason') ?: '';
+        $absence->replacement_notes = $request->get('replacement_notes', '');
         $absence->save();
         $this->setupReplacements($absence, $request->get('replacement') ?: []);
         return redirect()->route('absences.index', ['month' => $absence->from->format('m'), 'year' => $absence->from->format('Y')]);

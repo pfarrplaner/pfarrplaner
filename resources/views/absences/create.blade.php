@@ -5,55 +5,66 @@
 @section('content')
     <form method="post" action="{{ route('absences.store') }}">
         @csrf
-        @component('components.ui.card')
-            @slot('cardFooter')
-                <button type="submit" class="btn btn-primary">Speichern</button>
-            @endslot
-            @if(count($users) == 1)
-                @hidden(['name' => 'user_id', 'value' => $users->first()->id])
-            @else
-                @selectize(['name' => 'user_id', 'label' => 'Urlaub für', 'items' => $users, 'value' => $user->id])
-            @endif
-            <div class="form-group">
-                <label for="reason">Zeitraum:</label>
-                <input type="hidden" name="month" value="{{ $month }}"/>
-                <input type="hidden" name="year" value="{{ $year }}"/>
-                <input type="hidden" id="from" name="from"/>
-                <input type="hidden" id="to" name="to"/>
-                <div id="date-range12"></div>
-                <div id="date-range12-container"></div>
-            </div>
-            <div class="form-group">
-                <label for="reason">Beschreibung:</label>
-                <input type="text" class="form-control" name="reason" value="Urlaub"
-                       placeholder="z.B. Urlaub, Fortbildung, o.ä."/>
-            </div>
-            <h3>Vertretungen</h3>
-            <div id="frmReplacements">
-                <div class="hidden" style="display: none">
-                    <div class="container1">
-                        <select class="form-control replacement-user" multiple>
-                            @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
+        <div class="row">
+            <div class="col-md-6">
+                @component('components.ui.card')
+                    @slot('cardHeader')Informationen zum Urlaub @endslot
+                    @slot('cardFooter')
+                        <button type="submit" class="btn btn-primary">Speichern</button>
+                    @endslot
+                    @if(count($users) == 1)
+                        @hidden(['name' => 'user_id', 'value' => $users->first()->id])
+                    @else
+                        @selectize(['name' => 'user_id', 'label' => 'Urlaub für', 'items' => $users, 'value' => $user->id])
+                    @endif
+                    <div class="form-group">
+                        <label for="reason">Zeitraum:</label>
+                        <input type="hidden" name="month" value="{{ $month }}"/>
+                        <input type="hidden" name="year" value="{{ $year }}"/>
+                        <input type="hidden" id="from" name="from"/>
+                        <input type="hidden" id="to" name="to"/>
+                        <div id="date-range12"></div>
+                        <div id="date-range12-container"></div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-4">
-                        <div class="form-group">
-                            <label>Vertreter*in</label>
+                    <div class="form-group">
+                        <label for="reason">Beschreibung:</label>
+                        <input type="text" class="form-control" name="reason" value="Urlaub"
+                               placeholder="z.B. Urlaub, Fortbildung, o.ä."/>
+                    </div>
+                @endcomponent
+            </div>
+            <div class="col-md-6">
+                @component('components.ui.card')
+                    @slot('cardHeader')Vertretungen @endslot
+                    <div id="frmReplacements">
+                        <div class="hidden" style="display: none">
+                            <div class="container1">
+                                <select class="form-control replacement-user" multiple>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label>Vertreter*in</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Zeitraum</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-6">
-                        <div class="form-group">
-                            <label>Zeitraum</label>
-                        </div>
-                    </div>
-                </div>
+                    <button id="btnAddReplacement" class="btn btn-secondary">Vertretung hinzufügen</button>
+                    <br /><br />
+                    @textarea(['name' => 'replacement_notes', 'label' => 'Notizen für die Vertretung'])
+                @endcomponent
             </div>
-            <button id="btnAddReplacement" class="btn btn-secondary">Vertretung hinzufügen</button>
-        @endcomponent
+        </div>
     </form>
 @endsection
 

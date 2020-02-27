@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-02-27 11:00', 'Europe/Berlin'),
+                'text' => 'Urlaubseinträge können nun Hinweise für die Vertretung (z.B. mögliche Beerdigungstermine) enthalten.',
+            ],
+            [
                 'date' => new Carbon('2020-02-17 11:00', 'Europe/Berlin'),
                 'text' => 'Benutzer mit Startbildschirm können in ihrem <a href="/user/profile">Profil</a> einstellen, dass sie eine Liste aller Gottesdienste sehen wollen, bei denen bestimmte Felder nicht ausgefüllt sind. ',
             ],
