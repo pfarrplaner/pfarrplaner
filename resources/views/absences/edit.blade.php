@@ -2,6 +2,20 @@
 
 @section('title', 'Urlaub bearbeiten')
 
+@section('navbar-left')
+    <form class="form-inline" style="display: inline;"
+          action="{{ route('absences.destroy', $absence->id)}}"
+          method="post">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="month" value="{{ $month }}"/>
+        <input type="hidden" name="year" value="{{ $year }}"/>
+        <button class="btn btn-danger" type="submit" title="Urlaubseintrag löschen"><span
+                class="fa fa-trash"></span> Urlaubseintrag löschen
+        </button>
+    </form>
+@endsection
+
 @section('content')
     <form method="post" action="{{ route('absences.update', $absence->id) }}">
         @csrf
@@ -14,17 +28,6 @@
                     @endslot
                     @slot('cardFooter')
                         <button type="submit" class="btn btn-primary">Speichern</button>
-                        <form class="form-inline" style="display: inline;"
-                              action="{{ route('absences.destroy', $absence->id)}}"
-                              method="post">
-                            @csrf
-                            @method('DELETE')
-                            <input type="hidden" name="month" value="{{ $month }}"/>
-                            <input type="hidden" name="year" value="{{ $year }}"/>
-                            <button class="btn btn-danger" type="submit" title="Urlaubseintrag löschen"><span
-                                    class="fa fa-trash"></span> Urlaubseintrag löschen
-                            </button>
-                        </form>
                     @endslot
                     <div class="form-group">
                         <label for="reason">Zeitraum:</label>

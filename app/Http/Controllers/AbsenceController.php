@@ -123,7 +123,7 @@ class AbsenceController extends Controller
      */
     public function create($year, $month, User $user)
     {
-        $users = Auth::user()->getViewableAbsenceUsers();
+        $users = User::all();
         return view('absences.create', compact('month', 'year', 'users', 'user'));
     }
 
@@ -189,7 +189,7 @@ class AbsenceController extends Controller
         }
         if (!$year) $year = date('Y');
         if (!$month) $year = date('m');
-        $users = Auth::user()->getViewableAbsenceUsers();
+        $users = User::all();
         return view('absences.edit', compact('absence', 'month', 'year', 'users'));
     }
 
@@ -209,6 +209,9 @@ class AbsenceController extends Controller
             ]);
             $replacement->save();
             if (isset($replacementData['user'])) {
+                foreach ($replacementData['user'] as $id => $userId) {
+                    $replacementData['user'][$id] = User::createIfNotExists($userId);
+                }
                 $replacement->users()->sync($replacementData['user']);
             }
             $replacementIds[] = $replacement->id;
