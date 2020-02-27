@@ -53,11 +53,12 @@ abstract class AbstractHomeScreen
      * @return array Absence data
      */
     protected function getAbsences() {
-        $absences = Absence::where('user_id', Auth::user()->id)->get();
+        $absences = Absence::where('user_id', Auth::user()->id)->where('to', '>=', now())->get();
         $replacements = Replacement::with('absence')
             ->whereHas('users', function($query) {
                 $query->where('users.id', Auth::user()->id);
             })
+            ->where('to', '>=', now())
             ->orderBy('from')
             ->orderBy('to')
             ->get();
