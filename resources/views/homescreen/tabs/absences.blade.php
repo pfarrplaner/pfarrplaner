@@ -61,9 +61,9 @@
                         <td>{{ $replacement->absence->reason }}</td>
                         <td>
                             {{ $replacement->absence    ->replacementText() }}
-                            @if (trim($absence->replacement_notes))
+                            @if (trim($replacement->absence->replacement_notes))
                                 <br /><div style="font-size: 0.8em;"><span style="font-weight: bold;">Hinweise:<br /></span>
-                                    {!! nl2br($absence->replacement_notes) !!}</div>
+                                    {!! nl2br($replacement->absence->replacement_notes) !!}</div>
                             @endif
                         </td>
                         <td style="text-align: right;">
