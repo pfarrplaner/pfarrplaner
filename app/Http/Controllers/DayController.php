@@ -146,8 +146,26 @@ class DayController extends Controller
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
             return redirect()->route('calendar', ['year' => date('Y'), 'month' => date('m')]);
         }
+        $start = Carbon::create($year, $month, 1);
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+
+        $days = [];
+        $existing = [];
+        $date = $start->copy();
+        while ($date <= $end) {
+            if ($existingDay = Day::where('date', $date->format('Y-m-d'))->first()) {
+                $existing[] = $existingDay->date;
+            } else {
+                $days[] = $date->day;
+            }
+            $date->addDay(1);
+        }
+
+        $days = collect($days);
+        $existing = collect($existing);
+
         $cities = Auth::user()->writableCities;
-        return view('days.create', ['year' => $year, 'month' => $month, 'cities' => $cities]);
+        return view('days.create', compact('year', 'month', 'cities', 'days', 'existing'));
     }
 
     /**
