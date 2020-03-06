@@ -6,6 +6,7 @@
     @endif
     data-day="{{ $day->id }}"
 >
+    <div class="day-header-collapse-hover">{{ $day->date->formatLocalized('%a, %d.') }}</div>
     <div class="card card-effect">
         <div class="card-header day-header-{{ $day->date->formatLocalized('%a') }}">
             {{ $day->date->formatLocalized('%A') }}

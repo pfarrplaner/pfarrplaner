@@ -82,6 +82,30 @@ body.calendar .content-header {
     background-color: #DCD0FF;
 }
 
+.calendar-month th .day-header-collapse-hover {
+    display: none;
+}
+
+.calendar-month th.collapsed .day-header-collapse-hover {
+    display: block;
+}
+
+.calendar-month th.collapsed:hover .day-header-collapse-hover {
+    font-size: 20px;
+}
+
+
+.day-header-collapse-hover {
+    font-size: 10px;
+    margin-left: -4px;
+    writing-mode: vertical-lr;
+}
+
+.collapsed.day-header-collapse-hover:hover {
+    display: block;
+}
+
+
 .calendar-month th.collapsed .card,
 .calendar-month th.collapsed .vacation {
     display: none;
