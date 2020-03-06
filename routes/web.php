@@ -40,17 +40,34 @@ Route::resource('tags', 'TagController')->middleware('auth');
 Route::resource('parishes', 'ParishController')->middleware('auth');
 
 // embed in web site:
-Route::get('services/embed/locations/{ids}/{limit?}', ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']);
-Route::get('services/embed/baptismalServices/{ids}/{limit?}/{maxBaptisms?}', ['as' => 'embed.table-baptismalservices', 'uses' => 'EmbedController@embedByBaptismalServices']);
-Route::get('services/embed/cities/{ids}/{limit?}', ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']);
-Route::get('services/embed/cc/cities/{ids}/{limit?}', ['as' => 'embed.table-cc', 'uses' => 'EmbedController@embedCCByCities']);
-Route::get('user/embed/vacations/{user}', ['as' => 'embed.user.vacations', 'uses' => 'EmbedController@embedUserVacations' ]);
+Route::get(
+    'services/embed/locations/{ids}/{limit?}',
+    ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']
+);
+Route::get(
+    'services/embed/baptismalServices/{ids}/{limit?}/{maxBaptisms?}',
+    ['as' => 'embed.table-baptismalservices', 'uses' => 'EmbedController@embedByBaptismalServices']
+);
+Route::get(
+    'services/embed/cities/{ids}/{limit?}',
+    ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']
+);
+Route::get(
+    'services/embed/cc/cities/{ids}/{limit?}',
+    ['as' => 'embed.table-cc', 'uses' => 'EmbedController@embedCCByCities']
+);
+Route::get(
+    'user/embed/vacations/{user}',
+    ['as' => 'embed.user.vacations', 'uses' => 'EmbedController@embedUserVacations']
+);
 
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
 Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
-Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name('calendar.printsetup');
+Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name(
+    'calendar.printsetup'
+);
 Route::post('/calendar/{year?}/{month?}/print', ['uses' => 'CalendarController@print'])->name('calendar.print');
 
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
@@ -74,7 +91,10 @@ Route::get('attachment/{attachment}', 'DownloadController@attachment')->name('at
 Route::resource('baptisms', 'BaptismController')->middleware('auth');
 Route::get('/baptism/add/{service}', ['as' => 'baptism.add', 'uses' => 'BaptismController@create'])->middleware('auth');
 Route::get('/baptism/destroy/{baptism}', ['as' => 'baptism.destroy', 'uses' => 'BaptismController@destroy']);
-Route::get('/baptism/{baptism}/appointment/ical', ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']);
+Route::get(
+    '/baptism/{baptism}/appointment/ical',
+    ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']
+);
 Route::post('/baptism/done/{baptism}', ['as' => 'baptism.done', 'uses' => 'BaptismController@done']);
 
 
@@ -86,14 +106,15 @@ Route::get('/funeral/wizard', ['as' => 'funerals.wizard', 'uses' => 'FuneralCont
 Route::post('/funeral/wizard/step2', ['as' => 'funerals.wizard.step2', 'uses' => 'FuneralController@wizardStep2']);
 Route::post('/funeral/wizard/step3', ['as' => 'funerals.wizard.step3', 'uses' => 'FuneralController@wizardStep3']);
 Route::post('/funeral/done/{funeral}', ['as' => 'funeral.done', 'uses' => 'FuneralController@done']);
-Route::get('/funeral/{funeral}/appointment/ical', ['as' => 'funeral.appointment.ical', 'uses' => 'FuneralController@appointmentIcal']);
+Route::get(
+    '/funeral/{funeral}/appointment/ical',
+    ['as' => 'funeral.appointment.ical', 'uses' => 'FuneralController@appointmentIcal']
+);
 
 Route::get('/wedding/wizard', ['as' => 'weddings.wizard', 'uses' => 'WeddingController@wizardStep1']);
 Route::post('/wedding/wizard/step2', ['as' => 'weddings.wizard.step2', 'uses' => 'WeddingController@wizardStep2']);
 Route::post('/wedding/wizard/step3', ['as' => 'weddings.wizard.step3', 'uses' => 'WeddingController@wizardStep3']);
 Route::post('/wedding/done/{wedding}', ['as' => 'wedding.done', 'uses' => 'WeddingController@done']);
-
-
 
 
 Route::resource('weddings', 'WeddingController')->middleware('auth');
@@ -102,16 +123,27 @@ Route::get('/wedding/destroy/{wedding}', ['as' => 'wedding.destroy', 'uses' => '
 
 // Home routes
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
-Route::get('/', function () {
-    if (Auth::user()) return redirect()->route('home');
-    return redirect()->route('login');
-});
+Route::get(
+    '/',
+    function () {
+        if (Auth::user()) {
+            return redirect()->route('home');
+        }
+        return redirect()->route('login');
+    }
+);
 
-Route::get('/changePassword','HomeController@showChangePassword');
-Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
+Route::get('/changePassword', 'HomeController@showChangePassword');
+Route::post('/changePassword', 'HomeController@changePassword')->name('changePassword');
 
 Auth::routes();
-Route::get('/logout', function() { Auth::logout(); return redirect()->route('login'); });
+Route::get(
+    '/logout',
+    function () {
+        Auth::logout();
+        return redirect()->route('login');
+    }
+);
 
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
@@ -131,15 +163,21 @@ Route::get('/whatsnew', ['as' => 'whatsnew', 'uses' => 'HomeController@whatsnew'
 Route::get('/kinderkirche/{city}/pdf', ['as' => 'cc-public-pdf', 'uses' => 'PublicController@childrensChurch']);
 Route::get('/kinderkirche/{city}', ['as' => 'cc-public', 'uses' => 'PublicController@childrensChurch']);
 
-Route::post('/showLimitedColumns/{switch}', function($switch){
-    Session::put('showLimitedDays', (bool)$switch);
-    return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
-})->middleware('auth')->name('showLimitedColumns');
+Route::post(
+    '/showLimitedColumns/{switch}',
+    function ($switch) {
+        Session::put('showLimitedDays', (bool)$switch);
+        return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
+    }
+)->middleware('auth')->name('showLimitedColumns');
 
-Route::get('/showLimitedColumns/{switch}', function($switch){
-    Session::put('showLimitedDays', (bool)$switch);
-    return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
-})->middleware('auth')->name('showLimitedColumns');
+Route::get(
+    '/showLimitedColumns/{switch}',
+    function ($switch) {
+        Session::put('showLimitedDays', (bool)$switch);
+        return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
+    }
+)->middleware('auth')->name('showLimitedColumns');
 
 // last service updated (timestamp)
 Route::get('/lastUpdate', ['as' => 'lastUpdate', 'uses' => 'ServiceController@lastUpdate']);
@@ -163,11 +201,63 @@ Route::get('apiToken', 'ApiTokenController@update')->name('apitoken');
 // approvals
 Route::resource('approvals', 'ApprovalController');
 
-Route::get('/devtest', function(){
-    dd(\Illuminate\Support\Facades\Auth::user()->getViewableAbsenceUsers()->pluck('name'));
-});
+Route::get(
+    '/admin/tools/fixDoubleDays',
+    function () {
+        if (!Auth::user()->name == 'Admin') abort(403);
+
+        $days = \App\Day::all();
+        $doubleDays = [];
+        $deleteDays = collect([]);
+        foreach ($days as $day) {
+            $tmpDays = \App\Day::where('date', $day->date)->orderBy('id')->get();
+            if (count($tmpDays) > 1) {
+                echo 'Doppelter Tag: ' . $day->date->format('d.m.Y') . ' -- #' . $tmpDays->pluck('id')->join(
+                        ', #'
+                    ) . '<br />';
+                $target = $tmpDays->shift();
+
+                foreach ($tmpDays as $tmpDay) {
+                    $services = \App\Service::where('day_id', $tmpDay->id)->get();
+                    echo 'Bewege ' . count($services) . ' von #' . $tmpDay->id . ' nach #' . $target->id . '<br />';
+                    foreach ($services as $service) {
+                        $service->update(['day_id' => $target->id]);
+                    }
+                    $deleteDays->push($tmpDay);
+                }
+
+                echo '<hr />';
+            }
+        }
+
+        foreach ($deleteDays as $deleteDay) {
+            echo 'Removing Day #' . $deleteDay->id . '<br />';
+            $deleteDay->delete();
+        }
+
+        echo 'Fertig.';
+    }
+)->middleware('auth');
+
+Route::get(
+    '/admin/tools/fixDayDescription',
+    function () {
+        if (!Auth::user()->name == 'Admin') abort(403);
+
+        $days = \App\Day::where('description', '!=', '')->get();
+        foreach ($days as $day) {
+            echo 'Tag #'.$day->id.': "'.$day->description.'"<br />';
+            $day->update(['description' => '']);
+        }
+
+        echo 'Fertig.';
+    }
+)->middleware('auth');
 
 // demo function for exception handling
-Route::get('panic', function(){
-    throw new Exception('Diese Fehlermeldung dient nur zu Demonstrationszwecken.');
-});
+Route::get(
+    'panic',
+    function () {
+        throw new Exception('Diese Fehlermeldung dient nur zu Demonstrationszwecken.');
+    }
+);
