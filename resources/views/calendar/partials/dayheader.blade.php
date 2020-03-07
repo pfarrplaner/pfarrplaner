@@ -13,10 +13,6 @@
         </div>
         <div class="card-body">
             {{ $day->date->format('d') }}
-            @can('gd-allgemein-bearbeiten')
-                <a class="btn btn-default btn-sm" role="button"
-                   href="{{ route('days.edit', $day->id) }}"><span class="fa fa-edit"></span></a>
-            @endcan
             @can('tag-loeschen')
                 <form action="{{ route('days.destroy', $day->id)}}" method="post"
                       style="display: inline;">

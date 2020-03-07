@@ -50,23 +50,21 @@ class DayController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateRequest();
-        if (($data['day_type'] ==  Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) {
-            return redirect()->back()->withInput()->withErrors(['cities' => 'Mindestens eine Kirchengemeinde muss ausgewählt werden.']);
-        }
-
-        // check if day already exists in limited form for other churches...
-        // ...if so, only attach new cities
-        $day = Day::existsForDate($data['date']);
-        if (false !== $day) {
+        //$day = Day::existsForDate(Carbon::createFromFormat('d.m.Y', $data['date'])->format('Y-m-d'));
+        $day = Day::where('date', Carbon::createFromFormat('d.m.Y', $data['date'])->format('Y-m-d'))->first();
+        if ($day) {
             $day->update($data);
         } else {
-            // ...if not, create a new day record
+            if (($data['day_type'] ==  Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) {
+                return redirect()->back()->withInput()->withErrors(['cities' => 'Mindestens eine Kirchengemeinde muss ausgewählt werden.']);
+            }
             $day = Day::create($data);
         }
         $this->updateAttachedCities($data, $day);
-
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
-            ->with('success', $day->date->format('d.m.Y').' wurde der Liste hinzugefügt.');
+        if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) {
+            $day->delete();
+        }
+        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month]);
     }
 
     /**
@@ -154,7 +152,7 @@ class DayController extends Controller
         $date = $start->copy();
         while ($date <= $end) {
             if ($existingDay = Day::where('date', $date->format('Y-m-d'))->first()) {
-                $existing[] = $existingDay->date;
+                $existing[$existingDay->date->format('Y-m-d')] = $existingDay;
             } else {
                 $days[] = $date->day;
             }
@@ -165,7 +163,7 @@ class DayController extends Controller
         $existing = collect($existing);
 
         $cities = Auth::user()->writableCities;
-        return view('days.create', compact('year', 'month', 'cities', 'days', 'existing'));
+        return view('days.create', compact('year', 'month', 'cities', 'days', 'existing', 'start', 'end'));
     }
 
     /**
@@ -198,7 +196,7 @@ class DayController extends Controller
      */
     protected function updateAttachedCities(array $data, $day): void
     {
-// add checked cities
+        // add checked cities
         if (count($data['cities'])) {
             foreach ($data['cities'] as $city) {
                 $day->cities()->attach($city);

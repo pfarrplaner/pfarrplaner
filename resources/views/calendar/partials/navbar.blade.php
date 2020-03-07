@@ -53,8 +53,8 @@
                 <div class="btn-group mr-2" role="group">
                     <a class="btn btn-success"
                        href="{{ route('days.add', ['year' => $year, 'month' => $month]) }}"
-                       title="Tag hinzufügen"><span
-                                class="fa fa-calendar-plus"></span><span class="d-none d-md-inline"> Tag hinzufügen</span></a>
+                       title="Angezeigte Tage ändern"><span
+                                class="fa fa-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
                 </div>
             @endcan
         @else

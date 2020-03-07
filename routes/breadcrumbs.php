@@ -50,7 +50,7 @@ Breadcrumbs::for('days.create', function(BreadcrumbsGenerator $trail) {
 
 Breadcrumbs::for('days.add', function(BreadcrumbsGenerator $trail, $year, $month) {
     $trail->parent('calendar');
-    $trail->push('Tag hinzufügen', route('days.add', compact('year', 'month')));
+    $trail->push('Tage im Kalender', route('days.add', compact('year', 'month')));
 });
 
 Breadcrumbs::for('baptism.add', function (BreadcrumbsGenerator $trail, $service) {

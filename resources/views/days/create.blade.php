@@ -1,26 +1,45 @@
 @extends('layouts.app')
 
-@section('title', 'Tag zum Kalender hinzufügen')
+@section('title', 'Im Kalender angezeigte Tage ändern')
 
 @section('content')
     <form method="post" action="{{ route('days.store') }}">
         @csrf
         @component('components.ui.card')
             @slot('cardFooter')
-                <button type="submit" class="btn btn-primary" id="submit">Hinzufügen</button>
+                <button type="submit" class="btn btn-primary" id="submit" disabled="disabled">Ansicht ändern</button>
+                <a class="btn btn-secondary" href="{{ route('calendar', compact('year', 'month')) }}">Zurück</a>
             @endslot
             <input type="hidden" name="date"/>
+            <label>{{ $start->formatLocalized ('%B %Y') }}</label>
             <table width="100%;" id="days">
                 <tr>
-                    <?php $date = \Carbon\Carbon::create($year, $month, 1, 0, 0, 0); ?>
-                    <?php $end = $date->copy()->addMonth(1)->subSecond(1); ?>
+                    <?php $date = $start->copy() ?>
                     @while($date < $end )
                         <td class="day
-                                    @if($existing->contains($date)) exists @else new @endif
+                                    @if(isset($existing[$date->format('Y-m-d')]))
+                        @if ($existing[$date->format('Y-m-d')]->day_type == \App\Day::DAY_TYPE_LIMITED) day-type-limited @else day-type-default @endif
+                            exists
+                        @else new @endif
                             " id="day_{{ $date->day }}"
                             data-day="{{ $date->day }}" data-weekday="{{ $date->formatLocalized('%A') }}"
-                            data-date="{{ $date->format('d.m.Y') }}">
-                            {!! $date->formatLocalized('%a') !!}<br/>
+                            data-date="{{ $date->format('d.m.Y') }}"
+                            @if(isset($existing[$date->format('Y-m-d')]) && $existing[$date->format('Y-m-d')]->day_type == \App\Day::DAY_TYPE_LIMITED)
+                            data-cities="{{ $existing[$date->format('Y-m-d')]->cities->pluck('id')->join(',') }}"
+                            @endif
+                            @if(isset($existing[$date->format('Y-m-d')]))
+                            @if ($existing[$date->format('Y-m-d')]->day_type == \App\Day::DAY_TYPE_LIMITED)
+                                title="Dieser Tag existiert bereits, wird aber noch nicht für alle Gemeinden angezeigt."
+                            @else
+                                title="Dieser Tag existiert bereits."
+                            @endif
+                            @else
+                                title="Diesen Tag neu anlegen"
+                            @endif
+
+                        >
+
+                            <span class="weekday-label weekday-label-{{ $date->formatLocalized('%a') }}">{!! $date->formatLocalized('%a') !!}</span><br/>
                             {{ $date->day }}
                         </td>
                         <?php $date->addDay(1) ?>
@@ -34,14 +53,14 @@
                             <th>
                                 <div class="card card-effect">
                                     <div class="card-header day-header-so">
-                                        Sonntag
+                                        {{ $start->formatLocalized('%A') }}
                                     </div>
                                     <div class="card-body">
-                                        <span>1</span>
+                                        <span class="day-label">{{ $start->day }}</span>
                                         <div class="liturgy"></div>
                                     </div>
                                     <div class="card-footer day-name"
-                                         title=""></div>
+                                         title="">{{ $start->formatLocalized('%B') }}</div>
                                 </div>
                             </th>
                         </tr>
@@ -56,7 +75,9 @@
                             <label class="form-check-label" style="color: red;">
                                 Diesen Tag für alle Gemeinden anzeigen
                             </label>
-                            <div class="explain">Bitte nur auswählen, wenn dies ein Sonntag oder allgemeiner kirchlicher Feiertag ist.</div>
+                            <div class="explain">Bitte nur auswählen, wenn dies ein Sonntag oder allgemeiner kirchlicher
+                                Feiertag ist.
+                            </div>
                         </div>
                         <div class="form-check">
                             <input type="radio" name="day_type" value="{{ \App\Day::DAY_TYPE_LIMITED }}"
@@ -88,15 +109,27 @@
         function selectDay(n) {
             $('.day').removeClass('selected');
             $('#day_' + n).addClass('selected');
-            $('.card .card-body span').html($('#day_' + n).data('day'));
+            $('.card .card-body span.day-label').html($('#day_' + n).data('day'));
             $('.card .card-header').html($('#day_' + n).data('weekday'));
             $('input[name=date]').val($('#day_' + n).data('date'));
+            $('#check-type-limited').prop('checked', true);
+            $('#check-type-default').prop('checked', false);
+            $('#submit').removeAttr('disabled');
+
+            $('.city-check').prop('checked', false);
+            if ($('#day_' + n).hasClass('day-type-limited')) {
+                var cities = $('#day_' + n).data('cities');
+                if (cities != '') {
+                    String(cities).split(',').forEach(city => {
+                        $('#defaultCheck' + city).prop('checked', true);
+                    });
+                }
+            }
+
         }
 
         $(document).ready(function () {
-            selectDay({{ $days->first() }});
-
-            $('.day.new').click(function () {
+            $('.day.new, .day-type-limited').click(function () {
                 selectDay($(this).data('day'));
             });
 
@@ -109,9 +142,6 @@
                 if (limit) {
                     $('#check-type-limited').prop('checked', true);
                     $('#check-type-default').prop('checked', false);
-                } else {
-                    $('#check-type-limited').prop('checked', false);
-                    $('#check-type-default').prop('checked', true);
                 }
             });
         });
@@ -129,18 +159,41 @@
             text-align: center;
         }
 
-        .day.new:hover {
-            border: solid 1px gray;
-            border-radius: 3px;
+        .day.new {
+            color: gray;
+        }
+
+        .day.new:hover, .day.day-type-limited:hover {
             cursor: pointer;
+            color: black;
+            background-color: #DDFFDD;
+        }
+
+        .day.day-type-limited {
+            background-color: #DCD0FF;
+            font-weight: bold;
+        }
+
+        .day.day-type-limited:hover {
+            background-color: mediumpurple;
         }
 
         .day.selected {
-            background-color: yellow;
+            background-color: lightgreen;
+            color: black;
         }
 
-        .day.exists {
-            color: lightgray;
+        .day.selected.day-type-limited {
+            background-color: rebeccapurple;
+            color: white;
+        }
+
+        .weekday-label-So {
+            color: red;
+        }
+
+        .day.day-type-default {
+            font-weight: bold;
         }
 
         #days {
@@ -148,6 +201,7 @@
             border-radius: 3px;
             margin-bottom: 10px;
         }
+
         .explain {
             color: black;
             font-size: 0.8em;
