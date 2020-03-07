@@ -1,5 +1,5 @@
 @component('components.ui.loader')
-    <div class="calendar-month">
+    <div class="calendar-month calendar-vertical">
         @if(session()->get('success'))
             <div class="alert alert-success">
                 {{ session()->get('success') }}

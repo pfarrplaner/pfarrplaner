@@ -97,6 +97,9 @@ body.calendar .content-header {
 
 .day-header-collapse-hover {
     font-size: 10px;
+}
+
+.calendar-horizontal .day-header-collapse-hover {
     margin-left: -4px;
     writing-mode: vertical-lr;
 }
@@ -112,8 +115,8 @@ body.calendar .content-header {
 }
 
 
-.calendar-month th.limited.collapsed,
-.calendar-month td.limited.collapsed {
+.calendar-horizontal  th.limited.collapsed,
+.calendar-horizontal  td.limited.collapsed {
     width: 10px !important;
     max-width: 10px !important;
     overflow: hidden;
@@ -121,10 +124,26 @@ body.calendar .content-header {
     border-right: solid 1px #F8FAFC;
 }
 
-.calendar-month th.limited.collapsed:hover,
-.calendar-month td.limited.collapsed:hover {
+.calendar-horizontal  th.limited.collapsed:hover,
+.calendar-horizontal  td.limited.collapsed:hover {
     width: 50px !important;
     max-width: 50px !important;
+}
+
+.calendar-vertical th.limited.collapsed,
+.calendar-vertical td.limited.collapsed {
+    height: 10px !important;
+    max-height: 10px !important;
+    overflow: hidden;
+    border-left: solid 1px #F8FAFC;
+    border-right: solid 1px #F8FAFC;
+    padding: 0;
+}
+
+.calendar-vertical  th.limited.collapsed:hover,
+.calendar-vertical  td.limited.collapsed:hover {
+    height: 50px !important;
+    max-height: 50px !important;
 }
 
 
