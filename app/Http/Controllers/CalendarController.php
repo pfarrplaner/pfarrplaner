@@ -137,16 +137,26 @@ class CalendarController extends Controller
 
         $user = Auth::user();
 
-        $days = $this->getDaysInMonth($year, $month);
-        $nextDay = Day::where('date', '>=', Carbon::createFromTimestamp(time()))
-            ->orderBy('date', 'ASC')
-            ->limit(1)
-            ->get()->first();
 
         // city sorting
         if ($request->has('sort')) $user->setSetting('sorted_cities', $request->get('sort'));
         $cities = $sortedCities = $user->getSortedCities();
         $unusedCities = $user->cities->whereNotIn('id', $sortedCities->pluck('id'));
+
+        // filter days:
+        $monthDays = $this->getDaysInMonth($year, $month);
+        $days = collect();
+        foreach ($monthDays as $day) {
+            if (($day->day_type == Day::DAY_TYPE_DEFAULT) || (count($day->cities->intersect($cities)) >0)) {
+                $days->push($day);
+            }
+        }
+
+        $nextDay = new Day(['date' => now()]);
+        if (($year == now()->year) && ($month == now()->month)) {
+            $nextDay = Day::where('date', '>=', now())->whereIn('id', $days->pluck('id')->toArray())->orderBy('date')->first();
+        }
+
 
         // name_format parameter
         $nameFormat = $request->has('name_format') ? $request->get('name_format') : $user->getSetting('calendar_name_format', self::NAME_FORMAT_DEFAULT);
