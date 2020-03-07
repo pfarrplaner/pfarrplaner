@@ -82,6 +82,16 @@ body.calendar .content-header {
     background-color: #DCD0FF;
 }
 
+.calendar-horizontal th.limited.collapsed,
+.calendar-horizontal td.limited.for-city.collapsed {
+    background: linear-gradient(90deg, #DCD0FF 80%, #f4f6f9 100%);
+}
+
+.calendar-vertical th.limited.collapsed,
+.calendar-vertical td.limited.for-city.collapsed {
+    background: linear-gradient(180deg, #DCD0FF 80%, #f4f6f9 100%);
+}
+
 .calendar-month th .day-header-collapse-hover {
     display: none;
 }
