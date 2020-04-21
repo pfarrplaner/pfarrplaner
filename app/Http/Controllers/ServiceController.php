@@ -78,26 +78,26 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  Service $service
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Service $service)
     {
-        //
+        return redirect()->route('services.edit', $service);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Request $request
-     * @param  int $id
+     * @param  Service $service
      * @param  string $tab optional tab name
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id, $tab = 'home')
+    public function edit(Request $request, Service $service, $tab = 'home')
     {
 
-        $service = Service::with(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings'])->find($id);
+        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
         $ministries = Participant::all()
             ->pluck('category')
@@ -122,7 +122,7 @@ class ServiceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  StoreServiceRequest $request
-     * @param  Service $id
+     * @param  Service $service
      * @return \Illuminate\Http\Response
      */
     public function update(StoreServiceRequest $request, Service $service)
@@ -154,12 +154,11 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  Service $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Service $service)
     {
-        $service = Service::find($id);
         $day = Day::find($service->day_id);
         $service->delete();
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
