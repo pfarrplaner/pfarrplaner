@@ -85,6 +85,7 @@ Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputContr
 
 Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses' => 'DownloadController@download']);
 Route::get('attachment/{attachment}', 'DownloadController@attachment')->name('attachment');
+Route::get('files/{path}/{prettyName?}', 'DownloadController@storage')->name('storage');
 
 
 // RITES (Kasualien)

@@ -17,24 +17,56 @@ class DownloadController extends Controller
         $this->middleware('auth');
     }
 
-    public function download(Request $request, $storage, $code, $prettyName = '') {
+    public function download(Request $request, $storage, $code, $prettyName = '')
+    {
         $prettyName = $prettyName ?: '';
-        return Storage::download('public/'.$storage.'/'.$code.'.'.pathinfo($prettyName, PATHINFO_EXTENSION), FileHelper::normalizeFilename($prettyName));
+        return Storage::download(
+            'public/' . $storage . '/' . $code . '.' . pathinfo($prettyName, PATHINFO_EXTENSION),
+            FileHelper::normalizeFilename($prettyName)
+        );
     }
 
-    public function attachment(Request $request, Attachment $attachment, $prettyName = '') {
+    public function attachment(Request $request, Attachment $attachment, $prettyName = '')
+    {
         if (get_class($attachment->attachable) == Service::class) {
-            if (!Auth::user()->can('update', $attachment->attachable)) abort (403);
-            if (!Auth::user()->can('gd-bearbeiten')) abort(403);
-            if (!Auth::user()->writableCities->contains($attachment->attachable->city)) abort(403);
+            if (!Auth::user()->can('update', $attachment->attachable)) {
+                abort(403);
+            }
+            if (!Auth::user()->can('gd-bearbeiten')) {
+                abort(403);
+            }
+            if (!Auth::user()->writableCities->contains($attachment->attachable->city)) {
+                abort(403);
+            }
         } else {
-            if (!Auth::user()->can('update', $attachment->attachable->service)) abort(403);
-            if (!Auth::user()->can('gd-kasualien-bearbeiten')) abort(403);
-            if (!Auth::user()->writableCities->contains($attachment->attachable->service->city)) abort(403);
+            if (!Auth::user()->can('update', $attachment->attachable->service)) {
+                abort(403);
+            }
+            if (!Auth::user()->can('gd-kasualien-bearbeiten')) {
+                abort(403);
+            }
+            if (!Auth::user()->writableCities->contains($attachment->attachable->service->city)) {
+                abort(403);
+            }
         }
 
-        $prettyName = $prettyName ?  FileHelper::normalizeFilename($prettyName) :
-            (FileHelper::normalizeFilename($attachment->title) ?? $attachment->id).'.'.pathinfo($attachment->file, PATHINFO_EXTENSION) ;
+        $prettyName = $prettyName ? FileHelper::normalizeFilename($prettyName) :
+            (FileHelper::normalizeFilename($attachment->title) ?? $attachment->id) . '.' . pathinfo(
+                $attachment->file,
+                PATHINFO_EXTENSION
+            );
         return Storage::download($attachment->file, $prettyName);
+    }
+
+    public function storage($path, $prettyName = '')
+    {
+        if ((pathinfo($path, PATHINFO_EXTENSION)  == '') && (pathinfo($prettyName, PATHINFO_EXTENSION) != '')) {
+            $path .= '.' . pathinfo($prettyName, PATHINFO_EXTENSION);
+        }
+        $prettyName = $prettyName ? FileHelper::normalizeFilename($prettyName) : basename($path);
+        if (Storage::exists('attachments/' . $path)) {
+            return Storage::download('attachments/' . $path, $prettyName);
+        }
+        abort(404);
     }
 }
