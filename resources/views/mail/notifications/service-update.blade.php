@@ -196,6 +196,48 @@ Service
                      'new' => $changed->cc_staff,
                      ])
 
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'youtube_url',
+                     'key' => 'Streaming-URL (youtube)',
+                     'old' => $original->youtube_url,
+                     'new' => $changed->youtube_url,
+                     ])
+
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'cc_streaming_url',
+                     'key' => 'URL für das Streaming der Kinderkirche',
+                     'old' => $original->cc_streaming_url,
+                     'new' => $changed->cc_streaming_url,
+                     ])
+
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'offerings_url',
+                     'key' => 'URL für Onlinespenden',
+                     'old' => $original->offerings_url,
+                     'new' => $changed->offerings_url,
+                     ])
+
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'meeting_url',
+                     'key' => 'URL für ein "virtuelles Kirchencafé"',
+                     'old' => $original->meeting_url,
+                     'new' => $changed->meeting_url,
+                     ])
+
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'recording_url',
+                     'key' => 'URL zur Audioaufzeichnung',
+                     'old' => $original->recording_url,
+                     'new' => $changed->recording_url,
+                     ])
+
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'songsheet',
+                     'key' => 'URL zum Liedblatt',
+                     'old' => $original->songsheet,
+                     'new' => $changed->songsheet,
+                     ])
+
         @endcomponent
 
 

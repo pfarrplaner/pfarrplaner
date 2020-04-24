@@ -92,6 +92,12 @@ class Service extends Model
         'internal_remarks',
         'offering_amount',
         'title',
+        'youtube_url',
+        'cc_streaming_url',
+        'offerings_url',
+        'meeting_url',
+        'recording_url',
+        'songsheet',
     ];
 
     protected $appends = [

@@ -25,6 +25,7 @@
                     @canany(['gd-kinderkirche-lesen', 'gd-kinderkirche-bearbeiten'])
                         @tabheader(['id' => 'cc', 'title' => 'Kinderkirche']) @endtabheader
                     @endcanany
+                    @tabheader(['id' => 'streaming', 'title' => 'Streaming']) @endtabheader
                     @endtabheaders
 
                     @tabs
@@ -59,6 +60,14 @@
                     @input(['name' => 'cc_location', 'label' => 'Ort der Kinderkirche', 'placeholder' => 'Leer lassen für ', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
+                    @endtab
+                    @tab(['id' => 'streaming', 'active' => ($tab=='streaming')])
+                    @input(['name' => 'youtube_url', 'label' => 'Youtube-URL', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'cc_streaming_url', 'label' => 'URL zu einem parallel gestreamten Kindergottesdienst', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite ein "virtuelles Kirchencafé"', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst'])
                     @endtab
                     @endtabs
                 @endcomponent

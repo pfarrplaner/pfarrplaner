@@ -56,6 +56,11 @@ class StoreServiceRequest extends FormRequest
             'cc_alt_time' => 'nullable|date_format:"H:i"',
             'internal_remarks' => 'nullable|string',
             'title' => 'nullable|string',
+            'youtube_url' => 'nullable|string',
+            'cc_streaming_url' => 'nullable|string',
+            'offerings_url' => 'nullable|string',
+            'meeting_url' => 'nullable|string',
+            'recording_url' => 'nullable|string',
         ];
     }
 

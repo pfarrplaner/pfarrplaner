@@ -51,6 +51,7 @@
                     @canany(['gd-kinderkirche-lesen', 'gd-kinderkirche-bearbeiten'])
                         @tabheader(['id' => 'cc', 'title' => 'Kinderkirche', 'active' => ($tab=='cc')]) @endtabheader
                     @endcanany
+                    @tabheader(['id' => 'streaming', 'title' => 'Streaming', 'active' => ($tab=='streaming')]) @endtabheader
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments')]) @endtabheader
                     @can('admin')
                         @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
@@ -92,6 +93,14 @@
                     @input(['name' => 'cc_location', 'label' => 'Ort der Kinderkirche', 'placeholder' => 'Leer lassen für ', 'value' => $service->cc_location, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'value' => $service->cc_lesson, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'value' => $service->cc_staff, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
+                    @endtab
+                    @tab(['id' => 'streaming', 'active' => ($tab=='streaming')])
+                    @input(['name' => 'youtube_url', 'label' => 'Youtube-URL', 'value' => $service->youtube_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'cc_streaming_url', 'label' => 'URL zu einem parallel gestreamten Kindergottesdienst', 'value' => $service->cc_streaming_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'value' => $service->offerings_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite ein "virtuelles Kirchencafé"', 'value' => $service->meeting_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'value' => $service->recording_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt'])
                     @endtab
                     @can('admin')
                         @include('partials.service.tabs.history')
