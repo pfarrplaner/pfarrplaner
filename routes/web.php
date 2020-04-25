@@ -61,6 +61,11 @@ Route::get(
     ['as' => 'embed.user.vacations', 'uses' => 'EmbedController@embedUserVacations']
 );
 
+Route::get(
+    'services/embed/{report}',
+    ['as' => 'embed.report', 'uses' => 'EmbedController@embedReport']
+);
+
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
