@@ -62,7 +62,7 @@ class EmbedStreamingReport extends AbstractEmbedReport
             })
             ->orderBy('days.date', 'desc')
             ->orderBy('time', 'desc')
-            ->limit(15)
+            ->limit(100)
             ->get();
 
         return view('reports.embedstreaming.embed', compact('nextService', 'lastServices'));
