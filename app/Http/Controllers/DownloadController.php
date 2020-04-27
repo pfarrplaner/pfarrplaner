@@ -14,7 +14,7 @@ class DownloadController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['storage','file','image']);
     }
 
     public function download(Request $request, $storage, $code, $prettyName = '')
@@ -69,4 +69,30 @@ class DownloadController extends Controller
         }
         abort(404);
     }
+
+
+    public function image($path, $prettyName = '')
+    {
+        if ((pathinfo($path, PATHINFO_EXTENSION)  == '') && (pathinfo($prettyName, PATHINFO_EXTENSION) != '')) {
+            $path .= '.' . pathinfo($prettyName, PATHINFO_EXTENSION);
+        }
+        $prettyName = $prettyName ? FileHelper::normalizeFilename($prettyName) : basename($path);
+        if (Storage::exists('attachments/' . $path)) {
+            return Storage::download('attachments/' . $path, $prettyName);
+
+	    $file = File::get('attachments/'.$path);
+	    $type = File::mimeType('attachments/'.$path);
+	
+	    $response = Response::make($file, 200);
+	    $response->header("Content-Type", $type);
+
+	    return $response;
+
+        }
+        abort(404);
+    }
+
+
+
+
 }

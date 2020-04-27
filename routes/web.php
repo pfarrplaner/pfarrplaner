@@ -91,6 +91,7 @@ Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputContr
 Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses' => 'DownloadController@download']);
 Route::get('attachment/{attachment}', 'DownloadController@attachment')->name('attachment');
 Route::get('files/{path}/{prettyName?}', 'DownloadController@storage')->name('storage');
+Route::get('image/{path}/{prettyName?}', 'DownloadController@image')->name('image');
 
 
 // RITES (Kasualien)
@@ -206,6 +207,9 @@ Route::get('apiToken', 'ApiTokenController@update')->name('apitoken');
 
 // approvals
 Route::resource('approvals', 'ApprovalController');
+
+// podcast
+Route::get('/podcasts/{cityName}.xml', 'PodcastController@podcast')->name('podcast');
 
 Route::get(
     '/admin/tools/fixDoubleDays',

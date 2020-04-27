@@ -98,6 +98,11 @@ class Service extends Model
         'meeting_url',
         'recording_url',
         'songsheet',
+        'external_url',
+        'sermon_title',
+        'sermon_reference',
+        'sermon_image',
+        'sermon_description',
     ];
 
     protected $appends = [

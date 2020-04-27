@@ -26,6 +26,7 @@
                         @tabheader(['id' => 'cc', 'title' => 'Kinderkirche']) @endtabheader
                     @endcanany
                     @tabheader(['id' => 'streaming', 'title' => 'Streaming']) @endtabheader
+                    @tabheader(['id' => 'sermon', 'title' => 'Predigt']) @endtabheader
                     @endtabheaders
 
                     @tabs
@@ -65,9 +66,16 @@
                     @input(['name' => 'youtube_url', 'label' => 'Youtube-URL', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'cc_streaming_url', 'label' => 'URL zu einem parallel gestreamten Kindergottesdienst', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite ein "virtuelles Kirchencafé"', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite für ein "virtuelles Kirchencafé"', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst'])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'accept' => '.pdf'])
+                    @endtab
+                    @tab(['id' => 'sermon', 'active' => ($tab=='streaming')])
+                        @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])
+                        @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @endtabs
                 @endcomponent

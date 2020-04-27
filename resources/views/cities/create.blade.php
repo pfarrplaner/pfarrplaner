@@ -3,7 +3,7 @@
 @section('title', 'Kirchengemeinde hinzufügen')
 
 @section('content')
-    <form method="post" action="{{ route('cities.store') }}">
+    <form method="post" action="{{ route('cities.store') }}" enctype="multipart/form-data">
         @component('components.ui.card')
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Hinzufügen</button>
@@ -13,6 +13,7 @@
                 @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
+                @tabheader(['id' => 'podcast', 'title' => 'Podcast']) @endtabheader
         @endtabheaders
         @tabs
                 @tab(['id' => 'home', 'active' => true])
@@ -31,6 +32,14 @@
                         @input(['name' => 'op_domain', 'label' => 'Domain für den Online-Planer'])
                         @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer'])
                         @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer'])
+                @endtab
+                @tab(['id' => 'podcast'])
+                @input(['name' => 'podcast_title', 'label' => 'Titel des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @upload(['name' => 'podcast_logo', 'label' => 'Logo für den Podcast', 'accept' => '.jpg,.jpeg'])
+                @upload(['name' => 'sermon_default_image', 'label' => 'Standard-Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])
+                @input(['name' => 'podcast_owner_name', 'label' => 'Herausgeber des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @input(['name' => 'podcast_owner_email', 'label' => 'E-Mailadresse für den Herausgeber des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @input(['name' => 'homepage', 'label' => 'Homepage der Kirchengemeinde', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
         @endtabs
         @endcomponent

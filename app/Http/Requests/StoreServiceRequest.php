@@ -61,6 +61,10 @@ class StoreServiceRequest extends FormRequest
             'offerings_url' => 'nullable|string',
             'meeting_url' => 'nullable|string',
             'recording_url' => 'nullable|string',
+            'external_url' => 'nullable|string',
+            'sermon_title' => 'nullable|string',
+            'sermon_reference' => 'nullable|string',
+            'sermon_description' => 'nullable|string',
         ];
     }
 

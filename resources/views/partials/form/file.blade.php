@@ -11,7 +11,7 @@
                             {{ Storage::mimeType($value) }},
                             {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($value)) }},
                             {{ \Carbon\Carbon::createFromTimestamp(Storage::lastModified($value))->format('d.m.Y H:i:s') }}
-                            (<a href="{{ route('storage', ['path' => pathinfo($value, PATHINFO_FILENAME), 'prettyName' => ($prettyName ?? $name).'.'.pathinfo($value, PATHINFO_EXTENSION)]) }}">Ansehen</a>)<br />
+                            (<a href="{{ route('storage', ['path' => pathinfo($value, PATHINFO_FILENAME), 'prettyName' => ($prettyName ?? $name).'.'.(isset($forceExtension) ? $forceExtension :  pathinfo($value, PATHINFO_EXTENSION))]) }}">Ansehen</a>)<br />
                         </div>
                         <div class="col-sm-4 text-right">
                             <label><input type="checkbox" name="remove_{{ $name }}" value="1" /> Entfernen</label>
@@ -26,6 +26,7 @@
             name="{{ $name }}" @if(isset($id)) id="{{ $id }}_input" @endif
             @if($errors->any()) value="{{ old($name) }}" @else @if(isset($value))value="{{ $value }}" @endif @endif
             @if(isset($placeholder)) placeholder="{{ $placeholder }}" @endif
+            @if(isset($accept)) accept="{{ $accept }}" @endif
             @if(isset($enabled) && (!$enabled)) disabled @endif
             @if(isset($required) && ($required)) required @endif
             @if(isset($pattern)) pattern="{{ $pattern }}" @endif

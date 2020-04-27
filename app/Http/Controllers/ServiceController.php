@@ -68,6 +68,7 @@ class ServiceController extends Controller
         $this->updateFromRequest($request, $service);
         $this->handleAttachments($request, $service);
         $this->handleIndividualAttachment($request, $service, 'songsheet');
+        $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -135,6 +136,7 @@ class ServiceController extends Controller
         $service->save();
         $this->handleAttachments($request, $service);
         $this->handleIndividualAttachment($request, $service, 'songsheet');
+        $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
         $success = '';
         if ($service->isChanged()) {

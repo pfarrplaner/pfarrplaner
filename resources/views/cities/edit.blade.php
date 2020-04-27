@@ -3,7 +3,7 @@
 @section('title', 'Kirchengemeinde bearbeiten')
 
 @section('content')
-    <form method="post" action="{{ route('cities.update', $city->id) }}" id="frm">
+    <form method="post" action="{{ route('cities.update', $city->id) }}" id="frm" enctype="multipart/form-data">
         @method('PATCH')
         @csrf
         @component('components.ui.card')
@@ -14,6 +14,7 @@
                 @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
+                @tabheader(['id' => 'podcast', 'title' => 'Podcast']) @endtabheader
             @endtabheaders
             @tabs
                 @tab(['id' => 'home', 'active' => true])
@@ -32,6 +33,14 @@
                     @input(['name' => 'op_domain', 'label' => 'Domain für den Online-Planer', 'value' => $city->op_domain, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer', 'value' => $city->op_customer_key, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer', 'value' => $city->op_customer_token, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @endtab
+                @tab(['id' => 'podcast'])
+                    @input(['name' => 'podcast_title', 'label' => 'Titel des Podcasts', 'value' => $city->podcast_title, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @upload(['name' => 'podcast_logo', 'label' => 'Logo für den Podcast', 'value' => $city->podcast_logo, 'prettyName' => $city->name.'-Podcast-Logo', 'accept' => '.jpg,.jpeg'])
+                    @upload(['name' => 'sermon_default_image', 'label' => 'Standard-Titelbild zur Predigt', 'value' => $city->sermon_default_image, 'prettyName' => $city->name.'-Standard-Predigtbild', 'accept' => '.jpg,.jpeg'])
+                    @input(['name' => 'podcast_owner_name', 'label' => 'Herausgeber des Podcasts', 'value' => $city->podcast_owner_name, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @input(['name' => 'podcast_owner_email', 'label' => 'E-Mailadresse für den Herausgeber des Podcasts', 'value' => $city->podcast_owner_email, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @input(['name' => 'homepage', 'label' => 'Homepage der Kirchengemeinde', 'value' => $city->homepage, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
             @endtabs
     </form>

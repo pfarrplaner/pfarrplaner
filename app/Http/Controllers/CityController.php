@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Traits\HandlesAttachmentsTrait;
 use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
 
     public function __construct()
     {
@@ -42,9 +45,11 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        City::create($this->validateRequest());
+        $city = City::create($this->validateRequest());
+        $this->handleIndividualAttachment($request, $city, 'podcast_logo');
+        $this->handleIndividualAttachment($request, $city, 'sermon_default_image');
         return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
     }
 
@@ -68,9 +73,11 @@ class CityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(City $city)
+    public function update(Request $request, City $city)
     {
         $city->update($this->validateRequest());
+        $this->handleIndividualAttachment($request, $city, 'podcast_logo');
+        $this->handleIndividualAttachment($request, $city, 'sermon_default_image');
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde geändert.');
     }
 
@@ -104,6 +111,10 @@ class CityController extends Controller
             'op_domain' => 'nullable',
             'op_customer_key' => 'nullable',
             'op_customer_token' => 'nullable',
+            'podcast_title' => 'nullable|string',
+            'homepage' => 'nullable|string',
+            'podcast_owner_name' => 'nullable|string',
+            'podcast_owner_email' => 'nullable|email',
         ]);
     }
 

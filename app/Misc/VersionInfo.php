@@ -29,6 +29,14 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-02-27 10:00', 'Europe/Berlin'),
+                'text' => 'Aus Gottesdiensten, die einen Link zu einer Audioaufnahme haben, kann nun automatisch ein Podcast erstellt werden. Dieser findet sich unter https://www.pfarrplaner.de/podcasts/<name des ortes>.xml',
+            ],
+            [
+                'date' => new Carbon('2020-02-25 11:00', 'Europe/Berlin'),
+                'text' => 'Gottesdienste können nun Angaben zu Streaming, usw. enthalten. Diese können auf der Homepage eingeblendet werden.',
+            ],
+            [
                 'date' => new Carbon('2020-02-27 11:00', 'Europe/Berlin'),
                 'text' => 'Urlaubseinträge können nun Hinweise für die Vertretung (z.B. mögliche Beerdigungstermine) enthalten.',
             ],

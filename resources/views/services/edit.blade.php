@@ -52,6 +52,7 @@
                         @tabheader(['id' => 'cc', 'title' => 'Kinderkirche', 'active' => ($tab=='cc')]) @endtabheader
                     @endcanany
                     @tabheader(['id' => 'streaming', 'title' => 'Streaming', 'active' => ($tab=='streaming')]) @endtabheader
+                    @tabheader(['id' => 'sermon', 'title' => 'Predigt', 'active' => ($tab=='sermon')]) @endtabheader
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments')]) @endtabheader
                     @can('admin')
                         @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
@@ -98,9 +99,16 @@
                     @input(['name' => 'youtube_url', 'label' => 'Youtube-URL', 'value' => $service->youtube_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'cc_streaming_url', 'label' => 'URL zu einem parallel gestreamten Kindergottesdienst', 'value' => $service->cc_streaming_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'value' => $service->offerings_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite ein "virtuelles Kirchencafé"', 'value' => $service->meeting_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite für ein "virtuelles Kirchencafé"', 'value' => $service->meeting_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'value' => $service->recording_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt'])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt', 'accept' => '.pdf'])
+                    @endtab
+                    @tab(['id' => 'sermon', 'active' => ($tab=='sermon')])
+                        @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'value' => $service->sermon_title, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'value' => $service->sermon_reference, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'value' => $service->sermon_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'value' => $service->sermon_image, 'prettyName' => $service->day->date->format('Ymd').'-Predigtbild', 'accept' => '.jpg,.jpeg'])
+                        @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'value' => $service->external_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @can('admin')
                         @include('partials.service.tabs.history')
