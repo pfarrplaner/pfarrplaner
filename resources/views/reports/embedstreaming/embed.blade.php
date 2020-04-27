@@ -1,4 +1,4 @@
-@if((null === $nextService) && (null=== $lastService))
+@if((null === $nextService) && (null=== $lastServices))
     <p>Zur Zeit sind keine Streaminggottesdienste eingetragen.</p>
 @else
     <ul class="collapsible" data-collapsible="accordion" id="serviceCollapsible">
@@ -25,11 +25,9 @@
                                     <tr>
                                         <td valign="top"><span class="fa fa-file fa-2x"></span></td>
                                         <td valign="top">
-                                            Zu diesem Gottesdienst gibt es Texte und Lieder zum Herunterladen.
-                                        </td>
-                                        <td valign="top" class="text-right">
+                                            Zu diesem Gottesdienst gibt es Texte und Lieder zum Herunterladen.<br />
                                             <a class="btn btn-secondary"
-                                               href="{{ route('storage', ['path' => pathinfo($nextService->songsheet, PATHINFO_FILENAME), 'prettyName' => $nextService->day->date->format('Ymd').'-Liedblatt.'.pathinfo($nextService->songsheet, PATHINFO_EXTENSION)]) }}">Liedblatt</a>
+                                               href="{{ route('storage', ['path' => pathinfo($nextService->songsheet, PATHINFO_FILENAME), 'prettyName' => $nextService->day->date->format('Ymd').'-Liedblatt.'.pathinfo($nextService->songsheet, PATHINFO_EXTENSION)]) }}">Liedblatt herunterladen</a>
                                         </td>
                                     </tr>
                                 @endif
@@ -38,9 +36,7 @@
                                         <td valign="top"><span class="fa fa-euro-sign fa-2x"></span></td>
                                         <td valign="top">
                                             Zu diesem Gottesdienst bitten wir um Spenden für folgenden
-                                            Zweck: {{ $nextService->offering_goal }}
-                                        </td>
-                                        <td valign="top" class="text-right">
+                                            Zweck: {{ $nextService->offering_goal }}<br />
                                             @if($nextService->offerings_url)
                                                 <a class="btn btn-secondary" href="{{ $nextService->offerings_url }}"
                                                    target="_blank">Spenden</a>
@@ -56,9 +52,7 @@
                                             Auch ein Kindergottesdienst wird
                                             am {{ $nextService->day->date->format('d.m.Y') }}
                                             um @if($nextService->cc_alt_time != '') {{ substr($nextService->cc_alt_time,0,5) }} @else {{ $nextService->timeText(false) }} @endif
-                                            Uhr live übertragen.
-                                        </td>
-                                        <td valign="top" class="text-right">
+                                            Uhr live übertragen.<br />
                                             <a class="btn btn-secondary" href="{{ $nextService->cc_streaming_url }}"
                                                target="_blank">Kinderkirche</a>
                                         </td>
@@ -71,11 +65,22 @@
                                             Nach dem Gottesdienst laden wir online zum "virtuellen Kirchenkaffee" ein.
                                             Dort gibt es die Möglichkeit, miteinander ins Gespräch zu kommen.
                                             <br/><small>Auf dem Smartphone wird dazu evtl. die App "Microsoft Teams"
-                                                benötigt.</small>
-                                        </td>
-                                        <td valign="top" class="text-right">
+                                                benötigt.</small><br />
                                             <a class="btn btn-secondary" href="{{ $nextService->meeting_url }}"
                                                target="_blank">Kirchenkaffee</a>
+                                        </td>
+                                    </tr>
+                                @endif
+                                @if($nextService->external_url)
+                                    <tr>
+                                        <td valign="top"><span class="fa fa-globe fa-2x"></span></td>
+                                        <td valign="top">
+                                            Zu diesem Gottesdienst gibt es eine externe Seite.<br />
+                                            @if($nextService->offerings_url)
+                                                <a class="btn btn-secondary"
+                                                   href="{{ $nextService->external_url }}"
+                                                   target="_blank">Zur Seite</a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endif
@@ -114,26 +119,12 @@
                                     @endif
                                     <table class="table serviceTable">
                                         <tbody>
-                                        @if($lastService->songsheet)
-                                            <tr>
-                                                <td valign="top"><span class="fa fa-file fa-2x"></span></td>
-                                                <td valign="top">
-                                                    Zu diesem Gottesdienst gibt es Texte und Lieder zum Herunterladen.
-                                                </td>
-                                                <td valign="top" class="text-right">
-                                                    <a class="btn btn-secondary"
-                                                       href="{{ route('storage', ['path' => pathinfo($lastService->songsheet, PATHINFO_FILENAME), 'prettyName' => $lastService->day->date->format('Ymd').'-Liedblatt.'.pathinfo($lastService->songsheet, PATHINFO_EXTENSION)]) }}">Liedblatt</a>
-                                                </td>
-                                            </tr>
-                                        @endif
                                         @if($lastService->offering_goal)
                                             <tr>
                                                 <td valign="top"><span class="fa fa-euro-sign fa-2x"></span></td>
                                                 <td valign="top">
                                                     Zu diesem Gottesdienst bitten wir um Spenden für folgenden
-                                                    Zweck: {{ $lastService->offering_goal }}
-                                                </td>
-                                                <td valign="top" class="text-right">
+                                                    Zweck: {{ $lastService->offering_goal }}<br />
                                                     @if($lastService->offerings_url)
                                                         <a class="btn btn-secondary"
                                                            href="{{ $lastService->offerings_url }}"
@@ -142,9 +133,22 @@
                                                 </td>
                                             </tr>
                                         @endif
+                                        @if($lastService->external_url)
+                                            <tr>
+                                                <td valign="top"><span class="fa fa-globe fa-2x"></span></td>
+                                                <td valign="top">
+                                                    Zu diesem Gottesdienst gibt es eine externe Seite.<br />
+                                                    @if($lastService->offerings_url)
+                                                        <a class="btn btn-secondary"
+                                                           href="{{ $lastService->external_url }}"
+                                                           target="_blank">Zur Seite</a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endif
                                         @if($lastService->recording_url)
                                             <tr>
-                                                <td valign="top" colspan="3">
+                                                <td valign="top" colspan="2">
                                                     Zu diesem Gottesdienst gibt es eine Audioaufzeichnung:<br/>
                                                     <figure class="width100">
                                                         <audio controls="">
