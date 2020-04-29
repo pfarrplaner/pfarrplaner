@@ -71,6 +71,11 @@
                                         <span class="fa fa-search"></span>
                                     </a>
                                 @endcan
+                                @if(\Illuminate\Support\Facades\Auth::user()->isAdmin && (Auth::user()->id != $user->id))
+                                    <a href="{{ route('user.switch', $user) }}" class="btn btn-sm btn-secondary" title="Als {{ $user->name }} anmelden">
+                                        <span class="fa fa-sign-in-alt"></span>
+                                    </a>
+                                @endif
                                 @can('delete', $user)
                                     <form action="{{ route('users.destroy', $user->id)}}" method="post"
                                           class="form-inline" style="display:inline;">
