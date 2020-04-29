@@ -1,4 +1,4 @@
-<th class="hide-buttons @if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif
+u<th class="hide-buttons @if(isset($nextDay) && ($day->date->format('Ymd')==$nextDay->date->format('Ymd'))) now @endif
 @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) limited collapsed @endif
 @if($day->day_type == \App\Day::DAY_TYPE_LIMITED && (count($day->cities->intersect(Auth::user()->cities))==0)) not-for-city @endif
         "

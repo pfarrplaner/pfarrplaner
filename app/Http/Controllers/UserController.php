@@ -377,4 +377,11 @@ class UserController extends Controller
             ->get();
         return view('users.services', compact('user', 'services'));
     }
+
+    public function switch(User $user) {
+        if (!Auth::user()->isAdmin) abort (403);
+        Auth::logout();
+        Auth::login($user);
+        return redirect()->route('home');
+    }
 }

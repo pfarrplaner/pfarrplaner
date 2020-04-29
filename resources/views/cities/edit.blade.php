@@ -2,6 +2,14 @@
 
 @section('title', 'Kirchengemeinde bearbeiten')
 
+@section('navbar-left')
+    @if ($city->google_auth_code == '')
+        <a class="btn btn-default" href="{{ route('google-auth', ['city' => $city, 'nextStep' => route('cities.edit', $city)]) }}">Mit Youtube verbinden</a>
+    @else
+        <a class="btn btn-default" href="{{ route('google-auth', ['city' => $city, 'nextStep' => route('cities.edit', $city)]) }}">Mit Youtube verbunden</a>
+    @endif
+@endsection
+
 @section('content')
     <form method="post" action="{{ route('cities.update', $city->id) }}" id="frm" enctype="multipart/form-data">
         @method('PATCH')

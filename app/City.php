@@ -24,6 +24,9 @@ class City extends Model
         'homepage',
         'podcast_owner_name',
         'podcast_owner_email',
+        'google_auth_code',
+        'google_access_token',
+        'google_refresh_token',
     ];
 
     protected $orderBy = 'name';

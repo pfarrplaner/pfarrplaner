@@ -4,26 +4,32 @@
 
 @section('navbar-left')
     <li class="nav-item">
-        <a id="btnBack" class="btn btn-navbar" @if ($backRoute)href="{{ $backRoute }}" @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif title="Schließen ohne Änderungen">
+        <a id="btnBack" class="btn btn-navbar" @if ($backRoute)href="{{ $backRoute }}"
+           @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}"
+           @endif title="Schließen ohne Änderungen">
             <span class="fa fa-times"></span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('services.ical', $service) }}" title="In Outlook übernehmen"><span class="fa fa-calendar-alt"></span> In Outlook übernehmen</a>
+        <a class="nav-link" href="{{ route('services.ical', $service) }}" title="In Outlook übernehmen"><span
+                class="fa fa-calendar-alt"></span> In Outlook übernehmen</a>
     </li>
     @can('gd-loeschen')
         <li class="nav-item">
-            <form class="form-inline" style="display: inline;" action="{{ route('services.destroy', $service->id)}}" method="post">
+            <form class="form-inline" style="display: inline;" action="{{ route('services.destroy', $service->id)}}"
+                  method="post">
                 @csrf
                 @method('DELETE')
-                <button class="btn btn-danger" type="submit" title="Gottesdiensteintrag (UNWIDERRUFLICH!) löschen"><span class="fa fa-trash"></span></button>
+                <button class="btn btn-danger" type="submit" title="Gottesdiensteintrag (UNWIDERRUFLICH!) löschen"><span
+                        class="fa fa-trash"></span></button>
             </form>
         </li>
     @endcan
 @endsection
 
 @section('content')
-    <form id="frmEdit" method="post" action="{{ route('services.update', $service->id) }}"  enctype="multipart/form-data">
+    <form id="frmEdit" method="post" action="{{ route('services.update', $service->id) }}"
+          enctype="multipart/form-data">
         @method('PATCH')
         @csrf
         <div class="row">
@@ -32,10 +38,15 @@
                     @slot('cardHeader')Informationen zum Gottesdienst @endslot
                     @slot('cardFooter')
                         @can('update', $service)
-                            <button type="submit" class="btn btn-primary btnSave" @if($backRoute) data-route="{{ $backRoute }}" @endif>Speichern und schließen</button>
-                            <button type="submit" class="btn btn-primary btnSave" data-route="{{ route('services.edit', ['service' => $service->id]) }}">Speichern</button>
+                            <button type="submit" class="btn btn-primary btnSave"
+                                    @if($backRoute) data-route="{{ $backRoute }}" @endif>Speichern und schließen
+                            </button>
+                            <button type="submit" class="btn btn-primary btnSave"
+                                    data-route="{{ route('services.edit', ['service' => $service->id]) }}">Speichern
+                            </button>
                         @else
-                            <a class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}" @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Zurück</a>
+                            <a class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}"
+                               @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Zurück</a>
                         @endcan
                     @endslot
 
@@ -61,11 +72,11 @@
 
                     @tabs
                     @tab(['id' => 'home', 'active' => ($tab=='home' || $tab == '')])
-                        @hidden(['name' => 'city_id', 'value' => $service->city_id])
-                        @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $service->day])
-                        @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'value' => $service->location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'value' => $service->special_location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'value' => $service->timeText(false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @hidden(['name' => 'city_id', 'value' => $service->city_id])
+                    @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $service->day])
+                    @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'value' => $service->location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'value' => $service->special_location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'value' => $service->timeText(false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'special', 'active' => ($tab=='special')])
                     @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'value' => $service->baptism])
@@ -89,13 +100,21 @@
                     @endcanany
                     @tab(['id' => 'cc', 'active' => ($tab=='cc')])
                     @checkbox(['name' => 'cc', 'label' => 'Parallel findet Kinderkirche statt.', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten'), 'value' => $service->cc])
-                    <br />
+                    <br/>
                     @input(['name' => 'cc_alt_time', 'label' => 'Vom Gottesdienst abweichende Uhrzeit (sonst leer lassen)', 'placeholder' => 'HH:MM', 'value' => $service->ccTimeText(true, false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_location', 'label' => 'Ort der Kinderkirche', 'placeholder' => 'Leer lassen für ', 'value' => $service->cc_location, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'value' => $service->cc_lesson, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'value' => $service->cc_staff, 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @endtab
                     @tab(['id' => 'streaming', 'active' => ($tab=='streaming')])
+                    @if($service->youtube_url)
+                        <small>Diesem Gottesdienst ist bereits <a href="{{ $service->youtube_url }}" target="_blank">ein
+                                Livestream</a> zugeordnet.</small>
+                    @else
+                        <small id="build_livestream">Diesem Gottesdienst noch kein Livestream zugeordnet.<br/>
+                            <a id="btn_build_livestream" class="btn btn-sm btn-secondary">Neuen Livestream erstellen</a><hr />
+                        </small>
+                    @endif
                     @input(['name' => 'youtube_url', 'label' => 'Youtube-URL', 'value' => $service->youtube_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'cc_streaming_url', 'label' => 'URL zu einem parallel gestreamten Kindergottesdienst', 'value' => $service->cc_streaming_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'value' => $service->offerings_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
@@ -104,11 +123,11 @@
                     @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt', 'accept' => '.pdf'])
                     @endtab
                     @tab(['id' => 'sermon', 'active' => ($tab=='sermon')])
-                        @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'value' => $service->sermon_title, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'value' => $service->sermon_reference, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'value' => $service->sermon_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'value' => $service->sermon_image, 'prettyName' => $service->day->date->format('Ymd').'-Predigtbild', 'accept' => '.jpg,.jpeg'])
-                        @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'value' => $service->external_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'value' => $service->sermon_title, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'value' => $service->sermon_reference, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'value' => $service->sermon_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'value' => $service->sermon_image, 'prettyName' => $service->day->date->format('Ymd').'-Predigtbild', 'accept' => '.jpg,.jpeg'])
+                    @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'value' => $service->external_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @can('admin')
                         @include('partials.service.tabs.history')
@@ -116,7 +135,7 @@
                     @include('partials.service.tabs.comments')
                     @endtabs
 
-                    <input type="hidden" name="routeBack" value="{{ $backRoute }}" />
+                    <input type="hidden" name="routeBack" value="{{ $backRoute }}"/>
                 @endcomponent
             </div>
             <div class="col-md-6">
@@ -208,19 +227,19 @@
                 setDefaultTime();
             });
 
-            $('#needPredicant').change(function(){
-                if ($(this).prop( "checked" )) {
+            $('#needPredicant').change(function () {
+                if ($(this).prop("checked")) {
                     $('input[name=pastor]').val('').attr('disabled', true);
                 } else {
                     $('input[name=pastor]').attr('disabled', false).focus();
                 }
             });
 
-            $('.btnSave').click(function(event){
+            $('.btnSave').click(function (event) {
                 event.preventDefault();
                 var route = $(this).data('route');
                 if (route != '') $('input[name=routeBack]').val(route);
-                $('#frmEdit input, #frmEdit select, #frmEdit textarea').each(function() {
+                $('#frmEdit input, #frmEdit select, #frmEdit textarea').each(function () {
                     $(this).attr('disabled', false);
                 });
                 $('#frmEdit').submit();
@@ -237,13 +256,12 @@
             */
 
 
-
         });
 
         var ctrMinistryRows = {{ isset($service) ? count($service->ministries()) : 0 }};
 
         function enableMinistryRows() {
-            $('.btnDeleteMinistryRow').click(function(){
+            $('.btnDeleteMinistryRow').click(function () {
                 $(this).parent().parent().remove();
             });
 
@@ -258,31 +276,31 @@
             });
         }
 
-        $(document).ready(function(){
+        $(document).ready(function () {
             enableMinistryRows();
 
-            $('#btnAddMinistryRow').click(function(e){
+            $('#btnAddMinistryRow').click(function (e) {
                 e.preventDefault();
                 ctrMinistryRows++;
                 $('#otherParticipantsWithText').append(
-                    '<div class="row form-group ministry-row" style="display:none;" id="ministryRow'+ctrMinistryRows+'">'
-                    +'<div class="col-5">'
-                    +'<input class="form-control" type="text" name="ministries['+ctrMinistryRows+'][description]" value="" />'
-                    +'</div>'
-                    +'<div class="col-6">'
-                    +'<select type="form-control" name="ministries['+ctrMinistryRows+'][people][]" id="ministrySelect'+ctrMinistryRows+'" multiple placeholder="Eine oder mehrere Personen (keine Anmerkungen!)">'
-                    +'</select>'
-                    +'</div>'
-                    +'<div class="col-1">'
-                    +'<button class="btnDeleteMinistryRow btn btn-danger" title="Zeile löschen"><span class="fa fa-trash"></span></button>'
-                    +'</div>'
-                    +'</div>'
+                    '<div class="row form-group ministry-row" style="display:none;" id="ministryRow' + ctrMinistryRows + '">'
+                    + '<div class="col-5">'
+                    + '<input class="form-control" type="text" name="ministries[' + ctrMinistryRows + '][description]" value="" />'
+                    + '</div>'
+                    + '<div class="col-6">'
+                    + '<select type="form-control" name="ministries[' + ctrMinistryRows + '][people][]" id="ministrySelect' + ctrMinistryRows + '" multiple placeholder="Eine oder mehrere Personen (keine Anmerkungen!)">'
+                    + '</select>'
+                    + '</div>'
+                    + '<div class="col-1">'
+                    + '<button class="btnDeleteMinistryRow btn btn-danger" title="Zeile löschen"><span class="fa fa-trash"></span></button>'
+                    + '</div>'
+                    + '</div>'
                 );
-                $('#ministrySelect'+ctrMinistryRows).attr('disabled', $('#peopleTemplate_input').attr('disabled'));
-                $('#peopleTemplate_input option').each(function(){
-                    $('#ministrySelect'+ctrMinistryRows).append('<option value="'+$(this).attr('value')+'">'+$(this).html()+'</option>');
+                $('#ministrySelect' + ctrMinistryRows).attr('disabled', $('#peopleTemplate_input').attr('disabled'));
+                $('#peopleTemplate_input option').each(function () {
+                    $('#ministrySelect' + ctrMinistryRows).append('<option value="' + $(this).attr('value') + '">' + $(this).html() + '</option>');
                 });
-                $('#ministrySelect'+ctrMinistryRows).selectize({
+                $('#ministrySelect' + ctrMinistryRows).selectize({
                     create: true,
                     render: {
                         option_create: function (data, escape) {
@@ -290,8 +308,20 @@
                         }
                     },
                 });
-                $('#ministryRow'+ctrMinistryRows).show();
+                $('#ministryRow' + ctrMinistryRows).show();
                 enableMinistryRows();
+            });
+
+
+            $('#btn_build_livestream').click(function (e) {
+                e.preventDefault();
+                $('#build_livestream').html('<img src="{{ asset('img/spinner.gif') }}" /> Livestream wird erstellt...');
+                fetch('{{ route('broadcast.create', $service) }}').then((response) => {
+                    return response.json();
+                }).then((data) => {
+                    $('input[name=youtube_url]').val(data.url);
+                    $('#build_livestream').html('Diesem Gottesdienst ist bereits <a href="' + data.url + '" target="_blank">ein Livestream</a> zugeordnet. <br /><a class="btn btn-sm btn-secondary" href="'+data.liveDashboard+'" target="_blank">Im Live-Dashboard öffnen</a><hr />')
+                });
             });
 
 

@@ -11,6 +11,8 @@
 |
 */
 
+use App\Service;
+
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
@@ -22,6 +24,7 @@ Route::patch('user/profile', ['as' => 'user.profile.save', 'uses' => 'UserContro
 Route::post('user/{user}/join', ['as' => 'user.join', 'uses' => 'UserController@join'])->middleware('auth');
 Route::post('users/join', ['as' => 'users.join', 'uses' => 'UserController@doJoin'])->middleware('auth');
 Route::get('user/{user}/services', ['as' => 'user.services', 'uses' => 'UserController@services'])->middleware('auth');
+Route::get('user/switch/{user}', ['as' => 'user.switch', 'uses' => 'UserController@switch'])->middleware('auth');
 
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
@@ -211,58 +214,10 @@ Route::resource('approvals', 'ApprovalController');
 // podcast
 Route::get('/podcasts/{cityName}.xml', 'PodcastController@podcast')->name('podcast');
 
-Route::get(
-    '/admin/tools/fixDoubleDays',
-    function () {
-        if (!Auth::user()->name == 'Admin') abort(403);
+// google api
+Route::get('/google/auth/city', 'GoogleApiController@auth')->name('google-auth');
+Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name('broadcast.create');
 
-        $days = \App\Day::all();
-        $doubleDays = [];
-        $deleteDays = collect([]);
-        foreach ($days as $day) {
-            $tmpDays = \App\Day::where('date', $day->date)->orderBy('id')->get();
-            if (count($tmpDays) > 1) {
-                echo 'Doppelter Tag: ' . $day->date->format('d.m.Y') . ' -- #' . $tmpDays->pluck('id')->join(
-                        ', #'
-                    ) . '<br />';
-                $target = $tmpDays->shift();
-
-                foreach ($tmpDays as $tmpDay) {
-                    $services = \App\Service::where('day_id', $tmpDay->id)->get();
-                    echo 'Bewege ' . count($services) . ' von #' . $tmpDay->id . ' nach #' . $target->id . '<br />';
-                    foreach ($services as $service) {
-                        $service->update(['day_id' => $target->id]);
-                    }
-                    $deleteDays->push($tmpDay);
-                }
-
-                echo '<hr />';
-            }
-        }
-
-        foreach ($deleteDays as $deleteDay) {
-            echo 'Removing Day #' . $deleteDay->id . '<br />';
-            $deleteDay->delete();
-        }
-
-        echo 'Fertig.';
-    }
-)->middleware('auth');
-
-Route::get(
-    '/admin/tools/fixDayDescription',
-    function () {
-        if (!Auth::user()->name == 'Admin') abort(403);
-
-        $days = \App\Day::where('description', '!=', '')->get();
-        foreach ($days as $day) {
-            echo 'Tag #'.$day->id.': "'.$day->description.'"<br />';
-            $day->update(['description' => '']);
-        }
-
-        echo 'Fertig.';
-    }
-)->middleware('auth');
 
 // demo function for exception handling
 Route::get(
@@ -271,3 +226,10 @@ Route::get(
         throw new Exception('Diese Fehlermeldung dient nur zu Demonstrationszwecken.');
     }
 );
+
+
+Route::get('test', function(){
+    ini_set('display_errors', 1);
+    $bc = \App\Broadcast::create(Service::find(923));
+    dd($bc->getSharerUrl(), $bc, Service::find(923));
+});
