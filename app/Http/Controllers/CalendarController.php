@@ -152,10 +152,11 @@ class CalendarController extends Controller
             }
         }
 
-        $nextDay = new Day(['date' => now()]);
+        $nextDay = null;
         if (($year == now()->year) && ($month == now()->month)) {
             $nextDay = Day::where('date', '>=', now())->whereIn('id', $days->pluck('id')->toArray())->orderBy('date')->first();
         }
+        if (null === $nextDay) $nextDay = new Day(['date' => now()]);
 
 
         // name_format parameter
