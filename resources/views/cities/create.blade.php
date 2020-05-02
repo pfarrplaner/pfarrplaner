@@ -13,7 +13,7 @@
                 @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
-                @tabheader(['id' => 'podcast', 'title' => 'Podcast']) @endtabheader
+                @tabheader(['id' => 'podcast', 'title' => 'Streaming & Podcast']) @endtabheader
         @endtabheaders
         @tabs
                 @tab(['id' => 'home', 'active' => true])
@@ -34,6 +34,7 @@
                         @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer'])
                 @endtab
                 @tab(['id' => 'podcast'])
+                @input(['name' => 'youtube_channel_url', 'label' => 'URL für den Youtube-Kanal', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @input(['name' => 'podcast_title', 'label' => 'Titel des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @upload(['name' => 'podcast_logo', 'label' => 'Logo für den Podcast', 'accept' => '.jpg,.jpeg'])
                 @upload(['name' => 'sermon_default_image', 'label' => 'Standard-Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])

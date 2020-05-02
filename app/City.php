@@ -27,6 +27,7 @@ class City extends Model
         'google_auth_code',
         'google_access_token',
         'google_refresh_token',
+        'youtube_channel_url',
     ];
 
     protected $orderBy = 'name';

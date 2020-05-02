@@ -115,6 +115,7 @@ class CityController extends Controller
             'homepage' => 'nullable|string',
             'podcast_owner_name' => 'nullable|string',
             'podcast_owner_email' => 'nullable|email',
+            'youtube_channel_url' => 'nullable|string',
         ]);
     }
 
