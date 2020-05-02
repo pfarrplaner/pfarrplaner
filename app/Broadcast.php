@@ -84,15 +84,19 @@ class Broadcast
 
         $instance->authenticate($service->city);
 
+        $liturgy = Liturgy::getDayInfo($service->day);
+
         $broadcast = null;
         $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
-        $broadcastSnippet->setTitle($service->title ?: 'Gottesdienst mit ' . $service->participantsText('P', true));
+        $broadcastSnippet->setTitle(($service->title ?: ($liturgy['title'] ? $liturgy['title'].' ('.$service->day->date->format('d.m.Y').')' : 'Gottesdienst mit '.$service->participantsText('P', true))));
+        $broadcastSnippet->setDescription(($service->title ?: 'Gottesdienst').' am '.$service->day->date->format('d.m.Y') .($liturgy['title'] ? ' ('.$liturgy['title'].')' : '').' mit '.$service->participantsText('P', true));
         $broadcastSnippet->setScheduledStartTime(self::timeString($service));
 
         // Create an object for the liveBroadcast resource's status, and set the
         // broadcast's status to "private".
         $status = new Google_Service_YouTube_LiveBroadcastStatus();
         $status->setPrivacyStatus($statusString);
+        $status->setSelfDeclaredMadeForKids(false);
 
         // Create the API request that inserts the liveBroadcast resource.
         $broadcastInsert = new Google_Service_YouTube_LiveBroadcast();

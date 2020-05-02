@@ -25,6 +25,23 @@
             </form>
         </li>
     @endcan
+    @if($service->city->youtube_channel_url)
+        @if($service->youtube_url)
+            <li class="nav-item">
+                <a id="btn_link_video" class="nav-link" href="{{ $service->youtube_url }}" target="_blank"><span class="fab fa-youtube"></span> Video</a>
+            </li>
+            <li class="nav-item">
+                <a id="btn_link_livedash" class="nav-link" href="{{ \App\Helpers\YoutubeHelper::getLiveDashboardUrl($service->city, $service->youtube_url) }}" target="_blank"><span class="fa fa-video"></span> Live-Dashboard</a>
+            </li>
+        @else
+            <li class="nav-item" id="new_livestream">
+                <a id="btn_build_livestream" class="nav-link" href="#">Neuen Livestream erstellen</a>
+            </li>
+            <li class="nav-item" id="link_livedash" style="display:none;">
+                <a id="btn_link_livedash" class="nav-link" href="{{ \App\Helpers\YoutubeHelper::getLiveDashboardUrl($service->city, $service->youtube_url) }}" target="_blank"><span class="fa fa-video"></span> Live-Dashboard</a>
+            </li>
+        @endif
+    @endif
 @endsection
 
 @section('content')
@@ -108,12 +125,9 @@
                     @endtab
                     @tab(['id' => 'streaming', 'active' => ($tab=='streaming')])
                     @if($service->youtube_url)
-                        <small>Diesem Gottesdienst ist bereits <a href="{{ $service->youtube_url }}" target="_blank">ein
-                                Livestream</a> zugeordnet.</small>
+                        <small>Diesem Gottesdienst ist bereits ein Livestream zugeordnet.</small>
                     @else
-                        <small id="build_livestream">Diesem Gottesdienst noch kein Livestream zugeordnet.<br/>
-                            <a id="btn_build_livestream" class="btn btn-sm btn-secondary">Neuen Livestream erstellen</a><hr />
-                        </small>
+                        <small id="build_livestream">Diesem Gottesdienst noch kein Livestream zugeordnet.</small>
                     @endif
                     @input(['name' => 'youtube_url', 'label' => 'Youtube-URL', 'value' => $service->youtube_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'cc_streaming_url', 'label' => 'URL zu einem parallel gestreamten Kindergottesdienst', 'value' => $service->cc_streaming_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
@@ -319,8 +333,13 @@
                 fetch('{{ route('broadcast.create', $service) }}').then((response) => {
                     return response.json();
                 }).then((data) => {
+                    $('#link_livedash a').attr('href', data.liveDashboard);
+                    $('#link_livedash').show();
+                    $('#btn_build_livestream').html('<span class="fab fa-youtube"></span> Video');
+                    $('#btn_build_livestream').attr('id', 'btn_link_video');
+                    $('#btn_link_video').attr('href', data.url);
                     $('input[name=youtube_url]').val(data.url);
-                    $('#build_livestream').html('Diesem Gottesdienst ist bereits <a href="' + data.url + '" target="_blank">ein Livestream</a> zugeordnet. <br /><a class="btn btn-sm btn-secondary" href="'+data.liveDashboard+'" target="_blank">Im Live-Dashboard öffnen</a><hr />')
+                    $('#build_livestream').html('<small>Diesem Gottesdienst ist bereits ein Livestream zugeordnet.</small>');
                 });
             });
 

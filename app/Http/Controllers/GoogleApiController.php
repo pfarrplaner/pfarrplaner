@@ -70,6 +70,7 @@ class GoogleApiController extends Controller
 
     function createBroadcast(Service $service) {
         $broadcast = Broadcast::create($service);
+        $service->update(['youtube_url' => $broadcast->getSharerUrl()]);
         return response()->json(['url' => $broadcast->getSharerUrl(), 'liveDashboard' => $broadcast->getLiveDashboardUrl()]);
     }
 }
