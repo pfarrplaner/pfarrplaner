@@ -6,7 +6,7 @@
                 "
         @can('update', $service)
         style="cursor: pointer;"
-        title="Klicken, um diesen Eintrag zu bearbeiten"
+        title="Klicken, um diesen Eintrag zu bearbeiten (#{{ $service->id }})"
         onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
         @endcan
         data-day="{{ $service->day->id }}"
@@ -27,6 +27,12 @@
     @endif
     @if($service->cc) <img src="{{ asset('img/cc.png') }}"
                            title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
+    @if($service->youtube_url)
+        <a href="{{ $service->youtube_url }}" target="_blank" style="color: red"; title="Zum Youtube-Video"><span class="fab fa-youtube"></span></a>
+        @if ($service->city->youtube_channel_url)
+                <a href="{{ \App\Helpers\YoutubeHelper::getLiveDashboardUrl($service->city, $service->youtube_url) }}" target="_blank" style="color: darkgray"; title="Zum LiveDashboard"><span class="fa fa-video"></span></a>
+        @endif
+    @endif
     @if($service->titleText(true, true) != 'GD')
         <div class="service-description">{{ $service->titleText(true, true) }}</div>
     @endif
