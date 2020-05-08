@@ -202,6 +202,10 @@ Breadcrumbs::for('parishes.edit', function (BreadcrumbsGenerator $trail, $parish
     $trail->push($parish->name, route('parishes.edit', $parish));
 });
 
+Breadcrumbs::for('password.request', function (BreadcrumbsGenerator $trail){
+    $trail->push('Passwort vergessen');
+});
+
 Breadcrumbs::for('reports.list', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Ausgabeformate', route('reports.list'));
