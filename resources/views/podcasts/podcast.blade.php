@@ -34,7 +34,9 @@
         <item>
             <title>@if($service->sermon_title) {{ $service->sermon_title }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt') }} @else {{ $service->participantsText('P') }} @endif @endif</title>
             <itunes:image href="{{ asset($service->sermon_image ?: $service->city->sermon_default_image) }}" />
-            <itunes:summary><![CDATA[ @if($service->sermon_description){{ $service->sermon_description }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></itunes:summary>
+            <itunes:summary><![CDATA[ @if($service->sermon_description){{ $service->sermon_description }}
+
+                (Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif)@else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></itunes:summary>
             <link>{{ $city->homepage.(substr($city->homepage, -1) == '/' ? '' : '/') }}?podcast_id={{ md5( $service->id) }}</link>
             <guid>{{ $city->homepage.(substr($city->homepage, -1) == '/' ? '' : '/') }}?podcast_id={{ md5( $service->id) }}</guid>
             <description><![CDATA[ @if($service->sermon_description){{ $service->sermon_description }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></description>
