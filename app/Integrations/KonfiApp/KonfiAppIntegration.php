@@ -9,6 +9,7 @@ use App\Integrations\AbstractIntegration;
 use Exception;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
+use Illuminate\Support\Collection;
 
 class KonfiAppIntegration extends AbstractIntegration
 {
@@ -26,16 +27,41 @@ class KonfiAppIntegration extends AbstractIntegration
         $this->setClient(new Client(['base_uri' => self::API_URL]));
     }
 
+    /**
+     * Get a collection with all defined event types from KonfiApp
+     *
+     * @return Collection Event types
+     * @throws Exception when request status is not 200
+     */
     public function listEventTypes() {
         return collect($this->requestData('GET', 'verwaltung/veranstaltungen')->veranstaltungen);
     }
 
+    /**
+     * Send a request to the public API for KonfiApp and return the contents of the response's data field
+     *
+     * @param $requestType
+     * @param $path
+     * @param array $arguments
+     * @return mixed Response data field
+     * @throws Exception
+     */
     protected function requestData($requestType, $path, $arguments = []) {
         $response = $this->request($requestType, $path, $arguments);
         if ($response->getStatusCode() != 200) throw new Exception ('Could not retrieve event types from KonfiApp.');
         return json_decode((string)$response->getBody())->data;
     }
 
+    /**
+     * Send a request to the public API for KonfiApp
+     *
+     * This will automatically add the api key
+     *
+     * @param $requestType
+     * @param $path
+     * @param array $arguments
+     * @return ResponseInterface
+     */
     protected function request($requestType, $path, $arguments = []): ResponseInterface {
         return $this->client->request($requestType, $path, [
             'query' => [
