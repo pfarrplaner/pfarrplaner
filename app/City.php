@@ -28,6 +28,7 @@ class City extends Model
         'google_access_token',
         'google_refresh_token',
         'youtube_channel_url',
+        'konfiapp_apikey',
     ];
 
     protected $orderBy = 'name';

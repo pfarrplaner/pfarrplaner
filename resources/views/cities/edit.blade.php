@@ -23,6 +23,7 @@
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
                 @tabheader(['id' => 'podcast', 'title' => 'Streaming & Podcast']) @endtabheader
+                @tabheader(['id' => 'integrations', 'title' => 'Weitere Integrationen']) @endtabheader
             @endtabheaders
             @tabs
                 @tab(['id' => 'home', 'active' => true])
@@ -50,6 +51,34 @@
                     @input(['name' => 'podcast_owner_name', 'label' => 'Herausgeber des Podcasts', 'value' => $city->podcast_owner_name, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @input(['name' => 'podcast_owner_email', 'label' => 'E-Mailadresse für den Herausgeber des Podcasts', 'value' => $city->podcast_owner_email, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @input(['name' => 'homepage', 'label' => 'Homepage der Kirchengemeinde', 'value' => $city->homepage, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @endtab
+                @tab(['id' => 'integrations'])
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="img-fluid">
+                                <img src="{{ asset('img/external/konfiapp.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-sm-10">
+                            <h4>Konfi-App</h4
+                            <p>Die <a href="https://konfiapp.de" target="_blank">Konfi-App</a> von Philipp Dormann bietet viele Möglichkeiten, mit Konfis in Kontakt zu bleiben.</p>
+                            <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
+                            <ul>
+                                <li>Im Pfarrplaner angelegte Gottesdienste können einem Veranstaltungstyp in der Konfiapp zugewiesen werden. Beim Speichern wird dann automatisch ein passender QR-Code in der Konfiapp angelegt. </li>
+                            </ul>
+                            <p>Für die Integration der Konfiapp ist ein API-Schlüssel erforderlich. Dieser kann im Verwaltungsbereich der Konfiapp über folgenden Link angelegt werden:
+                                <a href="https://verwaltung.konfiapp.de/administration/api-tokens/" target="_blank">https://verwaltung.konfiapp.de/administration/api-tokens/</a>.
+                                Der dort erstellte Schlüssel muss in das untenstehende Eingabefeld kopiert werden. In der anschließenden Übersicht in der Konfiapp können für den Schlüssel
+                                sogenannte "Scopes" aktiviert werden. Folgende Scopes sind für das Funktionieren der Integration erforderlich:</p>
+                            <p>
+                                <span class="badge badge-secondary">veranstaltungen_list</span>
+                                <span class="badge badge-secondary">qr_list</span>
+                                <span class="badge badge-secondary">qr_create</span>
+                                <span class="badge badge-secondary">qr_delete</span>
+                            </p>
+                        </div>
+                    </div>
+                    @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die Konfi-App', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
             @endtabs
     </form>

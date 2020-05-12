@@ -116,6 +116,7 @@ class CityController extends Controller
             'podcast_owner_name' => 'nullable|string',
             'podcast_owner_email' => 'nullable|email',
             'youtube_channel_url' => 'nullable|string',
+            'konfiapp_apikey' => 'nullable|string',
         ]);
     }
 

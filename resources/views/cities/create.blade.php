@@ -14,26 +14,27 @@
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
                 @tabheader(['id' => 'podcast', 'title' => 'Streaming & Podcast']) @endtabheader
+                @tabheader(['id' => 'integrations', 'title' => 'Weitere Integrationen']) @endtabheader
         @endtabheaders
         @tabs
-                @tab(['id' => 'home', 'active' => true])
-                        @input(['name' => 'name', 'label' => 'Ort'])
-                @endtab
-                @tab(['id' => 'offerings'])
-                        @input(['name' => 'default_offering_goal', 'label' => 'Opferzweck, wenn nicht angegeben'])
-                        @input(['name' => 'default_offering_description', 'label' => 'Opferbeschreibung bei leerem Opferzweck'])
-                        @input(['name' => 'default_funeral_offering_goal', 'label' => 'Opferzweck für Beerdigungen'])
-                        @input(['name' => 'default_funeral_offering_description', 'label' => 'Opferbeschreibung für Beerdigungen'])
-                        @input(['name' => 'default_wedding_offering_goal', 'label' => 'Opferzweck für Trauungen'])
-                        @input(['name' => 'default_wedding_offering_description', 'label' => 'Opferbeschreibung für Trauungen'])
-                @endtab
-                @tab(['id' => 'calendars'])
-                        @input(['name' => 'public_events_calendar_url', 'label' => 'URL für einen öffentlichen Kalender auf elkw.de'])
-                        @input(['name' => 'op_domain', 'label' => 'Domain für den Online-Planer'])
-                        @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer'])
-                        @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer'])
-                @endtab
-                @tab(['id' => 'podcast'])
+            @tab(['id' => 'home', 'active' => true])
+                @input(['name' => 'name', 'label' => 'Ort'])
+            @endtab
+            @tab(['id' => 'offerings'])
+                @input(['name' => 'default_offering_goal', 'label' => 'Opferzweck, wenn nicht angegeben'])
+                @input(['name' => 'default_offering_description', 'label' => 'Opferbeschreibung bei leerem Opferzweck'])
+                @input(['name' => 'default_funeral_offering_goal', 'label' => 'Opferzweck für Beerdigungen'])
+                @input(['name' => 'default_funeral_offering_description', 'label' => 'Opferbeschreibung für Beerdigungen'])
+                @input(['name' => 'default_wedding_offering_goal', 'label' => 'Opferzweck für Trauungen'])
+                @input(['name' => 'default_wedding_offering_description', 'label' => 'Opferbeschreibung für Trauungen'])
+            @endtab
+            @tab(['id' => 'calendars'])
+                @input(['name' => 'public_events_calendar_url', 'label' => 'URL für einen öffentlichen Kalender auf elkw.de'])
+                @input(['name' => 'op_domain', 'label' => 'Domain für den Online-Planer'])
+                @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer'])
+                @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer'])
+            @endtab
+            @tab(['id' => 'podcast'])
                 @input(['name' => 'youtube_channel_url', 'label' => 'URL für den Youtube-Kanal', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @input(['name' => 'podcast_title', 'label' => 'Titel des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @upload(['name' => 'podcast_logo', 'label' => 'Logo für den Podcast', 'accept' => '.jpg,.jpeg'])
@@ -41,7 +42,10 @@
                 @input(['name' => 'podcast_owner_name', 'label' => 'Herausgeber des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @input(['name' => 'podcast_owner_email', 'label' => 'E-Mailadresse für den Herausgeber des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @input(['name' => 'homepage', 'label' => 'Homepage der Kirchengemeinde', 'enabled' => Auth::user()->can('ort-bearbeiten')])
-                @endtab
+            @endtab
+            @tab(['id' => 'integrations'])
+                @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die Konfi-App', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+            @endtab
         @endtabs
         @endcomponent
     </form>
