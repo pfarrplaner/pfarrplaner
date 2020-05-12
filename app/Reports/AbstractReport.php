@@ -32,6 +32,14 @@ class AbstractReport
     public $description = '';
 
 
+    /**
+     * Returns true if the report is active for the current user
+     * @return bool
+     */
+    public function isActive(): bool {
+        return true;
+    }
+
     public function getKey() {
         return lcfirst(strtr(get_called_class(), [
             'Report' => '',

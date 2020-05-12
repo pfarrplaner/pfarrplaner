@@ -21,9 +21,11 @@ class ReportsController extends Controller
                 $reportClass = 'App\\Reports\\' . pathinfo($file, PATHINFO_FILENAME);
                 if (class_exists($reportClass)) {
                     $report = new $reportClass();
-                    $reports[$report->group][$report->title] = $report;
+                    if ($report->isActive()) {
+                        $reports[$report->group][$report->title] = $report;
+                        ksort($reports[$report->group]);
+                    }
                 }
-                ksort($reports[$report->group]);
             }
         }
         ksort($reports);
