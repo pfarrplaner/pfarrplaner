@@ -84,6 +84,15 @@ class BulletinBLReport extends AbstractPDFDocumentReport
     /** @var IDML */
     protected $idml;
 
+    /**
+     * Returns true, if active user has write rights for "Balingen" and thus activates the report
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return Auth::user()->writableCities->pluck('name')->contains('Balingen');
+    }
+
 
     public function setup()
     {
