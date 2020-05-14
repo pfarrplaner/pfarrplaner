@@ -30,6 +30,19 @@ class CommentController extends Controller
     }
 
     /**
+     * Check if current user may comment on a specific object
+     * @param $owner Object to be commented on
+     * @return bool true if commenting is allowed
+     */
+    protected function canCommentOnThisObject($owner) {
+        $owningService = is_a($owner, Service::class) ? $owner : $owner->service;
+        if (null === $owningService) {
+            return Auth::user()->writableCities->pluck('id')->contains($owner->city_id);
+        }
+        return Auth::user()->can('update', $owningService);
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -41,8 +54,7 @@ class CommentController extends Controller
             $commentableType = $request->get('commentable_type');
             $commentableId = $request->get('commentable_id');
             $owner = app($commentableType)->find($commentableId);
-            $owningService = is_a($owner, Service::class) ? $owner : $owner->service;
-            if (Auth::user()->can('update', $owningService)) {
+            if ($this->canCommentOnThisObject($owner)) {
                 $comment = $owner->comments()->create(['body' => $request->get('body'), 'private' => $request->get('private'), 'user_id' => Auth::user()->id]);
                 return view('partials.comments.single', compact('comment'));
             } else {
