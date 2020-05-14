@@ -1,5 +1,6 @@
 <?php
 
+use App\Service;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
 Breadcrumbs::for('absences.index', function (BreadcrumbsGenerator $trail) {
@@ -255,6 +256,12 @@ Breadcrumbs::for('services.edit', function (BreadcrumbsGenerator $trail, $servic
     if (!is_numeric($service)) $service = $service->id;
     $trail->parent('calendar');
     $trail->push('#'.$service, route('services.edit', $service));
+});
+
+Breadcrumbs::for('service.livechat', function (BreadcrumbsGenerator $trail, Service $service) {
+    if (is_numeric($service)) $service = Service::find($service);
+    $trail->push('Live Chat');
+    $trail->push($service->title ?: 'Gottesdienst am '.$service->day->date->format('d.m.Y').', '.$service->timeText());
 });
 
 

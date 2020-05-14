@@ -21,13 +21,25 @@
                             </div>
                             <table class="table serviceTable">
                                 <tbody>
+                                <tr>
+                                    <td valign="top"><span class="fa fa-praying-hands fa-2x"></span></td>
+                                    <td valign="top">
+                                        Gebetsanliegen und Nachrichten zu diesem Gottesdienst kannst du hier eingeben:
+                                        <input type="text" style="width:100%;" placeholder="Gib hier deinen Namen ein"/>
+                                        <textarea style="width: 100%;" rows="2"
+                                                  placeholder="Gib hier deine Nachricht ein"></textarea>
+                                        <input type="submit" class="btn btn-secondary btnSendLiveChatMsg"
+                                               value="Absenden"/>
+                                    </td>
+                                </tr>
                                 @if($nextService->songsheet)
                                     <tr>
                                         <td valign="top"><span class="fa fa-file fa-2x"></span></td>
                                         <td valign="top">
-                                            Zu diesem Gottesdienst gibt es Texte und Lieder zum Herunterladen.<br />
+                                            Zu diesem Gottesdienst gibt es Texte und Lieder zum Herunterladen.<br/>
                                             <a class="btn btn-secondary"
-                                               href="{{ route('storage', ['path' => pathinfo($nextService->songsheet, PATHINFO_FILENAME), 'prettyName' => $nextService->day->date->format('Ymd').'-Liedblatt.'.pathinfo($nextService->songsheet, PATHINFO_EXTENSION)]) }}">Liedblatt herunterladen</a>
+                                               href="{{ route('storage', ['path' => pathinfo($nextService->songsheet, PATHINFO_FILENAME), 'prettyName' => $nextService->day->date->format('Ymd').'-Liedblatt.'.pathinfo($nextService->songsheet, PATHINFO_EXTENSION)]) }}">Liedblatt
+                                                herunterladen</a>
                                         </td>
                                     </tr>
                                 @endif
@@ -36,7 +48,7 @@
                                         <td valign="top"><span class="fa fa-euro-sign fa-2x"></span></td>
                                         <td valign="top">
                                             Zu diesem Gottesdienst bitten wir um Spenden für folgenden
-                                            Zweck: {{ $nextService->offering_goal }}<br />
+                                            Zweck: {{ $nextService->offering_goal }}<br/>
                                             @if($nextService->offerings_url)
                                                 <a class="btn btn-secondary" href="{{ $nextService->offerings_url }}"
                                                    target="_blank">Spenden</a>
@@ -52,7 +64,7 @@
                                             Auch ein Kindergottesdienst wird
                                             am {{ $nextService->day->date->format('d.m.Y') }}
                                             um @if($nextService->cc_alt_time != '') {{ substr($nextService->cc_alt_time,0,5) }} @else {{ $nextService->timeText(false) }} @endif
-                                            Uhr live übertragen.<br />
+                                            Uhr live übertragen.<br/>
                                             <a class="btn btn-secondary" href="{{ $nextService->cc_streaming_url }}"
                                                target="_blank">Kinderkirche</a>
                                         </td>
@@ -65,7 +77,7 @@
                                             Nach dem Gottesdienst laden wir online zum "virtuellen Kirchenkaffee" ein.
                                             Dort gibt es die Möglichkeit, miteinander ins Gespräch zu kommen.
                                             <br/><small>Auf dem Smartphone wird dazu evtl. die App "Microsoft Teams"
-                                                benötigt.</small><br />
+                                                benötigt.</small><br/>
                                             <a class="btn btn-secondary" href="{{ $nextService->meeting_url }}"
                                                target="_blank">Kirchenkaffee</a>
                                         </td>
@@ -75,7 +87,7 @@
                                     <tr>
                                         <td valign="top"><span class="fa fa-globe fa-2x"></span></td>
                                         <td valign="top">
-                                            Zu diesem Gottesdienst gibt es eine externe Seite.<br />
+                                            Zu diesem Gottesdienst gibt es eine externe Seite.<br/>
                                             @if($nextService->offerings_url)
                                                 <a class="btn btn-secondary"
                                                    href="{{ $nextService->external_url }}"
@@ -124,7 +136,7 @@
                                                 <td valign="top"><span class="fa fa-euro-sign fa-2x"></span></td>
                                                 <td valign="top">
                                                     Zu diesem Gottesdienst bitten wir um Spenden für folgenden
-                                                    Zweck: {{ $lastService->offering_goal }}<br />
+                                                    Zweck: {{ $lastService->offering_goal }}<br/>
                                                     @if($lastService->offerings_url)
                                                         <a class="btn btn-secondary"
                                                            href="{{ $lastService->offerings_url }}"
@@ -137,7 +149,7 @@
                                             <tr>
                                                 <td valign="top"><span class="fa fa-globe fa-2x"></span></td>
                                                 <td valign="top">
-                                                    Zu diesem Gottesdienst gibt es eine externe Seite.<br />
+                                                    Zu diesem Gottesdienst gibt es eine externe Seite.<br/>
                                                     @if($lastService->offerings_url)
                                                         <a class="btn btn-secondary"
                                                            href="{{ $lastService->external_url }}"
@@ -183,5 +195,26 @@
         $('#serviceCollapsible li:first').addClass('active');
         $('#serviceCollapsible div:first').addClass('active');
         $('#serviceCollapsible li:first div.collapsible-body:first').show();
+
+
+        @if (null !== $nextService)
+        $('.btnSendLiveChatMsg').click(function () {
+            var author = $(this).parent().find('input').first().val();
+            var msg = $(this).parent().find('textarea').first().val();
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            });
+            $.post('{{ route('service.livechat.message.post', $nextService) }}', {
+                author: author,
+                message: msg,
+            }).done(function () {
+                console.log('Message submission successful.');
+            }).error(function () {
+                console.log('Message submission failed.');
+            });
+        });
+        @endif
     </script>
 @endif

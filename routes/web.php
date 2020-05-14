@@ -218,6 +218,11 @@ Route::get('/podcasts/{cityName}.xml', 'PodcastController@podcast')->name('podca
 Route::get('/google/auth/city', 'GoogleApiController@auth')->name('google-auth');
 Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name('broadcast.create');
 
+// youtube live chat
+Route::get('/services/{service}/livechat', 'LiveChatController@liveChat')->name('service.livechat');
+Route::get('/services/{service}/livechat/messages', 'LiveChatController@liveChatAjax')->name('service.livechat.ajax');
+Route::post('/services/{service}/livechat/messages', 'LiveChatController@liveChatPostMessage')->name('service.livechat.message.post');
+
 
 // demo function for exception handling
 Route::get(
@@ -229,7 +234,4 @@ Route::get(
 
 
 Route::get('test', function(){
-    ini_set('display_errors', 1);
-    $bc = \App\Broadcast::create(Service::find(923));
-    dd($bc->getSharerUrl(), $bc, Service::find(923));
 });
