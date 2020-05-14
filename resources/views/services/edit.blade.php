@@ -81,6 +81,9 @@
                     @endcanany
                     @tabheader(['id' => 'streaming', 'title' => 'Streaming', 'active' => ($tab=='streaming')]) @endtabheader
                     @tabheader(['id' => 'sermon', 'title' => 'Predigt', 'active' => ($tab=='sermon')]) @endtabheader
+                    @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
+                        @tabheader(['id' => 'konfiapp', 'title' => 'Konfi-App', 'active' => ($tab=='konfiapp')]) @endtabheader
+                    @endif
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments')]) @endtabheader
                     @can('admin')
                         @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
@@ -143,6 +146,11 @@
                     @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'value' => $service->sermon_image, 'prettyName' => $service->day->date->format('Ymd').'-Predigtbild', 'accept' => '.jpg,.jpeg'])
                     @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'value' => $service->external_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
+                    @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
+                        @tab(['id' => 'konfiapp', 'active' => ($tab=='konfiapp')])
+                            @selectize(['name' => 'konfiapp_eventtype', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($service->city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch'])
+                        @endtab
+                    @endif
                     @can('admin')
                         @include('partials.service.tabs.history')
                     @endcan

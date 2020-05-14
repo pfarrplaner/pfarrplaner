@@ -27,6 +27,9 @@
                     @endcanany
                     @tabheader(['id' => 'streaming', 'title' => 'Streaming']) @endtabheader
                     @tabheader(['id' => 'sermon', 'title' => 'Predigt']) @endtabheader
+                    @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
+                        @tabheader(['id' => 'konfiapp', 'title' => 'Konfi-App']) @endtabheader
+                    @endif
                     @endtabheaders
 
                     @tabs
@@ -77,6 +80,11 @@
                         @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])
                         @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
+                    @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
+                        @tab(['id' => 'konfiapp'])
+                        @selectize(['name' => 'konfiapp_eventtype', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch'])
+                        @endtab
+                    @endif
                     @endtabs
                 @endcomponent
             </div>

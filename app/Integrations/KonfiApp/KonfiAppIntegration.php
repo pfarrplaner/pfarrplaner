@@ -21,6 +21,15 @@ class KonfiAppIntegration extends AbstractIntegration
     /** @var Client */
     protected $client;
 
+    /**
+     * Get an instance of this integration for a particular city
+     * @param City $city
+     * @return KonfiAppIntegration
+     */
+    public static function get(City $city): KonfiAppIntegration {
+        return (new self($city->konfiapp_apikey));
+    }
+
     public function __construct($apiKey)
     {
         $this->setApiKey($apiKey);

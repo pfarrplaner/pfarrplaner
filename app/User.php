@@ -630,7 +630,7 @@ class User extends Authenticatable
 
     public function getWritableCitiesAttribute()
     {
-        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
+        if ((!Auth::guest()) && Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
             return City::all();
         }
         return $this->writableCities()->get();
