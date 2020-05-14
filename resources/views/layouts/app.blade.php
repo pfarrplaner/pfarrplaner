@@ -46,9 +46,11 @@
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
+            @if((!isset($noNavBar)) || (!$noNavBar) )
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
+            @endif
             @yield('navbar-left')
         </ul>
 
@@ -84,6 +86,7 @@
 
         <!-- Sidebar -->
         <div class="sidebar">
+        @if((!isset($noNavBar)) || (!$noNavBar) )
             @auth
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -150,6 +153,7 @@
                     <input type="submit" class="btn btn-primary" value="Anmelden" />
                 </form>
             @endguest
+            @endif
         </div>
         <!-- /.sidebar -->
     </aside>
