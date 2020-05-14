@@ -1,6 +1,6 @@
 <div class="form-group" @if(isset($id)) id="{{ $id }}" @endif>
     @if($label)<label for="{{ $name }}">{{ $label }}</label>@endif
-    <select class="form-control @if(isset($class)){{ $class }} @endif" name="{{ $name }}" @if(false !== strpos($name, '[]')) multiple @endif @if(isset($enabled) && (!$enabled)) disabled @endcannot @if(isset($id)) id="{{ $id }}_input" @endif>
+    <select class="form-control @if(isset($class)){{ $class }} @endif" name="{{ $name }}" @if(false !== strpos($name, '[]')) multiple @endif @if(isset($enabled) && (!$enabled)) disabled @endcannot @if(isset($id)) id="{{ $id }}_input" @endif @if(isset($placeholder)) placeholder="{{ $placeholder }}" @endif>
         @if(isset($empty) && $empty)<option></option>@endif
         @foreach ($items as $item)
                 @if((strpos($name, '[]') !== false))
