@@ -3,6 +3,7 @@
 
 namespace App;
 
+use App\Helpers\YoutubeHelper;
 use Carbon\Carbon;
 use Google_Client;
 use Google_Service_YouTube;
@@ -62,17 +63,12 @@ class Broadcast
         $serviceTimeString = self::timeString($service);
 
         $broadcastsResponse = $instance->getYoutube()->liveBroadcasts->listLiveBroadcasts(
-            'id,snippet',
-            array(
-                'mine' => 'true',
-            )
+            'id,snippet', ['id' => YoutubeHelper::getCode($service->youtube_url)]
         );
 
-        foreach ($broadcastsResponse['items'] as $broadcastItem) {
-            if ($serviceTimeString == $broadcastItem['snippet']['scheduledStartTime']) {
-                $instance->setLiveBroadcast($broadcastItem);
-                $broadcast = $broadcastItem;
-            }
+        if (isset($broadcastsResponse['items'][0])) {
+            $instance->setLiveBroadcast($broadcastsResponse['items'][0]);
+            $broadcast = $broadcastsResponse['items'][0];
         }
 
         return $broadcast ? $instance : null;
