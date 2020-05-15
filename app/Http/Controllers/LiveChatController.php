@@ -32,7 +32,7 @@ class LiveChatController
         $youtube = YoutubeIntegration::get($service->city);
         $liveChatId = Broadcast::get($service)->getLiveBroadcast()->getSnippet()->getLiveChatId();
         $youtube->sendLiveChatMessage($liveChatId, $author, $msg);
-        return response()->setStatusCode(200)->json(compact('author', 'msg'));
+        return response()->json(compact('author', 'msg'));
     }
 
 

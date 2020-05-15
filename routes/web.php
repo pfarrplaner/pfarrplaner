@@ -219,9 +219,9 @@ Route::get('/google/auth/city', 'GoogleApiController@auth')->name('google-auth')
 Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name('broadcast.create');
 
 // youtube live chat
-Route::get('/services/{service}/livechat', 'LiveChatController@liveChat')->name('service.livechat');
-Route::get('/services/{service}/livechat/messages', 'LiveChatController@liveChatAjax')->name('service.livechat.ajax');
-Route::post('/services/{service}/livechat/messages', 'LiveChatController@liveChatPostMessage')->name('service.livechat.message.post');
+Route::get('/livechat/{service}', 'LiveChatController@liveChat')->name('service.livechat');
+Route::get('/livechat/{service}/messages', 'LiveChatController@liveChatAjax')->name('service.livechat.ajax');
+Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessage')->name('service.livechat.message.post');
 
 
 // demo function for exception handling
