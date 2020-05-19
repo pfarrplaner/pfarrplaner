@@ -12,24 +12,34 @@ trait TracksChangesTrait
 
     /** @var array $dataBeforeChanges Snapshot with original data */
     public $dataBeforeChanges = [];
+    public $originalObject = null;
+    public $changedFields = [];
+    public $originalRelations = [];
+    public $originalAttributes = [];
+    public $originalAppendedAttributes = [];
 
     public function createSnapshot()
     {
-        if (isset($this->forceTracking)) $this->load($this->forceTracking);
-        $data = $this->toArray();
-        $snapshot = [];
-        foreach ($data as $key => $val) {
-            if (is_array($data[$key]) && method_exists($this, $key)) {
-                if (is_a($val, \Illuminate\Database\Eloquent\Collection::class)) {
-                    $snapshot['relations'][$key] = collect($this->$key);
-                } else {
-                    $snapshot['relations'][$key] = $this->$key;
-                }
+        $snapshot = $this->attributes;
+        foreach ($this->getRelations() as $key => $relation) {
+            if (is_a($relation, \Illuminate\Database\Eloquent\Collection::class)) {
+                $snapshot[$key] = $relation->pluck('id')->join(',');
             } else {
-                $snapshot['attributes'][$key] = $val;
+                $snapshot[$key] = $relation->id;
             }
         }
         return $snapshot;
+    }
+
+    public function restoreOriginal($attributes = null, $relations = null)
+    {
+        $class = get_called_class();
+        $object = new $class();
+        $object->setRawAttributes(($attributes ?? $this->originalAttributes));
+        foreach (($relations ?? $this->originalRelations) as $key => $relation) {
+            $object->$key = $relation;
+        }
+        return $object;
     }
 
     /**
@@ -38,8 +48,49 @@ trait TracksChangesTrait
      */
     public function trackChanges()
     {
+        if (isset($this->forceTracking)) {
+            $this->load($this->forceTracking);
+        }
+        $this->originalObject = clone($this);
+        $this->originalAttributes = $this->attributes;
+
+        foreach ($this->getRelations() as $relationKey => $relation) {
+            if (is_a($relation, \Illuminate\Database\Eloquent\Collection::class)) {
+                $collection = new Collection();
+                foreach ($relation as $key => $item) {
+                    $collection->put($key, $item);
+                }
+                $this->originalObject->$relation = $collection;
+                $this->originalRelations[$relationKey] = $collection;
+            } else {
+                $this->originalObject->$relation = $this->originalRelations[$relationKey] = clone($relation);
+            }
+        }
         $this->dataBeforeChanges = $this->createSnapshot();
+        $this->originalAppendedAttributes = $this->getAppendedAttributes();
     }
+
+    protected function unPivot($array) {
+        if (!is_array($array)) return $array;
+        if (isset($array['pivot'])) unset($array['pivot']);
+        foreach ($array as $k => $v) {
+            $array[$k] = $this->unPivot($v);
+        }
+        return $array;
+    }
+
+    protected function getAppendedAttributes()
+    {
+        $attrs = [];
+        if (property_exists($this, 'appendsToTracking')) {
+            foreach ($this->appendsToTracking as $key) {
+                $value = $this->$key;
+                $attrs[$key] = $this->unPivot(json_decode(json_encode($value), true));
+            }
+        }
+        return $attrs;
+    }
+
 
     /**
      * Return all changed attributes and relations
@@ -47,52 +98,36 @@ trait TracksChangesTrait
      */
     public function diff()
     {
-        $data = $this->createSnapshot();
+        $this->refresh();
+        $dataNow = $this->createSnapshot();
+        $dataBefore = $this->dataBeforeChanges;
 
-        $class = get_class($this);
-        $originalObj = new $class();
-        $changedObj = new $class();
+        $diff = [];
+        $diff['difference'] = array_diff($dataBefore, $dataNow);
 
-        // unset updated_at, which will always be changed
-        unset($data['attributes']['updated_at']);
-        if(!isset($this->dataBeforeChanges['attributes'])) $this->dataBeforeChanges['attributes'] = [];
-        if(!isset($this->dataBeforeChanges['relations'])) $this->dataBeforeChanges['relations'] = [];
-
-        $diff = ['attributes' => [], 'relations' => []];
-        foreach ($data['attributes'] as $attribute => $value) {
-            if (!isset($this->dataBeforeChanges['attributes'][$attribute])) $this->dataBeforeChanges['attributes'][$attribute] = null;
-            if ($value != $this->dataBeforeChanges['attributes'][$attribute]) {
-                $diff['attributes'][$attribute] = ['original' =>  ($this->dataBeforeChanges['attributes'][$attribute] ?? ''), 'changed' => $value ?? ''];
-            }
-            $originalObj->$attribute = $this->dataBeforeChanges['attributes'][$attribute] ?? null;
-            $changedObj->$attribute = $value ?: null;
-        }
-        foreach ($data['relations'] as $relation => $value) {
-            if (isset($this->dataBeforeChanges['relations'][$relation])) {
-                if (is_a($value, Collection::class)) {
-                    $changed = ($value->pluck('id')->join(',') != $this->dataBeforeChanges['relations'][$relation]->pluck('id')->join(','));
-                } else {
-                    $changed = ($value != $this->dataBeforeChanges['relations'][$relation]);
-                }
-                if ($changed) $diff['relations'][$relation] = ['original' => $this->dataBeforeChanges['relations'][$relation], 'changed' => $value];
+        // check appended attributes
+        foreach ($this->originalAppendedAttributes as $attribute => $value) {
+            if (!(serialize($this->unPivot(json_decode(json_encode($this->$attribute), true))) == serialize($value))) {
+                $diff['difference'][$attribute] = $this->$attribute;
             }
         }
 
-        /** @var Service $originalObj */
-        $originalObj->setRelations($this->dataBeforeChanges['relations']);
-        /** @var Service $changedObj */
-        $changedObj->setRelations($data['relations']);
-        $diff['original'] = $originalObj;
-        $diff['changed'] = $changedObj;
+        $this->changedFields = $diff['difference'];
+
+        $diff['original'] = $this->originalObject;
+        $diff['changed'] = $this;
         $diff['field_names'] = $this->revisionFormattedFieldNames ?? [];
         return $diff;
     }
 
-    public function isChanged() {
+    public function isChanged()
+    {
         $diff = $this->diff();
-        return ((count($diff['attributes']) + count($diff['relations'])) != 0);
+        if (isset($diff['difference']['updated_at'])) {
+            unset($diff['difference']['updated_at']);
+        }
+        return (count($diff['difference']) != 0);
     }
-
 
 
 }

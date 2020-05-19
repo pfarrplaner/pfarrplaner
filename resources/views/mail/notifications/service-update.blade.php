@@ -57,7 +57,6 @@
                      'old' => $original->locationText(),
                      'new' => $changed->locationText(),
                      ])
-Service
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'Beschreibung',
                      'key' => 'description',

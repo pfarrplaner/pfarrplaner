@@ -1,4 +1,4 @@
-@if(isset($changes['attributes'][$key]))
+@if(isset($changes[$key]))
     <tr>
         @component('mail.layout.blocks.cell'){{ $title }} @endcomponent
         @component('mail.layout.blocks.cell'){{ $old }} @endcomponent

@@ -8,9 +8,14 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\View;
 
 class ServiceUpdated extends AbstractServiceMailable
 {
+
+    protected $originalRelations;
+    protected $originalAttributes;
+    protected $originalAppendedAttributes;
 
     /**
      * Create a new message instance.
@@ -20,6 +25,10 @@ class ServiceUpdated extends AbstractServiceMailable
     public function __construct(User $user, Service $service, array $data)
     {
         parent::__construct($user, $service, $data);
+        $this->original = $service->originalObject;
+        $this->originalRelations = $service->originalRelations;
+        $this->originalAttributes = $service->originalAttributes;
+        $this->originalAppendedAttributes = $service->originalAppendedAttributes;
     }
 
     /**
@@ -30,19 +39,29 @@ class ServiceUpdated extends AbstractServiceMailable
     public function build()
     {
 
-        $this->service->load(['location', 'day']);
+        $this->original = $this->service->restoreOriginal($this->originalAttributes, $this->originalRelations);
+        $this->original->originalAppendedAttributes = $this->originalAppendedAttributes;
 
         $ics = view('ical/ical', ['services' => [$this->service], 'token' => null, 'action' => null, 'key' => null])->render();
         $icsTitle = 'GD '.$this->service->day->date->format('Ymd').' '.$this->service->timeText(false).' '.$this->service->locationText().'.ics';
-
-        $diff = $this->service->diff();
-
-        if (!is_object($diff['original']->day)) {
-            $diff['original']->day = $this->service->day;
-        }
-        if (!is_object($diff['changed']->day)) {
-            $diff['changed']->day = $this->service->day;
-        }
+        die(View::make('mail.notifications.service-update')->with([
+                                                                  'service' => $this->service,
+                                                                  'original' => $this->original,
+                                                                  'originalRelations' => $this->originalRelations,
+                                                                  'changed' => $this->service,
+                                                                  'changes' => $this->changed,
+                                                                  'user' => $this->user,
+                                                              ]));
+        dd($this->subject('Änderungen am Gottesdienst vom '.$diff['original']->day->date->format('d.m.Y').', '.$diff['original']->timeText().' ('.$diff['original']->locationText().')')
+            ->view('mail.notifications.service-update')->with([
+                                                                  'service' => $this->service,
+                                                                  'original' => $diff['original'],
+                                                                  'changed' => $diff['changed'],
+                                                                  'changes' => $diff,
+                                                                  'user' => $this->user,
+                                                              ])->attachData($ics, $icsTitle, [
+                'mime' => 'text/calendar',
+            ]));
 
         return $this->subject('Änderungen am Gottesdienst vom '.$diff['original']->day->date->format('d.m.Y').', '.$diff['original']->timeText().' ('.$diff['original']->locationText().')')
             ->view('mail.notifications.service-update')->with([

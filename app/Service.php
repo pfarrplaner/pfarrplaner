@@ -118,6 +118,10 @@ class Service extends Model
         'ministriesByCategory',
     ];
 
+    protected $appendsToTracking = [
+        'ministriesByCategory',
+        ];
+
     protected $attributes = [
         'offering_type' => 'eO',
     ];
