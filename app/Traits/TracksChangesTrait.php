@@ -25,7 +25,9 @@ trait TracksChangesTrait
             if (is_a($relation, \Illuminate\Database\Eloquent\Collection::class)) {
                 $snapshot[$key] = $relation->pluck('id')->join(',');
             } else {
-                $snapshot[$key] = $relation->id;
+                if (is_object($relation) && property_exists($relation, 'id')) {
+                    $snapshot[$key] = $relation->id;
+                }
             }
         }
         return $snapshot;
@@ -51,7 +53,7 @@ trait TracksChangesTrait
         if (isset($this->forceTracking)) {
             $this->load($this->forceTracking);
         }
-        $this->originalObject = clone($this);
+        if (is_object($this)) $this->originalObject = clone($this);
         $this->originalAttributes = $this->attributes;
 
         foreach ($this->getRelations() as $relationKey => $relation) {
@@ -63,7 +65,9 @@ trait TracksChangesTrait
                 $this->originalObject->$relation = $collection;
                 $this->originalRelations[$relationKey] = $collection;
             } else {
-                $this->originalObject->$relation = $this->originalRelations[$relationKey] = clone($relation);
+                if (is_object($relation)) {
+                    $this->originalObject->$relation = $this->originalRelations[$relationKey] = clone($relation);
+                }
             }
         }
         $this->dataBeforeChanges = $this->createSnapshot();
