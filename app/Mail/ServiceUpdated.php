@@ -38,40 +38,36 @@ class ServiceUpdated extends AbstractServiceMailable
      */
     public function build()
     {
-
         $this->original = $this->service->restoreOriginal($this->originalAttributes, $this->originalRelations);
         $this->original->originalAppendedAttributes = $this->originalAppendedAttributes;
 
-        $ics = view('ical/ical', ['services' => [$this->service], 'token' => null, 'action' => null, 'key' => null])->render();
-        $icsTitle = 'GD '.$this->service->day->date->format('Ymd').' '.$this->service->timeText(false).' '.$this->service->locationText().'.ics';
-        die(View::make('mail.notifications.service-update')->with([
-                                                                  'service' => $this->service,
-                                                                  'original' => $this->original,
-                                                                  'originalRelations' => $this->originalRelations,
-                                                                  'changed' => $this->service,
-                                                                  'changes' => $this->changed,
-                                                                  'user' => $this->user,
-                                                              ]));
-        dd($this->subject('Änderungen am Gottesdienst vom '.$diff['original']->day->date->format('d.m.Y').', '.$diff['original']->timeText().' ('.$diff['original']->locationText().')')
-            ->view('mail.notifications.service-update')->with([
-                                                                  'service' => $this->service,
-                                                                  'original' => $diff['original'],
-                                                                  'changed' => $diff['changed'],
-                                                                  'changes' => $diff,
-                                                                  'user' => $this->user,
-                                                              ])->attachData($ics, $icsTitle, [
-                'mime' => 'text/calendar',
-            ]));
-
-        return $this->subject('Änderungen am Gottesdienst vom '.$diff['original']->day->date->format('d.m.Y').', '.$diff['original']->timeText().' ('.$diff['original']->locationText().')')
-            ->view('mail.notifications.service-update')->with([
-            'service' => $this->service,
-            'original' => $diff['original'],
-            'changed' => $diff['changed'],
-            'changes' => $diff,
-            'user' => $this->user,
-        ])->attachData($ics, $icsTitle, [
-                'mime' => 'text/calendar',
-            ]);
+        $ics = view(
+            'ical/ical',
+            ['services' => [$this->service], 'token' => null, 'action' => null, 'key' => null]
+        )->render();
+        $icsTitle = 'GD ' . $this->service->day->date->format('Ymd') . ' ' . $this->service->timeText(
+                false
+            ) . ' ' . $this->service->locationText() . '.ics';
+        return $this->subject(
+            'Änderungen am Gottesdienst vom ' . $this->originalRelations['day']->date->format(
+                'd.m.Y'
+            ) . ', ' . $this->original->timeText() . ' (' . $this->original->locationText() . ')'
+        )
+            ->view('mail.notifications.service-update')->with(
+                [
+                    'service' => $this->service,
+                    'original' => $this->original,
+                    'originalRelations' => $this->originalRelations,
+                    'changed' => $this->service,
+                    'changes' => $this->changed,
+                    'user' => $this->user,
+                ]
+            )->attachData(
+                $ics,
+                $icsTitle,
+                [
+                    'mime' => 'text/calendar',
+                ]
+            );
     }
 }
