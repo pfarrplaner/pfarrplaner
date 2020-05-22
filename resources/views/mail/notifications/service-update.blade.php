@@ -236,7 +236,36 @@
                      'old' => $original->songsheet,
                      'new' => $changed->songsheet,
                      ])
-
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'external_url',
+                     'key' => 'Externe Seite zum Gottesdienst',
+                     'old' => $original->external_url,
+                     'new' => $changed->external_url,
+                     ])
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'sermon_title',
+                     'key' => 'Titel der Predigt',
+                     'old' => $original->sermon_title,
+                     'new' => $changed->sermon_title,
+                     ])
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'sermon_reference',
+                     'key' => 'Predigttext',
+                     'old' => $original->sermon_reference,
+                     'new' => $changed->sermon_reference,
+                     ])
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'sermon_image',
+                     'key' => 'Titelbild der Predigt',
+                     'old' => $original->sermon_image,
+                     'new' => $changed->sermon_image,
+                     ])
+            @include('mail.notifications.service.changed-attribute', [
+                     'title' => 'sermon_description',
+                     'key' => 'Beschreibungstext zur Predigt',
+                     'old' => $original->sermon_description,
+                     'new' => $changed->sermon_description,
+                     ])
         @endcomponent
 
 
