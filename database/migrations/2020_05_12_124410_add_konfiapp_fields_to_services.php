@@ -15,7 +15,7 @@ class AddKonfiappFieldsToServices extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             $table->bigInteger('konfiapp_event_type')->nullable();
-            $table->bigInteger('konfiapp_event_qr')->nullable();
+            $table->string('konfiapp_event_qr')->nullable();
         });
     }
 

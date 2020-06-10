@@ -103,6 +103,8 @@ class Service extends Model
         'sermon_reference',
         'sermon_image',
         'sermon_description',
+        'konfiapp_event_type',
+        'konfiapp_event_qr',
     ];
 
     protected $appends = [

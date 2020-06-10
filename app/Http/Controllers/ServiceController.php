@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Day;
 use App\Http\Requests\StoreServiceRequest;
+use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Mail\ServiceUpdated;
@@ -69,6 +70,11 @@ class ServiceController extends Controller
         $this->handleAttachments($request, $service);
         $this->handleIndividualAttachment($request, $service, 'songsheet');
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
+
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service);
+        }
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -138,6 +144,11 @@ class ServiceController extends Controller
         $this->handleIndividualAttachment($request, $service, 'songsheet');
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service);
+        }
+
         $success = '';
         if ($service->isChanged()) {
             Subscription::send($service, ServiceUpdated::class);
@@ -164,6 +175,12 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $day = Day::find($service->day_id);
+
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service);
+        }
+
         $service->delete();
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', 'Der Gottesdiensteintrag wurde gelöscht.');

@@ -65,6 +65,8 @@ class StoreServiceRequest extends FormRequest
             'sermon_title' => 'nullable|string',
             'sermon_reference' => 'nullable|string',
             'sermon_description' => 'nullable|string',
+            'konfiapp_event_type' => 'nullable|int',
+            'konfiapp_event_qr' => 'nullable|string',
         ];
     }
 

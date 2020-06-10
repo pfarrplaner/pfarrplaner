@@ -82,7 +82,7 @@
                     @endtab
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
                         @tab(['id' => 'konfiapp'])
-                        @selectize(['name' => 'konfiapp_eventtype', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch'])
+                        @selectize(['name' => 'konfiapp_event_type', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch'])
                         @endtab
                     @endif
                     @endtabs

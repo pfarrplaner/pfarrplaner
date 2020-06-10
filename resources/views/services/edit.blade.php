@@ -148,7 +148,12 @@
                     @endtab
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
                         @tab(['id' => 'konfiapp', 'active' => ($tab=='konfiapp')])
-                            @selectize(['name' => 'konfiapp_eventtype', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($service->city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch'])
+                            @selectize(['name' => 'konfiapp_event_type', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($service->city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch', 'value' => $service->konfiapp_event_type])
+                            @if($service->konfiapp_event_qr)
+                                <div>
+                                    Diesem Gottesdienst ist ein QR-Code mit der ID <code>{{ $service->konfiapp_event_qr }}</code> zugeordnet.
+                                </div>
+                            @endif
                         @endtab
                     @endif
                     @can('admin')

@@ -234,4 +234,5 @@ Route::get(
 
 
 Route::get('test', function(){
+    dd(\App\Integrations\KonfiApp\KonfiAppIntegration::get(App\City::find(1))->createQRCode(Service::find(934)));
 });
