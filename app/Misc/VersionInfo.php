@@ -29,6 +29,10 @@ class VersionInfo
     {
         return collect([
             [
+                'date' => new Carbon('2020-06-11 09:30', 'Europe/Berlin'),
+                'text' => 'Der Pfarrplaner bietet nun eine Integration für die <a href="www.konfiapp.de" target="_blank">KonfiApp</a>. Wenn diese aktiviert ist, können automatisch QR-Codes für Gottesdienste angelegt werden. Die Konfis können diese dann mit der KonfiApp scannen und Punkte sammeln.',
+            ],
+            [
                 'date' => new Carbon('2020-02-27 10:00', 'Europe/Berlin'),
                 'text' => 'Aus Gottesdiensten, die einen Link zu einer Audioaufnahme haben, kann nun automatisch ein Podcast erstellt werden. Dieser findet sich unter https://www.pfarrplaner.de/podcasts/<name des ortes>.xml',
             ],
