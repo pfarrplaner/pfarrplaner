@@ -61,20 +61,23 @@ class ServiceController extends Controller
      */
     public function store(StoreServiceRequest $request)
     {
+        $validatedData = $request->validated();
+        $service = new Service($validatedData);
 
-        $service = new Service($request->validated());
         $service->setDefaultOfferingValues();
         $service->save();
+
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service['konfiapp_event_type'] ?: '');
+        }
+
 
         $this->updateFromRequest($request, $service);
         $this->handleAttachments($request, $service);
         $this->handleIndividualAttachment($request, $service, 'songsheet');
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service);
-        }
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -136,7 +139,15 @@ class ServiceController extends Controller
     public function update(StoreServiceRequest $request, Service $service)
     {
         $service->trackChanges();
-        $service->fill($request->validated());
+        $validatedData = $request->validated();
+
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service, $validatedData['konfiapp_event_type'] ?: '');
+        }
+
+
+        $service->fill($validatedData);
         $service->setDefaultOfferingValues();
         $this->updateFromRequest($request, $service);
         $service->save();
@@ -144,10 +155,6 @@ class ServiceController extends Controller
         $this->handleIndividualAttachment($request, $service, 'songsheet');
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service);
-        }
 
         $success = '';
         if ($service->isChanged()) {

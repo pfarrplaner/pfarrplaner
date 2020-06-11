@@ -59,17 +59,24 @@ class KonfiAppIntegration extends AbstractIntegration
      * @param Service $service
      * @throws Exception
      */
-    public function handleServiceUpdate(Service $service)
+    public function handleServiceUpdate(Service $service, $requestedChange)
     {
-        if (($service->konfiapp_event_type != '') && ($service->konfiapp_event_qr == '')) {
-            $service->update(['konfiapp_event_qr' => $this->createQRCode($service)]);
+        if ($service->konfiapp_event_type != '') {
+            if ($service->konfiapp_event_qr == '') {
+                $service->update(['konfiapp_event_qr' => $this->createQRCode($service)]);
+            } elseif ($service->konfiapp_event_type != $requestedChange) {
+                // change of event type: old qr needs to be deleted first
+                $this->deleteQRCodeByCode($service->konfiapp_event_qr, $service->konfiapp_event_type);
+                $service->update(['konfiapp_event_type' => $requestedChange]);
+                $service->update(['konfiapp_event_qr' => $this->createQRCode($service)]);
+            }
         }
         return $service;
     }
 
     public function handleServiceDelete(Service $service) {
         if ($service->konfiapp_event_qr != '') {
-            $this->deleteQRCode($service);
+            $this->deleteQRCode($service->konfiapp_event_qr);
         }
         $service->update(['konfiapp_event_qr' => '']);
         return $service;
@@ -98,14 +105,28 @@ class KonfiAppIntegration extends AbstractIntegration
 
     /**
      * Delete a qr associated with a service
-     * @param Service $service
+     * @param string $id Code id
      * @throws Exception
      */
-    public function deleteQRCode(Service $service) {
+    public function deleteQRCode($id) {
         $this->requestData(
             'verwaltung/veranstaltungen/qr/delete/', [
-                'id' => $service->konfiapp_event_qr,
+                'id' => $id,
         ]);
+    }
+
+    public function deleteQRCodeByCode($code, $type) {
+        $codes = $this->requestData('verwaltung/veranstaltungen/qr/list/', [
+            'veranstaltungID' => $type,
+        ])->detail;
+
+        foreach ($codes as $qrcode) {
+            if ($qrcode->code == $code) $this->deleteQRCode($qrcode->id);
+        }
+    }
+
+    public function listQRCodes() {
+        return $this->requestData('verwaltung/veranstaltungen/qr/list/', ['veranstaltungID' => 682])->detail;
     }
 
     /**
