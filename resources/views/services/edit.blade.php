@@ -82,7 +82,7 @@
                     @tabheader(['id' => 'streaming', 'title' => 'Streaming', 'active' => ($tab=='streaming')]) @endtabheader
                     @tabheader(['id' => 'sermon', 'title' => 'Predigt', 'active' => ($tab=='sermon')]) @endtabheader
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
-                        @tabheader(['id' => 'konfiapp', 'title' => 'Konfi-App', 'active' => ($tab=='konfiapp')]) @endtabheader
+                        @tabheader(['id' => 'konfiapp', 'title' => 'KonfiApp', 'active' => ($tab=='konfiapp')]) @endtabheader
                     @endif
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments')]) @endtabheader
                     @can('admin')

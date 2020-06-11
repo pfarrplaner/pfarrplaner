@@ -14,9 +14,9 @@
 @foreach ($services as $location => $localServices)
     @foreach($localServices as $service)
         <div @if(!$loop->last)style="page-break-after: always" @endif>
-            <h1>Punkte für die Konfi-App</h1>
+            <h1>Punkte für die KonfiApp</h1>
             <h2>{{ $service->title ?: 'Gottesdienst' }}<br /> am {{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}<br />{{ $service->locationText() }}</h2>
-            <p>Du bist Konfi und willst Punkte für diesen Gottesdienst? Scanne den folgenden Code mit deiner Konfi-App:</p>
+            <p>Du bist Konfi und willst Punkte für diesen Gottesdienst? Scanne den folgenden Code mit deiner KonfiApp:</p>
             <div style="text-align: center; width: 100%;"><barcode code="{{ $service->konfiapp_event_qr }}" size="4" type="QR" error="M" class="barcode" disableborder="1"/></div>
             <p style="font-size: 0.65em; font-style: italic;">Bitte beachte: Dieser Code funktioniert nur am {{ $service->day->date->format('d.m.Y') }} ab {{ $service->timeText() }} für 3 Stunden. Gelegenheit verpasst? Dann musst du den Gottesdienst von deinem Pfarrer in der App nachtragen lassen.</p>
             <p style="font-size: 0.65em; ">

@@ -28,7 +28,7 @@
                     @tabheader(['id' => 'streaming', 'title' => 'Streaming']) @endtabheader
                     @tabheader(['id' => 'sermon', 'title' => 'Predigt']) @endtabheader
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
-                        @tabheader(['id' => 'konfiapp', 'title' => 'Konfi-App']) @endtabheader
+                        @tabheader(['id' => 'konfiapp', 'title' => 'KonfiApp']) @endtabheader
                     @endif
                     @endtabheaders
 

@@ -44,7 +44,7 @@
                 @input(['name' => 'homepage', 'label' => 'Homepage der Kirchengemeinde', 'enabled' => Auth::user()->can('ort-bearbeiten')])
             @endtab
             @tab(['id' => 'integrations'])
-                @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die Konfi-App', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'enabled' => Auth::user()->can('ort-bearbeiten')])
             @endtab
         @endtabs
         @endcomponent

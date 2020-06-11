@@ -41,7 +41,7 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
 
     public $title = 'QR-Codes für Gottesdienste';
     public $group = 'Konfi';
-    public $description = 'QR Codes für Gottesdienste, die von den Konfis mit der Konfi-App gescannt werden können.';
+    public $description = 'QR Codes für Gottesdienste, die von den Konfis mit der KonfiApp gescannt werden können.';
 
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();

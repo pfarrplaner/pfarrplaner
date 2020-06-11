@@ -60,8 +60,8 @@
                             </div>
                         </div>
                         <div class="col-sm-10">
-                            <h4>Konfi-App</h4
-                            <p>Die <a href="https://konfiapp.de" target="_blank">Konfi-App</a> von Philipp Dormann bietet viele Möglichkeiten, mit Konfis in Kontakt zu bleiben.</p>
+                            <h4>KonfiApp</h4
+                            <p>Die <a href="https://konfiapp.de" target="_blank">KonfiApp</a> von Philipp Dormann bietet viele Möglichkeiten, mit Konfis in Kontakt zu bleiben.</p>
                             <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
                             <ul>
                                 <li>Im Pfarrplaner angelegte Gottesdienste können einem Veranstaltungstyp in der Konfiapp zugewiesen werden. Beim Speichern wird dann automatisch ein passender QR-Code in der Konfiapp angelegt. </li>
@@ -78,7 +78,7 @@
                             </p>
                         </div>
                     </div>
-                    @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die Konfi-App', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
             @endtabs
     </form>
