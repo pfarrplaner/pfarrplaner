@@ -151,7 +151,8 @@
                             @selectize(['name' => 'konfiapp_event_type', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($service->city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch', 'value' => $service->konfiapp_event_type])
                             @if($service->konfiapp_event_qr)
                                 <div>
-                                    Diesem Gottesdienst ist ein QR-Code mit der ID <code>{{ $service->konfiapp_event_qr }}</code> zugeordnet.
+                                    Diesem Gottesdienst ist ein QR-Code mit der ID <code>{{ $service->konfiapp_event_qr }}</code> zugeordnet. <br />
+                                    <a class="btn btn-secondary" href="{{ route('report.step', ['report' => 'KonfiAppQR', 'step' => 'single', 'service' => $service->id]) }}">QR-Code drucken</a>
                                 </div>
                             @endif
                         @endtab

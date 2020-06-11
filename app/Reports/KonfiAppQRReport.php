@@ -23,6 +23,7 @@ namespace App\Reports;
 
 use App\City;
 use App\Day;
+use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Service;
 use App\User;
 use Illuminate\Http\Request;
@@ -58,12 +59,13 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
         ]);
 
         $allServices = Service::where('city_id', $data['city'])
-            ->whereNotNull('konfiapp_event_qr')
+            ->where('konfiapp_event_qr', '!=', '')
             ->whereHas('day', function ($query) use ($data) {
-                $query->where('date', '>=', $data['start'])
-                    ->where('date', '<=', $data['end']);
+                $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $data['start'])->format('Y-m-d'))
+                    ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $data['end'])->format('Y-m-d'));
             })
             ->get();
+
 
         // group by location
         $services = [];
@@ -73,15 +75,35 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
         ksort($services);
 
 
-        return $this->sendToBrowser(
+
+        if (count($services) == '0') {
+            return redirect()->route('reports.setup', 'konfiAppQR');
+        }
+
+        $types = KonfiAppIntegration::get(City::find($data['city']))->listEventTypes();
+
+
+        return $this->sendToFile(
             date('Ymd') . ' QR-Codes.pdf',
             [
-                'start' => $request->get('start'),
-                'end' => $request->get('end'),
                 'services' => $services,
+                'types' => $types,
             ],
             ['format' => 'A4']);
 
+    }
+
+    public function single(Request $request) {
+        $service = Service::findOrFail($request->get('service'));
+        $services[$service->locationText()][] = $service;
+        $types = KonfiAppIntegration::get($service->city)->listEventTypes();
+        return $this->sendToFile(
+            $service->day->date->format('Ymd') . ' QR-Code.pdf',
+            [
+                'services' => $services,
+                'types' => $types,
+            ],
+            ['format' => 'A4']);
     }
 
 }
