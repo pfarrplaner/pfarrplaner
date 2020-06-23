@@ -89,7 +89,7 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
                 'services' => $services,
                 'types' => $types,
             ],
-            ['format' => 'A4']);
+            ['format' => 'A4-L']);
 
     }
 
@@ -103,7 +103,7 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
                 'services' => $services,
                 'types' => $types,
             ],
-            ['format' => 'A4']);
+            ['format' => 'A4-L']);
     }
 
 }

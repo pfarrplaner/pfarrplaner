@@ -1,10 +1,24 @@
 <html>
 <head>
     <style>
+        @page {
+          margin: 0;
+        }
         body, * {
             font-family: 'helveticacondensed', sans-serif;
-            font-size: 2em;
+            text-align: center;
         }
+        div.container {
+          float: left;
+          border: solid 1px white;
+          width: 61.3mm !important;
+          max-width: 61.3mm !important;
+          height: 92mm;
+          max-height: 92mm;
+          overflow: hidden;
+          padding: 6mm;
+        }
+        
         tr.even {
             background-color: lightgray;
         }
@@ -13,20 +27,19 @@
 <body>
 @foreach ($services as $location => $localServices)
     @foreach($localServices as $service)
-        <div @if(!$loop->last)style="page-break-after: always" @endif>
-            <h1>Punkte für die KonfiApp</h1>
-            <h2>{{ $service->title ?: 'Gottesdienst' }}<br /> am {{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}<br />{{ $service->locationText() }}</h2>
-            <p>Du bist Konfi und willst Punkte für diesen Gottesdienst? Scanne den folgenden Code mit deiner KonfiApp:</p>
-            <div style="text-align: center; width: 100%;"><barcode code="{{ $service->konfiapp_event_qr }}" size="4" type="QR" error="M" class="barcode" disableborder="1"/></div>
-            <p style="font-size: 0.65em; font-style: italic;">Bitte beachte: Dieser Code funktioniert nur am {{ $service->day->date->format('d.m.Y') }} ab {{ $service->timeText() }} für 3 Stunden. Gelegenheit verpasst? Dann musst du den Gottesdienst von deinem Pfarrer in der App nachtragen lassen.</p>
-            <p style="font-size: 0.65em; ">
+        <div class="container" @if($loop->last) style="page-break-after: always;" @endif>
+            <p style="font-weight: bold">{{ $service->title ?: 'Gottesdienst' }}<br /> am {{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}<br />{{ $service->locationText() }}</p>
+            <p>
+              <barcode code="{{ $service->konfiapp_event_qr }}" size="2" type="QR" error="M" class="barcode" disableborder="1"/><br />
                 @foreach ($types as $type)
                     @if($type->id == $service->konfiapp_event_type)
-                        Mit diesem Code erhältst du {{ $type->punktzahl }} {{ $type->punktzahl == 1 ? 'Punkt' : 'Punkte' }} in der Kategorie "{{ $type->name }}".
+                        {{ $type->punktzahl }} {{ $type->punktzahl == 1 ? 'Punkt' : 'Punkte' }} in der Kategorie "{{ $type->name }}"
                     @endif
                 @endforeach
+                <span style="font-size: 0.65em; font-style: italic;">gültig am {{ $service->day->date->format('d.m.Y') }} ab {{ $service->timeText() }} für 3 Stunden. </span>
             </p>
-            <p style="width:100%; text-align: right; font-size: 0.2em;">
+            
+            <p style="font-size: 0.4em;">
                 {{ $service->konfiapp_event_qr }} | Gedruckt am {{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->formatLocalized('%d.%m.%Y um %H:%M Uhr') }} von {{ \Illuminate\Support\Facades\Auth::user()->name }}.
             </p>
         </div>
