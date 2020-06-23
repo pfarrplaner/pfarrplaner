@@ -28,12 +28,8 @@
                 <div class="form-group">
                     <label for="ministries">Folgende Dienste mit planen:</label>
                     <select id="selectMinistry" class="form-control" name="ministries[]" multiple>
-                        <option value="P">Pfarrer*in</option>
-                        <option value="O">Organist*in</option>
-                        <option value="M">Mesner*in</option>
-                        <option value="A">Weitere Beteiligte</option>
-                        @foreach ($ministries as $ministry)
-                            <option value="{{ $ministry }}">{{ $ministry }}</option>
+                        @foreach ($ministries as $ministryKey => $ministry)
+                            <option value="{{ $ministryKey }}">{{ $ministry }}</option>
                         @endforeach
                     </select>
                 </div>

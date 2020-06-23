@@ -40,7 +40,10 @@ class PlanningInput extends AbstractInput
 
     public function canEdit(): bool
     {
-        return Auth::user()->can('gd-pfarrer-bearbeiten');
+        return Auth::user()->can('gd-pfarrer-bearbeiten') ||
+            Auth::user()->can('gd-organist-bearbeiten') ||
+            Auth::user()->can('gd-mesner-bearbeiten') ||
+            Auth::user()->can('gd-allgemein-bearbeiten');
     }
 
     public function setup(Request $request)
@@ -49,15 +52,11 @@ class PlanningInput extends AbstractInput
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->writableCities;
 
-        $ministries = Participant::all()
-            ->pluck('category')
-            ->unique()
-            ->reject(
-                function ($value, $key) {
-                    return in_array($value, ['P', 'O', 'M', 'A']);
-                }
-            );
-
+        $ministries = $this->getAvailableMinistries(
+            Participant::all()
+                ->pluck('category')
+                ->unique()
+        );
 
         return view(
             $this->getViewName('setup'),
@@ -98,24 +97,8 @@ class PlanningInput extends AbstractInput
 
         $users = User::all();
 
-        $reqMinistries = $request->get('ministries') ?: [];
-        $ministries = [];
-        foreach ($reqMinistries as $ministry) {
-            $title = $ministry;
-            if ($ministry == 'P') {
-                $title = 'Pfarrer*in';
-            }
-            if ($ministry == 'O') {
-                $title = 'Organist*in';
-            }
-            if ($ministry == 'M') {
-                $title = 'Mesner*in';
-            }
-            if ($ministry == 'A') {
-                $title = 'Weitere Beteiligte';
-            }
-            $ministries[$ministry] = $title;
-        }
+        $ministries = $this->getAvailableMinistries($request->get('ministries') ?: []);
+
 
         $input = $this;
         return view(
@@ -155,5 +138,39 @@ class PlanningInput extends AbstractInput
             }
         }
         return redirect()->route('calendar')->with('success', 'Der Plan wurde gespeichert.');
+    }
+
+    protected function getAvailableMinistries($reqMinistries)
+    {
+        $ministries = [];
+        foreach ($reqMinistries as $ministry) {
+            switch ($ministry) {
+                case 'P':
+                    if (Auth::user()->can('gd-pfarrer-bearbeiten')) {
+                        $ministries[$ministry] = 'Pfarrer*in';
+                    }
+                    break;
+                case 'O':
+                    if (Auth::user()->can('gd-organist-bearbeiten')) {
+                        $ministries[$ministry] = 'Organist*in';
+                    }
+                    break;
+                case 'M':
+                    if (Auth::user()->can('gd-mesner-bearbeiten')) {
+                        $ministries[$ministry] = 'Mesner*in';
+                    }
+                    break;
+                case 'A':
+                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
+                        $ministries[$ministry] = 'Weitere Beteiligte';
+                    }
+                    break;
+                default:
+                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
+                        $ministries[$ministry] = $ministry;
+                    }
+            }
+        }
+        return $ministries;
     }
 }
