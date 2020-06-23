@@ -58,8 +58,7 @@ class CityEventsCalendarLink extends AbstractCalendarLink
 
         $events = Service::mix($events, $services, $start, $end);
 
-
-        if (isset($city->op_domain) && isset($city->op_customer_key) && isset($city->op_customer_token)) {
+        if (($city->op_domain != '') && ($city->op_customer_key != '') && ($city->op_customer_token != '')) {
             $op = new OPEventsImport($city);
             $events = $op->mix($events, $start, $end, true);
         }
