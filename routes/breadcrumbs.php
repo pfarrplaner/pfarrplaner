@@ -207,6 +207,10 @@ Breadcrumbs::for('password.request', function (BreadcrumbsGenerator $trail){
     $trail->push('Passwort vergessen');
 });
 
+Breadcrumbs::for('password.reset', function (BreadcrumbsGenerator $trail){
+    $trail->push('Passwort zurücksetzen');
+});
+
 Breadcrumbs::for('reports.list', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Ausgabeformate', route('reports.list'));
