@@ -95,8 +95,8 @@ class KonfiAppIntegration extends AbstractIntegration
             'verwaltung/veranstaltungen/qr/add/',
             [
                 'veranstaltungID' => $service->konfiapp_event_type,
-                'dateStart' => $service->day->date->format('Y-m-d'),
-                'dateEnd' => $service->day->date->format('Y-m-d'),
+                'dateStart' => $service->day->date->format('Y.m.d'),
+                'dateEnd' => $service->day->date->format('Y.m.d'),
                 'timeStart' => $serviceTime->format('H:i'),
                 'timeEnd' => $serviceTime->clone()->addHour(3)->format('H:i'),
             ]
