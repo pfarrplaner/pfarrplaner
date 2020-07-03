@@ -313,12 +313,13 @@ class User extends Authenticatable
      */
     public function getSubscription($city)
     {
-        $subscription = $this->subscriptions()->where('city_id', is_int($city) ? $city : $city->id)->first();
+        $cityId = is_int($city) ? $city : $city->id;
+        $subscription = $this->subscriptions()->where('city_id', $cityId)->first();
         if (null === $subscription) {
             $subscription = new Subscription(
                 [
                     'user_id' => $this->id,
-                    'city_id' => $city->id,
+                    'city_id' => $cityId,
                     'subscription_type' => Subscription::SUBSCRIBE_OWN,
                 ]
             );
