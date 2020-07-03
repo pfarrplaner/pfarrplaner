@@ -48,10 +48,7 @@ class ServiceUpdated extends AbstractServiceMailable
         $icsTitle = 'GD ' . $this->service->day->date->format('Ymd') . ' ' . $this->service->timeText(
                 false
             ) . ' ' . $this->service->locationText() . '.ics';
-        return $this->subject(
-            'Änderungen an einem Gottesdienst'
-            ) . ', ' . $this->original->timeText() . ' (' . $this->original->locationText() . ')'
-        )
+        return $this->subject('Änderungen an einem Gottesdienst')
             ->view('mail.notifications.service-update')->with(
                 [
                     'service' => $this->service,
