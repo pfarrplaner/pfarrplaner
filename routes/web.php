@@ -223,6 +223,9 @@ Route::get('/livechat/{service}', 'LiveChatController@liveChat')->name('service.
 Route::get('/livechat/{service}/messages', 'LiveChatController@liveChatAjax')->name('service.livechat.ajax');
 Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessage')->name('service.livechat.message.post');
 
+// test/debug routes
+Route::get('/test/mail/{address}', 'TestController@mail');
+
 
 // demo function for exception handling
 Route::get(
