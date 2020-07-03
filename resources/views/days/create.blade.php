@@ -29,17 +29,19 @@
                             @endif
                             @if(isset($existing[$date->format('Y-m-d')]))
                             @if ($existing[$date->format('Y-m-d')]->day_type == \App\Day::DAY_TYPE_LIMITED)
-                                title="Dieser Tag existiert bereits, wird aber noch nicht für alle Gemeinden angezeigt."
+                            title="Dieser Tag existiert bereits, wird aber noch nicht für alle Gemeinden angezeigt."
                             @else
-                                title="Dieser Tag existiert bereits."
+                            title="Dieser Tag existiert bereits."
+                                @if(isset($existingCities[$date->format('Y-m-d')])) data-cities="{{ $existingCities[$date->format('Y-m-d')]->join(',') }}" @endif
                             @endif
                             @else
-                                title="Diesen Tag neu anlegen"
+                            title="Diesen Tag neu anlegen"
                             @endif
 
                         >
 
-                            <span class="weekday-label weekday-label-{{ $date->formatLocalized('%a') }}">{!! $date->formatLocalized('%a') !!}</span><br/>
+                            <span
+                                class="weekday-label weekday-label-{{ $date->formatLocalized('%a') }}">{!! $date->formatLocalized('%a') !!}</span><br/>
                             {{ $date->day }}
                         </td>
                         <?php $date->addDay(1) ?>
@@ -112,24 +114,28 @@
             $('.card .card-body span.day-label').html($('#day_' + n).data('day'));
             $('.card .card-header').html($('#day_' + n).data('weekday'));
             $('input[name=date]').val($('#day_' + n).data('date'));
-            $('#check-type-limited').prop('checked', true);
-            $('#check-type-default').prop('checked', false);
+
+            if ($('#day_' + n).hasClass('day-type-limited')) {
+                $('#check-type-limited').prop('checked', true);
+                $('#check-type-default').prop('checked', false);
+            } else {
+                $('#check-type-limited').prop('checked', false);
+                $('#check-type-default').prop('checked', true);
+            }
             $('#submit').removeAttr('disabled');
 
             $('.city-check').prop('checked', false);
-            if ($('#day_' + n).hasClass('day-type-limited')) {
-                var cities = $('#day_' + n).data('cities');
-                if (cities != '') {
-                    String(cities).split(',').forEach(city => {
-                        $('#defaultCheck' + city).prop('checked', true);
-                    });
-                }
+            var cities = $('#day_' + n).data('cities');
+            if (cities != '') {
+                String(cities).split(',').forEach(city => {
+                    $('#defaultCheck' + city).prop('checked', true);
+                });
             }
 
         }
 
         $(document).ready(function () {
-            $('.day.new, .day-type-limited').click(function () {
+            $('.day.new, .day-type-limited, .day-type-default').click(function () {
                 selectDay($(this).data('day'));
             });
 
@@ -176,6 +182,12 @@
 
         .day.day-type-limited:hover {
             background-color: mediumpurple;
+        }
+
+        .day.day-type-default:hover {
+            background-color: lightpink;
+            cursor: pointer;
+            color: black;
         }
 
         .day.selected {

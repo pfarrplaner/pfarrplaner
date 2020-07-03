@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Day;
 use App\Liturgy;
+use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -149,10 +150,14 @@ class DayController extends Controller
 
         $days = [];
         $existing = [];
+        $existingCities = [];
         $date = $start->copy();
         while ($date <= $end) {
             if ($existingDay = Day::where('date', $date->format('Y-m-d'))->first()) {
                 $existing[$existingDay->date->format('Y-m-d')] = $existingDay;
+                if ($existingDay->day_type == Day::DAY_TYPE_DEFAULT) {
+                    $existingCities[$existingDay->date->format('Y-m-d')] = Service::where('day_id', $existingDay->id)->get()->pluck('city_id')->unique();
+                }
             } else {
                 $days[] = $date->day;
             }
@@ -163,7 +168,7 @@ class DayController extends Controller
         $existing = collect($existing);
 
         $cities = Auth::user()->writableCities;
-        return view('days.create', compact('year', 'month', 'cities', 'days', 'existing', 'start', 'end'));
+        return view('days.create', compact('year', 'month', 'cities', 'days', 'existing', 'start', 'end', 'existingCities'));
     }
 
     /**
