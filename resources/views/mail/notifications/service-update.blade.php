@@ -8,7 +8,7 @@
 
     @component('mail.layout.blocks.content-table')
         @slot('title')
-            Änderungen an einem Gottesdienst
+            Änderungen am Gottesdienst vom {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }} ({{ $service->locationText() }})
         @endslot
         @slot('subtitle')
             {{ strftime('%A, %d. %B %Y', $service->day->date->timestamp) }}, {{ $service->timeText() }}
@@ -30,251 +30,124 @@
                 @component('mail.layout.blocks.cell', ['type' => 'th']) Nachher @endcomponent
             @endslot
 
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Datum',
-                     'key' => 'day_id',
-                     'old' => $original->day->date->format('d.m.Y'),
-                     'new' => $changed->day->date->format('d.m.Y')
-                     ])
+            @foreach ([
+                'dateText' => 'Datum',
+                'timeText' => 'Uhrzeit',
+                'locationText' => 'Ort',
+                'descriptionText' => 'Beschreibung',
+                'internal_remarks' => 'Interne Anmerkungen',
+                ] as $attribute => $title)
+                @if(isset($changes[$attribute]))
+                    @include('mail.notifications.service.changed-attribute', [
+                             'title' => $title,
+                             'old' => $changes[$attribute]['original'],
+                             'new' => $changes[$attribute]['changed'],
+                             ])
+                @endif
+            @endforeach
 
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Uhrzeit',
-                     'key' => 'time',
-                     'old' => $original->timeText(),
-                     'new' => $changed->timeText()
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Ort',
-                     'key' => 'location_id',
-                     'old' => $original->locationText(),
-                     'new' => $changed->locationText(),
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Freie Ortsangabe',
-                     'key' => 'special_location',
-                     'old' => $original->locationText(),
-                     'new' => $changed->locationText(),
-                     ])
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Beschreibung',
-                     'key' => 'description',
-                     'old' => trim($original->descriptionText()),
-                     'new' => trim($changed->descriptionText()),
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'Interne Anmerkungen',
-                     'key' => 'internal_remarks',
-                     'old' => $original->internal_remarks,
-                     'new' => $changed->internal_remarks,
-                     ])
-
-            @if(isset($original->city) && isset($changed->city))
+            @if(isset($changes['city_id']))
                 @include('mail.notifications.service.changed-attribute', [
                          'title' => 'Kirchengemeinde',
                          'key' => 'city_id',
-                         'old' => $original->city->name,
-                         'new' => $changed->city->name,
+                         'old' => \App\City::find($changes['city_id']['original'])->name,
+                         'new' => $service->city->name,
                          ])
             @endif
 
+            @if(isset($changes['need_predicant']))
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'need_predicant',
                      'key' => 'Prädikant benötigt',
                      'old' => $original->need_predicant ? '✔' : '✘',
                      'new' => $changed->need_predicant ? '✔' : '✘',
                      ])
+            @endif
 
-            @include('mail.notifications.service.changed-participants-list', [
-                     'title' => 'Pfarrer*in',
-                     'key' => 'pastors',
-                     ])
+            @foreach ($participants as $category => $categoryParticipants)
+                @include('mail.notifications.service.changed-ministries', [
+                    'category' => $category,
+                    'ministry' => $categoryParticipants,
+                ])
+            @endforeach
 
-            @include('mail.notifications.service.changed-participants-list', [
-                     'title' => 'Organist*in',
-                     'key' => 'organists',
-                     ])
-
-            @include('mail.notifications.service.changed-participants-list', [
-                     'title' => 'Mesner*in',
-                     'key' => 'sacristans',
-                     ])
-
-            @include('mail.notifications.service.changed-ministries')
-
+            @if(isset($changes['baptism']))
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'baptism',
                      'key' => 'Taufgottesdienst',
-                     'old' => $original->baptism ? '✔' : '✘',
-                     'new' => $changed->baptism ? '✔' : '✘',
+                     'old' => $changes['baptism']['original'] ? '✔' : '✘',
+                     'new' => $changes['baptism']['changed'] ? '✔' : '✘',
                      ])
+            @endif
 
+            @if(isset($changes['eucharist']))
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'eucharist',
                      'key' => 'Abendmahlsgottesdienst',
-                     'old' => $original->eucharist ? '✔' : '✘',
-                     'new' => $changed->eucharist ? '✔' : '✘',
+                     'old' => $changes['eucharist']['original'] ? '✔' : '✘',
+                     'new' => $changes['eucharist']['changed'] ? '✔' : '✘',
                      ])
+            @endif
 
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'offerings_counter1',
-                     'key' => 'Opferzähler 1',
-                     'old' => $original->offerings_counter1,
-                     'new' => $changed->offerings_counter1,
-                     ])
 
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'offerings_counter2',
-                     'key' => 'Opferzähler 2',
-                     'old' => $original->offerings_counter2,
-                     'new' => $changed->offerings_counter2,
-                     ])
+            @foreach ([
+                'offerings_counter1' => 'Opferzähler 1',
+                'offerings_counter2' => 'Opferzähler 2',
+                'offering_goal' => 'Opferzweck',
+                'offering_description' => 'Beschreibung zum Opfer',
+                'offering_type' => 'Opfertyp',
+                'offering_type' => 'Opfertyp',
+                'offering_amount' => 'Opfersumme',
+                ] as $attribute => $title)
+                @if(isset($changes[$attribute]))
+                    @include('mail.notifications.service.changed-attribute', [
+                             'title' => $title,
+                             'old' => $changes[$attribute]['original'],
+                             'new' => $changes[$attribute]['changed'],
+                             ])
+                @endif
+            @endforeach
 
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'offering_goal',
-                     'key' => 'Opferzweck',
-                     'old' => $original->offering_goal,
-                     'new' => $changed->offering_goal,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'offering_description',
-                     'key' => 'Beschreibung zum Opfer',
-                     'old' => $original->offering_description,
-                     'new' => $changed->offering_description,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'offering_type',
-                     'key' => 'Opfertyp',
-                     'old' => $original->offering_type,
-                     'new' => $changed->offering_type,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'offering_amount',
-                     'key' => 'Opfersumme',
-                     'old' => $original->offering_amount,
-                     'new' => $changed->offering_amount,
-                     ])
-
+            @if(isset($changes['cc']))
             @include('mail.notifications.service.changed-attribute', [
                      'title' => 'cc',
                      'key' => 'Kinderkirche',
-                     'old' => $original->cc ? '✔' : '✘',
-                     'new' => $changed->cc ? '✔' : '✘',
+                     'old' => $changes['cc']['original'] ? '✔' : '✘',
+                     'new' => $changes['cc']['changed'] ? '✔' : '✘',
                      ])
+            @endif
 
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'cc_alt_time',
-                     'key' => 'Uhrzeit der Kinderkirche',
-                     'old' => $original->cc_alt_time,
-                     'new' => $changed->cc_alt_time,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'cc_location',
-                     'key' => 'Ort der Kinderkirche',
-                     'old' => $original->cc_location,
-                     'new' => $changed->cc_location,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'cc_lesson',
-                     'key' => 'Lektion für die Kinderkirche',
-                     'old' => $original->cc_lesson,
-                     'new' => $changed->cc_lesson,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'cc_staff',
-                     'key' => 'Mitarbeiter in der Kinderkirche',
-                     'old' => $original->cc_staff,
-                     'new' => $changed->cc_staff,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'youtube_url',
-                     'key' => 'Streaming-URL (youtube)',
-                     'old' => $original->youtube_url,
-                     'new' => $changed->youtube_url,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'cc_streaming_url',
-                     'key' => 'URL für das Streaming der Kinderkirche',
-                     'old' => $original->cc_streaming_url,
-                     'new' => $changed->cc_streaming_url,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'offerings_url',
-                     'key' => 'URL für Onlinespenden',
-                     'old' => $original->offerings_url,
-                     'new' => $changed->offerings_url,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'meeting_url',
-                     'key' => 'URL für ein "virtuelles Kirchencafé"',
-                     'old' => $original->meeting_url,
-                     'new' => $changed->meeting_url,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'recording_url',
-                     'key' => 'URL zur Audioaufzeichnung',
-                     'old' => $original->recording_url,
-                     'new' => $changed->recording_url,
-                     ])
-
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'songsheet',
-                     'key' => 'URL zum Liedblatt',
-                     'old' => $original->songsheet,
-                     'new' => $changed->songsheet,
-                     ])
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'external_url',
-                     'key' => 'Externe Seite zum Gottesdienst',
-                     'old' => $original->external_url,
-                     'new' => $changed->external_url,
-                     ])
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'sermon_title',
-                     'key' => 'Titel der Predigt',
-                     'old' => $original->sermon_title,
-                     'new' => $changed->sermon_title,
-                     ])
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'sermon_reference',
-                     'key' => 'Predigttext',
-                     'old' => $original->sermon_reference,
-                     'new' => $changed->sermon_reference,
-                     ])
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'sermon_image',
-                     'key' => 'Titelbild der Predigt',
-                     'old' => $original->sermon_image,
-                     'new' => $changed->sermon_image,
-                     ])
-            @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'sermon_description',
-                     'key' => 'Beschreibungstext zur Predigt',
-                     'old' => $original->sermon_description,
-                     'new' => $changed->sermon_description,
-                     ])
+            @foreach ([
+                'cc_alt_time' => 'Uhrzeit der Kinderkirche',
+                'cc_location' => 'Ort der Kinderkirche',
+                'cc_lession' => 'Lektion für die Kinderkirche',
+                'cc_staff' => 'Mitarbeiter in der Kinderkirche',
+                'youtube_url' => 'Streaming-URL (youtube)',
+                'cc_streaming_url' => 'URL für das Streaming der Kinderkirche',
+                'offerings_url' => 'URL für Onlinespenden',
+                'meeting_url' => 'URL für ein "virtuelles Kirchencafé"',
+                'recording_url' => 'URL zur Audioaufzeichnung',
+                'songsheet' => 'URL zum Liedblatt',
+                'external_url' => 'Externe Seite zum Gottesdienst',
+                'sermon_title' => 'Titel der Predigt',
+                'sermon_reference' => 'Predigttext',
+                'sermon_image' => 'Titelbild der Predigt',
+                'sermon_description' => 'Beschreibungstext zur Predigt',
+                ] as $attribute => $title)
+                @if(isset($changes[$attribute]))
+                    @include('mail.notifications.service.changed-attribute', [
+                             'title' => $title,
+                             'old' => $changes[$attribute]['original'],
+                             'new' => $changes[$attribute]['changed'],
+                             ])
+                @endif
+            @endforeach
         @endcomponent
 
 
     @endcomponent
 
     @include('mail.layout.blocks.spacer')
-
-    @include('mail.notifications.service.overview')
-
 
     @if($user->can('gd-kasualien-lesen') || $user->can('gd-kasualien-bearbeiten'))
         @if($service->baptisms->count() || $service->funerals->count() || $service->weddings->count())

@@ -41,6 +41,13 @@ class Service extends Model
         'weddings'
     ];
 
+    protected $casts = [
+        'need_predicant' => 'boolean',
+        'cc' => 'boolean',
+        'baptism' => 'boolean',
+        'eucharist' => 'boolean',
+    ];
+
     protected $revisionEnabled = true;
     protected $revisionFormattedFieldNames = array(
         'day_id' => 'Tag',
@@ -114,8 +121,10 @@ class Service extends Model
         'otherParticipants',
         'descriptionText',
         'locationText',
+        'dateText',
         'timeText',
         'baptismsText',
+        'descriptionText',
         'liturgy',
         'ministriesByCategory',
     ];
@@ -273,6 +282,14 @@ class Service extends Model
 
     public function timeText($uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
         return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
+    }
+
+    public function dateText($format = '%d.%m.%Y') {
+        return $this->day->date->formatLocalized($format);
+    }
+
+    public function getDateTextAttribute() {
+        return $this->dateText();
     }
 
     public function offeringText() {

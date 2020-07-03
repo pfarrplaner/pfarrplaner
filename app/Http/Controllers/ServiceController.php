@@ -158,6 +158,7 @@ class ServiceController extends Controller
 
         $success = '';
         if ($service->isChanged()) {
+            $service->storeDiff();
             Subscription::send($service, ServiceUpdated::class);
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
         }
