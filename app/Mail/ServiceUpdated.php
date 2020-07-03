@@ -49,8 +49,7 @@ class ServiceUpdated extends AbstractServiceMailable
                 false
             ) . ' ' . $this->service->locationText() . '.ics';
         return $this->subject(
-            'Änderungen am Gottesdienst vom ' . $this->originalRelations['day']->date->format(
-                'd.m.Y'
+            'Änderungen an einem Gottesdienst'
             ) . ', ' . $this->original->timeText() . ' (' . $this->original->locationText() . ')'
         )
             ->view('mail.notifications.service-update')->with(
