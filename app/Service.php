@@ -523,8 +523,8 @@ class Service extends Model
                 }
             }
         }
+        $this->participants()->sync([]);
         if (count($participants)) {
-            $this->participants()->sync([]);
             foreach ($participants as $category => $participant) {
                 $this->participants()->attach($participant);
             }
