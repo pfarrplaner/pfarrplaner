@@ -76,7 +76,7 @@
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" @if(config('app.dev')) style="background-color: orangered; "@endif>
         <!-- Brand Logo -->
         <a href="{{ route('home') }}" class="brand-link" style="margin-left: 5px;">
             <img src="{{ asset('img/logo/pfarrplaner.png') }}" width="22" height="22" class="brand-image"

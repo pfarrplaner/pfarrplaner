@@ -2,6 +2,8 @@
 
 return [
 
+    'dev' => env('THIS_IS_MY_DEV_HOST', false),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
