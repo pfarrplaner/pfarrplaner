@@ -69,7 +69,7 @@ class ServiceController extends Controller
 
         // KonfiApp-Integration
         if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service['konfiapp_event_type'] ?: '');
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service, $service['konfiapp_event_type'] ?: '');
         }
 
 
