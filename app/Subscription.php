@@ -27,9 +27,19 @@ class Subscription extends Model
         return $this->belongsTo(City::class);
     }
 
-    public static function send(Service $service, $mailClass, $data = [])
+    public static function send(Service $service, $mailClass, $data = [], $additionalSubscribers = null)
     {
         $subscribers = User::subscribedTo($service)->get();
+
+        // add additional subscribers
+        if (!is_null($additionalSubscribers)) {
+            foreach ($additionalSubscribers as $subscriber) {
+                if (!$subscribers->contains($subscriber)) $subscribers->push($subscriber);
+            }
+        }
+
+
+        // queue messages
         foreach ($subscribers as $subscriber) {
             if (!env('THIS_IS_MY_DEV_HOST')) {
                 if ($subscriber->email && filter_var($subscriber->email, FILTER_VALIDATE_EMAIL)) {

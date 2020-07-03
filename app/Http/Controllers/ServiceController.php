@@ -19,6 +19,7 @@ use App\User;
 use App\Vacations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
@@ -139,6 +140,8 @@ class ServiceController extends Controller
     public function update(StoreServiceRequest $request, Service $service)
     {
         $service->trackChanges();
+        $originalParticipants = $service->participants;
+
         $validatedData = $request->validated();
 
         // KonfiApp-Integration
@@ -159,7 +162,13 @@ class ServiceController extends Controller
         $success = '';
         if ($service->isChanged()) {
             $service->storeDiff();
-            Subscription::send($service, ServiceUpdated::class);
+
+            // find participants who have been removed:
+            $removed = new Collection();
+            foreach ($originalParticipants as $participant) {
+                if (!$service->participants->contains($participant)) $removed->push($participant);
+            }
+            Subscription::send($service, ServiceUpdated::class, [],  $removed);
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
         }
 
