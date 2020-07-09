@@ -64,11 +64,11 @@
                             <p>Die <a href="https://konfiapp.de" target="_blank">KonfiApp</a> von Philipp Dormann bietet viele Möglichkeiten, mit Konfis in Kontakt zu bleiben.</p>
                             <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
                             <ul>
-                                <li>Im Pfarrplaner angelegte Gottesdienste können einem Veranstaltungstyp in der Konfiapp zugewiesen werden. Beim Speichern wird dann automatisch ein passender QR-Code in der Konfiapp angelegt. </li>
+                                <li>Im Pfarrplaner angelegte Gottesdienste können einem Veranstaltungstyp in der KonfiApp zugewiesen werden. Beim Speichern wird dann automatisch ein passender QR-Code in der KonfiApp angelegt. </li>
                             </ul>
-                            <p>Für die Integration der Konfiapp ist ein API-Schlüssel erforderlich. Dieser kann im Verwaltungsbereich der Konfiapp über folgenden Link angelegt werden:
+                            <p>Für die Integration der KonfiApp ist ein API-Schlüssel erforderlich. Dieser kann im Verwaltungsbereich der KonfiApp über folgenden Link angelegt werden:
                                 <a href="https://verwaltung.konfiapp.de/administration/api-tokens/" target="_blank">https://verwaltung.konfiapp.de/administration/api-tokens/</a>.
-                                Der dort erstellte Schlüssel muss in das untenstehende Eingabefeld kopiert werden. In der anschließenden Übersicht in der Konfiapp können für den Schlüssel
+                                Der dort erstellte Schlüssel muss in das untenstehende Eingabefeld kopiert werden. In der anschließenden Übersicht in der KonfiApp können für den Schlüssel
                                 sogenannte "Scopes" aktiviert werden. Folgende Scopes sind für das Funktionieren der Integration erforderlich:</p>
                             <p>
                                 <span class="badge badge-secondary">veranstaltungen_list</span>
