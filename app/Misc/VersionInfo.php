@@ -30,7 +30,7 @@ class VersionInfo
         return collect([
             [
                 'date' => new Carbon('2020-06-11 09:30', 'Europe/Berlin'),
-                'text' => 'Der Pfarrplaner bietet nun eine Integration für die <a href="www.konfiapp.de" target="_blank">KonfiApp</a>. Wenn diese aktiviert ist, können automatisch QR-Codes für Gottesdienste angelegt werden. Die Konfis können diese dann mit der KonfiApp scannen und Punkte sammeln.',
+                'text' => 'Der Pfarrplaner bietet nun eine Integration für die <a href="https://konfiapp.de" target="_blank">KonfiApp</a>. Wenn diese aktiviert ist, können automatisch QR-Codes für Gottesdienste angelegt werden. Die Konfis können diese dann mit der KonfiApp scannen und Punkte sammeln.',
             ],
             [
                 'date' => new Carbon('2020-02-27 10:00', 'Europe/Berlin'),
