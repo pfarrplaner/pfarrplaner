@@ -49,13 +49,29 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpWord\Shared\Converter;
 
+/**
+ * Class OfferingAmountsReport
+ * @package App\Reports
+ */
 class OfferingAmountsReport extends AbstractExcelDocumentReport
 {
+    /**
+     * @var string
+     */
     public $title = 'Übersicht der eingenommenen Opfer';
+    /**
+     * @var string
+     */
     public $description = 'Tabelle der Opferbeiträge nach Kategorien';
+    /**
+     * @var string
+     */
     public $group = 'Opfer';
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
@@ -64,6 +80,11 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
         return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function render(Request $request)
     {
         $request->validate(

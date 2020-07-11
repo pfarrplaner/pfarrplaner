@@ -50,10 +50,20 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Class AuthServiceProvider
+ * @package App\Providers
+ */
 class AuthServiceProvider extends ServiceProvider
 {
 
+    /**
+     *
+     */
     public const SUPER = 'Super-Administrator*in';
+    /**
+     *
+     */
     public const ADMIN = 'Administrator*in';
 
     /**

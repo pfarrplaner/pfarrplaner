@@ -33,6 +33,10 @@ namespace App\Http\Controllers;
 use App\ServiceGroup;
 use Illuminate\Http\Request;
 
+/**
+ * Class ServiceGroupController
+ * @package App\Http\Controllers
+ */
 class ServiceGroupController extends Controller
 {
     /**

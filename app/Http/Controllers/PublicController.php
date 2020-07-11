@@ -38,15 +38,31 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
+/**
+ * Class PublicController
+ * @package App\Http\Controllers
+ */
 class PublicController extends Controller
 {
+    /**
+     * @var array
+     */
     protected $vacationData = [];
 
+    /**
+     * @param $lastName
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
     protected function findUserByLastName($lastName)
     {
         return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
     }
 
+    /**
+     * @param $start
+     * @param $end
+     * @return array
+     */
     protected function getVacationers($start, $end)
     {
         $vacationers = [];
@@ -78,6 +94,9 @@ class PublicController extends Controller
         return $vacationers;
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function absences()
     {
         $start = Carbon::now()

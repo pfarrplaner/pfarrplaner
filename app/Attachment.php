@@ -32,10 +32,20 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Attachment
+ * @package App
+ */
 class Attachment extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = ['title', 'file', 'attachable'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     */
     public function attachable()
     {
         return $this->morphTo();

@@ -43,17 +43,29 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class OPEventsImport
+ * @package App\Imports
+ */
 class OPEventsImport
 {
 
     /** @var City city */
     protected $city = null;
 
+    /**
+     * OPEventsImport constructor.
+     * @param City $city
+     */
     public function __construct(City $city)
     {
         $this->city = $city;
     }
 
+    /**
+     * @return mixed
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function getEvents()
     {
         $url = 'https://backend.online-geplant.de/public/event/' . $this->city->op_customer_token . '/' . $this->city->op_customer_key;
@@ -67,6 +79,11 @@ class OPEventsImport
         return $events;
     }
 
+    /**
+     * @param $url
+     * @return \Psr\Http\Message\StreamInterface
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function getUrl($url)
     {
         $client = new Client();
@@ -80,6 +97,10 @@ class OPEventsImport
     }
 
 
+    /**
+     * @param $event
+     * @throws \Exception
+     */
     protected function fixTimeAndDates(&$event)
     {
         $event['start'] = new Carbon($event['startdate'], 'Europe/Berlin');
@@ -99,6 +120,13 @@ class OPEventsImport
         }
     }
 
+    /**
+     * @param $events
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param bool $removeMatching
+     * @return mixed
+     */
     public function mix($events, Carbon $start, Carbon $end, $removeMatching = false)
     {
         $myEvents = $this->getEvents();

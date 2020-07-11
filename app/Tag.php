@@ -32,10 +32,20 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Tag
+ * @package App
+ */
 class Tag extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = ['code', 'name'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function services() {
         return $this->belongsToMany(Service::class)->withTimestamps();
     }

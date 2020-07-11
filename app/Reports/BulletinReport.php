@@ -41,15 +41,34 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
 
+/**
+ * Class BulletinReport
+ * @package App\Reports
+ */
 class BulletinReport extends AbstractWordDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Gemeindebrief';
+    /**
+     * @var string
+     */
     public $group = 'Listen';
+    /**
+     * @var string
+     */
     public $description = 'Gottesdienstliste für den Gemeindebrief';
 
+    /**
+     * @var string[]
+     */
     public $formats = ['Tailfingen', 'Truchtelfingen'];
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
@@ -57,7 +76,10 @@ class BulletinReport extends AbstractWordDocumentReport
     }
 
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|string
+     */
     public function render(Request $request)
     {
         $request->validate([
@@ -89,6 +111,9 @@ class BulletinReport extends AbstractWordDocumentReport
         }
     }
 
+    /**
+     * @return \PhpOffice\PhpWord\Element\Section
+     */
     public function commonDocumentSetup() {
         $this->wordDocument->addParagraphStyle('list', [
             'tabs' => [
@@ -109,6 +134,10 @@ class BulletinReport extends AbstractWordDocumentReport
         return $section;
     }
 
+    /**
+     * @param $days
+     * @param $serviceList
+     */
     public function renderTailfingenFormat($days, $serviceList) {
         $section = $this->commonDocumentSetup();
 
@@ -143,6 +172,10 @@ class BulletinReport extends AbstractWordDocumentReport
 
     }
 
+    /**
+     * @param $days
+     * @param $serviceList
+     */
     public function renderTruchtelfingenFormat($days, $serviceList) {
         $section = $this->commonDocumentSetup();
         $table = $section->addTable('table');

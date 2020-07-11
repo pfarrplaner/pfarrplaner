@@ -48,20 +48,43 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class EmbedContactLookupReport
+ * @package App\Reports
+ */
 class EmbedContactLookupReport extends AbstractEmbedReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Ansprechpartner finden';
+    /**
+     * @var string
+     */
     public $group = 'Website (Gemeindebaukasten)';
+    /**
+     * @var string
+     */
     public $description = 'Erzeugt HTML-Code für die Einbindung einer Ansprechpartner-Box in die Website der Gemeinde';
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-code';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
     public function render(Request $request)
     {
 
@@ -80,6 +103,10 @@ class EmbedContactLookupReport extends AbstractEmbedReport
     }
 
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function embed(Request $request)
     {
         $city = City::findOrFail($request->get('city'));

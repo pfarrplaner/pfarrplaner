@@ -32,6 +32,9 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
+/**
+ * Class CreateRevisionsTableIfNotExists
+ */
 class CreateRevisionsTableIfNotExists extends Migration
 {
     public function up()

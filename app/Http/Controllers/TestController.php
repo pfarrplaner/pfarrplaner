@@ -36,9 +36,17 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class TestController
+ * @package App\Http\Controllers
+ */
 class TestController extends Controller
 {
 
+    /**
+     * @param $address
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function mail($address)
     {
         Log::debug('Sending test mail to '.$address);

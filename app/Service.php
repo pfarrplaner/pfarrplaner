@@ -45,6 +45,10 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 use Venturecraft\Revisionable\RevisionableTrait;
 
+/**
+ * Class Service
+ * @package App
+ */
 class Service extends Model
 {
     use RevisionableTrait;
@@ -52,8 +56,14 @@ class Service extends Model
     use TracksChangesTrait;
     use HasAttachmentsTrait;
 
+    /**
+     * @var array
+     */
     public $liturgy = [];
 
+    /**
+     * @var string[]
+     */
     protected $with = [
         'participants',
         'day',
@@ -69,6 +79,9 @@ class Service extends Model
         'weddings'
     ];
 
+    /**
+     * @var string[]
+     */
     protected $casts = [
         'need_predicant' => 'boolean',
         'cc' => 'boolean',
@@ -76,7 +89,13 @@ class Service extends Model
         'eucharist' => 'boolean',
     ];
 
+    /**
+     * @var bool
+     */
     protected $revisionEnabled = true;
+    /**
+     * @var string[]
+     */
     protected $revisionFormattedFieldNames = array(
         'day_id' => 'Tag',
         'location_id' => 'Ort',
@@ -103,6 +122,9 @@ class Service extends Model
         'title' => 'Titel',
     );
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'day_id',
         'location_id',
@@ -142,6 +164,9 @@ class Service extends Model
         'konfiapp_event_qr',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $appends = [
         'pastors',
         'organists',
@@ -157,14 +182,23 @@ class Service extends Model
         'ministriesByCategory',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $appendsToTracking = [
         'ministriesByCategory',
         ];
 
+    /**
+     * @var string[]
+     */
     protected $attributes = [
         'offering_type' => 'eO',
     ];
 
+    /**
+     * @var array
+     */
     private $auditData = [];
 
     public static function boot()
@@ -172,75 +206,134 @@ class Service extends Model
         parent::boot();
     }
 
+    /**
+     * @param $field
+     * @param $originalRecords
+     * @param $newIds
+     */
     public function audit($field, $originalRecords, $newIds) {
         $originalIds = $originalRecords->pluck('id')->toArray();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function day() {
         return $this->belongsTo(Day::class);
     }
 
+    /**
+     * @param null $format
+     * @return mixed
+     */
     public function date($format = null) {
         if (is_null($format)) return $this->day->date; else return $this->day->date->format($format);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function location() {
         return $this->belongsTo(Location::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function city() {
         return $this->belongsTo(City::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function baptisms() {
         return $this->hasMany(Baptism::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function funerals() {
         return $this->hasMany(Funeral::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function weddings() {
         return $this->hasMany(Wedding::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function participants() {
         return $this->belongsToMany(User::class)->withTimestamps()->withPivot('category');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users() {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function pastors() {
         return $this->belongsToMany(User::class)->wherePivot('category', 'P')->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function organists() {
         return $this->belongsToMany(User::class)->wherePivot('category', 'O')->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function sacristans() {
         return $this->belongsToMany(User::class)->wherePivot('category', 'M')->withTimestamps();
     }
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function otherParticipants() {
         return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
     }
 
+    /**
+     * @param $ministry
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function ministryParticipants($ministry) {
         return $this->belongsToMany(User::class)->wherePivot('category', $ministry)->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function tags() {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function serviceGroups() {
         return $this->belongsToMany(ServiceGroup::class);
     }
 
+    /**
+     * @param $category
+     * @return Collection|mixed
+     */
     public function participantsByCategory($category) {
         switch ($category) {
             case 'P': return $this->pastors;
@@ -253,6 +346,9 @@ class Service extends Model
 
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function participantsWithMinistry() {
         return $this->belongsToMany(User::class)
             ->withPivot('category')
@@ -260,6 +356,9 @@ class Service extends Model
             ->withTimestamps();
     }
 
+    /**
+     * @return array
+     */
     public function ministries() {
         $ministries = [];
         foreach ($this->participantsWithMinistry as $participant) {
@@ -269,11 +368,21 @@ class Service extends Model
         return $ministries;
     }
 
+    /**
+     * @return array
+     */
     public function getMinistriesByCategoryAttribute() {
         return $this->ministries();
     }
 
 
+    /**
+     * @param $category
+     * @param bool $fullName
+     * @param bool $withTitle
+     * @param string $glue
+     * @return string
+     */
     public function participantsText($category, $fullName = false, $withTitle = true, $glue = ', ') {
         $participants = $this->participantsByCategory($category);
         $names = [];
@@ -283,6 +392,11 @@ class Service extends Model
         return join($glue, $names);
     }
 
+    /**
+     * @param $category
+     * @param $participantIds
+     * @return array
+     */
     public function syncParticipantsByCategory ($category, $participantIds) {
         $participants = [];
         foreach ($participantIds as $participantId) {
@@ -296,10 +410,16 @@ class Service extends Model
         }
     }
 
+    /**
+     * @return mixed|string
+     */
     public function locationText() {
         return $this->special_location ?: (is_object( $this->location) ? $this->location->name : '');
     }
 
+    /**
+     * @return string
+     */
     public function descriptionText() {
         $desc = [];
         if ($this->baptism) $desc[] = 'mit Taufen';
@@ -308,22 +428,45 @@ class Service extends Model
         return join('; ', $desc);
     }
 
+    /**
+     * @param bool $uhr
+     * @param string $separator
+     * @param bool $skipMinutes
+     * @param bool $nbsp
+     * @param bool $leadingZero
+     * @return string
+     */
     public function timeText($uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
         return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
     }
 
+    /**
+     * @param string $format
+     * @return mixed
+     */
     public function dateText($format = '%d.%m.%Y') {
         return $this->day->date->formatLocalized($format);
     }
 
+    /**
+     * @return mixed
+     */
     public function getDateTextAttribute() {
         return $this->dateText();
     }
 
+    /**
+     * @return string
+     */
     public function offeringText() {
         return $this->offering_goal.($this->offering_type ? ' ('.$this->offering_type.')' : '');
     }
 
+    /**
+     * @param bool $includeCount
+     * @param bool $includeText
+     * @return string
+     */
     public function baptismsText($includeCount = false, $includeText = false) {
         $baptisms = [];
         foreach ($this->baptisms as $baptism) {
@@ -335,6 +478,9 @@ class Service extends Model
             .join('; ', $baptisms);
     }
 
+    /**
+     * @return string
+     */
     public function funeralsText() {
         $funerals = [];
         foreach ($this->funerals as $funeral) {
@@ -343,6 +489,9 @@ class Service extends Model
         return (join('; ', $funerals));
     }
 
+    /**
+     * @return string
+     */
     public function weddingsText() {
         $weddings = [];
         /** @var Wedding $wedding */
@@ -355,6 +504,11 @@ class Service extends Model
         return (join('; ', $weddings));
     }
 
+    /**
+     * @param bool $short
+     * @param bool $skipRites
+     * @return string
+     */
     public function titleText($short = true, $skipRites = false) {
         $elements = [];
         if ($x = $this->title) $elements[] = $x;
@@ -370,6 +524,9 @@ class Service extends Model
     }
 
 
+    /**
+     * @return string
+     */
     public function titleAndDescriptionCombinedText()
     {
         $description = [];
@@ -378,6 +535,11 @@ class Service extends Model
         return join('; ', $description);
     }
 
+    /**
+     * @param bool $emptyIfNotSet
+     * @return Carbon|null
+     * @throws \Exception
+     */
     public function ccTime($emptyIfNotSet = false) {
         if ($this->cc_alt_time == '00:00:00') $this->cc_alt_time = null;
         if (null === $this->cc_alt_time) {
@@ -389,6 +551,15 @@ class Service extends Model
         return new Carbon($this->day->date->format('Y-m-d').' '.$t);
     }
 
+    /**
+     * @param bool $emptyIfNotSet
+     * @param bool $uhr
+     * @param string $separator
+     * @param bool $skipMinutes
+     * @param bool $nbsp
+     * @param bool $leadingZero
+     * @return string
+     */
     public function ccTimeText($emptyIfNotSet = false, $uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
         if (null === $this->ccTime($emptyIfNotSet)) return '';
         return StringTool::timeText($this->ccTime(false), $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
@@ -403,6 +574,10 @@ class Service extends Model
         return (false !== strpos(strtolower($this->descriptionText()), strtolower($text)));
     }
 
+    /**
+     * @param User $author
+     * @param $text
+     */
     public function notifyOfCreation(User $author, $text) {
 
         $mailText = sprintf($text, $author->name.' ('.$author->email.')')."\r\n\r\n"
@@ -429,6 +604,9 @@ class Service extends Model
     }
 
 
+    /**
+     * @param $text
+     */
     protected function notify ($text) {
         $users = User::whereHas('cities', function($query){
             $query->where('city_id', $this->city_id);
@@ -443,6 +621,9 @@ class Service extends Model
         }
     }
 
+    /**
+     * @return bool
+     */
     function hasNonStandardCCLocation() {
         if ($this->special_location) {
             return true;
@@ -451,70 +632,125 @@ class Service extends Model
         }
     }
 
+    /**
+     * @return mixed|string
+     */
     function ccLocationText() {
         return ($this->cc_location ?: $this->locationText());
     }
 
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getPastorsAttribute() {
         return $this->pastors()->get();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getOrganistsAttribute() {
         return $this->organists()->get();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getSacristansAttribute() {
         return $this->sacristans()->get();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getOtherParticipantsAttribute() {
         return $this->otherParticipants()->get();
     }
 
+    /**
+     * @return string
+     */
     public function getDescriptionTextAttribute() {
         return $this->descriptionText();
     }
 
+    /**
+     * @return mixed|string
+     */
     public function getLocationTextAttribute() {
         return $this->locationText();
     }
 
+    /**
+     * @return string
+     */
     public function getTimeTextAttribute() {
         return $this->timeText();
     }
 
+    /**
+     * @return string
+     */
     public function getBaptismsTextAttribute() {
         return $this->baptismsText(true);
     }
 
+    /**
+     * @return false|string
+     */
     public function getTimeAttribute() {
         return isset($this->attributes['time']) ? substr($this->attributes['time'], 0, 5) : '';
     }
 
+    /**
+     * @param $time
+     */
     public function setTimeAttribute($time) {
         $this->attributes['time'] = substr($time, 0, 5);
     }
 
 
+    /**
+     * @param Builder $query
+     * @param City $city
+     * @return Builder
+     */
     public function scopeRegularForCity(Builder $query, City $city) {
         return $query->where('city_id', $city->id)
             ->whereDoesntHave('funerals')
             ->whereDoesntHave('weddings');
     }
 
+    /**
+     * @return Carbon
+     */
     public function trueDate() {
         return Carbon::createFromTimeString($this->day->date->format('Y-m-d').' '.$this->time);
     }
 
+    /**
+     * @return string
+     */
     public function atText() {
         return is_object($this->location) ? $this->location->atText() : '('.$this->locationText().')';
     }
 
+    /**
+     * @param Builder $query
+     * @param $city
+     * @return Builder
+     */
     public function scopeInCity(Builder $query, $city) {
         return $query->where('city_id', $city->id);
     }
 
+    /**
+     * @param Builder $query
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return Builder
+     */
     public function scopeDateRange(Builder $query, Carbon $start, Carbon $end) {
         return $query->whereHas('day', function ($query2) use ($start, $end) {
             $query2->where('date', '>=', $start)
@@ -522,6 +758,10 @@ class Service extends Model
         });
     }
 
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
     public function scopeOrdered(Builder $query) {
         return $query->select('services.*')
             ->join('days', 'services.day_id', 'days.id')
@@ -550,6 +790,11 @@ class Service extends Model
     }
 
 
+    /**
+     * @param $request
+     * @param Service $service
+     * @return array
+     */
     public function associateParticipants($request, Service $service) {
         $participants = [];
         foreach (($request->get('participants') ?: []) as $category => $participantList) {
@@ -609,6 +854,9 @@ class Service extends Model
 
     }
 
+    /**
+     * @return array
+     */
     public function getLiturgyAttribute() {
         return $this->liturgy;
     }

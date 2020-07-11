@@ -36,6 +36,10 @@ use App\Integrations\AbstractIntegration;
 use Google_Client;
 use Google_Service_YouTube;
 
+/**
+ * Class YoutubeIntegration
+ * @package App\Integrations\Youtube
+ */
 class YoutubeIntegration extends AbstractIntegration
 {
 
@@ -57,6 +61,9 @@ class YoutubeIntegration extends AbstractIntegration
         $this->setYoutube($youtube);
     }
 
+    /**
+     * @param City $city
+     */
     public function authenticate(City $city)
     {
         $this->client->setAccessToken($city->google_access_token);
@@ -64,20 +71,38 @@ class YoutubeIntegration extends AbstractIntegration
         $this->client->setAccessToken($token);
     }
 
+    /**
+     * @param City $city
+     * @return YoutubeIntegration
+     */
     public static function get(City $city) {
         $instance = (new self());
         $instance->authenticate($city);
         return $instance;
     }
 
+    /**
+     * @param $id
+     * @return mixed|null
+     */
     public function getVideo($id) {
         return $this->youtube->videos->listVideos('snippet,contentDetails,statistics', ['id' => $id])->getItems()[0];
     }
 
+    /**
+     * @param $id
+     * @param array $data
+     * @return \Google_Service_YouTube_LiveChatMessageListResponse
+     */
     public function getLiveChat($id, $data = []) {
         return $this->getYoutube()->liveChatMessages->listLiveChatMessages($id, 'id,snippet,authorDetails', $data);
     }
 
+    /**
+     * @param $liveChatId
+     * @param $author
+     * @param $message
+     */
     public function sendLiveChatMessage($liveChatId, $author, $message)
     {
         $snippet = new \Google_Service_YouTube_LiveChatMessageSnippet();

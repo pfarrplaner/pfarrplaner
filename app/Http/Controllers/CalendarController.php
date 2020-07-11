@@ -42,13 +42,29 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use PDF;
 
+/**
+ * Class CalendarController
+ * @package App\Http\Controllers
+ */
 class CalendarController extends Controller
 {
 
+    /**
+     *
+     */
     public const NAME_FORMAT_DEFAULT = 1;
+    /**
+     *
+     */
     public const NAME_FORMAT_INITIAL_AND_LAST = 2;
+    /**
+     *
+     */
     public const NAME_FORMAT_FIRST_AND_LAST = 3;
 
+    /**
+     * @var array
+     */
     protected $vacationData = [];
 
     public function __construct()
@@ -56,6 +72,10 @@ class CalendarController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @param $year
+     * @param $month
+     */
     protected function initializeMonth($year, $month)
     {
         $today = Carbon::createFromDate($year, $month, 1);
@@ -72,6 +92,13 @@ class CalendarController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $route
+     * @param $year
+     * @param $month
+     * @return bool|\Illuminate\Http\RedirectResponse
+     */
     protected function redirectIfMissingParameters(Request $request, $route, $year, $month)
     {
         $defaultMonth = Auth::user()->getSetting('display-month', date('m'));
@@ -106,6 +133,11 @@ class CalendarController extends Controller
         return redirect()->route($route, $data);
     }
 
+    /**
+     * @param $year
+     * @param $month
+     * @return mixed
+     */
     protected function getDaysInMonth($year, $month)
     {
         $monthStart = Carbon::createFromFormat('Y-m-d H:i:s', $year . '-' . $month . '-01 0:00:00');
@@ -119,6 +151,10 @@ class CalendarController extends Controller
         return $days;
     }
 
+    /**
+     * @param Day $day
+     * @return array
+     */
     protected function getVacationers(Day $day)
     {
         $vacationers = [];
@@ -153,6 +189,12 @@ class CalendarController extends Controller
         return $vacationers;
     }
 
+    /**
+     * @param Request $request
+     * @param int $year
+     * @param int $month
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function month(Request $request, $year = 0, $month = 0)
     {
         if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar', $year, $month))) {
@@ -252,6 +294,12 @@ class CalendarController extends Controller
         );
     }
 
+    /**
+     * @param Request $request
+     * @param int $year
+     * @param int $month
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function printsetup(Request $request, $year = 0, $month = 0)
     {
         if (false !== ($r = $this->redirectIfMissingParameters($request, 'calendar.printsetup', $year, $month))) {

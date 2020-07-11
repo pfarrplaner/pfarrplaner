@@ -33,6 +33,10 @@ namespace App\Http\Controllers;
 use App\StreetRange;
 use Illuminate\Http\Request;
 
+/**
+ * Class StreetRangeController
+ * @package App\Http\Controllers
+ */
 class StreetRangeController extends Controller
 {
     /**

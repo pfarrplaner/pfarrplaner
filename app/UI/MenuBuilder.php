@@ -49,9 +49,16 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Class MenuBuilder
+ * @package App\UI
+ */
 class MenuBuilder
 {
 
+    /**
+     * @return array
+     */
     public static function sidebar()
     {
         $config = self::configure();

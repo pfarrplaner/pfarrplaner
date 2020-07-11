@@ -37,6 +37,10 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class LocationTest
+ * @package Tests\Feature
+ */
 class LocationTest extends TestCase
 {
 

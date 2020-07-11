@@ -42,9 +42,16 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class VersionInfo
+ * @package App\Misc
+ */
 class VersionInfo
 {
 
+    /**
+     * @return mixed
+     */
     public static function version() {
         $data = json_decode(file_get_contents(base_path('composer.json')), true);
         return $data['version'];

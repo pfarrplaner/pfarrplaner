@@ -34,6 +34,10 @@ use App\Absence;
 use App\Approval;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class AbsenceApproved
+ * @package App\Events
+ */
 class AbsenceApproved {
 
     use SerializesModels;
@@ -44,6 +48,11 @@ class AbsenceApproved {
     /** @var Approval */
     public $approval;
 
+    /**
+     * AbsenceApproved constructor.
+     * @param Absence $absence
+     * @param Approval $approval
+     */
     public function __construct(Absence $absence, Approval $approval)
     {
         $this->absence = $absence;

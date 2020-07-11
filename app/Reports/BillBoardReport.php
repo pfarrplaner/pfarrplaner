@@ -47,28 +47,64 @@ use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Section;
 use PhpOffice\PhpWord\Style\Tab;
 
+/**
+ * Class BillBoardReport
+ * @package App\Reports
+ */
 class BillBoardReport extends AbstractWordDocumentReport
 {
+    /**
+     *
+     */
     protected const BOLD = ['bold' => true];
+    /**
+     *
+     */
     protected const UNDERLINE = ['underline' => Font::UNDERLINE_SINGLE];
+    /**
+     *
+     */
     protected const BOLD_UNDERLINE = ['bold' => true, 'underline' => Font::UNDERLINE_SINGLE];
     protected const DEFAULT = 'Kirchzettel';
+    /**
+     *
+     */
     protected const HEADING1 = 'Kirchzettel Überschrift 1';
+    /**
+     *
+     */
     protected const HEADING2 = 'Kirchzettel Überschrift 2';
 
+    /**
+     * @var string
+     */
     public $title = 'Kirchzettel';
+    /**
+     * @var string
+     */
     public $group = 'Veröffentlichungen';
+    /**
+     * @var string
+     */
     public $description = 'Kirchzettel zum Aushang im Schaukasten';
 
     /** @var \PhpOffice\PhpWord\Element\Section */
     protected $section;
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
     public function render(Request $request)
     {
         $request->validate([
@@ -200,6 +236,9 @@ class BillBoardReport extends AbstractWordDocumentReport
         $this->sendToBrowser($filename);
     }
 
+    /**
+     * @param $event
+     */
     protected function renderSingleEvent($event) {
         if (is_array($event)) {
             $this->renderParagraph(self::DEFAULT, [
@@ -236,6 +275,10 @@ class BillBoardReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param $s
+     * @return string
+     */
     protected function renderName($s)
     {
         if (false !== strpos($s, ',')) {
@@ -245,6 +288,13 @@ class BillBoardReport extends AbstractWordDocumentReport
         return $s;
     }
 
+    /**
+     * @param string $template
+     * @param array $blocks
+     * @param int $emptyParagraphsAfter
+     * @param null $existingTextRun
+     * @return \PhpOffice\PhpWord\Element\TextRun|null
+     */
     protected function renderParagraph(
         $template = '',
         array $blocks = [],
@@ -262,6 +312,9 @@ class BillBoardReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param $text
+     */
     protected function renderLiteral($text)
     {
         if (!is_array($text)) {

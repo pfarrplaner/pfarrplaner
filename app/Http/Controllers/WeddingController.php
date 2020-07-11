@@ -42,6 +42,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class WeddingController
+ * @package App\Http\Controllers
+ */
 class WeddingController extends Controller
 {
 
@@ -332,6 +336,10 @@ class WeddingController extends Controller
     }
 
 
+    /**
+     * @param Wedding $wedding
+     * @return false|string
+     */
     public function done(Wedding $wedding) {
         $wedding->done = true;
         $wedding->save();

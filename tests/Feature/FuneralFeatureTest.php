@@ -35,6 +35,10 @@ use App\Traits\TestWithCredentialsTrait;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class FuneralFeatureTest
+ * @package Tests\Feature
+ */
 class FuneralFeatureTest extends TestCase
 {
     use RefreshDatabase;

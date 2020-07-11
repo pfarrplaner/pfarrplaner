@@ -43,12 +43,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class AbstractCalendarLink
+ * @package App\CalendarLinks
+ */
 class AbstractCalendarLink
 {
+    /**
+     * @var string
+     */
     protected $title = '';
+    /**
+     * @var string
+     */
     protected $description = '';
 
+    /**
+     * @var array
+     */
     protected $data = [];
+    /**
+     * @var string
+     */
     protected $viewName = 'ical';
 
     /** @var User $user  */
@@ -86,10 +102,16 @@ class AbstractCalendarLink
         return lcfirst(strtr(get_class($this), ['CalendarLink' => '', 'App\\s\\' => '', 'App\\CalendarLinks\\' => '']));
     }
 
+    /**
+     * @return string
+     */
     public function setupRoute() {
         return route('ical.setup', ['key' => $this->getKey()]);
     }
 
+    /**
+     * @return array
+     */
     public function setupData() {
         return [];
     }
@@ -111,20 +133,32 @@ class AbstractCalendarLink
     }
 
 
+    /**
+     * @param Request $request
+     */
     public function setDataFromRequest(Request $request) {
 
     }
 
+    /**
+     * @return string
+     */
     public function getSetupViewName() {
         return 'ical.'.$this->getKey().'.setup';
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setupView() {
         $data = $this->setupData();
         $data['calendarLink'] = $this;
         return view($this->getSetupViewName(), $data);
     }
 
+    /**
+     * @return string
+     */
     public function getLink() {
         return route('ical.export', $this->data);
     }
@@ -140,11 +174,20 @@ class AbstractCalendarLink
     }
 
 
-
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
     public function getRenderData(Request $request, User $user) {
         return [];
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return string|string[]|null
+     */
     public function export(Request $request, User $user) {
         $this->setDataFromRequest($request);
         $this->setUser($user);

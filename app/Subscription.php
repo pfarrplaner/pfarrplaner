@@ -34,28 +34,56 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * Class Subscription
+ * @package App
+ */
 class Subscription extends Model
 {
+    /**
+     *
+     */
     public const SUBSCRIBE_ALL = 2;
+    /**
+     *
+     */
     public const SUBSCRIBE_OWN = 1;
+    /**
+     *
+     */
     public const SUBSCRIBE_NONE = 0;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'user_id',
         'city_id',
         'subscription_type',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function city()
     {
         return $this->belongsTo(City::class);
     }
 
+    /**
+     * @param Service $service
+     * @param $mailClass
+     * @param array $data
+     * @param null $additionalSubscribers
+     */
     public static function send(Service $service, $mailClass, $data = [], $additionalSubscribers = null)
     {
         $subscribers = User::subscribedTo($service)->get();

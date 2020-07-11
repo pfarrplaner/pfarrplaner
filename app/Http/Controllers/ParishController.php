@@ -36,6 +36,10 @@ use App\StreetRange;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class ParishController
+ * @package App\Http\Controllers
+ */
 class ParishController extends Controller
 {
     /**

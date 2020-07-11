@@ -43,22 +43,43 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class AllServicesCalendarLink
+ * @package App\CalendarLinks
+ */
 class AllServicesCalendarLink extends AbstractCalendarLink
 {
 
+    /**
+     * @var string
+     */
     protected $title = 'Gottesdienste nach Kirchengemeinden';
+    /**
+     * @var string
+     */
     protected $description = 'Kalender, der alle Gottesdienste ausgewählter Kirchengemeinden enthält';
 
+    /**
+     * @return array
+     */
     public function setupData() {
         $cities = Auth::user()->cities;
         return compact('cities');
     }
 
+    /**
+     * @param Request $request
+     */
     public function setDataFromRequest(Request $request)
     {
         $this->data['cities'] = join('-', $request->get('includeCities') ?: []);
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getRenderData(Request $request, User $user)
     {
         $cityIds = explode('-', $request->get('cities', ''));

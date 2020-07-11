@@ -40,11 +40,21 @@ use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 use Illuminate\Support\Collection;
 
+/**
+ * Class KonfiAppIntegration
+ * @package App\Integrations\KonfiApp
+ */
 class KonfiAppIntegration extends AbstractIntegration
 {
 
+    /**
+     *
+     */
     protected const API_URL = 'https://api.konfiapp.de/v2/';
 
+    /**
+     * @var string
+     */
     protected $apiKey = '';
 
     /** @var Client */
@@ -60,6 +70,10 @@ class KonfiAppIntegration extends AbstractIntegration
         return (new self($city->konfiapp_apikey));
     }
 
+    /**
+     * KonfiAppIntegration constructor.
+     * @param $apiKey
+     */
     public function __construct($apiKey)
     {
         $this->setApiKey($apiKey);
@@ -102,6 +116,11 @@ class KonfiAppIntegration extends AbstractIntegration
         return $service;
     }
 
+    /**
+     * @param Service $service
+     * @return Service
+     * @throws Exception
+     */
     public function handleServiceDelete(Service $service)
     {
         if ($service->konfiapp_event_qr != '') {
@@ -147,6 +166,11 @@ class KonfiAppIntegration extends AbstractIntegration
         );
     }
 
+    /**
+     * @param $code
+     * @param $type
+     * @throws Exception
+     */
     public function deleteQRCodeByCode($code, $type)
     {
         $codes = $this->requestData(
@@ -163,6 +187,10 @@ class KonfiAppIntegration extends AbstractIntegration
         }
     }
 
+    /**
+     * @return mixed
+     * @throws Exception
+     */
     public function listQRCodes()
     {
         return $this->requestData('verwaltung/veranstaltungen/qr/list/', ['veranstaltungID' => 682])->detail;

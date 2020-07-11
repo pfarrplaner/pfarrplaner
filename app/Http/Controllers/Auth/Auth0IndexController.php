@@ -33,6 +33,10 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ * Class Auth0IndexController
+ * @package App\Http\Controllers\Auth
+ */
 class Auth0IndexController extends Controller
 {
     /**

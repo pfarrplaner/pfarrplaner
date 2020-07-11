@@ -46,20 +46,43 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class EmbedEventsTableReport
+ * @package App\Reports
+ */
 class EmbedEventsTableReport extends AbstractEmbedReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Liste von aktuellen Veranstaltungen';
+    /**
+     * @var string
+     */
     public $group = 'Website (Gemeindebaukasten)';
+    /**
+     * @var string
+     */
     public $description = 'Erzeugt HTML-Code für die Einbindung einer Veranstaltungsliste in die Website der Gemeinde';
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-code';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
     public function render(Request $request)
     {
 
@@ -79,6 +102,10 @@ class EmbedEventsTableReport extends AbstractEmbedReport
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function embed(Request $request) {
         $city = City::findOrFail($request->get('city'));
         $days = $request->get('days');

@@ -45,10 +45,20 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class OfficeHomeScreen
+ * @package App\HomeScreens
+ */
 class OfficeHomeScreen extends AbstractHomeScreen
 {
+    /**
+     * @var bool
+     */
     protected $hasConfiguration = true;
 
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|mixed
+     */
     public function render()
     {
         /** @var User $user */
@@ -129,12 +139,19 @@ class OfficeHomeScreen extends AbstractHomeScreen
         return $this->renderView('homescreen.office', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings', 'missing'));
     }
 
+    /**
+     * @return array|string
+     * @throws \Throwable
+     */
     public function renderConfigurationView()
     {
         return view('homescreen.pastor.config')->render();
     }
 
 
+    /**
+     * @param Request $request
+     */
     public function setConfiguration(Request $request)
     {
         parent::setConfiguration($request);

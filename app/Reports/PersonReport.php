@@ -43,19 +43,39 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
 
+/**
+ * Class PersonReport
+ * @package App\Reports
+ */
 class PersonReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Alle Gottesdienste einer Person';
+    /**
+     * @var string
+     */
     public $group = 'Listen';
+    /**
+     * @var string
+     */
     public $description = 'Liste mit allen Gottesdiensten, für die eine bestimmte Person eingeteilt ist';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $users = User::all();
         return $this->renderSetupView(compact('maxDate', 'users'));
     }
 
+    /**
+     * @param Request $request
+     * @return mixed|string
+     */
     public function render(Request $request)
     {
         $request->validate([

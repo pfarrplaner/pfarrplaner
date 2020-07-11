@@ -42,11 +42,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class ICalController
+ * @package App\Http\Controllers
+ */
 class ICalController extends Controller
 {
     /** @var User $user  */
     protected $user = null;
 
+    /**
+     * @param $token
+     */
     protected function checkToken($token)
     {
         $users = User::all();
@@ -78,6 +85,10 @@ class ICalController extends Controller
         die ($raw);
     }
 
+    /**
+     * @param $locationIds
+     * @param $token
+     */
     public function byLocation($locationIds, $token)
     {
         $this->checkToken($token);
@@ -99,6 +110,10 @@ class ICalController extends Controller
     /*
      * Export absences as ical
      *
+     */
+    /**
+     * @param User $user
+     * @param $token
      */
     public function absences(User $user, $token)
     {
@@ -122,6 +137,9 @@ class ICalController extends Controller
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function connect() {
         $calendarLinks = CalendarLinks::all();
         /** @var AbstractCalendarLink $calendarLink */
@@ -130,11 +148,20 @@ class ICalController extends Controller
     }
 
 
+    /**
+     * @param $key
+     * @return mixed
+     */
     public function setup ($key) {
         $calendarLink = CalendarLinks::findKey($key);
         return $calendarLink->setupView();
     }
 
+    /**
+     * @param Request $request
+     * @param $key
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function link(Request $request, $key) {
         /** @var AbstractCalendarLink $calendarLink */
         $calendarLink = CalendarLinks::findKey($key);
@@ -142,6 +169,13 @@ class ICalController extends Controller
         return view('ical.link', compact('calendarLink'));
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @param $token
+     * @param $key
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response|void
+     */
     public function export(Request $request, User $user, $token, $key) {
         if ($token != $user->getToken()) {
             return abort(403);

@@ -34,6 +34,10 @@ use App\Absence;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class AbsencePolicy
+ * @package App\Policies
+ */
 class AbsencePolicy
 {
     use HandlesAuthorization;
@@ -48,10 +52,19 @@ class AbsencePolicy
         //
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function create(User $user) {
         return $user->manage_absences || $user->hasPermissionTo('fremden-urlaub-bearbeiten');
     }
 
+    /**
+     * @param User $user
+     * @param Absence $absence
+     * @return bool
+     */
     public function update(User $user, Absence $absence) {
         if ($user->id == $absence->user->id) return true;
         if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {

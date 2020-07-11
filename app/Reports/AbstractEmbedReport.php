@@ -38,6 +38,10 @@
 namespace App\Reports;
 
 
+/**
+ * Class AbstractEmbedReport
+ * @package App\Reports
+ */
 class AbstractEmbedReport extends AbstractReport
 {
 

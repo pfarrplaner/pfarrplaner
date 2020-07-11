@@ -38,9 +38,16 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class DayController
+ * @package App\Http\Controllers
+ */
 class DayController extends Controller
 {
 
+    /**
+     * @var array
+     */
     protected $dataCache = [];
 
     public function __construct()
@@ -169,6 +176,11 @@ class DayController extends Controller
     }
 
 
+    /**
+     * @param $year
+     * @param $month
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function add($year, $month) {
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
             return redirect()->route('calendar', ['year' => date('Y'), 'month' => date('m')]);

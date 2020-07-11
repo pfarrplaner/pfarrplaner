@@ -41,9 +41,17 @@ namespace App\Http\Controllers;
 use App\Day;
 use App\Liturgy;
 
+/**
+ * Class LiturgicalDaysController
+ * @package App\Http\Controllers
+ */
 class LiturgicalDaysController extends Controller
 {
 
+    /**
+     * @param $dayId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function info($dayId) {
         $day = Day::find($dayId);
         $liturgy = Liturgy::getDayInfo($day);

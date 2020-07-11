@@ -42,9 +42,16 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class MultipleServicesInput
+ * @package App\Inputs
+ */
 class MultipleServicesInput extends AbstractInput
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Mehrere Gottesdienste';
 
     public function canEdit(): bool
@@ -52,6 +59,10 @@ class MultipleServicesInput extends AbstractInput
         return Auth::user()->can('gd-bearbeiten');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup(Request $request) {
         $cities = Auth::user()->writableCities;
         $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
@@ -64,6 +75,10 @@ class MultipleServicesInput extends AbstractInput
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     */
     public function input(Request $request) {
         $request->validate([
             'includeLocations' => 'required',
@@ -103,6 +118,10 @@ class MultipleServicesInput extends AbstractInput
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
     public function save(Request $request) {
 
         $ctrAdded = $ctrExisting = 0;

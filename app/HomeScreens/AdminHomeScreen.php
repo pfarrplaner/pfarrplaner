@@ -45,8 +45,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Rap2hpoutre\LaravelLogViewer\LaravelLogViewer;
 
+/**
+ * Class AdminHomeScreen
+ * @package App\HomeScreens
+ */
 class AdminHomeScreen extends AbstractHomeScreen
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|mixed
+     */
     public function render()
     {
         /** @var User $user */

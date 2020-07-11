@@ -30,9 +30,16 @@
 
 namespace App\CalendarLinks;
 
+/**
+ * Class CalendarLinks
+ * @package App\CalendarLinks
+ */
 class CalendarLinks
 {
 
+    /**
+     * @return array
+     */
     public static function all() {
         $calendarLinks = [];
         foreach (glob(app_path('CalendarLinks').'/*CalendarLink.php') as $file) {
@@ -49,6 +56,10 @@ class CalendarLinks
         return $calendarLinks;
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     */
     public static function findKey($key) {
         foreach (self::all() as $item) {
             if ($item->getKey()==$key) return $item;

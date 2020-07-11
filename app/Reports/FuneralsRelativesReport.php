@@ -46,13 +46,29 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpWord\Shared\Converter;
 
+/**
+ * Class FuneralsRelativesReport
+ * @package App\Reports
+ */
 class FuneralsRelativesReport extends AbstractExcelDocumentReport
 {
+    /**
+     * @var string
+     */
     public $title = 'Liste der Angehörigen';
+    /**
+     * @var string
+     */
     public $description = 'Adressliste von Angehörigen für die Beerdigungen eines Jahres';
+    /**
+     * @var string
+     */
     public $group = 'Kasualien';
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
@@ -61,6 +77,11 @@ class FuneralsRelativesReport extends AbstractExcelDocumentReport
         return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     */
     public function render(Request $request)
     {
         $request->validate([

@@ -32,14 +32,28 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class ServiceGroup
+ * @package App
+ */
 class ServiceGroup extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = ['name'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function services() {
         return $this->belongsToMany(Service::class);
     }
 
+    /**
+     * @param $list
+     * @return array
+     */
     public static function createIfMissing($list) {
         $result = [];
         foreach ($list as $element) {

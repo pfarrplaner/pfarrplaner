@@ -35,15 +35,28 @@ use App\Day;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class AbstractInput
+ * @package App\Inputs
+ */
 class AbstractInput
 {
+    /**
+     * @var string
+     */
     public $title = '';
+    /**
+     * @var string
+     */
     protected $setupView = 'inputs.setup';
 
     public function canEdit(): bool {
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function getKey() {
         return lcfirst(strtr(get_called_class(), [
             'Input' => '',
@@ -51,18 +64,34 @@ class AbstractInput
         ]));
     }
 
+    /**
+     * @return string
+     */
     public function getInputViewName() {
         return $this->getViewName('input');
     }
 
+    /**
+     * @param $viewName
+     * @return string
+     */
     public function getViewName($viewName) {
         return 'inputs.'.strtolower($this->getKey()).'.'.$viewName;
     }
 
+    /**
+     * @param City $city
+     * @param $days
+     * @return array
+     */
     public function getValues(City $city, $days) {
         return [];
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup(Request $request) {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
@@ -76,7 +105,14 @@ class AbstractInput
         ]);
     }
 
+    /**
+     * @param Request $request
+     */
     public function input(Request $request) {}
+
+    /**
+     * @param Request $request
+     */
     public function save(Request $request) {}
 
 }

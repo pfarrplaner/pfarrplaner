@@ -41,11 +41,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use PDF;
 
+/**
+ * Class CalendarController
+ * @package App\Http\Controllers\Api
+ */
 class CalendarController extends Controller
 {
 
+    /**
+     * @var array
+     */
     protected $vacationData = [];
 
+    /**
+     * @param $year
+     * @param $month
+     */
     protected function initializeMonth($year, $month)
     {
         $today = Carbon::createFromDate($year, $month, 1);
@@ -62,6 +73,12 @@ class CalendarController extends Controller
         }
     }
 
+    /**
+     * @param $route
+     * @param $year
+     * @param $month
+     * @return bool|\Illuminate\Http\RedirectResponse
+     */
     protected function redirectIfMissingParameters($route, $year, $month)
     {
         if ($month == 13) {
@@ -76,6 +93,11 @@ class CalendarController extends Controller
         return false;
     }
 
+    /**
+     * @param $year
+     * @param $month
+     * @return mixed
+     */
     protected function getDaysInMonth($year, $month)
     {
         $monthStart = Carbon::createFromFormat('Y-m-d H:i:s', $year . '-' . $month . '-01 0:00:00');
@@ -89,6 +111,10 @@ class CalendarController extends Controller
         return $days;
     }
 
+    /**
+     * @param Day $day
+     * @return array
+     */
     protected function getVacationers(Day $day)
     {
         $vacationers = [];
@@ -109,6 +135,11 @@ class CalendarController extends Controller
         return $vacationers;
     }
 
+    /**
+     * @param int $year
+     * @param int $month
+     * @return bool|\Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse
+     */
     public function month($year = 0, $month = 0)
     {
         if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
@@ -124,6 +155,11 @@ class CalendarController extends Controller
     }
 
 
+    /**
+     * @param int $year
+     * @param int $month
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function monthJS($year = 0, $month = 0)
     {
         if (false !== ($r = $this->redirectIfMissingParameters('calendar', $year, $month))) {
@@ -162,6 +198,11 @@ class CalendarController extends Controller
     }
 
 
+    /**
+     * @param int $year
+     * @param int $month
+     * @return bool|\Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function printsetup($year = 0, $month = 0)
     {
         if (false !== ($r = $this->redirectIfMissingParameters('calendar.printsetup', $year, $month))) {

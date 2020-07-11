@@ -39,9 +39,16 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class ChildrensChurchInput
+ * @package App\Inputs
+ */
 class ChildrensChurchInput extends AbstractInput
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Kinderkirche';
 
     public function canEdit(): bool
@@ -49,6 +56,10 @@ class ChildrensChurchInput extends AbstractInput
         return Auth::user()->can('gd-kinderkirche-bearbeiten');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     */
     public function input(Request $request) {
         $request->validate([
             'year' => 'int|required',
@@ -75,6 +86,10 @@ class ChildrensChurchInput extends AbstractInput
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
     public function save(Request $request) {
         $services = $request->get('service') ?: [];
         foreach ($services as $id => $data) {

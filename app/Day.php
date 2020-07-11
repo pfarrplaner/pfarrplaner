@@ -33,19 +33,41 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Day
+ * @package App
+ */
 class Day extends Model
 {
 
+    /**
+     *
+     */
     public const DAY_TYPE_DEFAULT = 0;
+    /**
+     *
+     */
     public const DAY_TYPE_LIMITED = 1;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = ['date', 'name', 'description', 'day_type'];
+    /**
+     * @var string[]
+     */
     protected $dates = ['date'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function services() {
         return $this->hasMany(Service::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function cities() {
         return $this->belongsToMany(City::class);
     }

@@ -37,11 +37,27 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use SplFileInfo;
 
+/**
+ * Class IDML
+ * @package App\FileFormats
+ */
 class IDML
 {
+    /**
+     * @var false|string
+     */
     protected $tempFolder = '';
+    /**
+     * @var string
+     */
     protected $prefix = '';
 
+    /**
+     * IDML constructor.
+     * @param $fileName
+     * @param $prefix
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
     public function __construct($fileName, $prefix)
     {
         $this->tempFolder = $this->tempdir();
@@ -53,6 +69,9 @@ class IDML
         $this->prefix = $prefix;
     }
 
+    /**
+     * @return false|string
+     */
     protected function tempdir()
     {
         $tempfile = tempnam(sys_get_temp_dir(), 'IDML_unpacked_');
@@ -113,11 +132,19 @@ class IDML
         exit;
     }
 
+    /**
+     * @param $file
+     * @return \SimpleXMLElement
+     */
     public function getXML($file)
     {
         return simplexml_load_file($this->tempPath($file));
     }
 
+    /**
+     * @param $file
+     * @param \SimpleXMLElement $xml
+     */
     public function setXML($file, \SimpleXMLElement $xml) {
         $this->renderToFile($file, $xml->__toString());
     }
@@ -211,15 +238,26 @@ class IDML
         $this->deleteFolder($this->tempFolder);
     }
 
+    /**
+     * @return string
+     */
     public function BR() {
         return chr(0xE2).chr(0x80).chr(0xA8);
     }
 
+    /**
+     * @param $mm
+     * @return float
+     */
     public static function mmToPoint($mm)
     {
         return $mm * 2.845275590551;
     }
 
+    /**
+     * @param $pt
+     * @return float
+     */
     public static function pointToMm($pt)
     {
         return $pt / 2.845275590551;

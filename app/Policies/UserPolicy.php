@@ -34,10 +34,18 @@ use App\Providers\AuthServiceProvider;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class UserPolicy
+ * @package App\Policies
+ */
 class UserPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function index(User $user) {
         if ($user->hasRole('Administrator*in')) return true;
         return $user->hasPermissionTo('benutzerliste-lokal-sehen') || $user->hasPermissionTo('benutzer-bearbeiten');

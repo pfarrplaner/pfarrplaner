@@ -34,6 +34,10 @@ use App\Parish;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class ParishPolicy
+ * @package App\Policies
+ */
 class ParishPolicy
 {
     use HandlesAuthorization;
@@ -48,30 +52,59 @@ class ParishPolicy
         //
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function index(User $user) {
         if ($user->hasRole('Administrator*in')) return true;
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Parish $model
+     * @return bool
+     */
     public function create(User $user, Parish $model) {
         if ($user->adminCities->contains($model->owningCity)) return true;
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Parish $model
+     * @return bool
+     */
     public function update(User $user, Parish $model) {
         if ($user->adminCities->contains($model->owningCity)) return true;
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Parish $model
+     * @return bool
+     */
     public function delete(User $user, Parish $model) {
         if ($user->adminCities->contains($model->owningCity)) return true;
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Parish $model
+     * @return bool
+     */
     public function restore(User $user, Parish $model) {
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Parish $model
+     * @return bool
+     */
     public function forceDelete(User $user, Parish $model) {
         return false;
     }

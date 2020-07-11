@@ -40,19 +40,40 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Section;
 
+/**
+ * Class PredicantsReport
+ * @package App\Reports
+ */
 class PredicantsReport extends AbstractWordDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Prädikantenanforderung';
+    /**
+     * @var string
+     */
     public $group = 'Formulare';
+    /**
+     * @var string
+     */
     public $description = 'Vorausgefülltes Prädikantenformular für das Dekanatamt';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
         return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
     public function render(Request $request)
     {
         $request->validate([

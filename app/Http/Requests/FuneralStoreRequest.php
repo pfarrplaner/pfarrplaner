@@ -33,6 +33,10 @@ namespace App\Http\Requests;
 use App\Funeral;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class FuneralStoreRequest
+ * @package App\Http\Requests
+ */
 class FuneralStoreRequest extends FormRequest
 {
     /**
@@ -45,6 +49,9 @@ class FuneralStoreRequest extends FormRequest
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function validated()
     {
         $data = parent::validated();

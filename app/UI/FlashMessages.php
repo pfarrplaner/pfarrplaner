@@ -40,13 +40,23 @@ namespace App\UI;
 
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Class FlashMessages
+ * @package App\UI
+ */
 class FlashMessages
 {
+    /**
+     * @return int
+     */
     public static function count()
     {
         return count(self::all());
     }
 
+    /**
+     * @return array
+     */
     public static function all()
     {
         $msg = [];

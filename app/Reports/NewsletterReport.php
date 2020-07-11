@@ -41,13 +41,29 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
 
+/**
+ * Class NewsletterReport
+ * @package App\Reports
+ */
 class NewsletterReport extends AbstractWordDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Newsletter';
+    /**
+     * @var string
+     */
     public $group = 'Veröffentlichungen';
+    /**
+     * @var string
+     */
     public $description = 'Gottesdienstliste für den Newsletter';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
@@ -55,7 +71,10 @@ class NewsletterReport extends AbstractWordDocumentReport
     }
 
 
-
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
     public function render(Request $request)
     {
         $request->validate([

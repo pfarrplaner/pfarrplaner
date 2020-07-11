@@ -44,14 +44,33 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class EmbedStreamingReport
+ * @package App\Reports
+ */
 class EmbedStreamingReport extends AbstractEmbedReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Streaming von Gottesdiensten';
+    /**
+     * @var string
+     */
     public $group = 'Website (Gemeindebaukasten)';
+    /**
+     * @var string
+     */
     public $description = 'Erzeugt HTML-Code für die Einbindung eines Streaming-Gottesdiensts in die Website der Gemeinde';
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-code';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
@@ -59,6 +78,10 @@ class EmbedStreamingReport extends AbstractEmbedReport
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
     public function render(Request $request)
     {
         $data = $request->validate([
@@ -70,6 +93,10 @@ class EmbedStreamingReport extends AbstractEmbedReport
         return view('reports.embedstreaming.render', $data);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function embed(Request $request) {
         if (!$request->has('city')) abort(404);
         $nextService = Service::where('city_id', $request->get('city'))

@@ -38,6 +38,10 @@ use Google_Service_YouTube_LiveBroadcast;
 use Google_Service_YouTube_LiveBroadcastSnippet;
 use Google_Service_YouTube_LiveBroadcastStatus;
 
+/**
+ * Class Broadcast
+ * @package App
+ */
 class Broadcast
 {
     /** @var Service */
@@ -52,6 +56,11 @@ class Broadcast
     /** @var Google_Service_YouTube_LiveBroadcast */
     protected $liveBroadcast = null;
 
+    /**
+     * Broadcast constructor.
+     * @param null $service
+     * @throws \Google_Exception
+     */
     public function __construct($service = null)
     {
         $this->setService($service);
@@ -65,6 +74,9 @@ class Broadcast
         $this->setYoutube($youtube);
     }
 
+    /**
+     * @param City $city
+     */
     public function authenticate(City $city)
     {
         $this->client->setAccessToken($city->google_access_token);
@@ -72,6 +84,10 @@ class Broadcast
         $this->client->setAccessToken($token);
     }
 
+    /**
+     * @param Service $service
+     * @return string
+     */
     public static function timeString(Service $service)
     {
         $serviceTime = Carbon::createFromTimeString(
@@ -81,6 +97,10 @@ class Broadcast
         return $serviceTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
     }
 
+    /**
+     * @param Service $service
+     * @return Broadcast|null
+     */
     public static function get(Service $service)
     {
         $instance = new Broadcast($service);
@@ -101,6 +121,11 @@ class Broadcast
         return $broadcast ? $instance : null;
     }
 
+    /**
+     * @param Service $service
+     * @param string $statusString
+     * @return Broadcast
+     */
     public static function create(Service $service, $statusString = 'public')
     {
         $instance = new Broadcast($service);
@@ -139,11 +164,17 @@ class Broadcast
         return $instance;
     }
 
+    /**
+     * @return string
+     */
     public function getSharerUrl()
     {
         return $this->liveBroadcast ? 'https://youtu.be/' . $this->liveBroadcast['id'] : '';
     }
 
+    /**
+     * @return string
+     */
     public function getLiveDashboardUrl()
     {
         return $this->liveBroadcast ? 'https://studio.youtube.com/channel/'

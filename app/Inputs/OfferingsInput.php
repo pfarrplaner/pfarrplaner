@@ -39,10 +39,20 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class OfferingsInput
+ * @package App\Inputs
+ */
 class OfferingsInput extends AbstractInput
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Opferplan';
+    /**
+     * @var string
+     */
     protected $setupView = 'inputs.offerings.setup';
 
     public function canEdit(): bool
@@ -50,6 +60,10 @@ class OfferingsInput extends AbstractInput
         return Auth::user()->can('gd-opfer-bearbeiten');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     */
     public function input(Request $request) {
         $request->validate([
             'year' => 'int|required',
@@ -79,6 +93,9 @@ class OfferingsInput extends AbstractInput
 
     }
 
+    /**
+     * @param Request $request
+     */
     public function save(Request $request) {}
 
 

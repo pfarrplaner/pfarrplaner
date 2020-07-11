@@ -42,6 +42,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Class HomeController
+ * @package App\Http\Controllers
+ */
 class HomeController extends Controller
 {
     /**
@@ -85,10 +89,17 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function showChangePassword() {
         return view('auth.changepassword');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function changePassword(Request $request){
         if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
             // The passwords matches
@@ -120,12 +131,19 @@ class HomeController extends Controller
         */
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function whatsnew() {
         $messages = VersionInfo::getMessages()->sortByDesc('date');
         Auth::user()->setSetting('new_features', \Carbon\Carbon::now());
         return view('whatsnew', compact('messages'));
     }
 
+    /**
+     * @param $counter
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function counters($counter) {
         $data = [];
         switch ($counter) {

@@ -32,12 +32,19 @@ namespace App;
 
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class Liturgy
+ * @package App
+ */
 class Liturgy
 {
 
     /** @var Liturgy|null Instance */
     protected static $instance = null;
 
+    /**
+     * @return Liturgy|null
+     */
     public static function getInstance() {
         if (null === self::$instance) self::$instance = new self();
         return self::$instance;

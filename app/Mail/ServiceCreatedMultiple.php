@@ -38,6 +38,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class ServiceCreatedMultiple
+ * @package App\Mail
+ */
 class ServiceCreatedMultiple extends AbstractServiceMailable
 {
     /**

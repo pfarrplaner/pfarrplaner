@@ -33,8 +33,15 @@ namespace App\Reports;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 
+/**
+ * Class AbstractWordDocumentReport
+ * @package App\Reports
+ */
 class AbstractWordDocumentReport extends AbstractReport
 {
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-word';
 
     /** @var PhpWord $wordDocument */
@@ -44,6 +51,10 @@ class AbstractWordDocumentReport extends AbstractReport
         $this->wordDocument = new PhpWord();
     }
 
+    /**
+     * @param $filename
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
     public function sendToBrowser($filename) {
         header("Content-Description: File Transfer");
         header('Content-Disposition: attachment; filename="' . $filename . '.docx"');

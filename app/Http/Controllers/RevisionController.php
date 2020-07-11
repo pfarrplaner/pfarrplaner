@@ -34,6 +34,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Venturecraft\Revisionable\Revision;
 
+/**
+ * Class RevisionController
+ * @package App\Http\Controllers
+ */
 class RevisionController extends Controller
 {
     public function __construct()
@@ -42,6 +46,10 @@ class RevisionController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function index(Request $request) {
         $key = $request->get('key', '');
         $old = $request->get('old', '');
@@ -59,6 +67,10 @@ class RevisionController extends Controller
         return view('revisions.index', compact('revisions', 'key', 'old', 'new', 'keys'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function revert(Request $request) {
         $request->validate(['key' => 'required']);
         $key = $request->get('key');

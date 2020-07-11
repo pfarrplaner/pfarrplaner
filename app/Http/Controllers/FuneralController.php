@@ -48,6 +48,10 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use PDF;
 
+/**
+ * Class FuneralController
+ * @package App\Http\Controllers
+ */
 class FuneralController extends Controller
 {
 
@@ -79,11 +83,19 @@ class FuneralController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function wizardStep1(Request $request) {
         $cities = Auth::user()->writableCities;
         return view('funerals.wizard.step1', compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function wizardStep2(Request $request) {
         $request->validate([
             'date' => 'required|date|date_format:d.m.Y',
@@ -120,6 +132,10 @@ class FuneralController extends Controller
 
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function wizardStep3(Request $request)
     {
         $request->validate([
@@ -275,6 +291,10 @@ class FuneralController extends Controller
     }
 
 
+    /**
+     * @param Funeral $funeral
+     * @return false|string
+     */
     public function done(Funeral $funeral) {
         $funeral->done = true;
         $funeral->save();
@@ -282,6 +302,10 @@ class FuneralController extends Controller
     }
 
 
+    /**
+     * @param Funeral $funeral
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function appointmentIcal(Funeral $funeral) {
         $service = Service::find($funeral->service_id);
         $raw = View::make('funerals.appointment.ical', compact('funeral', 'service'));

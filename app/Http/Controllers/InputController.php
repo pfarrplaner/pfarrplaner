@@ -36,6 +36,10 @@ use App\Inputs\AbstractInput;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class InputController
+ * @package App\Http\Controllers
+ */
 class InputController extends Controller
 {
 
@@ -44,6 +48,10 @@ class InputController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @param $input
+     * @return AbstractInput
+     */
     protected function getInputClass($input): AbstractInput
     {
         $inputClass = 'App\\Inputs\\' . ucfirst($input) . 'Input';
@@ -58,17 +66,30 @@ class InputController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $input
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup(Request $request, $input)
     {
         $input = $this->getInputClass($input);
         return $input->setup($request);
     }
 
+    /**
+     * @param Request $request
+     * @param $input
+     */
     public function input(Request $request, $input) {
         $input = $this->getInputClass($input);
         return $input->input($request);
     }
 
+    /**
+     * @param Request $request
+     * @param $input
+     */
     public function save(Request $request, $input) {
         $input = $this->getInputClass($input);
         return $input->save($request);

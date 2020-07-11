@@ -33,6 +33,10 @@ namespace App\Http\Controllers;
 use App\Replacement;
 use Illuminate\Http\Request;
 
+/**
+ * Class ReplacementController
+ * @package App\Http\Controllers
+ */
 class ReplacementController extends Controller
 {
     /**

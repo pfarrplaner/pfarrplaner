@@ -42,12 +42,26 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Psy\Exception\ErrorException;
 
+/**
+ * Class EventCalendarImport
+ * @package App\Imports
+ */
 class EventCalendarImport
 {
 
+    /**
+     * @var string
+     */
     protected $url = '';
+    /**
+     * @var string
+     */
     public $timeZone = 'UTC';
 
+    /**
+     * EventCalendarImport constructor.
+     * @param $url
+     */
     public function __construct($url)
     {
         $this->url = $url;
@@ -77,6 +91,12 @@ class EventCalendarImport
         return $events;
     }
 
+    /**
+     * @param Carbon $weekStart
+     * @param Carbon $weekEnd
+     * @param bool $removeServices
+     * @return array
+     */
     public function getEvents(Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
         $cacheKey = 'EventCalendarImport_'.$this->url;

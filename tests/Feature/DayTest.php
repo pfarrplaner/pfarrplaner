@@ -38,6 +38,10 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class DayTest
+ * @package Tests\Feature
+ */
 class DayTest extends TestCase
 {
 

@@ -34,6 +34,10 @@ use App\Events\AbsenceRejected;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+/**
+ * Class SendRejectionNotification
+ * @package App\Listeners
+ */
 class SendRejectionNotification
 {
     /**

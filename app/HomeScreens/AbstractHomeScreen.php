@@ -46,6 +46,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
+/**
+ * Class AbstractHomeScreen
+ * @package App\HomeScreens
+ */
 abstract class AbstractHomeScreen
 {
 

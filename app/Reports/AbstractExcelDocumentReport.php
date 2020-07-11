@@ -33,9 +33,16 @@ namespace App\Reports;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
+/**
+ * Class AbstractExcelDocumentReport
+ * @package App\Reports
+ */
 class AbstractExcelDocumentReport extends AbstractReport
 {
 
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-excel';
 
     /** @var Spreadsheet  */
@@ -46,6 +53,10 @@ class AbstractExcelDocumentReport extends AbstractReport
         $this->spreadsheet = new Spreadsheet();
     }
 
+    /**
+     * @param $filename
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function sendToBrowser($filename) {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $filename.'"');

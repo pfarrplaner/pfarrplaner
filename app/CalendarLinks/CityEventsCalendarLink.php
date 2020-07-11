@@ -47,24 +47,48 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class CityEventsCalendarLink
+ * @package App\CalendarLinks
+ */
 class CityEventsCalendarLink extends AbstractCalendarLink
 {
 
+    /**
+     * @var string
+     */
     protected $title = 'Kombinierter Veranstaltungskalender';
+    /**
+     * @var string
+     */
     protected $description = 'Kalender, neben den Gottesdiensten auch die Veranstaltungen (aus Outlook, Online Planer) einer Kirchengemeinde enthält.';
+    /**
+     * @var string
+     */
     protected $viewName = 'events';
 
+    /**
+     * @return array
+     */
     public function setupData() {
         $cities = Auth::user()->cities;
         return compact('cities');
     }
 
+    /**
+     * @param Request $request
+     */
     public function setDataFromRequest(Request $request)
     {
         $request->validate(['city' => 'required']);
         $this->data['city'] = $request->get('city');
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return array|mixed
+     */
     public function getRenderData(Request $request, User $user)
     {
 

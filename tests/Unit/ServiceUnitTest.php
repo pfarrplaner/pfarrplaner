@@ -36,6 +36,10 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class ServiceUnitTest
+ * @package Tests\Unit
+ */
 class ServiceUnitTest extends TestCase
 {
 

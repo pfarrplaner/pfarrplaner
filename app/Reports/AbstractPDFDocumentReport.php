@@ -34,10 +34,22 @@ use Illuminate\Support\Facades\Auth;
 use Mpdf\Mpdf;
 use PDF;
 
+/**
+ * Class AbstractPDFDocumentReport
+ * @package App\Reports
+ */
 class AbstractPDFDocumentReport extends AbstractReport
 {
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-pdf';
 
+    /**
+     * @param $data
+     * @param $layout
+     * @return PDF
+     */
     public function renderPDF($data, $layout) {
         $pdf = PDF::loadView($this->getRenderViewName(), $data, [], array_merge([
             'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
@@ -45,10 +57,22 @@ class AbstractPDFDocumentReport extends AbstractReport
         return $pdf;
     }
 
+    /**
+     * @param $filename
+     * @param $data
+     * @param $layout
+     * @return mixed
+     */
     public function sendToBrowser($filename, $data, $layout) {
         return $this->renderPDF($data, $layout)->stream($filename);
     }
 
+    /**
+     * @param $filename
+     * @param $data
+     * @param $layout
+     * @return mixed
+     */
     public function sendToFile($filename, $data, $layout) {
         return $this->renderPDF($data, $layout)->download($filename);
     }

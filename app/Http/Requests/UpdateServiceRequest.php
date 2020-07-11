@@ -36,6 +36,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
+/**
+ * Class UpdateServiceRequest
+ * @package App\Http\Requests
+ */
 class UpdateServiceRequest extends FormRequest
 {
     /**

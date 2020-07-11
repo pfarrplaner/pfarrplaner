@@ -45,12 +45,25 @@ use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * Class User
+ * @package App
+ */
 class User extends Authenticatable
 {
     use Notifiable, HasRoles, Visitable, Visitor;
 
+    /**
+     *
+     */
     public const NAME_FORMAT_DEFAULT = 1;
+    /**
+     *
+     */
     public const NAME_FORMAT_INITIAL_AND_LAST = 2;
+    /**
+     *
+     */
     public const NAME_FORMAT_FIRST_AND_LAST = 3;
 
 
@@ -77,6 +90,9 @@ class User extends Authenticatable
         'manage_absences',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
         'new_features',
     ];
@@ -91,7 +107,13 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /**
+     * @var string
+     */
     protected $orderBy = 'name';
+    /**
+     * @var string
+     */
     protected $orderDirection = 'ASC';
 
     /**
@@ -104,37 +126,59 @@ class User extends Authenticatable
             ->withPivot('permission');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function visibleCities()
     {
         return $this->cities();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function writableCities()
     {
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
     }
 
+    /**
+     * @param $city
+     * @return string
+     */
     public function permissionForCity($city) {
         if (is_numeric($city)) $city = City::find($city);
         /** @var City $city */
         return $this->cities()->where('cities.id', $city->id)->first()->pivot->permission ?? 'n';
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function writableCitiesWithoutAdmin()
     {
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w']);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function adminCities()
     {
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function homeCities()
     {
         return $this->belongsToMany(City::class, 'user_home');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function services()
     {
         return $this->belongsToMany(Service::class)
@@ -142,26 +186,43 @@ class User extends Authenticatable
             ->withPivot('category');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function parishes()
     {
         return $this->belongsToMany(Parish::class)->withTimestamps();
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function approvers()
     {
         return $this->belongsToMany(User::class, 'user_approver', 'user_id', 'approver_id');
     }
 
+    /**
+     * @param $field
+     * @return bool
+     */
     public function canEditField($field)
     {
         return $this->isAdmin || in_array($field, $this->getEditableFields());
     }
 
+    /**
+     * @param $area
+     * @return bool
+     */
     public function canEdit($area)
     {
         if (in_array($area, ['general', 'church'])) {
@@ -172,16 +233,26 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * @return false|string[]
+     */
     public function getEditableFields()
     {
         return explode(',', $this->canEditFields);
     }
 
+    /**
+     * @return mixed
+     */
     public function getToken()
     {
         return $this->api_token;
     }
 
+    /**
+     * @param bool $withTitle
+     * @return string
+     */
     public function lastName($withTitle = false)
     {
         if ($this->last_name) {
@@ -191,6 +262,10 @@ class User extends Authenticatable
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . end($name);
     }
 
+    /**
+     * @param bool $withTitle
+     * @return string
+     */
     public function fullName($withTitle = false)
     {
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->name;
@@ -214,6 +289,10 @@ class User extends Authenticatable
         return $this->lastName($withTitle);
     }
 
+    /**
+     * @param bool $withTitle
+     * @return string
+     */
     public function initialedName($withTitle = false)
     {
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '')
@@ -221,11 +300,20 @@ class User extends Authenticatable
             . $this->last_name;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function userSettings()
     {
         return $this->hasMany(UserSetting::class);
     }
 
+    /**
+     * @param $key
+     * @param null $default
+     * @param bool $returnObject
+     * @return UserSetting|mixed
+     */
     public function getSetting($key, $default = null, $returnObject = false)
     {
         $setting = UserSetting::where('key', $key)->where('user_id', $this->id)->first();
@@ -241,11 +329,19 @@ class User extends Authenticatable
         return ($returnObject ? $setting : $setting->value);
     }
 
+    /**
+     * @param $key
+     * @return bool
+     */
     public function hasSetting($key)
     {
         return (UserSetting::where('key', $key)->where('user_id', $this->id)->get()->count() > 0);
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
     public function setSetting($key, $value)
     {
         if ($this->hasSetting($key)) {
@@ -263,6 +359,10 @@ class User extends Authenticatable
         $setting->save();
     }
 
+    /**
+     * @param $key
+     * @throws \Exception
+     */
     public function forgetSetting($key)
     {
         if ($this->hasSetting($key)) {
@@ -286,11 +386,18 @@ class User extends Authenticatable
         return null;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
     }
 
+    /**
+     * @param $name
+     * @return int|mixed|string
+     */
     public static function createIfNotExists($name)
     {
         if ((!is_numeric($name)) || (User::find($name) === false)) {
@@ -424,6 +531,9 @@ class User extends Authenticatable
         );
     }
 
+    /**
+     * @param $subscriptions
+     */
     public function setSubscriptionsFromArray($subscriptions)
     {
         foreach ($subscriptions as $city => $type) {
@@ -432,6 +542,9 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * @return array
+     */
     public function getAllPermissionsAttribute()
     {
         $permissions = [];
@@ -443,6 +556,9 @@ class User extends Authenticatable
         return $permissions;
     }
 
+    /**
+     * @return mixed
+     */
     public function getSortedCities()
     {
         if ($this->hasSetting('sorted_cities')) {
@@ -461,6 +577,12 @@ class User extends Authenticatable
     }
 
 
+    /**
+     * @param $date
+     * @param bool $returnAbsence
+     * @return bool|Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @throws \Exception
+     */
     public function isAbsent($date, $returnAbsence = false)
     {
         if (!$this->manage_absences) {
@@ -477,6 +599,12 @@ class User extends Authenticatable
         return (null !== $absences) ? ($returnAbsence ? $absences : null) : ($returnAbsence ? null : false);
     }
 
+    /**
+     * @param $date
+     * @param bool $returnAbsence
+     * @return bool|null
+     * @throws \Exception
+     */
     public function isReplacement($date, $returnAbsence = false)
     {
         if (!$this->manage_absences) {
@@ -492,6 +620,11 @@ class User extends Authenticatable
         return (null !== $absences) ? ($returnAbsence ? $absences : null) : ($returnAbsence ? null : false);
     }
 
+    /**
+     * @param $date
+     * @param bool $returnServices
+     * @return bool|null
+     */
     public function isBusy($date, $returnServices = false)
     {
         $services = Service::whereHas(
@@ -508,6 +641,9 @@ class User extends Authenticatable
         return (count($services) ? ($returnServices ? $services : null) : ($services ? null : false));
     }
 
+    /**
+     * @return bool
+     */
     public function getIsAdminAttribute()
     {
         return $this->hasRole('Administrator*in') || $this->hasRole('Super-Administrator*in');
@@ -579,6 +715,9 @@ class User extends Authenticatable
         return $users;
     }
 
+    /**
+     * @return string
+     */
     public function getPlanNameAttribute()
     {
         return $this->lastName(true);
@@ -657,6 +796,9 @@ class User extends Authenticatable
         return false;
     }
 
+    /**
+     * @return City[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getWritableCitiesAttribute()
     {
         if ((!Auth::guest()) && Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
@@ -665,6 +807,9 @@ class User extends Authenticatable
         return $this->writableCities()->get();
     }
 
+    /**
+     * @return City[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getAdminCitiesAttribute()
     {
         if ($this->hasRole(AuthServiceProvider::SUPER)) {
@@ -673,6 +818,9 @@ class User extends Authenticatable
         return $this->adminCities()->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function approvableUsers()
     {
         $id = $this->id;
@@ -684,6 +832,9 @@ class User extends Authenticatable
         )->get();
     }
 
+    /**
+     * @return mixed
+     */
     public function absencesToBeApproved()
     {
         $approvableUsers = $this->approvableUsers();

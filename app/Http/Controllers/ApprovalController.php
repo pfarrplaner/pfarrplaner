@@ -35,6 +35,10 @@ use App\Approval;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class ApprovalController
+ * @package App\Http\Controllers
+ */
 class ApprovalController extends Controller
 {
 

@@ -33,19 +33,39 @@ namespace App;
 use App\Tools\StringTool;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Replacement
+ * @package App
+ */
 class Replacement extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = ['absence_id', 'from', 'to'];
+    /**
+     * @var string[]
+     */
     protected $dates = ['from', 'to'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function absence() {
         return $this->belongsTo(Absence::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users() {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
+    /**
+     * @param bool $withDates
+     * @return string
+     */
     public function toText(bool $withDates = false) {
         $u = [];
         /** @var User $user */

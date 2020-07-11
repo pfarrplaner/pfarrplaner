@@ -42,13 +42,29 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
 
+/**
+ * Class OfferingPlanReport
+ * @package App\Reports
+ */
 class OfferingPlanReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Opferplan';
+    /**
+     * @var string
+     */
     public $group = 'Opfer';
+    /**
+     * @var string
+     */
     public $description = 'Übersicht aller Opferzwecke für ein Jahr';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
@@ -56,6 +72,10 @@ class OfferingPlanReport extends AbstractPDFDocumentReport
         return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed|string
+     */
     public function render(Request $request)
     {
         $request->validate([

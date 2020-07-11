@@ -34,13 +34,23 @@ namespace App\Traits;
 use App\Service;
 use Illuminate\Support\Collection;
 
+/**
+ * Trait TracksChangesTrait
+ * @package App\Traits
+ */
 trait TracksChangesTrait
 {
 
     /** @var array $dataBeforeChanges Snapshot with original data */
     public $dataBeforeChanges = [];
+    /**
+     * @var array
+     */
     public $changed = [];
 
+    /**
+     * @return mixed
+     */
     public function createSnapshot()
     {
         $snapshot = $this->removeTimestamps(json_decode(json_encode($this), true));
@@ -64,6 +74,10 @@ trait TracksChangesTrait
         $this->dataBeforeChanges = $this->createSnapshot();
     }
 
+    /**
+     * @param $array
+     * @return mixed
+     */
     protected function removeTimestamps($array) {
         foreach ($array as $key => $value) {
             if (is_array($value)) $array[$key] = $this->removeTimestamps($value);
@@ -105,6 +119,9 @@ trait TracksChangesTrait
         return $diff;
     }
 
+    /**
+     * @return bool
+     */
     public function isChanged()
     {
         $snapshot = $this->createSnapshot();

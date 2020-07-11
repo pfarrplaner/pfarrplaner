@@ -41,9 +41,16 @@ namespace App\Http\Controllers;
 use App\Day;
 use App\Vacations;
 
+/**
+ * Class VacationController
+ * @package App\Http\Controllers
+ */
 class VacationController extends Controller
 {
 
+    /**
+     * @var array
+     */
     protected $vacationData = [];
 
     public function __construct()
@@ -51,6 +58,10 @@ class VacationController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @param $dayId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function vacationsByDay($dayId) {
         $day = Day::find($dayId);
         $vacations = Vacations::getByDay($day);

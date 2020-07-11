@@ -33,8 +33,16 @@ namespace App\Helpers;
 
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class FileHelper
+ * @package App\Helpers
+ */
 class FileHelper
 {
+    /**
+     * @param $bytes
+     * @return string
+     */
     public static function bytesToHuman($bytes)
     {
         $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
@@ -46,6 +54,10 @@ class FileHelper
         return round($bytes, 2) . ' ' . $units[$i];
     }
 
+    /**
+     * @param $path
+     * @return string
+     */
     public static function icon($path) {
         $icons = [
             'application/pdf' => 'fa-file-pdf',
@@ -53,6 +65,10 @@ class FileHelper
         return $icons[Storage::mimeType($path)] ?? 'fa-file';
     }
 
+    /**
+     * @param string $str
+     * @return string|string[]
+     */
     public static function normalizeFilename ($str = '')
     {
         $str = strip_tags($str);

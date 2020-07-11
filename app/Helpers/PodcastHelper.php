@@ -31,9 +31,17 @@
 namespace App\Helpers;
 
 
+/**
+ * Class PodcastHelper
+ * @package App\Helpers
+ */
 class PodcastHelper
 {
 
+    /**
+     * @param $url
+     * @return mixed
+     */
     public static function getFileSize($url)
     {
 	$curl = curl_init($url);

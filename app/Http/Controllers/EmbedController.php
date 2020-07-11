@@ -46,6 +46,10 @@ use App\Vacations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
+/**
+ * Class EmbedController
+ * @package App\Http\Controllers
+ */
 class EmbedController extends Controller
 {
 
@@ -150,6 +154,14 @@ class EmbedController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @param $ids
+     * @param int $limit
+     * @param int $maxBaptisms
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function embedByBaptismalServices(Request $request, User $user, $ids, $limit =10, $maxBaptisms=0) {
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
@@ -169,6 +181,11 @@ class EmbedController extends Controller
         return view('embed.services.baptismalServices', compact('services', 'ids', 'title', 'maxBaptisms'));
     }
 
+    /**
+     * @param Request $request
+     * @param $report
+     * @return mixed
+     */
     public function embedReport(Request $request, $report) {
         $reportClass = 'App\\Reports\\Embed'.ucfirst($report).'Report';
         if (!class_exists($reportClass)) abort(404);

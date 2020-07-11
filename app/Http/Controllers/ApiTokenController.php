@@ -33,6 +33,10 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
+/**
+ * Class ApiTokenController
+ * @package App\Http\Controllers
+ */
 class ApiTokenController extends Controller
 {
     public function __construct()

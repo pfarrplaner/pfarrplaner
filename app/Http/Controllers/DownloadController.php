@@ -37,6 +37,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Class DownloadController
+ * @package App\Http\Controllers
+ */
 class DownloadController extends Controller
 {
 
@@ -45,6 +49,13 @@ class DownloadController extends Controller
         $this->middleware('auth')->except(['storage','file','image']);
     }
 
+    /**
+     * @param Request $request
+     * @param $storage
+     * @param $code
+     * @param string $prettyName
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function download(Request $request, $storage, $code, $prettyName = '')
     {
         $prettyName = $prettyName ?: '';
@@ -54,6 +65,12 @@ class DownloadController extends Controller
         );
     }
 
+    /**
+     * @param Request $request
+     * @param Attachment $attachment
+     * @param string $prettyName
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function attachment(Request $request, Attachment $attachment, $prettyName = '')
     {
         if (get_class($attachment->attachable) == Service::class) {
@@ -86,6 +103,11 @@ class DownloadController extends Controller
         return Storage::download($attachment->file, $prettyName);
     }
 
+    /**
+     * @param $path
+     * @param string $prettyName
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function storage($path, $prettyName = '')
     {
         if ((pathinfo($path, PATHINFO_EXTENSION)  == '') && (pathinfo($prettyName, PATHINFO_EXTENSION) != '')) {
@@ -99,6 +121,11 @@ class DownloadController extends Controller
     }
 
 
+    /**
+     * @param $path
+     * @param string $prettyName
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function image($path, $prettyName = '')
     {
         if ((pathinfo($path, PATHINFO_EXTENSION)  == '') && (pathinfo($prettyName, PATHINFO_EXTENSION) != '')) {

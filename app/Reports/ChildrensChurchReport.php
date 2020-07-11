@@ -42,19 +42,39 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
 
+/**
+ * Class ChildrensChurchReport
+ * @package App\Reports
+ */
 class ChildrensChurchReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Programm für die Kinderkirche';
+    /**
+     * @var string
+     */
     public $group = 'Listen';
+    /**
+     * @var string
+     */
     public $description = 'Übersicht aller Termine der Kinderkirche mit Themen und Mitarbeitern';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
         return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed|string
+     */
     public function render(Request $request)
     {
         $request->validate([

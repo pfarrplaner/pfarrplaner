@@ -35,6 +35,10 @@ use App\Service;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
+/**
+ * Class StoreServiceRequest
+ * @package App\Http\Requests
+ */
 class StoreServiceRequest extends FormRequest
 {
     /**

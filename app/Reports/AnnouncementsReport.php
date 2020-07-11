@@ -46,27 +46,62 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Section;
 
+/**
+ * Class AnnouncementsReport
+ * @package App\Reports
+ */
 class AnnouncementsReport extends AbstractWordDocumentReport
 {
+    /**
+     *
+     */
     protected const BOLD = ['bold' => true];
+    /**
+     *
+     */
     protected const UNDERLINE = ['underline' => Font::UNDERLINE_SINGLE];
+    /**
+     *
+     */
     protected const BOLD_UNDERLINE = ['bold' => true, 'underline' => Font::UNDERLINE_SINGLE];
+    /**
+     *
+     */
     protected const INDENT = 'Bekanntgaben';
+    /**
+     *
+     */
     protected const NO_INDENT = 'Bekanntgaben ohne Einrückung';
 
+    /**
+     * @var string
+     */
     public $title = 'Bekanntgaben';
+    /**
+     * @var string
+     */
     public $group = 'Veröffentlichungen';
+    /**
+     * @var string
+     */
     public $description = 'Bekanntgaben für einen Gottesdienst';
 
     /** @var \PhpOffice\PhpWord\Element\Section */
     protected $section;
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function configure(Request $request) {
         $request->validate(['city' => 'required|int']);
         $city = City::findOrFail($request->get('city'));
@@ -75,6 +110,10 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function configure2(Request $request)
     {
         $city = City::findOrFail($request->session()->get('city'));
@@ -91,6 +130,10 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         return $this->renderView('configure', compact('city', 'services'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function input(Request $request)
     {
         $request->validate(['service' => 'required|int']);
@@ -100,6 +143,10 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function postInput(Request $request)
     {
         $service = Service::findOrFail($request->session()->get('service'));
@@ -127,6 +174,11 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
     public function render(Request $request)
     {
         $request->validate([
@@ -501,6 +553,10 @@ Amen.');
     }
 
 
+    /**
+     * @param $s
+     * @return string
+     */
     protected function renderName($s)
     {
         if (false !== strpos($s, ',')) {
@@ -510,6 +566,13 @@ Amen.');
         return $s;
     }
 
+    /**
+     * @param string $template
+     * @param array $blocks
+     * @param int $emptyParagraphsAfter
+     * @param null $existingTextRun
+     * @return \PhpOffice\PhpWord\Element\TextRun|null
+     */
     protected function renderParagraph(
         $template = '',
         array $blocks = [],
@@ -527,6 +590,9 @@ Amen.');
     }
 
 
+    /**
+     * @param $text
+     */
     protected function renderLiteral($text)
     {
         if (!is_array($text)) {

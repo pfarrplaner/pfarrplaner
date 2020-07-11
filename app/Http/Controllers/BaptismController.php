@@ -41,6 +41,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class BaptismController
+ * @package App\Http\Controllers
+ */
 class BaptismController extends Controller
 {
 
@@ -62,6 +66,10 @@ class BaptismController extends Controller
         //
     }
 
+    /**
+     * @param int $baptismFlag
+     * @return mixed
+     */
     protected function getBaptismalServices($baptismFlag = 1) {
         return Service::where('baptism', '=', $baptismFlag)
             ->select('services.*')
@@ -247,6 +255,10 @@ class BaptismController extends Controller
         }
     }
 
+    /**
+     * @param Baptism $baptism
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     */
     public function appointmentIcal(Baptism $baptism) {
         $service = Service::find($baptism->service_id);
         $raw = View::make('baptisms.appointment.ical', compact('baptism', 'service'));
@@ -258,6 +270,10 @@ class BaptismController extends Controller
             ->header('Content-Disposition', 'inline; filename=Taufgespraech-'.$baptism->id.'.ics');
     }
 
+    /**
+     * @param Baptism $baptism
+     * @return false|string
+     */
     public function done(Baptism $baptism) {
         $baptism->done = true;
         $baptism->save();

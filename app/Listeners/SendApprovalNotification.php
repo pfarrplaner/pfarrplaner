@@ -34,6 +34,10 @@ use App\Events\AbsenceApproved;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * Class SendApprovalNotification
+ * @package App\Listeners
+ */
 class SendApprovalNotification
 {
     /**

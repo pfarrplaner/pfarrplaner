@@ -43,6 +43,10 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ * Class DemoBuilder
+ * @package App\Console\Commands
+ */
 class DemoBuilder extends Command
 {
     /**

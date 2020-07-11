@@ -35,6 +35,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class CityController
+ * @package App\Http\Controllers\Api
+ */
 class CityController extends Controller
 {
 

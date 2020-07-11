@@ -34,6 +34,10 @@ use App\City;
 use App\Traits\HandlesAttachmentsTrait;
 use Illuminate\Http\Request;
 
+/**
+ * Class CityController
+ * @package App\Http\Controllers
+ */
 class CityController extends Controller
 {
 

@@ -49,13 +49,29 @@ use PhpOffice\PhpWord\Style\Tab;
 use PhpOffice\PhpWord\Style\Table;
 
 
+/**
+ * Class QuarterlyEventsReport
+ * @package App\Reports
+ */
 class QuarterlyEventsReport extends AbstractWordDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Quartalsprogramm';
+    /**
+     * @var string
+     */
     public $group = 'Listen';
+    /**
+     * @var string
+     */
     public $description = 'Übersicht aller Termine für ein Quartal an einem bestimmten Veranstaltungsort';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $minDate = max(Carbon::now(), Day::orderBy('date', 'ASC')->limit(1)->get()->first()->getAttribute('date'));
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first()->getAttribute('date');
@@ -63,6 +79,10 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
         return $this->renderSetupView(compact('minDate', 'maxDate', 'locations'));
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     */
     public function render(Request $request)
     {
         $request->validate([

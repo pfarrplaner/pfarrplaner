@@ -35,9 +35,17 @@ use App\Attachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * Trait HandlesAttachmentsTrait
+ * @package App\Traits
+ */
 trait HandlesAttachmentsTrait
 {
 
+    /**
+     * @param Request $request
+     * @param $object
+     */
     protected function removeAttachments(Request $request, $object)
     {
         if ($request->has('remove_attachment')) {
@@ -50,6 +58,10 @@ trait HandlesAttachmentsTrait
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $object
+     */
     protected function handleAttachments(Request $request, $object)
     {
         if ($request->hasFile('attachments')) {
@@ -68,6 +80,11 @@ trait HandlesAttachmentsTrait
     }
 
 
+    /**
+     * @param Request $request
+     * @param $object
+     * @param $key
+     */
     protected function removeIndividualAttachment(Request $request, $object, $key)
     {
         if ($request->has('remove_'.$key)) {
@@ -78,6 +95,11 @@ trait HandlesAttachmentsTrait
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $object
+     * @param $key
+     */
     protected function handleIndividualAttachment(Request $request, $object, $key)
     {
         if ($request->hasFile($key)) {

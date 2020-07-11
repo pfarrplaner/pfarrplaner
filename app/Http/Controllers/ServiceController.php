@@ -52,6 +52,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class ServiceController
+ * @package App\Http\Controllers
+ */
 class ServiceController extends Controller
 {
 
@@ -231,6 +235,11 @@ class ServiceController extends Controller
             ->with('success', 'Der Gottesdiensteintrag wurde gelöscht.');
     }
 
+    /**
+     * @param $date
+     * @param $city
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function add($date, $city)
     {
         $day = Day::find($date);
@@ -255,6 +264,11 @@ class ServiceController extends Controller
         return view('services.create', compact('day', 'city', 'days', 'locations', 'users', 'tags', 'serviceGroups', 'ministries'));
     }
 
+    /**
+     * @param $cityId
+     * @param $dayId
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function servicesByCityAndDay($cityId, $dayId) {
         $day = Day::find($dayId);
         $city = City::find($cityId);

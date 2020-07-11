@@ -32,23 +32,42 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Location
+ * @package App
+ */
 class Location extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = ['name', 'city_id', 'default_time', 'cc_default_location', 'alternate_location_id', 'general_location_name', 'at_text'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function city() {
         return $this->belongsTo(City::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function services() {
         return $this->hasMany(Service::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function alternateLocation() {
         return $this->belongsTo(Location::class, 'alternate_location_id');
     }
 
 
+    /**
+     * @return mixed|string
+     */
     public function atText() {
         return $this->at_text ?: '('.$this->name.')';
     }

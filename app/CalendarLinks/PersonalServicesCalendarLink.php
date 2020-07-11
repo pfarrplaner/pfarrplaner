@@ -44,16 +44,32 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class PersonalServicesCalendarLink
+ * @package App\CalendarLinks
+ */
 class PersonalServicesCalendarLink extends AbstractCalendarLink
 {
+    /**
+     * @var string
+     */
     protected $title = 'Eigene Gottesdienste';
+    /**
+     * @var string
+     */
     protected $description = 'Kalender, der nur deine eigenen Gottesdienste enthält';
 
+    /**
+     * @return string
+     */
     public function setupRoute()
     {
         return route('ical.link', ['key' => $this->getKey()]);
     }
 
+    /**
+     * @param Request $request
+     */
     public function setDataFromRequest(Request $request)
     {
         if (null !== Auth::user()) {
@@ -61,6 +77,11 @@ class PersonalServicesCalendarLink extends AbstractCalendarLink
         }
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
     public function getRenderData(Request $request, User $user)
     {
         $data = Service::select('services.*')

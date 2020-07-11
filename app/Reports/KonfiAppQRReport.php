@@ -45,13 +45,29 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
 
+/**
+ * Class KonfiAppQRReport
+ * @package App\Reports
+ */
 class KonfiAppQRReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'QR-Codes für Gottesdienste';
+    /**
+     * @var string
+     */
     public $group = 'Konfi';
+    /**
+     * @var string
+     */
     public $description = 'QR Codes für Gottesdienste, die von den Konfis mit der KonfiApp gescannt werden können.';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $users = User::all();
@@ -59,6 +75,11 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
         return $this->renderSetupView(compact('maxDate', 'users', 'cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|mixed|string
+     * @throws \Exception
+     */
     public function render(Request $request)
     {
         $data = $request->validate([
@@ -104,6 +125,11 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
 
     }
 
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws \Exception
+     */
     public function single(Request $request) {
         $service = Service::findOrFail($request->get('service'));
         $services[$service->locationText()][] = $service;

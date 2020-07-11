@@ -33,9 +33,23 @@ namespace App\Http\Requests;
 use App\Baptism;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class StoreBaptismRequest
+ * @package App\Http\Requests
+ */
 class StoreBaptismRequest extends FormRequest
 {
 
+    /**
+     * StoreBaptismRequest constructor.
+     * @param array $query
+     * @param array $request
+     * @param array $attributes
+     * @param array $cookies
+     * @param array $files
+     * @param array $server
+     * @param null $content
+     */
     public function __construct(
         array $query = [],
         array $request = [],

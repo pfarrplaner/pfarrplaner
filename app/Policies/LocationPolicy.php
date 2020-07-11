@@ -34,10 +34,18 @@ use App\User;
 use App\Location;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class LocationPolicy
+ * @package App\Policies
+ */
 class LocationPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function index(User $user) {
         if ($user->hasRole('Administrator*in')) return true;
         if ($user->can('ort-bearbeiten') || $user->can('gd-opfer-bearbeiten')) return true;

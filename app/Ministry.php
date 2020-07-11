@@ -31,8 +31,15 @@
 namespace App;
 
 
+/**
+ * Class Ministry
+ * @package App
+ */
 class Ministry
 {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     public static function all() {
         return Participant::all()
             ->pluck('category')
@@ -44,6 +51,10 @@ class Ministry
             );
     }
 
+    /**
+     * @param $title
+     * @return string
+     */
     public static function title($title) {
         if ($title == 'P') return 'Pfarrer*in';
         if ($title == 'O') return 'Organist*in';

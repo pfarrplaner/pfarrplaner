@@ -36,6 +36,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Class RolePolicy
+ * @package App\Policies
+ */
 class RolePolicy
 {
     use HandlesAuthorization;
@@ -50,6 +54,10 @@ class RolePolicy
         //
     }
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function index(User $user) {
         return $user->hasPermissionTo('rollen-bearbeiten');
     }

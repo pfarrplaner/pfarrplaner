@@ -48,16 +48,38 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
 
+/**
+ * Class BulletinBLReport
+ * @package App\Reports
+ */
 class BulletinBLReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file';
+    /**
+     * @var string
+     */
     public $title = 'Gemeindebrief (BL)';
+    /**
+     * @var string
+     */
     public $group = 'Listen';
+    /**
+     * @var string
+     */
     public $description = 'Gottesdiensttabelle für den Gemeindebrief';
 
+    /**
+     * @var string[]
+     */
     public $formats = ['Balingen'];
 
+    /**
+     * @var \float[][]
+     */
     protected $cols = [
         [21.6102362202077, -489.32677165354335, 7948.082677164984, -350.9017990755136, 7978.082677164984],
         [203.94291338581854, -522.6036220472524, 7948.082677164984, -384.17842519685036, 7978.082677164984],
@@ -66,6 +88,9 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         [697.137161041411, -518.8541317049825, 7948.082677164984, -384.1784251968842, 7978.082677164984],
     ];
 
+    /**
+     * @var array
+     */
     protected $tagWidth = [
         'abendmahl' => 2.399,
         'fahrdienst' => 4.276,
@@ -78,6 +103,9 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         'taufe' => 3.315,
     ];
 
+    /**
+     * @var \float[][]
+     */
     protected $tagBaseCoords = [
         'abendmahl' => [-488.45233093682400, -596.13678866970800],
         'fahrdienst' => [-308.42721887539200, -45.45599600745520],
@@ -103,6 +131,9 @@ class BulletinBLReport extends AbstractPDFDocumentReport
     }
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
@@ -110,6 +141,10 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         return $this->renderView('setup', ['maxDate' => $maxDate, 'cities' => $cities, 'formats' => $this->formats]);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function configure(Request $request)
     {
         $request->validate(
@@ -188,6 +223,12 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         return $this->renderView('empty', compact('start', 'end', 'includeCities', 'locations', 'empty', 'dayList', 'locationIds'));
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     * @throws \Throwable
+     */
     public function render(Request $request)
     {
         $request->validate(
@@ -432,6 +473,17 @@ class BulletinBLReport extends AbstractPDFDocumentReport
     }
 
 
+    /**
+     * @param $stories
+     * @param $storyId
+     * @param $spreadCode
+     * @param $y
+     * @param $col
+     * @param $text
+     * @param string $view
+     * @return string
+     * @throws \Throwable
+     */
     protected function storyFrame(
         &$stories,
         &$storyId,
@@ -460,6 +512,12 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         return $storyId;
     }
 
+    /**
+     * @param int $col
+     * @param int $row
+     * @param array $tags
+     * @return string
+     */
     protected function setTags(int $col, int $row, array $tags) {
         $offset = 0;
         $code = '';

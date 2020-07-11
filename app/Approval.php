@@ -32,14 +32,27 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Approval
+ * @package App
+ */
 class Approval extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = ['absence_id', 'user_id', 'status'];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function approver() {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function absence() {
         return $this->belongsTo(Absence::class);
     }

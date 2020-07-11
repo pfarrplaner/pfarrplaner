@@ -42,14 +42,33 @@ use App\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class EmbedServiceTableReport
+ * @package App\Reports
+ */
 class EmbedServiceTableReport extends AbstractEmbedReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Liste von Gottesdiensten';
+    /**
+     * @var string
+     */
     public $group = 'Website (Gemeindebaukasten)';
+    /**
+     * @var string
+     */
     public $description = 'Erzeugt HTML-Code für die Einbindung einer Gottesdiensttabelle in die Website der Gemeinde';
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-code';
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
@@ -57,6 +76,10 @@ class EmbedServiceTableReport extends AbstractEmbedReport
         return $this->renderSetupView(compact('cities', 'locations'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     */
     public function render(Request $request)
     {
         $request->validate([

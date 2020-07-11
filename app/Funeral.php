@@ -36,12 +36,19 @@ use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Funeral
+ * @package App
+ */
 class Funeral extends Model
 {
     use HasEncryptedAttributes;
     use HasCommentsTrait;
     use HasAttachmentsTrait;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'service_id',
         'buried_name',
@@ -63,6 +70,9 @@ class Funeral extends Model
         'dod',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
         'announcement',
         'wake',
@@ -84,10 +94,16 @@ class Funeral extends Model
         'relative_contact_data',
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function service() {
         return $this->belongsTo(Service::class);
     }
 
+    /**
+     * @return string
+     */
     public function age() {
         if (($this->dob) && ($this->dod)) {
             return $this->dod->diffInYears($this->dob);
@@ -95,26 +111,45 @@ class Funeral extends Model
         return '';
     }
 
+    /**
+     * @param $date
+     */
     public function setDobAttribute($date) {
         if (!is_null($date)) {
             $this->attributes['dob'] = Carbon::createFromFormat('d.m.Y', $date);
         }
     }
+
+    /**
+     * @param $date
+     */
     public function setDodAttribute($date) {
         if (!is_null($date)) {
             $this->attributes['dod'] = Carbon::createFromFormat('d.m.Y', $date);
         }
     }
+
+    /**
+     * @param $date
+     */
     public function setAnnouncementAttribute($date) {
         if (!is_null($date)) {
             $this->attributes['announcement'] = Carbon::createFromFormat('d.m.Y', $date);
         }
     }
+
+    /**
+     * @param $date
+     */
     public function setWakeAttribute($date) {
         if (!is_null($date)) {
             $this->attributes['wake'] = Carbon::createFromFormat('d.m.Y', $date);
         }
     }
+
+    /**
+     * @param $date
+     */
     public function setAppointmentAttribute($date) {
         if (!is_null($date)) {
             $this->attributes['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $date);

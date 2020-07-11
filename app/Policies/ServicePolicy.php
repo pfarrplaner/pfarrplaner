@@ -35,10 +35,19 @@ use App\User;
 use App\Service;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class ServicePolicy
+ * @package App\Policies
+ */
 class ServicePolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * @param $user
+     * @param $service
+     * @return mixed
+     */
     protected function hasCityPermission($user, $service) {
         return $user->writableCities->pluck('id')->contains($service->city_id);
     }

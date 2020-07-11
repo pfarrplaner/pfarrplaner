@@ -34,10 +34,18 @@ use App\User;
 use App\City;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class CityPolicy
+ * @package App\Policies
+ */
 class CityPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function index(User $user) {
         if ($user->hasRole('Administrator*in')) return true;
         return false;

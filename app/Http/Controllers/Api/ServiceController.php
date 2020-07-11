@@ -51,11 +51,20 @@ use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Carbon\Carbon;
 
+/**
+ * Class ServiceController
+ * @package App\Http\Controllers\Api
+ */
 class ServiceController extends Controller
 {
 
     use HandlesAttachmentsTrait;
 
+    /**
+     * @param Day $day
+     * @param City $city
+     * @return mixed
+     */
     public function byDayAndCity(Day $day, City $city) {
         return Service::select('id')
             ->where('city_id', $city->id)
@@ -65,6 +74,10 @@ class ServiceController extends Controller
             ->pluck('id');
     }
 
+    /**
+     * @param Service $service
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Service $service) {
         $service->load(['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms', 'day', 'tags', 'serviceGroups']);
         $service->liturgy = Liturgy::getDayInfo($service->day);
@@ -73,6 +86,10 @@ class ServiceController extends Controller
     }
 
 
+    /**
+     * @param User $user
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function byUser(User $user) {
         $services = Service::select('services.*')
             ->with('location', 'city', 'participants', 'funerals', 'baptisms', 'weddings', 'day')

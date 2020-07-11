@@ -46,13 +46,29 @@ use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpWord\Shared\Converter;
 
+/**
+ * Class ServiceTableReport
+ * @package App\Reports
+ */
 class ServiceTableReport extends AbstractExcelDocumentReport
 {
+    /**
+     * @var string
+     */
     public $title = 'Jahresplan der Gottesdienste';
+    /**
+     * @var string
+     */
     public $description = 'Große Exceltabelle mit Übersicht zu Gottesdiensten, liturgischen Farben, Opfern, ...';
+    /**
+     * @var string
+     */
     public $group = 'Listen';
 
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
@@ -61,6 +77,12 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     */
     public function render(Request $request)
     {
         $request->validate([
@@ -348,6 +370,11 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         $this->sendToBrowser($filename);
     }
 
+    /**
+     * @param $people
+     * @param $format
+     * @return string
+     */
     protected function peopleListFormatted($people, $format) {
         $recs = [];
         foreach ($people as $person) {

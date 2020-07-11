@@ -30,9 +30,16 @@
 
 namespace App\Inputs;
 
+/**
+ * Class Inputs
+ * @package App\Inputs
+ */
 class Inputs
 {
 
+    /**
+     * @return array
+     */
     public static function all() {
         $inputs = [];
         foreach (glob(app_path('Inputs').'/*Input.php') as $file) {
@@ -48,6 +55,10 @@ class Inputs
         return $inputs;
     }
 
+    /**
+     * @param $input
+     * @return AbstractInput
+     */
     public static function get($input): AbstractInput {
         $inputClass = 'App\\Inputs\\' . ucfirst($input) . 'Input';
         if (class_exists($inputClass)) {

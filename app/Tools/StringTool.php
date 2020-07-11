@@ -40,8 +40,18 @@ namespace App\Tools;
 
 use Carbon\Carbon;
 
+/**
+ * Class StringTool
+ * @package App\Tools
+ */
 class StringTool
 {
+    /**
+     * @param $s
+     * @param bool $clockText
+     * @param string $separator
+     * @return string
+     */
     public static function timeString($s, $clockText = true, $separator = ':')
     {
         return Carbon::createFromTimeString($s)->formatLocalized('%H' . $separator . '%M') . ($clockText ? ' Uhr' : '');
@@ -59,12 +69,24 @@ class StringTool
         return '';
     }
 
+    /**
+     * @param $count
+     * @param $singular
+     * @param $plural
+     * @param string $zeroString
+     * @return string
+     */
     public static function pluralString($count, $singular, $plural, $zeroString = '')
     {
         if ($count == 0 ) return $zeroString ?: $plural;
         return ($count == 1) ? $singular : $plural;
     }
 
+    /**
+     * @param $s
+     * @param $maxLength
+     * @return string
+     */
     public static function trimToLen($s, $maxLength) {
         if (strlen($s) > $maxLength)
         {
@@ -74,6 +96,15 @@ class StringTool
         return $s;
     }
 
+    /**
+     * @param $time
+     * @param bool $uhr
+     * @param string $separator
+     * @param bool $skipMinutes
+     * @param bool $nbsp
+     * @param bool $leadingZero
+     * @return string
+     */
     public static function timeText($time, $uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
         if (!is_numeric($time)) $time = strtotime($time);
         $format = ($leadingZero ? '%H' : '%k').$separator.'%M';
@@ -84,6 +115,10 @@ class StringTool
 
     }
 
+    /**
+     * @param $text
+     * @return string
+     */
     public static function indent($text) {
         $indent = 0;
         $lines = explode("\n", $text);

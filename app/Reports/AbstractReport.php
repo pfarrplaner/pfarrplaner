@@ -32,12 +32,28 @@ namespace App\Reports;
 
 use Illuminate\Http\Request;
 
+/**
+ * Class AbstractReport
+ * @package App\Reports
+ */
 class AbstractReport
 {
 
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file';
+    /**
+     * @var string
+     */
     public $title = '';
+    /**
+     * @var string
+     */
     public $group = '';
+    /**
+     * @var string
+     */
     public $description = '';
 
 
@@ -49,6 +65,9 @@ class AbstractReport
         return true;
     }
 
+    /**
+     * @return string
+     */
     public function getKey() {
         return lcfirst(strtr(get_called_class(), [
             'Report' => '',
@@ -56,32 +75,58 @@ class AbstractReport
         ]));
     }
 
+    /**
+     * @param $view
+     * @return string
+     */
     public function getViewName($view) {
         return 'reports.'.strtolower($this->getKey().'.'.strtolower($view));
     }
 
+    /**
+     * @return string
+     */
     public function getSetupViewName() {
         return $this->getViewName('setup');
     }
 
+    /**
+     * @return string
+     */
     public function getRenderViewName() {
         return $this->getViewName('render');
     }
 
+    /**
+     * @param Request $request
+     * @return string
+     */
     public function render(Request $request) {
         return '';
     }
 
+    /**
+     * @param array $data
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function renderSetupView($data = []) {
         $data = array_merge(['report' => $this->getKey()], $data);
         return view($this->getSetupViewName(), $data);
     }
 
+    /**
+     * @param $view
+     * @param array $data
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function renderView($view, $data = []) {
         $data = array_merge(['report' => $this->getKey()], $data);
         return view($this->getViewName($view), $data);
     }
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup() {
         return $this->renderView('setup');
     }

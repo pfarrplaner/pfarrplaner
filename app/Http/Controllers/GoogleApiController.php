@@ -39,6 +39,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
 
+/**
+ * Class GoogleApiController
+ * @package App\Http\Controllers
+ */
 class GoogleApiController extends Controller
 {
     public function __construct()
@@ -46,6 +50,11 @@ class GoogleApiController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws \Google_Exception
+     */
     public function auth(Request $request)
     {
         if ($request->has('state')) {
@@ -96,6 +105,10 @@ class GoogleApiController extends Controller
         }
     }
 
+    /**
+     * @param Service $service
+     * @return \Illuminate\Http\JsonResponse
+     */
     function createBroadcast(Service $service) {
         $broadcast = Broadcast::create($service);
         $service->update(['youtube_url' => $broadcast->getSharerUrl()]);

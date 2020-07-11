@@ -35,6 +35,10 @@ use App\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class LocationController
+ * @package App\Http\Controllers
+ */
 class LocationController extends Controller
 {
     public function __construct()

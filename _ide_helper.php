@@ -16675,28 +16675,64 @@ namespace Shetabit\Visitor\Facade {
 
 namespace  {
 
+    /**
+     * Class App
+     */
     class App extends \Illuminate\Support\Facades\App {}
 
+    /**
+     * Class Artisan
+     */
     class Artisan extends \Illuminate\Support\Facades\Artisan {}
 
+    /**
+     * Class Auth
+     */
     class Auth extends \Illuminate\Support\Facades\Auth {}
 
+    /**
+     * Class Blade
+     */
     class Blade extends \Illuminate\Support\Facades\Blade {}
 
+    /**
+     * Class Broadcast
+     */
     class Broadcast extends \Illuminate\Support\Facades\Broadcast {}
 
+    /**
+     * Class Bus
+     */
     class Bus extends \Illuminate\Support\Facades\Bus {}
 
+    /**
+     * Class Cache
+     */
     class Cache extends \Illuminate\Support\Facades\Cache {}
 
+    /**
+     * Class Config
+     */
     class Config extends \Illuminate\Support\Facades\Config {}
 
+    /**
+     * Class Cookie
+     */
     class Cookie extends \Illuminate\Support\Facades\Cookie {}
 
+    /**
+     * Class Crypt
+     */
     class Crypt extends \Illuminate\Support\Facades\Crypt {}
 
+    /**
+     * Class DB
+     */
     class DB extends \Illuminate\Support\Facades\DB {}
 
+    /**
+     * Class Eloquent
+     */
     class Eloquent extends \Illuminate\Database\Eloquent\Model {
             /**
              * Create and return an un-saved model instance.
@@ -19422,56 +19458,134 @@ namespace  {
             }
         }
 
+    /**
+     * Class Event
+     */
     class Event extends \Illuminate\Support\Facades\Event {}
 
+    /**
+     * Class File
+     */
     class File extends \Illuminate\Support\Facades\File {}
 
+    /**
+     * Class Gate
+     */
     class Gate extends \Illuminate\Support\Facades\Gate {}
 
+    /**
+     * Class Hash
+     */
     class Hash extends \Illuminate\Support\Facades\Hash {}
 
+    /**
+     * Class Lang
+     */
     class Lang extends \Illuminate\Support\Facades\Lang {}
 
+    /**
+     * Class Log
+     */
     class Log extends \Illuminate\Support\Facades\Log {}
 
+    /**
+     * Class Mail
+     */
     class Mail extends \Illuminate\Support\Facades\Mail {}
 
+    /**
+     * Class Notification
+     */
     class Notification extends \Illuminate\Support\Facades\Notification {}
 
+    /**
+     * Class Password
+     */
     class Password extends \Illuminate\Support\Facades\Password {}
 
+    /**
+     * Class Queue
+     */
     class Queue extends \Illuminate\Support\Facades\Queue {}
 
+    /**
+     * Class Redirect
+     */
     class Redirect extends \Illuminate\Support\Facades\Redirect {}
 
+    /**
+     * Class Request
+     */
     class Request extends \Illuminate\Support\Facades\Request {}
 
+    /**
+     * Class Response
+     */
     class Response extends \Illuminate\Support\Facades\Response {}
 
+    /**
+     * Class Route
+     */
     class Route extends \Illuminate\Support\Facades\Route {}
 
+    /**
+     * Class Schema
+     */
     class Schema extends \Illuminate\Support\Facades\Schema {}
 
+    /**
+     * Class Session
+     */
     class Session extends \Illuminate\Support\Facades\Session {}
 
+    /**
+     * Class Storage
+     */
     class Storage extends \Illuminate\Support\Facades\Storage {}
 
+    /**
+     * Class URL
+     */
     class URL extends \Illuminate\Support\Facades\URL {}
 
+    /**
+     * Class Validator
+     */
     class Validator extends \Illuminate\Support\Facades\Validator {}
 
+    /**
+     * Class View
+     */
     class View extends \Illuminate\Support\Facades\View {}
 
+    /**
+     * Class PDF
+     */
     class PDF extends \niklasravnsborg\LaravelPdf\Facades\Pdf {}
 
+    /**
+     * Class DatabaseEncryption
+     */
     class DatabaseEncryption extends \AustinHeap\Database\Encryption\EncryptionFacade {}
 
+    /**
+     * Class Debugbar
+     */
     class Debugbar extends \Barryvdh\Debugbar\Facade {}
 
+    /**
+     * Class Breadcrumbs
+     */
     class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
 
+    /**
+     * Class Agent
+     */
     class Agent extends \Jenssegers\Agent\Facades\Agent {}
 
+    /**
+     * Class Visitor
+     */
     class Visitor extends \Shetabit\Visitor\Facade\Visitor {}
 
 }

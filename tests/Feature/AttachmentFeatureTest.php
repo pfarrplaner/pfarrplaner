@@ -39,6 +39,10 @@ use Shetabit\Visitor\Middlewares\LogVisits;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class AttachmentFeatureTest
+ * @package Tests\Feature
+ */
 class AttachmentFeatureTest extends TestCase
 {
 

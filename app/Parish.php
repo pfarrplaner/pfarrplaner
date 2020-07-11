@@ -33,8 +33,15 @@ namespace App;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Parish
+ * @package App
+ */
 class Parish extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'code',
@@ -46,20 +53,34 @@ class Parish extends Model
         'email'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function owningCity()
     {
         return $this->belongsTo(City::class, 'city_id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function streetRanges()
     {
         return $this->hasMany(StreetRange::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     public function users() {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
+    /**
+     * @param $csv
+     * @return int
+     * @throws \Exception
+     */
     public function importStreetsFromCSV($csv)
     {
         /** @var StreetRange $streetRange */
@@ -93,6 +114,12 @@ class Parish extends Model
         return $ctr;
     }
 
+    /**
+     * @param Builder $query
+     * @param $street
+     * @param $number
+     * @return mixed
+     */
     public function scopeByAddress(Builder $query, $street, $number)
     {
         return $this->whereHas('streetRanges', function ($query2) use ($street, $number) {

@@ -42,9 +42,16 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class PlanningInput
+ * @package App\Inputs
+ */
 class PlanningInput extends AbstractInput
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Planungstabelle';
 
     public function canEdit(): bool
@@ -55,6 +62,10 @@ class PlanningInput extends AbstractInput
             Auth::user()->can('gd-allgemein-bearbeiten');
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup(Request $request)
     {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
@@ -80,6 +91,10 @@ class PlanningInput extends AbstractInput
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     */
     public function input(Request $request)
     {
         $request->validate(
@@ -116,6 +131,10 @@ class PlanningInput extends AbstractInput
         );
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse|void
+     */
     public function save(Request $request)
     {
         $services = $request->get('service') ?: [];
@@ -149,6 +168,10 @@ class PlanningInput extends AbstractInput
         return redirect()->route('calendar')->with('success', 'Der Plan wurde gespeichert.');
     }
 
+    /**
+     * @param $reqMinistries
+     * @return array
+     */
     protected function getAvailableMinistries($reqMinistries)
     {
         $ministries = [];

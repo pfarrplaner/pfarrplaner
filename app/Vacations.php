@@ -41,9 +41,16 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class Vacations
+ * @package App
+ */
 class Vacations
 {
 
+    /**
+     * @return mixed
+     */
     protected static function getVacationDataFromCache() {
         if (!Cache::has('vacationData')) {
             $vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
@@ -58,6 +65,10 @@ class Vacations
         return $vacationData;
     }
 
+    /**
+     * @param $day
+     * @return array
+     */
     public static function getByDay($day)
     {
         $vacationers = [];
@@ -75,13 +86,22 @@ class Vacations
     }
 
 
+    /**
+     * @param $lastName
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
     protected static function findUserByLastName($lastName)
     {
         return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
     }
 
 
-
+    /**
+     * @param $start
+     * @param $end
+     * @param User|null $user
+     * @return mixed
+     */
     public static function getByPeriodAndUser($start, $end, User $user = null)
     {
         return Absence::with('replacements')->byUserAndPeriod($user, $start, $end);

@@ -34,6 +34,10 @@ use App\User;
 use App\Day;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class DayPolicy
+ * @package App\Policies
+ */
 class DayPolicy
 {
     use HandlesAuthorization;

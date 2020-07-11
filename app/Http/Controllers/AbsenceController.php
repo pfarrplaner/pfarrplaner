@@ -42,6 +42,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Events\AbsenceApproved;
 
+/**
+ * Class AbsenceController
+ * @package App\Http\Controllers
+ */
 class AbsenceController extends Controller
 {
     public function __construct()
@@ -50,6 +54,12 @@ class AbsenceController extends Controller
     }
 
 
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return array
+     * @throws \Exception
+     */
     private function getHolidays(Carbon $start, Carbon $end) {
         $raw = json_decode(file_get_contents('https://ferien-api.de/api/v1/holidays/BW'), true);
         $holidays = [];
@@ -63,7 +73,13 @@ class AbsenceController extends Controller
     }
 
 
-
+    /**
+     * @param Request $request
+     * @param $route
+     * @param $year
+     * @param $month
+     * @return bool|\Illuminate\Http\RedirectResponse
+     */
     protected function redirectIfMissingParameters(Request $request, $route, $year, $month)
     {
         $defaultMonth = Auth::user()->getSetting('display-month', date('m'));
@@ -221,6 +237,10 @@ class AbsenceController extends Controller
         return view('absences.edit', compact('absence', 'month', 'year', 'users'));
     }
 
+    /**
+     * @param Absence $absence
+     * @param $data
+     */
     protected function setupReplacements(Absence $absence, $data)
     {
         $absence->load('replacements');
@@ -280,6 +300,11 @@ class AbsenceController extends Controller
         return redirect()->route('absences.index', ['month' => $request->get('month'), 'year' => $request->get('year')]);
     }
 
+    /**
+     * @param Request $request
+     * @param Absence $absence
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function approve(Request $request, Absence $absence) {
         $approval = Approval::create([
             'status' => 'approved',
@@ -302,6 +327,12 @@ class AbsenceController extends Controller
         return redirect()->route('approvals.index')->with('success', 'Du hast den Urlaubsantrag genehmigt. '.$success);
     }
 
+    /**
+     * @param Request $request
+     * @param Absence $absence
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
     public function reject(Request $request, Absence $absence) {
         event(new AbsenceRejected($absence));
         $absence->delete();

@@ -42,6 +42,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
+/**
+ * Class UserController
+ * @package App\Http\Controllers
+ */
 class UserController extends Controller
 {
 
@@ -74,6 +78,9 @@ class UserController extends Controller
         return view('users.index', compact('users', 'otherPeople'));
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection|Role[]
+     */
     protected function getRoles() {
         if (Auth::user()->hasRole('Super-Administrator*in')) {
             $roles = Role::all();
@@ -208,6 +215,10 @@ class UserController extends Controller
         return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes', 'users'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function profile(Request $request)
     {
         $user = Auth::user();
@@ -220,6 +231,10 @@ class UserController extends Controller
         return view('users.profile', compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView', 'homeScreen'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function profileSave(Request $request)
     {
         $user = Auth::user();
@@ -345,6 +360,10 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Der Benutzer wurde gelöscht.');
     }
 
+    /**
+     * @param $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function preferences($id)
     {
         $user = User::find($id);
@@ -356,15 +375,28 @@ class UserController extends Controller
         return view('users.preferences', compact('user', 'allowedCities', 'preferenceCities'));
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     */
     public function savePreferences(Request $request, $id)
     {
     }
 
+    /**
+     * @param User $user
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function join(User $user) {
         $users = User::where('id', '!=', $user->id)->orderBy('name')->get();
         return view('users.join', compact('user', 'users'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
     public function doJoin(Request $request) {
         $request->validate([
             'user1' => 'required|integer',
@@ -394,6 +426,10 @@ class UserController extends Controller
     }
 
 
+    /**
+     * @param User $user
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function services(User $user) {
         $services = Service::with('location', 'day', 'participants')
             ->select('services.*')

@@ -37,6 +37,10 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
+/**
+ * Class AbsenceApproved
+ * @package App\Mail
+ */
 class AbsenceApproved extends Mailable
 {
     use Queueable, SerializesModels;

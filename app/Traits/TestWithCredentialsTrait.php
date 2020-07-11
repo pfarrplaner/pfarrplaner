@@ -36,6 +36,10 @@ use App\Http\Middleware\Authenticate;
 use App\User;
 use Spatie\Permission\Models\Permission;
 
+/**
+ * Trait TestWithCredentialsTrait
+ * @package App\Traits
+ */
 trait TestWithCredentialsTrait
 {
 

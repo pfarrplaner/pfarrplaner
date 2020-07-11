@@ -34,8 +34,17 @@ use App\City;
 use App\Service;
 use Illuminate\Http\Request;
 
+/**
+ * Class PodcastController
+ * @package App\Http\Controllers
+ */
 class PodcastController extends Controller
 {
+    /**
+     * @param Request $request
+     * @param $cityName
+     * @return \Illuminate\Http\Response
+     */
     public function podcast(Request $request, $cityName)
     {
         $city = City::where('name', $cityName)->first();

@@ -48,27 +48,59 @@ use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Section;
 use PhpOffice\PhpWord\Style\Tab;
 
+/**
+ * Class EventListReport
+ * @package App\Reports
+ */
 class EventListReport extends AbstractWordDocumentReport
 {
+    /**
+     *
+     */
     protected const BOLD = ['bold' => true];
+    /**
+     *
+     */
     protected const UNDERLINE = ['underline' => Font::UNDERLINE_SINGLE];
+    /**
+     *
+     */
     protected const BOLD_UNDERLINE = ['bold' => true, 'underline' => Font::UNDERLINE_SINGLE];
     protected const DEFAULT = 'Gottesdienste';
+    /**
+     *
+     */
     protected const LIST2 = 'Termine';
 
+    /**
+     * @var string
+     */
     public $title = 'Terminliste';
+    /**
+     * @var string
+     */
     public $group = 'Veröffentlichungen';
+    /**
+     * @var string
+     */
     public $description = 'Terminliste als Worddatei';
 
     /** @var \PhpOffice\PhpWord\Element\Section */
     protected $section;
 
+    /**
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     */
     public function render(Request $request)
     {
         $request->validate([
@@ -261,6 +293,13 @@ class EventListReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param string $template
+     * @param array $blocks
+     * @param int $emptyParagraphsAfter
+     * @param null $existingTextRun
+     * @return \PhpOffice\PhpWord\Element\TextRun|null
+     */
     protected function renderParagraph(
         $template = '',
         array $blocks = [],
@@ -278,6 +317,9 @@ class EventListReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param $text
+     */
     protected function renderLiteral($text)
     {
         if (!is_array($text)) {

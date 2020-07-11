@@ -34,6 +34,10 @@ use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+/**
+ * Class TagController
+ * @package App\Http\Controllers
+ */
 class TagController extends Controller
 {
 

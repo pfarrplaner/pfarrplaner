@@ -37,6 +37,10 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class CityTest
+ * @package Tests\Feature
+ */
 class CityTest extends TestCase
 {
 

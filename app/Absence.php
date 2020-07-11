@@ -35,8 +35,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class Absence
+ * @package App
+ */
 class Absence extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'from',
         'to',
@@ -45,22 +52,38 @@ class Absence extends Model
         'replacement_notes',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
         'from', 'to'
     ];
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function replacements() {
         return $this->hasMany(Replacement::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user() {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function approvals() {
         return $this->hasMany(Approval::class);
     }
 
+    /**
+     * @param string $prefix
+     * @return string
+     */
     public function replacementText($prefix = '') {
         $prefix = $prefix ? $prefix.' ' : '';
         $replacements = $this->replacements;
@@ -76,10 +99,16 @@ class Absence extends Model
         }
     }
 
+    /**
+     * @return string
+     */
     public function durationText() {
         return StringTool::durationText($this->from, $this->to);
     }
 
+    /**
+     * @return Collection
+     */
     public function getReplacingUserIds(): Collection {
         $ids = [];
         foreach ($this->replacements as $replacement) {
@@ -90,6 +119,9 @@ class Absence extends Model
         return (new Collection(array_unique($ids)));
     }
 
+    /**
+     * @return string
+     */
     public function fullDescription() {
         $t = $this->replacementText();
         if ($t) $t = ' [V: '.$t.']';
@@ -108,6 +140,10 @@ class Absence extends Model
         return $myTo->diffInDays($myFrom)+1;
     }
 
+    /**
+     * @return bool|null
+     * @throws \Exception
+     */
     public function delete()
     {
         foreach ($this->replacements as $replacement) $replacement->delete();
@@ -115,6 +151,11 @@ class Absence extends Model
     }
 
 
+    /**
+     * @param $query
+     * @param $user
+     * @return mixed
+     */
     public function scopeVisibleForUser($query, $user)
     {
         $userId = $user->id;
@@ -129,6 +170,13 @@ class Absence extends Model
     }
 
 
+    /**
+     * @param $query
+     * @param User $user
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return mixed
+     */
     public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end) {
         return $query->where('user_id', $user->id)
             ->where('from', '<=', $end)

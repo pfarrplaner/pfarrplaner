@@ -36,13 +36,25 @@ use App\Integrations\Youtube\YoutubeIntegration;
 use App\Service;
 use Illuminate\Http\Request;
 
+/**
+ * Class LiveChatController
+ * @package App\Http\Controllers
+ */
 class LiveChatController
 {
 
+    /**
+     * @param Service $service
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function liveChat(Service $service) {
         return view('services.livechat.index', compact('service'));
     }
 
+    /**
+     * @param Service $service
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function liveChatAjax(Service $service) {
         $youtube = YoutubeIntegration::get($service->city);
         $liveChatId = Broadcast::get($service)->getLiveBroadcast()->getSnippet()->getLiveChatId();
@@ -50,6 +62,11 @@ class LiveChatController
         return response()->json($messages);
     }
 
+    /**
+     * @param Request $request
+     * @param Service $service
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function liveChatPostMessage(Request $request, Service $service) {
         if (!$request->has('author')) abort(500);
         if (!$request->has('message')) abort(500);

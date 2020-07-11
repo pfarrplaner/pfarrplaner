@@ -32,8 +32,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class City
+ * @package App
+ */
 class City extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'public_events_calendar_url',
@@ -59,13 +66,25 @@ class City extends Model
         'konfiapp_apikey',
     ];
 
+    /**
+     * @var string
+     */
     protected $orderBy = 'name';
+    /**
+     * @var string
+     */
     protected $orderDirection = 'ASC';
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function locations() {
         return $this->hasMany(Location::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function services() {
         return $this->hasManyThrough(Service::class, Location::class);
     }
