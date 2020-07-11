@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddOpFieldsToCity
@@ -44,11 +44,14 @@ class AddOpFieldsToCity extends Migration
      */
     public function up()
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->string('op_domain')->nullable()->default('');
-            $table->string('op_customer_key')->nullable()->default('');
-            $table->string('op_customer_token')->nullable()->default('');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->string('op_domain')->nullable()->default('');
+                $table->string('op_customer_key')->nullable()->default('');
+                $table->string('op_customer_token')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -58,10 +61,13 @@ class AddOpFieldsToCity extends Migration
      */
     public function down()
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->dropColumn('op_domain');
-            $table->dropColumn('op_customer_key');
-            $table->dropColumn('op_customer_token');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->dropColumn('op_domain');
+                $table->dropColumn('op_customer_key');
+                $table->dropColumn('op_customer_token');
+            }
+        );
     }
 }

@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddChannelUrlToCities
@@ -44,9 +44,12 @@ class AddChannelUrlToCities extends Migration
      */
     public function up()
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->string('youtube_channel_url')->default('')->nullable();
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->string('youtube_channel_url')->default('')->nullable();
+            }
+        );
     }
 
     /**
@@ -56,8 +59,11 @@ class AddChannelUrlToCities extends Migration
      */
     public function down()
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->dropColumn('youtube_channel_url');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->dropColumn('youtube_channel_url');
+            }
+        );
     }
 }

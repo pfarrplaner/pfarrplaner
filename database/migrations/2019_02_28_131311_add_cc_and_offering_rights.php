@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddCcAndOfferingRights
@@ -44,10 +43,13 @@ class AddCcAndOfferingRights extends Migration
      */
     public function up()
     {
-        Schema::table('users', function($table) {
-            $table->integer('canEditOfferings')->nullable();
-            $table->integer('canEditCC')->nullable();
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->integer('canEditOfferings')->nullable();
+                $table->integer('canEditCC')->nullable();
+            }
+        );
     }
 
     /**
@@ -57,9 +59,12 @@ class AddCcAndOfferingRights extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table) {
-            $table->dropColumn('canEditOfferings');
-            $table->dropColumn('canEditCC');
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->dropColumn('canEditOfferings');
+                $table->dropColumn('canEditCC');
+            }
+        );
     }
 }

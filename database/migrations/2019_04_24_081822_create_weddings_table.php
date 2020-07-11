@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateWeddingsTable
@@ -44,26 +44,29 @@ class CreateWeddingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('weddings', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('service_id');
-            $table->text('spouse1_name');
-            $table->text('spouse1_birth_name');
-            $table->text('spouse1_email');
-            $table->text('spouse1_phone');
-            $table->text('spouse2_name');
-            $table->text('spouse2_birth_name');
-            $table->text('spouse2_email');
-            $table->text('spouse2_phone');
-            $table->date('appointment')->nullable();
-            $table->string('text');
-            $table->integer('registered');
-            $table->string('registration_document');
-            $table->integer('signed');
-            $table->integer('docs_ready');
-            $table->string('docs_where');
-            $table->timestamps();
-        });
+        Schema::create(
+            'weddings',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('service_id');
+                $table->text('spouse1_name');
+                $table->text('spouse1_birth_name');
+                $table->text('spouse1_email');
+                $table->text('spouse1_phone');
+                $table->text('spouse2_name');
+                $table->text('spouse2_birth_name');
+                $table->text('spouse2_email');
+                $table->text('spouse2_phone');
+                $table->date('appointment')->nullable();
+                $table->string('text');
+                $table->integer('registered');
+                $table->string('registration_document');
+                $table->integer('signed');
+                $table->integer('docs_ready');
+                $table->string('docs_where');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

@@ -32,9 +32,8 @@ namespace Tests\Unit;
 
 use App\Attachment;
 use App\Funeral;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 /**
  * Class AttachmentUnitTest

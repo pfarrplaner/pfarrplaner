@@ -34,12 +34,9 @@ use App\City;
 use App\Http\Middleware\Authenticate;
 use App\Service;
 use App\User;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Class ServiceFeatureTest
@@ -52,23 +49,6 @@ class ServiceFeatureTest extends TestCase
 
     /** @var City */
     protected $city;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware(Authenticate::class);
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
-
-        Permission::create(['name' => 'gd-bearbeiten']);
-
-        $this->city = factory(City::class)->create();
-
-        /** @var User */
-        $this->user = factory(User::class)->create();
-        $this->user->givePermissionTo('gd-bearbeiten');
-        $this->user->writableCities()->attach($this->city);
-    }
-
 
     /**
      * Test that a service can be created
@@ -100,7 +80,6 @@ class ServiceFeatureTest extends TestCase
         $response->assertStatus(302);
         $this->assertEquals('cool title', Service::first()->description);
     }
-
 
     /**
      * Test that a service cannot be updated without write permissions for city
@@ -136,7 +115,8 @@ class ServiceFeatureTest extends TestCase
         $this->assertCount(0, Service::all());
     }
 
-    public function testCheckBoxesCanBeSetAndUnset() {
+    public function testCheckBoxesCanBeSetAndUnset()
+    {
         $this->withoutExceptionHandling();
         $serviceData = factory(Service::class)->raw(['city_id' => $this->city, 'need_predicant' => 1]);
         $this->actingAs($this->user)->post(route('services.store'), $serviceData)->assertStatus(302);
@@ -146,7 +126,6 @@ class ServiceFeatureTest extends TestCase
         $this->actingAs($this->user)->patch(route('services.update', $service->id), $serviceData)->assertStatus(302);
         $this->assertEquals(0, Service::first()->need_predicant);
     }
-
 
     /**
      * Test that a service can have a title
@@ -163,6 +142,22 @@ class ServiceFeatureTest extends TestCase
             ->post(route('services.store'), $data)
             ->assertStatus(302);
         $this->assertEquals('Cool title', Service::first()->title);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(Authenticate::class);
+        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
+
+        Permission::create(['name' => 'gd-bearbeiten']);
+
+        $this->city = factory(City::class)->create();
+
+        /** @var User */
+        $this->user = factory(User::class)->create();
+        $this->user->givePermissionTo('gd-bearbeiten');
+        $this->user->writableCities()->attach($this->city);
     }
 
 }

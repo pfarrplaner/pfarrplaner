@@ -27,12 +27,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function(){
-    $('#code').click(function(){ $('#msgCopied').html(''); });
-    $('#code').change(function(){ $('#msgCopied').html(''); });
-    $('#code').blur(function(){ $('#msgCopied').html(''); });
-    $('#code').on('keyup', function(){ $('#msgCopied').html(''); });
-    $('#btnCopy').on('click', function(e){
+$(document).ready(function () {
+    $('#code').click(function () {
+        $('#msgCopied').html('');
+    });
+    $('#code').change(function () {
+        $('#msgCopied').html('');
+    });
+    $('#code').blur(function () {
+        $('#msgCopied').html('');
+    });
+    $('#code').on('keyup', function () {
+        $('#msgCopied').html('');
+    });
+    $('#btnCopy').on('click', function (e) {
         e.preventDefault();
         $('#code').focus();
         $('#code').select();

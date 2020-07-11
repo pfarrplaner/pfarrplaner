@@ -30,8 +30,11 @@
 
 use Faker\Generator as Faker;
 
-$factory->define(App\Baptism::class, function (Faker $faker) {
-    return [
-        //
-    ];
-});
+$factory->define(
+    App\Baptism::class,
+    function (Faker $faker) {
+        return [
+            //
+        ];
+    }
+);

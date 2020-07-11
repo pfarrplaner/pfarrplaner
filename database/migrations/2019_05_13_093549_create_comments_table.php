@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateCommentsTable
@@ -44,15 +44,18 @@ class CreateCommentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('comments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->longText('body');
-            $table->boolean('private');
-            $table->integer('commentable_id');
-            $table->string('commentable_type');
-            $table->timestamps();
-        });
+        Schema::create(
+            'comments',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id');
+                $table->longText('body');
+                $table->boolean('private');
+                $table->integer('commentable_id');
+                $table->string('commentable_type');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddFieldsForAnnouncements
@@ -44,12 +44,18 @@ class AddFieldsForAnnouncements extends Migration
      */
     public function up()
     {
-        Schema::table('cities', function (Blueprint $table) {
-           $table->string('public_events_calendar_url')->nullable()->default('');
-        });
-        Schema::table('locations', function(Blueprint $table) {
-            $table->string('at_text')->nullable()->default('');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->string('public_events_calendar_url')->nullable()->default('');
+            }
+        );
+        Schema::table(
+            'locations',
+            function (Blueprint $table) {
+                $table->string('at_text')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -59,11 +65,17 @@ class AddFieldsForAnnouncements extends Migration
      */
     public function down()
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->dropColumn('public_events_calendar_url');
-        });
-        Schema::table('cities', function (Blueprint $table) {
-            $table->dropColumn('at_text');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->dropColumn('public_events_calendar_url');
+            }
+        );
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->dropColumn('at_text');
+            }
+        );
     }
 }

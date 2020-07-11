@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateUserSettingsTable
@@ -44,13 +44,16 @@ class CreateUserSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_settings', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->string('key');
-            $table->text('value')->nullable();
-            $table->timestamps();
-        });
+        Schema::create(
+            'user_settings',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id');
+                $table->string('key');
+                $table->text('value')->nullable();
+                $table->timestamps();
+            }
+        );
     }
 
     /**

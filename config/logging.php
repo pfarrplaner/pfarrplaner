@@ -75,7 +75,7 @@ return [
 
         'daily' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/'.php_sapi_name().'/laravel.log'),
+            'path' => storage_path('logs/' . php_sapi_name() . '/laravel.log'),
             'level' => 'debug',
             'days' => 14,
             'permission' => 0664,
@@ -90,7 +90,7 @@ return [
         ],
 
         'papertrail' => [
-            'driver'  => 'monolog',
+            'driver' => 'monolog',
             'level' => 'debug',
             'handler' => SyslogUdpHandler::class,
             'handler_with' => [

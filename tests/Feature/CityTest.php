@@ -32,10 +32,8 @@ namespace Tests\Feature;
 
 use App\City;
 use App\Http\Middleware\Authenticate;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 /**
  * Class CityTest
@@ -45,13 +43,6 @@ class CityTest extends TestCase
 {
 
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware([Authenticate::class]);
-    }
-
 
     /**
      * Test that a city can be successfully added
@@ -73,9 +64,14 @@ class CityTest extends TestCase
      */
     public function testCityNeedsName()
     {
-        $response = $this->post(route('cities.store'), factory(City::class)->raw([
-            'name' => '',
-        ]));
+        $response = $this->post(
+            route('cities.store'),
+            factory(City::class)->raw(
+                [
+                    'name' => '',
+                ]
+            )
+        );
 
         $response->assertSessionHasErrors('name');
         $this->assertCount(0, City::all());
@@ -88,9 +84,14 @@ class CityTest extends TestCase
      */
     public function testCityNeedsNameShorterThan255()
     {
-        $response = $this->post(route('cities.store'), factory(City::class)->raw([
-            'name' => str_random(256),
-        ]));
+        $response = $this->post(
+            route('cities.store'),
+            factory(City::class)->raw(
+                [
+                    'name' => str_random(256),
+                ]
+            )
+        );
 
         $response->assertSessionHasErrors('name');
         $this->assertCount(0, City::all());
@@ -101,18 +102,21 @@ class CityTest extends TestCase
      * @return void
      * @test
      */
-    public function testCityCanBeUpdated() {
+    public function testCityCanBeUpdated()
+    {
         $city = factory(City::class)->create(['name' => 'Stuttgart']);
 
         $this->assertTrue($city->update(['name' => 'New York']));
 
-        $response = $this->patch(route('cities.update', $city->id), [
-            'name' => 'Hamburg',
-        ]);
+        $response = $this->patch(
+            route('cities.update', $city->id),
+            [
+                'name' => 'Hamburg',
+            ]
+        );
 
         $response->assertStatus(302);
         $this->assertEquals('Hamburg', City::find($city->id)->name);
-
     }
 
     /**
@@ -120,11 +124,18 @@ class CityTest extends TestCase
      * @return void
      * @test
      */
-    public function testCityCanBeDeleted() {
+    public function testCityCanBeDeleted()
+    {
         $city = factory(City::class)->create();
         $response = $this->delete(route('cities.destroy', $city->id));
         $response->assertStatus(302);
         $this->assertCount(0, City::all());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware([Authenticate::class]);
     }
 
 

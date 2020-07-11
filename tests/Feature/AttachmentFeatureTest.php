@@ -33,11 +33,11 @@ namespace Tests\Feature;
 use App\Attachment;
 use App\Funeral;
 use App\Traits\TestWithCredentialsTrait;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Shetabit\Visitor\Middlewares\LogVisits;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * Class AttachmentFeatureTest
@@ -50,13 +50,6 @@ class AttachmentFeatureTest extends TestCase
     use TestWithCredentialsTrait {
         setUp as traitSetUp;
     }
-
-    protected function setUp(): void
-    {
-        $this->traitSetUp();
-        $this->withoutMiddleware([LogVisits::class]);
-    }
-
 
     /**
      * Test that a funeral can be created with an attachment
@@ -104,5 +97,11 @@ class AttachmentFeatureTest extends TestCase
             ->assertStatus(302);
 
         $this->assertCount(0, Funeral::first()->attachments);
+    }
+
+    protected function setUp(): void
+    {
+        $this->traitSetUp();
+        $this->withoutMiddleware([LogVisits::class]);
     }
 }

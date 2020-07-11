@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddApiTokenToUsers
@@ -44,12 +44,16 @@ class AddApiTokenToUsers extends Migration
      */
     public function up()
     {
-        Schema::table('users', function ($table) {
-            $table->string('api_token', 80)->after('password')
-                ->unique()
-                ->nullable()
-                ->default(null);
-        });    }
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->string('api_token', 80)->after('password')
+                    ->unique()
+                    ->nullable()
+                    ->default(null);
+            }
+        );
+    }
 
     /**
      * Reverse the migrations.
@@ -58,8 +62,11 @@ class AddApiTokenToUsers extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('api_token');
-        });
+        Schema::table(
+            'users',
+            function (Blueprint $table) {
+                $table->dropColumn('api_token');
+            }
+        );
     }
 }

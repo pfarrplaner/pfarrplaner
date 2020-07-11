@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddUserNotificationField
@@ -44,9 +43,12 @@ class AddUserNotificationField extends Migration
      */
     public function up()
     {
-        Schema::table('users', function($table) {
-            $table->integer('notifications')->nullable();
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->integer('notifications')->nullable();
+            }
+        );
     }
 
     /**
@@ -56,8 +58,11 @@ class AddUserNotificationField extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table) {
-            $table->dropColumn('notifications');
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->dropColumn('notifications');
+            }
+        );
     }
 }

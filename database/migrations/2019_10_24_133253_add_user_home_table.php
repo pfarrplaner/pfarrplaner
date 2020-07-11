@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddUserHomeTable
@@ -44,12 +44,15 @@ class AddUserHomeTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_home', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('city_id');
-            $table->timestamps();
-        });
+        Schema::create(
+            'user_home',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id');
+                $table->integer('city_id');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

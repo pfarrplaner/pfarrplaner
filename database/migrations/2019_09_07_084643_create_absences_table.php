@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateAbsencesTable
@@ -44,19 +44,25 @@ class CreateAbsencesTable extends Migration
      */
     public function up()
     {
-        Schema::create('absences', function (Blueprint $table) {
-            $table->increments('id');
-            $table->date('from');
-            $table->date('to');
-            $table->integer('user_id');
-            $table->integer('replacement')->nullable();
-            $table->text('reason');
-            $table->timestamps();
-        });
+        Schema::create(
+            'absences',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->date('from');
+                $table->date('to');
+                $table->integer('user_id');
+                $table->integer('replacement')->nullable();
+                $table->text('reason');
+                $table->timestamps();
+            }
+        );
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('manage_absences')->nullable();
-        });
+        Schema::table(
+            'users',
+            function (Blueprint $table) {
+                $table->boolean('manage_absences')->nullable();
+            }
+        );
     }
 
     /**
@@ -67,8 +73,11 @@ class CreateAbsencesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('absences');
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn('manage_absences');
-        });
+        Schema::table(
+            'users',
+            function (Blueprint $table) {
+                $table->dropColumn('manage_absences');
+            }
+        );
     }
 }

@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateFuneralsTable
@@ -44,23 +44,26 @@ class CreateFuneralsTable extends Migration
      */
     public function up()
     {
-        Schema::create('funerals', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('service_id');
-            $table->text('buried_name');
-            $table->text('buried_address');
-            $table->text('buried_zip');
-            $table->text('buried_city');
-            $table->string('text');
-            $table->date('announcement')->nullable();
-            $table->string('type');
-            $table->date('wake')->nullable();
-            $table->text('relative_name');
-            $table->text('relative_address');
-            $table->text('relative_zip');
-            $table->text('relative_city');
-            $table->timestamps();
-        });
+        Schema::create(
+            'funerals',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('service_id');
+                $table->text('buried_name');
+                $table->text('buried_address');
+                $table->text('buried_zip');
+                $table->text('buried_city');
+                $table->string('text');
+                $table->date('announcement')->nullable();
+                $table->string('type');
+                $table->date('wake')->nullable();
+                $table->text('relative_name');
+                $table->text('relative_address');
+                $table->text('relative_zip');
+                $table->text('relative_city');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

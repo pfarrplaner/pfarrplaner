@@ -56,5 +56,5 @@ module.exports = {
 
 mix.js('resources/scripts/bundle.js', 'public/js')
     .styles(['https://fonts.googleapis.com/css?family=Nunito',
-    'resources/css/pfarrplaner.css'], 'public/css/pfarrplaner.css');
-    //.js('resources/scripts/pfarrplaner-scripts.js', 'public/js');
+        'resources/css/pfarrplaner.css'], 'public/css/pfarrplaner.css');
+//.js('resources/scripts/pfarrplaner-scripts.js', 'public/js');

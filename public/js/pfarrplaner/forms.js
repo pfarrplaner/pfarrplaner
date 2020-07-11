@@ -36,7 +36,7 @@ $(document).ready(function () {
         language: 'de',
     });
 
-    $('.datetimepicker').each(function(){
+    $('.datetimepicker').each(function () {
         var value = $(this).val();
         $(this).datetimepicker({
             locale: 'de',

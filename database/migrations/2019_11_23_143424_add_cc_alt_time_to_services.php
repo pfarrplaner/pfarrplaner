@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddCcAltTimeToServices
@@ -44,9 +44,12 @@ class AddCcAltTimeToServices extends Migration
      */
     public function up()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->time('cc_alt_time')->nullable();
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->time('cc_alt_time')->nullable();
+            }
+        );
     }
 
     /**
@@ -56,8 +59,11 @@ class AddCcAltTimeToServices extends Migration
      */
     public function down()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->dropColumn('cc_alt_time');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->dropColumn('cc_alt_time');
+            }
+        );
     }
 }

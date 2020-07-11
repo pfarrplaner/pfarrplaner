@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateTagsTable
@@ -44,19 +44,25 @@ class CreateTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tags', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('code');
-            $table->string('name');
-            $table->timestamps();
-        });
+        Schema::create(
+            'tags',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('code');
+                $table->string('name');
+                $table->timestamps();
+            }
+        );
 
-        Schema::create('service_tag', function(Blueprint $table){
-            $table->increments('id');
-            $table->integer('service_id');
-            $table->integer('tag_id');
-            $table->timestamps();
-        });
+        Schema::create(
+            'service_tag',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('service_id');
+                $table->integer('tag_id');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

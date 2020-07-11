@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddServiceLocationFreetext
@@ -44,10 +43,13 @@ class AddServiceLocationFreetext extends Migration
      */
     public function up()
     {
-        Schema::table('services', function($table) {
-            $table->integer('city_id')->nullable();
-            $table->string('special_location')->nullable();
-        });
+        Schema::table(
+            'services',
+            function ($table) {
+                $table->integer('city_id')->nullable();
+                $table->string('special_location')->nullable();
+            }
+        );
     }
 
     /**
@@ -57,9 +59,12 @@ class AddServiceLocationFreetext extends Migration
      */
     public function down()
     {
-        Schema::table('locations', function($table) {
-            $table->dropColumn('city_id');
-            $table->dropColumn('special_location');
-        });
+        Schema::table(
+            'locations',
+            function ($table) {
+                $table->dropColumn('city_id');
+                $table->dropColumn('special_location');
+            }
+        );
     }
 }

@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddDayTypes
@@ -44,15 +44,21 @@ class AddDayTypes extends Migration
      */
     public function up()
     {
-        Schema::create('city_day', function (Blueprint $table) {
-            $table->increments('id')->nullable();
-            $table->integer('day_id')->nullable();
-            $table->integer('city_id')->nullable();
-            $table->timestamps();
-        });
-        Schema::table('days', function($table) {
-           $table->integer('day_type')->nullable();
-        });
+        Schema::create(
+            'city_day',
+            function (Blueprint $table) {
+                $table->increments('id')->nullable();
+                $table->integer('day_id')->nullable();
+                $table->integer('city_id')->nullable();
+                $table->timestamps();
+            }
+        );
+        Schema::table(
+            'days',
+            function ($table) {
+                $table->integer('day_type')->nullable();
+            }
+        );
     }
 
     /**
@@ -63,8 +69,11 @@ class AddDayTypes extends Migration
     public function down()
     {
         Schema::dropIfExists('city_day');
-        Schema::table('days', function($table) {
-            $table->dropColumn('day_type');
-        });
+        Schema::table(
+            'days',
+            function ($table) {
+                $table->dropColumn('day_type');
+            }
+        );
     }
 }

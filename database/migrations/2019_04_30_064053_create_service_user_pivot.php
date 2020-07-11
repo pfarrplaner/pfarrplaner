@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateServiceUserPivot
@@ -44,13 +44,16 @@ class CreateServiceUserPivot extends Migration
      */
     public function up()
     {
-        Schema::create('service_user', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('service_id');
-            $table->integer('user_id');
-            $table->char('category');
-            $table->timestamps();
-        });
+        Schema::create(
+            'service_user',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('service_id');
+                $table->integer('user_id');
+                $table->char('category');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

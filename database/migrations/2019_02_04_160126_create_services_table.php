@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateServicesTable
@@ -44,17 +44,20 @@ class CreateServicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('services', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('day_id')->index();
-            $table->integer('location_id')->index();
-            $table->time('time');
-            $table->string('pastor');
-            $table->string('organist');
-            $table->string('sacristan');
-            $table->mediumText('description');
-            $table->timestamps();
-        });
+        Schema::create(
+            'services',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('day_id')->index();
+                $table->integer('location_id')->index();
+                $table->time('time');
+                $table->string('pastor');
+                $table->string('organist');
+                $table->string('sacristan');
+                $table->mediumText('description');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

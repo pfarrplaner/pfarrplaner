@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ExtendCityUserPivot
@@ -44,10 +43,13 @@ class ExtendCityUserPivot extends Migration
      */
     public function up()
     {
-        Schema::table('city_user', function($table){
-            $table->char('permission')->nullable()->default('w');
-            $table->integer('sorting')->nullable()->default(0);
-        });
+        Schema::table(
+            'city_user',
+            function ($table) {
+                $table->char('permission')->nullable()->default('w');
+                $table->integer('sorting')->nullable()->default(0);
+            }
+        );
     }
 
     /**
@@ -57,10 +59,13 @@ class ExtendCityUserPivot extends Migration
      */
     public function down()
     {
-        Schema::table('city_user', function($table){
-            /** @var \Doctrine\DBAL\Schema\Table $table */
-            $table->dropColumn('permission');
-            $table->dropColumn('sorting');
-        });
+        Schema::table(
+            'city_user',
+            function ($table) {
+                /** @var \Doctrine\DBAL\Schema\Table $table */
+                $table->dropColumn('permission');
+                $table->dropColumn('sorting');
+            }
+        );
     }
 }

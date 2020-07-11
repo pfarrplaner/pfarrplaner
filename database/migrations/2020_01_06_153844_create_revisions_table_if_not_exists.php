@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateRevisionsTableIfNotExists
@@ -40,18 +39,21 @@ class CreateRevisionsTableIfNotExists extends Migration
     public function up()
     {
         if (!Schema::hasTable('revisions')) {
-            Schema::create('revisions', function ($table) {
-                $table->increments('id');
-                $table->string('revisionable_type');
-                $table->integer('revisionable_id');
-                $table->integer('user_id')->nullable();
-                $table->string('key');
-                $table->text('old_value')->nullable();
-                $table->text('new_value')->nullable();
-                $table->timestamps();
+            Schema::create(
+                'revisions',
+                function ($table) {
+                    $table->increments('id');
+                    $table->string('revisionable_type');
+                    $table->integer('revisionable_id');
+                    $table->integer('user_id')->nullable();
+                    $table->string('key');
+                    $table->text('old_value')->nullable();
+                    $table->text('new_value')->nullable();
+                    $table->timestamps();
 
-                $table->index(array('revisionable_id', 'revisionable_type'));
-            });
+                    $table->index(array('revisionable_id', 'revisionable_type'));
+                }
+            );
         }
     }
 

@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddParishUserTable
@@ -44,16 +44,22 @@ class AddParishUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('parish_user', function(Blueprint $table){
-            $table->increments('id');
-            $table->integer('parish_id');
-            $table->integer('user_id');
-            $table->timestamps();
-        });
+        Schema::create(
+            'parish_user',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('parish_id');
+                $table->integer('user_id');
+                $table->timestamps();
+            }
+        );
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->string('image')->nullable()->default('');
-        });
+        Schema::table(
+            'users',
+            function (Blueprint $table) {
+                $table->string('image')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -64,8 +70,11 @@ class AddParishUserTable extends Migration
     public function down()
     {
         Schema::dropIfExists('parish_user');
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('image');
-        });
+        Schema::table(
+            'users',
+            function (Blueprint $table) {
+                $table->dropColumn('image');
+            }
+        );
     }
 }

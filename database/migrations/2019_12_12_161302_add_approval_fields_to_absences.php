@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddApprovalFieldsToAbsences
@@ -44,9 +44,12 @@ class AddApprovalFieldsToAbsences extends Migration
      */
     public function up()
     {
-        Schema::table('absences', function (Blueprint $table) {
-            $table->string('status')->nullable()->default('approved');
-        });
+        Schema::table(
+            'absences',
+            function (Blueprint $table) {
+                $table->string('status')->nullable()->default('approved');
+            }
+        );
     }
 
     /**
@@ -56,8 +59,11 @@ class AddApprovalFieldsToAbsences extends Migration
      */
     public function down()
     {
-        Schema::table('absences', function (Blueprint $table) {
-            $table->dropColumn('status');
-        });
+        Schema::table(
+            'absences',
+            function (Blueprint $table) {
+                $table->dropColumn('status');
+            }
+        );
     }
 }

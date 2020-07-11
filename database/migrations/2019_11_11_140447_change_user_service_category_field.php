@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class ChangeUserServiceCategoryField
@@ -44,9 +44,12 @@ class ChangeUserServiceCategoryField extends Migration
      */
     public function up()
     {
-        Schema::table('service_user', function (Blueprint $table) {
-            $table->string('category')->change();
-        });
+        Schema::table(
+            'service_user',
+            function (Blueprint $table) {
+                $table->string('category')->change();
+            }
+        );
     }
 
     /**
@@ -56,8 +59,11 @@ class ChangeUserServiceCategoryField extends Migration
      */
     public function down()
     {
-        Schema::table('service_user', function (Blueprint $table) {
-            $table->char('category')->change();
-        });
+        Schema::table(
+            'service_user',
+            function (Blueprint $table) {
+                $table->char('category')->change();
+            }
+        );
     }
 }

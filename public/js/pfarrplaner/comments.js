@@ -32,7 +32,7 @@ function updateCommentCount() {
 }
 
 function commentEditButtons() {
-    $('.btnEditComment').click(function(event){
+    $('.btnEditComment').click(function (event) {
         event.preventDefault();
         axios.get($(this).data('route'), {
             id: $(this).data('comment-id'),
@@ -40,12 +40,12 @@ function commentEditButtons() {
             console.log(response);
             $(this).closest('tr').replaceWith(response.data);
             commentEditButtons();
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error.response.data)
         });
     });
 
-    $('.btnEditCommentSave').click(function(event){
+    $('.btnEditCommentSave').click(function (event) {
         event.preventDefault();
         var tr = $(this).closest('tr');
         axios.patch(tr.data('update-route'), {
@@ -58,13 +58,13 @@ function commentEditButtons() {
             console.log(response);
             $(this).closest('tr').replaceWith(response.data);
             commentEditButtons();
-        }).catch((error)=>{
+        }).catch((error) => {
             console.log(error.response.data)
         });
     });
 
 
-    $('.btnDeleteComment').click(function(){
+    $('.btnDeleteComment').click(function () {
         event.preventDefault();
         axios.delete($(this).data('route'), {
             id: $(this).data('comment-id'),
@@ -77,8 +77,8 @@ function commentEditButtons() {
     });
 }
 
-$(document).ready(function(){
-    $('#newCommentSave').click(function(event){
+$(document).ready(function () {
+    $('#newCommentSave').click(function (event) {
         event.preventDefault();
 
         axios.post(commentRoute, {
@@ -87,15 +87,15 @@ $(document).ready(function(){
             'body': $('#newCommentRow .editCommentBody').first().val(),
             'private': $('#newCommentRow .editCommentPrivate').first().prop('checked'),
         })
-    .then((response)=>{
-            console.log(response);
-            $('#newCommentRow').before(response.data);
-            updateCommentCount();
-            setDirty();
-            $('#newCommentRow .editCommentBody').first().val('');
-            $('#newCommentRow .editCommentPrivate').first().prop('checked', false);
-            commentEditButtons();
-        }).catch((error)=>{
+            .then((response) => {
+                console.log(response);
+                $('#newCommentRow').before(response.data);
+                updateCommentCount();
+                setDirty();
+                $('#newCommentRow .editCommentBody').first().val('');
+                $('#newCommentRow .editCommentPrivate').first().prop('checked', false);
+                commentEditButtons();
+            }).catch((error) => {
             console.log(error.response.data)
         });
     });

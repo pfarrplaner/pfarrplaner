@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddDefaultTimeField
@@ -44,9 +43,12 @@ class AddDefaultTimeField extends Migration
      */
     public function up()
     {
-        Schema::table('locations', function($table) {
-            $table->time('default_time')->nullable();
-        });
+        Schema::table(
+            'locations',
+            function ($table) {
+                $table->time('default_time')->nullable();
+            }
+        );
     }
 
     /**
@@ -56,8 +58,11 @@ class AddDefaultTimeField extends Migration
      */
     public function down()
     {
-        Schema::table('locations', function($table) {
-            $table->dropColumn('default_time');
-        });
+        Schema::table(
+            'locations',
+            function ($table) {
+                $table->dropColumn('default_time');
+            }
+        );
     }
 }

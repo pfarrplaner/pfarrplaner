@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddUserPreferenceCities
@@ -44,12 +43,15 @@ class AddUserPreferenceCities extends Migration
      */
     public function up()
     {
-        Schema::table('users', function($table){
-            $table->string('office')->nullable()->default('');
-            $table->string('address')->nullable()->default('');
-            $table->string('phone')->nullable()->default('');
-            $table->string('preference_cities')->nullable()->default('');
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->string('office')->nullable()->default('');
+                $table->string('address')->nullable()->default('');
+                $table->string('phone')->nullable()->default('');
+                $table->string('preference_cities')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -59,11 +61,14 @@ class AddUserPreferenceCities extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table){
-            $table->dropColumn('office');
-            $table->dropColumn('address');
-            $table->dropColumn('phone');
-            $table->dropColumn('preference_cities');
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->dropColumn('office');
+                $table->dropColumn('address');
+                $table->dropColumn('phone');
+                $table->dropColumn('preference_cities');
+            }
+        );
     }
 }

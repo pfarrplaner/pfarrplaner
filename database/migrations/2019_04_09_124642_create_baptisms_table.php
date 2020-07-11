@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateBaptismsTable
@@ -44,25 +44,28 @@ class CreateBaptismsTable extends Migration
      */
     public function up()
     {
-        Schema::create('baptisms', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('service_id')->nullable();
-            $table->text('candidate_name');
-            $table->text('candidate_address');
-            $table->text('candidate_zip');
-            $table->text('candidate_city');
-            $table->text('candidate_email');
-            $table->text('candidate_phone');
-            $table->string('first_contact_with');
-            $table->date('first_contact_on')->nullable();
-            $table->integer('registered');
-            $table->string('registration_document');
-            $table->integer('signed');
-            $table->date('appointment')->nullable();
-            $table->integer('docs_ready');
-            $table->string('docs_where');
-            $table->timestamps();
-        });
+        Schema::create(
+            'baptisms',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('service_id')->nullable();
+                $table->text('candidate_name');
+                $table->text('candidate_address');
+                $table->text('candidate_zip');
+                $table->text('candidate_city');
+                $table->text('candidate_email');
+                $table->text('candidate_phone');
+                $table->string('first_contact_with');
+                $table->date('first_contact_on')->nullable();
+                $table->integer('registered');
+                $table->string('registration_document');
+                $table->integer('signed');
+                $table->date('appointment')->nullable();
+                $table->integer('docs_ready');
+                $table->string('docs_where');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

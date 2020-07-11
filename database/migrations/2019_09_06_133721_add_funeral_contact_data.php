@@ -28,9 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddFuneralContactData
@@ -44,10 +43,12 @@ class AddFuneralContactData extends Migration
      */
     public function up()
     {
-        Schema::table('funerals', function ($table) {
-            $table->text('relative_contact_data')->nullable();
-        });
-
+        Schema::table(
+            'funerals',
+            function ($table) {
+                $table->text('relative_contact_data')->nullable();
+            }
+        );
     }
 
     /**
@@ -57,8 +58,11 @@ class AddFuneralContactData extends Migration
      */
     public function down()
     {
-        Schema::table('funerals', function ($table) {
-           $table->dropColumn('relative_contact_data');
-        });
+        Schema::table(
+            'funerals',
+            function ($table) {
+                $table->dropColumn('relative_contact_data');
+            }
+        );
     }
 }

@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class CreateRiteDoneFields
@@ -44,15 +44,24 @@ class CreateRiteDoneFields extends Migration
      */
     public function up()
     {
-        Schema::table('baptisms', function (Blueprint $table) {
-            $table->boolean('done')->nullable()->default(false);
-        });
-        Schema::table('funerals', function (Blueprint $table) {
-            $table->boolean('done')->nullable()->default(false);
-        });
-        Schema::table('weddings', function (Blueprint $table) {
-            $table->boolean('done')->nullable()->default(false);
-        });
+        Schema::table(
+            'baptisms',
+            function (Blueprint $table) {
+                $table->boolean('done')->nullable()->default(false);
+            }
+        );
+        Schema::table(
+            'funerals',
+            function (Blueprint $table) {
+                $table->boolean('done')->nullable()->default(false);
+            }
+        );
+        Schema::table(
+            'weddings',
+            function (Blueprint $table) {
+                $table->boolean('done')->nullable()->default(false);
+            }
+        );
     }
 
     /**
@@ -62,14 +71,23 @@ class CreateRiteDoneFields extends Migration
      */
     public function down()
     {
-        Schema::table('baptisms', function(Blueprint $table) {
-            $table->dropColumn('done');
-        });
-        Schema::table('funerals', function(Blueprint $table) {
-            $table->dropColumn('done');
-        });
-        Schema::table('weddings', function(Blueprint $table) {
-            $table->dropColumn('done');
-        });
+        Schema::table(
+            'baptisms',
+            function (Blueprint $table) {
+                $table->dropColumn('done');
+            }
+        );
+        Schema::table(
+            'funerals',
+            function (Blueprint $table) {
+                $table->dropColumn('done');
+            }
+        );
+        Schema::table(
+            'weddings',
+            function (Blueprint $table) {
+                $table->dropColumn('done');
+            }
+        );
     }
 }

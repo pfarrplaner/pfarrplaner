@@ -27,7 +27,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$(document).ready(function(){
+$(document).ready(function () {
     $(".loader").fadeOut(400, function () {
         $("#page").fadeIn(400);
     });

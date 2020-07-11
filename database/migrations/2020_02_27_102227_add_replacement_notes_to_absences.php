@@ -28,9 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 /**
  * Class AddReplacementNotesToAbsences
@@ -44,9 +44,12 @@ class AddReplacementNotesToAbsences extends Migration
      */
     public function up()
     {
-        Schema::table('absences', function (Blueprint $table) {
-            $table->text('replacement_notes')->nullable();
-        });
+        Schema::table(
+            'absences',
+            function (Blueprint $table) {
+                $table->text('replacement_notes')->nullable();
+            }
+        );
     }
 
     /**
@@ -56,8 +59,11 @@ class AddReplacementNotesToAbsences extends Migration
      */
     public function down()
     {
-        Schema::table('absences', function (Blueprint $table) {
-            $table->dropColumn('replacement_notes');
-        });
+        Schema::table(
+            'absences',
+            function (Blueprint $table) {
+                $table->dropColumn('replacement_notes');
+            }
+        );
     }
 }
