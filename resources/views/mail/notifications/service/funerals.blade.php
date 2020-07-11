@@ -16,10 +16,12 @@
             @component('mail.layout.blocks.cell')
                 @if(count($funeral->attachments))
                     @foreach($funeral->attachments as $attachment)
-                        <a href="{{ route('attachment', $attachment->id) }}"  class="btn-secondary btn-sm"
-                           title="{{ $attachment->title }}, {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($attachment->file)) }}, {{ Storage::mimeType($attachment->file) }}">
-                            <span class="fa {{ \App\Helpers\FileHelper::icon($attachment->file) }}"></span>
-                        </a>
+                        @if(Storage::exists($attachment->file))
+                            <a href="{{ route('attachment', $attachment->id) }}"  class="btn-secondary btn-sm"
+                               title="{{ $attachment->title }}, {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($attachment->file)) }}, {{ Storage::mimeType($attachment->file) }}">
+                                <span class="fa {{ \App\Helpers\FileHelper::icon($attachment->file) }}"></span>
+                            </a>
+                        @endif
                     @endforeach
                 @endif
             @endcomponent

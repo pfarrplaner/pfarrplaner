@@ -114,4 +114,23 @@ class ServiceFeatureTest extends TestCase
         $this->actingAs($this->user)->patch(route('services.update', $service->id), $serviceData)->assertStatus(302);
         $this->assertEquals(0, Service::first()->need_predicant);
     }
+
+
+    /**
+     * Test that a service can have a title
+     *
+     * @return void
+     * @test
+     */
+    public function testServiceCanHaveTitle()
+    {
+        $this->withoutExceptionHandling();
+        $data = factory(Service::class)->raw();
+        $data['title'] = 'Cool title';
+        $this->actingAs($this->user)
+            ->post(route('services.store'), $data)
+            ->assertStatus(302);
+        $this->assertEquals('Cool title', Service::first()->title);
+    }
+
 }

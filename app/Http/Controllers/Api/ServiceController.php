@@ -12,13 +12,20 @@ namespace App\Http\Controllers\Api;
 use App\City;
 use App\Day;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Liturgy;
+use App\Mail\ServiceUpdated;
 use App\Service;
+use App\ServiceGroup;
+use App\Subscription;
+use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Carbon\Carbon;
 
 class ServiceController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
 
     public function byDayAndCity(Day $day, City $city) {
         return Service::select('id')
@@ -52,6 +59,29 @@ class ServiceController extends Controller
             $service->liturgy = Liturgy::getDayInfo($service->day);
         }
         return response()->json(compact('services'))->header('Access-Control-Allow-Origin', '*');
+    }
+
+    /**
+     * Update a service
+     * @param UpdateServiceRequest $request Request with validated data
+     * @param Service $service Service model
+     * @return \Illuminate\Http\JsonResponse Response with new service data
+     */
+    public function update(UpdateServiceRequest $request, Service $service) {
+        $service->trackChanges();
+        $service->update($request->validated());
+        $service->associateParticipants($request, $service);
+        $service->checkIfPredicantNeeded();
+
+        $service->tags()->sync($request->get('tags') ?: []);
+        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
+        $this->handleAttachments($request, $service);
+
+        if ($service->isChanged()) {
+            Subscription::send($service, ServiceUpdated::class);
+        }
+
+        return response()->json(compact('service'));
     }
 
 }

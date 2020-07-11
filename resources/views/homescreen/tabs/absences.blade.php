@@ -23,7 +23,9 @@
                     <tr>
                         <td>{{ $absence->durationText() }}</td>
                         <td>{{ $absence->reason }}</td>
-                        <td>{{ $absence->replacementText() }}</td>
+                        <td>
+                            {{ $absence->replacementText() }}
+                        </td>
                         <td style="text-align: right;">
                             <a href="{{ route('absences.index') }}" class="btn btn-sm btn-secondary"
                                title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
@@ -57,7 +59,13 @@
                         <td>{{ $replacement->absence->durationText() }}</td>
                         <td>{{ $replacement->absence->user->fullName() }}</td>
                         <td>{{ $replacement->absence->reason }}</td>
-                        <td>{{ $replacement->absence    ->replacementText() }}</td>
+                        <td>
+                            {{ $replacement->absence    ->replacementText() }}
+                            @if (trim($replacement->absence->replacement_notes))
+                                <br /><div style="font-size: 0.8em;"><span style="font-weight: bold;">Hinweise:<br /></span>
+                                    {!! nl2br($replacement->absence->replacement_notes) !!}</div>
+                            @endif
+                        </td>
                         <td style="text-align: right;">
                             <a href="{{ route('absences.index') }}" class="btn btn-sm btn-secondary"
                                title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>

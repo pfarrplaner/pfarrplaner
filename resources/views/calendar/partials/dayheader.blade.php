@@ -1,4 +1,4 @@
-<th class="hide-buttons @if($day->date->format('Ymd')==$nextDay->date->format('Ymd')) now @endif
+u<th class="hide-buttons @if(isset($nextDay) && ($day->date->format('Ymd')==$nextDay->date->format('Ymd'))) now @endif
 @if($day->day_type == \App\Day::DAY_TYPE_LIMITED) limited collapsed @endif
 @if($day->day_type == \App\Day::DAY_TYPE_LIMITED && (count($day->cities->intersect(Auth::user()->cities))==0)) not-for-city @endif
         "
@@ -6,16 +6,13 @@
     @endif
     data-day="{{ $day->id }}"
 >
+    <div class="day-header-collapse-hover">{{ $day->date->formatLocalized('%a, %d.') }}</div>
     <div class="card card-effect">
         <div class="card-header day-header-{{ $day->date->formatLocalized('%a') }}">
             {{ $day->date->formatLocalized('%A') }}
         </div>
         <div class="card-body">
             {{ $day->date->format('d') }}
-            @can('gd-allgemein-bearbeiten')
-                <a class="btn btn-default btn-sm" role="button"
-                   href="{{ route('days.edit', $day->id) }}"><span class="fa fa-edit"></span></a>
-            @endcan
             @can('tag-loeschen')
                 <form action="{{ route('days.destroy', $day->id)}}" method="post"
                       style="display: inline;">

@@ -46,9 +46,11 @@
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
+            @if((!isset($noNavBar)) || (!$noNavBar) )
             <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
             </li>
+            @endif
             @yield('navbar-left')
         </ul>
 
@@ -74,7 +76,7 @@
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <aside class="main-sidebar sidebar-dark-primary elevation-4" @if(config('app.dev')) style="background-color: orangered; "@endif>
         <!-- Brand Logo -->
         <a href="{{ route('home') }}" class="brand-link" style="margin-left: 5px;">
             <img src="{{ asset('img/logo/pfarrplaner.png') }}" width="22" height="22" class="brand-image"
@@ -84,6 +86,7 @@
 
         <!-- Sidebar -->
         <div class="sidebar">
+        @if((!isset($noNavBar)) || (!$noNavBar) )
             @auth
             <!-- Sidebar user panel (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -150,6 +153,7 @@
                     <input type="submit" class="btn btn-primary" value="Anmelden" />
                 </form>
             @endguest
+            @endif
         </div>
         <!-- /.sidebar -->
     </aside>
@@ -194,25 +198,16 @@
 <!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
-<script
-        src="https://code.jquery.com/jquery-3.3.1.min.js"
-        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-        crossorigin="anonymous"></script>
-<!-- Bootstrap -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<!-- AdminLTE -->
-<script src="{{ asset('adminlte/js/adminlte.js') }}"></script>
+@auth
+<script>
+    window.Laravel = {!! json_encode([
+       'csrfToken' => csrf_token(),
+       'apiToken' => Auth::user()->api_token ?? null,
+   ]) !!};
+</script>
+@endauth
+<script src="{{ asset('js/bundle.js') }}" />
 <!-- other libraries -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"
-        integrity="sha256-59IZ5dbLyByZgSsRE3Z0TjDuX7e1AiqW5bZ8Bg50dsU=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/js/bootstrap-datepicker.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.8.0/locales/bootstrap-datepicker.de.min.js"></script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
-<script type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.20.0/jquery.daterangepicker.min.js"></script>
 <script src="{{ asset('js/pfarrplaner/forms.js') }}"></script>
 @yield('scripts')
 @if(env('MATOMO_SITE') >0)

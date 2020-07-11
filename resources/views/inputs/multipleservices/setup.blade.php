@@ -43,6 +43,10 @@
                         <option value="Saturday">Samstag</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="title">Abweichender Titel</label>
+                    <input class="form-control" type="text" name="title" />
+                </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Anlegen</button>

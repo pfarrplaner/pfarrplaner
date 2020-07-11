@@ -15,7 +15,7 @@
                     @csrf
                     <div class="form-group">
                         <label class="control-label" for="title">Titel:</label>
-                        <input class="form-control" name="title" value="" />
+                        <input class="form-control" name="title" value="{{ Auth::user()->getSetting('quarterly_events_report_title', '') }}" />
                     </div>
                     <div class="form-group">
                         <label class="control-label">Liste für folgenden Veranstaltungsort:</label>
@@ -57,11 +57,11 @@
                     </div>
                     <div class="form-group">
                         <label for="notes1">Hinweise <i>vor</i> der Übersicht der Gottesdienste:</label>
-                        <textarea class="form-control" name="notes1"></textarea>
+                        <textarea class="form-control" name="notes1">{{ Auth::user()->getSetting('quarterly_events_report_notes1', '') }}</textarea>
                     </div>
                     <div class="form-group">
                         <label for="notes2">Hinweise <i>nach</i> der Übersicht der Gottesdienste:</label>
-                        <textarea class="form-control" name="notes2"></textarea>
+                        <textarea class="form-control" name="notes2">{{ Auth::user()->getSetting('quarterly_events_report_notes2', '') }}</textarea>
                     </div>
                     <div class="form-group">
                         <div class="form-check">

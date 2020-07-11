@@ -188,7 +188,8 @@ class UserController extends Controller
         $sortedCities = $user->getSortedCities();
         $unusedCities = $allCities->whereNotIn('id', $sortedCities->pluck('id'));
         $calendarView = $user->getSetting('calendar_view', 'calendar.month');
-        return view('users.profile', compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView'));
+        $homeScreen = $user->getHomeScreen();
+        return view('users.profile', compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView', 'homeScreen'));
     }
 
     public function profileSave(Request $request)
@@ -207,6 +208,12 @@ class UserController extends Controller
 
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
+
+        // homescreen configuration
+        $homeScreen = $user->getHomeScreen();
+        if (null !== $homeScreen) {
+            $homeScreen->setConfiguration($request);
+        }
 
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
@@ -369,5 +376,12 @@ class UserController extends Controller
             ->orderBy('time')
             ->get();
         return view('users.services', compact('user', 'services'));
+    }
+
+    public function switch(User $user) {
+        if (!Auth::user()->isAdmin) abort (403);
+        Auth::logout();
+        Auth::login($user);
+        return redirect()->route('home');
     }
 }

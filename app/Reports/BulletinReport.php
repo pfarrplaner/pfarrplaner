@@ -122,8 +122,8 @@ class BulletinReport extends AbstractWordDocumentReport
                     $textRun->addText(htmlspecialchars($service->location->name) . "\t");
                 }
                 $textRun->addText(htmlspecialchars($service->participantsText('P', false, false)));
-                if ($service->descriptionText() != "") {
-                    $textRun->addText(' - ' . htmlspecialchars($service->descriptionText()));
+                if ($x = $service->titleAndDescriptionCombinedText()) {
+                    $textRun->addText(' - ' . htmlspecialchars($x));
                 }
             }
             $textRun = $section->addTextRun('list');

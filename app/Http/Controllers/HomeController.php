@@ -47,9 +47,8 @@ class HomeController extends Controller
                     return view($data);
                     break;
                 case 'homescreen':
-                    $homeScreenClass = 'App\\HomeScreens\\'.ucfirst($data).'HomeScreen';
-                    if (class_exists($homeScreenClass)) {
-                        $homeScreenObj = new $homeScreenClass();
+                    $homeScreenObj = Auth::user()->getHomeScreen();
+                    if (null !== $homeScreenObj) {
                         return $homeScreenObj->render();
                     }
             }

@@ -140,4 +140,11 @@ class EmbedController extends Controller
         return view('embed.services.baptismalServices', compact('services', 'ids', 'title', 'maxBaptisms'));
     }
 
+    public function embedReport(Request $request, $report) {
+        $reportClass = 'App\\Reports\\Embed'.ucfirst($report).'Report';
+        if (!class_exists($reportClass)) abort(404);
+        $reportObject = new $reportClass();
+        return $reportObject->embed($request);
+    }
+
 }

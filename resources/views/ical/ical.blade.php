@@ -15,5 +15,6 @@ DTSTART:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $service->day->date->
 DTEND:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $service->day->date->format('Y-m-d').' '.$service->timeText(false).':00', 'Europe/Berlin')->addHour(1)->setTimezone('UTC')->format('Ymd\THis\Z') }}
 DTSTAMP:{{ $service->updated_at->setTimezone('UTC')->format('Ymd\THis\Z') }}
 END:VEVENT
+
 @endforeach
 END:VCALENDAR

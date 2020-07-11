@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\HomeScreens\AbstractHomeScreen;
 use App\Providers\AuthServiceProvider;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Carbon\Carbon;
@@ -19,6 +20,11 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use Notifiable, HasRoles, Visitable, Visitor;
+
+    public const NAME_FORMAT_DEFAULT = 1;
+    public const NAME_FORMAT_INITIAL_AND_LAST = 2;
+    public const NAME_FORMAT_FIRST_AND_LAST = 3;
+
 
     /**
      * The attributes that are mass assignable.
@@ -78,6 +84,12 @@ class User extends Authenticatable
     public function writableCities()
     {
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
+    }
+
+    public function permissionForCity($city) {
+        if (is_numeric($city)) $city = City::find($city);
+        /** @var City $city */
+        return $this->cities()->where('cities.id', $city->id)->first()->pivot->permission ?? 'n';
     }
 
     public function writableCitiesWithoutAdmin()
@@ -156,6 +168,24 @@ class User extends Authenticatable
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->name;
     }
 
+    /**
+     * Get the user's name in one of the predefined formats
+     * @param int $format
+     * @param bool $withTitle
+     * @return string
+     */
+    public function formattedName($format = self::NAME_FORMAT_DEFAULT, $withTitle = true) {
+        switch ($format) {
+            case self::NAME_FORMAT_INITIAL_AND_LAST:
+                return $this->initialedName($withTitle);
+                break;
+            case self::NAME_FORMAT_FIRST_AND_LAST:
+                return $this->fullName($withTitle);
+                break;
+        }
+        return $this->lastName($withTitle);
+    }
+
     public function initialedName($withTitle = false)
     {
         return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '')
@@ -213,6 +243,21 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * Get an instance of the HomeScreen for this user
+     * @return AbstractHomeScreen|null
+     */
+    public function getHomeScreen() {
+        $homeScreen = $this->getSetting('homeScreen', 'route:calendar');
+        if (substr($homeScreen, 0, 11) == 'homescreen:') {
+            $homeScreenClass = 'App\\HomeScreens\\'.ucfirst(substr($homeScreen, 11)).'HomeScreen';
+            if (class_exists($homeScreenClass)) {
+                return new $homeScreenClass();
+            }
+        }
+        return null;
+    }
+
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
@@ -268,12 +313,13 @@ class User extends Authenticatable
      */
     public function getSubscription($city)
     {
-        $subscription = $this->subscriptions()->where('city_id', is_int($city) ? $city : $city->id)->first();
+        $cityId = is_int($city) ? $city : $city->id;
+        $subscription = $this->subscriptions()->where('city_id', $cityId)->first();
         if (null === $subscription) {
             $subscription = new Subscription(
                 [
                     'user_id' => $this->id,
-                    'city_id' => $city->id,
+                    'city_id' => $cityId,
                     'subscription_type' => Subscription::SUBSCRIBE_OWN,
                 ]
             );
@@ -464,16 +510,18 @@ class User extends Authenticatable
             ->where('id', $this->id);
 
         if ($this->hasRole('Pfarrer*in') || $this->hasPermissionTo('fremden-urlaub-bearbeiten')) {
-            $userQuery->orWhereHas(
+            $newIds = User::whereHas(
                 'homeCities',
                 function ($query) {
                     $query->whereIn('cities.id', $this->homeCities->pluck('id'));
                 }
-            );
+            )->where('manage_absences', 1)
+            ->get()->pluck('id')->toArray();
+            $ids = array_merge($ids, $newIds);
         }
 
         if ($this->hasRole('Pfarrer*in')) {
-            $userQuery->orWhere(
+            $newIds = User::where(
                 function ($query2) {
                     $query2->whereHas(
                         'roles',
@@ -488,11 +536,16 @@ class User extends Authenticatable
                         }
                     );
                 }
-            );
+            )->get()->pluck('id')->toArray();
+            $ids = array_merge($ids, $newIds);
         }
 
+        $ids = array_unique($ids);
+
+        $userQuery = User::whereIn('id', $ids);
         $userQuery->orderBy('last_name');
         $userQuery->orderBy('first_name');
+
         $users = $userQuery->get();
 
         return $users;
@@ -578,7 +631,7 @@ class User extends Authenticatable
 
     public function getWritableCitiesAttribute()
     {
-        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
+        if ((!Auth::guest()) && Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
             return City::all();
         }
         return $this->writableCities()->get();
@@ -586,7 +639,7 @@ class User extends Authenticatable
 
     public function getAdminCitiesAttribute()
     {
-        if (Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
+        if ($this->hasRole(AuthServiceProvider::SUPER)) {
             return City::all();
         }
         return $this->adminCities()->get();

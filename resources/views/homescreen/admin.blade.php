@@ -46,7 +46,7 @@
         <hr />
         <h2>Logs</h2>
         @foreach ($logs as $entry)
-            <div class="alert alert-{{ $entry['level_class'] }} log-entry-{{$entry['level']}}">
+            <div class="alert alert-light }} log-entry-{{$entry['level']}}">
                 <b style="font-size: 0.7em;"><span class="badge badge-{{ $entry['level_class'] }}"><span class="fa fa-{{ $entry['level_img'] }}"></span>&nbsp;{{ strtoupper($entry['level']) }}</span>
                     {{ (new \Carbon\Carbon($entry['date']))->format('Y-m-d H:i:s') }}</b> <br />
                 {!! $entry['text'] !!}

@@ -49,6 +49,7 @@ class ServicePolicy
     {
         if ($user->hasRole(AuthServiceProvider::ADMIN) && $this->hasCityPermission($user, $service)) return true;
         if ($user->hasPermissionTo('gd-bearbeiten') && $this->hasCityPermission($user, $service)) return true;
+        if ($service->pastors->contains($user)) return true;
         return false;
     }
 

@@ -6,7 +6,7 @@
                 "
         @can('update', $service)
         style="cursor: pointer;"
-        title="Klicken, um diesen Eintrag zu bearbeiten"
+        title="Klicken, um diesen Eintrag zu bearbeiten (#{{ $service->id }})"
         onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
         @endcan
         data-day="{{ $service->day->id }}"
@@ -27,6 +27,15 @@
     @endif
     @if($service->cc) <img src="{{ asset('img/cc.png') }}"
                            title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
+    @if($service->youtube_url)
+        <a href="{{ $service->youtube_url }}" target="_blank" style="color: red"; title="Zum Youtube-Video"><span class="fab fa-youtube"></span></a>
+        @if ($service->city->youtube_channel_url)
+                <a href="{{ \App\Helpers\YoutubeHelper::getLiveDashboardUrl($service->city, $service->youtube_url) }}" target="_blank" style="color: darkgray"; title="Zum LiveDashboard"><span class="fa fa-video"></span></a>
+        @endif
+    @endif
+    @if($service->titleText(true, true) != 'GD')
+        <div class="service-description">{{ $service->titleText(true, true) }}</div>
+    @endif
     @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen'])
         @if($service->weddings->count())
             <div class="service-description">
@@ -54,14 +63,17 @@
         @endif
     </div>
     <div class="service-team service-organist"><span
-                class="designation">O: </span>@foreach($service->organists as $participant){{ $participant->lastName(true) }}@if($loop->last) @else
-            | @endif @endforeach</div>
+                class="designation">O: </span>
+        @include('calendar.partials.peoplelist', ['participants' => $service->organists, 'vacation_check' => false])
+    </div>
     <div class="service-team service-sacristan"><span
-                class="designation">M: </span>@foreach($service->sacristans as $participant){{ $participant->lastName(true) }}@if($loop->last) @else
-            | @endif @endforeach</div>
+                class="designation">M: </span>
+        @include('calendar.partials.peoplelist', ['participants' => $service->sacristans, 'vacation_check' => false])
+    </div>
     @foreach($service->ministries() as $ministry => $people)
         <div class="service-team"><span
-                    class="designation">{{ $ministry }}: </span>{{ $people->implode('planName', ' | ') }}
+                    class="designation">{{ $ministry }}: </span>
+            @include('calendar.partials.peoplelist', ['participants' => $people, 'vacation_check' => false])
         </div>
     @endforeach
     <div class="service-description">{{ $service->descriptionText() }}</div>

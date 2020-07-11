@@ -17,6 +17,9 @@
                     <a class="nav-link" href="#absences" role="tab" data-toggle="tab">Mein Urlaub</a>
                 </li>
             @endif
+            @if(count($missing))
+                @tabheader(['id' => 'missing', 'title' => 'Fehlende Einträge', 'count' => count($missing), 'badge_type' => 'danger']) @endtabheader
+            @endif
         </ul>
 
         <div class="tab-content">
@@ -53,6 +56,7 @@
                     </table>
                 </div>
             </div>
+            @include('homescreen.partials.tabs.missing')
             @if(Auth::user()->manage_absences)
                 @include('homescreen.tabs.absences')
             @endif

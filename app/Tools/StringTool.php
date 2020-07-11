@@ -54,4 +54,16 @@ class StringTool
         return trim(strftime($format, $time).($uhr ? ($nbsp ? '&nbsp;' : ' ').'Uhr' : ''));
 
     }
+
+    public static function indent($text) {
+        $indent = 0;
+        $lines = explode("\n", $text);
+        foreach ($lines as $index => $line) {
+            $line = trim($line);
+            if (substr($line, 0, 2) == '</') $indent--;
+            elseif (substr($line, 0, 1) == '<') $indent++;
+            $lines[$index] = str_pad($line, 4*$indent, ' ', STR_PAD_LEFT);
+        }
+        return join("\n", $lines);
+    }
 }

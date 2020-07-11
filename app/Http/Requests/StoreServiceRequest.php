@@ -55,6 +55,18 @@ class StoreServiceRequest extends FormRequest
             'cc_staff' => 'nullable|string',
             'cc_alt_time' => 'nullable|date_format:"H:i"',
             'internal_remarks' => 'nullable|string',
+            'title' => 'nullable|string',
+            'youtube_url' => 'nullable|string',
+            'cc_streaming_url' => 'nullable|string',
+            'offerings_url' => 'nullable|string',
+            'meeting_url' => 'nullable|string',
+            'recording_url' => 'nullable|string',
+            'external_url' => 'nullable|string',
+            'sermon_title' => 'nullable|string',
+            'sermon_reference' => 'nullable|string',
+            'sermon_description' => 'nullable|string',
+            'konfiapp_event_type' => 'nullable|int',
+            'konfiapp_event_qr' => 'nullable|string',
         ];
     }
 
@@ -72,7 +84,7 @@ class StoreServiceRequest extends FormRequest
             $data['location_id'] = 0;
             $data['time'] = $data['time'] ?: '';
             $data['cc_location'] = $data['cc_location'] ?: '';
-        } else {
+        } elseif (isset($data['location_id'])) {
             $locationId = $data['location_id'] ?: 0;
             if ($locationId) {
                 $location = Location::find($locationId);

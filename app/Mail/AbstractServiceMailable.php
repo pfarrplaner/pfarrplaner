@@ -29,10 +29,17 @@ class AbstractServiceMailable extends Mailable
     /** @var User $user */
     protected $user;
 
+    /** @var Service $original */
+    protected $original;
+
+    protected $changed = [];
+
     public function __construct(User $user, Service $service, array $data)
     {
         $this->user = $user;
         $this->service = $service;
+        $this->original =$service->originalObject;
+        $this->changed = $service->changedFields;
         $this->data = $data;
     }
 

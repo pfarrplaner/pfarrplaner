@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Day;
 use App\Http\Requests\StoreServiceRequest;
+use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Mail\ServiceUpdated;
@@ -18,6 +19,7 @@ use App\User;
 use App\Vacations;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
@@ -60,13 +62,23 @@ class ServiceController extends Controller
      */
     public function store(StoreServiceRequest $request)
     {
+        $validatedData = $request->validated();
+        $service = new Service($validatedData);
 
-        $service = new Service($request->validated());
         $service->setDefaultOfferingValues();
         $service->save();
 
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service, $service['konfiapp_event_type'] ?: '');
+        }
+
+
         $this->updateFromRequest($request, $service);
         $this->handleAttachments($request, $service);
+        $this->handleIndividualAttachment($request, $service, 'songsheet');
+        $this->handleIndividualAttachment($request, $service, 'sermon_image');
+
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -78,26 +90,26 @@ class ServiceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  Service $service
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Service $service)
     {
-        //
+        return redirect()->route('services.edit', $service);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Request $request
-     * @param  int $id
+     * @param  Service $service
      * @param  string $tab optional tab name
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id, $tab = 'home')
+    public function edit(Request $request, Service $service, $tab = 'home')
     {
 
-        $service = Service::with(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings'])->find($id);
+        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
         $ministries = Participant::all()
             ->pluck('category')
@@ -122,26 +134,51 @@ class ServiceController extends Controller
      * Update the specified resource in storage.
      *
      * @param  StoreServiceRequest $request
-     * @param  Service $id
+     * @param  Service $service
      * @return \Illuminate\Http\Response
      */
     public function update(StoreServiceRequest $request, Service $service)
     {
         $service->trackChanges();
-        $service->fill($request->validated());
+        $originalParticipants = $service->participants;
+
+        $validatedData = $request->validated();
+
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service, $validatedData['konfiapp_event_type'] ?: '');
+        }
+
+
+        $service->fill($validatedData);
         $service->setDefaultOfferingValues();
         $this->updateFromRequest($request, $service);
         $service->save();
         $this->handleAttachments($request, $service);
-        Subscription::send($service, ServiceUpdated::class);
+        $this->handleIndividualAttachment($request, $service, 'songsheet');
+        $this->handleIndividualAttachment($request, $service, 'sermon_image');
+
+
+        $success = '';
+        if ($service->isChanged()) {
+            $service->storeDiff();
+
+            // find participants who have been removed:
+            $removed = new Collection();
+            foreach ($originalParticipants as $participant) {
+                if (!$service->participants->contains($participant)) $removed->push($participant);
+            }
+            Subscription::send($service, ServiceUpdated::class, [],  $removed);
+            $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
+        }
 
         $route = $request->get('routeBack') ?: '';
         if ($route) {
-            return redirect($route)->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
+            return redirect($route)->with('success', $success);
         } else {
             // default: redirect to calendar
             return redirect()->route('calendar', ['year' => $service->day->date->year, 'month' => $service->day->date->month])
-                ->with('success', 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.');
+                ->with('success', $success);
 
         }
     }
@@ -149,13 +186,18 @@ class ServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  Service $service
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Service $service)
     {
-        $service = Service::find($id);
         $day = Day::find($service->day_id);
+
+        // KonfiApp-Integration
+        if (KonfiAppIntegration::isActive($service->city)) {
+            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service);
+        }
+
         $service->delete();
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
             ->with('success', 'Der Gottesdiensteintrag wurde gelöscht.');

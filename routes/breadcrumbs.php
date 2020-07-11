@@ -1,5 +1,6 @@
 <?php
 
+use App\Service;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
 Breadcrumbs::for('absences.index', function (BreadcrumbsGenerator $trail) {
@@ -50,7 +51,7 @@ Breadcrumbs::for('days.create', function(BreadcrumbsGenerator $trail) {
 
 Breadcrumbs::for('days.add', function(BreadcrumbsGenerator $trail, $year, $month) {
     $trail->parent('calendar');
-    $trail->push('Tag hinzufügen', route('days.add', compact('year', 'month')));
+    $trail->push('Tage im Kalender', route('days.add', compact('year', 'month')));
 });
 
 Breadcrumbs::for('baptism.add', function (BreadcrumbsGenerator $trail, $service) {
@@ -202,6 +203,14 @@ Breadcrumbs::for('parishes.edit', function (BreadcrumbsGenerator $trail, $parish
     $trail->push($parish->name, route('parishes.edit', $parish));
 });
 
+Breadcrumbs::for('password.request', function (BreadcrumbsGenerator $trail){
+    $trail->push('Passwort vergessen');
+});
+
+Breadcrumbs::for('password.reset', function (BreadcrumbsGenerator $trail){
+    $trail->push('Passwort zurücksetzen');
+});
+
 Breadcrumbs::for('reports.list', function (BreadcrumbsGenerator $trail) {
     $trail->parent('home');
     $trail->push('Ausgabeformate', route('reports.list'));
@@ -224,7 +233,7 @@ Breadcrumbs::for('report.step', function (BreadcrumbsGenerator $trail, $report, 
 
 Breadcrumbs::for('reports.render', function (BreadcrumbsGenerator $trail, $report) {
     $trail->parent('reports.setup', $report);
-    $trail->push('Einbetten', route('reports.render', ['report' => $report->getKey()]));
+    $trail->push('Einbetten', route('reports.render', ['report' => $report]));
 });
 
 Breadcrumbs::for('roles.index', function (BreadcrumbsGenerator $trail) {
@@ -251,6 +260,12 @@ Breadcrumbs::for('services.edit', function (BreadcrumbsGenerator $trail, $servic
     if (!is_numeric($service)) $service = $service->id;
     $trail->parent('calendar');
     $trail->push('#'.$service, route('services.edit', $service));
+});
+
+Breadcrumbs::for('service.livechat', function (BreadcrumbsGenerator $trail, Service $service) {
+    if (is_numeric($service)) $service = Service::find($service);
+    $trail->push('Live Chat');
+    $trail->push($service->title ?: 'Gottesdienst am '.$service->day->date->format('d.m.Y').', '.$service->timeText());
 });
 
 
@@ -284,6 +299,13 @@ Breadcrumbs::for('users.edit', function (BreadcrumbsGenerator $trail, $user) {
     if (is_numeric($user)) $user = \App\User::find($user);
     $trail->parent('users.index');
     $trail->push($user->fullName(), route('users.edit', $user));
+});
+
+Breadcrumbs::for('user.join', function (BreadcrumbsGenerator $trail, $user) {
+    $trail->parent('home');
+    $trail->push('Benutzer', route('users.index'));
+    $trail->push($user->fullName(), route('users.edit', $user));
+    $trail->push('Zusammenführen', route('user.join', $user));
 });
 
 Breadcrumbs::for('user.profile', function (BreadcrumbsGenerator $trail) {
@@ -322,3 +344,9 @@ Breadcrumbs::for('weddings.wizard.step2', function (BreadcrumbsGenerator $trail)
     $trail->push('Ortsangaben', route('weddings.wizard.step2'));
 });
 
+Breadcrumbs::for('liturgyBlocks.index', function (BreadcrumbsGenerator $trail, $service) {
+    if (!is_numeric($service)) $service = $service->id;
+    $trail->parent('calendar');
+    $trail->push('#'.$service, route('services.edit', $service));
+    $trail->push('Liturgie', route('liturgyBlocks.index', $service));
+});

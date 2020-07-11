@@ -26,7 +26,7 @@
                 <tr>
                     <td>{{$location->name}}</td>
                     <td>{{$location->city->name}}</td>
-                    <td>{{\Carbon\Carbon::createFromTimeString($location->default_time)->format('H:i') }} Uhr</td>
+                    <td>@if($location->default_time){{\Carbon\Carbon::createFromTimeString($location->default_time)->format('H:i') }} Uhr @else -- @endif</td>
                     <td class="text-right" style="min-width: 100px;">
                         @if(Auth::user()->can('update', $location))
                             <a href="{{ route('locations.edit',$location->id)}}" class="btn btn-primary  btn-sm" title="Bearbeiten"><span class="fa fa-edit"></span></a>

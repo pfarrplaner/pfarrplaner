@@ -212,8 +212,8 @@ class BillBoardReport extends AbstractWordDocumentReport
             }
 
             $this->renderParagraph(self::DEFAULT, [
-                [Carbon::createFromFormat('Y-m-d H:i:s', $event->day->date->format('Y-m-d').' '.$event->time)->formatLocalized('%H.%M Uhr')."\t", []],
-                ['Gottesdienst'.$description, self::BOLD],
+                [Carbon::createFromFormat('Y-m-d H:i', $event->day->date->format('Y-m-d').' '.$event->time)->formatLocalized('%H.%M Uhr')."\t", []],
+                [($event->title ?: 'Gottesdienst').$description, self::BOLD],
                 [' ('.$event->locationText().')', []],
                 ["\t" . $event->participantsText('P'), self::BOLD]
             ]);

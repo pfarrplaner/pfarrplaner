@@ -4,11 +4,11 @@
         @foreach($service->revisionHistory as $history)
             @if($history->key == 'created_at' && !$history->old_value)
                 {{ $history->created_at->format('d.m.Y, H:i:s') }}
-                : {{ $history->userResponsible()->name }} hat diesen Eintrag
+                : {{ is_object($history->userResponsible()) ? $history->userResponsible()->name : '<anonym>' }} hat diesen Eintrag
                 angelegt: {{ $history->newValue() }}<br/>
             @else
                 {{ $history->created_at->format('d.m.Y, H:i:s') }}
-                : {{ $history->userResponsible()->name }} hat "{{ $history->fieldName() }}" von
+                : {{ is_object($history->userResponsible()) ? $history->userResponsible()->name : '<anonym>' }} hat "{{ $history->fieldName() }}" von
                 "{{ $history->oldValue() }}" zu "{{ $history->newValue() }}" geändert.
                 <br/>
             @endif

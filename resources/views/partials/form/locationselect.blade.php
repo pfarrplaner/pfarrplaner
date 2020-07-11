@@ -1,7 +1,7 @@
 <div class="form-group">
     <label for="{{ $name }}">{{ $label }}</label>
-    <select class="form-control fancy-selectize @if(isset($class)){{ $class }}@endif" name="{{ $name }}" @if(isset($enabled) && (!$enabled)) disabled @endcannot >
-        @foreach($locations as $thisLocation)
+    <select class="form-control @if(isset($class)){{ $class }}@endif" name="{{ $name }}" @if(isset($enabled) && (!$enabled)) disabled @endcannot >
+        @foreach($locations->sortBy('name') as $thisLocation)
             <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
                     value="{{$thisLocation->id}}"
                     @if (isset ($value) && (is_object($value)))

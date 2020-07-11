@@ -34,6 +34,7 @@ class OfferingsInput extends AbstractInput
 {
 
     public $title = 'Opferplan';
+    protected $setupView = 'inputs.offerings.setup';
 
     public function canEdit(): bool
     {
@@ -43,16 +44,19 @@ class OfferingsInput extends AbstractInput
     public function input(Request $request) {
         $request->validate([
             'year' => 'int|required',
-            'city' => 'int|required',
+            'cities' => 'required',
+            'cities.*' => 'int|required|exists:cities,id',
         ]);
 
-        $city = City::find($request->get('city'));
+
+        $cityIds = $request->get('cities');
+        $cities = City::whereIn('id', $cityIds)->get();
         $year = $request->get('year');
 
         $services = Service::with('day', 'location')
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
-            ->where('city_id', $city->id)
+            ->whereIn('city_id', $cityIds)
             ->where('days.date', '>=', $year.'-01-01')
             ->where('days.date', '<=', $year.'-12-31')
             ->orderBy('days.date', 'ASC')
@@ -62,39 +66,11 @@ class OfferingsInput extends AbstractInput
 
 
         $input = $this;
-        return view($this->getInputViewName(), compact('input', 'city', 'services', 'year'));
+        return view($this->getInputViewName(), compact('input', 'cities', 'services', 'year'));
 
     }
 
-    public function save(Request $request) {
-        $services = $request->get('service') ?: [];
-        foreach ($services as $id => $data) {
-            $service = Service::find($id);
-            if (null !== $service) {
-
-                // get old data set for comparison
-                $original = clone $service;
-                foreach (['P', 'O', 'M', 'A'] as $key) {
-                    $originalParticipants[$key] = $original->participantsText($key);
-                }
-
-                $service->offering_goal = isset($data['offering_goal']) ? $data['offering_goal'] : '';
-                $service->offering_type = isset($data['offering_type']) ? $data['offering_type'] : '';
-                $service->offering_description = isset($data['offering_description']) ? $data['offering_description'] : '';
-                $service->offerings_counter1 = isset($data['offerings_counter1']) ? $data['offerings_counter1'] : '';
-                $service->offerings_counter2 = isset($data['offerings_counter2']) ? $data['offerings_counter2'] : '';
-                $service->offering_amount = isset($data['offering_amount']) ? $data['offering_amount'] : '';
-                $dirty = (count($service->getDirty()) > 0);
-                $service->save();
-
-                if ($dirty) {
-                    Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
-                }
-
-            }
-        }
-        return redirect()->route('calendar')->with('success', 'Der Opferplan wurde gespeichert.');
-    }
+    public function save(Request $request) {}
 
 
 }

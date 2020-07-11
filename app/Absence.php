@@ -13,7 +13,8 @@ class Absence extends Model
         'from',
         'to',
         'user_id',
-        'reason'
+        'reason',
+        'replacement_notes',
     ];
 
     protected $dates = [

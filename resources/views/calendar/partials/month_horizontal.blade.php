@@ -1,5 +1,5 @@
 @component('components.ui.loader')
-    <div class="calendar-month">
+    <div class="calendar-month calendar-horizontal">
         <table class="table table-bordered">
             <thead>
             <tr>

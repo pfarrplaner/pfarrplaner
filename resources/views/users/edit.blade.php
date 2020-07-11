@@ -92,20 +92,20 @@
                                     <select class="form-control check-city"
                                             name="cityPermission[{{ $city->id }}][permission]"
                                             data-city="{{ $city->id }}" style="color: white;">
-                                        <option value="a" @if($user->adminCities->contains($city)) selected
+                                        <option value="a" @if($user->permissionForCity($city) == 'a') selected
                                                 @endif data-city-write="{{ $city->id }}"
                                                 style="background-color: purple; color: white;">Administrator
                                         </option>
-                                        <option value="w" @if($user->writableCitiesWithoutAdmin->contains($city)) selected
+                                        <option value="w" @if($user->permissionForCity($city) == 'w') selected
                                                 @endif data-city-write="{{ $city->id }}"
                                                 style="background-color: green">Schreibzugriff
                                         </option>
                                         <option value="r"
-                                                @if($user->visibleCities->contains($city) && !$user->writableCities->contains($city)) selected
+                                                @if($user->permissionForCity($city) == 'r') selected
                                                 @endif data-city-read="{{ $city->id }}"
                                                 style="background-color: orange">Lesezugriff
                                         </option>
-                                        <option value="n" @if(!$user->visibleCities->contains($city)) selected
+                                        <option value="n" @if($user->permissionForCity($city) == 'n') selected
                                                 @endif data-city="{{ $city->id }}" style="background-color: red">Kein
                                             Zugriff
                                         </option>

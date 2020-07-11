@@ -1,4 +1,7 @@
 @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen', 'gd-kasualien-barbeiten'])
+@if($service->titleText(true, true) != 'GD')
+    <div class="service-description"><b>{{ $service->titleText(true, true) }}</b></div>
+@endif
 @if($service->weddings->count())
     <div class="service-description">
         <span class="fa fa-ring"></span> @canany(['gd-kasualien-lesen', 'gd-kasualien-barbeiten']) {{ $service->weddingsText() }} @endcanany

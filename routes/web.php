@@ -11,6 +11,8 @@
 |
 */
 
+use App\Service;
+
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
@@ -22,6 +24,7 @@ Route::patch('user/profile', ['as' => 'user.profile.save', 'uses' => 'UserContro
 Route::post('user/{user}/join', ['as' => 'user.join', 'uses' => 'UserController@join'])->middleware('auth');
 Route::post('users/join', ['as' => 'users.join', 'uses' => 'UserController@doJoin'])->middleware('auth');
 Route::get('user/{user}/services', ['as' => 'user.services', 'uses' => 'UserController@services'])->middleware('auth');
+Route::get('user/switch/{user}', ['as' => 'user.switch', 'uses' => 'UserController@switch'])->middleware('auth');
 
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
@@ -40,17 +43,39 @@ Route::resource('tags', 'TagController')->middleware('auth');
 Route::resource('parishes', 'ParishController')->middleware('auth');
 
 // embed in web site:
-Route::get('services/embed/locations/{ids}/{limit?}', ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']);
-Route::get('services/embed/baptismalServices/{ids}/{limit?}/{maxBaptisms?}', ['as' => 'embed.table-baptismalservices', 'uses' => 'EmbedController@embedByBaptismalServices']);
-Route::get('services/embed/cities/{ids}/{limit?}', ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']);
-Route::get('services/embed/cc/cities/{ids}/{limit?}', ['as' => 'embed.table-cc', 'uses' => 'EmbedController@embedCCByCities']);
-Route::get('user/embed/vacations/{user}', ['as' => 'embed.user.vacations', 'uses' => 'EmbedController@embedUserVacations' ]);
+Route::get(
+    'services/embed/locations/{ids}/{limit?}',
+    ['as' => 'embed.table-locations', 'uses' => 'EmbedController@embedByLocations']
+);
+Route::get(
+    'services/embed/baptismalServices/{ids}/{limit?}/{maxBaptisms?}',
+    ['as' => 'embed.table-baptismalservices', 'uses' => 'EmbedController@embedByBaptismalServices']
+);
+Route::get(
+    'services/embed/cities/{ids}/{limit?}',
+    ['as' => 'embed.table-cities', 'uses' => 'EmbedController@embedByCities']
+);
+Route::get(
+    'services/embed/cc/cities/{ids}/{limit?}',
+    ['as' => 'embed.table-cc', 'uses' => 'EmbedController@embedCCByCities']
+);
+Route::get(
+    'user/embed/vacations/{user}',
+    ['as' => 'embed.user.vacations', 'uses' => 'EmbedController@embedUserVacations']
+);
+
+Route::get(
+    'services/embed/{report}',
+    ['as' => 'embed.report', 'uses' => 'EmbedController@embedReport']
+);
 
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
 Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
-Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name('calendar.printsetup');
+Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name(
+    'calendar.printsetup'
+);
 Route::post('/calendar/{year?}/{month?}/print', ['uses' => 'CalendarController@print'])->name('calendar.print');
 
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
@@ -68,13 +93,18 @@ Route::post('/input/save/{input}', ['as' => 'inputs.save', 'uses' => 'InputContr
 
 Route::get('download/{storage}/{code}/{prettyName?}', ['as' => 'download', 'uses' => 'DownloadController@download']);
 Route::get('attachment/{attachment}', 'DownloadController@attachment')->name('attachment');
+Route::get('files/{path}/{prettyName?}', 'DownloadController@storage')->name('storage');
+Route::get('image/{path}/{prettyName?}', 'DownloadController@image')->name('image');
 
 
 // RITES (Kasualien)
 Route::resource('baptisms', 'BaptismController')->middleware('auth');
 Route::get('/baptism/add/{service}', ['as' => 'baptism.add', 'uses' => 'BaptismController@create'])->middleware('auth');
 Route::get('/baptism/destroy/{baptism}', ['as' => 'baptism.destroy', 'uses' => 'BaptismController@destroy']);
-Route::get('/baptism/{baptism}/appointment/ical', ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']);
+Route::get(
+    '/baptism/{baptism}/appointment/ical',
+    ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']
+);
 Route::post('/baptism/done/{baptism}', ['as' => 'baptism.done', 'uses' => 'BaptismController@done']);
 
 
@@ -86,14 +116,15 @@ Route::get('/funeral/wizard', ['as' => 'funerals.wizard', 'uses' => 'FuneralCont
 Route::post('/funeral/wizard/step2', ['as' => 'funerals.wizard.step2', 'uses' => 'FuneralController@wizardStep2']);
 Route::post('/funeral/wizard/step3', ['as' => 'funerals.wizard.step3', 'uses' => 'FuneralController@wizardStep3']);
 Route::post('/funeral/done/{funeral}', ['as' => 'funeral.done', 'uses' => 'FuneralController@done']);
-Route::get('/funeral/{funeral}/appointment/ical', ['as' => 'funeral.appointment.ical', 'uses' => 'FuneralController@appointmentIcal']);
+Route::get(
+    '/funeral/{funeral}/appointment/ical',
+    ['as' => 'funeral.appointment.ical', 'uses' => 'FuneralController@appointmentIcal']
+);
 
 Route::get('/wedding/wizard', ['as' => 'weddings.wizard', 'uses' => 'WeddingController@wizardStep1']);
 Route::post('/wedding/wizard/step2', ['as' => 'weddings.wizard.step2', 'uses' => 'WeddingController@wizardStep2']);
 Route::post('/wedding/wizard/step3', ['as' => 'weddings.wizard.step3', 'uses' => 'WeddingController@wizardStep3']);
 Route::post('/wedding/done/{wedding}', ['as' => 'wedding.done', 'uses' => 'WeddingController@done']);
-
-
 
 
 Route::resource('weddings', 'WeddingController')->middleware('auth');
@@ -102,16 +133,27 @@ Route::get('/wedding/destroy/{wedding}', ['as' => 'wedding.destroy', 'uses' => '
 
 // Home routes
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
-Route::get('/', function () {
-    if (Auth::user()) return redirect()->route('home');
-    return redirect()->route('login');
-});
+Route::get(
+    '/',
+    function () {
+        if (Auth::user()) {
+            return redirect()->route('home');
+        }
+        return redirect()->route('login');
+    }
+);
 
-Route::get('/changePassword','HomeController@showChangePassword');
-Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
+Route::get('/changePassword', 'HomeController@showChangePassword');
+Route::post('/changePassword', 'HomeController@changePassword')->name('changePassword');
 
 Auth::routes();
-Route::get('/logout', function() { Auth::logout(); return redirect()->route('login'); });
+Route::get(
+    '/logout',
+    function () {
+        Auth::logout();
+        return redirect()->route('login');
+    }
+);
 
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
@@ -131,15 +173,21 @@ Route::get('/whatsnew', ['as' => 'whatsnew', 'uses' => 'HomeController@whatsnew'
 Route::get('/kinderkirche/{city}/pdf', ['as' => 'cc-public-pdf', 'uses' => 'PublicController@childrensChurch']);
 Route::get('/kinderkirche/{city}', ['as' => 'cc-public', 'uses' => 'PublicController@childrensChurch']);
 
-Route::post('/showLimitedColumns/{switch}', function($switch){
-    Session::put('showLimitedDays', (bool)$switch);
-    return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
-})->middleware('auth')->name('showLimitedColumns');
+Route::post(
+    '/showLimitedColumns/{switch}',
+    function ($switch) {
+        Session::put('showLimitedDays', (bool)$switch);
+        return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
+    }
+)->middleware('auth')->name('showLimitedColumns');
 
-Route::get('/showLimitedColumns/{switch}', function($switch){
-    Session::put('showLimitedDays', (bool)$switch);
-    return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
-})->middleware('auth')->name('showLimitedColumns');
+Route::get(
+    '/showLimitedColumns/{switch}',
+    function ($switch) {
+        Session::put('showLimitedDays', (bool)$switch);
+        return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
+    }
+)->middleware('auth')->name('showLimitedColumns');
 
 // last service updated (timestamp)
 Route::get('/lastUpdate', ['as' => 'lastUpdate', 'uses' => 'ServiceController@lastUpdate']);
@@ -155,10 +203,42 @@ Route::post('revisions/revert', 'RevisionController@revert')->name('revisions.re
 
 
 // new features
-Route::get('featues', 'HomeController@features');
+Route::get('features', 'HomeController@features');
 
 // api token
 Route::get('apiToken', 'ApiTokenController@update')->name('apitoken');
 
 // approvals
 Route::resource('approvals', 'ApprovalController');
+
+// podcast
+Route::get('/podcasts/{cityName}.xml', 'PodcastController@podcast')->name('podcast');
+
+// google api
+Route::get('/google/auth/city', 'GoogleApiController@auth')->name('google-auth');
+Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name('broadcast.create');
+
+// youtube live chat
+Route::get('/livechat/{service}', 'LiveChatController@liveChat')->name('service.livechat');
+Route::get('/livechat/{service}/messages', 'LiveChatController@liveChatAjax')->name('service.livechat.ajax');
+Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessage')->name('service.livechat.message.post');
+
+// test/debug routes
+Route::get('/test/mail/{address}', 'TestController@mail');
+
+
+// demo function for exception handling
+Route::get(
+    'panic',
+    function () {
+        throw new Exception('Diese Fehlermeldung dient nur zu Demonstrationszwecken.');
+    }
+);
+
+/**
+ * Test route
+ * Allows for quick test code in a file that is excluded from Git
+ */
+Route::get('test', function(){
+    include(base_path('build/test.php'));
+});

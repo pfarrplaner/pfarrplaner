@@ -173,7 +173,7 @@ class EventListReport extends AbstractWordDocumentReport
                         ], 0, $run);
                     }
 
-                    $title = 'Gottesdienst';
+                    $title = $event->title ?: 'Gottesdienst';
                     if ($event->eucharist) $title = 'Abendmahlsgottesdienst';
                     if ($event->baptism) $title = 'Taufgottesdienst';
 

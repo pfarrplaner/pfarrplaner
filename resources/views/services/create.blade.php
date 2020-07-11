@@ -7,7 +7,7 @@
 
 
 @section('content')
-    <form method="post" action="{{ route('services.store') }}">
+    <form method="post" action="{{ route('services.store') }}" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-md-6">
@@ -25,6 +25,11 @@
                     @canany(['gd-kinderkirche-lesen', 'gd-kinderkirche-bearbeiten'])
                         @tabheader(['id' => 'cc', 'title' => 'Kinderkirche']) @endtabheader
                     @endcanany
+                    @tabheader(['id' => 'streaming', 'title' => 'Streaming']) @endtabheader
+                    @tabheader(['id' => 'sermon', 'title' => 'Predigt']) @endtabheader
+                    @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
+                        @tabheader(['id' => 'konfiapp', 'title' => 'KonfiApp']) @endtabheader
+                    @endif
                     @endtabheaders
 
                     @tabs
@@ -38,6 +43,7 @@
                     @tab(['id' => 'special'])
                     @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ])
                     @checkbox(['name' => 'eucharist', 'label' => 'Dies ist ein Abendmahlsgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ])
+                    @input(['name' => 'title', 'label' => 'Abweichender Titel', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @input(['name' => 'description', 'label' => 'Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags,  'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
@@ -59,6 +65,26 @@
                     @input(['name' => 'cc_lesson', 'label' => 'Lektion', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @input(['name' => 'cc_staff', 'label' => 'Mitarbeiter', 'placeholder' => 'Name, Name, ...', 'enabled' => Auth::user()->can('gd-kinderkirche-bearbeiten')])
                     @endtab
+                    @tab(['id' => 'streaming'])
+                    @input(['name' => 'youtube_url', 'label' => 'Youtube-URL', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'cc_streaming_url', 'label' => 'URL zu einem parallel gestreamten Kindergottesdienst', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite für ein "virtuelles Kirchencafé"', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'accept' => '.pdf'])
+                    @endtab
+                    @tab(['id' => 'sermon'])
+                        @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])
+                        @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @endtab
+                    @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
+                        @tab(['id' => 'konfiapp'])
+                        @selectize(['name' => 'konfiapp_event_type', 'label' => 'Art der Veranstaltung', 'items' => \App\Integrations\KonfiApp\KonfiAppIntegration::get($city)->listEventTypes()->sortBy('name'), 'empty' => true, 'placeholder' => 'Leer = keine Punkte für den Besuch'])
+                        @endtab
+                    @endif
                     @endtabs
                 @endcomponent
             </div>

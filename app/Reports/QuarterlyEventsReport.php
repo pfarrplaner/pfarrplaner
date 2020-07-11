@@ -161,6 +161,10 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
 
         $section->addText('Stand: '.Carbon::now()->setTimezone(new \DateTimeZone('Europe/Berlin'))->format('d.m.Y, H:i').' Uhr', ['size' => 7]);
 
+        Auth::user()->setSetting('quarterly_events_report_title', $request->get('title', ''));
+        Auth::user()->setSetting('quarterly_events_report_notes1', $request->get('notes1', ''));
+        Auth::user()->setSetting('quarterly_events_report_notes2', $request->get('notes2', ''));
+
 
         $filename = $quarter->year.'-'.$quarter->quarter. ' '.$title;
         $this->sendToBrowser($filename);

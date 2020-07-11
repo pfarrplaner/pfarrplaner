@@ -37,7 +37,7 @@ class OfferingPlanReport extends AbstractPDFDocumentReport
 {
 
     public $title = 'Opferplan';
-    public $group = 'Listen';
+    public $group = 'Opfer';
     public $description = 'Übersicht aller Opferzwecke für ein Jahr';
 
     public function setup() {

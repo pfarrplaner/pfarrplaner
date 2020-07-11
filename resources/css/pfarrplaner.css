@@ -1,4 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Nunito);@charset "UTF-8";
+@import url(https://fonts.googleapis.com/css?family=Nunito);
+@charset "UTF-8";
 
 ul.nav-tabs {
     margin-bottom: 15px;
@@ -81,14 +82,51 @@ body.calendar .content-header {
     background-color: #DCD0FF;
 }
 
+.calendar-horizontal th.limited.collapsed,
+.calendar-horizontal td.limited.for-city.collapsed {
+    background: linear-gradient(90deg, #DCD0FF 80%, #f4f6f9 100%);
+}
+
+.calendar-vertical th.limited.collapsed,
+.calendar-vertical td.limited.for-city.collapsed {
+    background: linear-gradient(180deg, #DCD0FF 80%, #f4f6f9 100%);
+}
+
+.calendar-month th .day-header-collapse-hover {
+    display: none;
+}
+
+.calendar-month th.collapsed .day-header-collapse-hover {
+    display: block;
+}
+
+.calendar-month th.collapsed:hover .day-header-collapse-hover {
+    font-size: 20px;
+}
+
+
+.day-header-collapse-hover {
+    font-size: 10px;
+}
+
+.calendar-horizontal .day-header-collapse-hover {
+    margin-left: -4px;
+    writing-mode: vertical-lr;
+}
+
+.collapsed.day-header-collapse-hover:hover {
+    display: block;
+}
+
+
 .calendar-month th.collapsed .card,
 .calendar-month th.collapsed .vacation {
     display: none;
 }
 
 
-.calendar-month th.limited.collapsed,
-.calendar-month td.limited.collapsed {
+.calendar-horizontal  th.limited.collapsed,
+.calendar-horizontal  td.limited.collapsed {
     width: 10px !important;
     max-width: 10px !important;
     overflow: hidden;
@@ -96,10 +134,26 @@ body.calendar .content-header {
     border-right: solid 1px #F8FAFC;
 }
 
-.calendar-month th.limited.collapsed:hover,
-.calendar-month td.limited.collapsed:hover {
+.calendar-horizontal  th.limited.collapsed:hover,
+.calendar-horizontal  td.limited.collapsed:hover {
     width: 50px !important;
     max-width: 50px !important;
+}
+
+.calendar-vertical th.limited.collapsed,
+.calendar-vertical td.limited.collapsed {
+    height: 10px !important;
+    max-height: 10px !important;
+    overflow: hidden;
+    border-left: solid 1px #F8FAFC;
+    border-right: solid 1px #F8FAFC;
+    padding: 0;
+}
+
+.calendar-vertical  th.limited.collapsed:hover,
+.calendar-vertical  td.limited.collapsed:hover {
+    height: 50px !important;
+    max-height: 50px !important;
 }
 
 
@@ -645,4 +699,8 @@ body.login .main-sidebar:hover .login-form.hidden-collapsed {
 
 .attachment-row {
     cursor: pointer;
+}
+
+tr.changed, tr.changed td, tr.changed th {
+    background-color: lightgreen;
 }

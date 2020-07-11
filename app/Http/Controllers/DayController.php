@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Day;
 use App\Liturgy;
+use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -36,7 +37,7 @@ class DayController extends Controller
      */
     public function create()
     {
-        $cities = City::all();
+        $cities = Auth::user()->writableCities;
         return view('days.create', compact('cities'));
         //
     }
@@ -50,26 +51,21 @@ class DayController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateRequest();
-        if (($data['day_type'] ==  Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) {
-            return redirect()->back()->withInput()->withErrors(['cities' => 'Mindestens eine Kirchengemeinde muss ausgewählt werden.']);
-        }
-
-        // check if day already exists in limited form for other churches...
-        // ...if so, only attach new cities
-        $day = Day::existsForDate($data['date']);
-        if (false !== $day) {
+        //$day = Day::existsForDate(Carbon::createFromFormat('d.m.Y', $data['date'])->format('Y-m-d'));
+        $day = Day::where('date', Carbon::createFromFormat('d.m.Y', $data['date'])->format('Y-m-d'))->first();
+        if ($day) {
             $day->update($data);
         } else {
-            // ...if not, create a new day record
+            if (($data['day_type'] ==  Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) {
+                return redirect()->back()->withInput()->withErrors(['cities' => 'Mindestens eine Kirchengemeinde muss ausgewählt werden.']);
+            }
             $day = Day::create($data);
         }
-
-        if (count($data['cities'])) {
-            foreach ($data['cities'] as $city) $day->cities()->attach($city);
+        $this->updateAttachedCities($data, $day);
+        if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) {
+            $day->delete();
         }
-
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
-            ->with('success', $day->date->format('d.m.Y').' wurde der Liste hinzugefügt.');
+        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month]);
     }
 
     /**
@@ -109,9 +105,9 @@ class DayController extends Controller
 
 
         $day->update($data);
-        $day->cities()->sync($data['cities']);
+        $this->updateAttachedCities($data, $day);
         $date = $day->date;
-        if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($data['cities']) == 0)) $day->delete();
+        if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) $day->delete();
 
         return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month])
             ->with('success', 'Die Änderungen wurden gespeichert.');
@@ -149,8 +145,30 @@ class DayController extends Controller
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
             return redirect()->route('calendar', ['year' => date('Y'), 'month' => date('m')]);
         }
-        $cities = City::all();
-        return view('days.create', ['year' => $year, 'month' => $month, 'cities' => $cities]);
+        $start = Carbon::create($year, $month, 1);
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+
+        $days = [];
+        $existing = [];
+        $existingCities = [];
+        $date = $start->copy();
+        while ($date <= $end) {
+            if ($existingDay = Day::where('date', $date->format('Y-m-d'))->first()) {
+                $existing[$existingDay->date->format('Y-m-d')] = $existingDay;
+                if ($existingDay->day_type == Day::DAY_TYPE_DEFAULT) {
+                    $existingCities[$existingDay->date->format('Y-m-d')] = Service::where('day_id', $existingDay->id)->get()->pluck('city_id')->unique();
+                }
+            } else {
+                $days[] = $date->day;
+            }
+            $date->addDay(1);
+        }
+
+        $days = collect($days);
+        $existing = collect($existing);
+
+        $cities = Auth::user()->writableCities;
+        return view('days.create', compact('year', 'month', 'cities', 'days', 'existing', 'start', 'end', 'existingCities'));
     }
 
     /**
@@ -167,9 +185,31 @@ class DayController extends Controller
             'cities.*' => 'nullable|int|exists:cities,id',
         ]);
         $data['day_type'] = $data['day_type'] ?? Day::DAY_TYPE_DEFAULT;
+        if ($data['day_type'] == Day::DAY_TYPE_LIMITED) {
+            request()->validate(['cities.*' => 'int|exists:cities,id']);
+        }
+
         $data['cities'] = $data['cities'] ?? [];
         $data['name'] = $data['name'] ?? Liturgy::getDayInfo($data['date'])['title'] ?? '';
         $data['description'] = $data['description'] ?? '';
         return $data;
+    }
+
+    /**
+     * @param array $data
+     * @param $day
+     */
+    protected function updateAttachedCities(array $data, $day): void
+    {
+        // add checked cities
+        if (count($data['cities'])) {
+            foreach ($data['cities'] as $city) {
+                $day->cities()->attach($city);
+            }
+        }
+        // remove unchecked cities
+        foreach (Auth::user()->writableCities->pluck('id') as $cityId) {
+            if (!in_array($cityId, $data['cities'])) $day->cities()->detach($cityId);
+        }
     }
 }

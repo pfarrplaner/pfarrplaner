@@ -26,7 +26,7 @@ class Service extends Model
 
     public $liturgy = [];
 
-    protected $forceTracking = [
+    protected $with = [
         'participants',
         'day',
         'location',
@@ -39,6 +39,13 @@ class Service extends Model
         'funerals',
         'baptisms',
         'weddings'
+    ];
+
+    protected $casts = [
+        'need_predicant' => 'boolean',
+        'cc' => 'boolean',
+        'baptism' => 'boolean',
+        'eucharist' => 'boolean',
     ];
 
     protected $revisionEnabled = true;
@@ -65,6 +72,7 @@ class Service extends Model
         'cc_alt_time' => 'Alternative Uhrzeit für die Kinderkirche',
         'internal_remarks' => 'Interne Anmerkungen',
         'offering_amount' => 'Opferbetrag',
+        'title' => 'Titel',
     );
 
     protected $fillable = [
@@ -90,6 +98,20 @@ class Service extends Model
         'cc_staff',
         'internal_remarks',
         'offering_amount',
+        'title',
+        'youtube_url',
+        'cc_streaming_url',
+        'offerings_url',
+        'meeting_url',
+        'recording_url',
+        'songsheet',
+        'external_url',
+        'sermon_title',
+        'sermon_reference',
+        'sermon_image',
+        'sermon_description',
+        'konfiapp_event_type',
+        'konfiapp_event_qr',
     ];
 
     protected $appends = [
@@ -99,11 +121,17 @@ class Service extends Model
         'otherParticipants',
         'descriptionText',
         'locationText',
+        'dateText',
         'timeText',
         'baptismsText',
+        'descriptionText',
         'liturgy',
         'ministriesByCategory',
     ];
+
+    protected $appendsToTracking = [
+        'ministriesByCategory',
+        ];
 
     protected $attributes = [
         'offering_type' => 'eO',
@@ -173,6 +201,10 @@ class Service extends Model
         return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
     }
 
+    public function ministryParticipants($ministry) {
+        return $this->belongsToMany(User::class)->wherePivot('category', $ministry)->withTimestamps();
+    }
+
     public function tags() {
         return $this->belongsToMany(Tag::class)->withTimestamps();
     }
@@ -187,6 +219,8 @@ class Service extends Model
             case 'O': return $this->organists;
             case 'M': return $this->sacristans;
             case 'A': return $this->otherParticipants;
+            default:
+                return $this->ministries()[$category] ?? collect([]);
         }
 
     }
@@ -250,6 +284,14 @@ class Service extends Model
         return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
     }
 
+    public function dateText($format = '%d.%m.%Y') {
+        return $this->day->date->formatLocalized($format);
+    }
+
+    public function getDateTextAttribute() {
+        return $this->dateText();
+    }
+
     public function offeringText() {
         return $this->offering_goal.($this->offering_type ? ' ('.$this->offering_type.')' : '');
     }
@@ -285,15 +327,28 @@ class Service extends Model
         return (join('; ', $weddings));
     }
 
-    public function titleText() {
+    public function titleText($short = true, $skipRites = false) {
         $elements = [];
-        if ($x = $this->weddingsText()) $elements[] = $x;
-        if ($x = $this->funeralsText()) $elements[] = $x;
-        if ($x = $this->baptismsText()) $elements[] = 'Taufe(n)';
-        if ((count($elements) == 1) && ($x != '')) $elements[0] = 'GD mit '.$elements[0];
-        return join(' / ', $elements) ?: 'GD';
+        if ($x = $this->title) $elements[] = $x;
+        if (!$skipRites) {
+            if ($x = $this->weddingsText()) $elements[] = $x;
+            if ($x = $this->funeralsText()) $elements[] = $x;
+            if ($x = $this->baptismsText()) $elements[] = 'Taufe(n)';
+        }
+        if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {
+            $elements[0] = ($short ? 'GD' : 'Gottesdienst').' mit '.$elements[0];
+        }
+        return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
     }
 
+
+    public function titleAndDescriptionCombinedText()
+    {
+        $description = [];
+        if (($x = $this->titleText(false, false)) != 'Gottesdienst') $description[] = $x;
+        if ($x = $this->descriptionText) $description[] = $x;
+        return join('; ', $description);
+    }
 
     public function ccTime($emptyIfNotSet = false) {
         if ($this->cc_alt_time == '00:00:00') $this->cc_alt_time = null;
@@ -467,7 +522,7 @@ class Service extends Model
     }
 
 
-    public function associateParticipants(StoreServiceRequest $request, Service $service) {
+    public function associateParticipants($request, Service $service) {
         $participants = [];
         foreach (($request->get('participants') ?: []) as $category => $participantList) {
             foreach ($participantList as $participant) {
@@ -485,8 +540,8 @@ class Service extends Model
                 }
             }
         }
+        $this->participants()->sync([]);
         if (count($participants)) {
-            $this->participants()->sync([]);
             foreach ($participants as $category => $participant) {
                 $this->participants()->attach($participant);
             }
@@ -528,5 +583,52 @@ class Service extends Model
 
     public function getLiturgyAttribute() {
         return $this->liturgy;
+    }
+
+
+    /**
+     * Return services with empty entries for specific ministries
+     * @param $ministries array
+     * @return array
+     */
+    public static function withOpenMinistries($ministries) {
+        $missing2 = [];
+
+        foreach ($ministries as $ministry) {
+            $missing2[$ministry] = Service::with(['location', 'day'])
+                ->whereDoesntHave(
+                    'participants',
+                    function ($query) use ($ministry) {
+                        $query->where('service_user.category', $ministry);
+                    }
+                )
+                ->whereIn('city_id', Auth::user()->writableCities->pluck('id'))
+                ->whereHas(
+                    'day',
+                    function ($query)  {
+                        $query->where('date', '>=', now());
+                    }
+                )
+                ->select(['services.*', 'days.date'])
+                ->join('days', 'days.id', '=', 'day_id')
+                ->orderBy('days.date', 'ASC')
+                ->orderBy('time', 'ASC')
+                ->get();
+        }
+
+        $missing = [];
+        foreach ($missing2 as $ministry => $services) {
+            foreach ($services as $service) {
+                if (isset($missing[$service->id])) {
+                    $missing[$service->id]['missing'][] = $ministry;
+                } else {
+                    $missing[$service->id] = [
+                        'missing' => [Ministry::title($ministry)],
+                        'service' => $service,
+                    ];
+                }
+            }
+        }
+        return $missing;
     }
 }

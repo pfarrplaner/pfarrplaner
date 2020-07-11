@@ -2,8 +2,16 @@
 
 @section('title', 'Kirchengemeinde bearbeiten')
 
+@section('navbar-left')
+    @if ($city->google_auth_code == '')
+        <a class="btn btn-default" href="{{ route('google-auth', ['city' => $city, 'nextStep' => route('cities.edit', $city)]) }}">Mit Youtube verbinden</a>
+    @else
+        <a class="btn btn-default" href="{{ route('google-auth', ['city' => $city, 'nextStep' => route('cities.edit', $city)]) }}">Mit Youtube verbunden</a>
+    @endif
+@endsection
+
 @section('content')
-    <form method="post" action="{{ route('cities.update', $city->id) }}" id="frm">
+    <form method="post" action="{{ route('cities.update', $city->id) }}" id="frm" enctype="multipart/form-data">
         @method('PATCH')
         @csrf
         @component('components.ui.card')
@@ -14,6 +22,8 @@
                 @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
+                @tabheader(['id' => 'podcast', 'title' => 'Streaming & Podcast']) @endtabheader
+                @tabheader(['id' => 'integrations', 'title' => 'Weitere Integrationen']) @endtabheader
             @endtabheaders
             @tabs
                 @tab(['id' => 'home', 'active' => true])
@@ -32,6 +42,43 @@
                     @input(['name' => 'op_domain', 'label' => 'Domain für den Online-Planer', 'value' => $city->op_domain, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer', 'value' => $city->op_customer_key, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer', 'value' => $city->op_customer_token, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @endtab
+                @tab(['id' => 'podcast'])
+                    @input(['name' => 'youtube_channel_url', 'label' => 'URL für den Youtube-Kanal', 'value' => $city->youtube_channel_url, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @input(['name' => 'podcast_title', 'label' => 'Titel des Podcasts', 'value' => $city->podcast_title, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @upload(['name' => 'podcast_logo', 'label' => 'Logo für den Podcast', 'value' => $city->podcast_logo, 'prettyName' => $city->name.'-Podcast-Logo', 'accept' => '.jpg,.jpeg'])
+                    @upload(['name' => 'sermon_default_image', 'label' => 'Standard-Titelbild zur Predigt', 'value' => $city->sermon_default_image, 'prettyName' => $city->name.'-Standard-Predigtbild', 'accept' => '.jpg,.jpeg'])
+                    @input(['name' => 'podcast_owner_name', 'label' => 'Herausgeber des Podcasts', 'value' => $city->podcast_owner_name, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @input(['name' => 'podcast_owner_email', 'label' => 'E-Mailadresse für den Herausgeber des Podcasts', 'value' => $city->podcast_owner_email, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @input(['name' => 'homepage', 'label' => 'Homepage der Kirchengemeinde', 'value' => $city->homepage, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @endtab
+                @tab(['id' => 'integrations'])
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <div class="img-fluid">
+                                <img src="{{ asset('img/external/konfiapp.png') }}" />
+                            </div>
+                        </div>
+                        <div class="col-sm-10">
+                            <h4>KonfiApp</h4
+                            <p>Die <a href="https://konfiapp.de" target="_blank">KonfiApp</a> von Philipp Dormann bietet viele Möglichkeiten, mit Konfis in Kontakt zu bleiben.</p>
+                            <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
+                            <ul>
+                                <li>Im Pfarrplaner angelegte Gottesdienste können einem Veranstaltungstyp in der KonfiApp zugewiesen werden. Beim Speichern wird dann automatisch ein passender QR-Code in der KonfiApp angelegt. </li>
+                            </ul>
+                            <p>Für die Integration der KonfiApp ist ein API-Schlüssel erforderlich. Dieser kann im Verwaltungsbereich der KonfiApp über folgenden Link angelegt werden:
+                                <a href="https://verwaltung.konfiapp.de/administration/api-tokens/" target="_blank">https://verwaltung.konfiapp.de/administration/api-tokens/</a>.
+                                Der dort erstellte Schlüssel muss in das untenstehende Eingabefeld kopiert werden. In der anschließenden Übersicht in der KonfiApp können für den Schlüssel
+                                sogenannte "Scopes" aktiviert werden. Folgende Scopes sind für das Funktionieren der Integration erforderlich:</p>
+                            <p>
+                                <span class="badge badge-secondary">veranstaltungen_list</span>
+                                <span class="badge badge-secondary">qr_list</span>
+                                <span class="badge badge-secondary">qr_create</span>
+                                <span class="badge badge-secondary">qr_delete</span>
+                            </p>
+                        </div>
+                    </div>
+                    @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
             @endtabs
     </form>

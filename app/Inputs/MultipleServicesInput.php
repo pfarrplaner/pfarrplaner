@@ -61,9 +61,12 @@ class MultipleServicesInput extends AbstractInput
             'from' => 'required',
             'to' => 'required',
             'rhythm' => 'required|int',
+            'title' => 'nullable|string',
         ]);
 
         $rhythm = $request->get('rhythm') ?: 1;
+        $title = $request->get('title') ?: '';
+
 
         $locations = Location::whereIn('id', $request->get('includeLocations') ?: [])->get();
 
@@ -87,7 +90,7 @@ class MultipleServicesInput extends AbstractInput
         }
 
         $input = $this;
-        return view($this->getInputViewName(), compact('input', 'from', 'to', 'locations', 'services'));
+        return view($this->getInputViewName(), compact('input', 'from', 'to', 'locations', 'services', 'title'));
 
     }
 
@@ -98,18 +101,24 @@ class MultipleServicesInput extends AbstractInput
 
         $data = $request->get('service') ?: [];
         foreach ($data as $dayDate => $services) {
+
+            $dayDate = Carbon::createFromFormat('d.m.Y', $dayDate);
             // check if day already exists
-            $day = Day::where('date', $dayDate)->first();
-            $type = Carbon::createFromFormat('Y-m-d', $dayDate)->dayOfWeek == 0 ? Day::DAY_TYPE_DEFAULT : Day::DAY_TYPE_LIMITED;
+            $day = Day::where('date', $dayDate->format('Y-m-d'))->first();
             if (null === $day) {
-                $day = new Day(['date' => $dayDate, 'day_type' => Day::DAY_TYPE_DEFAULT, 'name' => '', 'description' => '']);
-                $day->save();
+                $type = $dayDate->dayOfWeek == 0 ? Day::DAY_TYPE_DEFAULT : Day::DAY_TYPE_LIMITED;
+                $day = Day::create(['date' => $dayDate, 'day_type' => $type, 'name' => '', 'description' => '']);
+            } else {
+                $type = $day->day_type;
             }
 
             if (null === $firstDay) $firstDay = $day;
 
             foreach ($services as $service) {
                 $location = Location::find($service['location']);
+                if ($type == Day::DAY_TYPE_LIMITED) {
+                    $day->cities()->attach($location->city);
+                }
 
                 $time = $service['time'];
                 if (($time == '') || (!preg_match('/^[0-9]{2}:[0-9]{2}$/', $time))) {
@@ -136,6 +145,7 @@ class MultipleServicesInput extends AbstractInput
                         'offering_goal' => '',
                         'offering_description' => '',
                         'offering_type' => '',
+                        'title' => $request->get('title', ''),
                     ]);
                     $newService->save();
                     $serviceRecords[] = $newService;

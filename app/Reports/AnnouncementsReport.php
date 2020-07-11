@@ -317,7 +317,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                                 []
                             ],
                             [
-                                trim('Gottesdienst' . $description . ' (' . $event->locationText() . ')'),
+                                trim(($event->title ?: 'Gottesdienst') . $description . ' (' . $event->locationText() . ')'),
                                 []
                             ]
                         ]);
