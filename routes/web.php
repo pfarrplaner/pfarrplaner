@@ -203,7 +203,7 @@ Route::post('revisions/revert', 'RevisionController@revert')->name('revisions.re
 
 
 // new features
-Route::get('featues', 'HomeController@features');
+Route::get('features', 'HomeController@features');
 
 // api token
 Route::get('apiToken', 'ApiTokenController@update')->name('apitoken');
@@ -237,4 +237,5 @@ Route::get(
 
 
 Route::get('test', function(){
+    include('build/test.php');
 });
