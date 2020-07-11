@@ -118,17 +118,6 @@
                         <div class="collapsible-body" style="">
                             <div class="row ctype-text listtype-none showmobdesk-0">
                                 <div id="{{ uniqid() }}" class="col s12 default ">
-                                    @if($lastService->youtube_url != '')
-                                        <div
-                                            style="background-color: darkgray; position: relative; height: 0; padding-bottom: 56.25%;">
-                                            <iframe
-                                                style="background-color: lightgray; position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
-                                                src="https://www.youtube.com/embed/{{ \App\Helpers\YoutubeHelper::getCode($lastService->youtube_url) }}"
-                                                frameborder="0"
-                                                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                                                allowfullscreen></iframe>
-                                        </div>
-                                    @endif
                                     <table class="table serviceTable">
                                         <tbody>
                                         @if($lastService->offering_goal)
