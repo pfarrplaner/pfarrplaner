@@ -235,7 +235,10 @@ Route::get(
     }
 );
 
-
+/**
+ * Test route
+ * Allows for quick test code in a file that is excluded from Git
+ */
 Route::get('test', function(){
-    include('build/test.php');
+    include(base_path('build/test.php'));
 });
