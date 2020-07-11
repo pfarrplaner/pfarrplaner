@@ -35,7 +35,12 @@ use App\City;
 use App\Http\Middleware\Authenticate;
 use App\User;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 
+/**
+ * Trait TestWithCredentialsTrait
+ * @package App\Traits
+ */
 trait TestWithCredentialsTrait
 {
 
@@ -46,7 +51,7 @@ trait TestWithCredentialsTrait
     {
         parent::setUp();
         $this->withoutMiddleware(Authenticate::class);
-        $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
+        $this->app->make(PermissionRegistrar::class)->registerPermissions();
 
         Permission::create(['name' => 'gd-bearbeiten']);
 

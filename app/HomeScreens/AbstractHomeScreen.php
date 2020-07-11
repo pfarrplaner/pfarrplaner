@@ -39,13 +39,16 @@ namespace App\HomeScreens;
 
 
 use App\Absence;
-use App\Misc\VersionInfo;
 use App\Replacement;
-use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 
+/**
+ * Class AbstractHomeScreen
+ * @package App\HomeScreens
+ */
 abstract class AbstractHomeScreen
 {
 
@@ -68,9 +71,10 @@ abstract class AbstractHomeScreen
      * Called to render a specific blade view
      * @param $viewName Name of the view to render
      * @param $data Data passed to the view (absence data will be added)
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
-    public function renderView($viewName, $data) {
+    public function renderView($viewName, $data)
+    {
         if (Auth::user()->manage_absences) {
             $data = array_merge($data, $this->getAbsences());
         }
@@ -81,12 +85,16 @@ abstract class AbstractHomeScreen
      * Get absence data for view
      * @return array Absence data
      */
-    protected function getAbsences() {
+    protected function getAbsences()
+    {
         $absences = Absence::where('user_id', Auth::user()->id)->where('to', '>=', now())->get();
         $replacements = Replacement::with('absence')
-            ->whereHas('users', function($query) {
-                $query->where('users.id', Auth::user()->id);
-            })
+            ->whereHas(
+                'users',
+                function ($query) {
+                    $query->where('users.id', Auth::user()->id);
+                }
+            )
             ->where('to', '>=', now())
             ->orderBy('from')
             ->orderBy('to')
@@ -99,7 +107,8 @@ abstract class AbstractHomeScreen
      * Get a view for configuration setttings
      * @return string
      */
-    public function renderConfigurationView() {
+    public function renderConfigurationView()
+    {
         return 'Für diesen Startbildschirm gibt es nichts zu konfigurieren.';
     }
 
@@ -108,8 +117,8 @@ abstract class AbstractHomeScreen
      * Save submitted configuration
      * @param Request $request Request
      */
-    public function setConfiguration (Request $request) {
-
+    public function setConfiguration(Request $request)
+    {
     }
 
 }

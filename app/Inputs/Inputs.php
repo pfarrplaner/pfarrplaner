@@ -30,17 +30,27 @@
 
 namespace App\Inputs;
 
+/**
+ * Class Inputs
+ * @package App\Inputs
+ */
 class Inputs
 {
 
-    public static function all() {
+    /**
+     * @return array
+     */
+    public static function all()
+    {
         $inputs = [];
-        foreach (glob(app_path('Inputs').'/*Input.php') as $file) {
+        foreach (glob(app_path('Inputs') . '/*Input.php') as $file) {
             if (substr(pathinfo($file, PATHINFO_FILENAME), 0, 8) !== 'Abstract') {
-                $inputClass = 'App\\Inputs\\'.pathinfo($file, PATHINFO_FILENAME);
+                $inputClass = 'App\\Inputs\\' . pathinfo($file, PATHINFO_FILENAME);
                 if (class_exists($inputClass)) {
                     $input = new $inputClass();
-                    if ($input->canEdit()) $inputs[$input->title] = $input;
+                    if ($input->canEdit()) {
+                        $inputs[$input->title] = $input;
+                    }
                 }
             }
         }
@@ -48,7 +58,12 @@ class Inputs
         return $inputs;
     }
 
-    public static function get($input): AbstractInput {
+    /**
+     * @param $input
+     * @return AbstractInput
+     */
+    public static function get($input): AbstractInput
+    {
         $inputClass = 'App\\Inputs\\' . ucfirst($input) . 'Input';
         if (class_exists($inputClass)) {
             $input = new $inputClass();

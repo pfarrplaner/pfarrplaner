@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddDefaultOfferingGoals
+ */
 class AddDefaultOfferingGoals extends Migration
 {
     /**
@@ -41,14 +44,17 @@ class AddDefaultOfferingGoals extends Migration
      */
     public function up()
     {
-        Schema::table('cities', function(Blueprint $table) {
-            $table->string('default_offering_goal')->nullable()->default('');
-            $table->string('default_offering_description')->nullable()->default('');
-            $table->string('default_funeral_offering_goal')->nullable()->default('');
-            $table->string('default_funeral_offering_description')->nullable()->default('');
-            $table->string('default_wedding_offering_goal')->nullable()->default('');
-            $table->string('default_wedding_offering_description')->nullable()->default('');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->string('default_offering_goal')->nullable()->default('');
+                $table->string('default_offering_description')->nullable()->default('');
+                $table->string('default_funeral_offering_goal')->nullable()->default('');
+                $table->string('default_funeral_offering_description')->nullable()->default('');
+                $table->string('default_wedding_offering_goal')->nullable()->default('');
+                $table->string('default_wedding_offering_description')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -58,13 +64,16 @@ class AddDefaultOfferingGoals extends Migration
      */
     public function down()
     {
-        Schema::table('cities', function(Blueprint $table) {
-            $table->dropColumn('default_offering_goal');
-            $table->dropColumn('default_offering_description');
-            $table->dropColumn('default_funeral_offering_goal');
-            $table->dropColumn('default_funeral_offering_description');
-            $table->dropColumn('default_wedding_offering_goal');
-            $table->dropColumn('default_wedding_offering_description');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->dropColumn('default_offering_goal');
+                $table->dropColumn('default_offering_description');
+                $table->dropColumn('default_funeral_offering_goal');
+                $table->dropColumn('default_funeral_offering_description');
+                $table->dropColumn('default_wedding_offering_goal');
+                $table->dropColumn('default_wedding_offering_description');
+            }
+        );
     }
 }

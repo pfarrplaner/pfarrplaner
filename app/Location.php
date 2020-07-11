@@ -31,25 +31,58 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Class Location
+ * @package App
+ */
 class Location extends Model
 {
-    protected $fillable = ['name', 'city_id', 'default_time', 'cc_default_location', 'alternate_location_id', 'general_location_name', 'at_text'];
+    /**
+     * @var string[]
+     */
+    protected $fillable = [
+        'name',
+        'city_id',
+        'default_time',
+        'cc_default_location',
+        'alternate_location_id',
+        'general_location_name',
+        'at_text'
+    ];
 
-    public function city() {
+    /**
+     * @return BelongsTo
+     */
+    public function city()
+    {
         return $this->belongsTo(City::class);
     }
 
-    public function services() {
+    /**
+     * @return HasMany
+     */
+    public function services()
+    {
         return $this->hasMany(Service::class);
     }
 
-    public function alternateLocation() {
+    /**
+     * @return BelongsTo
+     */
+    public function alternateLocation()
+    {
         return $this->belongsTo(Location::class, 'alternate_location_id');
     }
 
 
-    public function atText() {
-        return $this->at_text ?: '('.$this->name.')';
+    /**
+     * @return mixed|string
+     */
+    public function atText()
+    {
+        return $this->at_text ?: '(' . $this->name . ')';
     }
 }

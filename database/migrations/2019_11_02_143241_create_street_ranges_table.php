@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateStreetRangesTable
+ */
 class CreateStreetRangesTable extends Migration
 {
     /**
@@ -41,16 +44,19 @@ class CreateStreetRangesTable extends Migration
      */
     public function up()
     {
-        Schema::create('street_ranges', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('parish_id');
-            $table->string('name');
-            $table->integer('odd_start');
-            $table->integer('odd_end');
-            $table->integer('even_start');
-            $table->integer('even_end');
-            $table->timestamps();
-        });
+        Schema::create(
+            'street_ranges',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('parish_id');
+                $table->string('name');
+                $table->integer('odd_start');
+                $table->integer('odd_end');
+                $table->integer('even_start');
+                $table->integer('even_end');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

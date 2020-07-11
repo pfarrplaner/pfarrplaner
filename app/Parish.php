@@ -30,11 +30,22 @@
 
 namespace App;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Class Parish
+ * @package App
+ */
 class Parish extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'code',
@@ -46,20 +57,35 @@ class Parish extends Model
         'email'
     ];
 
+    /**
+     * @return BelongsTo
+     */
     public function owningCity()
     {
         return $this->belongsTo(City::class, 'city_id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function streetRanges()
     {
         return $this->hasMany(StreetRange::class);
     }
 
-    public function users() {
+    /**
+     * @return BelongsToMany
+     */
+    public function users()
+    {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
+    /**
+     * @param $csv
+     * @return int
+     * @throws Exception
+     */
     public function importStreetsFromCSV($csv)
     {
         /** @var StreetRange $streetRange */
@@ -74,36 +100,50 @@ class Parish extends Model
             $records[] = str_getcsv($line, ';');
         }
         unset ($records[0]);
-        array_walk($records, function (&$record) use (&$ctr) {
-            if ($record[4] == $this->code) {
-                $record[5] = explode(' bis ', $record[5]);
-                $record[6] = explode(' bis ', $record[6]);
-                $streetRange = new StreetRange([
-                    'parish_id' => $this->id,
-                    'name' => $record[0],
-                    'odd_start' => $record[5][0],
-                    'odd_end' => $record[5][1],
-                    'even_start' => $record[6][0],
-                    'even_end' => $record[6][1],
-                ]);
-                $streetRange->save();
-                $ctr++;
+        array_walk(
+            $records,
+            function (&$record) use (&$ctr) {
+                if ($record[4] == $this->code) {
+                    $record[5] = explode(' bis ', $record[5]);
+                    $record[6] = explode(' bis ', $record[6]);
+                    $streetRange = new StreetRange(
+                        [
+                            'parish_id' => $this->id,
+                            'name' => $record[0],
+                            'odd_start' => $record[5][0],
+                            'odd_end' => $record[5][1],
+                            'even_start' => $record[6][0],
+                            'even_end' => $record[6][1],
+                        ]
+                    );
+                    $streetRange->save();
+                    $ctr++;
+                }
             }
-        });
+        );
         return $ctr;
     }
 
+    /**
+     * @param Builder $query
+     * @param $street
+     * @param $number
+     * @return mixed
+     */
     public function scopeByAddress(Builder $query, $street, $number)
     {
-        return $this->whereHas('streetRanges', function ($query2) use ($street, $number) {
-            $query2->where('name', $street);
-            if (($number % 2) == 0) {
-                $query2->where('even_start', '<=', $number)
-                    ->where('even_end', '>=', $number);
-            } else {
-                $query2->where('odd_start', '<=', $number)
-                    ->where('odd_end', '>=', $number);
+        return $this->whereHas(
+            'streetRanges',
+            function ($query2) use ($street, $number) {
+                $query2->where('name', $street);
+                if (($number % 2) == 0) {
+                    $query2->where('even_start', '<=', $number)
+                        ->where('even_end', '>=', $number);
+                } else {
+                    $query2->where('odd_start', '<=', $number)
+                        ->where('odd_end', '>=', $number);
+                }
             }
-        });
+        );
     }
 }

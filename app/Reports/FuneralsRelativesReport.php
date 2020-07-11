@@ -33,26 +33,37 @@ namespace App\Reports;
 use App\City;
 use App\Day;
 use App\Funeral;
-use App\Liturgy;
-use App\Service;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
-use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpWord\Shared\Converter;
+use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\Exception;
 
+/**
+ * Class FuneralsRelativesReport
+ * @package App\Reports
+ */
 class FuneralsRelativesReport extends AbstractExcelDocumentReport
 {
+    /**
+     * @var string
+     */
     public $title = 'Liste der Angehörigen';
+    /**
+     * @var string
+     */
     public $description = 'Adressliste von Angehörigen für die Beerdigungen eines Jahres';
+    /**
+     * @var string
+     */
     public $group = 'Kasualien';
 
 
+    /**
+     * @return Application|Factory|View
+     */
     public function setup()
     {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
@@ -61,23 +72,36 @@ class FuneralsRelativesReport extends AbstractExcelDocumentReport
         return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws Exception
+     */
     public function render(Request $request)
     {
-        $request->validate([
-            'city' => 'required|integer',
-            'start' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'city' => 'required|integer',
+                'start' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
         $start = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00');
         $city = City::find($request->get('city'));
 
         $funerals = Funeral::with('service')
-            ->whereHas('service', function ($query) use ($city, $start) {
-                $query->where('city_id', $city->id);
-                $query->whereHas('day', function ($query2) use ($start) {
-                    $query2->where('date', '>=', $start);
-                });
-            })
+            ->whereHas(
+                'service',
+                function ($query) use ($city, $start) {
+                    $query->where('city_id', $city->id);
+                    $query->whereHas(
+                        'day',
+                        function ($query2) use ($start) {
+                            $query2->where('date', '>=', $start);
+                        }
+                    );
+                }
+            )
             ->get();
 
         $this->spreadsheet->getDefaultStyle()
@@ -88,7 +112,7 @@ class FuneralsRelativesReport extends AbstractExcelDocumentReport
         $sheet = $this->spreadsheet->getActiveSheet();
 
         // column width
-        for ($i=65; $i<=76; $i++) {
+        for ($i = 65; $i <= 76; $i++) {
             $sheet->getColumnDimension(chr($i))->setWidth(20);
         }
         // title row
@@ -134,7 +158,7 @@ class FuneralsRelativesReport extends AbstractExcelDocumentReport
         }
 
         // output
-        $filename = 'Beerdigungen ab '.$start->format('Y-m-d') . ', ' . $city->name;
+        $filename = 'Beerdigungen ab ' . $start->format('Y-m-d') . ', ' . $city->name;
         $this->sendToBrowser($filename);
     }
 

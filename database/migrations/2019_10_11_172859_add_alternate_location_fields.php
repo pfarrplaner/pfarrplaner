@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddAlternateLocationFields
+ */
 class AddAlternateLocationFields extends Migration
 {
     /**
@@ -41,14 +44,20 @@ class AddAlternateLocationFields extends Migration
      */
     public function up()
     {
-        Schema::table('locations', function(Blueprint $table){
-            $table->integer('alternate_location_id')->nullable();
-            $table->string('general_location_name')->nullable()->default('');
-        });
+        Schema::table(
+            'locations',
+            function (Blueprint $table) {
+                $table->integer('alternate_location_id')->nullable();
+                $table->string('general_location_name')->nullable()->default('');
+            }
+        );
 
-        Schema::table('services', function(Blueprint $table){
-            $table->string('location_description')->nullable()->default('');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->string('location_description')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -58,12 +67,18 @@ class AddAlternateLocationFields extends Migration
      */
     public function down()
     {
-        Schema::table('locations', function(Blueprint $table){
-            $table->dropColumn('alternate_location_id');
-            $table->dropColumn('general_location_name');
-        });
-        Schema::table('services', function(Blueprint $table){
-            $table->dropColumn('location_description');
-        });
+        Schema::table(
+            'locations',
+            function (Blueprint $table) {
+                $table->dropColumn('alternate_location_id');
+                $table->dropColumn('general_location_name');
+            }
+        );
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->dropColumn('location_description');
+            }
+        );
     }
 }

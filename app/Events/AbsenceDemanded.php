@@ -33,13 +33,22 @@ namespace App\Events;
 use App\Absence;
 use Illuminate\Queue\SerializesModels;
 
-class AbsenceDemanded {
+/**
+ * Class AbsenceDemanded
+ * @package App\Events
+ */
+class AbsenceDemanded
+{
 
     use SerializesModels;
 
     /** @var Absence */
     public $absence;
 
+    /**
+     * AbsenceDemanded constructor.
+     * @param Absence $absence
+     */
     public function __construct(Absence $absence)
     {
         $this->absence = $absence;

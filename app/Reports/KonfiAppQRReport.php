@@ -35,45 +35,72 @@ use App\Day;
 use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Service;
 use App\User;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use Exception;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use League\Flysystem\Adapter\AbstractAdapter;
-use niklasravnsborg\LaravelPdf\Pdf;
-use PhpOffice\PhpWord\Shared\Converter;
-use PhpOffice\PhpWord\Style\Tab;
+use Illuminate\View\View;
 
 
+/**
+ * Class KonfiAppQRReport
+ * @package App\Reports
+ */
 class KonfiAppQRReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'QR-Codes für Gottesdienste';
+    /**
+     * @var string
+     */
     public $group = 'Konfi';
+    /**
+     * @var string
+     */
     public $description = 'QR Codes für Gottesdienste, die von den Konfis mit der KonfiApp gescannt werden können.';
 
-    public function setup() {
+    /**
+     * @return Application|Factory|View
+     */
+    public function setup()
+    {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $users = User::all();
         $cities = Auth::user()->writableCities;
         return $this->renderSetupView(compact('maxDate', 'users', 'cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse|mixed|string
+     * @throws Exception
+     */
     public function render(Request $request)
     {
-        $data = $request->validate([
-            'city' => 'required|int|exists:cities,id',
-            'start' => 'required|date|date_format:d.m.Y',
-            'end' => 'required|date|date_format:d.m.Y',
-            'copies' => 'required|int',
-        ]);
+        $data = $request->validate(
+            [
+                'city' => 'required|int|exists:cities,id',
+                'start' => 'required|date|date_format:d.m.Y',
+                'end' => 'required|date|date_format:d.m.Y',
+                'copies' => 'required|int',
+            ]
+        );
 
         $allServices = Service::where('city_id', $data['city'])
             ->where('konfiapp_event_qr', '!=', '')
-            ->whereHas('day', function ($query) use ($data) {
-                $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $data['start'])->format('Y-m-d'))
-                    ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $data['end'])->format('Y-m-d'));
-            })
+            ->whereHas(
+                'day',
+                function ($query) use ($data) {
+                    $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $data['start'])->format('Y-m-d'))
+                        ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $data['end'])->format('Y-m-d'));
+                }
+            )
             ->get();
 
 
@@ -83,7 +110,6 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
             $services[$service->locationText()][] = $service;
         }
         ksort($services);
-
 
 
         if (count($services) == '0') {
@@ -100,11 +126,17 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
                 'types' => $types,
                 'copies' => $data['copies'],
             ],
-            ['format' => 'A4-L']);
-
+            ['format' => 'A4-L']
+        );
     }
 
-    public function single(Request $request) {
+    /**
+     * @param Request $request
+     * @return mixed
+     * @throws Exception
+     */
+    public function single(Request $request)
+    {
         $service = Service::findOrFail($request->get('service'));
         $services[$service->locationText()][] = $service;
         $types = KonfiAppIntegration::get($service->city)->listEventTypes();
@@ -114,7 +146,8 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
                 'services' => $services,
                 'types' => $types,
             ],
-            ['format' => 'A4-L']);
+            ['format' => 'A4-L']
+        );
     }
 
 }

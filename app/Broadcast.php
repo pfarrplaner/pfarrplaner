@@ -33,11 +33,16 @@ namespace App;
 use App\Helpers\YoutubeHelper;
 use Carbon\Carbon;
 use Google_Client;
+use Google_Exception;
 use Google_Service_YouTube;
 use Google_Service_YouTube_LiveBroadcast;
 use Google_Service_YouTube_LiveBroadcastSnippet;
 use Google_Service_YouTube_LiveBroadcastStatus;
 
+/**
+ * Class Broadcast
+ * @package App
+ */
 class Broadcast
 {
     /** @var Service */
@@ -52,6 +57,11 @@ class Broadcast
     /** @var Google_Service_YouTube_LiveBroadcast */
     protected $liveBroadcast = null;
 
+    /**
+     * Broadcast constructor.
+     * @param null $service
+     * @throws Google_Exception
+     */
     public function __construct($service = null)
     {
         $this->setService($service);
@@ -65,22 +75,10 @@ class Broadcast
         $this->setYoutube($youtube);
     }
 
-    public function authenticate(City $city)
-    {
-        $this->client->setAccessToken($city->google_access_token);
-        $token = $this->client->refreshToken($city->google_refresh_token);
-        $this->client->setAccessToken($token);
-    }
-
-    public static function timeString(Service $service)
-    {
-        $serviceTime = Carbon::createFromTimeString(
-            $service->day->date->format('Y-m-d') . ' ' . $service->time,
-            'Europe/Berlin'
-        );
-        return $serviceTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
-    }
-
+    /**
+     * @param Service $service
+     * @return Broadcast|null
+     */
     public static function get(Service $service)
     {
         $instance = new Broadcast($service);
@@ -90,7 +88,8 @@ class Broadcast
         $serviceTimeString = self::timeString($service);
 
         $broadcastsResponse = $instance->getYoutube()->liveBroadcasts->listLiveBroadcasts(
-            'id,snippet', ['id' => YoutubeHelper::getCode($service->youtube_url)]
+            'id,snippet',
+            ['id' => YoutubeHelper::getCode($service->youtube_url)]
         );
 
         if (isset($broadcastsResponse['items'][0])) {
@@ -101,6 +100,50 @@ class Broadcast
         return $broadcast ? $instance : null;
     }
 
+    /**
+     * @param City $city
+     */
+    public function authenticate(City $city)
+    {
+        $this->client->setAccessToken($city->google_access_token);
+        $token = $this->client->refreshToken($city->google_refresh_token);
+        $this->client->setAccessToken($token);
+    }
+
+    /**
+     * @param Service $service
+     * @return string
+     */
+    public static function timeString(Service $service)
+    {
+        $serviceTime = Carbon::createFromTimeString(
+            $service->day->date->format('Y-m-d') . ' ' . $service->time,
+            'Europe/Berlin'
+        );
+        return $serviceTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
+    }
+
+    /**
+     * @return Google_Service_YouTube
+     */
+    public function getYoutube(): Google_Service_YouTube
+    {
+        return $this->youtube;
+    }
+
+    /**
+     * @param Google_Service_YouTube $youtube
+     */
+    public function setYoutube(Google_Service_YouTube $youtube): void
+    {
+        $this->youtube = $youtube;
+    }
+
+    /**
+     * @param Service $service
+     * @param string $statusString
+     * @return Broadcast
+     */
     public static function create(Service $service, $statusString = 'public')
     {
         $instance = new Broadcast($service);
@@ -111,8 +154,19 @@ class Broadcast
 
         $broadcast = null;
         $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
-        $broadcastSnippet->setTitle(($service->title ?: (isset($liturgy['title']) ? $liturgy['title'].' ('.$service->day->date->format('d.m.Y').')' : 'Gottesdienst mit '.$service->participantsText('P', true))));
-        $broadcastSnippet->setDescription(($service->title ?: 'Gottesdienst').' am '.$service->day->date->format('d.m.Y') .(isset($liturgy['title']) ? ' ('.$liturgy['title'].')' : '').' mit '.$service->participantsText('P', true));
+        $broadcastSnippet->setTitle(
+            ($service->title ?: (isset($liturgy['title']) ? $liturgy['title'] . ' (' . $service->day->date->format(
+                    'd.m.Y'
+                ) . ')' : 'Gottesdienst mit ' . $service->participantsText('P', true)))
+        );
+        $broadcastSnippet->setDescription(
+            ($service->title ?: 'Gottesdienst') . ' am ' . $service->day->date->format(
+                'd.m.Y'
+            ) . (isset($liturgy['title']) ? ' (' . $liturgy['title'] . ')' : '') . ' mit ' . $service->participantsText(
+                'P',
+                true
+            )
+        );
         $broadcastSnippet->setScheduledStartTime(self::timeString($service));
 
         // Create an object for the liveBroadcast resource's status, and set the
@@ -139,18 +193,23 @@ class Broadcast
         return $instance;
     }
 
+    /**
+     * @return string
+     */
     public function getSharerUrl()
     {
         return $this->liveBroadcast ? 'https://youtu.be/' . $this->liveBroadcast['id'] : '';
     }
 
+    /**
+     * @return string
+     */
     public function getLiveDashboardUrl()
     {
         return $this->liveBroadcast ? 'https://studio.youtube.com/channel/'
             . $this->liveBroadcast->getSnippet()->getChannelId()
-            . '/livestreaming/dashboard?v=' .$this->liveBroadcast->getId() : '';
+            . '/livestreaming/dashboard?v=' . $this->liveBroadcast->getId() : '';
     }
-
 
     /**
      * @return Service
@@ -182,22 +241,6 @@ class Broadcast
     public function setClient(Google_Client $client): void
     {
         $this->client = $client;
-    }
-
-    /**
-     * @return Google_Service_YouTube
-     */
-    public function getYoutube(): Google_Service_YouTube
-    {
-        return $this->youtube;
-    }
-
-    /**
-     * @param Google_Service_YouTube $youtube
-     */
-    public function setYoutube(Google_Service_YouTube $youtube): void
-    {
-        $this->youtube = $youtube;
     }
 
     /**

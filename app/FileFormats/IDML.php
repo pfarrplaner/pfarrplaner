@@ -31,17 +31,34 @@
 namespace App\FileFormats;
 
 
-use Carbon\Carbon;
+use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\Shared\ZipArchive;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use SimpleXMLElement;
 use SplFileInfo;
 
+/**
+ * Class IDML
+ * @package App\FileFormats
+ */
 class IDML
 {
+    /**
+     * @var false|string
+     */
     protected $tempFolder = '';
+    /**
+     * @var string
+     */
     protected $prefix = '';
 
+    /**
+     * IDML constructor.
+     * @param $fileName
+     * @param $prefix
+     * @throws Exception
+     */
     public function __construct($fileName, $prefix)
     {
         $this->tempFolder = $this->tempdir();
@@ -53,6 +70,9 @@ class IDML
         $this->prefix = $prefix;
     }
 
+    /**
+     * @return false|string
+     */
     protected function tempdir()
     {
         $tempfile = tempnam(sys_get_temp_dir(), 'IDML_unpacked_');
@@ -68,6 +88,23 @@ class IDML
         }
     }
 
+    /**
+     * @param $mm
+     * @return float
+     */
+    public static function mmToPoint($mm)
+    {
+        return $mm * 2.845275590551;
+    }
+
+    /**
+     * @param $pt
+     * @return float
+     */
+    public static function pointToMm($pt)
+    {
+        return $pt / 2.845275590551;
+    }
 
     public function build()
     {
@@ -105,21 +142,13 @@ class IDML
         $zip->close();
 
         // send to browser
-        $this->forceDownload($tempFile,
-                             'application/vnd.adobe.indesign-idml-package',
-                             "build-ev3_" . now()->format('YmdHis') . ".idml"
+        $this->forceDownload(
+            $tempFile,
+            'application/vnd.adobe.indesign-idml-package',
+            "build-ev3_" . now()->format('YmdHis') . ".idml"
         );
         unlink($tempFile);
         exit;
-    }
-
-    public function getXML($file)
-    {
-        return simplexml_load_file($this->tempPath($file));
-    }
-
-    public function setXML($file, \SimpleXMLElement $xml) {
-        $this->renderToFile($file, $xml->__toString());
     }
 
     /**
@@ -130,11 +159,15 @@ class IDML
      */
     public function forceDownload($file, $mimeType = 'application/vnd.adobe.indesign-idml-package', $fileName = '')
     {
-        if ($fileName == '') $fileName = pathinfo($file, PATHINFO_BASENAME);
+        if ($fileName == '') {
+            $fileName = pathinfo($file, PATHINFO_BASENAME);
+        }
         header('Content-Type: application/vnd.adobe.indesign-idml-package');
         header("Content-Transfer-Encoding: Binary");
-        header("Content-disposition: attachment; filename=\"".$fileName."\"");
-        if (!file_exists($file) && file_exists($this->tempPath($file))) $file = $this->tempPath($file);
+        header("Content-disposition: attachment; filename=\"" . $fileName . "\"");
+        if (!file_exists($file) && file_exists($this->tempPath($file))) {
+            $file = $this->tempPath($file);
+        }
         readfile($file);
         exit;
     }
@@ -145,18 +178,27 @@ class IDML
      * @param $file
      * @return string
      */
-    public function tempPath($file) {
-        return $this->tempFolder.'/'.$file;
+    public function tempPath($file)
+    {
+        return $this->tempFolder . '/' . $file;
     }
 
+    /**
+     * @param $file
+     * @return SimpleXMLElement
+     */
+    public function getXML($file)
+    {
+        return simplexml_load_file($this->tempPath($file));
+    }
 
     /**
-     * Remove a file from the temp directory
-     * @param $filePath
+     * @param $file
+     * @param SimpleXMLElement $xml
      */
-    public function removeFile($filePath)
+    public function setXML($file, SimpleXMLElement $xml)
     {
-        if (file_exists($this->tempPath($filePath))) unlink($file);
+        $this->renderToFile($file, $xml->__toString());
     }
 
     /**
@@ -164,16 +206,37 @@ class IDML
      * @param string $filePath a relative path in the temp folder
      * @param string $code contents
      */
-    public function renderToFile($filePath, $code) {
+    public function renderToFile($filePath, $code)
+    {
         file_put_contents($this->tempPath($filePath), $code);
+    }
+
+    /**
+     * Remove a file from the temp directory
+     * @param $filePath
+     */
+    public function removeFile($filePath)
+    {
+        if (file_exists($this->tempPath($filePath))) {
+            unlink($file);
+        }
     }
 
     /**
      * Get a unique identifier
      * @return string
      */
-    public function getUID($type = '') {
-        return $this->prefix.'_'.($type ?: '').'_'.str_random(16);
+    public function getUID($type = '')
+    {
+        return $this->prefix . '_' . ($type ?: '') . '_' . str_random(16);
+    }
+
+    /**
+     * Delete temp folder upon garbage collection
+     */
+    public function __destruct()
+    {
+        $this->deleteFolder($this->tempFolder);
     }
 
     /**
@@ -204,25 +267,11 @@ class IDML
     }
 
     /**
-     * Delete temp folder upon garbage collection
+     * @return string
      */
-    public function __destruct()
+    public function BR()
     {
-        $this->deleteFolder($this->tempFolder);
-    }
-
-    public function BR() {
-        return chr(0xE2).chr(0x80).chr(0xA8);
-    }
-
-    public static function mmToPoint($mm)
-    {
-        return $mm * 2.845275590551;
-    }
-
-    public static function pointToMm($pt)
-    {
-        return $pt / 2.845275590551;
+        return chr(0xE2) . chr(0x80) . chr(0xA8);
     }
 
 

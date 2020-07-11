@@ -32,12 +32,20 @@ namespace App;
 
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class Comment
+ * @package App
+ */
 class Comment extends Model
 {
 
     use HasEncryptedAttributes;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'user_id',
         'body',
@@ -46,6 +54,9 @@ class Comment extends Model
         'commentable_type',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $encrypted = [
         'body',
     ];
@@ -58,7 +69,11 @@ class Comment extends Model
         return $this->morphTo();
     }
 
-    public function user() {
+    /**
+     * @return BelongsTo
+     */
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 

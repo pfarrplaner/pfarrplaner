@@ -47,7 +47,7 @@ $(document).ready(function () {
     setLimitedColumnStatus();
 
     // open limited days with services that belong to me
-    $('.limited .service-entry.mine').each(function(){
+    $('.limited .service-entry.mine').each(function () {
         $('[data-day=' + $(this).data('day') + ']').removeClass('collapsed');
     });
 
@@ -56,9 +56,8 @@ $(document).ready(function () {
     }
 
 
-
-    $('input[name=orientation]').change(function(){
-        window.location.href = route+'?orientation='+$('input[name=orientation]:checked').val();
+    $('input[name=orientation]').change(function () {
+        window.location.href = route + '?orientation=' + $('input[name=orientation]:checked').val();
     });
 
 
@@ -67,7 +66,7 @@ $(document).ready(function () {
         $('#userCities li').each(function () {
             if ($(this).data('city')) value.push($(this).data('city'));
         });
-        $('#applySorting').attr('href', route+'?sort='+value.join(','));
+        $('#applySorting').attr('href', route + '?sort=' + value.join(','));
     }
 
     setCitySortValue();
@@ -102,14 +101,14 @@ $(document).ready(function () {
     });
 
 
-    $('#ctrlNameSort').change(function(){
-        window.location.href = $(this).data('route')+'?name_format='+$('#ctrlNameSort option:selected').val();
+    $('#ctrlNameSort').change(function () {
+        window.location.href = $(this).data('route') + '?name_format=' + $('#ctrlNameSort option:selected').val();
     });
 
     $('#ctrlFilterLocation').selectize();
-    $('#applyFilter').click(function(e){
+    $('#applyFilter').click(function (e) {
         e.preventDefault();
-        window.location.href = $('#ctrlFilterLocation').data('route')+'?filter_location='+$('#ctrlFilterLocation').val().join(',');
+        window.location.href = $('#ctrlFilterLocation').data('route') + '?filter_location=' + $('#ctrlFilterLocation').val().join(',');
     });
 
 });

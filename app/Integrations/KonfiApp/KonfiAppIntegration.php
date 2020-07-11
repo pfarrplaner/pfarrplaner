@@ -37,18 +37,38 @@ use App\Service;
 use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
 use Illuminate\Support\Collection;
+use Psr\Http\Message\ResponseInterface;
 
+/**
+ * Class KonfiAppIntegration
+ * @package App\Integrations\KonfiApp
+ */
 class KonfiAppIntegration extends AbstractIntegration
 {
 
+    /**
+     *
+     */
     protected const API_URL = 'https://api.konfiapp.de/v2/';
 
+    /**
+     * @var string
+     */
     protected $apiKey = '';
 
     /** @var Client */
     protected $client;
+
+    /**
+     * KonfiAppIntegration constructor.
+     * @param $apiKey
+     */
+    public function __construct($apiKey)
+    {
+        $this->setApiKey($apiKey);
+        $this->setClient(new Client(['base_uri' => self::API_URL]));
+    }
 
     /**
      * Get an instance of this integration for a particular city
@@ -60,10 +80,17 @@ class KonfiAppIntegration extends AbstractIntegration
         return (new self($city->konfiapp_apikey));
     }
 
-    public function __construct($apiKey)
+    /**
+     * Returns true if the integration is active and properly configured to work for a specific city
+     *
+     * For this integration, this is the case if the konfiapp_apikey is present.
+     *
+     * @param City $city
+     * @return bool
+     */
+    public static function isActive(City $city): bool
     {
-        $this->setApiKey($apiKey);
-        $this->setClient(new Client(['base_uri' => self::API_URL]));
+        return ($city->konfiapp_apikey != '');
     }
 
     /**
@@ -75,97 +102,6 @@ class KonfiAppIntegration extends AbstractIntegration
     public function listEventTypes()
     {
         return collect($this->requestData('verwaltung/veranstaltungen/list/')->payload->veranstaltungen);
-    }
-
-
-    /**
-     * Handle service update
-     *
-     * This will create a new qr code if the service does not have one yet
-     *
-     * @param Service $service
-     * @throws Exception
-     */
-    public function handleServiceUpdate(Service $service, $requestedChange)
-    {
-        if ($service->konfiapp_event_type != '') {
-            if ($service->konfiapp_event_qr == '') {
-                $service->update(['konfiapp_event_qr' => $this->createQRCode($service)]);
-            } elseif ($service->konfiapp_event_type != $requestedChange) {
-                // change of event type: old qr needs to be deleted first
-                $this->deleteQRCodeByCode($service->konfiapp_event_qr, $service->konfiapp_event_type);
-                $service->update(
-                    ['konfiapp_event_type' => $requestedChange, 'konfiapp_event_qr' => $this->createQRCode($service)]
-                );
-            }
-        }
-        return $service;
-    }
-
-    public function handleServiceDelete(Service $service)
-    {
-        if ($service->konfiapp_event_qr != '') {
-            $this->deleteQRCode($service->konfiapp_event_qr);
-        }
-        $service->update(['konfiapp_event_qr' => '']);
-        return $service;
-    }
-
-    /**
-     * Create a QR code for a service
-     * @param Service $service
-     * @return mixed
-     * @throws Exception
-     */
-    public function createQRCode(Service $service)
-    {
-        $serviceTime = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' ' . $service->time);
-        return ($this->requestData(
-            'verwaltung/veranstaltungen/qr/add/',
-            [
-                'veranstaltungID' => $service->konfiapp_event_type,
-                'dateStart' => $service->day->date->format('Y.m.d'),
-                'dateEnd' => $service->day->date->format('Y.m.d'),
-                'timeStart' => $serviceTime->format('H:i'),
-                'timeEnd' => $serviceTime->clone()->addHour(3)->format('H:i'),
-            ]
-        ))->code;
-    }
-
-    /**
-     * Delete a qr associated with a service
-     * @param string $id Code id
-     * @throws Exception
-     */
-    public function deleteQRCode($id)
-    {
-        $this->requestData(
-            'verwaltung/veranstaltungen/qr/delete/',
-            [
-                'id' => $id,
-            ]
-        );
-    }
-
-    public function deleteQRCodeByCode($code, $type)
-    {
-        $codes = $this->requestData(
-            'verwaltung/veranstaltungen/qr/list/',
-            [
-                'veranstaltungID' => $type,
-            ]
-        )->detail;
-
-        foreach ($codes as $qrcode) {
-            if ($qrcode->code == $code) {
-                $this->deleteQRCode($qrcode->id);
-            }
-        }
-    }
-
-    public function listQRCodes()
-    {
-        return $this->requestData('verwaltung/veranstaltungen/qr/list/', ['veranstaltungID' => 682])->detail;
     }
 
     /**
@@ -209,18 +145,108 @@ class KonfiAppIntegration extends AbstractIntegration
         );
     }
 
+    /**
+     * Handle service update
+     *
+     * This will create a new qr code if the service does not have one yet
+     *
+     * @param Service $service
+     * @throws Exception
+     */
+    public function handleServiceUpdate(Service $service, $requestedChange)
+    {
+        if ($service->konfiapp_event_type != '') {
+            if ($service->konfiapp_event_qr == '') {
+                $service->update(['konfiapp_event_qr' => $this->createQRCode($service)]);
+            } elseif ($service->konfiapp_event_type != $requestedChange) {
+                // change of event type: old qr needs to be deleted first
+                $this->deleteQRCodeByCode($service->konfiapp_event_qr, $service->konfiapp_event_type);
+                $service->update(
+                    ['konfiapp_event_type' => $requestedChange, 'konfiapp_event_qr' => $this->createQRCode($service)]
+                );
+            }
+        }
+        return $service;
+    }
 
     /**
-     * Returns true if the integration is active and properly configured to work for a specific city
-     *
-     * For this integration, this is the case if the konfiapp_apikey is present.
-     *
-     * @param City $city
-     * @return bool
+     * Create a QR code for a service
+     * @param Service $service
+     * @return mixed
+     * @throws Exception
      */
-    public static function isActive(City $city): bool
+    public function createQRCode(Service $service)
     {
-        return ($city->konfiapp_apikey != '');
+        $serviceTime = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' ' . $service->time);
+        return ($this->requestData(
+            'verwaltung/veranstaltungen/qr/add/',
+            [
+                'veranstaltungID' => $service->konfiapp_event_type,
+                'dateStart' => $service->day->date->format('Y.m.d'),
+                'dateEnd' => $service->day->date->format('Y.m.d'),
+                'timeStart' => $serviceTime->format('H:i'),
+                'timeEnd' => $serviceTime->clone()->addHour(3)->format('H:i'),
+            ]
+        ))->code;
+    }
+
+    /**
+     * @param $code
+     * @param $type
+     * @throws Exception
+     */
+    public function deleteQRCodeByCode($code, $type)
+    {
+        $codes = $this->requestData(
+            'verwaltung/veranstaltungen/qr/list/',
+            [
+                'veranstaltungID' => $type,
+            ]
+        )->detail;
+
+        foreach ($codes as $qrcode) {
+            if ($qrcode->code == $code) {
+                $this->deleteQRCode($qrcode->id);
+            }
+        }
+    }
+
+    /**
+     * Delete a qr associated with a service
+     * @param string $id Code id
+     * @throws Exception
+     */
+    public function deleteQRCode($id)
+    {
+        $this->requestData(
+            'verwaltung/veranstaltungen/qr/delete/',
+            [
+                'id' => $id,
+            ]
+        );
+    }
+
+    /**
+     * @param Service $service
+     * @return Service
+     * @throws Exception
+     */
+    public function handleServiceDelete(Service $service)
+    {
+        if ($service->konfiapp_event_qr != '') {
+            $this->deleteQRCode($service->konfiapp_event_qr);
+        }
+        $service->update(['konfiapp_event_qr' => '']);
+        return $service;
+    }
+
+    /**
+     * @return mixed
+     * @throws Exception
+     */
+    public function listQRCodes()
+    {
+        return $this->requestData('verwaltung/veranstaltungen/qr/list/', ['veranstaltungID' => 682])->detail;
     }
 
     /**

@@ -34,13 +34,21 @@ use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class Wedding
+ * @package App
+ */
 class Wedding extends Model
 {
     use HasEncryptedAttributes;
     use HasCommentsTrait;
     use HasAttachmentsTrait;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'service_id',
         'spouse1_name',
@@ -60,6 +68,9 @@ class Wedding extends Model
         'docs_where',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
         'appointment',
     ];
@@ -76,7 +87,11 @@ class Wedding extends Model
         'spouse2_phone',
     ];
 
-    public function service() {
+    /**
+     * @return BelongsTo
+     */
+    public function service()
+    {
         return $this->belongsTo(Service::class);
     }
 

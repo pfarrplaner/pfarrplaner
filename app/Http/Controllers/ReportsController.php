@@ -31,8 +31,16 @@
 namespace App\Http\Controllers;
 
 use App\Reports\AbstractReport;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
+/**
+ * Class ReportsController
+ * @package App\Http\Controllers
+ */
 class ReportsController extends Controller
 {
 
@@ -60,6 +68,10 @@ class ReportsController extends Controller
         return view('reports.list', compact('reports'));
     }
 
+    /**
+     * @param $report
+     * @return Application|Factory|RedirectResponse|View
+     */
     public function setup($report)
     {
         $reportClass = 'App\\Reports\\' . ucfirst($report) . 'Report';
@@ -72,6 +84,11 @@ class ReportsController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $report
+     * @return RedirectResponse|string
+     */
     public function render(Request $request, $report)
     {
         $reportClass = 'App\\Reports\\' . ucfirst($report) . 'Report';
@@ -84,7 +101,14 @@ class ReportsController extends Controller
         }
     }
 
-    public function step (Request $request, $report, $step) {
+    /**
+     * @param Request $request
+     * @param $report
+     * @param $step
+     * @return RedirectResponse
+     */
+    public function step(Request $request, $report, $step)
+    {
         $reportClass = 'App\\Reports\\' . ucfirst($report) . 'Report';
         if (class_exists($reportClass)) {
             /** @var AbstractReport $report */
@@ -96,7 +120,12 @@ class ReportsController extends Controller
         return redirect()->route('home');
     }
 
-    public function embed(Request $request, $report) {
+    /**
+     * @param Request $request
+     * @param $report
+     */
+    public function embed(Request $request, $report)
+    {
         $reportClass = 'App\\Reports\\' . ucfirst($report) . 'Report';
         if (class_exists($reportClass)) {
             /** @var AbstractReport $report */

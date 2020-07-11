@@ -32,25 +32,40 @@ namespace App;
 
 use App\HomeScreens\AbstractHomeScreen;
 use App\Providers\AuthServiceProvider;
-use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Shetabit\Visitor\Traits\Visitable;
 use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * Class User
+ * @package App
+ */
 class User extends Authenticatable
 {
     use Notifiable, HasRoles, Visitable, Visitor;
 
+    /**
+     *
+     */
     public const NAME_FORMAT_DEFAULT = 1;
+    /**
+     *
+     */
     public const NAME_FORMAT_INITIAL_AND_LAST = 2;
+    /**
+     *
+     */
     public const NAME_FORMAT_FIRST_AND_LAST = 3;
 
 
@@ -77,6 +92,9 @@ class User extends Authenticatable
         'manage_absences',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
         'new_features',
     ];
@@ -91,206 +109,19 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    /**
+     * @var string
+     */
     protected $orderBy = 'name';
+    /**
+     * @var string
+     */
     protected $orderDirection = 'ASC';
 
     /**
-     * Cities to which the user has at least read access
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @param $name
+     * @return int|mixed|string
      */
-    public function cities()
-    {
-        return $this->belongsToMany(City::class)
-            ->withPivot('permission');
-    }
-
-    public function visibleCities()
-    {
-        return $this->cities();
-    }
-
-    public function writableCities()
-    {
-        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
-    }
-
-    public function permissionForCity($city) {
-        if (is_numeric($city)) $city = City::find($city);
-        /** @var City $city */
-        return $this->cities()->where('cities.id', $city->id)->first()->pivot->permission ?? 'n';
-    }
-
-    public function writableCitiesWithoutAdmin()
-    {
-        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w']);
-    }
-
-    public function adminCities()
-    {
-        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
-    }
-
-    public function homeCities()
-    {
-        return $this->belongsToMany(City::class, 'user_home');
-    }
-
-    public function services()
-    {
-        return $this->belongsToMany(Service::class)
-            ->withTimestamps()
-            ->withPivot('category');
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function parishes()
-    {
-        return $this->belongsToMany(Parish::class)->withTimestamps();
-    }
-
-    public function approvers()
-    {
-        return $this->belongsToMany(User::class, 'user_approver', 'user_id', 'approver_id');
-    }
-
-    public function canEditField($field)
-    {
-        return $this->isAdmin || in_array($field, $this->getEditableFields());
-    }
-
-    public function canEdit($area)
-    {
-        if (in_array($area, ['general', 'church'])) {
-            $property = ucfirst($area);
-            return $this->isAdmin || $this->$property;
-        } else {
-            return $this->canEditField($area);
-        }
-    }
-
-    public function getEditableFields()
-    {
-        return explode(',', $this->canEditFields);
-    }
-
-    public function getToken()
-    {
-        return $this->api_token;
-    }
-
-    public function lastName($withTitle = false)
-    {
-        if ($this->last_name) {
-            return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->last_name;
-        }
-        $name = explode(' ', $this->name);
-        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . end($name);
-    }
-
-    public function fullName($withTitle = false)
-    {
-        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->name;
-    }
-
-    /**
-     * Get the user's name in one of the predefined formats
-     * @param int $format
-     * @param bool $withTitle
-     * @return string
-     */
-    public function formattedName($format = self::NAME_FORMAT_DEFAULT, $withTitle = true) {
-        switch ($format) {
-            case self::NAME_FORMAT_INITIAL_AND_LAST:
-                return $this->initialedName($withTitle);
-                break;
-            case self::NAME_FORMAT_FIRST_AND_LAST:
-                return $this->fullName($withTitle);
-                break;
-        }
-        return $this->lastName($withTitle);
-    }
-
-    public function initialedName($withTitle = false)
-    {
-        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '')
-            . ($this->first_name ? substr($this->first_name, 0, 1) . '. ' : '')
-            . $this->last_name;
-    }
-
-    public function userSettings()
-    {
-        return $this->hasMany(UserSetting::class);
-    }
-
-    public function getSetting($key, $default = null, $returnObject = false)
-    {
-        $setting = UserSetting::where('key', $key)->where('user_id', $this->id)->first();
-        if ((!$setting) && (!is_null($default))) {
-            $setting = new UserSetting(
-                [
-                    'user_id' => $this->id,
-                    'key' => $key,
-                    'value' => $default,
-                ]
-            );
-        }
-        return ($returnObject ? $setting : $setting->value);
-    }
-
-    public function hasSetting($key)
-    {
-        return (UserSetting::where('key', $key)->where('user_id', $this->id)->get()->count() > 0);
-    }
-
-    public function setSetting($key, $value)
-    {
-        if ($this->hasSetting($key)) {
-            $setting = $this->getSetting($key, null, true);
-            $setting->value = $value;
-        } else {
-            $setting = new UserSetting(
-                [
-                    'user_id' => $this->id,
-                    'key' => $key,
-                    'value' => $value,
-                ]
-            );
-        }
-        $setting->save();
-    }
-
-    public function forgetSetting($key)
-    {
-        if ($this->hasSetting($key)) {
-            $setting = $this->getSetting($key, null, true);
-            $setting->delete();
-        }
-    }
-
-    /**
-     * Get an instance of the HomeScreen for this user
-     * @return AbstractHomeScreen|null
-     */
-    public function getHomeScreen() {
-        $homeScreen = $this->getSetting('homeScreen', 'route:calendar');
-        if (substr($homeScreen, 0, 11) == 'homescreen:') {
-            $homeScreenClass = 'App\\HomeScreens\\'.ucfirst(substr($homeScreen, 11)).'HomeScreen';
-            if (class_exists($homeScreenClass)) {
-                return new $homeScreenClass();
-            }
-        }
-        return null;
-    }
-
-    public function subscriptions()
-    {
-        return $this->hasMany(Subscription::class);
-    }
-
     public static function createIfNotExists($name)
     {
         if ((!is_numeric($name)) || (User::find($name) === false)) {
@@ -330,6 +161,254 @@ class User extends Authenticatable
         return $name;
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public function visibleCities()
+    {
+        return $this->cities();
+    }
+
+    /**
+     * Cities to which the user has at least read access
+     * @return BelongsToMany
+     */
+    public function cities()
+    {
+        return $this->belongsToMany(City::class)
+            ->withPivot('permission');
+    }
+
+    /**
+     * @param $city
+     * @return string
+     */
+    public function permissionForCity($city)
+    {
+        if (is_numeric($city)) {
+            $city = City::find($city);
+        }
+        /** @var City $city */
+        return $this->cities()->where('cities.id', $city->id)->first()->pivot->permission ?? 'n';
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function writableCitiesWithoutAdmin()
+    {
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w']);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function homeCities()
+    {
+        return $this->belongsToMany(City::class, 'user_home');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function services()
+    {
+        return $this->belongsToMany(Service::class)
+            ->withTimestamps()
+            ->withPivot('category');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function parishes()
+    {
+        return $this->belongsToMany(Parish::class)->withTimestamps();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function approvers()
+    {
+        return $this->belongsToMany(User::class, 'user_approver', 'user_id', 'approver_id');
+    }
+
+    /**
+     * @param $area
+     * @return bool
+     */
+    public function canEdit($area)
+    {
+        if (in_array($area, ['general', 'church'])) {
+            $property = ucfirst($area);
+            return $this->isAdmin || $this->$property;
+        } else {
+            return $this->canEditField($area);
+        }
+    }
+
+    /**
+     * @param $field
+     * @return bool
+     */
+    public function canEditField($field)
+    {
+        return $this->isAdmin || in_array($field, $this->getEditableFields());
+    }
+
+    /**
+     * @return false|string[]
+     */
+    public function getEditableFields()
+    {
+        return explode(',', $this->canEditFields);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->api_token;
+    }
+
+    /**
+     * Get the user's name in one of the predefined formats
+     * @param int $format
+     * @param bool $withTitle
+     * @return string
+     */
+    public function formattedName($format = self::NAME_FORMAT_DEFAULT, $withTitle = true)
+    {
+        switch ($format) {
+            case self::NAME_FORMAT_INITIAL_AND_LAST:
+                return $this->initialedName($withTitle);
+                break;
+            case self::NAME_FORMAT_FIRST_AND_LAST:
+                return $this->fullName($withTitle);
+                break;
+        }
+        return $this->lastName($withTitle);
+    }
+
+    /**
+     * @param bool $withTitle
+     * @return string
+     */
+    public function initialedName($withTitle = false)
+    {
+        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '')
+            . ($this->first_name ? substr($this->first_name, 0, 1) . '. ' : '')
+            . $this->last_name;
+    }
+
+    /**
+     * @param bool $withTitle
+     * @return string
+     */
+    public function fullName($withTitle = false)
+    {
+        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->name;
+    }
+
+    /**
+     * @param bool $withTitle
+     * @return string
+     */
+    public function lastName($withTitle = false)
+    {
+        if ($this->last_name) {
+            return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . $this->last_name;
+        }
+        $name = explode(' ', $this->name);
+        return ($withTitle ? ($this->title ? $this->title . ' ' : '') : '') . end($name);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function userSettings()
+    {
+        return $this->hasMany(UserSetting::class);
+    }
+
+    /**
+     * @param $key
+     * @throws Exception
+     */
+    public function forgetSetting($key)
+    {
+        if ($this->hasSetting($key)) {
+            $setting = $this->getSetting($key, null, true);
+            $setting->delete();
+        }
+    }
+
+    /**
+     * @param $key
+     * @return bool
+     */
+    public function hasSetting($key)
+    {
+        return (UserSetting::where('key', $key)->where('user_id', $this->id)->get()->count() > 0);
+    }
+
+    /**
+     * @param $key
+     * @param null $default
+     * @param bool $returnObject
+     * @return UserSetting|mixed
+     */
+    public function getSetting($key, $default = null, $returnObject = false)
+    {
+        $setting = UserSetting::where('key', $key)->where('user_id', $this->id)->first();
+        if ((!$setting) && (!is_null($default))) {
+            $setting = new UserSetting(
+                [
+                    'user_id' => $this->id,
+                    'key' => $key,
+                    'value' => $default,
+                ]
+            );
+        }
+        return ($returnObject ? $setting : $setting->value);
+    }
+
+    /**
+     * Get an instance of the HomeScreen for this user
+     * @return AbstractHomeScreen|null
+     */
+    public function getHomeScreen()
+    {
+        $homeScreen = $this->getSetting('homeScreen', 'route:calendar');
+        if (substr($homeScreen, 0, 11) == 'homescreen:') {
+            $homeScreenClass = 'App\\HomeScreens\\' . ucfirst(substr($homeScreen, 11)) . 'HomeScreen';
+            if (class_exists($homeScreenClass)) {
+                return new $homeScreenClass();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the users subscription for a city
+     * @param $city
+     * @return Subscription
+     */
+    public function getSubscriptionType($city)
+    {
+        $subscription = $this->getSubscription($city)->subscription_type;
+        return $subscription;
+    }
 
     /**
      * Get a single subscription for a specific city
@@ -357,39 +436,12 @@ class User extends Authenticatable
     }
 
     /**
-     * Set the user's subscription for a city
-     * @param City|int $city City
-     * @param int $type Subscription type
-     * @return Subscription
+     * @return HasMany
      */
-    public function setSubscription($city, int $type)
+    public function subscriptions()
     {
-        $city = is_int($city) ? City::find($city) : $city;
-        $subscription = $this->getSubscription($city);
-        if (null === $subscription) {
-            $subscription = new Subscription(
-                [
-                    'user_id' => $this->id,
-                    'city_id' => $city->id,
-                ]
-            );
-        }
-        $subscription->subscription_type = $type;
-        $subscription->save();
-        return $subscription;
+        return $this->hasMany(Subscription::class);
     }
-
-    /**
-     * Get the users subscription for a city
-     * @param $city
-     * @return Subscription
-     */
-    public function getSubscriptionType($city)
-    {
-        $subscription = $this->getSubscription($city)->subscription_type;
-        return $subscription;
-    }
-
 
     /**
      * Query for users subscribed to a specific service
@@ -424,6 +476,9 @@ class User extends Authenticatable
         );
     }
 
+    /**
+     * @param $subscriptions
+     */
     public function setSubscriptionsFromArray($subscriptions)
     {
         foreach ($subscriptions as $city => $type) {
@@ -431,7 +486,32 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * Set the user's subscription for a city
+     * @param City|int $city City
+     * @param int $type Subscription type
+     * @return Subscription
+     */
+    public function setSubscription($city, int $type)
+    {
+        $city = is_int($city) ? City::find($city) : $city;
+        $subscription = $this->getSubscription($city);
+        if (null === $subscription) {
+            $subscription = new Subscription(
+                [
+                    'user_id' => $this->id,
+                    'city_id' => $city->id,
+                ]
+            );
+        }
+        $subscription->subscription_type = $type;
+        $subscription->save();
+        return $subscription;
+    }
 
+    /**
+     * @return array
+     */
     public function getAllPermissionsAttribute()
     {
         $permissions = [];
@@ -443,6 +523,9 @@ class User extends Authenticatable
         return $permissions;
     }
 
+    /**
+     * @return mixed
+     */
     public function getSortedCities()
     {
         if ($this->hasSetting('sorted_cities')) {
@@ -460,7 +543,33 @@ class User extends Authenticatable
         }
     }
 
+    /**
+     * @param $key
+     * @param $value
+     */
+    public function setSetting($key, $value)
+    {
+        if ($this->hasSetting($key)) {
+            $setting = $this->getSetting($key, null, true);
+            $setting->value = $value;
+        } else {
+            $setting = new UserSetting(
+                [
+                    'user_id' => $this->id,
+                    'key' => $key,
+                    'value' => $value,
+                ]
+            );
+        }
+        $setting->save();
+    }
 
+    /**
+     * @param $date
+     * @param bool $returnAbsence
+     * @return bool|Builder|Model|object|null
+     * @throws Exception
+     */
     public function isAbsent($date, $returnAbsence = false)
     {
         if (!$this->manage_absences) {
@@ -477,6 +586,12 @@ class User extends Authenticatable
         return (null !== $absences) ? ($returnAbsence ? $absences : null) : ($returnAbsence ? null : false);
     }
 
+    /**
+     * @param $date
+     * @param bool $returnAbsence
+     * @return bool|null
+     * @throws Exception
+     */
     public function isReplacement($date, $returnAbsence = false)
     {
         if (!$this->manage_absences) {
@@ -492,6 +607,11 @@ class User extends Authenticatable
         return (null !== $absences) ? ($returnAbsence ? $absences : null) : ($returnAbsence ? null : false);
     }
 
+    /**
+     * @param $date
+     * @param bool $returnServices
+     * @return bool|null
+     */
     public function isBusy($date, $returnServices = false)
     {
         $services = Service::whereHas(
@@ -508,6 +628,9 @@ class User extends Authenticatable
         return (count($services) ? ($returnServices ? $services : null) : ($services ? null : false));
     }
 
+    /**
+     * @return bool
+     */
     public function getIsAdminAttribute()
     {
         return $this->hasRole('Administrator*in') || $this->hasRole('Super-Administrator*in');
@@ -544,7 +667,7 @@ class User extends Authenticatable
                     $query->whereIn('cities.id', $this->homeCities->pluck('id'));
                 }
             )->where('manage_absences', 1)
-            ->get()->pluck('id')->toArray();
+                ->get()->pluck('id')->toArray();
             $ids = array_merge($ids, $newIds);
         }
 
@@ -579,11 +702,13 @@ class User extends Authenticatable
         return $users;
     }
 
+    /**
+     * @return string
+     */
     public function getPlanNameAttribute()
     {
         return $this->lastName(true);
     }
-
 
     /**
      * Update this users permissions from an array
@@ -657,6 +782,9 @@ class User extends Authenticatable
         return false;
     }
 
+    /**
+     * @return City[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getWritableCitiesAttribute()
     {
         if ((!Auth::guest()) && Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
@@ -665,6 +793,17 @@ class User extends Authenticatable
         return $this->writableCities()->get();
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public function writableCities()
+    {
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
+    }
+
+    /**
+     * @return City[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function getAdminCitiesAttribute()
     {
         if ($this->hasRole(AuthServiceProvider::SUPER)) {
@@ -673,6 +812,27 @@ class User extends Authenticatable
         return $this->adminCities()->get();
     }
 
+    /**
+     * @return BelongsToMany
+     */
+    public function adminCities()
+    {
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function absencesToBeApproved()
+    {
+        $approvableUsers = $this->approvableUsers();
+        return Absence::whereIn('user_id', $approvableUsers->pluck('id'))
+            ->where('status', 'pending')->get();
+    }
+
+    /**
+     * @return mixed
+     */
     public function approvableUsers()
     {
         $id = $this->id;
@@ -682,13 +842,6 @@ class User extends Authenticatable
                 $query->where('approver_id', $id);
             }
         )->get();
-    }
-
-    public function absencesToBeApproved()
-    {
-        $approvableUsers = $this->approvableUsers();
-        return Absence::whereIn('user_id', $approvableUsers->pluck('id'))
-            ->where('status', 'pending')->get();
     }
 
 }

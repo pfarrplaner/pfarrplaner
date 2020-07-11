@@ -38,13 +38,23 @@ use App\Participant;
 use App\Service;
 use App\Subscription;
 use App\User;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
+/**
+ * Class PlanningInput
+ * @package App\Inputs
+ */
 class PlanningInput extends AbstractInput
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Planungstabelle';
 
     public function canEdit(): bool
@@ -55,6 +65,10 @@ class PlanningInput extends AbstractInput
             Auth::user()->can('gd-allgemein-bearbeiten');
     }
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View
+     */
     public function setup(Request $request)
     {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
@@ -79,7 +93,48 @@ class PlanningInput extends AbstractInput
         );
     }
 
+    /**
+     * @param $reqMinistries
+     * @return array
+     */
+    protected function getAvailableMinistries($reqMinistries)
+    {
+        $ministries = [];
+        foreach ($reqMinistries as $ministry) {
+            switch ($ministry) {
+                case 'P':
+                    if (Auth::user()->can('gd-pfarrer-bearbeiten')) {
+                        $ministries[$ministry] = 'Pfarrer*in';
+                    }
+                    break;
+                case 'O':
+                    if (Auth::user()->can('gd-organist-bearbeiten')) {
+                        $ministries[$ministry] = 'Organist*in';
+                    }
+                    break;
+                case 'M':
+                    if (Auth::user()->can('gd-mesner-bearbeiten')) {
+                        $ministries[$ministry] = 'Mesner*in';
+                    }
+                    break;
+                case 'A':
+                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
+                        $ministries[$ministry] = 'Weitere Beteiligte';
+                    }
+                    break;
+                default:
+                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
+                        $ministries[$ministry] = $ministry;
+                    }
+            }
+        }
+        return $ministries;
+    }
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|void
+     */
     public function input(Request $request)
     {
         $request->validate(
@@ -116,6 +171,10 @@ class PlanningInput extends AbstractInput
         );
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse|void
+     */
     public function save(Request $request)
     {
         $services = $request->get('service') ?: [];
@@ -147,39 +206,5 @@ class PlanningInput extends AbstractInput
             }
         }
         return redirect()->route('calendar')->with('success', 'Der Plan wurde gespeichert.');
-    }
-
-    protected function getAvailableMinistries($reqMinistries)
-    {
-        $ministries = [];
-        foreach ($reqMinistries as $ministry) {
-            switch ($ministry) {
-                case 'P':
-                    if (Auth::user()->can('gd-pfarrer-bearbeiten')) {
-                        $ministries[$ministry] = 'Pfarrer*in';
-                    }
-                    break;
-                case 'O':
-                    if (Auth::user()->can('gd-organist-bearbeiten')) {
-                        $ministries[$ministry] = 'Organist*in';
-                    }
-                    break;
-                case 'M':
-                    if (Auth::user()->can('gd-mesner-bearbeiten')) {
-                        $ministries[$ministry] = 'Mesner*in';
-                    }
-                    break;
-                case 'A':
-                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
-                        $ministries[$ministry] = 'Weitere Beteiligte';
-                    }
-                    break;
-                default:
-                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
-                        $ministries[$ministry] = $ministry;
-                    }
-            }
-        }
-        return $ministries;
     }
 }

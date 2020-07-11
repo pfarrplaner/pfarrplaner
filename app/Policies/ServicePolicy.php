@@ -31,23 +31,23 @@
 namespace App\Policies;
 
 use App\Providers\AuthServiceProvider;
-use App\User;
 use App\Service;
+use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class ServicePolicy
+ * @package App\Policies
+ */
 class ServicePolicy
 {
     use HandlesAuthorization;
 
-    protected function hasCityPermission($user, $service) {
-        return $user->writableCities->pluck('id')->contains($service->city_id);
-    }
-
     /**
      * Determine whether the user can view the service.
      *
-     * @param  \App\User  $user
-     * @param  \App\Service  $service
+     * @param User $user
+     * @param Service $service
      * @return mixed
      */
     public function view(User $user, Service $service)
@@ -58,7 +58,7 @@ class ServicePolicy
     /**
      * Determine whether the user can create services.
      *
-     * @param  \App\User  $user
+     * @param User $user
      * @return mixed
      */
     public function create(User $user)
@@ -69,23 +69,39 @@ class ServicePolicy
     /**
      * Determine whether the user can update the service.
      *
-     * @param  \App\User  $user
-     * @param  \App\Service  $service
+     * @param User $user
+     * @param Service $service
      * @return mixed
      */
     public function update(User $user, Service $service)
     {
-        if ($user->hasRole(AuthServiceProvider::ADMIN) && $this->hasCityPermission($user, $service)) return true;
-        if ($user->hasPermissionTo('gd-bearbeiten') && $this->hasCityPermission($user, $service)) return true;
-        if ($service->pastors->contains($user)) return true;
+        if ($user->hasRole(AuthServiceProvider::ADMIN) && $this->hasCityPermission($user, $service)) {
+            return true;
+        }
+        if ($user->hasPermissionTo('gd-bearbeiten') && $this->hasCityPermission($user, $service)) {
+            return true;
+        }
+        if ($service->pastors->contains($user)) {
+            return true;
+        }
         return false;
+    }
+
+    /**
+     * @param $user
+     * @param $service
+     * @return mixed
+     */
+    protected function hasCityPermission($user, $service)
+    {
+        return $user->writableCities->pluck('id')->contains($service->city_id);
     }
 
     /**
      * Determine whether the user can delete the service.
      *
-     * @param  \App\User  $user
-     * @param  \App\Service  $service
+     * @param User $user
+     * @param Service $service
      * @return mixed
      */
     public function delete(User $user, Service $service)
@@ -96,8 +112,8 @@ class ServicePolicy
     /**
      * Determine whether the user can restore the service.
      *
-     * @param  \App\User  $user
-     * @param  \App\Service  $service
+     * @param User $user
+     * @param Service $service
      * @return mixed
      */
     public function restore(User $user, Service $service)
@@ -108,8 +124,8 @@ class ServicePolicy
     /**
      * Determine whether the user can permanently delete the service.
      *
-     * @param  \App\User  $user
-     * @param  \App\Service  $service
+     * @param User $user
+     * @param Service $service
      * @return mixed
      */
     public function forceDelete(User $user, Service $service)

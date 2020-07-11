@@ -30,14 +30,10 @@
 
 namespace App\Mail;
 
-use App\Service;
-use App\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\View;
-
+/**
+ * Class ServiceCreatedMultiple
+ * @package App\Mail
+ */
 class ServiceCreatedMultiple extends AbstractServiceMailable
 {
     /**
@@ -49,16 +45,25 @@ class ServiceCreatedMultiple extends AbstractServiceMailable
     {
         $this->service->load(['location', 'day']);
 
-        $ics = view('ical/ical', ['services' => $this->data['services'], 'token' => null, 'action' => null, 'key' => null])->render();
+        $ics = view(
+            'ical/ical',
+            ['services' => $this->data['services'], 'token' => null, 'action' => null, 'key' => null]
+        )->render();
         $icsTitle = 'Gottesdienste.ics';
 
         return $this->subject('Mehrere neue Gottesdienste angelegt')
-            ->view('mail.notifications.service-created-multiple')->with([
-                'service' => $this->service,
-                'user' => $this->user,
-                'data' => $this->data,
-            ])->attachData($ics, $icsTitle, [
-                'mime' => 'text/calendar',
-            ]);
+            ->view('mail.notifications.service-created-multiple')->with(
+                [
+                    'service' => $this->service,
+                    'user' => $this->user,
+                    'data' => $this->data,
+                ]
+            )->attachData(
+                $ics,
+                $icsTitle,
+                [
+                    'mime' => 'text/calendar',
+                ]
+            );
     }
 }

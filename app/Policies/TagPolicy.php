@@ -34,6 +34,10 @@ use App\Tag;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class TagPolicy
+ * @package App\Policies
+ */
 class TagPolicy
 {
     use HandlesAuthorization;
@@ -49,31 +53,60 @@ class TagPolicy
     }
 
 
+    /**
+     * @param User $user
+     * @return bool
+     */
     public function index(User $user)
     {
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Tag $model
+     * @return bool
+     */
     public function create(User $user, Tag $model)
     {
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Tag $model
+     * @return bool
+     */
     public function update(User $user, Tag $model)
     {
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Tag $model
+     * @return bool
+     */
     public function delete(User $user, Tag $model)
     {
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Tag $model
+     * @return bool
+     */
     public function forceDelete(User $user, Tag $model)
     {
         return false;
     }
 
+    /**
+     * @param User $user
+     * @param Tag $model
+     * @return bool
+     */
     public function restore(User $user, Tag $model)
     {
         return false;

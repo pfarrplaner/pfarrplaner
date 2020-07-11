@@ -38,17 +38,29 @@
 namespace App\HomeScreens;
 
 
-use App\Baptism;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Throwable;
 
+/**
+ * Class MinistryHomeScreen
+ * @package App\HomeScreens
+ */
 class MinistryHomeScreen extends AbstractHomeScreen
 {
+    /**
+     * @var bool
+     */
     protected $hasConfiguration = true;
 
+    /**
+     * @return Factory|View|mixed
+     */
     public function render()
     {
         /** @var User $user */
@@ -60,12 +72,18 @@ class MinistryHomeScreen extends AbstractHomeScreen
         $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
+            ->whereHas(
+                'participants',
+                function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            )->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -75,12 +93,19 @@ class MinistryHomeScreen extends AbstractHomeScreen
         return $this->renderView('homescreen.ministry', compact('user', 'services', 'missing'));
     }
 
+    /**
+     * @return array|string
+     * @throws Throwable
+     */
     public function renderConfigurationView()
     {
         return view('homescreen.ministry.config')->render();
     }
 
 
+    /**
+     * @param Request $request
+     */
     public function setConfiguration(Request $request)
     {
         parent::setConfiguration($request);

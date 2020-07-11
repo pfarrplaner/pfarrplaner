@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateReplacementsTable
+ */
 class CreateReplacementsTable extends Migration
 {
     /**
@@ -41,19 +44,25 @@ class CreateReplacementsTable extends Migration
      */
     public function up()
     {
-        Schema::create('replacements', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('absence_id');
-            $table->date('from');
-            $table->date('to');
-            $table->timestamps();
-        });
-        Schema::create('replacement_user', function(Blueprint $table) {
-            $table->increments('id');
-            $table->integer('replacement_id');
-            $table->integer('user_id');
-            $table->timestamps();
-        });
+        Schema::create(
+            'replacements',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('absence_id');
+                $table->date('from');
+                $table->date('to');
+                $table->timestamps();
+            }
+        );
+        Schema::create(
+            'replacement_user',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('replacement_id');
+                $table->integer('user_id');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

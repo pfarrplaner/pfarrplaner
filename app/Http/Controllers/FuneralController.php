@@ -39,15 +39,23 @@ use App\Mail\ServiceCreated;
 use App\Service;
 use App\Subscription;
 use App\Traits\HandlesAttachmentsTrait;
-use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use PDF;
 
+/**
+ * Class FuneralController
+ * @package App\Http\Controllers
+ */
 class FuneralController extends Controller
 {
 
@@ -61,7 +69,7 @@ class FuneralController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -70,7 +78,7 @@ class FuneralController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create(Service $service)
     {
@@ -79,19 +87,31 @@ class FuneralController extends Controller
     }
 
 
-    public function wizardStep1(Request $request) {
+    /**
+     * @param Request $request
+     * @return Application|Factory|\Illuminate\View\View
+     */
+    public function wizardStep1(Request $request)
+    {
         $cities = Auth::user()->writableCities;
         return view('funerals.wizard.step1', compact('cities'));
     }
 
-    public function wizardStep2(Request $request) {
-        $request->validate([
-            'date' => 'required|date|date_format:d.m.Y',
-            'city' => 'required|integer',
-        ]);
+    /**
+     * @param Request $request
+     * @return Application|Factory|\Illuminate\View\View
+     */
+    public function wizardStep2(Request $request)
+    {
+        $request->validate(
+            [
+                'date' => 'required|date|date_format:d.m.Y',
+                'city' => 'required|integer',
+            ]
+        );
 
         $cityId = $request->get('city');
-        $date = Carbon::createFromFormat('d.m.Y', $request->get('date'))->setTime(0,0,0);
+        $date = Carbon::createFromFormat('d.m.Y', $request->get('date'))->setTime(0, 0, 0);
 
         $city = City::find($cityId);
 
@@ -100,16 +120,20 @@ class FuneralController extends Controller
         if ($day) {
             // check if it visible for this city
             if ($day->day_type == Day::DAY_TYPE_LIMITED) {
-                if (!$day->cities->contains($city)) $day->cities()->attach($city);
+                if (!$day->cities->contains($city)) {
+                    $day->cities()->attach($city);
+                }
             }
         } else {
             // create day
-            $day = new Day([
-               'date' => $date,
-                'name' => '',
-                'description' => '',
-                'day_type' => Day::DAY_TYPE_LIMITED,
-            ]);
+            $day = new Day(
+                [
+                    'date' => $date,
+                    'name' => '',
+                    'description' => '',
+                    'day_type' => Day::DAY_TYPE_LIMITED,
+                ]
+            );
             $day->save();
             $day->cities()->sync([$cityId]);
         }
@@ -117,15 +141,20 @@ class FuneralController extends Controller
         $locations = Location::where('city_id', $cityId)->get();
 
         return view('funerals.wizard.step2', compact('day', 'city', 'locations'));
-
     }
 
+    /**
+     * @param Request $request
+     * @return Application|RedirectResponse|Redirector
+     */
     public function wizardStep3(Request $request)
     {
-        $request->validate([
-            'day' => 'required|integer',
-            'city' => 'required|integer',
-        ]);
+        $request->validate(
+            [
+                'day' => 'required|integer',
+                'city' => 'required|integer',
+            ]
+        );
 
         $city = City::find($request->get('city'));
         $day = Day::find($request->get('day'));
@@ -139,7 +168,9 @@ class FuneralController extends Controller
             if ($locationId) {
                 $location = Location::find($locationId);
                 $time = $request->get('time') ?: $location->default_time;
-                $ccLocation = $request->get('cc_location') ?: ($request->get('cc') ? $location->cc_default_location : '');
+                $ccLocation = $request->get('cc_location') ?: ($request->get(
+                    'cc'
+                ) ? $location->cc_default_location : '');
             } else {
                 $time = $request->get('time') ?: '';
                 $ccLocation = $request->get('cc_location') ?: '';
@@ -147,41 +178,42 @@ class FuneralController extends Controller
         }
 
         // create the service
-        $service = Service::create([
-            'day_id' => $day->id,
-            'location_id' => $locationId,
-            'time' => $time,
-            'special_location' => $specialLocation,
-            'city_id' => $city->id,
-            'others' => '',
-            'description' => '',
-            'need_predicant' => 0,
-            'baptism' => 0,
-            'eucharist' => 0,
-            'offerings_counter1' => '',
-            'offerings_counter2' => '',
-            'offering_goal' => '',
-            'offering_description' => '',
-            'offering_type' => '',
-            'cc' => 0,
-            'cc_location' => '',
-            'cc_lesson' => '',
-            'cc_staff' => '',
-        ]);
+        $service = Service::create(
+            [
+                'day_id' => $day->id,
+                'location_id' => $locationId,
+                'time' => $time,
+                'special_location' => $specialLocation,
+                'city_id' => $city->id,
+                'others' => '',
+                'description' => '',
+                'need_predicant' => 0,
+                'baptism' => 0,
+                'eucharist' => 0,
+                'offerings_counter1' => '',
+                'offerings_counter2' => '',
+                'offering_goal' => '',
+                'offering_description' => '',
+                'offering_type' => '',
+                'cc' => 0,
+                'cc_location' => '',
+                'cc_lesson' => '',
+                'cc_staff' => '',
+            ]
+        );
         if (Auth::user()->hasRole('Pfarrer*in')) {
             $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
         }
         Session::flash('wizard', 1);
 
         return redirect(route('funeral.add', compact('service')));
-
     }
 
-        /**
+    /**
      * Store a newly created resource in storage.
      *
-     * @param  FuneralStoreRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param FuneralStoreRequest $request
+     * @return Response
      */
     public function store(FuneralStoreRequest $request)
     {
@@ -202,8 +234,8 @@ class FuneralController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Funeral  $funeral
-     * @return \Illuminate\Http\Response
+     * @param Funeral $funeral
+     * @return Response
      */
     public function show(Funeral $funeral)
     {
@@ -213,8 +245,8 @@ class FuneralController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Funeral  $funeral
-     * @return \Illuminate\Http\Response
+     * @param Funeral $funeral
+     * @return Response
      */
     public function edit(Funeral $funeral)
     {
@@ -225,9 +257,9 @@ class FuneralController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  FuneralStoreRequest $request
-     * @param  \App\Funeral  $funeral
-     * @return \Illuminate\Http\Response
+     * @param FuneralStoreRequest $request
+     * @param Funeral $funeral
+     * @return Response
      */
     public function update(FuneralStoreRequest $request, Funeral $funeral)
     {
@@ -242,8 +274,8 @@ class FuneralController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Funeral  $funeral
-     * @return \Illuminate\Http\Response
+     * @param Funeral $funeral
+     * @return Response
      */
     public function destroy(Funeral $funeral)
     {
@@ -254,19 +286,20 @@ class FuneralController extends Controller
 
     /**
      * Create a pdf form with funeral data
-     * @param \App\Funeral $funeral
-     * @return \Illuminate\Http\Response
+     * @param Funeral $funeral
+     * @return Response
      */
-    public function pdfForm(Funeral $funeral) {
+    public function pdfForm(Funeral $funeral)
+    {
         $funeral->load('service');
         $funeral->service->load('day', 'location', 'city');
-        $filename = $funeral->service->day->date->format('Ymd').' '.$funeral->buried_name.' KRA.pdf';
+        $filename = $funeral->service->day->date->format('Ymd') . ' ' . $funeral->buried_name . ' KRA.pdf';
 
         $pdf = PDF::loadView('funerals.pdf.form', compact('funeral'), [], ['format' => 'A5', 'useActiveForms' => true]);
 
 
         header("Content-Description: File Transfer");
-        header('Content-Disposition: attachment; filename="' . $filename .'"');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Type: application/pdf');
         header('Content-Transfer-Encoding: binary');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -275,22 +308,36 @@ class FuneralController extends Controller
     }
 
 
-    public function done(Funeral $funeral) {
+    /**
+     * @param Funeral $funeral
+     * @return false|string
+     */
+    public function done(Funeral $funeral)
+    {
         $funeral->done = true;
         $funeral->save();
         return json_encode(true);
     }
 
 
-    public function appointmentIcal(Funeral $funeral) {
+    /**
+     * @param Funeral $funeral
+     * @return Application|ResponseFactory|Response
+     */
+    public function appointmentIcal(Funeral $funeral)
+    {
         $service = Service::find($funeral->service_id);
         $raw = View::make('funerals.appointment.ical', compact('funeral', 'service'));
-        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        $raw = str_replace(
+            "\r\n\r\n",
+            "\r\n",
+            str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw)))
+        );
         return response($raw, 200)
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Expires', '0')
             ->header('Content-Type', 'text/calendar')
-            ->header('Content-Disposition', 'inline; filename=Trauergespraech-'.$funeral->id.'.ics');
+            ->header('Content-Disposition', 'inline; filename=Trauergespraech-' . $funeral->id . '.ics');
     }
 
 

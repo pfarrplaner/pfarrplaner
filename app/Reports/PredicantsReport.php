@@ -33,36 +33,64 @@ namespace App\Reports;
 use App\City;
 use App\Day;
 use App\Service;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Section;
 
+/**
+ * Class PredicantsReport
+ * @package App\Reports
+ */
 class PredicantsReport extends AbstractWordDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Prädikantenanforderung';
+    /**
+     * @var string
+     */
     public $group = 'Formulare';
+    /**
+     * @var string
+     */
     public $description = 'Vorausgefülltes Prädikantenformular für das Dekanatamt';
 
-    public function setup() {
+    /**
+     * @return Application|Factory|View
+     */
+    public function setup()
+    {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
         return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws Exception
+     */
     public function render(Request $request)
     {
-        $request->validate([
-            'city' => 'required|integer',
-            'start' => 'required|date|date_format:d.m.Y',
-            'end' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'city' => 'required|integer',
+                'start' => 'required|date|date_format:d.m.Y',
+                'end' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
-        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start').'0:00:00'))
-            ->where('date', '<=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end').' 23:59:59'))
+        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . '0:00:00'))
+            ->where('date', '<=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end') . ' 23:59:59'))
             ->orderBy('date', 'ASC')
             ->get();
 
@@ -88,43 +116,56 @@ class PredicantsReport extends AbstractWordDocumentReport
 
         $this->wordDocument->setDefaultFontName('Arial');
         $this->wordDocument->setDefaultFontSize(11);
-        $section = $this->wordDocument->addSection([
-            'orientation' => Section::ORIENTATION_LANDSCAPE,
-            'marginTop' => Converter::cmToTwip('1.59'),
-            'marginBottom' => Converter::cmToTwip('2'),
-            'marginLeft' => Converter::cmToTwip('2'),
-            'marginRight' => Converter::cmToTwip('2.5'),
-        ]);
+        $section = $this->wordDocument->addSection(
+            [
+                'orientation' => Section::ORIENTATION_LANDSCAPE,
+                'marginTop' => Converter::cmToTwip('1.59'),
+                'marginBottom' => Converter::cmToTwip('2'),
+                'marginLeft' => Converter::cmToTwip('2'),
+                'marginRight' => Converter::cmToTwip('2.5'),
+            ]
+        );
 
 
-        $section->addText('Anforderung von Prädikant/innen bzw. Pfarrer/innen im Ruhestand über das Dekanatamt',
+        $section->addText(
+            'Anforderung von Prädikant/innen bzw. Pfarrer/innen im Ruhestand über das Dekanatamt',
             [
                 'size' => 13,
                 'bold' => true,
-            ], [
+            ],
+            [
                 'alignment' => 'center',
                 "borderSize" => 6,
                 "borderColor" => "000000",
                 'spaceAfter' => 0,
-            ]);
+            ]
+        );
 
         for ($i = 1; $i <= 3; $i++) {
             $section->addText('', [], ['spaceAfter' => 0]);
         }
-        $section->addText('Evang. Kirchengemeinde ' . $city->name, [], [
-            "borderSize" => 6,
-            "borderColor" => "000000",
-            'indentation' => ['right' => Converter::cmToTwip(10.5)],
-            'spaceAfter' => 0,
-        ]);
+        $section->addText(
+            'Evang. Kirchengemeinde ' . $city->name,
+            [],
+            [
+                "borderSize" => 6,
+                "borderColor" => "000000",
+                'indentation' => ['right' => Converter::cmToTwip(10.5)],
+                'spaceAfter' => 0,
+            ]
+        );
         for ($i = 1; $i <= 4; $i++) {
             $section->addText('', [], ['spaceAfter' => 0]);
         }
 
-        $this->wordDocument->addTableStyle('table', [
-            'borderSize' => 6,
-            'borderColor' => '000000',
-        ], []);
+        $this->wordDocument->addTableStyle(
+            'table',
+            [
+                'borderSize' => 6,
+                'borderColor' => '000000',
+            ],
+            []
+        );
 
         $table = $section->addTable('table');
         $table->addRow();
@@ -133,11 +174,14 @@ class PredicantsReport extends AbstractWordDocumentReport
         $table->addCell(Converter::cmToTwip(3.75))->addText("Beginn des<w:br />Gottesdienstes", ['bold' => true]);
         $table->addCell(Converter::cmToTwip(6))->addText("Abendmahl / Taufe /<w:br />Bemerkungen", ['bold' => true]);
         $textRun = $table->addCell(Converter::cmToTwip(7.25))->addTextRun();
-        $textRun->addText('Rückmeldung Dekanatamt<w:br />', [
-            'bold' => true,
-            'underline' => Font::UNDERLINE_SINGLE,
-            'italic' => true,
-        ]);
+        $textRun->addText(
+            'Rückmeldung Dekanatamt<w:br />',
+            [
+                'bold' => true,
+                'underline' => Font::UNDERLINE_SINGLE,
+                'italic' => true,
+            ]
+        );
         $textRun->addText('GD-Vertretung übernimmt:', ['bold' => true]);
 
         foreach ($serviceList as $services) {

@@ -30,11 +30,16 @@
 
 namespace App\Http\Controllers;
 
-use App\City;
 use App\Location;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
+/**
+ * Class LocationController
+ * @package App\Http\Controllers
+ */
 class LocationController extends Controller
 {
     public function __construct()
@@ -45,7 +50,7 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -56,7 +61,7 @@ class LocationController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -68,7 +73,7 @@ class LocationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store()
     {
@@ -77,10 +82,29 @@ class LocationController extends Controller
     }
 
     /**
+     * @return array
+     * @throws ValidationException
+     */
+    protected function validateRequest(): array
+    {
+        return request()->validate(
+            [
+                'name' => 'required|max:255',
+                'city_id' => 'required|integer',
+                'default_time' => 'nullable|date_format:H:i',
+                'cc_default_location' => 'nullable',
+                'alternate_location_id' => 'nullable',
+                'general_location_name' => 'nullable',
+                'at_text' => 'nullable',
+            ]
+        );
+    }
+
+    /**
      * Display the specified resource.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function show($id)
     {
@@ -90,23 +114,24 @@ class LocationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function edit($id)
     {
         $cities = Auth::user()->writableCities;
         $location = Location::find($id);
-        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->where('id', '!=', $location->id)->get();
+        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->where('id', '!=', $location->id)->get(
+        );
         return view('locations.edit', compact('cities', 'location', 'alternateLocations'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Location $location
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Location $location
+     * @return Response
      */
     public function update(Location $location)
     {
@@ -117,30 +142,13 @@ class LocationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function destroy($id)
     {
         $location = Location::find($id);
         $location->delete();
         return redirect()->route('locations.index')->with('success', 'Die Kirche wurde gelöscht.');
-    }
-
-    /**
-     * @return array
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    protected function validateRequest(): array
-    {
-        return request()->validate([
-            'name' => 'required|max:255',
-            'city_id' => 'required|integer',
-            'default_time' => 'nullable|date_format:H:i',
-            'cc_default_location' => 'nullable',
-            'alternate_location_id' => 'nullable',
-            'general_location_name' => 'nullable',
-            'at_text' => 'nullable',
-        ]);
     }
 }

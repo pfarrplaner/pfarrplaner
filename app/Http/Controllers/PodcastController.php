@@ -33,13 +33,25 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Service;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
+/**
+ * Class PodcastController
+ * @package App\Http\Controllers
+ */
 class PodcastController extends Controller
 {
+    /**
+     * @param Request $request
+     * @param $cityName
+     * @return Response
+     */
     public function podcast(Request $request, $cityName)
     {
         $city = City::where('name', $cityName)->first();
-        if (null === $city) abort(404);
+        if (null === $city) {
+            abort(404);
+        }
 
         $services = Service::where('city_id', $city->id)
             ->select('services.*')

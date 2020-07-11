@@ -32,13 +32,18 @@ namespace App\Http\Controllers;
 
 use App\ServiceGroup;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
+/**
+ * Class ServiceGroupController
+ * @package App\Http\Controllers
+ */
 class ServiceGroupController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -48,7 +53,7 @@ class ServiceGroupController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -58,8 +63,8 @@ class ServiceGroupController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -69,8 +74,8 @@ class ServiceGroupController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\ServiceGroup  $serviceGroup
-     * @return \Illuminate\Http\Response
+     * @param ServiceGroup $serviceGroup
+     * @return Response
      */
     public function show(ServiceGroup $serviceGroup)
     {
@@ -80,8 +85,8 @@ class ServiceGroupController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\ServiceGroup  $serviceGroup
-     * @return \Illuminate\Http\Response
+     * @param ServiceGroup $serviceGroup
+     * @return Response
      */
     public function edit(ServiceGroup $serviceGroup)
     {
@@ -91,9 +96,9 @@ class ServiceGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\ServiceGroup  $serviceGroup
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param ServiceGroup $serviceGroup
+     * @return Response
      */
     public function update(Request $request, ServiceGroup $serviceGroup)
     {
@@ -103,8 +108,8 @@ class ServiceGroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\ServiceGroup  $serviceGroup
-     * @return \Illuminate\Http\Response
+     * @param ServiceGroup $serviceGroup
+     * @return Response
      */
     public function destroy(ServiceGroup $serviceGroup)
     {

@@ -30,10 +30,20 @@
 
 namespace App;
 
-use \Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
+/**
+ * Class Participant
+ * @package App
+ */
 class Participant extends Pivot
 {
+    /**
+     * @var bool
+     */
     public $incrementing = true;
+    /**
+     * @var string
+     */
     protected $table = 'service_user';
 }

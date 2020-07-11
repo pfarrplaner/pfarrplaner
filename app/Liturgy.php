@@ -32,30 +32,45 @@ namespace App;
 
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class Liturgy
+ * @package App
+ */
 class Liturgy
 {
 
     /** @var Liturgy|null Instance */
     protected static $instance = null;
 
-    public static function getInstance() {
-        if (null === self::$instance) self::$instance = new self();
+    /**
+     * @return Liturgy|null
+     */
+    public static function getInstance()
+    {
+        if (null === self::$instance) {
+            self::$instance = new self();
+        }
         return self::$instance;
     }
 
     /**
      * Get all the liturgical info for a given day
-     * @param string|\App\Day $day
+     * @param string|Day $day
      * @param bool $fallback
      * @return array
      */
-    public static function getDayInfo($day, $fallback = false): array {
-        if (!is_object($day)) $day = new Day(['date' => $day]);
+    public static function getDayInfo($day, $fallback = false): array
+    {
+        if (!is_object($day)) {
+            $day = new Day(['date' => $day]);
+        }
         if (!Cache::has('liturgicalDays')) {
             $tmpData = json_decode(
                 file_get_contents(
-                    'https://www.kirchenjahr-evangelisch.de/service.php?o=lcf&f=gaa&r=json&dl=user'),
-                true);
+                    'https://www.kirchenjahr-evangelisch.de/service.php?o=lcf&f=gaa&r=json&dl=user'
+                ),
+                true
+            );
             foreach ($tmpData['content']['days'] as $key => $val) {
                 $data[$val['date']] = $val;
             }

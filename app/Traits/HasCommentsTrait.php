@@ -42,26 +42,49 @@ use App\Comment;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Trait HasCommentsTrait
+ * @package App\Traits
+ */
 trait HasCommentsTrait
 {
 
-    public function comments() {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    public function publicComments() {
+    /**
+     * @return mixed
+     */
+    public function publicComments()
+    {
         return $this->comments()->where('private', 0);
     }
 
-    public function commentsForUser(User $user) {
-        return $this->comments()->where(function($query) use ($user) {
-            $query->where('private', 0);
-            $query->orWhere('user_id', $user->id);
-        });
+    /**
+     * @return mixed
+     */
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
-    public function commentsForCurrentUser() {
+    /**
+     * @return mixed
+     */
+    public function commentsForCurrentUser()
+    {
         return $this->commentsForUser(Auth::user());
+    }
+
+    /**
+     * @param User $user
+     * @return mixed
+     */
+    public function commentsForUser(User $user)
+    {
+        return $this->comments()->where(
+            function ($query) use ($user) {
+                $query->where('private', 0);
+                $query->orWhere('user_id', $user->id);
+            }
+        );
     }
 
 

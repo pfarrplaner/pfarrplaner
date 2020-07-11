@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddInternalRemarksToServices
+ */
 class AddInternalRemarksToServices extends Migration
 {
     /**
@@ -41,9 +44,12 @@ class AddInternalRemarksToServices extends Migration
      */
     public function up()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->text('internal_remarks')->nullable();
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->text('internal_remarks')->nullable();
+            }
+        );
     }
 
     /**
@@ -53,8 +59,11 @@ class AddInternalRemarksToServices extends Migration
      */
     public function down()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->dropColumn('internal_remarks');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->dropColumn('internal_remarks');
+            }
+        );
     }
 }

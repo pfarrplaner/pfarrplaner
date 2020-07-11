@@ -30,18 +30,26 @@
 
 namespace App\Http\Controllers;
 
-use App\CalendarLinks\AbstractCalendarLink;
 use App\City;
-use App\CalendarLinks\CalendarLinks;
 use App\Location;
 use App\Misc\VersionInfo;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
+/**
+ * Class HomeController
+ * @package App\Http\Controllers
+ */
 class HomeController extends Controller
 {
     /**
@@ -57,7 +65,7 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return Renderable
      */
     public function index()
     {
@@ -85,31 +93,49 @@ class HomeController extends Controller
         }
     }
 
-    public function showChangePassword() {
+    /**
+     * @return Application|Factory|View
+     */
+    public function showChangePassword()
+    {
         return view('auth.changepassword');
     }
 
-    public function changePassword(Request $request){
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function changePassword(Request $request)
+    {
         if (!(Hash::check($request->get('current-password'), Auth::user()->password))) {
             // The passwords matches
-            return redirect()->back()->with("error","Your current password does not match with the password you provided. Please try again.");
+            return redirect()->back()->with(
+                "error",
+                "Your current password does not match with the password you provided. Please try again."
+            );
         }
-        if(strcmp($request->get('current-password'), $request->get('new-password')) == 0){
+        if (strcmp($request->get('current-password'), $request->get('new-password')) == 0) {
             //Current password and new password are same
-            return redirect()->back()->with("error","New Password cannot be same as your current password. Please choose a different password.");
+            return redirect()->back()->with(
+                "error",
+                "New Password cannot be same as your current password. Please choose a different password."
+            );
         }
-        $validatedData = $request->validate([
-            'current-password' => 'required',
-            'new-password' => 'required|string|min:6|confirmed',
-        ]);
+        $validatedData = $request->validate(
+            [
+                'current-password' => 'required',
+                'new-password' => 'required|string|min:6|confirmed',
+            ]
+        );
         //Change Password
         $user = Auth::user();
         $user->password = bcrypt($request->get('new-password'));
         $user->save();
-        return redirect()->back()->with("success","Password changed successfully !");
+        return redirect()->back()->with("success", "Password changed successfully !");
     }
 
-    public function connect() {
+    public function connect()
+    {
         /*
         $user = Auth::user();
         $token = $user->getToken();
@@ -120,20 +146,36 @@ class HomeController extends Controller
         */
     }
 
-    public function whatsnew() {
+    /**
+     * @return Application|Factory|View
+     */
+    public function whatsnew()
+    {
         $messages = VersionInfo::getMessages()->sortByDesc('date');
-        Auth::user()->setSetting('new_features', \Carbon\Carbon::now());
+        Auth::user()->setSetting('new_features', Carbon::now());
         return view('whatsnew', compact('messages'));
     }
 
-    public function counters($counter) {
+    /**
+     * @param $counter
+     * @return JsonResponse
+     */
+    public function counters($counter)
+    {
         $data = [];
         switch ($counter) {
             case 'users':
                 $count = count(User::where('password', '!=', '')->get());
                 break;
             case 'services':
-                $count = count(Service::whereHas('day', function($query) { $query->where('date', '>=', Carbon::now()); })->get());
+                $count = count(
+                    Service::whereHas(
+                        'day',
+                        function ($query) {
+                            $query->where('date', '>=', Carbon::now());
+                        }
+                    )->get()
+                );
                 break;
             case 'locations':
                 $count = count(Location::all());

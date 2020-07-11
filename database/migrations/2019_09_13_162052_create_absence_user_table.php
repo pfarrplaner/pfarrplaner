@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateAbsenceUserTable
+ */
 class CreateAbsenceUserTable extends Migration
 {
     /**
@@ -41,16 +44,22 @@ class CreateAbsenceUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('absence_user', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('absence_id');
-            $table->integer('user_id');
-            $table->timestamps();
-        });
+        Schema::create(
+            'absence_user',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('absence_id');
+                $table->integer('user_id');
+                $table->timestamps();
+            }
+        );
 
-        Schema::table('absences', function (Blueprint $table) {
-            $table->dropColumn('replacement');
-        });
+        Schema::table(
+            'absences',
+            function (Blueprint $table) {
+                $table->dropColumn('replacement');
+            }
+        );
     }
 
     /**
@@ -61,8 +70,11 @@ class CreateAbsenceUserTable extends Migration
     public function down()
     {
         Schema::dropIfExists('absence_user');
-        Schema::table('absences', function (Blueprint $table) {
-           $table->integer('replacement')->nullable();
-        });
+        Schema::table(
+            'absences',
+            function (Blueprint $table) {
+                $table->integer('replacement')->nullable();
+            }
+        );
     }
 }

@@ -33,6 +33,10 @@ namespace App\Integrations;
 
 use App\City;
 
+/**
+ * Class AbstractIntegration
+ * @package App\Integrations
+ */
 class AbstractIntegration
 {
 

@@ -31,31 +31,44 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * Class Subscription
+ * @package App
+ */
 class Subscription extends Model
 {
+    /**
+     *
+     */
     public const SUBSCRIBE_ALL = 2;
+    /**
+     *
+     */
     public const SUBSCRIBE_OWN = 1;
+    /**
+     *
+     */
     public const SUBSCRIBE_NONE = 0;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'user_id',
         'city_id',
         'subscription_type',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function city()
-    {
-        return $this->belongsTo(City::class);
-    }
-
+    /**
+     * @param Service $service
+     * @param $mailClass
+     * @param array $data
+     * @param null $additionalSubscribers
+     */
     public static function send(Service $service, $mailClass, $data = [], $additionalSubscribers = null)
     {
         $subscribers = User::subscribedTo($service)->get();
@@ -63,7 +76,9 @@ class Subscription extends Model
         // add additional subscribers
         if (!is_null($additionalSubscribers)) {
             foreach ($additionalSubscribers as $subscriber) {
-                if (!$subscribers->contains($subscriber)) $subscribers->push($subscriber);
+                if (!$subscribers->contains($subscriber)) {
+                    $subscribers->push($subscriber);
+                }
             }
         }
 
@@ -71,16 +86,32 @@ class Subscription extends Model
         foreach ($subscribers as $subscriber) {
             if (!env('THIS_IS_MY_DEV_HOST')) {
                 if ($subscriber->email && filter_var($subscriber->email, FILTER_VALIDATE_EMAIL)) {
-                    Log::debug('Sending ServiceUpdated to '.$subscriber->email);
+                    Log::debug('Sending ServiceUpdated to ' . $subscriber->email);
                     Mail::to($subscriber)->queue(new $mailClass($subscriber, $service, $data));
                 } else {
-                    Log::debug('User '.$subscriber->name.' has no valid email to send ServiceUpdated.');
+                    Log::debug('User ' . $subscriber->name . ' has no valid email to send ServiceUpdated.');
                 }
             } else {
-                Log::debug('Sending ServiceUpdated to dev@toph.de instead of '.$subscriber->email);
+                Log::debug('Sending ServiceUpdated to dev@toph.de instead of ' . $subscriber->email);
                 $subscriber->email = 'dev@toph.de';
                 Mail::to($subscriber)->queue(new $mailClass($subscriber, $service, $data));
             }
         }
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function city()
+    {
+        return $this->belongsTo(City::class);
     }
 }

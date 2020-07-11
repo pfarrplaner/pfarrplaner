@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class DropOldColumns
+ */
 class DropOldColumns extends Migration
 {
     /**
@@ -41,9 +44,12 @@ class DropOldColumns extends Migration
      */
     public function up()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->dropColumn(['pastor', 'organist','sacristan']);
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->dropColumn(['pastor', 'organist', 'sacristan']);
+            }
+        );
     }
 
     /**
@@ -53,10 +59,13 @@ class DropOldColumns extends Migration
      */
     public function down()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->string('pastor');
-            $table->string('organist');
-            $table->string('sacristan');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->string('pastor');
+                $table->string('organist');
+                $table->string('sacristan');
+            }
+        );
     }
 }

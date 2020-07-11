@@ -39,35 +39,78 @@ use App\Imports\OPEventsImport;
 use App\Service;
 use App\Tools\StringTool;
 use App\Wedding;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Element\Section;
+use PhpOffice\PhpWord\Element\TextRun;
+use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
-use PhpOffice\PhpWord\Style\Section;
+use PhpOffice\PhpWord\Style\Tab;
 
+/**
+ * Class AnnouncementsReport
+ * @package App\Reports
+ */
 class AnnouncementsReport extends AbstractWordDocumentReport
 {
+    /**
+     *
+     */
     protected const BOLD = ['bold' => true];
+    /**
+     *
+     */
     protected const UNDERLINE = ['underline' => Font::UNDERLINE_SINGLE];
+    /**
+     *
+     */
     protected const BOLD_UNDERLINE = ['bold' => true, 'underline' => Font::UNDERLINE_SINGLE];
+    /**
+     *
+     */
     protected const INDENT = 'Bekanntgaben';
+    /**
+     *
+     */
     protected const NO_INDENT = 'Bekanntgaben ohne Einrückung';
 
+    /**
+     * @var string
+     */
     public $title = 'Bekanntgaben';
+    /**
+     * @var string
+     */
     public $group = 'Veröffentlichungen';
+    /**
+     * @var string
+     */
     public $description = 'Bekanntgaben für einen Gottesdienst';
 
-    /** @var \PhpOffice\PhpWord\Element\Section */
+    /** @var Section */
     protected $section;
 
+    /**
+     * @return Application|Factory|View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
-    public function configure(Request $request) {
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function configure(Request $request)
+    {
         $request->validate(['city' => 'required|int']);
         $city = City::findOrFail($request->get('city'));
         $request->session()->put('city', $city->id);
@@ -75,6 +118,10 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View
+     */
     public function configure2(Request $request)
     {
         $city = City::findOrFail($request->session()->get('city'));
@@ -82,15 +129,22 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             ->regularForCity($city)
             ->select('services.*')
             ->join('days', 'services.day_id', 'days.id')
-            ->whereHas('day', function ($query) {
-                $query->where('date', '>=', Carbon::now()->subHours(8));
-            })->orderBy('days.date')
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now()->subHours(8));
+                }
+            )->orderBy('days.date')
             ->orderBy('time')
             ->get();
 
         return $this->renderView('configure', compact('city', 'services'));
     }
 
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
     public function input(Request $request)
     {
         $request->validate(['service' => 'required|int']);
@@ -100,13 +154,20 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     }
 
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View
+     */
     public function postInput(Request $request)
     {
         $service = Service::findOrFail($request->session()->get('service'));
 
-        $lastDaysWithServices = Day::whereHas('services', function ($query) use ($service) {
-            $query->regularForCity($service->city);
-        })->where('date', '<', $service->day->date)
+        $lastDaysWithServices = Day::whereHas(
+            'services',
+            function ($query) use ($service) {
+                $query->regularForCity($service->city);
+            }
+        )->where('date', '<', $service->day->date)
             ->orderBy('date', 'DESC')->limit(10)->get();
 
 
@@ -127,12 +188,19 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws Exception
+     */
     public function render(Request $request)
     {
-        $request->validate([
-            'offerings' => 'required|string',
-            'lastService' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'offerings' => 'required|string',
+                'lastService' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
         $service = Service::findOrFail($request->session()->pull('service'));
         $city = City::findOrFail($request->session()->pull('city'));
@@ -145,37 +213,55 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         $nextWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 next Sunday');
 
         $funerals = Funeral::where('announcement', $service->day->date->format('Y-m-d'))
-            ->whereHas('service', function ($query) use ($service) {
-                $query->where('city_id', $service->city->id);
-            })
+            ->whereHas(
+                'service',
+                function ($query) use ($service) {
+                    $query->where('city_id', $service->city->id);
+                }
+            )
             ->get();
 
         $weddings = Wedding::with('service')
-            ->whereHas('service', function ($query) use ($service, $nextWeek) {
-                $query->whereHas('day', function ($query2) use ($service, $nextWeek) {
-                    $query2->where('date', '>=', $service->day->date);
-                    $query2->where('date', '<=', $nextWeek);
-                    $query2->where('city_id', $service->city->id);
-                });
-            })->get();
+            ->whereHas(
+                'service',
+                function ($query) use ($service, $nextWeek) {
+                    $query->whereHas(
+                        'day',
+                        function ($query2) use ($service, $nextWeek) {
+                            $query2->where('date', '>=', $service->day->date);
+                            $query2->where('date', '<=', $nextWeek);
+                            $query2->where('city_id', $service->city->id);
+                        }
+                    );
+                }
+            )->get();
 
         $baptisms = Baptism::with('service')
-            ->whereHas('service', function ($query) use ($service, $nextWeek) {
-                $query->whereHas('day', function ($query2) use ($service, $nextWeek) {
-                    $query2->where('date', '>=', $service->day->date);
-                    $query2->where('date', '<=', $nextWeek);
-                    $query2->where('city_id', $service->city->id);
-                });
-            })->get();
+            ->whereHas(
+                'service',
+                function ($query) use ($service, $nextWeek) {
+                    $query->whereHas(
+                        'day',
+                        function ($query2) use ($service, $nextWeek) {
+                            $query2->where('date', '>=', $service->day->date);
+                            $query2->where('date', '<=', $nextWeek);
+                            $query2->where('city_id', $service->city->id);
+                        }
+                    );
+                }
+            )->get();
 
 
         $services = Service::with(['day', 'location'])
-            ->whereHas('day', function ($query) use ($service, $nextWeek) {
-                $query->where('date', '>=', $service->day->date);
-                $query->where('date', '<=', $nextWeek);
-                $query->where('city_id', $service->city->id);
-                $query->where('id', '!=', $service->id);
-            })
+            ->whereHas(
+                'day',
+                function ($query) use ($service, $nextWeek) {
+                    $query->where('date', '>=', $service->day->date);
+                    $query->where('date', '<=', $nextWeek);
+                    $query->where('city_id', $service->city->id);
+                    $query->where('id', '!=', $service->id);
+                }
+            )
             ->get();
 
         $events = [];
@@ -192,25 +278,27 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             $events = $op->mix($events, $service->day->date, $nextWeek);
         }
 
-        $this->section = $this->wordDocument->addSection([
-            'orientation' => 'portrait',
-            'pageSizeH' => Converter::cmToTwip(21),
-            'pageSizeW' => Converter::cmToTwip(14.85),
-            'marginTop' => Converter::cmToTwip(0.75),
-            'marginBottom' => Converter::cmToTwip(0.25),
-            'marginLeft' => Converter::cmToTwip(2),
-            'marginRight' => Converter::cmToTwip(0.8),
-        ]);
+        $this->section = $this->wordDocument->addSection(
+            [
+                'orientation' => 'portrait',
+                'pageSizeH' => Converter::cmToTwip(21),
+                'pageSizeW' => Converter::cmToTwip(14.85),
+                'marginTop' => Converter::cmToTwip(0.75),
+                'marginBottom' => Converter::cmToTwip(0.25),
+                'marginLeft' => Converter::cmToTwip(2),
+                'marginRight' => Converter::cmToTwip(0.8),
+            ]
+        );
 
         $this->wordDocument->addParagraphStyle(
             self::INDENT,
             array(
                 'indentation' => [
-                    'left' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(3),
-                    'hanging' => \PhpOffice\PhpWord\Shared\Converter::cmToTwip(3),
+                    'left' => Converter::cmToTwip(3),
+                    'hanging' => Converter::cmToTwip(3),
                 ],
                 'tabs' => [
-                    new \PhpOffice\PhpWord\Style\Tab('left', \PhpOffice\PhpWord\Shared\Converter::cmToTwip(3)),
+                    new Tab('left', Converter::cmToTwip(3)),
                 ],
                 'spaceAfter' => 0,
             )
@@ -220,15 +308,17 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             self::NO_INDENT,
             array(
                 'tabs' => [
-                    new \PhpOffice\PhpWord\Style\Tab('left', \PhpOffice\PhpWord\Shared\Converter::cmToTwip(3)),
+                    new Tab('left', Converter::cmToTwip(3)),
                 ],
                 'spaceAfter' => 0,
             )
         );
 
         $textRun = $this->section->addTextRun('Bekanntgaben');
-        $textRun->addText('Bekanntgaben für ' . $service->day->date->formatLocalized('%A, %d. %B %Y'),
-            ['bold' => true]);
+        $textRun->addText(
+            'Bekanntgaben für ' . $service->day->date->formatLocalized('%A, %d. %B %Y'),
+            ['bold' => true]
+        );
 
 
         $ctr = 0;
@@ -254,28 +344,37 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                 }
 
                 if (!$offeringsDone) {
-                    $this->renderParagraph(self::NO_INDENT, [
-                        ['**************************************************************************', []],
-                    ]);
-
-                    $this->renderParagraph(self::NO_INDENT, [
+                    $this->renderParagraph(
+                        self::NO_INDENT,
                         [
-                            'Herzlichen Dank für das Opfer der Gottesdienste vom '
-                            . $lastService
-                            . ' in Höhe von ' . $offerings . ' Euro.',
-                            []
+                            ['**************************************************************************', []],
                         ]
-                    ]);
+                    );
 
-                    $textRun = $this->renderParagraph(self::NO_INDENT, [
+                    $this->renderParagraph(
+                        self::NO_INDENT,
                         [
-                            'Das heutige Opfer ist für folgenden Zweck bestimmt: ' . $service->offering_goal,
-                            []
+                            [
+                                'Herzlichen Dank für das Opfer der Gottesdienste vom '
+                                . $lastService
+                                . ' in Höhe von ' . $offerings . ' Euro.',
+                                []
+                            ]
                         ]
-                    ], 1);
+                    );
+
+                    $textRun = $this->renderParagraph(
+                        self::NO_INDENT,
+                        [
+                            [
+                                'Das heutige Opfer ist für folgenden Zweck bestimmt: ' . $service->offering_goal,
+                                []
+                            ]
+                        ],
+                        1
+                    );
 
                     if ($offeringText) {
-
                         $this->renderLiteral($offeringText);
                         $this->renderParagraph();
                     }
@@ -287,49 +386,68 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                     if ($lastDay != $eventStart->format('Ymd')) {
                         $this->renderParagraph();
                         if ($nextWeek->format('Ymd') == $eventStart->format('Ymd')) {
-                            $this->renderParagraph(self::NO_INDENT, [
+                            $this->renderParagraph(
+                                self::NO_INDENT,
                                 [
-                                    'Vorschau',
-                                    self::BOLD_UNDERLINE,
-                                ]
-                            ], 1);
+                                    [
+                                        'Vorschau',
+                                        self::BOLD_UNDERLINE,
+                                    ]
+                                ],
+                                1
+                            );
                         }
 
-                        $this->renderParagraph(self::NO_INDENT, [
+                        $this->renderParagraph(
+                            self::NO_INDENT,
                             [
-                                ($service->day->date->format('Ymd') == $eventStart->format('Ymd')) ?
-                                    'Heute' : strftime($dateFormat, $eventStart->getTimestamp()),
-                                self::BOLD_UNDERLINE,
+                                [
+                                    ($service->day->date->format('Ymd') == $eventStart->format('Ymd')) ?
+                                        'Heute' : strftime($dateFormat, $eventStart->getTimestamp()),
+                                    self::BOLD_UNDERLINE,
+                                ]
                             ]
-                        ]);
+                        );
                     }
 
                     if (is_array($event)) {
-                        $textRun = $this->renderParagraph(self::INDENT, [
+                        $textRun = $this->renderParagraph(
+                            self::INDENT,
                             [
-                                (isset($event['allDay']) && $event['allDay']) ? '' : strftime('%H.%M Uhr', $eventStart->getTimestamp()) . "\t",
-                                []
-                            ],
-                            [
-                                trim($event['title'] . ' (' . $event['place'] . ')'),
-                                []
+                                [
+                                    (isset($event['allDay']) && $event['allDay']) ? '' : strftime(
+                                            '%H.%M Uhr',
+                                            $eventStart->getTimestamp()
+                                        ) . "\t",
+                                    []
+                                ],
+                                [
+                                    trim($event['title'] . ' (' . $event['place'] . ')'),
+                                    []
+                                ]
                             ]
-                        ]);
+                        );
                     } else {
                         $description = $event->descriptionText();
                         $description = $description ? ' mit ' . $description : '';
                         // take care of ampersands
-                        $description = preg_replace('/&(?![A-Za-z0-9#]{1,7};)/','&amp;',$description);
-                        $textRun = $this->renderParagraph(self::INDENT, [
+                        $description = preg_replace('/&(?![A-Za-z0-9#]{1,7};)/', '&amp;', $description);
+                        $textRun = $this->renderParagraph(
+                            self::INDENT,
                             [
-                                $event->timeText(true, '.') . "\t",
-                                []
-                            ],
-                            [
-                                trim(($event->title ?: 'Gottesdienst') . $description . ' (' . $event->locationText() . ')'),
-                                []
+                                [
+                                    $event->timeText(true, '.') . "\t",
+                                    []
+                                ],
+                                [
+                                    trim(
+                                        ($event->title ?: 'Gottesdienst') . $description . ' (' . $event->locationText(
+                                        ) . ')'
+                                    ),
+                                    []
+                                ]
                             ]
-                        ]);
+                        );
                     }
 
                     if ((isset($event['allDay']) && $event['allDay'])) {
@@ -360,33 +478,49 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                 if ($baptism->service->id != $service->id) {
                     $textRun = $this->renderParagraph();
                     if ($baptism->service->trueDate() == $service->trueDate()) {
-                        $this->renderParagraph(self::NO_INDENT, [
+                        $this->renderParagraph(
+                            self::NO_INDENT,
                             [
-                                'Im Gottesdienst heute ' . $baptism->service->atText() . ' ' . (count($baptisms) > 1 ? 'werden' : 'wird') . ' getauft:',
-                                []
+                                [
+                                    'Im Gottesdienst heute ' . $baptism->service->atText() . ' ' . (count(
+                                        $baptisms
+                                    ) > 1 ? 'werden' : 'wird') . ' getauft:',
+                                    []
+                                ]
                             ]
-                        ]);
+                        );
                     } else {
-                        $this->renderParagraph(self::NO_INDENT, [
+                        $this->renderParagraph(
+                            self::NO_INDENT,
                             [
-                                'Im Gottesdienst am ' . $baptism->service->day->date->format('d.m.Y') . ' ' . $baptism->service->atText() . ' ' . (count($baptisms) > 1 ? 'werden' : 'wird') . ' getauft:',
-                                []
+                                [
+                                    'Im Gottesdienst am ' . $baptism->service->day->date->format(
+                                        'd.m.Y'
+                                    ) . ' ' . $baptism->service->atText() . ' ' . (count(
+                                        $baptisms
+                                    ) > 1 ? 'werden' : 'wird') . ' getauft:',
+                                    []
+                                ]
                             ]
-                        ]);
+                        );
                     }
                     foreach ($baptisms as $baptism) {
-                        $this->renderParagraph(self::NO_INDENT, [
-                            [$this->renderName($baptism->candidate_name) . ', ' . $baptism->candidate_address, []]
-                        ]);
+                        $this->renderParagraph(
+                            self::NO_INDENT,
+                            [
+                                [$this->renderName($baptism->candidate_name) . ', ' . $baptism->candidate_address, []]
+                            ]
+                        );
                     }
                 }
             }
             $this->renderParagraph();
-            $this->renderLiteral('*Christus hat der Kirche den Auftrag gegeben:
+            $this->renderLiteral(
+                '*Christus hat der Kirche den Auftrag gegeben:
 Gehet hin und machet zu Jüngern alle Völker
 und taufet sie auf den Namen des Vaters und
-des Sohnes und des Heiligen Geistes.');
-
+des Sohnes und des Heiligen Geistes.'
+            );
         }
 
 
@@ -404,34 +538,53 @@ des Sohnes und des Heiligen Geistes.');
                 if ($wedding->service->id != $service->id) {
                     $textRun = $this->renderParagraph();
                     if ($wedding->service->trueDate() == $service->trueDate()) {
-                        $this->renderParagraph(self::NO_INDENT, [
-                            ['Im Gottesdienst heute ' . $wedding->service->atText() . ' werden kirchlich getraut:', []]
-                        ]);
-                    } else {
-                        $this->renderParagraph(self::NO_INDENT, [
+                        $this->renderParagraph(
+                            self::NO_INDENT,
                             [
-                                'Im Gottesdienst am ' . $wedding->service->day->date->format('d.m.Y') . ' ' . $wedding->service->atText() . ' werden kirchlich getraut:',
-                                []
+                                [
+                                    'Im Gottesdienst heute ' . $wedding->service->atText(
+                                    ) . ' werden kirchlich getraut:',
+                                    []
+                                ]
                             ]
-                        ]);
+                        );
+                    } else {
+                        $this->renderParagraph(
+                            self::NO_INDENT,
+                            [
+                                [
+                                    'Im Gottesdienst am ' . $wedding->service->day->date->format(
+                                        'd.m.Y'
+                                    ) . ' ' . $wedding->service->atText() . ' werden kirchlich getraut:',
+                                    []
+                                ]
+                            ]
+                        );
                     }
                     foreach ($weddings as $wedding) {
-                        $this->renderParagraph(self::NO_INDENT, [
+                        $this->renderParagraph(
+                            self::NO_INDENT,
                             [
-                                $this->renderName($wedding->spouse1_name) . ' &amp; ' . $this->renderName($wedding->spouse2_name),
-                                []
+                                [
+                                    $this->renderName($wedding->spouse1_name) . ' &amp; ' . $this->renderName(
+                                        $wedding->spouse2_name
+                                    ),
+                                    []
+                                ]
                             ]
-                        ]);
+                        );
                     }
                 }
             }
             $this->renderParagraph();
-            $textRun = $this->renderLiteral('*Vater im Himmel,
+            $textRun = $this->renderLiteral(
+                '*Vater im Himmel,
 wir bitten für dieses Hochzeitspaar.
 Begleite sie auf ihrem gemeinsamen Weg.
 Lass sie deine Liebe erfahren
 und stärke ihre Liebe zueinander
-in guten und in schweren Tagen.');
+in guten und in schweren Tagen.'
+            );
         }
 
         if (count($funerals)) {
@@ -445,54 +598,96 @@ in guten und in schweren Tagen.');
 
             if (count($funeralArray['past'])) {
                 ksort($funeralArray['past']);
-                $this->renderParagraph(self::NO_INDENT, [
-                    ['Aus unserer Gemeinde '.StringTool::pluralString(count($funeralArray['past']), 'ist', 'sind').' verstorben und '
-                        .StringTool::pluralString(count($funeralArray['past']), 'wurde', 'wurden').' kirchlich bestattet:', []]
-                ]);
-                foreach ($funeralArray['past'] as $funeral) {
-                    $this->renderParagraph(self::NO_INDENT, [
+                $this->renderParagraph(
+                    self::NO_INDENT,
+                    [
                         [
-                            $this->renderName($funeral->buried_name) . ', ' . $funeral->buried_address
-                            .($funeral->age() ? ', '.$funeral->age().' Jahre' : '').'.', []
+                            'Aus unserer Gemeinde ' . StringTool::pluralString(
+                                count($funeralArray['past']),
+                                'ist',
+                                'sind'
+                            ) . ' verstorben und '
+                            . StringTool::pluralString(
+                                count($funeralArray['past']),
+                                'wurde',
+                                'wurden'
+                            ) . ' kirchlich bestattet:',
+                            []
                         ]
-                    ]);
+                    ]
+                );
+                foreach ($funeralArray['past'] as $funeral) {
+                    $this->renderParagraph(
+                        self::NO_INDENT,
+                        [
+                            [
+                                $this->renderName($funeral->buried_name) . ', ' . $funeral->buried_address
+                                . ($funeral->age() ? ', ' . $funeral->age() . ' Jahre' : '') . '.',
+                                []
+                            ]
+                        ]
+                    );
                 }
-                if (count($funeralArray['future'])) $this->renderParagraph();
+                if (count($funeralArray['future'])) {
+                    $this->renderParagraph();
+                }
             }
 
             if (count($funeralArray['future'])) {
                 ksort($funeralArray['future']);
-                $this->renderParagraph(self::NO_INDENT, [
-                    ['Aus unserer Gemeinde '.StringTool::pluralString(count($funeralArray['future']), 'ist', 'sind').' verstorben:', []]
-                ]);
-                foreach ($funeralArray['future'] as $funeral) {
-                    $mode = $funeral->type;
-                    if ($mode == 'Erdbestattung') $mode = 'Bestattung';
-                    $this->renderParagraph(self::NO_INDENT, [
+                $this->renderParagraph(
+                    self::NO_INDENT,
+                    [
                         [
-                            $this->renderName($funeral->buried_name) . ', '
-                            . $funeral->buried_address
-                            .($funeral->age() ? ', '.$funeral->age().' Jahre' : '')
-                            .'. Die '.$mode.' findet am '.$funeral->service->day->date->formatLocalized('%A, %d. %B')
-                            .' um '.$funeral->service->timeText(true, '.')
-                            .' '.$funeral->service->atText().' statt.',
+                            'Aus unserer Gemeinde ' . StringTool::pluralString(
+                                count($funeralArray['future']),
+                                'ist',
+                                'sind'
+                            ) . ' verstorben:',
                             []
                         ]
-                    ]);
+                    ]
+                );
+                foreach ($funeralArray['future'] as $funeral) {
+                    $mode = $funeral->type;
+                    if ($mode == 'Erdbestattung') {
+                        $mode = 'Bestattung';
+                    }
+                    $this->renderParagraph(
+                        self::NO_INDENT,
+                        [
+                            [
+                                $this->renderName($funeral->buried_name) . ', '
+                                . $funeral->buried_address
+                                . ($funeral->age() ? ', ' . $funeral->age() . ' Jahre' : '')
+                                . '. Die ' . $mode . ' findet am ' . $funeral->service->day->date->formatLocalized(
+                                    '%A, %d. %B'
+                                )
+                                . ' um ' . $funeral->service->timeText(true, '.')
+                                . ' ' . $funeral->service->atText() . ' statt.',
+                                []
+                            ]
+                        ]
+                    );
                 }
-
             }
 
 
             $this->renderParagraph();
-            $textRun = $this->renderLiteral('Wir nehmen teil an der Trauer der Angehörigen und befehlen die Toten, die Trauernden und uns der Güte Gottes an.');
+            $textRun = $this->renderLiteral(
+                'Wir nehmen teil an der Trauer der Angehörigen und befehlen die Toten, die Trauernden und uns der Güte Gottes an.'
+            );
             $textRun = $this->renderLiteral('_Wir bekennen gemeinsam:');
             $textRun = $this->renderLiteral('Unser keiner lebt sich selber, und keiner stirbt sich selber.');
-            $textRun = $this->renderLiteral('Leben wir, so leben wir dem Herrn;
+            $textRun = $this->renderLiteral(
+                'Leben wir, so leben wir dem Herrn;
 sterben wir, so sterben wir dem Herrn.
-Darum: Wir leben oder sterben, so sind wir des Herrn.');
-            $textRun = $this->renderLiteral('*Denn dazu ist Christus gestorben und wieder lebendig geworden, dass er über Tote und Lebende Herr sei.
-Amen.');
+Darum: Wir leben oder sterben, so sind wir des Herrn.'
+            );
+            $textRun = $this->renderLiteral(
+                '*Denn dazu ist Christus gestorben und wieder lebendig geworden, dass er über Tote und Lebende Herr sei.
+Amen.'
+            );
         }
 
 
@@ -500,16 +695,13 @@ Amen.');
         $this->sendToBrowser($filename);
     }
 
-
-    protected function renderName($s)
-    {
-        if (false !== strpos($s, ',')) {
-            $t = explode(',', $s);
-            $s = trim($t[1]) . ' ' . trim($t[0]);
-        }
-        return $s;
-    }
-
+    /**
+     * @param string $template
+     * @param array $blocks
+     * @param int $emptyParagraphsAfter
+     * @param null $existingTextRun
+     * @return TextRun|null
+     */
     protected function renderParagraph(
         $template = '',
         array $blocks = [],
@@ -526,7 +718,9 @@ Amen.');
         return $textRun;
     }
 
-
+    /**
+     * @param $text
+     */
     protected function renderLiteral($text)
     {
         if (!is_array($text)) {
@@ -545,13 +739,29 @@ Amen.');
                 default:
                     $format = [];
             }
-            $paragraph = trim(strtr($paragraph, [
-                "\r" => '',
-                "\n" => '<w:br />'
-            ]));
+            $paragraph = trim(
+                strtr(
+                    $paragraph,
+                    [
+                        "\r" => '',
+                        "\n" => '<w:br />'
+                    ]
+                )
+            );
             $this->renderParagraph(self::NO_INDENT, [[$paragraph, $format]], 1);
         }
+    }
 
-
+    /**
+     * @param $s
+     * @return string
+     */
+    protected function renderName($s)
+    {
+        if (false !== strpos($s, ',')) {
+            $t = explode(',', $s);
+            $s = trim($t[1]) . ' ' . trim($t[0]);
+        }
+        return $s;
     }
 }

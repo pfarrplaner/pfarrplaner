@@ -39,17 +39,39 @@ namespace App\Reports;
 
 
 use App\Location;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
+/**
+ * Class EmbedServiceTableReport
+ * @package App\Reports
+ */
 class EmbedServiceTableReport extends AbstractEmbedReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Liste von Gottesdiensten';
+    /**
+     * @var string
+     */
     public $group = 'Website (Gemeindebaukasten)';
+    /**
+     * @var string
+     */
     public $description = 'Erzeugt HTML-Code für die Einbindung einer Gottesdiensttabelle in die Website der Gemeinde';
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-code';
 
+    /**
+     * @return Application|Factory|View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
@@ -57,13 +79,19 @@ class EmbedServiceTableReport extends AbstractEmbedReport
         return $this->renderSetupView(compact('cities', 'locations'));
     }
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|string
+     */
     public function render(Request $request)
     {
-        $request->validate([
-            'listType' => 'required',
-            'ids' => 'required',
-            'cors-origin' => 'required|url',
-        ]);
+        $request->validate(
+            [
+                'listType' => 'required',
+                'ids' => 'required',
+                'cors-origin' => 'required|url',
+            ]
+        );
 
         $listType = $request->get('listType');
         $ids = join(',', $request->get('ids'));
@@ -71,8 +99,10 @@ class EmbedServiceTableReport extends AbstractEmbedReport
         $limit = $request->get('limit') ?: 5;
         $corsOrigin = $request->get('cors-origin');
 
-        $url = route('embed.'.$listType, compact('ids', 'limit'));
-        if ($corsOrigin) $url.='?cors-origin='.urlencode($corsOrigin);
+        $url = route('embed.' . $listType, compact('ids', 'limit'));
+        if ($corsOrigin) {
+            $url .= '?cors-origin=' . urlencode($corsOrigin);
+        }
 
         $randomId = uniqid();
 

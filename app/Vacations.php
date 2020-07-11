@@ -39,25 +39,21 @@ namespace App;
 
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * Class Vacations
+ * @package App
+ */
 class Vacations
 {
 
-    protected static function getVacationDataFromCache() {
-        if (!Cache::has('vacationData')) {
-            $vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
-            foreach ($vacationData as $key => $datum) {
-                $vacationData[$key]['start'] = Carbon::createFromTimeString($datum['start']);
-                $vacationData[$key]['end'] = Carbon::createFromTimeString($datum['end']);
-            }
-            Cache::put('vacationData', $vacationData, 10000);
-        } else {
-            $vacationData = Cache::get('vacationData');
-        }
-        return $vacationData;
-    }
-
+    /**
+     * @param $day
+     * @return array
+     */
     public static function getByDay($day)
     {
         $vacationers = [];
@@ -74,17 +70,42 @@ class Vacations
         return $vacationers;
     }
 
-
-    protected static function findUserByLastName($lastName)
+    /**
+     * @return mixed
+     */
+    protected static function getVacationDataFromCache()
     {
-        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
+        if (!Cache::has('vacationData')) {
+            $vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
+            foreach ($vacationData as $key => $datum) {
+                $vacationData[$key]['start'] = Carbon::createFromTimeString($datum['start']);
+                $vacationData[$key]['end'] = Carbon::createFromTimeString($datum['end']);
+            }
+            Cache::put('vacationData', $vacationData, 10000);
+        } else {
+            $vacationData = Cache::get('vacationData');
+        }
+        return $vacationData;
     }
 
-
-
+    /**
+     * @param $start
+     * @param $end
+     * @param User|null $user
+     * @return mixed
+     */
     public static function getByPeriodAndUser($start, $end, User $user = null)
     {
         return Absence::with('replacements')->byUserAndPeriod($user, $start, $end);
+    }
+
+    /**
+     * @param $lastName
+     * @return Builder|Model|object|null
+     */
+    protected static function findUserByLastName($lastName)
+    {
+        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
     }
 
 }

@@ -28,10 +28,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddServiceFields2
+ */
 class AddServiceFields2 extends Migration
 {
     /**
@@ -41,14 +43,17 @@ class AddServiceFields2 extends Migration
      */
     public function up()
     {
-        Schema::table('services', function($table){
-            $table->integer('baptism')->nullable()->default(0);
-            $table->integer('eucharist')->nullable()->default(0);
-            $table->string('offerings_counter1')->nullable()->default('');
-            $table->string('offerings_counter2')->nullable()->default('');
-            $table->string('offering_goal')->nullable()->default('');
-            $table->string('offering_description')->nullable()->default('');
-        });
+        Schema::table(
+            'services',
+            function ($table) {
+                $table->integer('baptism')->nullable()->default(0);
+                $table->integer('eucharist')->nullable()->default(0);
+                $table->string('offerings_counter1')->nullable()->default('');
+                $table->string('offerings_counter2')->nullable()->default('');
+                $table->string('offering_goal')->nullable()->default('');
+                $table->string('offering_description')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -58,13 +63,16 @@ class AddServiceFields2 extends Migration
      */
     public function down()
     {
-        Schema::table('services', function($table) {
-            $table->dropColumn('baptism');
-            $table->dropColumn('eucharist');
-            $table->dropColumn('offerings_counter1');
-            $table->dropColumn('offerings_counter2');
-            $table->dropColumn('offering_goal');
-            $table->dropColumn('offering_description');
-        });
+        Schema::table(
+            'services',
+            function ($table) {
+                $table->dropColumn('baptism');
+                $table->dropColumn('eucharist');
+                $table->dropColumn('offerings_counter1');
+                $table->dropColumn('offerings_counter2');
+                $table->dropColumn('offering_goal');
+                $table->dropColumn('offering_description');
+            }
+        );
     }
 }

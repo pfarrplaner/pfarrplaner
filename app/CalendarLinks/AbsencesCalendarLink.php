@@ -43,18 +43,37 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class AbsencesCalendarLink
+ * @package App\CalendarLinks
+ */
 class AbsencesCalendarLink extends AbstractCalendarLink
 {
 
+    /**
+     * @var string
+     */
     protected $title = 'Urlaubskalender';
+    /**
+     * @var string
+     */
     protected $description = 'Kalender mit allen Urlaubseinträgen, die du sehen kannst';
+    /**
+     * @var string
+     */
     protected $viewName = 'absences';
 
+    /**
+     * @return string
+     */
     public function setupRoute()
     {
         return route('ical.link', ['key' => $this->getKey()]);
     }
 
+    /**
+     * @param Request $request
+     */
     public function setDataFromRequest(Request $request)
     {
         if (null !== Auth::user()) {
@@ -62,16 +81,26 @@ class AbsencesCalendarLink extends AbstractCalendarLink
         }
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return array
+     */
     public function getRenderData(Request $request, User $user)
     {
         $users = $user->getViewableAbsenceUsers();
         $userId = $user->id;
         $data = Absence::whereIn('user_id', $users->pluck('id'))
-            ->orWhere(function ($query2) use ($userId) {
-                $query2->whereHas('replacements', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
-            })->get();
+            ->orWhere(
+                function ($query2) use ($userId) {
+                    $query2->whereHas(
+                        'replacements',
+                        function ($query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        }
+                    );
+                }
+            )->get();
 
         return $data;
     }

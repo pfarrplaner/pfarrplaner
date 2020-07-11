@@ -33,20 +33,56 @@ namespace App\Http\Controllers;
 use App\Absence;
 use App\CalendarLinks\AbstractCalendarLink;
 use App\CalendarLinks\CalendarLinks;
-use App\City;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
 
+/**
+ * Class ICalController
+ * @package App\Http\Controllers
+ */
 class ICalController extends Controller
 {
-    /** @var User $user  */
+    /** @var User $user */
     protected $user = null;
 
+    public function private($name, $token)
+    {
+        $this->checkToken($token);
+        $services = Service::with(['day', 'location'])
+            ->where(
+                function ($query) use ($name) {
+                    $query->where('pastor', 'like', '%' . $name . '%')
+                        ->orWhere('organist', 'like', '%' . $name . '%')
+                        ->orWhere('sacristan', 'like', '%' . $name . '%');
+                }
+            )->get();
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        header('Content-Type: text/calendar');
+        $raw = View::make(
+            'ical.ical',
+            ['services' => $services, 'action' => 'private', 'token' => $token, 'key' => $name]
+        );
+
+        $raw = str_replace(
+            "\r\n\r\n",
+            "\r\n",
+            str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw)))
+        );
+        die ($raw);
+    }
+
+    /**
+     * @param $token
+     */
     protected function checkToken($token)
     {
         $users = User::all();
@@ -57,27 +93,15 @@ class ICalController extends Controller
                 $this->user = $user;
             }
         }
-        if (!$found) die('wrong token');
+        if (!$found) {
+            die('wrong token');
+        }
     }
 
-    public function private($name, $token)
-    {
-        $this->checkToken($token);
-        $services = Service::with(['day', 'location'])
-            ->where(function ($query) use ($name) {
-                $query->where('pastor', 'like', '%' . $name . '%')
-                    ->orWhere('organist', 'like', '%' . $name . '%')
-                    ->orWhere('sacristan', 'like', '%' . $name . '%');
-            })->get();
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Expires: 0');
-        header('Content-Type: text/calendar');
-        $raw = View::make('ical.ical', ['services' => $services, 'action' => 'private', 'token' => $token, 'key' => $name]);
-
-        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
-        die ($raw);
-    }
-
+    /**
+     * @param $locationIds
+     * @param $token
+     */
     public function byLocation($locationIds, $token)
     {
         $this->checkToken($token);
@@ -87,11 +111,17 @@ class ICalController extends Controller
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Expires: 0');
         header('Content-Type: text/calendar');
-        $raw = View::make('ical.ical', ['services' => $services, 'action' => 'gemeinden', 'token' => $token, 'key' => $locationIds]);
+        $raw = View::make(
+            'ical.ical',
+            ['services' => $services, 'action' => 'gemeinden', 'token' => $token, 'key' => $locationIds]
+        );
 
-        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        $raw = str_replace(
+            "\r\n\r\n",
+            "\r\n",
+            str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw)))
+        );
         die ($raw);
-
     }
 
 
@@ -100,6 +130,10 @@ class ICalController extends Controller
      * Export absences as ical
      *
      */
+    /**
+     * @param User $user
+     * @param $token
+     */
     public function absences(User $user, $token)
     {
         $this->checkToken($token);
@@ -107,42 +141,73 @@ class ICalController extends Controller
         $users = $user->getViewableAbsenceUsers();
         $userId = $user->id;
         $absences = Absence::whereIn('user_id', $users->pluck('id'))
-        ->orWhere(function ($query2)  use ($userId) {
-            $query2->whereHas('replacements', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            });
-        })->get();
+            ->orWhere(
+                function ($query2) use ($userId) {
+                    $query2->whereHas(
+                        'replacements',
+                        function ($query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        }
+                    );
+                }
+            )->get();
 
         $raw = View::make('ical.absences', compact('user', 'absences', 'token'));
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Expires: 0');
         header('Content-Type: text/calendar');
-        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        $raw = str_replace(
+            "\r\n\r\n",
+            "\r\n",
+            str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw)))
+        );
         die($raw);
     }
 
 
-    public function connect() {
+    /**
+     * @return Application|Factory|\Illuminate\View\View
+     */
+    public function connect()
+    {
         $calendarLinks = CalendarLinks::all();
         /** @var AbstractCalendarLink $calendarLink */
         return view('ical.choice', compact('calendarLinks'));
-
     }
 
 
-    public function setup ($key) {
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function setup($key)
+    {
         $calendarLink = CalendarLinks::findKey($key);
         return $calendarLink->setupView();
     }
 
-    public function link(Request $request, $key) {
+    /**
+     * @param Request $request
+     * @param $key
+     * @return Application|Factory|\Illuminate\View\View
+     */
+    public function link(Request $request, $key)
+    {
         /** @var AbstractCalendarLink $calendarLink */
         $calendarLink = CalendarLinks::findKey($key);
         $calendarLink->setDataFromRequest($request);
         return view('ical.link', compact('calendarLink'));
     }
 
-    public function export(Request $request, User $user, $token, $key) {
+    /**
+     * @param Request $request
+     * @param User $user
+     * @param $token
+     * @param $key
+     * @return Application|ResponseFactory|Response|void
+     */
+    public function export(Request $request, User $user, $token, $key)
+    {
         if ($token != $user->getToken()) {
             return abort(403);
         }
@@ -154,14 +219,13 @@ class ICalController extends Controller
         $expires = 0;
         if ($key == 'cityEvents') {
             $expires = Carbon::now()->addMinutes(60)->format('D, d M Y H:i:s \G\M\T');
-            $cacheKey = 'ical_export_'.$key.'_'.$token;
+            $cacheKey = 'ical_export_' . $key . '_' . $token;
             if (Cache::has($cacheKey)) {
                 $data = Cache::get($cacheKey);
             } else {
                 $data = $calendarLink->export($request, $user);
                 Cache::put($cacheKey, $data, 3600);
             }
-
         } else {
             $data = $calendarLink->export($request, $user);
         }

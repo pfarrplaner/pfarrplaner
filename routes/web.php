@@ -39,8 +39,6 @@
 |
 */
 
-use App\Service;
-
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
@@ -244,12 +242,16 @@ Route::get('/podcasts/{cityName}.xml', 'PodcastController@podcast')->name('podca
 
 // google api
 Route::get('/google/auth/city', 'GoogleApiController@auth')->name('google-auth');
-Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name('broadcast.create');
+Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name(
+    'broadcast.create'
+);
 
 // youtube live chat
 Route::get('/livechat/{service}', 'LiveChatController@liveChat')->name('service.livechat');
 Route::get('/livechat/{service}/messages', 'LiveChatController@liveChatAjax')->name('service.livechat.ajax');
-Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessage')->name('service.livechat.message.post');
+Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessage')->name(
+    'service.livechat.message.post'
+);
 
 // test/debug routes
 Route::get('/test/mail/{address}', 'TestController@mail');
@@ -267,6 +269,9 @@ Route::get(
  * Test route
  * Allows for quick test code in a file that is excluded from Git
  */
-Route::get('test', function(){
-    include(base_path('build/test.php'));
-});
+Route::get(
+    'test',
+    function () {
+        include(base_path('build/test.php'));
+    }
+);

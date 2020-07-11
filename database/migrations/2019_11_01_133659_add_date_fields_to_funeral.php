@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddDateFieldsToFuneral
+ */
 class AddDateFieldsToFuneral extends Migration
 {
     /**
@@ -41,11 +44,14 @@ class AddDateFieldsToFuneral extends Migration
      */
     public function up()
     {
-        Schema::table('funerals', function (Blueprint $table) {
-            $table->datetime('appointment')->nullable();
-            $table->date('dob')->nullable();
-            $table->date('dod')->nullable();
-        });
+        Schema::table(
+            'funerals',
+            function (Blueprint $table) {
+                $table->datetime('appointment')->nullable();
+                $table->date('dob')->nullable();
+                $table->date('dod')->nullable();
+            }
+        );
     }
 
     /**
@@ -55,10 +61,13 @@ class AddDateFieldsToFuneral extends Migration
      */
     public function down()
     {
-        Schema::table('funerals', function (Blueprint $table) {
-            $table->dropColumn('appointment');
-            $table->dropColumn('dob');
-            $table->dropColumn('dod');
-        });
+        Schema::table(
+            'funerals',
+            function (Blueprint $table) {
+                $table->dropColumn('appointment');
+                $table->dropColumn('dob');
+                $table->dropColumn('dod');
+            }
+        );
     }
 }

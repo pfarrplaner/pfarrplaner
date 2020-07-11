@@ -40,11 +40,23 @@ namespace App\Http\Controllers;
 
 use App\Day;
 use App\Liturgy;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\View\View;
 
+/**
+ * Class LiturgicalDaysController
+ * @package App\Http\Controllers
+ */
 class LiturgicalDaysController extends Controller
 {
 
-    public function info($dayId) {
+    /**
+     * @param $dayId
+     * @return Application|Factory|View
+     */
+    public function info($dayId)
+    {
         $day = Day::find($dayId);
         $liturgy = Liturgy::getDayInfo($day);
         return view('liturgicalDays.ajax.info', compact('day', 'liturgy'));

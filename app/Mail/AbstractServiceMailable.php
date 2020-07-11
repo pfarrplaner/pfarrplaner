@@ -44,6 +44,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * Class AbstractServiceMailable
+ * @package App\Mail
+ */
 class AbstractServiceMailable extends Mailable
 {
 
@@ -61,13 +65,22 @@ class AbstractServiceMailable extends Mailable
     /** @var Service $original */
     protected $original;
 
+    /**
+     * @var array|mixed
+     */
     protected $changed = [];
 
+    /**
+     * AbstractServiceMailable constructor.
+     * @param User $user
+     * @param Service $service
+     * @param array $data
+     */
     public function __construct(User $user, Service $service, array $data)
     {
         $this->user = $user;
         $this->service = $service;
-        $this->original =$service->originalObject;
+        $this->original = $service->originalObject;
         $this->changed = $service->changedFields;
         $this->data = $data;
     }

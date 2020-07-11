@@ -40,8 +40,18 @@ namespace App\Tools;
 
 use Carbon\Carbon;
 
+/**
+ * Class StringTool
+ * @package App\Tools
+ */
 class StringTool
 {
+    /**
+     * @param $s
+     * @param bool $clockText
+     * @param string $separator
+     * @return string
+     */
     public static function timeString($s, $clockText = true, $separator = ':')
     {
         return Carbon::createFromTimeString($s)->formatLocalized('%H' . $separator . '%M') . ($clockText ? ' Uhr' : '');
@@ -59,39 +69,80 @@ class StringTool
         return '';
     }
 
+    /**
+     * @param $count
+     * @param $singular
+     * @param $plural
+     * @param string $zeroString
+     * @return string
+     */
     public static function pluralString($count, $singular, $plural, $zeroString = '')
     {
-        if ($count == 0 ) return $zeroString ?: $plural;
+        if ($count == 0) {
+            return $zeroString ?: $plural;
+        }
         return ($count == 1) ? $singular : $plural;
     }
 
-    public static function trimToLen($s, $maxLength) {
-        if (strlen($s) > $maxLength)
-        {
+    /**
+     * @param $s
+     * @param $maxLength
+     * @return string
+     */
+    public static function trimToLen($s, $maxLength)
+    {
+        if (strlen($s) > $maxLength) {
             $offset = ($maxLength - 3) - strlen($s);
             $s = substr($s, 0, strrpos($s, ' ', $offset)) . '...';
         }
         return $s;
     }
 
-    public static function timeText($time, $uhr = true, $separator=':', $skipMinutes = false, $nbsp = false, $leadingZero = false)  {
-        if (!is_numeric($time)) $time = strtotime($time);
-        $format = ($leadingZero ? '%H' : '%k').$separator.'%M';
-        if ($skipMinutes) {
-            if ((int)strftime('%M', $time) == 0) $format = '%H';
+    /**
+     * @param $time
+     * @param bool $uhr
+     * @param string $separator
+     * @param bool $skipMinutes
+     * @param bool $nbsp
+     * @param bool $leadingZero
+     * @return string
+     */
+    public static function timeText(
+        $time,
+        $uhr = true,
+        $separator = ':',
+        $skipMinutes = false,
+        $nbsp = false,
+        $leadingZero = false
+    ) {
+        if (!is_numeric($time)) {
+            $time = strtotime($time);
         }
-        return trim(strftime($format, $time).($uhr ? ($nbsp ? '&nbsp;' : ' ').'Uhr' : ''));
-
+        $format = ($leadingZero ? '%H' : '%k') . $separator . '%M';
+        if ($skipMinutes) {
+            if ((int)strftime('%M', $time) == 0) {
+                $format = '%H';
+            }
+        }
+        return trim(strftime($format, $time) . ($uhr ? ($nbsp ? '&nbsp;' : ' ') . 'Uhr' : ''));
     }
 
-    public static function indent($text) {
+    /**
+     * @param $text
+     * @return string
+     */
+    public static function indent($text)
+    {
         $indent = 0;
         $lines = explode("\n", $text);
         foreach ($lines as $index => $line) {
             $line = trim($line);
-            if (substr($line, 0, 2) == '</') $indent--;
-            elseif (substr($line, 0, 1) == '<') $indent++;
-            $lines[$index] = str_pad($line, 4*$indent, ' ', STR_PAD_LEFT);
+            if (substr($line, 0, 2) == '</') {
+                $indent--;
+            } elseif (substr($line, 0, 1) == '<') {
+                $indent++;
+            }
+            $lines[$index] = str_pad($line, 4 * $indent, ' ', STR_PAD_LEFT);
         }
         return join("\n", $lines);
     }

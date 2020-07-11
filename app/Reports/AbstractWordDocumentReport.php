@@ -30,21 +30,35 @@
 
 namespace App\Reports;
 
+use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
 
+/**
+ * Class AbstractWordDocumentReport
+ * @package App\Reports
+ */
 class AbstractWordDocumentReport extends AbstractReport
 {
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-word';
 
     /** @var PhpWord $wordDocument */
     protected $wordDocument = null;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->wordDocument = new PhpWord();
     }
 
-    public function sendToBrowser($filename) {
+    /**
+     * @param $filename
+     * @throws Exception
+     */
+    public function sendToBrowser($filename)
+    {
         header("Content-Description: File Transfer");
         header('Content-Disposition: attachment; filename="' . $filename . '.docx"');
         header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');

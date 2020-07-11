@@ -32,10 +32,13 @@ namespace Tests\Feature;
 
 use App\HomeScreens\PastorHomeScreen;
 use App\User;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
+/**
+ * Class UserUnitTest
+ * @package Tests\Feature
+ */
 class UserUnitTest extends TestCase
 {
 

@@ -32,11 +32,21 @@ namespace App;
 
 use App\Tools\StringTool;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
+/**
+ * Class Absence
+ * @package App
+ */
 class Absence extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'from',
         'to',
@@ -45,55 +55,92 @@ class Absence extends Model
         'replacement_notes',
     ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
-        'from', 'to'
+        'from',
+        'to'
     ];
 
-    public function replacements() {
+    /**
+     * @return HasMany
+     */
+    public function replacements()
+    {
         return $this->hasMany(Replacement::class);
     }
 
-    public function user() {
+    /**
+     * @return BelongsTo
+     */
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function approvals() {
+    /**
+     * @return HasMany
+     */
+    public function approvals()
+    {
         return $this->hasMany(Approval::class);
     }
 
-    public function replacementText($prefix = '') {
-        $prefix = $prefix ? $prefix.' ' : '';
+    /**
+     * @return string
+     */
+    public function durationText()
+    {
+        return StringTool::durationText($this->from, $this->to);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getReplacingUserIds(): Collection
+    {
+        $ids = [];
+        foreach ($this->replacements as $replacement) {
+            foreach ($replacement->users as $user) {
+                if (is_object($user)) {
+                    $ids[] = $user->id;
+                }
+            }
+        }
+        return (new Collection(array_unique($ids)));
+    }
+
+    /**
+     * @return string
+     */
+    public function fullDescription()
+    {
+        $t = $this->replacementText();
+        if ($t) {
+            $t = ' [V: ' . $t . ']';
+        }
+        return $this->user->fullName() . ' (' . $this->reason . ')' . $t;
+    }
+
+    /**
+     * @param string $prefix
+     * @return string
+     */
+    public function replacementText($prefix = '')
+    {
+        $prefix = $prefix ? $prefix . ' ' : '';
         $replacements = $this->replacements;
         if (count($replacements) == 1) {
-            return $prefix.$replacements->first()->toText();
+            return $prefix . $replacements->first()->toText();
         } else {
             $r = [];
             /** @var Replacement $replacement */
             foreach ($replacements as $replacement) {
                 $r[] = $replacement->toText(true);
             }
-            return $prefix.join('; ', $r);
+            return $prefix . join('; ', $r);
         }
-    }
-
-    public function durationText() {
-        return StringTool::durationText($this->from, $this->to);
-    }
-
-    public function getReplacingUserIds(): Collection {
-        $ids = [];
-        foreach ($this->replacements as $replacement) {
-            foreach ($replacement->users as $user) {
-                if (is_object($user)) $ids[] = $user->id;
-            }
-        }
-        return (new Collection(array_unique($ids)));
-    }
-
-    public function fullDescription() {
-        $t = $this->replacementText();
-        if ($t) $t = ' [V: '.$t.']';
-        return $this->user->fullName().' ('.$this->reason.')'.$t;
     }
 
     /**
@@ -102,34 +149,59 @@ class Absence extends Model
      * @param Carbon $start Start date
      * @param Carbon $end End date
      */
-    public function showableDays($start, $end) {
+    public function showableDays($start, $end)
+    {
         $myFrom = max($start, $this->from);
         $myTo = min($end, $this->to);
-        return $myTo->diffInDays($myFrom)+1;
+        return $myTo->diffInDays($myFrom) + 1;
     }
 
+    /**
+     * @return bool|null
+     * @throws Exception
+     */
     public function delete()
     {
-        foreach ($this->replacements as $replacement) $replacement->delete();
+        foreach ($this->replacements as $replacement) {
+            $replacement->delete();
+        }
         return parent::delete();
     }
 
 
+    /**
+     * @param $query
+     * @param $user
+     * @return mixed
+     */
     public function scopeVisibleForUser($query, $user)
     {
         $userId = $user->id;
         $users = $user->getViewableAbsenceUsers();
 
         return $query->whereIn('user_id', $users->pluck('id'))
-            ->orWhere(function ($query2)  use ($userId) {
-                $query2->whereHas('replacements', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
-            });
+            ->orWhere(
+                function ($query2) use ($userId) {
+                    $query2->whereHas(
+                        'replacements',
+                        function ($query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        }
+                    );
+                }
+            );
     }
 
 
-    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end) {
+    /**
+     * @param $query
+     * @param User $user
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return mixed
+     */
+    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end)
+    {
         return $query->where('user_id', $user->id)
             ->where('from', '<=', $end)
             ->where('to', '>=', $start);

@@ -30,34 +30,55 @@
 
 namespace App\Reports;
 
-use App\City;
 use App\Day;
 use App\FileFormats\IDML;
 use App\Liturgy;
 use App\Location;
 use App\Service;
 use App\Tools\StringTool;
-use Debugbar;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use Debugbar;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\View;
-use Mpdf\Config\ConfigVariables;
-use PhpOffice\PhpWord\Shared\Converter;
-use PhpOffice\PhpWord\Style\Tab;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Exception\Exception;
+use Throwable;
 
 
+/**
+ * Class BulletinBLReport
+ * @package App\Reports
+ */
 class BulletinBLReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file';
+    /**
+     * @var string
+     */
     public $title = 'Gemeindebrief (BL)';
+    /**
+     * @var string
+     */
     public $group = 'Listen';
+    /**
+     * @var string
+     */
     public $description = 'Gottesdiensttabelle für den Gemeindebrief';
 
+    /**
+     * @var string[]
+     */
     public $formats = ['Balingen'];
 
+    /**
+     * @var float[]
+     */
     protected $cols = [
         [21.6102362202077, -489.32677165354335, 7948.082677164984, -350.9017990755136, 7978.082677164984],
         [203.94291338581854, -522.6036220472524, 7948.082677164984, -384.17842519685036, 7978.082677164984],
@@ -66,6 +87,9 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         [697.137161041411, -518.8541317049825, 7948.082677164984, -384.1784251968842, 7978.082677164984],
     ];
 
+    /**
+     * @var array
+     */
     protected $tagWidth = [
         'abendmahl' => 2.399,
         'fahrdienst' => 4.276,
@@ -78,6 +102,9 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         'taufe' => 3.315,
     ];
 
+    /**
+     * @var float[]
+     */
     protected $tagBaseCoords = [
         'abendmahl' => [-488.45233093682400, -596.13678866970800],
         'fahrdienst' => [-308.42721887539200, -45.45599600745520],
@@ -103,6 +130,9 @@ class BulletinBLReport extends AbstractPDFDocumentReport
     }
 
 
+    /**
+     * @return Application|Factory|View
+     */
     public function setup()
     {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
@@ -110,6 +140,10 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         return $this->renderView('setup', ['maxDate' => $maxDate, 'cities' => $cities, 'formats' => $this->formats]);
     }
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View
+     */
     public function configure(Request $request)
     {
         $request->validate(
@@ -179,15 +213,36 @@ class BulletinBLReport extends AbstractPDFDocumentReport
 
         $dayList = [];
         foreach ($days as $day) {
-            if (!isset($empty[$day->id])) $dayList[] = $day->id;
-            else {
-                if (count($empty[$day->id]['locations']) != 4) $dayList[] = $day->id;
-                else unset($empty[$day->id]);
+            if (!isset($empty[$day->id])) {
+                $dayList[] = $day->id;
+            } else {
+                if (count($empty[$day->id]['locations']) != 4) {
+                    $dayList[] = $day->id;
+                } else {
+                    unset($empty[$day->id]);
+                }
             }
         }
-        return $this->renderView('empty', compact('start', 'end', 'includeCities', 'locations', 'empty', 'dayList', 'locationIds'));
+        return $this->renderView(
+            'empty',
+            compact(
+                'start',
+                'end',
+                'includeCities',
+                'locations',
+                'empty',
+                'dayList',
+                'locationIds'
+            )
+        );
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws Exception
+     * @throws Throwable
+     */
     public function render(Request $request)
     {
         $request->validate(
@@ -318,7 +373,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
                 $location = $locationsTemp->splice(0, 1)->first();
                 $text = $location->name;
                 if ($location->default_time) {
-                    $text .= (strlen($text) <28) ? $this->idml->BR() : ' - ';
+                    $text .= (strlen($text) < 28) ? $this->idml->BR() : ' - ';
                     $text .= StringTool::timeString($location->default_time, true, '.');
                 }
             }
@@ -373,10 +428,20 @@ class BulletinBLReport extends AbstractPDFDocumentReport
                 $col++;
                 $text = '';
                 $service = null;
-                if (isset($serviceList[$location->id][$day->date->format('Y-m-d')]) && count($serviceList[$location->id][$day->date->format('Y-m-d')])) {
+                if (isset($serviceList[$location->id][$day->date->format('Y-m-d')]) && count(
+                        $serviceList[$location->id][$day->date->format('Y-m-d')]
+                    )) {
                     $service = $serviceList[$location->id][$day->date->format('Y-m-d')]->first();
                     $text = $service->participantsText('P', false, false, '|')
-                        .((is_object($service->location)) && (StringTool::timeString($location->default_time, true, '.') != StringTool::timeString($service->time, true, '.')) ? ' '.StringTool::timeString($location->default_time, true, '.') : '')
+                        . ((is_object($service->location)) && (StringTool::timeString(
+                                $location->default_time,
+                                true,
+                                '.'
+                            ) != StringTool::timeString($service->time, true, '.')) ? ' ' . StringTool::timeString(
+                                $location->default_time,
+                                true,
+                                '.'
+                            ) : '')
                         . $this->idml->BR()
                         . $service->description;
                 } elseif (isset($empty[$location->id][$day->id])) {
@@ -386,9 +451,15 @@ class BulletinBLReport extends AbstractPDFDocumentReport
 
                 if (!is_null($service)) {
                     $tags = $service->tags->pluck('code')->toArray();
-                    if ($service->eucharist) $tags[] = 'abendmahl';
-                    if ($service->baptism || (count($service->baptisms) >0)) $tags[] = 'taufe';
-                    if ($service->cc) $tags[] = 'kiki';
+                    if ($service->eucharist) {
+                        $tags[] = 'abendmahl';
+                    }
+                    if ($service->baptism || (count($service->baptisms) > 0)) {
+                        $tags[] = 'taufe';
+                    }
+                    if ($service->cc) {
+                        $tags[] = 'kiki';
+                    }
                     $spreadCode .= $this->setTags($col, $rowCtr, $tags);
                 }
             }
@@ -432,6 +503,17 @@ class BulletinBLReport extends AbstractPDFDocumentReport
     }
 
 
+    /**
+     * @param $stories
+     * @param $storyId
+     * @param $spreadCode
+     * @param $y
+     * @param $col
+     * @param $text
+     * @param string $view
+     * @return string
+     * @throws Throwable
+     */
     protected function storyFrame(
         &$stories,
         &$storyId,
@@ -460,22 +542,35 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         return $storyId;
     }
 
-    protected function setTags(int $col, int $row, array $tags) {
+    /**
+     * @param int $col
+     * @param int $row
+     * @param array $tags
+     * @return string
+     */
+    protected function setTags(int $col, int $row, array $tags)
+    {
         $offset = 0;
         $code = '';
 
         // calculate column offset
-        $colOffset = $this->cols[$col][0]-$this->cols[1][0];
-        if ($col == 3) $colOffset += 33.12469843;
+        $colOffset = $this->cols[$col][0] - $this->cols[1][0];
+        if ($col == 3) {
+            $colOffset += 33.12469843;
+        }
 
         foreach ($tags as $tag) {
             $coords = $this->tagBaseCoords[$tag];
-            $x = str_replace(',', '.', (string)($coords[0]-IDML::mmToPoint($this->tagWidth[$tag])-$offset+$colOffset));
-            $y = str_replace(',', '.', (string)($coords[1]+ (($row-1) * 34.4685039370106)));
-            $uid = $this->idml->getUID('tag_'.$tag);
-            $code .= view('reports.bulletinbl.idml.tags.'.$tag, compact('x', 'y', 'uid'));
+            $x = str_replace(
+                ',',
+                '.',
+                (string)($coords[0] - IDML::mmToPoint($this->tagWidth[$tag]) - $offset + $colOffset)
+            );
+            $y = str_replace(',', '.', (string)($coords[1] + (($row - 1) * 34.4685039370106)));
+            $uid = $this->idml->getUID('tag_' . $tag);
+            $code .= view('reports.bulletinbl.idml.tags.' . $tag, compact('x', 'y', 'uid'));
 
-            $offset += IDML::mmToPoint($this->tagWidth[$tag]+1);
+            $offset += IDML::mmToPoint($this->tagWidth[$tag] + 1);
         }
 
         return $code;

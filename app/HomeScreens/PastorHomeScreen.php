@@ -42,31 +42,49 @@ use App\Baptism;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+use Throwable;
 
+/**
+ * Class PastorHomeScreen
+ * @package App\HomeScreens
+ */
 class PastorHomeScreen extends AbstractHomeScreen
 {
+    /**
+     * @var bool
+     */
     protected $hasConfiguration = true;
 
+    /**
+     * @return Factory|View|mixed
+     */
     public function render()
     {
         /** @var User $user */
         $user = Auth::user();
 
-        $start = Carbon::now()->setTime(0,0,0);
+        $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
         $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
+            ->whereHas(
+                'participants',
+                function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            )->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -77,13 +95,19 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereHas('baptisms')
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
-            ->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
+            ->whereHas(
+                'participants',
+                function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -98,12 +122,18 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereHas('funerals')
-            ->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start->copy()->subWeeks(2));
-            })
+            ->whereHas(
+                'participants',
+                function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            )
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start->copy()->subWeeks(2));
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -113,13 +143,19 @@ class PastorHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereHas('weddings')
-            ->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
+            ->whereHas(
+                'participants',
+                function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            )
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -127,15 +163,33 @@ class PastorHomeScreen extends AbstractHomeScreen
 
         $missing = Service::withOpenMinistries(unserialize($user->getSetting('homeScreen_ministries', '')) ?: []);
 
-        return $this->renderView('homescreen.pastor', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings', 'missing'));
+        return $this->renderView(
+            'homescreen.pastor',
+            compact(
+                'user',
+                'services',
+                'funerals',
+                'baptisms',
+                'baptismRequests',
+                'weddings',
+                'missing'
+            )
+        );
     }
 
+    /**
+     * @return array|string
+     * @throws Throwable
+     */
     public function renderConfigurationView()
     {
         return view('homescreen.pastor.config')->render();
     }
 
 
+    /**
+     * @param Request $request
+     */
     public function setConfiguration(Request $request)
     {
         parent::setConfiguration($request);

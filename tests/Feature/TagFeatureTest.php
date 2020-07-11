@@ -32,22 +32,18 @@ namespace Tests\Feature;
 
 use App\Http\Middleware\Authenticate;
 use App\Tag;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class TagFeatureTest
+ * @package Tests\Feature
+ */
 class TagFeatureTest extends TestCase
 {
 
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware(Authenticate::class);
-    }
-
 
     /**
      * Test if a tag can be created
@@ -106,7 +102,8 @@ class TagFeatureTest extends TestCase
      *
      * @return void
      */
-    public function testTagCodeIsSlug() {
+    public function testTagCodeIsSlug()
+    {
         $this->post(route('tags.store'), factory(Tag::class)->raw(['code' => null]));
         $tag = Tag::first();
         $this->assertEquals(Str::slug($tag->name), $tag->code);
@@ -125,5 +122,11 @@ class TagFeatureTest extends TestCase
         $response->assertStatus(302);
         $response->assertRedirect(route('tags.index'));
         $this->assertCount(0, Tag::all());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware(Authenticate::class);
     }
 }

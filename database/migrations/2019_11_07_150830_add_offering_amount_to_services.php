@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddOfferingAmountToServices
+ */
 class AddOfferingAmountToServices extends Migration
 {
     /**
@@ -41,9 +44,12 @@ class AddOfferingAmountToServices extends Migration
      */
     public function up()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->string('offering_amount')->nullable()->default('');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->string('offering_amount')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -53,8 +59,11 @@ class AddOfferingAmountToServices extends Migration
      */
     public function down()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->dropColumn('offering_amount');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->dropColumn('offering_amount');
+            }
+        );
     }
 }

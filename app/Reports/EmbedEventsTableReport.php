@@ -43,30 +43,57 @@ use App\Imports\EventCalendarImport;
 use App\Imports\OPEventsImport;
 use App\Service;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
+/**
+ * Class EmbedEventsTableReport
+ * @package App\Reports
+ */
 class EmbedEventsTableReport extends AbstractEmbedReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Liste von aktuellen Veranstaltungen';
+    /**
+     * @var string
+     */
     public $group = 'Website (Gemeindebaukasten)';
+    /**
+     * @var string
+     */
     public $description = 'Erzeugt HTML-Code für die Einbindung einer Veranstaltungsliste in die Website der Gemeinde';
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file-code';
 
+    /**
+     * @return Application|Factory|View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return Application|Factory|View|string
+     */
     public function render(Request $request)
     {
-
-        $request->validate([
-            'cors-origin' => 'required|url',
-            'city' => 'required',
-        ]);
+        $request->validate(
+            [
+                'cors-origin' => 'required|url',
+                'city' => 'required',
+            ]
+        );
         $city = City::findOrFail($request->get('city'));
         $days = $request->get('numDays');
         $corsOrigin = $request->get('cors-origin');
@@ -79,12 +106,17 @@ class EmbedEventsTableReport extends AbstractEmbedReport
     }
 
 
-    public function embed(Request $request) {
+    /**
+     * @param Request $request
+     * @return Application|Factory|View
+     */
+    public function embed(Request $request)
+    {
         $city = City::findOrFail($request->get('city'));
         $days = $request->get('days');
 
-        $start = Carbon::now('Europe/Berlin')->setTime(0,0,0);
-        $end = $start->copy()->addDays($days)->setTime(23,59,59);
+        $start = Carbon::now('Europe/Berlin')->setTime(0, 0, 0);
+        $end = $start->copy()->addDays($days)->setTime(23, 59, 59);
 
         $services = Service::with(['day', 'location'])
             ->whereDoesntHave('funerals')
@@ -112,6 +144,9 @@ class EmbedEventsTableReport extends AbstractEmbedReport
         $customerKey = $city->op_customer_key;
         $randomId = uniqid();
 
-        return $this->renderView('embed', compact('start', 'days', 'city', 'events', 'customerKey', 'customerToken', 'randomId'));
+        return $this->renderView(
+            'embed',
+            compact('start', 'days', 'city', 'events', 'customerKey', 'customerToken', 'randomId')
+        );
     }
 }

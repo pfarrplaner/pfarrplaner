@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddStreamingFieldsToServices
+ */
 class AddStreamingFieldsToServices extends Migration
 {
     /**
@@ -41,14 +44,17 @@ class AddStreamingFieldsToServices extends Migration
      */
     public function up()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->string('youtube_url')->nullable()->default('');
-            $table->string('cc_streaming_url')->nullable()->default('');
-            $table->string('offerings_url')->nullable()->default('');
-            $table->string('meeting_url')->nullable()->default('');
-            $table->string('recording_url')->nullable()->default('');
-            $table->string('songsheet')->nullable()->default('');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->string('youtube_url')->nullable()->default('');
+                $table->string('cc_streaming_url')->nullable()->default('');
+                $table->string('offerings_url')->nullable()->default('');
+                $table->string('meeting_url')->nullable()->default('');
+                $table->string('recording_url')->nullable()->default('');
+                $table->string('songsheet')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -58,13 +64,16 @@ class AddStreamingFieldsToServices extends Migration
      */
     public function down()
     {
-        Schema::table('services', function (Blueprint $table) {
-            $table->dropColumn('youtube_url');
-            $table->dropColumn('cc_streaming_url');
-            $table->dropColumn('offerings_url');
-            $table->dropColumn('meeting_url');
-            $table->dropColumn('recording_url');
-            $table->dropColumn('songsheet');
-        });
+        Schema::table(
+            'services',
+            function (Blueprint $table) {
+                $table->dropColumn('youtube_url');
+                $table->dropColumn('cc_streaming_url');
+                $table->dropColumn('offerings_url');
+                $table->dropColumn('meeting_url');
+                $table->dropColumn('recording_url');
+                $table->dropColumn('songsheet');
+            }
+        );
     }
 }

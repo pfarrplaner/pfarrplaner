@@ -31,16 +31,24 @@
 namespace App\Events;
 
 use App\Absence;
-use App\Approval;
 use Illuminate\Queue\SerializesModels;
 
-class AbsenceRejected {
+/**
+ * Class AbsenceRejected
+ * @package App\Events
+ */
+class AbsenceRejected
+{
 
     use SerializesModels;
 
     /** @var Absence */
     public $absence;
 
+    /**
+     * AbsenceRejected constructor.
+     * @param Absence $absence
+     */
     public function __construct(Absence $absence)
     {
         $this->absence = $absence;

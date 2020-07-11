@@ -32,10 +32,13 @@ namespace Tests\Unit;
 
 use App\Http\Requests\StoreServiceRequest;
 use App\Service;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
+/**
+ * Class ServiceUnitTest
+ * @package Tests\Unit
+ */
 class ServiceUnitTest extends TestCase
 {
 
@@ -87,7 +90,8 @@ class ServiceUnitTest extends TestCase
      * @return void
      * @test
      */
-    public function testCheckBoxesCanBeSetAndUnset() {
+    public function testCheckBoxesCanBeSetAndUnset()
+    {
         $service = factory(Service::class)->raw(['need_predicant' => 1]);
         $rules = (new StoreServiceRequest())->rules();
         $validator = app('validator')->make($service, $rules);

@@ -47,27 +47,51 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class CityEventsCalendarLink
+ * @package App\CalendarLinks
+ */
 class CityEventsCalendarLink extends AbstractCalendarLink
 {
 
+    /**
+     * @var string
+     */
     protected $title = 'Kombinierter Veranstaltungskalender';
+    /**
+     * @var string
+     */
     protected $description = 'Kalender, neben den Gottesdiensten auch die Veranstaltungen (aus Outlook, Online Planer) einer Kirchengemeinde enthält.';
+    /**
+     * @var string
+     */
     protected $viewName = 'events';
 
-    public function setupData() {
+    /**
+     * @return array
+     */
+    public function setupData()
+    {
         $cities = Auth::user()->cities;
         return compact('cities');
     }
 
+    /**
+     * @param Request $request
+     */
     public function setDataFromRequest(Request $request)
     {
         $request->validate(['city' => 'required']);
         $this->data['city'] = $request->get('city');
     }
 
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return array|mixed
+     */
     public function getRenderData(Request $request, User $user)
     {
-
         $city = City::findOrFail($request->get('city'));
         $events = [];
 
@@ -76,8 +100,8 @@ class CityEventsCalendarLink extends AbstractCalendarLink
             ->get();
 
 
-        $start = Carbon::createFromDate(1970,1,1);
-        $end = Carbon::createFromDate(2070, 1,1 );
+        $start = Carbon::createFromDate(1970, 1, 1);
+        $end = Carbon::createFromDate(2070, 1, 1);
 
         if (isset($city->public_events_calendar_url)) {
             $calendar = new EventCalendarImport($city->public_events_calendar_url);

@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateAttachmentsTable
+ */
 class CreateAttachmentsTable extends Migration
 {
     /**
@@ -41,14 +44,17 @@ class CreateAttachmentsTable extends Migration
      */
     public function up()
     {
-        Schema::create('attachments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('title');
-            $table->string('file');
-            $table->integer('attachable_id')->nullable();
-            $table->string('attachable_type')->nullable();
-            $table->timestamps();
-        });
+        Schema::create(
+            'attachments',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->string('title');
+                $table->string('file');
+                $table->integer('attachable_id')->nullable();
+                $table->string('attachable_type')->nullable();
+                $table->timestamps();
+            }
+        );
     }
 
     /**

@@ -32,22 +32,37 @@ namespace App;
 
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class UserSetting
+ * @package App
+ */
 class UserSetting extends Model
 {
     use HasEncryptedAttributes;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'user_id',
         'key',
         'value'
     ];
 
+    /**
+     * @var string[]
+     */
     protected $encrypted = [
         'value'
     ];
 
-    public function user() {
+    /**
+     * @return BelongsTo
+     */
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 

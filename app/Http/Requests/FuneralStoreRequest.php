@@ -30,9 +30,12 @@
 
 namespace App\Http\Requests;
 
-use App\Funeral;
 use Illuminate\Foundation\Http\FormRequest;
 
+/**
+ * Class FuneralStoreRequest
+ * @package App\Http\Requests
+ */
 class FuneralStoreRequest extends FormRequest
 {
     /**
@@ -45,11 +48,26 @@ class FuneralStoreRequest extends FormRequest
         return true;
     }
 
+    /**
+     * @return array
+     */
     public function validated()
     {
         $data = parent::validated();
-        foreach (['buried_address', 'buried_zip', 'buried_city', 'text', 'type', 'relative_name', 'relative_address',
-                     'relative_zip', 'relative_city', 'wake_location'] as $key) {
+        foreach (
+            [
+                'buried_address',
+                'buried_zip',
+                'buried_city',
+                'text',
+                'type',
+                'relative_name',
+                'relative_address',
+                'relative_zip',
+                'relative_city',
+                'wake_location'
+            ] as $key
+        ) {
             $data[$key] = $data[$key] ?? '';
         }
         return $data;

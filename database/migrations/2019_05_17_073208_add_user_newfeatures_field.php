@@ -28,10 +28,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddUserNewfeaturesField
+ */
 class AddUserNewfeaturesField extends Migration
 {
     /**
@@ -41,9 +43,12 @@ class AddUserNewfeaturesField extends Migration
      */
     public function up()
     {
-        Schema::table('users', function($table) {
-            $table->date('new_features')->nullable();
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->date('new_features')->nullable();
+            }
+        );
     }
 
     /**
@@ -53,8 +58,11 @@ class AddUserNewfeaturesField extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table) {
-            $table->dropColumn('new_features');
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->dropColumn('new_features');
+            }
+        );
     }
 }

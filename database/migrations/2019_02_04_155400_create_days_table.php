@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateDaysTable
+ */
 class CreateDaysTable extends Migration
 {
     /**
@@ -41,13 +44,16 @@ class CreateDaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('days', function (Blueprint $table) {
-            $table->increments('id');
-            $table->date('date');
-            $table->string('name');
-            $table->mediumText('description');
-            $table->timestamps();
-        });
+        Schema::create(
+            'days',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->date('date');
+                $table->string('name');
+                $table->mediumText('description');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

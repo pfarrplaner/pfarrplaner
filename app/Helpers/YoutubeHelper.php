@@ -33,9 +33,45 @@ namespace App\Helpers;
 
 use App\City;
 
+/**
+ * Class YoutubeHelper
+ * @package App\Helpers
+ */
 class YoutubeHelper
 {
 
+    /**
+     * @param City $city
+     * @param $url
+     * @return string
+     */
+    public static function getLiveDashboardUrl(City $city, $url)
+    {
+        return 'https://studio.youtube.com/channel/'
+            . self::getChannelId($city->youtube_channel_url)
+            . (substr($city->youtube_channel_url, -1) == '/' ? '' : '/')
+            . 'livestreaming/dashboard?v='
+            . self::getCode($url);
+    }
+
+    /**
+     * @param $url
+     * @return mixed|string
+     */
+    public static function getChannelId($url)
+    {
+        if (substr($url, -1) == '/') {
+            $url = substr($url, 0, -1);
+        }
+        $tmp = explode('/', $url);
+        $code = end($tmp);
+        return $code;
+    }
+
+    /**
+     * @param $url
+     * @return mixed|string
+     */
     public static function getCode($url)
     {
         $code = '';
@@ -43,21 +79,6 @@ class YoutubeHelper
             $tmp = explode('/', $url);
             $code = end($tmp);
         }
-        return $code;
-    }
-
-    public static function getLiveDashboardUrl(City $city, $url) {
-        return 'https://studio.youtube.com/channel/'
-            .self::getChannelId($city->youtube_channel_url)
-            .(substr($city->youtube_channel_url, -1) == '/' ? '' : '/')
-            .'livestreaming/dashboard?v='
-            .self::getCode($url);
-    }
-
-    public static function getChannelId($url) {
-        if (substr($url, -1) == '/') $url = substr($url, 0, -1);
-        $tmp = explode('/', $url);
-        $code = end($tmp);
         return $code;
     }
 }

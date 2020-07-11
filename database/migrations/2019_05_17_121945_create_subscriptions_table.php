@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateSubscriptionsTable
+ */
 class CreateSubscriptionsTable extends Migration
 {
     /**
@@ -41,13 +44,16 @@ class CreateSubscriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('subscriptions', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('city_id');
-            $table->integer('subscription_type');
-            $table->timestamps();
-        });
+        Schema::create(
+            'subscriptions',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('user_id');
+                $table->integer('city_id');
+                $table->integer('subscription_type');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

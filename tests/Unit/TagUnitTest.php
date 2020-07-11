@@ -31,11 +31,15 @@
 namespace Tests\Unit;
 
 use App\Tag;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
+/**
+ * Class TagUnitTest
+ * @package Tests\Unit
+ */
 class TagUnitTest extends TestCase
 {
 
@@ -73,7 +77,8 @@ class TagUnitTest extends TestCase
      *
      * @return void
      */
-    public function testTagCanBeDeleted() {
+    public function testTagCanBeDeleted()
+    {
         $tag = Tag::create(factory(Tag::class)->raw());
         $this->assertCount(1, Tag::all());
         $tag->delete();

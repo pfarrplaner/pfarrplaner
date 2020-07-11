@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class AddMorePodcastFieldsToCities
+ */
 class AddMorePodcastFieldsToCities extends Migration
 {
     /**
@@ -41,11 +44,14 @@ class AddMorePodcastFieldsToCities extends Migration
      */
     public function up()
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->string('homepage')->nullable()->default('');
-            $table->string('podcast_owner_name')->nullable()->default('');
-            $table->string('podcast_owner_email')->nullable()->default('');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->string('homepage')->nullable()->default('');
+                $table->string('podcast_owner_name')->nullable()->default('');
+                $table->string('podcast_owner_email')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -55,10 +61,13 @@ class AddMorePodcastFieldsToCities extends Migration
      */
     public function down()
     {
-        Schema::table('cities', function (Blueprint $table) {
-            $table->dropColumn('homepage');
-            $table->dropColumn('podcast_owner_name');
-            $table->dropColumn('podcast_owner_email');
-        });
+        Schema::table(
+            'cities',
+            function (Blueprint $table) {
+                $table->dropColumn('homepage');
+                $table->dropColumn('podcast_owner_name');
+                $table->dropColumn('podcast_owner_email');
+            }
+        );
     }
 }

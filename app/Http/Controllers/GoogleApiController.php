@@ -34,11 +34,20 @@ use App\Broadcast;
 use App\City;
 use App\Service;
 use Google_Client;
+use Google_Exception;
 use Google_Service_YouTube;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Session;
 
 
+/**
+ * Class GoogleApiController
+ * @package App\Http\Controllers
+ */
 class GoogleApiController extends Controller
 {
     public function __construct()
@@ -46,6 +55,11 @@ class GoogleApiController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @param Request $request
+     * @return Application|RedirectResponse|Redirector
+     * @throws Google_Exception
+     */
     public function auth(Request $request)
     {
         if ($request->has('state')) {
@@ -86,19 +100,28 @@ class GoogleApiController extends Controller
             $client->fetchAccessTokenWithAuthCode($code);
             $token = $client->getAccessToken();
             Session::put('google_access_token', $token);
-            $data =                 [
+            $data = [
                 'google_auth_code' => $code,
                 'google_access_token' => $token['access_token'],
             ];
-            if (isset($token['refresh_token'])) $data['google_refresh_token'] = $token['refresh_token'];
+            if (isset($token['refresh_token'])) {
+                $data['google_refresh_token'] = $token['refresh_token'];
+            }
             $city->update($data);
             return redirect($nextStep);
         }
     }
 
-    function createBroadcast(Service $service) {
+    /**
+     * @param Service $service
+     * @return JsonResponse
+     */
+    function createBroadcast(Service $service)
+    {
         $broadcast = Broadcast::create($service);
         $service->update(['youtube_url' => $broadcast->getSharerUrl()]);
-        return response()->json(['url' => $broadcast->getSharerUrl(), 'liveDashboard' => $broadcast->getLiveDashboardUrl()]);
+        return response()->json(
+            ['url' => $broadcast->getSharerUrl(), 'liveDashboard' => $broadcast->getLiveDashboardUrl()]
+        );
     }
 }

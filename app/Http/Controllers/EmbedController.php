@@ -39,13 +39,18 @@ namespace App\Http\Controllers;
 
 
 use App\Absence;
-use App\Day;
 use App\Service;
 use App\User;
-use App\Vacations;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
+/**
+ * Class EmbedController
+ * @package App\Http\Controllers
+ */
 class EmbedController extends Controller
 {
 
@@ -61,16 +66,20 @@ class EmbedController extends Controller
      * @param string $ids comma-separated location ids
      * @param int $limit Limit (optional)
      */
-    public function embedByLocations(Request $request, $ids, $limit = 10) {
+    public function embedByLocations(Request $request, $ids, $limit = 10)
+    {
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
         $services = Service::with('location')
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('location_id', $ids)
-            ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0, 0, 0));
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->limit($limit)
@@ -84,16 +93,20 @@ class EmbedController extends Controller
      * @param string $ids comma-separated location ids
      * @param int $limit Limit (optional)
      */
-    public function embedByCities(Request $request, $ids, $limit = 10) {
+    public function embedByCities(Request $request, $ids, $limit = 10)
+    {
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
         $services = Service::with(['location', 'participants'])
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
-            ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0, 0, 0));
+                }
+            )
             ->doesntHave('funerals')
             ->doesntHave('weddings')
             ->orderBy('days.date', 'ASC')
@@ -102,7 +115,6 @@ class EmbedController extends Controller
             ->get();
         return response()
             ->view('embed.services.table', compact('services', 'ids', 'title'));
-
     }
 
     /**
@@ -111,16 +123,20 @@ class EmbedController extends Controller
      * @param string $ids comma-separated location ids
      * @param int $limit Limit (optional)
      */
-    public function embedCCByCities(Request $request, $ids, $limit = 5) {
+    public function embedCCByCities(Request $request, $ids, $limit = 5)
+    {
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
         $services = Service::with(['location', 'participants'])
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
-            ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0, 0, 0));
+                }
+            )
             ->doesntHave('funerals')
             ->doesntHave('weddings')
             ->where('cc', true)
@@ -130,7 +146,6 @@ class EmbedController extends Controller
             ->get();
         return response()
             ->view('embed.services.ccTable', compact('services', 'ids', 'title'));
-
     }
 
 
@@ -140,7 +155,8 @@ class EmbedController extends Controller
      * @param User $user
      * @param $userId
      */
-    public function embedUserVacations (Request $request, User $user) {
+    public function embedUserVacations(Request $request, User $user)
+    {
         $start = Carbon::now();
         $end = (clone $start)->addWeek(2);
         //$vacations = Vacations::getByPeriodAndUser($start, $end, $user);
@@ -150,7 +166,16 @@ class EmbedController extends Controller
     }
 
 
-    public function embedByBaptismalServices(Request $request, User $user, $ids, $limit =10, $maxBaptisms=0) {
+    /**
+     * @param Request $request
+     * @param User $user
+     * @param $ids
+     * @param int $limit
+     * @param int $maxBaptisms
+     * @return Application|Factory|View
+     */
+    public function embedByBaptismalServices(Request $request, User $user, $ids, $limit = 10, $maxBaptisms = 0)
+    {
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
         $services = Service::with('location', 'baptisms')
@@ -158,9 +183,12 @@ class EmbedController extends Controller
             ->join('days', 'services.day_id', '=', 'days.id')
             ->where('baptism', true)
             ->whereIn('city_id', $ids)
-            ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0,0,0));
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0, 0, 0));
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->limit($limit)
@@ -169,9 +197,17 @@ class EmbedController extends Controller
         return view('embed.services.baptismalServices', compact('services', 'ids', 'title', 'maxBaptisms'));
     }
 
-    public function embedReport(Request $request, $report) {
-        $reportClass = 'App\\Reports\\Embed'.ucfirst($report).'Report';
-        if (!class_exists($reportClass)) abort(404);
+    /**
+     * @param Request $request
+     * @param $report
+     * @return mixed
+     */
+    public function embedReport(Request $request, $report)
+    {
+        $reportClass = 'App\\Reports\\Embed' . ucfirst($report) . 'Report';
+        if (!class_exists($reportClass)) {
+            abort(404);
+        }
         $reportObject = new $reportClass();
         return $reportObject->embed($request);
     }

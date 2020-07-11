@@ -30,11 +30,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Absence;
 use App\Approval;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * Class ApprovalController
+ * @package App\Http\Controllers
+ */
 class ApprovalController extends Controller
 {
 
@@ -46,7 +50,7 @@ class ApprovalController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -57,7 +61,7 @@ class ApprovalController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -67,8 +71,8 @@ class ApprovalController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -78,8 +82,8 @@ class ApprovalController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Approval  $approval
-     * @return \Illuminate\Http\Response
+     * @param Approval $approval
+     * @return Response
      */
     public function show(Approval $approval)
     {
@@ -89,8 +93,8 @@ class ApprovalController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Approval  $approval
-     * @return \Illuminate\Http\Response
+     * @param Approval $approval
+     * @return Response
      */
     public function edit(Approval $approval)
     {
@@ -100,9 +104,9 @@ class ApprovalController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Approval  $approval
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Approval $approval
+     * @return Response
      */
     public function update(Request $request, Approval $approval)
     {
@@ -112,8 +116,8 @@ class ApprovalController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Approval  $approval
-     * @return \Illuminate\Http\Response
+     * @param Approval $approval
+     * @return Response
      */
     public function destroy(Approval $approval)
     {

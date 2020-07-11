@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class ChangeUserFields
+ */
 class ChangeUserFields extends Migration
 {
     /**
@@ -41,12 +44,15 @@ class ChangeUserFields extends Migration
      */
     public function up()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropColumn(['isAdmin', 'canEditGeneral', 'canEditChurch', 'canEditFields']);
-            $table->string('first_name')->nullable()->default('');
-            $table->string('last_name')->nullable()->default('');
-            $table->string('title')->nullable()->default('');
-        });
+        Schema::table(
+            'users',
+            function (Blueprint $table) {
+                $table->dropColumn(['isAdmin', 'canEditGeneral', 'canEditChurch', 'canEditFields']);
+                $table->string('first_name')->nullable()->default('');
+                $table->string('last_name')->nullable()->default('');
+                $table->string('title')->nullable()->default('');
+            }
+        );
     }
 
     /**
@@ -56,14 +62,17 @@ class ChangeUserFields extends Migration
      */
     public function down()
     {
-        Schema::table('users', function($table) {
-            $table->integer('isAdmin')->nullable;
-            $table->integer('canEditGeneral')->nullable;
-            $table->integer('canEditChurch')->nullable;
-            $table->string('canEditFields')->nullable;
-            $table->dropColumn('first_name');
-            $table->dropColumn('last_name');
-            $table->dropColumn('title');
-        });
+        Schema::table(
+            'users',
+            function ($table) {
+                $table->integer('isAdmin')->nullable;
+                $table->integer('canEditGeneral')->nullable;
+                $table->integer('canEditChurch')->nullable;
+                $table->string('canEditFields')->nullable;
+                $table->dropColumn('first_name');
+                $table->dropColumn('last_name');
+                $table->dropColumn('title');
+            }
+        );
     }
 }

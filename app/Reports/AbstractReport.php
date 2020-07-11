@@ -30,14 +30,33 @@
 
 namespace App\Reports;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
+/**
+ * Class AbstractReport
+ * @package App\Reports
+ */
 class AbstractReport
 {
 
+    /**
+     * @var string
+     */
     public $icon = 'fa fa-file';
+    /**
+     * @var string
+     */
     public $title = '';
+    /**
+     * @var string
+     */
     public $group = '';
+    /**
+     * @var string
+     */
     public $description = '';
 
 
@@ -45,44 +64,87 @@ class AbstractReport
      * Returns true if the report is active for the current user
      * @return bool
      */
-    public function isActive(): bool {
+    public function isActive(): bool
+    {
         return true;
     }
 
-    public function getKey() {
-        return lcfirst(strtr(get_called_class(), [
-            'Report' => '',
-            'App\\Reports\\' => '',
-        ]));
-    }
-
-    public function getViewName($view) {
-        return 'reports.'.strtolower($this->getKey().'.'.strtolower($view));
-    }
-
-    public function getSetupViewName() {
-        return $this->getViewName('setup');
-    }
-
-    public function getRenderViewName() {
+    /**
+     * @return string
+     */
+    public function getRenderViewName()
+    {
         return $this->getViewName('render');
     }
 
-    public function render(Request $request) {
+    /**
+     * @param $view
+     * @return string
+     */
+    public function getViewName($view)
+    {
+        return 'reports.' . strtolower($this->getKey() . '.' . strtolower($view));
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return lcfirst(
+            strtr(
+                get_called_class(),
+                [
+                    'Report' => '',
+                    'App\\Reports\\' => '',
+                ]
+            )
+        );
+    }
+
+    /**
+     * @param Request $request
+     * @return string
+     */
+    public function render(Request $request)
+    {
         return '';
     }
 
-    public function renderSetupView($data = []) {
+    /**
+     * @param array $data
+     * @return Application|Factory|View
+     */
+    public function renderSetupView($data = [])
+    {
         $data = array_merge(['report' => $this->getKey()], $data);
         return view($this->getSetupViewName(), $data);
     }
 
-    public function renderView($view, $data = []) {
-        $data = array_merge(['report' => $this->getKey()], $data);
-        return view($this->getViewName($view), $data);
+    /**
+     * @return string
+     */
+    public function getSetupViewName()
+    {
+        return $this->getViewName('setup');
     }
 
-    public function setup() {
+    /**
+     * @return Application|Factory|View
+     */
+    public function setup()
+    {
         return $this->renderView('setup');
+    }
+
+    /**
+     * @param $view
+     * @param array $data
+     * @return Application|Factory|View
+     */
+    public function renderView($view, $data = [])
+    {
+        $data = array_merge(['report' => $this->getKey()], $data);
+        return view($this->getViewName($view), $data);
     }
 }

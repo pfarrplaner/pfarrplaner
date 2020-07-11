@@ -44,7 +44,7 @@ return [
      *
      * @var null|bool
      */
-    'enabled'            => env('DB_ENCRYPTION_ENABLED', true),
+    'enabled' => env('DB_ENCRYPTION_ENABLED', true),
 
     /*
      * Prefix used in attribute header.
@@ -53,7 +53,7 @@ return [
      *
      * @var null|string
      */
-    'prefix'             => env('DB_ENCRYPTION_PREFIX', '__LARAVEL-DATABASE-ENCRYPTED-%VERSION%__'),
+    'prefix' => env('DB_ENCRYPTION_PREFIX', '__LARAVEL-DATABASE-ENCRYPTED-%VERSION%__'),
 
     /*
      * Enable header versioning.
@@ -62,7 +62,7 @@ return [
      *
      * @var null|bool
      */
-    'versioning'         => env('DB_ENCRYPTION_VERSIONING', false),
+    'versioning' => env('DB_ENCRYPTION_VERSIONING', false),
 
     /*
      * Control characters used by header.

@@ -34,21 +34,17 @@ use App\City;
 use App\Day;
 use App\Http\Middleware\Authenticate;
 use Carbon\Carbon;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
+/**
+ * Class DayTest
+ * @package Tests\Feature
+ */
 class DayTest extends TestCase
 {
 
     use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->withoutMiddleware([Authenticate::class]);
-    }
-
 
     /**
      * Test if a day can be created
@@ -125,7 +121,10 @@ class DayTest extends TestCase
      */
     public function testDayCannotBeCreatedWithInvalidDayType()
     {
-        $response = $this->post(route('days.store'), factory(Day::class)->raw(['day_type' => 5, 'date' => '01.01.1990']));
+        $response = $this->post(
+            route('days.store'),
+            factory(Day::class)->raw(['day_type' => 5, 'date' => '01.01.1990'])
+        );
         $response->assertSessionHasErrors('day_type');
         $this->assertCount(0, Day::all());
     }
@@ -138,10 +137,13 @@ class DayTest extends TestCase
     public function testDayCanBeUpdated()
     {
         $day = factory(Day::class)->create(['day_type' => 0]);
-        $response = $this->patch(route('days.update', $day->id), [
-            'date' => '01.01.1990',
-            'name' => 'test',
-        ]);
+        $response = $this->patch(
+            route('days.update', $day->id),
+            [
+                'date' => '01.01.1990',
+                'name' => 'test',
+            ]
+        );
         $response->assertStatus(302);
         $this->assertEquals('test', Day::find($day->id)->name);
     }
@@ -158,11 +160,14 @@ class DayTest extends TestCase
         $data = factory(Day::class)->raw(['day_type' => 1]);
         $day = Day::create($data);
         $day->cities()->attach($city1);
-        $response = $this->patch(route('days.update', $day->id), [
-            'date' => '01.01.1990',
-            'name' => 'test',
-            'cities' => [$city1, $city2]
-        ]);
+        $response = $this->patch(
+            route('days.update', $day->id),
+            [
+                'date' => '01.01.1990',
+                'name' => 'test',
+                'cities' => [$city1, $city2]
+            ]
+        );
         $response->assertStatus(302);
 
         $day = Day::find($day->id);
@@ -180,17 +185,19 @@ class DayTest extends TestCase
         $city2 = factory(City::class)->create()->id;
         $data = factory(Day::class)->raw(['day_type' => 1]);
         $day = Day::create($data);
-        $day->cities()->attach([$city1,$city2]);
-        $response = $this->patch(route('days.update', $day->id), [
-            'date' => '01.01.1990',
-            'day_type' => 1,
-            'name' => 'test',
-            'cities' => []
-        ]);
+        $day->cities()->attach([$city1, $city2]);
+        $response = $this->patch(
+            route('days.update', $day->id),
+            [
+                'date' => '01.01.1990',
+                'day_type' => 1,
+                'name' => 'test',
+                'cities' => []
+            ]
+        );
         $response->assertStatus(302);
         $this->assertCount(0, Day::all());
     }
-
 
     /**
      * Test if a day can be deleted
@@ -203,6 +210,12 @@ class DayTest extends TestCase
         $response = $this->delete(route('days.destroy', $day->id));
         $response->assertStatus(302);
         $this->assertCount(0, Day::all());
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutMiddleware([Authenticate::class]);
     }
 
 }

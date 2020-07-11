@@ -32,17 +32,27 @@ namespace App\Http\Controllers;
 
 
 use App\Mail\TestMail;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\View;
 
+/**
+ * Class TestController
+ * @package App\Http\Controllers
+ */
 class TestController extends Controller
 {
 
+    /**
+     * @param $address
+     * @return Application|ResponseFactory|Response
+     */
     public function mail($address)
     {
-        Log::debug('Sending test mail to '.$address);
+        Log::debug('Sending test mail to ' . $address);
         Mail::to($address)->bcc('dev@toph.de')->queue(new TestMail());
-        return response('Testnachricht an '.$address.' versendet.', 200);
+        return response('Testnachricht an ' . $address . ' versendet.', 200);
     }
 }

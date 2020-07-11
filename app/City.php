@@ -31,9 +31,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
+/**
+ * Class City
+ * @package App
+ */
 class City extends Model
 {
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'name',
         'public_events_calendar_url',
@@ -59,14 +68,28 @@ class City extends Model
         'konfiapp_apikey',
     ];
 
+    /**
+     * @var string
+     */
     protected $orderBy = 'name';
+    /**
+     * @var string
+     */
     protected $orderDirection = 'ASC';
 
-    public function locations() {
+    /**
+     * @return HasMany
+     */
+    public function locations()
+    {
         return $this->hasMany(Location::class);
     }
 
-    public function services() {
+    /**
+     * @return HasManyThrough
+     */
+    public function services()
+    {
         return $this->hasManyThrough(Service::class, Location::class);
     }
 
@@ -75,9 +98,14 @@ class City extends Model
      * @param User $user User
      * @return bool True if user has admin rights here
      */
-    public function administeredBy(User $user) {
-        if ($user->hasRole('Super-Administrator*in')) return true;
-        if (($city = $user->cities->where('id', $this->id)->first()) && ($city->pivot->permission == 'a')) return true;
+    public function administeredBy(User $user)
+    {
+        if ($user->hasRole('Super-Administrator*in')) {
+            return true;
+        }
+        if (($city = $user->cities->where('id', $this->id)->first()) && ($city->pivot->permission == 'a')) {
+            return true;
+        }
         return false;
     }
 }

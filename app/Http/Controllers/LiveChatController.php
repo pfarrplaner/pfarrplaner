@@ -34,25 +34,53 @@ namespace App\Http\Controllers;
 use App\Broadcast;
 use App\Integrations\Youtube\YoutubeIntegration;
 use App\Service;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
+/**
+ * Class LiveChatController
+ * @package App\Http\Controllers
+ */
 class LiveChatController
 {
 
-    public function liveChat(Service $service) {
+    /**
+     * @param Service $service
+     * @return Application|Factory|View
+     */
+    public function liveChat(Service $service)
+    {
         return view('services.livechat.index', compact('service'));
     }
 
-    public function liveChatAjax(Service $service) {
+    /**
+     * @param Service $service
+     * @return JsonResponse
+     */
+    public function liveChatAjax(Service $service)
+    {
         $youtube = YoutubeIntegration::get($service->city);
         $liveChatId = Broadcast::get($service)->getLiveBroadcast()->getSnippet()->getLiveChatId();
         $messages = $youtube->getLiveChat($liveChatId);
         return response()->json($messages);
     }
 
-    public function liveChatPostMessage(Request $request, Service $service) {
-        if (!$request->has('author')) abort(500);
-        if (!$request->has('message')) abort(500);
+    /**
+     * @param Request $request
+     * @param Service $service
+     * @return JsonResponse
+     */
+    public function liveChatPostMessage(Request $request, Service $service)
+    {
+        if (!$request->has('author')) {
+            abort(500);
+        }
+        if (!$request->has('message')) {
+            abort(500);
+        }
         $msg = $request->get('message');
         $author = $request->get('author');
 
@@ -61,7 +89,6 @@ class LiveChatController
         $youtube->sendLiveChatMessage($liveChatId, $author, $msg);
         return response()->json(compact('author', 'msg'));
     }
-
 
 
 }

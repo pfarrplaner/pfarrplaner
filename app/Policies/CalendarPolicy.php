@@ -30,9 +30,12 @@
 
 namespace App\Policies;
 
-use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
+/**
+ * Class CalendarPolicy
+ * @package App\Policies
+ */
 class CalendarPolicy
 {
     use HandlesAuthorization;
@@ -47,15 +50,24 @@ class CalendarPolicy
         //
     }
 
-    public function month() {
+    /**
+     * @return bool
+     */
+    public function month()
+    {
         return true;
     }
 
-    public function printsetup() {
+    /**
+     * @return bool
+     */
+    public function printsetup()
+    {
         return true;
     }
 
-    public function print() {
+    public function print()
+    {
         true;
     }
 }

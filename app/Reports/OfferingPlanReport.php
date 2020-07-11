@@ -33,35 +33,57 @@ namespace App\Reports;
 use App\City;
 use App\Day;
 use App\Service;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use League\Flysystem\Adapter\AbstractAdapter;
-use niklasravnsborg\LaravelPdf\Pdf;
-use PhpOffice\PhpWord\Shared\Converter;
-use PhpOffice\PhpWord\Style\Tab;
+use Illuminate\View\View;
 
 
+/**
+ * Class OfferingPlanReport
+ * @package App\Reports
+ */
 class OfferingPlanReport extends AbstractPDFDocumentReport
 {
 
+    /**
+     * @var string
+     */
     public $title = 'Opferplan';
+    /**
+     * @var string
+     */
     public $group = 'Opfer';
+    /**
+     * @var string
+     */
     public $description = 'Übersicht aller Opferzwecke für ein Jahr';
 
-    public function setup() {
+    /**
+     * @return Application|Factory|View
+     */
+    public function setup()
+    {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
         return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
     }
 
+    /**
+     * @param Request $request
+     * @return mixed|string
+     */
     public function render(Request $request)
     {
-        $request->validate([
-            'city' => 'required',
-            'year' => 'required|int'
-        ]);
+        $request->validate(
+            [
+                'city' => 'required',
+                'year' => 'required|int'
+            ]
+        );
 
         $year = $request->get('year');
         $days = Day::where('date', '>=', Carbon::create($year, 1, 1, 0, 0, 0))
@@ -100,8 +122,8 @@ class OfferingPlanReport extends AbstractPDFDocumentReport
                 'count' => count($dates),
                 'year' => $year,
             ],
-            ['format' => 'A4']);
-
+            ['format' => 'A4']
+        );
     }
 
 }

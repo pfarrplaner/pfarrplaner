@@ -33,9 +33,16 @@ namespace App\Traits;
 
 use App\Attachment;
 
+/**
+ * Trait HasAttachmentsTrait
+ * @package App\Traits
+ */
 trait HasAttachmentsTrait
 {
 
+    /**
+     * @return mixed
+     */
     public function attachments()
     {
         return $this->morphMany(Attachment::class, 'attachable');

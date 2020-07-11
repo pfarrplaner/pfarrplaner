@@ -34,13 +34,21 @@ use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Class Baptism
+ * @package App
+ */
 class Baptism extends Model
 {
     use HasEncryptedAttributes;
     use HasCommentsTrait;
     use HasAttachmentsTrait;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = [
         'service_id',
         'candidate_name',
@@ -58,14 +66,17 @@ class Baptism extends Model
         'docs_ready',
         'docs_where',
         'city_id'
-        ];
+    ];
 
+    /**
+     * @var string[]
+     */
     protected $dates = [
         'first_contact_on',
         'appointment',
     ];
 
-    /** @var array  */
+    /** @var array */
     protected $encrypted = [
         'candidate_name',
         'candidate_address',
@@ -74,7 +85,11 @@ class Baptism extends Model
         'candidate_phone',
     ];
 
-    public function service() {
+    /**
+     * @return BelongsTo
+     */
+    public function service()
+    {
         return $this->belongsTo(Service::class);
     }
 

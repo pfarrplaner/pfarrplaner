@@ -28,10 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
+/**
+ * Class CreateParishesTable
+ */
 class CreateParishesTable extends Migration
 {
     /**
@@ -41,18 +44,21 @@ class CreateParishesTable extends Migration
      */
     public function up()
     {
-        Schema::create('parishes', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('city_id');
-            $table->string('name');
-            $table->string('code');
-            $table->string('address')->nullable()->default('');
-            $table->string('zip')->nullable()->default('');
-            $table->string('city')->nullable()->default('');
-            $table->string('phone')->nullable()->default('');
-            $table->string('email')->nullable()->default('');
-            $table->timestamps();
-        });
+        Schema::create(
+            'parishes',
+            function (Blueprint $table) {
+                $table->increments('id');
+                $table->integer('city_id');
+                $table->string('name');
+                $table->string('code');
+                $table->string('address')->nullable()->default('');
+                $table->string('zip')->nullable()->default('');
+                $table->string('city')->nullable()->default('');
+                $table->string('phone')->nullable()->default('');
+                $table->string('email')->nullable()->default('');
+                $table->timestamps();
+            }
+        );
     }
 
     /**

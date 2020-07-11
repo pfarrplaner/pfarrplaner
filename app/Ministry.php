@@ -31,9 +31,19 @@
 namespace App;
 
 
+use Illuminate\Support\Collection;
+
+/**
+ * Class Ministry
+ * @package App
+ */
 class Ministry
 {
-    public static function all() {
+    /**
+     * @return Collection
+     */
+    public static function all()
+    {
         return Participant::all()
             ->pluck('category')
             ->unique()
@@ -44,11 +54,24 @@ class Ministry
             );
     }
 
-    public static function title($title) {
-        if ($title == 'P') return 'Pfarrer*in';
-        if ($title == 'O') return 'Organist*in';
-        if ($title == 'M') return 'Mesner*in';
-        if ($title == 'A') return 'Weitere Beteiligte';
+    /**
+     * @param $title
+     * @return string
+     */
+    public static function title($title)
+    {
+        if ($title == 'P') {
+            return 'Pfarrer*in';
+        }
+        if ($title == 'O') {
+            return 'Organist*in';
+        }
+        if ($title == 'M') {
+            return 'Mesner*in';
+        }
+        if ($title == 'A') {
+            return 'Weitere Beteiligte';
+        }
         return $title;
     }
 }

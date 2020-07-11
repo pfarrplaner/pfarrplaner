@@ -32,39 +32,69 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Class Day
+ * @package App
+ */
 class Day extends Model
 {
 
+    /**
+     *
+     */
     public const DAY_TYPE_DEFAULT = 0;
+    /**
+     *
+     */
     public const DAY_TYPE_LIMITED = 1;
 
+    /**
+     * @var string[]
+     */
     protected $fillable = ['date', 'name', 'description', 'day_type'];
+    /**
+     * @var string[]
+     */
     protected $dates = ['date'];
-
-    public function services() {
-        return $this->hasMany(Service::class);
-    }
-
-    public function cities() {
-        return $this->belongsToMany(City::class);
-    }
 
     /**
      * @param string $date Date (Y-m-d)
-     * @return bool|\App\Day False if not found, Day if found
+     * @return bool|Day False if not found, Day if found
      */
-    public static function existsForDate($date) {
+    public static function existsForDate($date)
+    {
         $day = Day::where('date', $date)->first();
-        if (null === $day) return false;
+        if (null === $day) {
+            return false;
+        }
         return $day;
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function cities()
+    {
+        return $this->belongsToMany(City::class);
     }
 
     /**
      * Accept a d.m.Y-formatted string as date attribute
      * @param string $date
      */
-    public function setDateAttribute($date) {
+    public function setDateAttribute($date)
+    {
         if (is_a($date, Carbon::class)) {
             $this->attributes['date'] = $date;
         } else {

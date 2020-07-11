@@ -30,51 +30,90 @@
 
 namespace App\Reports;
 
-use App\Baptism;
 use App\City;
 use App\Day;
-use App\Funeral;
 use App\Imports\EventCalendarImport;
 use App\Imports\OPEventsImport;
 use App\Service;
-use App\Tools\StringTool;
-use App\Wedding;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Element\Section;
+use PhpOffice\PhpWord\Element\TextRun;
+use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
-use PhpOffice\PhpWord\Style\Section;
 use PhpOffice\PhpWord\Style\Tab;
 
+/**
+ * Class BillBoardReport
+ * @package App\Reports
+ */
 class BillBoardReport extends AbstractWordDocumentReport
 {
+    /**
+     *
+     */
     protected const BOLD = ['bold' => true];
+    /**
+     *
+     */
     protected const UNDERLINE = ['underline' => Font::UNDERLINE_SINGLE];
+    /**
+     *
+     */
     protected const BOLD_UNDERLINE = ['bold' => true, 'underline' => Font::UNDERLINE_SINGLE];
     protected const DEFAULT = 'Kirchzettel';
+    /**
+     *
+     */
     protected const HEADING1 = 'Kirchzettel Überschrift 1';
+    /**
+     *
+     */
     protected const HEADING2 = 'Kirchzettel Überschrift 2';
 
+    /**
+     * @var string
+     */
     public $title = 'Kirchzettel';
+    /**
+     * @var string
+     */
     public $group = 'Veröffentlichungen';
+    /**
+     * @var string
+     */
     public $description = 'Kirchzettel zum Aushang im Schaukasten';
 
-    /** @var \PhpOffice\PhpWord\Element\Section */
+    /** @var Section */
     protected $section;
 
+    /**
+     * @return Application|Factory|View
+     */
     public function setup()
     {
         $cities = Auth::user()->cities;
         return $this->renderSetupView(compact('cities'));
     }
 
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws Exception
+     */
     public function render(Request $request)
     {
-        $request->validate([
-            'city' => 'required|int',
-            'start' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'city' => 'required|int',
+                'start' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
         $start = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00');
         $city = City::findOrFail($request->get('city'));
@@ -100,13 +139,15 @@ class BillBoardReport extends AbstractWordDocumentReport
             $events = $op->mix($events, $start, $end);
         }
 
-        $this->section = $this->wordDocument->addSection([
-            'orientation' => 'portrait',
-            'marginTop' => Converter::cmToTwip(0.75),
-            'marginBottom' => Converter::cmToTwip(0.25),
-            'marginLeft' => Converter::cmToTwip(1.59),
-            'marginRight' => Converter::cmToTwip(0.25),
-        ]);
+        $this->section = $this->wordDocument->addSection(
+            [
+                'orientation' => 'portrait',
+                'marginTop' => Converter::cmToTwip(0.75),
+                'marginBottom' => Converter::cmToTwip(0.25),
+                'marginLeft' => Converter::cmToTwip(1.59),
+                'marginRight' => Converter::cmToTwip(0.25),
+            ]
+        );
 
         $this->wordDocument->addParagraphStyle(
             self::DEFAULT,
@@ -168,7 +209,7 @@ class BillBoardReport extends AbstractWordDocumentReport
                         $this->renderParagraph(self::DEFAULT, [['Vorschau', self::BOLD_UNDERLINE]]);
                     }
 
-                    $day = Day::where('date', $eventStart->copy()->setTime(0,0,0))->first();
+                    $day = Day::where('date', $eventStart->copy()->setTime(0, 0, 0))->first();
                     if ($day) {
                         $dayTitle = $day->name;
                     } elseif (is_array($event) && (isset($event['allDay']) && $event['allDay'])) {
@@ -177,11 +218,14 @@ class BillBoardReport extends AbstractWordDocumentReport
                         $dayTitle = '';
                     }
 
-                    $this->renderParagraph(self::DEFAULT, [
-                        [$eventStart->formatLocalized($dateFormat), self::BOLD_UNDERLINE],
-                        [($dayTitle ? "\t" : ''), []],
-                        [($dayTitle ? $dayTitle : ''), self::BOLD_UNDERLINE],
-                    ]);
+                    $this->renderParagraph(
+                        self::DEFAULT,
+                        [
+                            [$eventStart->formatLocalized($dateFormat), self::BOLD_UNDERLINE],
+                            [($dayTitle ? "\t" : ''), []],
+                            [($dayTitle ? $dayTitle : ''), self::BOLD_UNDERLINE],
+                        ]
+                    );
 
                     $done = (isset($event['allDay']) && $event['allDay']);
                 }
@@ -200,51 +244,13 @@ class BillBoardReport extends AbstractWordDocumentReport
         $this->sendToBrowser($filename);
     }
 
-    protected function renderSingleEvent($event) {
-        if (is_array($event)) {
-            $this->renderParagraph(self::DEFAULT, [
-                [$event['start']->formatLocalized('%H.%M Uhr') . "\t", []],
-                [$event['title'], self::BOLD],
-                [' (' . $event['place'].')', []],
-                [(isset($event['P']) ? "\t" . $event['P'] : ''), self::BOLD]
-            ]);
-        } else {
-            $description = $event->descriptionText();
-            if ($description) {
-                if (substr($description, 0, 4) != 'mit ') $description = 'mit '.$description;
-                if (strlen($description) > 25) {
-                    $description = str_replace('; ', ';<w:br />', $description);
-                }
-                // take care of ampersands
-                $description = preg_replace('/&(?![A-Za-z0-9#]{1,7};)/','&amp;',$description);
-                $description = ' '.trim($description);
-            }
-
-            $this->renderParagraph(self::DEFAULT, [
-                [Carbon::createFromFormat('Y-m-d H:i', $event->day->date->format('Y-m-d').' '.$event->time)->formatLocalized('%H.%M Uhr')."\t", []],
-                [($event->title ?: 'Gottesdienst').$description, self::BOLD],
-                [' ('.$event->locationText().')', []],
-                ["\t" . $event->participantsText('P'), self::BOLD]
-            ]);
-
-            if ($event->offering_goal) {
-                $this->renderParagraph(self::DEFAULT, [
-                    ["\t".'Opfer: '.$event->offering_goal, []]
-                ]);
-            }
-        }
-    }
-
-
-    protected function renderName($s)
-    {
-        if (false !== strpos($s, ',')) {
-            $t = explode(',', $s);
-            $s = trim($t[1]) . ' ' . trim($t[0]);
-        }
-        return $s;
-    }
-
+    /**
+     * @param string $template
+     * @param array $blocks
+     * @param int $emptyParagraphsAfter
+     * @param null $existingTextRun
+     * @return TextRun|null
+     */
     protected function renderParagraph(
         $template = '',
         array $blocks = [],
@@ -261,7 +267,78 @@ class BillBoardReport extends AbstractWordDocumentReport
         return $textRun;
     }
 
+    /**
+     * @param $event
+     */
+    protected function renderSingleEvent($event)
+    {
+        if (is_array($event)) {
+            $this->renderParagraph(
+                self::DEFAULT,
+                [
+                    [$event['start']->formatLocalized('%H.%M Uhr') . "\t", []],
+                    [$event['title'], self::BOLD],
+                    [' (' . $event['place'] . ')', []],
+                    [(isset($event['P']) ? "\t" . $event['P'] : ''), self::BOLD]
+                ]
+            );
+        } else {
+            $description = $event->descriptionText();
+            if ($description) {
+                if (substr($description, 0, 4) != 'mit ') {
+                    $description = 'mit ' . $description;
+                }
+                if (strlen($description) > 25) {
+                    $description = str_replace('; ', ';<w:br />', $description);
+                }
+                // take care of ampersands
+                $description = preg_replace('/&(?![A-Za-z0-9#]{1,7};)/', '&amp;', $description);
+                $description = ' ' . trim($description);
+            }
 
+            $this->renderParagraph(
+                self::DEFAULT,
+                [
+                    [
+                        Carbon::createFromFormat(
+                            'Y-m-d H:i',
+                            $event->day->date->format('Y-m-d') . ' ' . $event->time
+                        )->formatLocalized('%H.%M Uhr') . "\t",
+                        []
+                    ],
+                    [($event->title ?: 'Gottesdienst') . $description, self::BOLD],
+                    [' (' . $event->locationText() . ')', []],
+                    ["\t" . $event->participantsText('P'), self::BOLD]
+                ]
+            );
+
+            if ($event->offering_goal) {
+                $this->renderParagraph(
+                    self::DEFAULT,
+                    [
+                        ["\t" . 'Opfer: ' . $event->offering_goal, []]
+                    ]
+                );
+            }
+        }
+    }
+
+    /**
+     * @param $s
+     * @return string
+     */
+    protected function renderName($s)
+    {
+        if (false !== strpos($s, ',')) {
+            $t = explode(',', $s);
+            $s = trim($t[1]) . ' ' . trim($t[0]);
+        }
+        return $s;
+    }
+
+    /**
+     * @param $text
+     */
     protected function renderLiteral($text)
     {
         if (!is_array($text)) {
@@ -280,13 +357,16 @@ class BillBoardReport extends AbstractWordDocumentReport
                 default:
                     $format = [];
             }
-            $paragraph = trim(strtr($paragraph, [
-                "\r" => '',
-                "\n" => '<w:br />'
-            ]));
+            $paragraph = trim(
+                strtr(
+                    $paragraph,
+                    [
+                        "\r" => '',
+                        "\n" => '<w:br />'
+                    ]
+                )
+            );
             $this->renderParagraph(self::NO_INDENT, [[$paragraph, $format]], 1);
         }
-
-
     }
 }
