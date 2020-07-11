@@ -30,8 +30,12 @@
 
 namespace App;
 
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class Parish
@@ -54,7 +58,7 @@ class Parish extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function owningCity()
     {
@@ -62,7 +66,7 @@ class Parish extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function streetRanges()
     {
@@ -70,16 +74,17 @@ class Parish extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function users() {
+    public function users()
+    {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     /**
      * @param $csv
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function importStreetsFromCSV($csv)
     {
@@ -95,22 +100,27 @@ class Parish extends Model
             $records[] = str_getcsv($line, ';');
         }
         unset ($records[0]);
-        array_walk($records, function (&$record) use (&$ctr) {
-            if ($record[4] == $this->code) {
-                $record[5] = explode(' bis ', $record[5]);
-                $record[6] = explode(' bis ', $record[6]);
-                $streetRange = new StreetRange([
-                    'parish_id' => $this->id,
-                    'name' => $record[0],
-                    'odd_start' => $record[5][0],
-                    'odd_end' => $record[5][1],
-                    'even_start' => $record[6][0],
-                    'even_end' => $record[6][1],
-                ]);
-                $streetRange->save();
-                $ctr++;
+        array_walk(
+            $records,
+            function (&$record) use (&$ctr) {
+                if ($record[4] == $this->code) {
+                    $record[5] = explode(' bis ', $record[5]);
+                    $record[6] = explode(' bis ', $record[6]);
+                    $streetRange = new StreetRange(
+                        [
+                            'parish_id' => $this->id,
+                            'name' => $record[0],
+                            'odd_start' => $record[5][0],
+                            'odd_end' => $record[5][1],
+                            'even_start' => $record[6][0],
+                            'even_end' => $record[6][1],
+                        ]
+                    );
+                    $streetRange->save();
+                    $ctr++;
+                }
             }
-        });
+        );
         return $ctr;
     }
 
@@ -122,15 +132,18 @@ class Parish extends Model
      */
     public function scopeByAddress(Builder $query, $street, $number)
     {
-        return $this->whereHas('streetRanges', function ($query2) use ($street, $number) {
-            $query2->where('name', $street);
-            if (($number % 2) == 0) {
-                $query2->where('even_start', '<=', $number)
-                    ->where('even_end', '>=', $number);
-            } else {
-                $query2->where('odd_start', '<=', $number)
-                    ->where('odd_end', '>=', $number);
+        return $this->whereHas(
+            'streetRanges',
+            function ($query2) use ($street, $number) {
+                $query2->where('name', $street);
+                if (($number % 2) == 0) {
+                    $query2->where('even_start', '<=', $number)
+                        ->where('even_end', '>=', $number);
+                } else {
+                    $query2->where('odd_start', '<=', $number)
+                        ->where('odd_end', '>=', $number);
+                }
             }
-        });
+        );
     }
 }

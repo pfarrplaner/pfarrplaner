@@ -35,7 +35,13 @@ use App\Day;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 /**
@@ -50,12 +56,29 @@ class PublicController extends Controller
     protected $vacationData = [];
 
     /**
-     * @param $lastName
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @return Application|Factory|View
      */
-    protected function findUserByLastName($lastName)
+    public function absences()
     {
-        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
+        $start = Carbon::now()
+            ->setTime(0, 0, 0);
+        $end = Carbon::createFromDate($start->year, $start->month, 1)
+            ->setTime(0, 0, 0)
+            ->addMonth(2)
+            ->subSecond(1);
+
+        $vacations = $this->getVacationers($start, $end);
+        $cities = City::orderBy('name', 'ASC')->get();
+
+        return view(
+            'public.absences',
+            [
+                'vacations' => $vacations,
+                'start' => $start,
+                'end' => $end,
+                'cities' => $cities,
+            ]
+        );
     }
 
     /**
@@ -95,36 +118,22 @@ class PublicController extends Controller
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param $lastName
+     * @return Builder|Model|object|null
      */
-    public function absences()
+    protected function findUserByLastName($lastName)
     {
-        $start = Carbon::now()
-            ->setTime(0, 0, 0);
-        $end = Carbon::createFromDate($start->year, $start->month, 1)
-            ->setTime(0, 0, 0)
-            ->addMonth(2)
-            ->subSecond(1);
-
-        $vacations = $this->getVacationers($start, $end);
-        $cities = City::orderBy('name', 'ASC')->get();
-
-        return view('public.absences', [
-            'vacations' => $vacations,
-            'start' => $start,
-            'end' => $end,
-            'cities' => $cities,
-        ]);
+        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
     }
 
     /**
      * @param Request $request
      * @param $city
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return Factory|RedirectResponse|View
      */
     public function childrensChurch(Request $request, $city)
     {
-        $city = City::where('name', 'like', '%'.$city.'%')->first();
+        $city = City::where('name', 'like', '%' . $city . '%')->first();
         if (!$city) {
             return redirect()->route('home');
         }
@@ -160,23 +169,31 @@ class PublicController extends Controller
         }
 
         if ($request->is('*/pdf')) {
-            $pdf = Pdf::loadView('reports.childrenschurch.render', [
+            $pdf = Pdf::loadView(
+                'reports.childrenschurch.render',
+                [
+                    'start' => $minDate,
+                    'end' => $maxDate,
+                    'city' => $city,
+                    'services' => $serviceList,
+                    'count' => count($dates),
+                ]
+            );
+            $filename = $minDate->format('Ymd') . '-' . $maxDate->format(
+                    'Ymd'
+                ) . ' Kinderkirche ' . $city->name . '.pdf';
+            return $pdf->stream($filename);
+        }
+
+        return view(
+            'public.cc',
+            [
                 'start' => $minDate,
                 'end' => $maxDate,
                 'city' => $city,
                 'services' => $serviceList,
                 'count' => count($dates),
-            ]);
-            $filename = $minDate->format('Ymd').'-'.$maxDate->format('Ymd').' Kinderkirche '.$city->name.'.pdf';
-            return $pdf->stream($filename);
-        }
-
-        return view('public.cc', [
-            'start' => $minDate,
-            'end' => $maxDate,
-            'city' => $city,
-            'services' => $serviceList,
-            'count' => count($dates),
-        ]);
+            ]
+        );
     }
 }

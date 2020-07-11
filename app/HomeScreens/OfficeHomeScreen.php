@@ -42,8 +42,11 @@ use App\Baptism;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Throwable;
 
 /**
  * Class OfficeHomeScreen
@@ -57,7 +60,7 @@ class OfficeHomeScreen extends AbstractHomeScreen
     protected $hasConfiguration = true;
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|mixed
+     * @return Factory|View|mixed
      */
     public function render()
     {
@@ -72,10 +75,13 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -87,13 +93,19 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('baptisms', function($query) {
-                $query->where('done', 0);
-            })
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
+            ->whereHas(
+                'baptisms',
+                function ($query) {
+                    $query->where('done', 0);
+                }
+            )
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -107,12 +119,18 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('funerals', function($query) {
-                $query->where('done', 0);
-            })
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start);
-            })
+            ->whereHas(
+                'funerals',
+                function ($query) {
+                    $query->where('done', 0);
+                }
+            )
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -122,13 +140,19 @@ class OfficeHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas('weddings', function($query) {
-                $query->where('done', 0);
-            })
-            ->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
+            ->whereHas(
+                'weddings',
+                function ($query) {
+                    $query->where('done', 0);
+                }
+            )
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -136,12 +160,23 @@ class OfficeHomeScreen extends AbstractHomeScreen
 
         $missing = Service::withOpenMinistries(unserialize($user->getSetting('homeScreen_ministries', '')) ?: []);
 
-        return $this->renderView('homescreen.office', compact('user', 'services', 'funerals', 'baptisms', 'baptismRequests', 'weddings', 'missing'));
+        return $this->renderView(
+            'homescreen.office',
+            compact(
+                'user',
+                'services',
+                'funerals',
+                'baptisms',
+                'baptismRequests',
+                'weddings',
+                'missing'
+            )
+        );
     }
 
     /**
      * @return array|string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderConfigurationView()
     {

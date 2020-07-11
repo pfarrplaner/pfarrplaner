@@ -31,12 +31,13 @@
 namespace App\Http\Controllers;
 
 use App\Baptism;
-use App\City;
 use App\Http\Requests\StoreBaptismRequest;
 use App\Service;
 use App\Traits\HandlesAttachmentsTrait;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
@@ -59,7 +60,7 @@ class BaptismController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -67,32 +68,17 @@ class BaptismController extends Controller
     }
 
     /**
-     * @param int $baptismFlag
-     * @return mixed
-     */
-    protected function getBaptismalServices($baptismFlag = 1) {
-        return Service::where('baptism', '=', $baptismFlag)
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
-            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
-            ->whereHas('day', function ($query) {
-                $query->where('date', '>=', Carbon::now());
-            })
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time')
-            ->get();
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @param int $serviceId Service Id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create($serviceId = null)
     {
         $service = null;
-        if ($serviceId) $service = Service::find($serviceId);
+        if ($serviceId) {
+            $service = Service::find($serviceId);
+        }
 
         $baptismalServices = $this->getBaptismalServices();
         $otherServices = $this->getBaptismalServices(0);
@@ -103,34 +89,61 @@ class BaptismController extends Controller
     }
 
     /**
+     * @param int $baptismFlag
+     * @return mixed
+     */
+    protected function getBaptismalServices($baptismFlag = 1)
+    {
+        return Service::where('baptism', '=', $baptismFlag)
+            ->select('services.*')
+            ->join('days', 'services.day_id', '=', 'days.id')
+            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now());
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time')
+            ->get();
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
-     * @param  StoreBaptismRequest  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreBaptismRequest $request
+     * @return Response
      */
     public function store(StoreBaptismRequest $request)
     {
-        $baptism = new Baptism([
-            'city_id' => $request->get('city_id'),
-            'candidate_name' => $request->get('candidate_name') ?: '',
-            'candidate_address' => $request->get('candidate_address') ?: '',
-            'candidate_zip' => $request->get('candidate_zip') ?: '',
-            'candidate_city' => $request->get('candidate_city') ?: '',
-            'candidate_phone' => $request->get('candidate_phone') ?: '',
-            'candidate_email' => $request->get('candidate_email') ?: '',
-            'first_contact_with' => $request->get('first_contact_with') ?: '',
-            'registered' => $request->get('registered') ? 1 : 0,
-            'registration_document' => $request->get('candidate_email') ?: '',
-            'signed' => $request->get('signed') ? 1 : 0,
-            'docs_ready' => $request->get('docs_ready') ? 1 : 0,
-            'docs_where' => $request->get('docs_where') ?: '',
-        ]);
+        $baptism = new Baptism(
+            [
+                'city_id' => $request->get('city_id'),
+                'candidate_name' => $request->get('candidate_name') ?: '',
+                'candidate_address' => $request->get('candidate_address') ?: '',
+                'candidate_zip' => $request->get('candidate_zip') ?: '',
+                'candidate_city' => $request->get('candidate_city') ?: '',
+                'candidate_phone' => $request->get('candidate_phone') ?: '',
+                'candidate_email' => $request->get('candidate_email') ?: '',
+                'first_contact_with' => $request->get('first_contact_with') ?: '',
+                'registered' => $request->get('registered') ? 1 : 0,
+                'registration_document' => $request->get('candidate_email') ?: '',
+                'signed' => $request->get('signed') ? 1 : 0,
+                'docs_ready' => $request->get('docs_ready') ? 1 : 0,
+                'docs_where' => $request->get('docs_where') ?: '',
+            ]
+        );
         $serviceId = $request->get('service') ?: '';
         if ($serviceId) {
             $baptism->service_id = $serviceId;
         }
-        if ($request->get('first_contact_on')) $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
-        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
+        if ($request->get('first_contact_on')) {
+            $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
+        }
+        if ($request->get('appointment')) {
+            $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
+        }
 
         if ($request->hasFile('registration_document')) {
             $baptism->registration_document = $request->file('registration_document')->store('baptism', 'public');
@@ -150,8 +163,8 @@ class BaptismController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Baptism  $baptism
-     * @return \Illuminate\Http\Response
+     * @param Baptism $baptism
+     * @return Response
      */
     public function show(Baptism $baptism)
     {
@@ -161,19 +174,21 @@ class BaptismController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Baptism  $baptism
-     * @return \Illuminate\Http\Response
+     * @param Baptism $baptism
+     * @return Response
      */
     public function edit(Baptism $baptism)
     {
-
         $baptismalServicesQuery = Service::where('baptism', '=', 1)
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', Auth::user()->cities->pluck('id'))
-            ->whereHas('day', function ($query) {
-                $query->where('date', '>=', Carbon::now());
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now());
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time');
         if ($baptism->service_id) {
@@ -190,9 +205,9 @@ class BaptismController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  StoreBaptismRequest  $request
-     * @param  \App\Baptism  $baptism
-     * @return \Illuminate\Http\Response
+     * @param StoreBaptismRequest $request
+     * @param Baptism $baptism
+     * @return Response
      */
     public function update(StoreBaptismRequest $request, Baptism $baptism)
     {
@@ -204,17 +219,21 @@ class BaptismController extends Controller
         }
         $baptism->city_id = $request->get('city_id');
         $baptism->candidate_name = $request->get('candidate_name') ?: '';
-        $baptism->candidate_address= $request->get('candidate_address') ?: '';
+        $baptism->candidate_address = $request->get('candidate_address') ?: '';
         $baptism->candidate_zip = $request->get('candidate_zip') ?: '';
         $baptism->candidate_city = $request->get('candidate_city') ?: '';
         $baptism->candidate_phone = $request->get('candidate_phone') ?: '';
         $baptism->candidate_email = $request->get('candidate_email') ?: '';
         $baptism->first_contact_with = $request->get('first_contact_with') ?: '';
-        if ($request->get('first_contact_on')) $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
-        if ($request->get('appointment')) $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
-        $baptism->registered= $request->get('registered') ? 1 : 0;
-        $baptism->signed= $request->get('signed') ? 1 : 0;
-        $baptism->docs_ready= $request->get('docs_ready') ? 1 : 0;
+        if ($request->get('first_contact_on')) {
+            $baptism->first_contact_on = Carbon::createFromFormat('d.m.Y', $request->get('first_contact_on'));
+        }
+        if ($request->get('appointment')) {
+            $baptism->appointment = Carbon::createFromFormat('d.m.Y H:i', $request->get('appointment'));
+        }
+        $baptism->registered = $request->get('registered') ? 1 : 0;
+        $baptism->signed = $request->get('signed') ? 1 : 0;
+        $baptism->docs_ready = $request->get('docs_ready') ? 1 : 0;
         $baptism->docs_where = $request->get('docs_where') ?: '';
 
         if ($request->hasFile('registration_document') || ($request->get('removeAttachment') == 1)) {
@@ -241,8 +260,8 @@ class BaptismController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Baptism  $baptism
-     * @return \Illuminate\Http\Response
+     * @param Baptism $baptism
+     * @return Response
      */
     public function destroy(Baptism $baptism)
     {
@@ -257,24 +276,30 @@ class BaptismController extends Controller
 
     /**
      * @param Baptism $baptism
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @return Application|ResponseFactory|Response
      */
-    public function appointmentIcal(Baptism $baptism) {
+    public function appointmentIcal(Baptism $baptism)
+    {
         $service = Service::find($baptism->service_id);
         $raw = View::make('baptisms.appointment.ical', compact('baptism', 'service'));
-        $raw = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw))));
+        $raw = str_replace(
+            "\r\n\r\n",
+            "\r\n",
+            str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', $raw)))
+        );
         return response($raw, 200)
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Expires', '0')
             ->header('Content-Type', 'text/calendar')
-            ->header('Content-Disposition', 'inline; filename=Taufgespraech-'.$baptism->id.'.ics');
+            ->header('Content-Disposition', 'inline; filename=Taufgespraech-' . $baptism->id . '.ics');
     }
 
     /**
      * @param Baptism $baptism
      * @return false|string
      */
-    public function done(Baptism $baptism) {
+    public function done(Baptism $baptism)
+    {
         $baptism->done = true;
         $baptism->save();
         return json_encode(true);

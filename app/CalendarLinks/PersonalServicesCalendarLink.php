@@ -40,7 +40,6 @@ namespace App\CalendarLinks;
 
 use App\Service;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,9 +85,12 @@ class PersonalServicesCalendarLink extends AbstractCalendarLink
     {
         $data = Service::select('services.*')
             ->with('location', 'day', 'participants')
-            ->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->get();
+            ->whereHas(
+                'participants',
+                function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            )->get();
         return $data;
     }
 

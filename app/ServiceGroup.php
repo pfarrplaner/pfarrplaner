@@ -31,6 +31,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class ServiceGroup
@@ -44,17 +45,11 @@ class ServiceGroup extends Model
     protected $fillable = ['name'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function services() {
-        return $this->belongsToMany(Service::class);
-    }
-
-    /**
      * @param $list
      * @return array
      */
-    public static function createIfMissing($list) {
+    public static function createIfMissing($list)
+    {
         $result = [];
         foreach ($list as $element) {
             if (is_numeric($element)) {
@@ -66,5 +61,13 @@ class ServiceGroup extends Model
             }
         }
         return $result;
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function services()
+    {
+        return $this->belongsToMany(Service::class);
     }
 }

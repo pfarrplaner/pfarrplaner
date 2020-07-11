@@ -38,12 +38,14 @@
 namespace App\HomeScreens;
 
 
-use App\Baptism;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Throwable;
 
 /**
  * Class MinistryHomeScreen
@@ -57,7 +59,7 @@ class MinistryHomeScreen extends AbstractHomeScreen
     protected $hasConfiguration = true;
 
     /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|mixed
+     * @return Factory|View|mixed
      */
     public function render()
     {
@@ -70,12 +72,18 @@ class MinistryHomeScreen extends AbstractHomeScreen
         $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereHas('participants', function ($query) use ($user) {
-                $query->where('user_id', $user->id);
-            })->whereHas('day', function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            })
+            ->whereHas(
+                'participants',
+                function ($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }
+            )->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
@@ -87,7 +95,7 @@ class MinistryHomeScreen extends AbstractHomeScreen
 
     /**
      * @return array|string
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function renderConfigurationView()
     {

@@ -39,8 +39,11 @@ namespace App\Reports;
 
 
 use App\Location;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class EmbedServiceTableReport
@@ -67,7 +70,7 @@ class EmbedServiceTableReport extends AbstractEmbedReport
     public $icon = 'fa fa-file-code';
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
     public function setup()
     {
@@ -78,15 +81,17 @@ class EmbedServiceTableReport extends AbstractEmbedReport
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Application|Factory|View|string
      */
     public function render(Request $request)
     {
-        $request->validate([
-            'listType' => 'required',
-            'ids' => 'required',
-            'cors-origin' => 'required|url',
-        ]);
+        $request->validate(
+            [
+                'listType' => 'required',
+                'ids' => 'required',
+                'cors-origin' => 'required|url',
+            ]
+        );
 
         $listType = $request->get('listType');
         $ids = join(',', $request->get('ids'));
@@ -94,8 +99,10 @@ class EmbedServiceTableReport extends AbstractEmbedReport
         $limit = $request->get('limit') ?: 5;
         $corsOrigin = $request->get('cors-origin');
 
-        $url = route('embed.'.$listType, compact('ids', 'limit'));
-        if ($corsOrigin) $url.='?cors-origin='.urlencode($corsOrigin);
+        $url = route('embed.' . $listType, compact('ids', 'limit'));
+        if ($corsOrigin) {
+            $url .= '?cors-origin=' . urlencode($corsOrigin);
+        }
 
         $randomId = uniqid();
 

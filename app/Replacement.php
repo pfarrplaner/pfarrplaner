@@ -32,6 +32,8 @@ namespace App;
 
 use App\Tools\StringTool;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Replacement
@@ -49,16 +51,18 @@ class Replacement extends Model
     protected $dates = ['from', 'to'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function absence() {
+    public function absence()
+    {
         return $this->belongsTo(Absence::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function users() {
+    public function users()
+    {
         return $this->belongsToMany(User::class)->withTimestamps();
     }
 
@@ -66,12 +70,13 @@ class Replacement extends Model
      * @param bool $withDates
      * @return string
      */
-    public function toText(bool $withDates = false) {
+    public function toText(bool $withDates = false)
+    {
         $u = [];
         /** @var User $user */
         foreach ($this->users as $user) {
             $u[] = $user->lastName();
         }
-        return join(' | ', $u).($withDates ? ' ('.StringTool::durationText($this->from, $this->to).')' : '');
+        return join(' | ', $u) . ($withDates ? ' (' . StringTool::durationText($this->from, $this->to) . ')' : '');
     }
 }

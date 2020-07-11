@@ -40,6 +40,8 @@ namespace App\CalendarLinks;
 
 use App\Service;
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -62,7 +64,8 @@ class AllServicesCalendarLink extends AbstractCalendarLink
     /**
      * @return array
      */
-    public function setupData() {
+    public function setupData()
+    {
         $cities = Auth::user()->cities;
         return compact('cities');
     }
@@ -78,7 +81,7 @@ class AllServicesCalendarLink extends AbstractCalendarLink
     /**
      * @param Request $request
      * @param User $user
-     * @return array|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     * @return array|Builder[]|Collection
      */
     public function getRenderData(Request $request, User $user)
     {
@@ -86,7 +89,6 @@ class AllServicesCalendarLink extends AbstractCalendarLink
         return Service::with(['day', 'location'])
             ->whereIn('city_id', $cityIds)
             ->get();
-
     }
 
 

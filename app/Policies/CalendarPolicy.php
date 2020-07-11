@@ -30,7 +30,6 @@
 
 namespace App\Policies;
 
-use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 /**
@@ -54,18 +53,21 @@ class CalendarPolicy
     /**
      * @return bool
      */
-    public function month() {
+    public function month()
+    {
         return true;
     }
 
     /**
      * @return bool
      */
-    public function printsetup() {
+    public function printsetup()
+    {
         return true;
     }
 
-    public function print() {
+    public function print()
+    {
         true;
     }
 }

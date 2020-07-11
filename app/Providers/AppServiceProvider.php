@@ -66,25 +66,31 @@ class AppServiceProvider extends ServiceProvider
         Blade::include('partials.string.badges', 'badges');
 
 
-        Validator::extendImplicit('checkbox', function($attribute, $value, $parameters, $validator)
-        {
-            $data = $oldData = $validator->getData();
-            $data[$attribute] = ($value == "1" || strtolower($value) == "true" || strtolower($value) == "on") ? 1: 0;
-            $validator->setData($data);
-            return true;
-        });
+        Validator::extendImplicit(
+            'checkbox',
+            function ($attribute, $value, $parameters, $validator) {
+                $data = $oldData = $validator->getData();
+                $data[$attribute] = ($value == "1" || strtolower($value) == "true" || strtolower(
+                        $value
+                    ) == "on") ? 1 : 0;
+                $validator->setData($data);
+                return true;
+            }
+        );
 
-        Validator::extend('phone_number', function($attribute, $value, $parameters)
-        {
-            return preg_match('/^([0-9s(+][0-9\.-\/ ()]{7,})$/i', $value);
-        });
+        Validator::extend(
+            'phone_number',
+            function ($attribute, $value, $parameters) {
+                return preg_match('/^([0-9s(+][0-9\.-\/ ()]{7,})$/i', $value);
+            }
+        );
 
-        Validator::extend('zip', function($attribute, $value, $parameters)
-        {
-            return preg_match('/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/i', $value);
-        });
-
-
+        Validator::extend(
+            'zip',
+            function ($attribute, $value, $parameters) {
+                return preg_match('/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/i', $value);
+            }
+        );
     }
 
     /**
@@ -95,7 +101,7 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         //$this->app->bind(
-            //'Auth0\Login\Contract\Auth0UserRepository',
-            //'Auth0\Login\Repository\Auth0UserRepository');
+        //'Auth0\Login\Contract\Auth0UserRepository',
+        //'Auth0\Login\Repository\Auth0UserRepository');
     }
 }

@@ -33,6 +33,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Traits\HandlesAttachmentsTrait;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 /**
  * Class CityController
@@ -49,13 +50,13 @@ class CityController extends Controller
     }
 
 
-
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $cities = City::all();
         return view('cities.index', compact('cities'));
     }
@@ -64,7 +65,7 @@ class CityController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -74,8 +75,8 @@ class CityController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -85,25 +86,54 @@ class CityController extends Controller
         return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
     }
 
+    /**
+     * Validate a city request
+     * @return mixed
+     */
+    protected function validateRequest()
+    {
+        return request()->validate(
+            [
+                'name' => 'required|max:255',
+                'public_events_calendar_url' => 'nullable',
+                'default_offering_goal' => 'nullable',
+                'default_offering_description' => 'nullable',
+                'default_funeral_offering_goal' => 'nullable',
+                'default_funeral_offering_description' => 'nullable',
+                'default_wedding_offering_goal' => 'nullable',
+                'default_wedding_offering_description' => 'nullable',
+                'op_domain' => 'nullable',
+                'op_customer_key' => 'nullable',
+                'op_customer_token' => 'nullable',
+                'podcast_title' => 'nullable|string',
+                'homepage' => 'nullable|string',
+                'podcast_owner_name' => 'nullable|string',
+                'podcast_owner_email' => 'nullable|email',
+                'youtube_channel_url' => 'nullable|string',
+                'konfiapp_apikey' => 'nullable|string',
+            ]
+        );
+    }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return Response
      */
     public function edit($id)
     {
         $city = City::find($id);
 
-        return view('cities.edit', compact('city'));    }
+        return view('cities.edit', compact('city'));
+    }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \App\City $city
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param City $city
+     * @param Request $request
+     * @return Response
      */
     public function update(Request $request, City $city)
     {
@@ -116,40 +146,13 @@ class CityController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\City $city
-     * @return \Illuminate\Http\Response
+     * @param City $city
+     * @return Response
      */
     public function destroy(City $city)
     {
         $city->delete();
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde gelöscht.');
-    }
-
-    /**
-     * Validate a city request
-     * @return mixed
-     */
-    protected function validateRequest()
-    {
-        return request()->validate([
-            'name' => 'required|max:255',
-            'public_events_calendar_url' => 'nullable',
-            'default_offering_goal' => 'nullable',
-            'default_offering_description' => 'nullable',
-            'default_funeral_offering_goal' => 'nullable',
-            'default_funeral_offering_description' => 'nullable',
-            'default_wedding_offering_goal' => 'nullable',
-            'default_wedding_offering_description' => 'nullable',
-            'op_domain' => 'nullable',
-            'op_customer_key' => 'nullable',
-            'op_customer_token' => 'nullable',
-            'podcast_title' => 'nullable|string',
-            'homepage' => 'nullable|string',
-            'podcast_owner_name' => 'nullable|string',
-            'podcast_owner_email' => 'nullable|email',
-            'youtube_channel_url' => 'nullable|string',
-            'konfiapp_apikey' => 'nullable|string',
-        ]);
     }
 
 }

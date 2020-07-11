@@ -30,22 +30,21 @@
 
 namespace App\Reports;
 
-use App\Baptism;
 use App\City;
-use App\Day;
-use App\Funeral;
 use App\Imports\EventCalendarImport;
 use App\Imports\OPEventsImport;
 use App\Liturgy;
 use App\Service;
-use App\Tools\StringTool;
-use App\Wedding;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Element\Section;
+use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
-use PhpOffice\PhpWord\Style\Section;
 use PhpOffice\PhpWord\Style\Tab;
 
 /**
@@ -85,11 +84,11 @@ class EventListReport extends AbstractWordDocumentReport
      */
     public $description = 'Terminliste als Worddatei';
 
-    /** @var \PhpOffice\PhpWord\Element\Section */
+    /** @var Section */
     protected $section;
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
     public function setup()
     {
@@ -103,10 +102,12 @@ class EventListReport extends AbstractWordDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate([
-            'city' => 'required|int',
-            'start' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'city' => 'required|int',
+                'start' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
         $start = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00');
         $end = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end') . ' 23:59:59');
@@ -135,13 +136,15 @@ class EventListReport extends AbstractWordDocumentReport
         $this->wordDocument->setDefaultFontName('Arial Narrow');
         $this->wordDocument->setDefaultFontSize(11);
 
-        $this->section = $this->wordDocument->addSection([
-            'orientation' => 'portrait',
-            'marginTop' => Converter::cmToTwip(0.63),
-            'marginBottom' => Converter::cmToTwip(0.5),
-            'marginLeft' => Converter::cmToTwip(0.59),
-            'marginRight' => Converter::cmToTwip(0.61),
-        ]);
+        $this->section = $this->wordDocument->addSection(
+            [
+                'orientation' => 'portrait',
+                'marginTop' => Converter::cmToTwip(0.63),
+                'marginBottom' => Converter::cmToTwip(0.5),
+                'marginLeft' => Converter::cmToTwip(0.59),
+                'marginRight' => Converter::cmToTwip(0.61),
+            ]
+        );
 
         $this->wordDocument->addParagraphStyle(
             self::DEFAULT,
@@ -177,57 +180,90 @@ class EventListReport extends AbstractWordDocumentReport
             )
         );
 
-        $this->renderParagraph(self::DEFAULT, [
-            ['Gottesdienste', self::BOLD],
-        ], 1);
+        $this->renderParagraph(
+            self::DEFAULT,
+            [
+                ['Gottesdienste', self::BOLD],
+            ],
+            1
+        );
 
 
         // render services
         foreach ($events as $theseEvents) {
             foreach ($theseEvents as $event) {
                 if (is_object(($event))) {
-                    /* @var \App\Service $event */
+                    /* @var Service $event */
                     // only services this time
 
                     $liturgy = Liturgy::getDayInfo($event->day);
-                    $pericope = (isset($liturgy['perikope']) ? $liturgy['litTextsPerikope'.$liturgy['perikope']] : '');
+                    $pericope = (isset($liturgy['perikope']) ? $liturgy['litTextsPerikope' . $liturgy['perikope']] : '');
 
                     // remove optional verses
                     if ($pericope) {
                         $pericope = preg_replace('/\([\d–]*\)/', '+', $pericope);
-                        if (substr($pericope, -1) == '+') $pericope = substr($pericope, 0, -1);
+                        if (substr($pericope, -1) == '+') {
+                            $pericope = substr($pericope, 0, -1);
+                        }
                         $pericope = str_replace(',+', ',', $pericope);
                     }
 
-                    $run = $this->renderParagraph(self::DEFAULT, [
-                        [$event->day->date->format('d.m.Y')."\t", []],
-                        [$event->timeText(true)."\t", []],
-                    ], 0);
+                    $run = $this->renderParagraph(
+                        self::DEFAULT,
+                        [
+                            [$event->day->date->format('d.m.Y') . "\t", []],
+                            [$event->timeText(true) . "\t", []],
+                        ],
+                        0
+                    );
 
                     if ($event->day->description) {
-                        $this->renderParagraph(self::DEFAULT, [
-                            [$event->day->description.' – ', []],
-                        ], 0, $run);
+                        $this->renderParagraph(
+                            self::DEFAULT,
+                            [
+                                [$event->day->description . ' – ', []],
+                            ],
+                            0,
+                            $run
+                        );
                     } elseif (isset($liturgy['title'])) {
-                        $this->renderParagraph(self::DEFAULT, [
-                            [$liturgy['title'].' – ', []],
-                        ], 0, $run);
+                        $this->renderParagraph(
+                            self::DEFAULT,
+                            [
+                                [$liturgy['title'] . ' – ', []],
+                            ],
+                            0,
+                            $run
+                        );
                     }
 
                     $title = $event->title ?: 'Gottesdienst';
-                    if ($event->eucharist) $title = 'Abendmahlsgottesdienst';
-                    if ($event->baptism) $title = 'Taufgottesdienst';
-
-                    if ($p = $event->participantsText('P', true )) {
-                        $this->renderParagraph(self::DEFAULT, [
-                            [$title.' mit '.$p, []],
-                        ], 0, $run);
+                    if ($event->eucharist) {
+                        $title = 'Abendmahlsgottesdienst';
+                    }
+                    if ($event->baptism) {
+                        $title = 'Taufgottesdienst';
                     }
 
-                    $this->renderParagraph(self::DEFAULT, [
-                        ["\t".$pericope, []],
-                    ], 0, $run);
+                    if ($p = $event->participantsText('P', true)) {
+                        $this->renderParagraph(
+                            self::DEFAULT,
+                            [
+                                [$title . ' mit ' . $p, []],
+                            ],
+                            0,
+                            $run
+                        );
+                    }
 
+                    $this->renderParagraph(
+                        self::DEFAULT,
+                        [
+                            ["\t" . $pericope, []],
+                        ],
+                        0,
+                        $run
+                    );
 
 
                     if ($description = $event->description) {
@@ -235,32 +271,60 @@ class EventListReport extends AbstractWordDocumentReport
                             $description = str_replace('; ', ';<w:br />', $description);
                         }
                         // take care of ampersands
-                        $description = trim(preg_replace('/&(?![A-Za-z0-9#]{1,7};)/','&amp;',$description));
-                        $this->renderParagraph(self::DEFAULT, [
-                            ["<w:br />\t\t".$description, []],
-                        ], 0, $run);
+                        $description = trim(preg_replace('/&(?![A-Za-z0-9#]{1,7};)/', '&amp;', $description));
+                        $this->renderParagraph(
+                            self::DEFAULT,
+                            [
+                                ["<w:br />\t\t" . $description, []],
+                            ],
+                            0,
+                            $run
+                        );
                     } elseif (isset($liturgy['title'])) {
-                        $this->renderParagraph(self::DEFAULT, [
-                            ["<w:br />\t\t".$liturgy['title'], []],
-                        ], 0, $run);
+                        $this->renderParagraph(
+                            self::DEFAULT,
+                            [
+                                ["<w:br />\t\t" . $liturgy['title'], []],
+                            ],
+                            0,
+                            $run
+                        );
                     }
 
                     if ($event->offering_goal) {
-                        $this->renderParagraph(self::DEFAULT, [
-                            ["<w:br />\t\tOpfer: ".$event->offering_goal, []],
-                        ], 0, $run);
+                        $this->renderParagraph(
+                            self::DEFAULT,
+                            [
+                                ["<w:br />\t\tOpfer: " . $event->offering_goal, []],
+                            ],
+                            0,
+                            $run
+                        );
                     }
 
                     if ($event->cc) {
-                        $this->renderParagraph(self::DEFAULT, [
-                            ["<w:br />\t\tKinderkirche: ".$event->ccTimeText(false).', '.$event->ccLocationText(), []],
-                        ], 0, $run);
+                        $this->renderParagraph(
+                            self::DEFAULT,
+                            [
+                                [
+                                    "<w:br />\t\tKinderkirche: " . $event->ccTimeText(
+                                        false
+                                    ) . ', ' . $event->ccLocationText(),
+                                    []
+                                ],
+                            ],
+                            0,
+                            $run
+                        );
                     }
 
-                    $this->renderParagraph(self::DEFAULT, [
-                    ], 1, $run);
-
-
+                    $this->renderParagraph(
+                        self::DEFAULT,
+                        [
+                        ],
+                        1,
+                        $run
+                    );
                 }
             }
         }
@@ -268,21 +332,28 @@ class EventListReport extends AbstractWordDocumentReport
         $this->renderParagraph();
         $this->renderParagraph();
         $this->renderParagraph();
-        $this->renderParagraph(self::DEFAULT, [
-            ['Termine', self::BOLD],
-        ], 1);
+        $this->renderParagraph(
+            self::DEFAULT,
+            [
+                ['Termine', self::BOLD],
+            ],
+            1
+        );
 
 
         // render other events
         foreach ($events as $theseEvents) {
             foreach ($theseEvents as $event) {
                 if (!is_object(($event))) {
-                    $run = $this->renderParagraph(self::LIST2, [
-                        [$event['start']->formatLocalized('%a.'), []],
-                        ["\t".$event['start']->format('d.m.'), []],
-                        ["\t".$event['start']->format('H:i').' Uhr', []],
-                        ["\t".$event['title'], []],
-                    ]);
+                    $run = $this->renderParagraph(
+                        self::LIST2,
+                        [
+                            [$event['start']->formatLocalized('%a.'), []],
+                            ["\t" . $event['start']->format('d.m.'), []],
+                            ["\t" . $event['start']->format('H:i') . ' Uhr', []],
+                            ["\t" . $event['title'], []],
+                        ]
+                    );
                 }
             }
         }
@@ -298,7 +369,7 @@ class EventListReport extends AbstractWordDocumentReport
      * @param array $blocks
      * @param int $emptyParagraphsAfter
      * @param null $existingTextRun
-     * @return \PhpOffice\PhpWord\Element\TextRun|null
+     * @return TextRun|null
      */
     protected function renderParagraph(
         $template = '',
@@ -338,13 +409,16 @@ class EventListReport extends AbstractWordDocumentReport
                 default:
                     $format = [];
             }
-            $paragraph = trim(strtr($paragraph, [
-                "\r" => '',
-                "\n" => '<w:br />'
-            ]));
+            $paragraph = trim(
+                strtr(
+                    $paragraph,
+                    [
+                        "\r" => '',
+                        "\n" => '<w:br />'
+                    ]
+                )
+            );
             $this->renderParagraph(self::NO_INDENT, [[$paragraph, $format]], 1);
         }
-
-
     }
 }

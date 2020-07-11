@@ -56,7 +56,8 @@ class AbsencePolicy
      * @param User $user
      * @return bool
      */
-    public function create(User $user) {
+    public function create(User $user)
+    {
         return $user->manage_absences || $user->hasPermissionTo('fremden-urlaub-bearbeiten');
     }
 
@@ -65,12 +66,17 @@ class AbsencePolicy
      * @param Absence $absence
      * @return bool
      */
-    public function update(User $user, Absence $absence) {
-        if ($user->id == $absence->user->id) return true;
+    public function update(User $user, Absence $absence)
+    {
+        if ($user->id == $absence->user->id) {
+            return true;
+        }
         if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {
             $cityIds = $absence->user->cities->pluck('id');
             foreach ($user->writableCities as $city) {
-                if ($cityIds->contains($city->id)) return true;
+                if ($cityIds->contains($city->id)) {
+                    return true;
+                }
             }
         }
         return false;

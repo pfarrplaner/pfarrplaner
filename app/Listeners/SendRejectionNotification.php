@@ -31,8 +31,6 @@
 namespace App\Listeners;
 
 use App\Events\AbsenceRejected;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**
  * Class SendRejectionNotification
@@ -53,7 +51,7 @@ class SendRejectionNotification
     /**
      * Handle the event.
      *
-     * @param  AbsenceRejected  $event
+     * @param AbsenceRejected $event
      * @return void
      */
     public function handle(AbsenceRejected $event)
@@ -62,7 +60,9 @@ class SendRejectionNotification
         $users->push($event->absence->user);
 
         if (env('THIS_IS_MY_DEV_HOST')) {
-            foreach($users as $user) $user->email = 'dev@peregrinus.de';
+            foreach ($users as $user) {
+                $user->email = 'dev@peregrinus.de';
+            }
         }
 
         Mail::to($users)->send(new \App\Mail\AbsenceRejected($event->absence));

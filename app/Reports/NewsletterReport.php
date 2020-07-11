@@ -30,15 +30,15 @@
 
 namespace App\Reports;
 
-use App\City;
 use App\Day;
 use App\Liturgy;
 use App\Service;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use PhpOffice\PhpWord\Shared\Converter;
-use PhpOffice\PhpWord\Style\Tab;
+use Illuminate\View\View;
 
 
 /**
@@ -62,9 +62,10 @@ class NewsletterReport extends AbstractWordDocumentReport
     public $description = 'Gottesdienstliste für den Newsletter';
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function setup() {
+    public function setup()
+    {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
         return $this->renderSetupView(['cities' => $cities]);
@@ -73,15 +74,17 @@ class NewsletterReport extends AbstractWordDocumentReport
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Application|Factory|View|string
      */
     public function render(Request $request)
     {
-        $request->validate([
-            'includeCities' => 'required',
-            'start' => 'required|date|date_format:d.m.Y',
-            'end' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'includeCities' => 'required',
+                'start' => 'required|date|date_format:d.m.Y',
+                'end' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
         $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')))
             ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')))
@@ -92,7 +95,9 @@ class NewsletterReport extends AbstractWordDocumentReport
         foreach ($days as $day) {
             $dayTitle = $day->date->formatLocalized('%A, %d. %B %Y');
             $liturgy = Liturgy::getDayInfo($day);
-            if (isset($liturgy['title'])) $dayTitle .= '&nbsp;&nbsp;&nbsp;'.$liturgy['title'];
+            if (isset($liturgy['title'])) {
+                $dayTitle .= '&nbsp;&nbsp;&nbsp;' . $liturgy['title'];
+            }
 
 
             $serviceList[$dayTitle] = Service::with(['location', 'day'])
@@ -102,12 +107,10 @@ class NewsletterReport extends AbstractWordDocumentReport
                 ->whereDoesntHave('weddings')
                 ->orderBy('time', 'ASC')
                 ->get();
-
         }
 
         return view('reports.newsletter.render', compact('serviceList', 'days'));
     }
-
 
 
 }

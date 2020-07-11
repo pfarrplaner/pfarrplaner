@@ -30,17 +30,18 @@
 
 namespace App\Inputs;
 
-use App\City;
 use App\Day;
 use App\Location;
 use App\Mail\ServiceCreatedMultiple;
-use App\Mail\ServiceUpdated;
 use App\Service;
 use App\Subscription;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class MultipleServicesInput
@@ -61,32 +62,39 @@ class MultipleServicesInput extends AbstractInput
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function setup(Request $request) {
+    public function setup(Request $request)
+    {
         $cities = Auth::user()->writableCities;
         $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
 
-        return view($this->getViewName('setup'), [
-            'input' => $this,
-            'cities' => $cities,
-            'locations' => $locations,
-        ]);
+        return view(
+            $this->getViewName('setup'),
+            [
+                'input' => $this,
+                'cities' => $cities,
+                'locations' => $locations,
+            ]
+        );
     }
 
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     * @return Application|Factory|View|void
      */
-    public function input(Request $request) {
-        $request->validate([
-            'includeLocations' => 'required',
-            'from' => 'required',
-            'to' => 'required',
-            'rhythm' => 'required|int',
-            'title' => 'nullable|string',
-        ]);
+    public function input(Request $request)
+    {
+        $request->validate(
+            [
+                'includeLocations' => 'required',
+                'from' => 'required',
+                'to' => 'required',
+                'rhythm' => 'required|int',
+                'title' => 'nullable|string',
+            ]
+        );
 
         $rhythm = $request->get('rhythm') ?: 1;
         $title = $request->get('title') ?: '';
@@ -95,7 +103,9 @@ class MultipleServicesInput extends AbstractInput
         $locations = Location::whereIn('id', $request->get('includeLocations') ?: [])->get();
 
         $from = Carbon::parse(Carbon::createFromFormat('d.m.Y', $request->get('from')));
-        while ($from->format('l') != $request->get('weekday')) $from->addDay(1);
+        while ($from->format('l') != $request->get('weekday')) {
+            $from->addDay(1);
+        }
         $to = Carbon::createFromFormat('d.m.Y', $request->get('to'));
 
 
@@ -115,21 +125,19 @@ class MultipleServicesInput extends AbstractInput
 
         $input = $this;
         return view($this->getInputViewName(), compact('input', 'from', 'to', 'locations', 'services', 'title'));
-
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return RedirectResponse|void
      */
-    public function save(Request $request) {
-
+    public function save(Request $request)
+    {
         $ctrAdded = $ctrExisting = 0;
         $firstDay = null;
 
         $data = $request->get('service') ?: [];
         foreach ($data as $dayDate => $services) {
-
             $dayDate = Carbon::createFromFormat('d.m.Y', $dayDate);
             // check if day already exists
             $day = Day::where('date', $dayDate->format('Y-m-d'))->first();
@@ -140,7 +148,9 @@ class MultipleServicesInput extends AbstractInput
                 $type = $day->day_type;
             }
 
-            if (null === $firstDay) $firstDay = $day;
+            if (null === $firstDay) {
+                $firstDay = $day;
+            }
 
             foreach ($services as $service) {
                 $location = Location::find($service['location']);
@@ -159,22 +169,24 @@ class MultipleServicesInput extends AbstractInput
                     ->where('day_id', $day->id)
                     ->first();
                 if (null == $service) {
-                    $newService = new Service([
-                        'location_id' => $location->id,
-                        'city_id' => $location->city_id,
-                        'day_id' => $day->id,
-                        'time' => $time,
-                        'description' => '',
-                        'need_predicant' => false,
-                        'baptism' => false,
-                        'eucharist' => false,
-                        'offerings_counter1' => '',
-                        'offerings_counter2' => '',
-                        'offering_goal' => '',
-                        'offering_description' => '',
-                        'offering_type' => '',
-                        'title' => $request->get('title', ''),
-                    ]);
+                    $newService = new Service(
+                        [
+                            'location_id' => $location->id,
+                            'city_id' => $location->city_id,
+                            'day_id' => $day->id,
+                            'time' => $time,
+                            'description' => '',
+                            'need_predicant' => false,
+                            'baptism' => false,
+                            'eucharist' => false,
+                            'offerings_counter1' => '',
+                            'offerings_counter2' => '',
+                            'offering_goal' => '',
+                            'offering_description' => '',
+                            'offering_type' => '',
+                            'title' => $request->get('title', ''),
+                        ]
+                    );
                     $newService->save();
                     $serviceRecords[] = $newService;
                     $ctrAdded++;
@@ -199,9 +211,19 @@ class MultipleServicesInput extends AbstractInput
         Subscription::send($service, ServiceCreatedMultiple::class, ['services' => $serviceRecords]);
 
         if ($ctrExisting) {
-            return redirect()->route('calendar', $data)->with('warning', sprintf('%d Gottesdienste wurden hinzugefügt. %d Gottesdienste waren bereits vorhanden.', $ctrAdded, $ctrExisting));
+            return redirect()->route('calendar', $data)->with(
+                'warning',
+                sprintf(
+                    '%d Gottesdienste wurden hinzugefügt. %d Gottesdienste waren bereits vorhanden.',
+                    $ctrAdded,
+                    $ctrExisting
+                )
+            );
         } else {
-            return redirect()->route('calendar', $data)->with('success', sprintf('%d Gottesdienste wurden hinzugefügt.', $ctrAdded));
+            return redirect()->route('calendar', $data)->with(
+                'success',
+                sprintf('%d Gottesdienste wurden hinzugefügt.', $ctrAdded)
+            );
         }
     }
 

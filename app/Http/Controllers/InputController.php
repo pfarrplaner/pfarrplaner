@@ -30,11 +30,11 @@
 
 namespace App\Http\Controllers;
 
-use App\City;
-use App\Day;
 use App\Inputs\AbstractInput;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class InputController
@@ -46,6 +46,17 @@ class InputController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * @param Request $request
+     * @param $input
+     * @return Application|Factory|View
+     */
+    public function setup(Request $request, $input)
+    {
+        $input = $this->getInputClass($input);
+        return $input->setup($request);
     }
 
     /**
@@ -69,19 +80,9 @@ class InputController extends Controller
     /**
      * @param Request $request
      * @param $input
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function setup(Request $request, $input)
+    public function input(Request $request, $input)
     {
-        $input = $this->getInputClass($input);
-        return $input->setup($request);
-    }
-
-    /**
-     * @param Request $request
-     * @param $input
-     */
-    public function input(Request $request, $input) {
         $input = $this->getInputClass($input);
         return $input->input($request);
     }
@@ -90,7 +91,8 @@ class InputController extends Controller
      * @param Request $request
      * @param $input
      */
-    public function save(Request $request, $input) {
+    public function save(Request $request, $input)
+    {
         $input = $this->getInputClass($input);
         return $input->save($request);
     }

@@ -35,6 +35,10 @@ use App\City;
 use App\Integrations\AbstractIntegration;
 use Google_Client;
 use Google_Service_YouTube;
+use Google_Service_YouTube_LiveChatMessage;
+use Google_Service_YouTube_LiveChatMessageListResponse;
+use Google_Service_YouTube_LiveChatMessageSnippet;
+use Google_Service_YouTube_LiveChatTextMessageDetails;
 
 /**
  * Class YoutubeIntegration
@@ -63,59 +67,23 @@ class YoutubeIntegration extends AbstractIntegration
 
     /**
      * @param City $city
-     */
-    public function authenticate(City $city)
-    {
-        $this->client->setAccessToken($city->google_access_token);
-        $token = $this->client->refreshToken($city->google_refresh_token);
-        $this->client->setAccessToken($token);
-    }
-
-    /**
-     * @param City $city
      * @return YoutubeIntegration
      */
-    public static function get(City $city) {
+    public static function get(City $city)
+    {
         $instance = (new self());
         $instance->authenticate($city);
         return $instance;
     }
 
     /**
-     * @param $id
-     * @return mixed|null
+     * @param City $city
      */
-    public function getVideo($id) {
-        return $this->youtube->videos->listVideos('snippet,contentDetails,statistics', ['id' => $id])->getItems()[0];
-    }
-
-    /**
-     * @param $id
-     * @param array $data
-     * @return \Google_Service_YouTube_LiveChatMessageListResponse
-     */
-    public function getLiveChat($id, $data = []) {
-        return $this->getYoutube()->liveChatMessages->listLiveChatMessages($id, 'id,snippet,authorDetails', $data);
-    }
-
-    /**
-     * @param $liveChatId
-     * @param $author
-     * @param $message
-     */
-    public function sendLiveChatMessage($liveChatId, $author, $message)
+    public function authenticate(City $city)
     {
-        $snippet = new \Google_Service_YouTube_LiveChatMessageSnippet();
-        $messageDetails = new \Google_Service_YouTube_LiveChatTextMessageDetails();
-        $messageDetails->setMessageText($author.' hat über die Homepage folgende Nachricht eingegeben: '.PHP_EOL.PHP_EOL.$message);
-        $snippet->setTextMessageDetails($messageDetails);
-        $snippet->setLiveChatId($liveChatId);
-        $snippet->setType('textMessageEvent');
-
-        $liveChatInsert = new \Google_Service_YouTube_LiveChatMessage();
-        $liveChatInsert->setSnippet($snippet);
-
-        $this->getYoutube()->liveChatMessages->insert('snippet', $liveChatInsert);
+        $this->client->setAccessToken($city->google_access_token);
+        $token = $this->client->refreshToken($city->google_refresh_token);
+        $this->client->setAccessToken($token);
     }
 
     /**
@@ -132,19 +100,22 @@ class YoutubeIntegration extends AbstractIntegration
     }
 
     /**
-     * @return Google_Client
+     * @param $id
+     * @return mixed|null
      */
-    public function getClient(): Google_Client
+    public function getVideo($id)
     {
-        return $this->client;
+        return $this->youtube->videos->listVideos('snippet,contentDetails,statistics', ['id' => $id])->getItems()[0];
     }
 
     /**
-     * @param Google_Client $client
+     * @param $id
+     * @param array $data
+     * @return Google_Service_YouTube_LiveChatMessageListResponse
      */
-    public function setClient(Google_Client $client): void
+    public function getLiveChat($id, $data = [])
     {
-        $this->client = $client;
+        return $this->getYoutube()->liveChatMessages->listLiveChatMessages($id, 'id,snippet,authorDetails', $data);
     }
 
     /**
@@ -161,6 +132,44 @@ class YoutubeIntegration extends AbstractIntegration
     public function setYoutube(Google_Service_YouTube $youtube): void
     {
         $this->youtube = $youtube;
+    }
+
+    /**
+     * @param $liveChatId
+     * @param $author
+     * @param $message
+     */
+    public function sendLiveChatMessage($liveChatId, $author, $message)
+    {
+        $snippet = new Google_Service_YouTube_LiveChatMessageSnippet();
+        $messageDetails = new Google_Service_YouTube_LiveChatTextMessageDetails();
+        $messageDetails->setMessageText(
+            $author . ' hat über die Homepage folgende Nachricht eingegeben: ' . PHP_EOL . PHP_EOL . $message
+        );
+        $snippet->setTextMessageDetails($messageDetails);
+        $snippet->setLiveChatId($liveChatId);
+        $snippet->setType('textMessageEvent');
+
+        $liveChatInsert = new Google_Service_YouTube_LiveChatMessage();
+        $liveChatInsert->setSnippet($snippet);
+
+        $this->getYoutube()->liveChatMessages->insert('snippet', $liveChatInsert);
+    }
+
+    /**
+     * @return Google_Client
+     */
+    public function getClient(): Google_Client
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param Google_Client $client
+     */
+    public function setClient(Google_Client $client): void
+    {
+        $this->client = $client;
     }
 
 

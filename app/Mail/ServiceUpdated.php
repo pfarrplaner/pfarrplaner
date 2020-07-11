@@ -32,11 +32,6 @@ namespace App\Mail;
 
 use App\Service;
 use App\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\View;
 
 /**
  * Class ServiceUpdated
@@ -63,17 +58,24 @@ class ServiceUpdated extends AbstractServiceMailable
      */
     public function build()
     {
-
         $participants = [];
         if (isset($this->changed['participants'])) {
             foreach (['original', 'changed'] as $type) {
                 foreach ($this->changed['participants'][$type] as $participant) {
                     $category = $participant['pivot']['category'];
                     switch ($category) {
-                        case 'P': $category = 'Pfarrer*in'; break;
-                        case 'O': $category = 'Organist*in'; break;
-                        case 'M': $category = 'Mesner*in'; break;
-                        case 'A': $category = 'Andere Beteiligte'; break;
+                        case 'P':
+                            $category = 'Pfarrer*in';
+                            break;
+                        case 'O':
+                            $category = 'Organist*in';
+                            break;
+                        case 'M':
+                            $category = 'Mesner*in';
+                            break;
+                        case 'A':
+                            $category = 'Andere Beteiligte';
+                            break;
                     }
                     $participants[$category][$type][] = $participant;
                 }
@@ -81,7 +83,9 @@ class ServiceUpdated extends AbstractServiceMailable
         }
         $tmpParticipants = $participants;
         foreach ($tmpParticipants as $category => $p) {
-            if (print_r($p['original'] ?? [], 1) == print_r($p['changed'] ?? [], 1)) unset($participants[$category]);
+            if (print_r($p['original'] ?? [], 1) == print_r($p['changed'] ?? [], 1)) {
+                unset($participants[$category]);
+            }
         }
 
         $ics = view(
@@ -91,14 +95,18 @@ class ServiceUpdated extends AbstractServiceMailable
         $icsTitle = 'GD ' . $this->service->day->date->format('Ymd') . ' ' . $this->service->timeText(
                 false
             ) . ' ' . $this->service->locationText() . '.ics';
-        return $this->subject('Änderungen am einem Gottesdienst vom '.$this->service->dateText().', '.$this->service->timeText().' ('.$this->service->locationText().')')
+        return $this->subject(
+            'Änderungen am einem Gottesdienst vom ' . $this->service->dateText() . ', ' . $this->service->timeText(
+            ) . ' (' . $this->service->locationText() . ')'
+        )
             ->view('mail.notifications.service-update')->with(
                 [
                     'service' => $this->service,
                     'changes' => $this->changed,
                     'participants' => $participants,
                     'user' => $this->user,
-                ])->attachData(
+                ]
+            )->attachData(
                 $ics,
                 $icsTitle,
                 [

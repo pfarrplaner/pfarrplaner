@@ -31,13 +31,12 @@
 namespace App\Inputs;
 
 use App\City;
-use App\Day;
-use App\Mail\ServiceUpdated;
 use App\Service;
-use App\Subscription;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class OfferingsInput
@@ -62,14 +61,17 @@ class OfferingsInput extends AbstractInput
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     * @return Application|Factory|View|void
      */
-    public function input(Request $request) {
-        $request->validate([
-            'year' => 'int|required',
-            'cities' => 'required',
-            'cities.*' => 'int|required|exists:cities,id',
-        ]);
+    public function input(Request $request)
+    {
+        $request->validate(
+            [
+                'year' => 'int|required',
+                'cities' => 'required',
+                'cities.*' => 'int|required|exists:cities,id',
+            ]
+        );
 
 
         $cityIds = $request->get('cities');
@@ -80,23 +82,23 @@ class OfferingsInput extends AbstractInput
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $cityIds)
-            ->where('days.date', '>=', $year.'-01-01')
-            ->where('days.date', '<=', $year.'-12-31')
+            ->where('days.date', '>=', $year . '-01-01')
+            ->where('days.date', '<=', $year . '-12-31')
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
 
 
-
         $input = $this;
         return view($this->getInputViewName(), compact('input', 'cities', 'services', 'year'));
-
     }
 
     /**
      * @param Request $request
      */
-    public function save(Request $request) {}
+    public function save(Request $request)
+    {
+    }
 
 
 }

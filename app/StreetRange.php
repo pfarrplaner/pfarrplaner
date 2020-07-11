@@ -31,6 +31,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class StreetRange
@@ -42,13 +43,19 @@ class StreetRange extends Model
      * @var string[]
      */
     protected $fillable = [
-        'parish_id', 'name', 'odd_start', 'odd_end', 'even_start', 'even_end'
+        'parish_id',
+        'name',
+        'odd_start',
+        'odd_end',
+        'even_start',
+        'even_end'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function parish() {
+    public function parish()
+    {
         return $this->belongsTo(Parish::class);
     }
 }

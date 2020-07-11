@@ -31,7 +31,7 @@
 namespace App\Http\Controllers;
 
 use App\Tag;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
 /**
@@ -49,7 +49,7 @@ class TagController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -60,7 +60,7 @@ class TagController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -70,58 +70,12 @@ class TagController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store()
     {
         Tag::create($this->validateRequest());
         return redirect()->route('tags.index')->with('success', 'Das Tag wurde angelegt.');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tag $tag)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tag $tag)
-    {
-        return view('tags.edit', compact('tag'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Tag $tag)
-    {
-        $tag->update($this->validateRequest());
-        return redirect()->route('tags.index')->with('success', 'Das Tag wurde geändert.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Tag  $tag
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Tag $tag)
-    {
-        $tag->delete();
-        return redirect()->route('tags.index')->with('success', 'Das Tag wurde gelöscht.');
     }
 
     /**
@@ -136,5 +90,51 @@ class TagController extends Controller
         );
         $data['code'] = Str::slug($data['name']);
         return $data;
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Tag $tag
+     * @return Response
+     */
+    public function show(Tag $tag)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Tag $tag
+     * @return Response
+     */
+    public function edit(Tag $tag)
+    {
+        return view('tags.edit', compact('tag'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Tag $tag
+     * @return Response
+     */
+    public function update(Tag $tag)
+    {
+        $tag->update($this->validateRequest());
+        return redirect()->route('tags.index')->with('success', 'Das Tag wurde geändert.');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param Tag $tag
+     * @return Response
+     */
+    public function destroy(Tag $tag)
+    {
+        $tag->delete();
+        return redirect()->route('tags.index')->with('success', 'Das Tag wurde gelöscht.');
     }
 }

@@ -39,14 +39,14 @@ namespace App\Reports;
 
 
 use App\City;
-use App\Imports\EventCalendarImport;
 use App\Parish;
-use App\Service;
 use App\StreetRange;
-use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class EmbedContactLookupReport
@@ -73,7 +73,7 @@ class EmbedContactLookupReport extends AbstractEmbedReport
     public $icon = 'fa fa-file-code';
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
     public function setup()
     {
@@ -83,15 +83,16 @@ class EmbedContactLookupReport extends AbstractEmbedReport
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Application|Factory|View|string
      */
     public function render(Request $request)
     {
-
-        $request->validate([
-            'cors-origin' => 'required|url',
-            'city' => 'required',
-        ]);
+        $request->validate(
+            [
+                'cors-origin' => 'required|url',
+                'city' => 'required',
+            ]
+        );
         $city = City::findOrFail($request->get('city'));
         $corsOrigin = $request->get('cors-origin');
         $report = $this->getKey();
@@ -114,9 +115,12 @@ class EmbedContactLookupReport extends AbstractEmbedReport
         $street = $request->get('street', '');
         $number = $request->get('number', '');
 
-        $streetRanges = StreetRange::whereHas('parish', function ($query) use ($city) {
-            $query->where('parishes.city_id', $city->id);
-        })->get();
+        $streetRanges = StreetRange::whereHas(
+            'parish',
+            function ($query) use ($city) {
+                $query->where('parishes.city_id', $city->id);
+            }
+        )->get();
 
         $streets = [];
 
@@ -144,8 +148,10 @@ class EmbedContactLookupReport extends AbstractEmbedReport
 
         /** @var Response $response */
         $response = response()
-            ->view($this->getViewName('embed'),
-                compact('city', 'street', 'number', 'streets', 'randomId', 'url', 'parish', 'report'));
+            ->view(
+                $this->getViewName('embed'),
+                compact('city', 'street', 'number', 'streets', 'randomId', 'url', 'parish', 'report')
+            );
 
         if (false !== $parish) {
             $response->withCookie('parish', $parish->id);

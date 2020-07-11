@@ -31,6 +31,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Approval
@@ -44,16 +45,18 @@ class Approval extends Model
     protected $fillable = ['absence_id', 'user_id', 'status'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function approver() {
+    public function approver()
+    {
         return $this->belongsTo(User::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function absence() {
+    public function absence()
+    {
         return $this->belongsTo(Absence::class);
     }
 }

@@ -38,9 +38,12 @@ use App\Participant;
 use App\Service;
 use App\Subscription;
 use App\User;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class PlanningInput
@@ -64,7 +67,7 @@ class PlanningInput extends AbstractInput
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
     public function setup(Request $request)
     {
@@ -90,10 +93,47 @@ class PlanningInput extends AbstractInput
         );
     }
 
+    /**
+     * @param $reqMinistries
+     * @return array
+     */
+    protected function getAvailableMinistries($reqMinistries)
+    {
+        $ministries = [];
+        foreach ($reqMinistries as $ministry) {
+            switch ($ministry) {
+                case 'P':
+                    if (Auth::user()->can('gd-pfarrer-bearbeiten')) {
+                        $ministries[$ministry] = 'Pfarrer*in';
+                    }
+                    break;
+                case 'O':
+                    if (Auth::user()->can('gd-organist-bearbeiten')) {
+                        $ministries[$ministry] = 'Organist*in';
+                    }
+                    break;
+                case 'M':
+                    if (Auth::user()->can('gd-mesner-bearbeiten')) {
+                        $ministries[$ministry] = 'Mesner*in';
+                    }
+                    break;
+                case 'A':
+                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
+                        $ministries[$ministry] = 'Weitere Beteiligte';
+                    }
+                    break;
+                default:
+                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
+                        $ministries[$ministry] = $ministry;
+                    }
+            }
+        }
+        return $ministries;
+    }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     * @return Application|Factory|View|void
      */
     public function input(Request $request)
     {
@@ -133,7 +173,7 @@ class PlanningInput extends AbstractInput
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return RedirectResponse|void
      */
     public function save(Request $request)
     {
@@ -166,43 +206,5 @@ class PlanningInput extends AbstractInput
             }
         }
         return redirect()->route('calendar')->with('success', 'Der Plan wurde gespeichert.');
-    }
-
-    /**
-     * @param $reqMinistries
-     * @return array
-     */
-    protected function getAvailableMinistries($reqMinistries)
-    {
-        $ministries = [];
-        foreach ($reqMinistries as $ministry) {
-            switch ($ministry) {
-                case 'P':
-                    if (Auth::user()->can('gd-pfarrer-bearbeiten')) {
-                        $ministries[$ministry] = 'Pfarrer*in';
-                    }
-                    break;
-                case 'O':
-                    if (Auth::user()->can('gd-organist-bearbeiten')) {
-                        $ministries[$ministry] = 'Organist*in';
-                    }
-                    break;
-                case 'M':
-                    if (Auth::user()->can('gd-mesner-bearbeiten')) {
-                        $ministries[$ministry] = 'Mesner*in';
-                    }
-                    break;
-                case 'A':
-                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
-                        $ministries[$ministry] = 'Weitere Beteiligte';
-                    }
-                    break;
-                default:
-                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
-                        $ministries[$ministry] = $ministry;
-                    }
-            }
-        }
-        return $ministries;
     }
 }

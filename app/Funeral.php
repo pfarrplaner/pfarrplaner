@@ -35,6 +35,7 @@ use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Funeral
@@ -81,7 +82,7 @@ class Funeral extends Model
         'dod',
     ];
 
-    /** @var array  */
+    /** @var array */
     protected $encrypted = [
         'buried_name',
         'buried_address',
@@ -95,16 +96,18 @@ class Funeral extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function service() {
+    public function service()
+    {
         return $this->belongsTo(Service::class);
     }
 
     /**
      * @return string
      */
-    public function age() {
+    public function age()
+    {
         if (($this->dob) && ($this->dod)) {
             return $this->dod->diffInYears($this->dob);
         }
@@ -114,7 +117,8 @@ class Funeral extends Model
     /**
      * @param $date
      */
-    public function setDobAttribute($date) {
+    public function setDobAttribute($date)
+    {
         if (!is_null($date)) {
             $this->attributes['dob'] = Carbon::createFromFormat('d.m.Y', $date);
         }
@@ -123,7 +127,8 @@ class Funeral extends Model
     /**
      * @param $date
      */
-    public function setDodAttribute($date) {
+    public function setDodAttribute($date)
+    {
         if (!is_null($date)) {
             $this->attributes['dod'] = Carbon::createFromFormat('d.m.Y', $date);
         }
@@ -132,7 +137,8 @@ class Funeral extends Model
     /**
      * @param $date
      */
-    public function setAnnouncementAttribute($date) {
+    public function setAnnouncementAttribute($date)
+    {
         if (!is_null($date)) {
             $this->attributes['announcement'] = Carbon::createFromFormat('d.m.Y', $date);
         }
@@ -141,7 +147,8 @@ class Funeral extends Model
     /**
      * @param $date
      */
-    public function setWakeAttribute($date) {
+    public function setWakeAttribute($date)
+    {
         if (!is_null($date)) {
             $this->attributes['wake'] = Carbon::createFromFormat('d.m.Y', $date);
         }
@@ -150,7 +157,8 @@ class Funeral extends Model
     /**
      * @param $date
      */
-    public function setAppointmentAttribute($date) {
+    public function setAppointmentAttribute($date)
+    {
         if (!is_null($date)) {
             $this->attributes['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $date);
         }

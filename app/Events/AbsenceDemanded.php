@@ -37,7 +37,8 @@ use Illuminate\Queue\SerializesModels;
  * Class AbsenceDemanded
  * @package App\Events
  */
-class AbsenceDemanded {
+class AbsenceDemanded
+{
 
     use SerializesModels;
 

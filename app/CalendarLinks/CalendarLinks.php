@@ -38,13 +38,27 @@ class CalendarLinks
 {
 
     /**
+     * @param $key
+     * @return mixed
+     */
+    public static function findKey($key)
+    {
+        foreach (self::all() as $item) {
+            if ($item->getKey() == $key) {
+                return $item;
+            }
+        }
+    }
+
+    /**
      * @return array
      */
-    public static function all() {
+    public static function all()
+    {
         $calendarLinks = [];
-        foreach (glob(app_path('CalendarLinks').'/*CalendarLink.php') as $file) {
+        foreach (glob(app_path('CalendarLinks') . '/*CalendarLink.php') as $file) {
             if (substr(pathinfo($file, PATHINFO_FILENAME), 0, 8) !== 'Abstract') {
-                $calendarLinkClass = 'App\\CalendarLinks\\'.pathinfo($file, PATHINFO_FILENAME);
+                $calendarLinkClass = 'App\\CalendarLinks\\' . pathinfo($file, PATHINFO_FILENAME);
                 if (class_exists($calendarLinkClass)) {
                     /** @var AbstractCalendarLink $calendarLink */
                     $calendarLink = new $calendarLinkClass();
@@ -54,15 +68,5 @@ class CalendarLinks
         }
         ksort($calendarLinks);
         return $calendarLinks;
-    }
-
-    /**
-     * @param $key
-     * @return mixed
-     */
-    public static function findKey($key) {
-        foreach (self::all() as $item) {
-            if ($item->getKey()==$key) return $item;
-        }
     }
 }

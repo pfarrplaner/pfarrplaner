@@ -39,6 +39,8 @@ namespace App;
 
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 /**
@@ -47,23 +49,6 @@ use Illuminate\Support\Facades\Cache;
  */
 class Vacations
 {
-
-    /**
-     * @return mixed
-     */
-    protected static function getVacationDataFromCache() {
-        if (!Cache::has('vacationData')) {
-            $vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
-            foreach ($vacationData as $key => $datum) {
-                $vacationData[$key]['start'] = Carbon::createFromTimeString($datum['start']);
-                $vacationData[$key]['end'] = Carbon::createFromTimeString($datum['end']);
-            }
-            Cache::put('vacationData', $vacationData, 10000);
-        } else {
-            $vacationData = Cache::get('vacationData');
-        }
-        return $vacationData;
-    }
 
     /**
      * @param $day
@@ -85,16 +70,23 @@ class Vacations
         return $vacationers;
     }
 
-
     /**
-     * @param $lastName
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     * @return mixed
      */
-    protected static function findUserByLastName($lastName)
+    protected static function getVacationDataFromCache()
     {
-        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
+        if (!Cache::has('vacationData')) {
+            $vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
+            foreach ($vacationData as $key => $datum) {
+                $vacationData[$key]['start'] = Carbon::createFromTimeString($datum['start']);
+                $vacationData[$key]['end'] = Carbon::createFromTimeString($datum['end']);
+            }
+            Cache::put('vacationData', $vacationData, 10000);
+        } else {
+            $vacationData = Cache::get('vacationData');
+        }
+        return $vacationData;
     }
-
 
     /**
      * @param $start
@@ -105,6 +97,15 @@ class Vacations
     public static function getByPeriodAndUser($start, $end, User $user = null)
     {
         return Absence::with('replacements')->byUserAndPeriod($user, $start, $end);
+    }
+
+    /**
+     * @param $lastName
+     * @return Builder|Model|object|null
+     */
+    protected static function findUserByLastName($lastName)
+    {
+        return User::with('cities')->where('name', 'like', '%' . $lastName)->first();
     }
 
 }

@@ -32,8 +32,11 @@ namespace App\Inputs;
 
 use App\City;
 use App\Day;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class AbstractInput
@@ -50,24 +53,16 @@ class AbstractInput
      */
     protected $setupView = 'inputs.setup';
 
-    public function canEdit(): bool {
+    public function canEdit(): bool
+    {
         return true;
     }
 
     /**
      * @return string
      */
-    public function getKey() {
-        return lcfirst(strtr(get_called_class(), [
-            'Input' => '',
-            'App\\Inputs\\' => '',
-        ]));
-    }
-
-    /**
-     * @return string
-     */
-    public function getInputViewName() {
+    public function getInputViewName()
+    {
         return $this->getViewName('input');
     }
 
@@ -75,8 +70,25 @@ class AbstractInput
      * @param $viewName
      * @return string
      */
-    public function getViewName($viewName) {
-        return 'inputs.'.strtolower($this->getKey()).'.'.$viewName;
+    public function getViewName($viewName)
+    {
+        return 'inputs.' . strtolower($this->getKey()) . '.' . $viewName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return lcfirst(
+            strtr(
+                get_called_class(),
+                [
+                    'Input' => '',
+                    'App\\Inputs\\' => '',
+                ]
+            )
+        );
     }
 
     /**
@@ -84,35 +96,44 @@ class AbstractInput
      * @param $days
      * @return array
      */
-    public function getValues(City $city, $days) {
+    public function getValues(City $city, $days)
+    {
         return [];
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function setup(Request $request) {
+    public function setup(Request $request)
+    {
         $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->writableCities;
 
-        return view($this->setupView, [
-            'input' => $this,
-            'minDate' => $minDate,
-            'maxDate' => $maxDate,
-            'cities' => $cities,
-        ]);
+        return view(
+            $this->setupView,
+            [
+                'input' => $this,
+                'minDate' => $minDate,
+                'maxDate' => $maxDate,
+                'cities' => $cities,
+            ]
+        );
     }
 
     /**
      * @param Request $request
      */
-    public function input(Request $request) {}
+    public function input(Request $request)
+    {
+    }
 
     /**
      * @param Request $request
      */
-    public function save(Request $request) {}
+    public function save(Request $request)
+    {
+    }
 
 }

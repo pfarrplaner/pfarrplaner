@@ -91,11 +91,16 @@ class AbsencesCalendarLink extends AbstractCalendarLink
         $users = $user->getViewableAbsenceUsers();
         $userId = $user->id;
         $data = Absence::whereIn('user_id', $users->pluck('id'))
-            ->orWhere(function ($query2) use ($userId) {
-                $query2->whereHas('replacements', function ($query) use ($userId) {
-                    $query->where('user_id', $userId);
-                });
-            })->get();
+            ->orWhere(
+                function ($query2) use ($userId) {
+                    $query2->whereHas(
+                        'replacements',
+                        function ($query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        }
+                    );
+                }
+            )->get();
 
         return $data;
     }

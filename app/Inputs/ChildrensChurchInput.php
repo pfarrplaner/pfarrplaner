@@ -31,13 +31,15 @@
 namespace App\Inputs;
 
 use App\City;
-use App\Day;
 use App\Mail\ServiceUpdated;
 use App\Service;
 use App\Subscription;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class ChildrensChurchInput
@@ -58,13 +60,16 @@ class ChildrensChurchInput extends AbstractInput
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|void
+     * @return Application|Factory|View|void
      */
-    public function input(Request $request) {
-        $request->validate([
-            'year' => 'int|required',
-            'city' => 'int|required',
-        ]);
+    public function input(Request $request)
+    {
+        $request->validate(
+            [
+                'year' => 'int|required',
+                'city' => 'int|required',
+            ]
+        );
 
         $city = City::find($request->get('city'));
         $year = $request->get('year');
@@ -73,29 +78,27 @@ class ChildrensChurchInput extends AbstractInput
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->where('city_id', $city->id)
-            ->where('days.date', '>=', $year.'-01-01')
-            ->where('days.date', '<=', $year.'-12-31')
+            ->where('days.date', '>=', $year . '-01-01')
+            ->where('days.date', '<=', $year . '-12-31')
             ->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
 
 
-
         $input = $this;
         return view($this->getInputViewName(), compact('input', 'city', 'services', 'year'));
-
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|void
+     * @return RedirectResponse|void
      */
-    public function save(Request $request) {
+    public function save(Request $request)
+    {
         $services = $request->get('service') ?: [];
         foreach ($services as $id => $data) {
             $service = Service::find($id);
             if (null !== $service) {
-
                 // get old data set for comparison
                 $original = clone $service;
                 foreach (['P', 'O', 'M', 'A'] as $key) {
@@ -113,7 +116,7 @@ class ChildrensChurchInput extends AbstractInput
                     $ccLocation = '';
                 }
 
-                $service->cc = isset($data['cc']) ? 1: 0;
+                $service->cc = isset($data['cc']) ? 1 : 0;
                 $service->cc_location = $ccLocation;
                 $service->cc_lesson = $data['cc_lesson'] ?: '';
                 $service->cc_staff = $data['cc_staff'] ?: '';
@@ -123,7 +126,6 @@ class ChildrensChurchInput extends AbstractInput
                 if ($dirty) {
                     Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
                 }
-
             }
         }
         return redirect()->route('calendar')->with('success', 'Der Plan für die Kinderkirche wurde gespeichert.');

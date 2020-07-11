@@ -31,6 +31,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Tag
@@ -44,9 +45,10 @@ class Tag extends Model
     protected $fillable = ['code', 'name'];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function services() {
+    public function services()
+    {
         return $this->belongsToMany(Service::class)->withTimestamps();
     }
 }

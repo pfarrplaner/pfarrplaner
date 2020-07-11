@@ -30,8 +30,6 @@
 
 namespace App\Http\Requests;
 
-use App\Location;
-use App\Service;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;

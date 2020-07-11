@@ -30,7 +30,10 @@
 
 namespace App\Reports;
 
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 /**
  * Class AbstractReport
@@ -61,73 +64,87 @@ class AbstractReport
      * Returns true if the report is active for the current user
      * @return bool
      */
-    public function isActive(): bool {
+    public function isActive(): bool
+    {
         return true;
     }
 
     /**
      * @return string
      */
-    public function getKey() {
-        return lcfirst(strtr(get_called_class(), [
-            'Report' => '',
-            'App\\Reports\\' => '',
-        ]));
+    public function getRenderViewName()
+    {
+        return $this->getViewName('render');
     }
 
     /**
      * @param $view
      * @return string
      */
-    public function getViewName($view) {
-        return 'reports.'.strtolower($this->getKey().'.'.strtolower($view));
+    public function getViewName($view)
+    {
+        return 'reports.' . strtolower($this->getKey() . '.' . strtolower($view));
     }
 
     /**
      * @return string
      */
-    public function getSetupViewName() {
-        return $this->getViewName('setup');
-    }
-
-    /**
-     * @return string
-     */
-    public function getRenderViewName() {
-        return $this->getViewName('render');
+    public function getKey()
+    {
+        return lcfirst(
+            strtr(
+                get_called_class(),
+                [
+                    'Report' => '',
+                    'App\\Reports\\' => '',
+                ]
+            )
+        );
     }
 
     /**
      * @param Request $request
      * @return string
      */
-    public function render(Request $request) {
+    public function render(Request $request)
+    {
         return '';
     }
 
     /**
      * @param array $data
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function renderSetupView($data = []) {
+    public function renderSetupView($data = [])
+    {
         $data = array_merge(['report' => $this->getKey()], $data);
         return view($this->getSetupViewName(), $data);
     }
 
     /**
-     * @param $view
-     * @param array $data
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return string
      */
-    public function renderView($view, $data = []) {
-        $data = array_merge(['report' => $this->getKey()], $data);
-        return view($this->getViewName($view), $data);
+    public function getSetupViewName()
+    {
+        return $this->getViewName('setup');
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function setup() {
+    public function setup()
+    {
         return $this->renderView('setup');
+    }
+
+    /**
+     * @param $view
+     * @param array $data
+     * @return Application|Factory|View
+     */
+    public function renderView($view, $data = [])
+    {
+        $data = array_merge(['report' => $this->getKey()], $data);
+        return view($this->getViewName($view), $data);
     }
 }

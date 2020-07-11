@@ -32,6 +32,7 @@ namespace App\Reports;
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
 
 /**
  * Class AbstractExcelDocumentReport
@@ -45,7 +46,7 @@ class AbstractExcelDocumentReport extends AbstractReport
      */
     public $icon = 'fa fa-file-excel';
 
-    /** @var Spreadsheet  */
+    /** @var Spreadsheet */
     protected $spreadsheet = null;
 
     public function __construct()
@@ -55,11 +56,12 @@ class AbstractExcelDocumentReport extends AbstractReport
 
     /**
      * @param $filename
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws Exception
      */
-    public function sendToBrowser($filename) {
+    public function sendToBrowser($filename)
+    {
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $filename.'"');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
         header('Cache-Control: max-age=1');
         header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past

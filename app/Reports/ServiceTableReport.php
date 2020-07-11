@@ -36,14 +36,18 @@ use App\Liturgy;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\Exception;
 use PhpOffice\PhpWord\Shared\Converter;
 
 /**
@@ -67,7 +71,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
 
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
     public function setup()
     {
@@ -81,18 +85,20 @@ class ServiceTableReport extends AbstractExcelDocumentReport
      * @param Request $request
      * @return string|void
      * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
+     * @throws Exception
      */
     public function render(Request $request)
     {
-        $request->validate([
-            'city' => 'required|integer',
-            'year' => 'required|integer',
-        ]);
+        $request->validate(
+            [
+                'city' => 'required|integer',
+                'year' => 'required|integer',
+            ]
+        );
 
         $year = $request->get('year');
-        $days = Day::where('date', '>=', Carbon::createFromDate($year, 1, 1)->setTime(0,0,0))
-            ->where('date', '<=', Carbon::createFromDate($year, 12, 31)->setTime(23,59,59))
+        $days = Day::where('date', '>=', Carbon::createFromDate($year, 1, 1)->setTime(0, 0, 0))
+            ->where('date', '<=', Carbon::createFromDate($year, 12, 31)->setTime(23, 59, 59))
             ->orderBy('date', 'ASC')
             ->get();
 
@@ -128,11 +134,11 @@ class ServiceTableReport extends AbstractExcelDocumentReport
             'O' => 10.73046875
         ];
 
-        $lastColumn = chr(78+count($ministries));
+        $lastColumn = chr(78 + count($ministries));
         $colCtr = 0;
         foreach ($ministries as $ministry) {
             $colCtr++;
-            $col = chr(78+$colCtr);
+            $col = chr(78 + $colCtr);
             $columns[$col] = 10.73046875;
         }
 
@@ -147,7 +153,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         $sheet->getPageSetup()
             ->setOrientation(PageSetup::ORIENTATION_LANDSCAPE)
             ->setPaperSize(PageSetup::PAPERSIZE_A4)
-            ->setRowsToRepeatAtTopByStartAndEnd(3,4);
+            ->setRowsToRepeatAtTopByStartAndEnd(3, 4);
         $sheet->getPageMargins()
             ->setTop(Converter::cmToInch(1.5))
             ->setBottom(Converter::cmToInch(1))
@@ -156,11 +162,14 @@ class ServiceTableReport extends AbstractExcelDocumentReport
             ->setRight(Converter::cmToInch(1))
             ->setFooter(0);
         $sheet->getHeaderFooter()
-            ->setOddHeader('&LEvangelische Kirchengemeinde '.$city->name.'&RPlan für Gottesdienste '.$year.' - Blatt &P von &N')
-            ->setEvenHeader('&LEvangelische Kirchengemeinde '.$city->name.'&RPlan für Gottesdienste '.$year.' - Blatt &P von &N')
+            ->setOddHeader(
+                '&LEvangelische Kirchengemeinde ' . $city->name . '&RPlan für Gottesdienste ' . $year . ' - Blatt &P von &N'
+            )
+            ->setEvenHeader(
+                '&LEvangelische Kirchengemeinde ' . $city->name . '&RPlan für Gottesdienste ' . $year . ' - Blatt &P von &N'
+            )
             ->setOddFooter('&CAusdruck vom &D, &T')
             ->setEvenFooter('&CAusdruck vom &D, &T');
-
 
 
         // column width
@@ -171,7 +180,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         // title row
         $sheet->mergeCells("A1:{$lastColumn}1");
         $sheet->getRowDimension('1')->setRowHeight(21);
-        $style = $sheet->setCellValue('A1', 'Plan für Gottesdienste - Liturgischer Kalender für das Jahr '.$year)
+        $style = $sheet->setCellValue('A1', 'Plan für Gottesdienste - Liturgischer Kalender für das Jahr ' . $year)
             ->getStyle('A1');
         $style->getFill()
             ->setFillType(Fill::FILL_SOLID)
@@ -235,9 +244,13 @@ class ServiceTableReport extends AbstractExcelDocumentReport
                 }
                 $style->getFont()->setBold(true)->setSize($fontSize);
                 $style->getAlignment()->setVertical(Alignment::VERTICAL_CENTER)->setWrapText(true);
-                $style->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('ff000000');
+                $style->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB(
+                    'ff000000'
+                );
             }
-            $sheet->getStyle("{$column}3:{$column}4")->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('ff000000');
+            $sheet->getStyle("{$column}3:{$column}4")->getBorders()->getOutline()->setBorderStyle(
+                Border::BORDER_THIN
+            )->getColor()->setARGB('ff000000');
         }
 
         // content rows
@@ -251,20 +264,21 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         $colCtr = 0;
         foreach ($ministries as $ministry) {
             $colCtr++;
-            $col = chr(78+$colCtr);
+            $col = chr(78 + $colCtr);
             $fontSizes[8][] = $col;
         }
 
         $row = 3;
         foreach ($serviceList as $services) {
             foreach ($services as $service) {
-
                 $liturgy = Liturgy::getDayInfo($service->day, true);
 
                 $row += 2;
-                $row2 = $row+1;
+                $row2 = $row + 1;
 
-                if (($row2-2) % 46 == 0) $sheet->setBreak("A{$row2}", Worksheet::BREAK_ROW);
+                if (($row2 - 2) % 46 == 0) {
+                    $sheet->setBreak("A{$row2}", Worksheet::BREAK_ROW);
+                }
 
                 foreach (array_keys($headers) as $index) {
                     $column = chr(65 + $index);
@@ -277,35 +291,43 @@ class ServiceTableReport extends AbstractExcelDocumentReport
                     for ($thisRow = $row; $thisRow <= $maxRow; $thisRow++) {
                         $style = $sheet->getStyle("{$column}{$thisRow}");
                         // font sizes
-                        for ($i=6; $i<=8; $i++) {
-                            if (in_array($column, $fontSizes[$i])) $fontSize = $i;
+                        for ($i = 6; $i <= 8; $i++) {
+                            if (in_array($column, $fontSizes[$i])) {
+                                $fontSize = $i;
+                            }
                         }
                         $style->getFont()->setSize($fontSize);
                         $style->getAlignment()->setVertical(Alignment::VERTICAL_CENTER)->setWrapText(true);
-                        $style->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('ff000000');
+                        $style->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB(
+                            'ff000000'
+                        );
                     }
-                    $sheet->getStyle("{$column}{$row}:{$column}{$row2}")->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->getColor()->setARGB('ff000000');
-
+                    $sheet->getStyle("{$column}{$row}:{$column}{$row2}")->getBorders()->getOutline()->setBorderStyle(
+                        Border::BORDER_THIN
+                    )->getColor()->setARGB('ff000000');
                 }
 
 
                 $richtext = new RichText();
                 $textrun = $richtext->createTextRun(strftime('%A,', $service->day->date->getTimestamp()));
                 $textrun->getFont()->setName('Arial')->setSize(8)->setBold(true);
-                $richtext->createText("\n".$service->day->date->format('d.m.Y'));
+                $richtext->createText("\n" . $service->day->date->format('d.m.Y'));
                 $sheet->getCell("A{$row}")->setValue($richtext);
                 $sheet->setCellValue("B{$row}", $service->day->name ?: $liturgy['title']);
                 $sheet->setCellValue("C{$row}", $service->descriptionText());
                 $sheet->setCellValue("D{$row}", $service->timeText(false));
                 $sheet->setCellValue("E{$row}", $service->locationText());
-                $sheet->setCellValue("F{$row}",
-                                     $this->peopleListFormatted($service->participantsByCategory('P'), $nameFormat)
+                $sheet->setCellValue(
+                    "F{$row}",
+                    $this->peopleListFormatted($service->participantsByCategory('P'), $nameFormat)
                 );
-                $sheet->setCellValue("G{$row}",
-                                     $this->peopleListFormatted($service->participantsByCategory('O'), $nameFormat)
+                $sheet->setCellValue(
+                    "G{$row}",
+                    $this->peopleListFormatted($service->participantsByCategory('O'), $nameFormat)
                 );
                 $sheet->setCellValue("H{$row}", $service->eucharist ? 'X' : '');
-                $sheet->setCellValue("I{$row}",
+                $sheet->setCellValue(
+                    "I{$row}",
                     $this->peopleListFormatted($service->participantsByCategory('A'), $nameFormat)
                 );
                 $sheet->setCellValue("J{$row}", $service->offerings_counter1);
@@ -317,10 +339,10 @@ class ServiceTableReport extends AbstractExcelDocumentReport
                 $colCtr = 0;
                 foreach ($ministries as $ministry) {
                     $colCtr++;
-                    $col = chr(78+$colCtr);
+                    $col = chr(78 + $colCtr);
                     $sheet->setCellValue(
                         "{$col}{$row}",
-                         $this->peopleListFormatted($service->participantsByCategory($ministry), $nameFormat)
+                        $this->peopleListFormatted($service->participantsByCategory($ministry), $nameFormat)
                     );
                 }
 
@@ -349,10 +371,10 @@ class ServiceTableReport extends AbstractExcelDocumentReport
                 }
 
                 // colors for required/recommended offerings
-                if ($service->offering_type=='PO') {
+                if ($service->offering_type == 'PO') {
                     $sheet->getStyle("K{$row}")->getFont()->getColor()->setARGB('ffff0000');
                 }
-                if ($service->offering_type=='eO') {
+                if ($service->offering_type == 'eO') {
                     $sheet->getStyle("K{$row}")->getFont()->getColor()->setARGB('ff838dd5');
                 }
 
@@ -361,12 +383,11 @@ class ServiceTableReport extends AbstractExcelDocumentReport
                     $sheet->getStyle("L{$row}")->getFill()->setFillType(Fill::FILL_SOLID)
                         ->getStartColor()->setARGB('ffffc000');
                 }
-
             }
         }
 
         // output
-        $filename = $year.' Plan für Gottesdienste '.$city->name;
+        $filename = $year . ' Plan für Gottesdienste ' . $city->name;
         $this->sendToBrowser($filename);
     }
 
@@ -375,7 +396,8 @@ class ServiceTableReport extends AbstractExcelDocumentReport
      * @param $format
      * @return string
      */
-    protected function peopleListFormatted($people, $format) {
+    protected function peopleListFormatted($people, $format)
+    {
         $recs = [];
         foreach ($people as $person) {
             $recs[] = $person->formattedName($format);

@@ -40,8 +40,11 @@ namespace App\Imports;
 
 use App\City;
 use Carbon\Carbon;
+use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Cache;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Class OPEventsImport
@@ -60,64 +63,6 @@ class OPEventsImport
     public function __construct(City $city)
     {
         $this->city = $city;
-    }
-
-    /**
-     * @return mixed
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getEvents()
-    {
-        $url = 'https://backend.online-geplant.de/public/event/' . $this->city->op_customer_token . '/' . $this->city->op_customer_key;
-        $cacheKey = 'OPEventsImport_' . $url;
-        if (Cache::has($cacheKey)) {
-            $events = Cache::get($cacheKey);
-        } else {
-            $events = json_decode($this->getUrl($url), true);
-            Cache::put($cacheKey, $events, 900);
-        }
-        return $events;
-    }
-
-    /**
-     * @param $url
-     * @return \Psr\Http\Message\StreamInterface
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function getUrl($url)
-    {
-        $client = new Client();
-        $response = $client->request('GET', $url, [
-            'headers' => [
-                'Origin' => 'https://' . $this->city->op_domain,
-                'Referer' => 'https://' . $this->city->op_domain,
-            ]
-        ]);
-        return $response->getBody();
-    }
-
-
-    /**
-     * @param $event
-     * @throws \Exception
-     */
-    protected function fixTimeAndDates(&$event)
-    {
-        $event['start'] = new Carbon($event['startdate'], 'Europe/Berlin');
-        if (null !== $event['timestart']) {
-            $event['start']->setTimeFromTimeString($event['timestart']);
-        }
-        if ($event['enddate']) {
-            $event['end'] = new Carbon($event['enddate'], 'Europe/Berlin');
-        }
-        if (null !== $event['timeend']) {
-            $event['end']->setTimeFromTimeString($event['timeend']);
-        } else {
-            unset($event['end']);
-        }
-        if (isset($event['end']) && ($event['end'] <= $event['start'])) {
-            $event['end'] = $event['start']->copy()->addHour(1);
-        }
     }
 
     /**
@@ -155,11 +100,70 @@ class OPEventsImport
                 }
                 $events[$myEvent['start']->format('YmdHis')][] = $myEvent;
             }
-
-
         }
 
         ksort($events);
         return $events;
+    }
+
+    /**
+     * @return mixed
+     * @throws GuzzleException
+     */
+    public function getEvents()
+    {
+        $url = 'https://backend.online-geplant.de/public/event/' . $this->city->op_customer_token . '/' . $this->city->op_customer_key;
+        $cacheKey = 'OPEventsImport_' . $url;
+        if (Cache::has($cacheKey)) {
+            $events = Cache::get($cacheKey);
+        } else {
+            $events = json_decode($this->getUrl($url), true);
+            Cache::put($cacheKey, $events, 900);
+        }
+        return $events;
+    }
+
+    /**
+     * @param $url
+     * @return StreamInterface
+     * @throws GuzzleException
+     */
+    public function getUrl($url)
+    {
+        $client = new Client();
+        $response = $client->request(
+            'GET',
+            $url,
+            [
+                'headers' => [
+                    'Origin' => 'https://' . $this->city->op_domain,
+                    'Referer' => 'https://' . $this->city->op_domain,
+                ]
+            ]
+        );
+        return $response->getBody();
+    }
+
+    /**
+     * @param $event
+     * @throws Exception
+     */
+    protected function fixTimeAndDates(&$event)
+    {
+        $event['start'] = new Carbon($event['startdate'], 'Europe/Berlin');
+        if (null !== $event['timestart']) {
+            $event['start']->setTimeFromTimeString($event['timestart']);
+        }
+        if ($event['enddate']) {
+            $event['end'] = new Carbon($event['enddate'], 'Europe/Berlin');
+        }
+        if (null !== $event['timeend']) {
+            $event['end']->setTimeFromTimeString($event['timeend']);
+        } else {
+            unset($event['end']);
+        }
+        if (isset($event['end']) && ($event['end'] <= $event['start'])) {
+            $event['end'] = $event['start']->copy()->addHour(1);
+        }
     }
 }

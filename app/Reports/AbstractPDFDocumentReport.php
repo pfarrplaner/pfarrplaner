@@ -31,7 +31,6 @@
 namespace App\Reports;
 
 use Illuminate\Support\Facades\Auth;
-use Mpdf\Mpdf;
 use PDF;
 
 /**
@@ -46,14 +45,35 @@ class AbstractPDFDocumentReport extends AbstractReport
     public $icon = 'fa fa-file-pdf';
 
     /**
+     * @param $filename
+     * @param $data
+     * @param $layout
+     * @return mixed
+     */
+    public function sendToBrowser($filename, $data, $layout)
+    {
+        return $this->renderPDF($data, $layout)->stream($filename);
+    }
+
+    /**
      * @param $data
      * @param $layout
      * @return PDF
      */
-    public function renderPDF($data, $layout) {
-        $pdf = PDF::loadView($this->getRenderViewName(), $data, [], array_merge([
-            'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
-        ], $layout), $layout);
+    public function renderPDF($data, $layout)
+    {
+        $pdf = PDF::loadView(
+            $this->getRenderViewName(),
+            $data,
+            [],
+            array_merge(
+                [
+                    'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
+                ],
+                $layout
+            ),
+            $layout
+        );
         return $pdf;
     }
 
@@ -63,17 +83,8 @@ class AbstractPDFDocumentReport extends AbstractReport
      * @param $layout
      * @return mixed
      */
-    public function sendToBrowser($filename, $data, $layout) {
-        return $this->renderPDF($data, $layout)->stream($filename);
-    }
-
-    /**
-     * @param $filename
-     * @param $data
-     * @param $layout
-     * @return mixed
-     */
-    public function sendToFile($filename, $data, $layout) {
+    public function sendToFile($filename, $data, $layout)
+    {
         return $this->renderPDF($data, $layout)->download($filename);
     }
 }

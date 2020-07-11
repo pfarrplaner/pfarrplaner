@@ -34,6 +34,7 @@ use App\City;
 use App\Parish;
 use App\StreetRange;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -45,7 +46,7 @@ class ParishController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -56,7 +57,7 @@ class ParishController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -67,28 +68,32 @@ class ParishController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'owningCity' => 'required|int',
-            'name' => 'required',
-            'code' => 'required',
-        ]);
+        $request->validate(
+            [
+                'owningCity' => 'required|int',
+                'name' => 'required',
+                'code' => 'required',
+            ]
+        );
 
         $owningCity = City::findOrFail($request->get('owningCity'));
-        $parish = new Parish([
-           'city_id' => $owningCity->id,
-           'name' => $request->get('name'),
-           'code' => $request->get('code'),
-           'address' => $request->get('address', ''),
-           'zip' => $request->get('zip', ''),
-           'city' => $request->get('city', ''),
-           'phone' => $request->get('phone', ''),
-           'email' => $request->get('email', ''),
-        ]);
+        $parish = new Parish(
+            [
+                'city_id' => $owningCity->id,
+                'name' => $request->get('name'),
+                'code' => $request->get('code'),
+                'address' => $request->get('address', ''),
+                'zip' => $request->get('zip', ''),
+                'city' => $request->get('city', ''),
+                'phone' => $request->get('phone', ''),
+                'email' => $request->get('email', ''),
+            ]
+        );
         $parish->save();
         return redirect()->route('parishes.index')->with('success', 'Das Pfarramt wurde angelegt.');
     }
@@ -96,8 +101,8 @@ class ParishController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Parish $parish
-     * @return \Illuminate\Http\Response
+     * @param Parish $parish
+     * @return Response
      */
     public function show(Parish $parish)
     {
@@ -107,8 +112,8 @@ class ParishController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Parish $parish
-     * @return \Illuminate\Http\Response
+     * @param Parish $parish
+     * @return Response
      */
     public function edit(Parish $parish)
     {
@@ -119,17 +124,19 @@ class ParishController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Parish $parish
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Parish $parish
+     * @return Response
      */
     public function update(Request $request, Parish $parish)
     {
-        $request->validate([
-            'owningCity' => 'required|int',
-            'name' => 'required',
-            'code' => 'required',
-        ]);
+        $request->validate(
+            [
+                'owningCity' => 'required|int',
+                'name' => 'required',
+                'code' => 'required',
+            ]
+        );
 
         $parish->name = $request->get('name');
         $parish->code = $request->get('code');
@@ -147,16 +154,16 @@ class ParishController extends Controller
             $ctr = $parish->importStreetsFromCSV($csv);
         }
 
-        $success = $ctr ? $ctr.' Straßendatensätze wurden importiert.' : '';
+        $success = $ctr ? $ctr . ' Straßendatensätze wurden importiert.' : '';
 
-        return redirect()->route('parishes.index')->with('success', 'Das Pfarramt wurde geändert. '.$success);
+        return redirect()->route('parishes.index')->with('success', 'Das Pfarramt wurde geändert. ' . $success);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Parish $parish
-     * @return \Illuminate\Http\Response
+     * @param Parish $parish
+     * @return Response
      */
     public function destroy(Parish $parish)
     {

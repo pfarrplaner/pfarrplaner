@@ -31,6 +31,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * Class City
@@ -76,16 +78,18 @@ class City extends Model
     protected $orderDirection = 'ASC';
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function locations() {
+    public function locations()
+    {
         return $this->hasMany(Location::class);
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     * @return HasManyThrough
      */
-    public function services() {
+    public function services()
+    {
         return $this->hasManyThrough(Service::class, Location::class);
     }
 
@@ -94,9 +98,14 @@ class City extends Model
      * @param User $user User
      * @return bool True if user has admin rights here
      */
-    public function administeredBy(User $user) {
-        if ($user->hasRole('Super-Administrator*in')) return true;
-        if (($city = $user->cities->where('id', $this->id)->first()) && ($city->pivot->permission == 'a')) return true;
+    public function administeredBy(User $user)
+    {
+        if ($user->hasRole('Super-Administrator*in')) {
+            return true;
+        }
+        if (($city = $user->cities->where('id', $this->id)->first()) && ($city->pivot->permission == 'a')) {
+            return true;
+        }
         return false;
     }
 }

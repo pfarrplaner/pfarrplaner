@@ -70,7 +70,8 @@ class CityEventsCalendarLink extends AbstractCalendarLink
     /**
      * @return array
      */
-    public function setupData() {
+    public function setupData()
+    {
         $cities = Auth::user()->cities;
         return compact('cities');
     }
@@ -91,7 +92,6 @@ class CityEventsCalendarLink extends AbstractCalendarLink
      */
     public function getRenderData(Request $request, User $user)
     {
-
         $city = City::findOrFail($request->get('city'));
         $events = [];
 
@@ -100,8 +100,8 @@ class CityEventsCalendarLink extends AbstractCalendarLink
             ->get();
 
 
-        $start = Carbon::createFromDate(1970,1,1);
-        $end = Carbon::createFromDate(2070, 1,1 );
+        $start = Carbon::createFromDate(1970, 1, 1);
+        $end = Carbon::createFromDate(2070, 1, 1);
 
         if (isset($city->public_events_calendar_url)) {
             $calendar = new EventCalendarImport($city->public_events_calendar_url);

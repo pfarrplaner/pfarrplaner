@@ -41,8 +41,11 @@ namespace App\Reports;
 use App\Location;
 use App\Service;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 /**
  * Class EmbedStreamingReport
@@ -69,7 +72,7 @@ class EmbedStreamingReport extends AbstractEmbedReport
     public $icon = 'fa fa-file-code';
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
     public function setup()
     {
@@ -80,14 +83,16 @@ class EmbedStreamingReport extends AbstractEmbedReport
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
+     * @return Application|Factory|View|string
      */
     public function render(Request $request)
     {
-        $data = $request->validate([
-            'city' => 'required',
-            'cors-origin' => 'required|url',
-        ]);
+        $data = $request->validate(
+            [
+                'city' => 'required',
+                'cors-origin' => 'required|url',
+            ]
+        );
         $data['url'] = route('embed.report', ['report' => 'streaming', 'city' => $data['city']]);
         $data['randomId'] = uniqid();
         return view('reports.embedstreaming.render', $data);
@@ -95,16 +100,22 @@ class EmbedStreamingReport extends AbstractEmbedReport
 
     /**
      * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function embed(Request $request) {
-        if (!$request->has('city')) abort(404);
+    public function embed(Request $request)
+    {
+        if (!$request->has('city')) {
+            abort(404);
+        }
         $nextService = Service::where('city_id', $request->get('city'))
             ->select('services.*')
             ->join('days', 'days.id', 'services.day_id')
-            ->whereHas('day', function ($query) {
-                $query->where('date', '>=', Carbon::now()->format('Y-m-d'));
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now()->format('Y-m-d'));
+                }
+            )
             ->where('youtube_url', '!=', '')
             ->orderBy('days.date')
             ->orderBy('time')
@@ -113,9 +124,12 @@ class EmbedStreamingReport extends AbstractEmbedReport
         $lastServices = Service::where('city_id', $request->get('city'))
             ->select('services.*')
             ->join('days', 'days.id', 'services.day_id')
-            ->whereHas('day', function ($query) {
-                $query->where('date', '<=', Carbon::now()->format('Y-m-d'));
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '<=', Carbon::now()->format('Y-m-d'));
+                }
+            )
             ->orderBy('days.date', 'desc')
             ->orderBy('time', 'desc')
             ->limit(100)

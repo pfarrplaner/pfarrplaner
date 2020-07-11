@@ -30,7 +30,7 @@
 
 namespace App;
 
-use \Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 /**
  * Class Participant

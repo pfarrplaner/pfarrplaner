@@ -33,6 +33,7 @@ namespace App\Http\Controllers;
 use App\Comment;
 use App\Service;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -44,7 +45,7 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -54,7 +55,7 @@ class CommentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -62,23 +63,10 @@ class CommentController extends Controller
     }
 
     /**
-     * Check if current user may comment on a specific object
-     * @param $owner Object to be commented on
-     * @return bool true if commenting is allowed
-     */
-    protected function canCommentOnThisObject($owner) {
-        $owningService = is_a($owner, Service::class) ? $owner : $owner->service;
-        if (null === $owningService) {
-            return Auth::user()->writableCities->pluck('id')->contains($owner->city_id);
-        }
-        return Auth::user()->can('update', $owningService);
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -87,7 +75,13 @@ class CommentController extends Controller
             $commentableId = $request->get('commentable_id');
             $owner = app($commentableType)->find($commentableId);
             if ($this->canCommentOnThisObject($owner)) {
-                $comment = $owner->comments()->create(['body' => $request->get('body'), 'private' => $request->get('private'), 'user_id' => Auth::user()->id]);
+                $comment = $owner->comments()->create(
+                    [
+                        'body' => $request->get('body'),
+                        'private' => $request->get('private'),
+                        'user_id' => Auth::user()->id
+                    ]
+                );
                 return view('partials.comments.single', compact('comment'));
             } else {
                 return '<div class="alert alert-danger">Leider hast du keine Berechtigung zum Kommentieren dieses Objekts.</div>';
@@ -97,10 +91,24 @@ class CommentController extends Controller
     }
 
     /**
+     * Check if current user may comment on a specific object
+     * @param $owner Object to be commented on
+     * @return bool true if commenting is allowed
+     */
+    protected function canCommentOnThisObject($owner)
+    {
+        $owningService = is_a($owner, Service::class) ? $owner : $owner->service;
+        if (null === $owningService) {
+            return Auth::user()->writableCities->pluck('id')->contains($owner->city_id);
+        }
+        return Auth::user()->can('update', $owningService);
+    }
+
+    /**
      * Display the specified resource.
      *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
+     * @param Comment $comment
+     * @return Response
      */
     public function show(Comment $comment)
     {
@@ -110,8 +118,8 @@ class CommentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
+     * @param Comment $comment
+     * @return Response
      */
     public function edit(Comment $comment)
     {
@@ -121,9 +129,9 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Comment $comment
+     * @return Response
      */
     public function update(Request $request, Comment $comment)
     {
@@ -136,8 +144,8 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Comment  $comment
-     * @return \Illuminate\Http\Response
+     * @param Comment $comment
+     * @return Response
      */
     public function destroy(Comment $comment)
     {

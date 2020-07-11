@@ -82,8 +82,8 @@ class DemoBuilder extends Command
     {
         $universalPassword = Hash::make('test');
 
-        $dbName = Config::get('database.connections.'.Config::get('database.default').'.database');
-        $this->line('Demo builder, using database "'.$dbName.'"');
+        $dbName = Config::get('database.connections.' . Config::get('database.default') . '.database');
+        $this->line('Demo builder, using database "' . $dbName . '"');
         if (!env('DEMO_MODE')) {
             $this->error('Demo builder requires DEMO_MODE=1 to be set in .env, aborting.');
             return;
@@ -112,7 +112,7 @@ class DemoBuilder extends Command
                 $location->save();
             }
         }
-        $this->info(count($cities).' cities created.');
+        $this->info(count($cities) . ' cities created.');
 
         $this->line('Creating users...');
         $users = User::all();
@@ -120,17 +120,19 @@ class DemoBuilder extends Command
             if ($user->name != 'Admin') {
                 $user->first_name = $faker->firstName;
                 $user->last_name = $faker->lastName;
-                $user->name = $user->first_name.' '.$user->last_name;
+                $user->name = $user->first_name . ' ' . $user->last_name;
                 $user->address = $faker->address;
                 $user->phone = $faker->phoneNumber;
-                if ($user->password != '') $user->password = $universalPassword;
-                $user->email = strtolower($user->first_name.'.'.$user->last_name).'@demo.pfarrplaner.de';
+                if ($user->password != '') {
+                    $user->password = $universalPassword;
+                }
+                $user->email = strtolower($user->first_name . '.' . $user->last_name) . '@demo.pfarrplaner.de';
             } else {
                 $user->password = Hash::make('admin');
             }
             $user->save();
         }
-        $this->info(count($users).' users created.');
+        $this->info(count($users) . ' users created.');
 
         $this->line('Creating baptisms...');
         $baptisms = Baptism::all();
@@ -145,7 +147,7 @@ class DemoBuilder extends Command
             $baptism->first_contact_with = $faker->name;
             $baptism->save();
         }
-        $this->info(count($baptisms).' baptisms created.');
+        $this->info(count($baptisms) . ' baptisms created.');
 
         $this->line('Creating weddings...');
         $weddings = Wedding::all();
@@ -154,14 +156,18 @@ class DemoBuilder extends Command
             $wedding->spouse1_name = $faker->name('male');
             $wedding->spouse1_phone = $faker->phoneNumber;
             $wedding->spouse1_email = $faker->email;
-            if ($wedding->spouse1_birth_name != '') $wedding->spouse1_birth_name = $faker->lastName;
+            if ($wedding->spouse1_birth_name != '') {
+                $wedding->spouse1_birth_name = $faker->lastName;
+            }
             $wedding->spouse2_name = $faker->name('female');
             $wedding->spouse2_phone = $faker->phoneNumber;
             $wedding->spouse2_email = $faker->email;
-            if ($wedding->spouse2_birth_name != '') $wedding->spouse2_birth_name = $faker->lastName;
+            if ($wedding->spouse2_birth_name != '') {
+                $wedding->spouse2_birth_name = $faker->lastName;
+            }
             $wedding->save();
         }
-        $this->info(count($weddings).' weddings created.');
+        $this->info(count($weddings) . ' weddings created.');
 
         $this->line('Creating funerals...');
         $funerals = Funeral::all();
@@ -177,14 +183,14 @@ class DemoBuilder extends Command
             $funeral->relative_city = $faker->city;
             $funeral->save();
         }
-        $this->info(count($funerals).' funerals created.');
+        $this->info(count($funerals) . ' funerals created.');
 
         $this->line('Creating parishes...');
         $parishes = Parish::with('owningCity')->get();
         /** @var Parish $parish */
         foreach ($parishes as $parish) {
             $name = str_replace('Pfarramt ', '', $parish->name);
-            $parish->code = $parish->owningCity->name.' '.$name;
+            $parish->code = $parish->owningCity->name . ' ' . $name;
             $parish->address = $faker->streetAddress;
             $parish->zip = $faker->postcode;
             $parish->city = $parish->owningCity->name;
@@ -192,11 +198,9 @@ class DemoBuilder extends Command
             $parish->email = $faker->email;
             $parish->save();
         }
-        $this->info(count($parishes).' parishes created.');
+        $this->info(count($parishes) . ' parishes created.');
 
         Comment::query()->delete();
         $this->info('All comments deleted');
-
-
     }
 }

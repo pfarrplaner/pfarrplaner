@@ -58,7 +58,8 @@ class FileHelper
      * @param $path
      * @return string
      */
-    public static function icon($path) {
+    public static function icon($path)
+    {
         $icons = [
             'application/pdf' => 'fa-file-pdf',
         ];
@@ -69,20 +70,20 @@ class FileHelper
      * @param string $str
      * @return string|string[]
      */
-    public static function normalizeFilename ($str = '')
+    public static function normalizeFilename($str = '')
     {
         $str = strip_tags($str);
         $str = preg_replace('/[\r\n\t ]+/', ' ', $str);
         $str = preg_replace('/[\"\*\/\:\<\>\?\'\|]+/', ' ', $str);
         $str = strtr($str, ['Ä' => 'Ae', 'ä' => 'ae', 'Ö' => 'Oe', 'ö' => 'oe', 'Ü' => 'Ue', 'ü' => 'ue', 'ß' => 'ss']);
 
-        $str = html_entity_decode( $str, ENT_QUOTES, "utf-8" );
+        $str = html_entity_decode($str, ENT_QUOTES, "utf-8");
         $str = htmlentities($str, ENT_QUOTES, "utf-8");
         $str = preg_replace("/(&)([a-z])([a-z]+;)/i", '$2', $str);
         $str = str_replace(' ', '_____', $str);
         $str = rawurlencode($str);
         $str = str_replace('%', '-', $str);
-        $str = str_replace( '_____', ' ', $str);
+        $str = str_replace('_____', ' ', $str);
         return $str;
     }
 

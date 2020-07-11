@@ -30,17 +30,14 @@
 
 namespace App\Reports;
 
-use App\City;
 use App\Day;
 use App\Service;
 use App\User;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-use League\Flysystem\Adapter\AbstractAdapter;
-use niklasravnsborg\LaravelPdf\Pdf;
-use PhpOffice\PhpWord\Shared\Converter;
-use PhpOffice\PhpWord\Style\Tab;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 
 /**
@@ -64,9 +61,10 @@ class PersonReport extends AbstractPDFDocumentReport
     public $description = 'Liste mit allen Gottesdiensten, für die eine bestimmte Person eingeteilt ist';
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function setup() {
+    public function setup()
+    {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $users = User::all();
         return $this->renderSetupView(compact('maxDate', 'users'));
@@ -78,24 +76,32 @@ class PersonReport extends AbstractPDFDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate([
-            'start' => 'required|date|date_format:d.m.Y',
-            'end' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'start' => 'required|date|date_format:d.m.Y',
+                'end' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
         $userIds = $request->get('person');
         $userIds = is_array($userIds) ? $userIds : [$userIds];
         $users = User::whereIn('id', $userIds)->get();
 
         $services = Service::with(['location'])
-            ->select(['services.*','days.date'])
+            ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereHas('participants', function ($query) use ($userIds) {
-                $query->whereIn('user_id', $userIds);
-            })->whereHas('day', function ($query) use ($request) {
-                $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')));
-                $query->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')));
-            })->orderBy('days.date', 'ASC')
+            ->whereHas(
+                'participants',
+                function ($query) use ($userIds) {
+                    $query->whereIn('user_id', $userIds);
+                }
+            )->whereHas(
+                'day',
+                function ($query) use ($request) {
+                    $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')));
+                    $query->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')));
+                }
+            )->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC')
             ->get();
 
@@ -107,8 +113,8 @@ class PersonReport extends AbstractPDFDocumentReport
                 'highlight' => $users,
                 'services' => $services,
             ],
-            ['format' => 'A4']);
-
+            ['format' => 'A4']
+        );
     }
 
 }

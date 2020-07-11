@@ -39,6 +39,8 @@ namespace App\CalendarLinks;
 
 
 use App\User;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
@@ -67,7 +69,7 @@ class AbstractCalendarLink
      */
     protected $viewName = 'ical';
 
-    /** @var User $user  */
+    /** @var User $user */
     protected $user = null;
 
 
@@ -79,6 +81,11 @@ class AbstractCalendarLink
             $this->data['token'] = Auth::user()->getToken();
             $this->data['user'] = Auth::user()->id;
         }
+    }
+
+    public function getKey(): string
+    {
+        return lcfirst(strtr(get_class($this), ['CalendarLink' => '', 'App\\s\\' => '', 'App\\CalendarLinks\\' => '']));
     }
 
     /**
@@ -97,23 +104,12 @@ class AbstractCalendarLink
         return $this->description;
     }
 
-
-    public function getKey(): string {
-        return lcfirst(strtr(get_class($this), ['CalendarLink' => '', 'App\\s\\' => '', 'App\\CalendarLinks\\' => '']));
-    }
-
     /**
      * @return string
      */
-    public function setupRoute() {
+    public function setupRoute()
+    {
         return route('ical.setup', ['key' => $this->getKey()]);
-    }
-
-    /**
-     * @return array
-     */
-    public function setupData() {
-        return [];
     }
 
     /**
@@ -132,35 +128,73 @@ class AbstractCalendarLink
         $this->data = $data;
     }
 
-
     /**
-     * @param Request $request
+     * @return Application|Factory|\Illuminate\View\View
      */
-    public function setDataFromRequest(Request $request) {
-
-    }
-
-    /**
-     * @return string
-     */
-    public function getSetupViewName() {
-        return 'ical.'.$this->getKey().'.setup';
-    }
-
-    /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function setupView() {
+    public function setupView()
+    {
         $data = $this->setupData();
         $data['calendarLink'] = $this;
         return view($this->getSetupViewName(), $data);
     }
 
     /**
+     * @return array
+     */
+    public function setupData()
+    {
+        return [];
+    }
+
+    /**
      * @return string
      */
-    public function getLink() {
+    public function getSetupViewName()
+    {
+        return 'ical.' . $this->getKey() . '.setup';
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink()
+    {
         return route('ical.export', $this->data);
+    }
+
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return string|string[]|null
+     */
+    public function export(Request $request, User $user)
+    {
+        $this->setDataFromRequest($request);
+        $this->setUser($user);
+        $data = $this->getRenderData($request, $user);
+        $calendarLink = $this;
+        $raw = View::make('ical.export.' . $this->viewName, compact('calendarLink', 'data'));
+        $s = str_replace(
+            "\r\n\r\n",
+            "\r\n",
+            str_replace(
+                '@@@@',
+                "\r\n",
+                str_replace(
+                    "\n",
+                    "\r\n",
+                    str_replace("\r\n", '@@@@', str_replace(' ,', ',', $raw))
+                )
+            )
+        );
+        return preg_replace('/^(\s*)/m', '', $s);
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function setDataFromRequest(Request $request)
+    {
     }
 
     /**
@@ -173,29 +207,14 @@ class AbstractCalendarLink
         $this->data['token'] = $this->user->getToken();
     }
 
-
     /**
      * @param Request $request
      * @param User $user
      * @return array
      */
-    public function getRenderData(Request $request, User $user) {
+    public function getRenderData(Request $request, User $user)
+    {
         return [];
-    }
-
-    /**
-     * @param Request $request
-     * @param User $user
-     * @return string|string[]|null
-     */
-    public function export(Request $request, User $user) {
-        $this->setDataFromRequest($request);
-        $this->setUser($user);
-        $data = $this->getRenderData($request, $user);
-        $calendarLink = $this;
-        $raw = View::make('ical.export.'.$this->viewName, compact('calendarLink', 'data'));
-        $s = str_replace("\r\n\r\n", "\r\n", str_replace('@@@@', "\r\n", str_replace("\n", "\r\n", str_replace("\r\n", '@@@@', str_replace(' ,', ',', $raw)))));
-        return preg_replace('/^(\s*)/m', '', $s);
     }
 
 

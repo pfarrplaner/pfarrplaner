@@ -43,11 +43,10 @@ use App\Policies\RolePolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\TagPolicy;
 use App\Policies\UserPolicy;
-use App\Service;
 use App\Tag;
 use App\User;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -95,13 +94,16 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         // Super-Administrator*in can do everything
-        Gate::before(function($user, $ability) {
-           if ($user->hasRole(self::SUPER)) return true;
-        });
+        Gate::before(
+            function ($user, $ability) {
+                if ($user->hasRole(self::SUPER)) {
+                    return true;
+                }
+            }
+        );
 
         Gate::define('calendar.month', 'App\Policies\CalendarPolicy@month');
         Gate::define('calendar.print', 'App\Policies\CalendarPolicy@print');
         Gate::define('calendar.printsetup', 'App\Policies\CalendarPolicy@printsetup');
-
     }
 }

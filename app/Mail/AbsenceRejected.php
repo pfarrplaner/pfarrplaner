@@ -35,7 +35,6 @@ use App\Approval;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 /**
  * Class AbsenceRejected
@@ -51,8 +50,6 @@ class AbsenceRejected extends Mailable
 
     /** @var Approval */
     protected $approval;
-
-
 
 
     /**

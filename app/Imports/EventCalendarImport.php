@@ -39,8 +39,10 @@ namespace App\Imports;
 
 
 use Carbon\Carbon;
+use DateTime;
+use DateTimeZone;
+use ErrorException;
 use Illuminate\Support\Facades\Cache;
-use Psy\Exception\ErrorException;
 
 /**
  * Class EventCalendarImport
@@ -52,11 +54,11 @@ class EventCalendarImport
     /**
      * @var string
      */
-    protected $url = '';
+    public $timeZone = 'UTC';
     /**
      * @var string
      */
-    public $timeZone = 'UTC';
+    protected $url = '';
 
     /**
      * EventCalendarImport constructor.
@@ -67,8 +69,8 @@ class EventCalendarImport
         $this->url = $url;
     }
 
-    public function getMixedEvents() {
-
+    public function getMixedEvents()
+    {
     }
 
     /**
@@ -79,7 +81,8 @@ class EventCalendarImport
      * @param bool $removeServices
      * @return array
      */
-    public function mix($events, Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array {
+    public function mix($events, Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
+    {
         $theseEvents = $this->getEvents($weekStart, $weekEnd, $removeServices);
         foreach ($theseEvents as $dateCode => $subEvents) {
             foreach ($subEvents as $event) {
@@ -99,14 +102,14 @@ class EventCalendarImport
      */
     public function getEvents(Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
-        $cacheKey = 'EventCalendarImport_'.$this->url;
+        $cacheKey = 'EventCalendarImport_' . $this->url;
         if (Cache::has($cacheKey)) {
             $events = Cache::get($cacheKey);
         } else {
             try {
                 $events = json_decode(file_get_contents($this->url), true);
                 Cache::put($cacheKey, $events, 900);
-            } catch (\ErrorException $e) {
+            } catch (ErrorException $e) {
                 $events = [];
             }
         }
@@ -127,19 +130,20 @@ class EventCalendarImport
                 }
             }
 
-            if (!isset($event['place'])) $event['place'] = '';
+            if (!isset($event['place'])) {
+                $event['place'] = '';
+            }
 
 
             if (($event['start'] >= $weekStart) and ($event['start'] <= $weekEnd)) {
                 if (!($event['allDay'] && ($event['place'] == ''))) {
                     if ((!$removeServices) || ((strtoupper(substr($event['title'], 0, 2)) != 'GD')
                             && (strtoupper(substr($event['title'], 0, 13)) != 'GOTTESDIENST ')
-                        && (strtoupper($event['title']) != 'GOTTESDIENST'))) {
+                            && (strtoupper($event['title']) != 'GOTTESDIENST'))) {
                         $filteredEvents[$event['start']->format('YmdHis')][] = $event;
                     }
                 }
             }
-
         }
         ksort($filteredEvents);
         return $filteredEvents;
@@ -150,9 +154,9 @@ class EventCalendarImport
      * @param string $time
      * @return DateTime
      */
-    protected function sanitizeTimeString(string $time): \DateTime
+    protected function sanitizeTimeString(string $time): DateTime
     {
-        return Carbon::createFromTimeString(substr($time, 0, -1), new \DateTimeZone($this->timeZone));
+        return Carbon::createFromTimeString(substr($time, 0, -1), new DateTimeZone($this->timeZone));
     }
 
     /**

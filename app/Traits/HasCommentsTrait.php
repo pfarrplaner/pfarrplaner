@@ -52,33 +52,39 @@ trait HasCommentsTrait
     /**
      * @return mixed
      */
-    public function comments() {
+    public function publicComments()
+    {
+        return $this->comments()->where('private', 0);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function comments()
+    {
         return $this->morphMany(Comment::class, 'commentable');
     }
 
     /**
      * @return mixed
      */
-    public function publicComments() {
-        return $this->comments()->where('private', 0);
+    public function commentsForCurrentUser()
+    {
+        return $this->commentsForUser(Auth::user());
     }
 
     /**
      * @param User $user
      * @return mixed
      */
-    public function commentsForUser(User $user) {
-        return $this->comments()->where(function($query) use ($user) {
-            $query->where('private', 0);
-            $query->orWhere('user_id', $user->id);
-        });
-    }
-
-    /**
-     * @return mixed
-     */
-    public function commentsForCurrentUser() {
-        return $this->commentsForUser(Auth::user());
+    public function commentsForUser(User $user)
+    {
+        return $this->comments()->where(
+            function ($query) use ($user) {
+                $query->where('private', 0);
+                $query->orWhere('user_id', $user->id);
+            }
+        );
     }
 
 

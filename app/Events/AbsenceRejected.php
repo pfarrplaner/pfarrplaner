@@ -31,14 +31,14 @@
 namespace App\Events;
 
 use App\Absence;
-use App\Approval;
 use Illuminate\Queue\SerializesModels;
 
 /**
  * Class AbsenceRejected
  * @package App\Events
  */
-class AbsenceRejected {
+class AbsenceRejected
+{
 
     use SerializesModels;
 

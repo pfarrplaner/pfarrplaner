@@ -80,7 +80,7 @@ class AbstractServiceMailable extends Mailable
     {
         $this->user = $user;
         $this->service = $service;
-        $this->original =$service->originalObject;
+        $this->original = $service->originalObject;
         $this->changed = $service->changedFields;
         $this->data = $data;
     }

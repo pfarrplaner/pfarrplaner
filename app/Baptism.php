@@ -34,6 +34,7 @@ use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class Baptism
@@ -65,7 +66,7 @@ class Baptism extends Model
         'docs_ready',
         'docs_where',
         'city_id'
-        ];
+    ];
 
     /**
      * @var string[]
@@ -75,7 +76,7 @@ class Baptism extends Model
         'appointment',
     ];
 
-    /** @var array  */
+    /** @var array */
     protected $encrypted = [
         'candidate_name',
         'candidate_address',
@@ -85,9 +86,10 @@ class Baptism extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function service() {
+    public function service()
+    {
         return $this->belongsTo(Service::class);
     }
 

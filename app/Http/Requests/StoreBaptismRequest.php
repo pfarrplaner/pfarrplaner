@@ -86,7 +86,9 @@ class StoreBaptismRequest extends FormRequest
             'candidate_email' => 'nullable|email',
             'candidate_zip' => 'nullable|zip',
             'candidate_phone' => 'nullable|phone_number',
-            'city_id' => 'required|integer|exists:cities,id|in:'.$this->user()->writableCities->pluck('id')->implode(','),
+            'city_id' => 'required|integer|exists:cities,id|in:' . $this->user()->writableCities->pluck('id')->implode(
+                    ','
+                ),
             'first_contact_on' => 'nullable|date_format:d.m.Y',
             'appointment' => 'nullable|date_format:d.m.Y H:i',
             'registered' => 'nullable|integer|between:0,1',

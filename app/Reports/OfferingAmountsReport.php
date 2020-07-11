@@ -32,22 +32,17 @@ namespace App\Reports;
 
 use App\City;
 use App\Day;
-use App\Funeral;
-use App\Liturgy;
 use App\Service;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use PhpOffice\PhpSpreadsheet\RichText\RichText;
+use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Settings;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
-use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Fill;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpWord\Shared\Converter;
 
 /**
  * Class OfferingAmountsReport
@@ -70,7 +65,7 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
 
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
     public function setup()
     {
@@ -83,7 +78,7 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
     /**
      * @param Request $request
      * @return string|void
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws Exception
      */
     public function render(Request $request)
     {
@@ -116,11 +111,17 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
         $offerings = [];
         foreach ($services as $service) {
             if ($service->offering_goal != '') {
-                if (!isset($offerings[$service->offering_goal])) $offerings[$service->offering_goal] = ['ct' => 0, 'amount' => 0, 'done' => 0];
+                if (!isset($offerings[$service->offering_goal])) {
+                    $offerings[$service->offering_goal] = ['ct' => 0, 'amount' => 0, 'done' => 0];
+                }
                 $offerings[$service->offering_goal]['ct']++;
                 $x = trim(strtr((string)$service->offering_amount, [',' => '.', '€' => '']));
-                if (is_numeric($x)) $offerings[$service->offering_goal]['amount'] += (float)$x;
-                if ($service->day->date <= Carbon::now()) $offerings[$service->offering_goal]['done']++;
+                if (is_numeric($x)) {
+                    $offerings[$service->offering_goal]['amount'] += (float)$x;
+                }
+                if ($service->day->date <= Carbon::now()) {
+                    $offerings[$service->offering_goal]['done']++;
+                }
             }
         }
 
@@ -134,7 +135,7 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
         $sheet = $this->spreadsheet->getActiveSheet();
 
         // column width
-        for ($i= 65; $i <= 76; $i++) {
+        for ($i = 65; $i <= 76; $i++) {
             $sheet->getColumnDimension(chr($i))->setWidth(20);
         }
         // title row
@@ -164,14 +165,20 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
             $sheet->setCellValue("A{$row}", $category);
             $sheet->setCellValue("B{$row}", $data['ct']);
             $sheet->setCellValue("C{$row}", $data['done']);
-            $sheet->setCellValueExplicit("D{$row}", (float)str_replace(',', '.', (string)$data['amount']), DataType::TYPE_NUMERIC);
+            $sheet->setCellValueExplicit(
+                "D{$row}",
+                (float)str_replace(',', '.', (string)$data['amount']),
+                DataType::TYPE_NUMERIC
+            );
             //$sheet->setCellValue("D{$row}", ));
             $sheet->getStyle("D{$row}")->getNumberFormat()->setFormatCode('#,##0.00_-€');
             $sheet->getStyle("D{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
         }
 
         // output
-        $filename = 'Opfersummen von ' . $start->format('Y-m-d') . ' bis ' . $end->format('Y-m-d') . ' -- ' . $cities->pluck('name')->join(', ');
+        $filename = 'Opfersummen von ' . $start->format('Y-m-d') . ' bis ' . $end->format(
+                'Y-m-d'
+            ) . ' -- ' . $cities->pluck('name')->join(', ');
         $this->sendToBrowser($filename);
     }
 

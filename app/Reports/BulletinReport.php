@@ -30,13 +30,17 @@
 
 namespace App\Reports;
 
-use App\City;
 use App\Day;
 use App\Liturgy;
 use App\Service;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
 
@@ -67,9 +71,10 @@ class BulletinReport extends AbstractWordDocumentReport
     public $formats = ['Tailfingen', 'Truchtelfingen'];
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Application|Factory|View
      */
-    public function setup() {
+    public function setup()
+    {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
         return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities, 'formats' => $this->formats]);
@@ -78,15 +83,17 @@ class BulletinReport extends AbstractWordDocumentReport
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|string
+     * @return RedirectResponse|string
      */
     public function render(Request $request)
     {
-        $request->validate([
-            'includeCities' => 'required',
-            'start' => 'required|date|date_format:d.m.Y',
-            'end' => 'required|date|date_format:d.m.Y',
-        ]);
+        $request->validate(
+            [
+                'includeCities' => 'required',
+                'start' => 'required|date|date_format:d.m.Y',
+                'end' => 'required|date|date_format:d.m.Y',
+            ]
+        );
 
         $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')))
             ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')))
@@ -112,33 +119,11 @@ class BulletinReport extends AbstractWordDocumentReport
     }
 
     /**
-     * @return \PhpOffice\PhpWord\Element\Section
-     */
-    public function commonDocumentSetup() {
-        $this->wordDocument->addParagraphStyle('list', [
-            'tabs' => [
-                new Tab('left', Converter::cmToTwip(4.5)),
-                new Tab('left', Converter::cmToTwip(6.7)),
-                new Tab('left', Converter::cmToTwip(9)),
-            ],
-            'spaceAfter' => 0,
-        ]);
-        $this->wordDocument->setDefaultFontName('Helvetica Condensed');
-        $this->wordDocument->setDefaultFontSize(10);
-        $section = $this->wordDocument->addSection([
-            'marginTop' => Converter::cmToTwip('1.9'),
-            'marginBottom' => Converter::cmToTwip('0.25'),
-            'marginLeft' => Converter::cmToTwip('1.59'),
-            'marginRight' => Converter::cmToTwip('0.25'),
-        ]);
-        return $section;
-    }
-
-    /**
      * @param $days
      * @param $serviceList
      */
-    public function renderTailfingenFormat($days, $serviceList) {
+    public function renderTailfingenFormat($days, $serviceList)
+    {
         $section = $this->commonDocumentSetup();
 
         foreach ($days as $day) {
@@ -169,14 +154,43 @@ class BulletinReport extends AbstractWordDocumentReport
 
         $filename = date('Ymd') . ' Gottesdienstliste Gemeindebrief';
         $this->sendToBrowser($filename);
+    }
 
+    /**
+     * @return Section
+     */
+    public function commonDocumentSetup()
+    {
+        $this->wordDocument->addParagraphStyle(
+            'list',
+            [
+                'tabs' => [
+                    new Tab('left', Converter::cmToTwip(4.5)),
+                    new Tab('left', Converter::cmToTwip(6.7)),
+                    new Tab('left', Converter::cmToTwip(9)),
+                ],
+                'spaceAfter' => 0,
+            ]
+        );
+        $this->wordDocument->setDefaultFontName('Helvetica Condensed');
+        $this->wordDocument->setDefaultFontSize(10);
+        $section = $this->wordDocument->addSection(
+            [
+                'marginTop' => Converter::cmToTwip('1.9'),
+                'marginBottom' => Converter::cmToTwip('0.25'),
+                'marginLeft' => Converter::cmToTwip('1.59'),
+                'marginRight' => Converter::cmToTwip('0.25'),
+            ]
+        );
+        return $section;
     }
 
     /**
      * @param $days
      * @param $serviceList
      */
-    public function renderTruchtelfingenFormat($days, $serviceList) {
+    public function renderTruchtelfingenFormat($days, $serviceList)
+    {
         $section = $this->commonDocumentSetup();
         $table = $section->addTable('table');
 
@@ -194,8 +208,12 @@ class BulletinReport extends AbstractWordDocumentReport
                 $table->addCell(Converter::cmToTwip(2.11))->addText($service->locationText());
                 $table->addCell(Converter::cmToTwip(2.32))->addText($service->descriptionText());
                 $table->addCell(Converter::cmToTwip(3.52))->addText($service->participantsText('P', false, false));
-                $table->addCell(Converter::cmToTwip(2.25))->addText(isset($liturgy['perikope']) ? $liturgy['litTextsPerikope'.$liturgy['perikope']] : '');
-                $table->addCell(Converter::cmToTwip(2.5))->addText($service->offering_goal ? 'Opfer für '.$service->offering_goal : '');
+                $table->addCell(Converter::cmToTwip(2.25))->addText(
+                    isset($liturgy['perikope']) ? $liturgy['litTextsPerikope' . $liturgy['perikope']] : ''
+                );
+                $table->addCell(Converter::cmToTwip(2.5))->addText(
+                    $service->offering_goal ? 'Opfer für ' . $service->offering_goal : ''
+                );
                 $first = false;
             }
         }

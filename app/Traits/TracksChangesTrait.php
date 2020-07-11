@@ -31,9 +31,6 @@
 namespace App\Traits;
 
 
-use App\Service;
-use Illuminate\Support\Collection;
-
 /**
  * Trait TracksChangesTrait
  * @package App\Traits
@@ -49,20 +46,6 @@ trait TracksChangesTrait
     public $changed = [];
 
     /**
-     * @return mixed
-     */
-    public function createSnapshot()
-    {
-        $snapshot = $this->removeTimestamps(json_decode(json_encode($this), true));
-        if (property_exists($this, 'appendsToTracking') && is_array($this->appendsToTracking)) {
-            foreach ($this->appendsToTracking as $attribute) {
-                if (!isset($snapshot[$attribute])) $snapshot[$attribute] = $this->$attribute;
-            }
-        }
-        return $snapshot;
-    }
-
-    /**
      * Start tracking changed
      * @return void
      */
@@ -75,18 +58,55 @@ trait TracksChangesTrait
     }
 
     /**
+     * @return mixed
+     */
+    public function createSnapshot()
+    {
+        $snapshot = $this->removeTimestamps(json_decode(json_encode($this), true));
+        if (property_exists($this, 'appendsToTracking') && is_array($this->appendsToTracking)) {
+            foreach ($this->appendsToTracking as $attribute) {
+                if (!isset($snapshot[$attribute])) {
+                    $snapshot[$attribute] = $this->$attribute;
+                }
+            }
+        }
+        return $snapshot;
+    }
+
+    /**
      * @param $array
      * @return mixed
      */
-    protected function removeTimestamps($array) {
+    protected function removeTimestamps($array)
+    {
         foreach ($array as $key => $value) {
-            if (is_array($value)) $array[$key] = $this->removeTimestamps($value);
-            elseif ($key == 'updated_at') unset($array[$key]);
-            elseif ($key == 'created_at') unset($array[$key]);
+            if (is_array($value)) {
+                $array[$key] = $this->removeTimestamps($value);
+            } elseif ($key == 'updated_at') {
+                unset($array[$key]);
+            } elseif ($key == 'created_at') {
+                unset($array[$key]);
+            }
         }
         return $array;
     }
 
+    /**
+     * @return bool
+     */
+    public function isChanged()
+    {
+        $snapshot = $this->createSnapshot();
+        $original = $this->dataBeforeChanges;
+        unset($original['updated_at']);
+        unset($snapshot['updated_at']);
+        return (json_encode($snapshot) != json_encode($original));
+    }
+
+    public function storeDiff()
+    {
+        $this->changed = $this->diff();
+    }
 
     /**
      * Return all changed attributes and relations
@@ -102,12 +122,16 @@ trait TracksChangesTrait
 
         // set previously unset keys
         foreach ($snapshot as $key => $value) {
-            if (!isset($original[$key])) $original[$key] = '';
+            if (!isset($original[$key])) {
+                $original[$key] = '';
+            }
         }
 
         foreach ($original as $key => $value) {
             // reset unset keys
-            if (!isset($snapshot[$key])) $snapshot[$key] = '';
+            if (!isset($snapshot[$key])) {
+                $snapshot[$key] = '';
+            }
             if (print_r($value, 1) != print_r($snapshot[$key], 1)) {
                 $diff[$key] = [
                     'original' => $original[$key],
@@ -117,22 +141,6 @@ trait TracksChangesTrait
         }
 
         return $diff;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isChanged()
-    {
-        $snapshot = $this->createSnapshot();
-        $original = $this->dataBeforeChanges;
-        unset($original['updated_at']);
-        unset($snapshot['updated_at']);
-        return (json_encode($snapshot) != json_encode($original));
-    }
-
-    public function storeDiff() {
-        $this->changed = $this->diff();
     }
 
 }

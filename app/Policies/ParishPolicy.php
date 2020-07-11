@@ -56,8 +56,11 @@ class ParishPolicy
      * @param User $user
      * @return bool
      */
-    public function index(User $user) {
-        if ($user->hasRole('Administrator*in')) return true;
+    public function index(User $user)
+    {
+        if ($user->hasRole('Administrator*in')) {
+            return true;
+        }
         return false;
     }
 
@@ -66,8 +69,11 @@ class ParishPolicy
      * @param Parish $model
      * @return bool
      */
-    public function create(User $user, Parish $model) {
-        if ($user->adminCities->contains($model->owningCity)) return true;
+    public function create(User $user, Parish $model)
+    {
+        if ($user->adminCities->contains($model->owningCity)) {
+            return true;
+        }
         return false;
     }
 
@@ -76,8 +82,11 @@ class ParishPolicy
      * @param Parish $model
      * @return bool
      */
-    public function update(User $user, Parish $model) {
-        if ($user->adminCities->contains($model->owningCity)) return true;
+    public function update(User $user, Parish $model)
+    {
+        if ($user->adminCities->contains($model->owningCity)) {
+            return true;
+        }
         return false;
     }
 
@@ -86,8 +95,11 @@ class ParishPolicy
      * @param Parish $model
      * @return bool
      */
-    public function delete(User $user, Parish $model) {
-        if ($user->adminCities->contains($model->owningCity)) return true;
+    public function delete(User $user, Parish $model)
+    {
+        if ($user->adminCities->contains($model->owningCity)) {
+            return true;
+        }
         return false;
     }
 
@@ -96,7 +108,8 @@ class ParishPolicy
      * @param Parish $model
      * @return bool
      */
-    public function restore(User $user, Parish $model) {
+    public function restore(User $user, Parish $model)
+    {
         return false;
     }
 
@@ -105,7 +118,8 @@ class ParishPolicy
      * @param Parish $model
      * @return bool
      */
-    public function forceDelete(User $user, Parish $model) {
+    public function forceDelete(User $user, Parish $model)
+    {
         return false;
     }
 }
