@@ -9,7 +9,7 @@ Das Projekt kommt aus dem [evangelischen Kirchenbezirk Balingen](https://www.kir
 Entwickelt wird der Pfarrplaner nach den Anforderungen der realen kirchlichen Arbeitswelt hauptsächlich von [Pfarrer Christoph Fischer](https://christoph.fischer.de). Interessierte Gemeinden können sich direkt an Pfr. Fischer wenden, um Zugang zu einer Demoversion oder zur offiziellen Plattform zu bekommen.
 
 ## Danke
-Ein besonderer Dank gilt den Entwicklern des [Laravel Framework](https://www.laravel.org), auf dem der Pfarrplaner basiert.
+Ein besonderer Dank gilt den Entwicklern des [Laravel Framework](https://laravel.com), auf dem der Pfarrplaner basiert.
 
 ## Lizenz
 Der Pfarrplaner steht hier als Open Source Software unter der [GPL 3.0](http://www.gnu.de/documents/gpl.de.html) oder deren Nachfolger zu Verfügung.
