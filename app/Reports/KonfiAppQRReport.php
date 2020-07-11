@@ -56,6 +56,7 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
             'city' => 'required|int|exists:cities,id',
             'start' => 'required|date|date_format:d.m.Y',
             'end' => 'required|date|date_format:d.m.Y',
+            'copies' => 'required|int',
         ]);
 
         $allServices = Service::where('city_id', $data['city'])
@@ -88,6 +89,7 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
             [
                 'services' => $services,
                 'types' => $types,
+                'copies' => $data['copies'],
             ],
             ['format' => 'A4-L']);
 

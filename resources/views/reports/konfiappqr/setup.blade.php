@@ -19,6 +19,10 @@
                     <input type="text" class="form-control datepicker" name="end" value="{{ $maxDate->date->format('d.m.Y') }}"
                            placeholder="TT.MM.JJJJ"/>
                 </div>
+                <div class="form-group">
+                    <label for="end">Anzahl Kopien pro QR-Code:</label>
+                    <input type="text" class="form-control" name="copies" value="1"/>
+                </div>
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Erstellen</button>
