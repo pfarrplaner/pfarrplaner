@@ -32,7 +32,10 @@ namespace Tests\Feature;
 
 use App\City;
 use App\Http\Middleware\Authenticate;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 /**
@@ -43,6 +46,48 @@ class CityTest extends TestCase
 {
 
     use RefreshDatabase;
+
+    /** @var User */
+    protected $user;
+
+    /**
+     * Test that the city index works correctly
+     * @return void
+     * @test
+     */
+    public function testCityIndexWorks()
+    {
+        $response = $this->get(route('cities.index'));
+        $response->assertStatus(200)
+            ->assertViewIs('cities.index');
+    }
+
+    /**
+     * Test that the city create page works correctly
+     * @return void
+     * @test
+     */
+    public function testCityCreateWorks() {
+        $response = $this->actingAs($this->user)->get(route('cities.create'));
+        $response->assertStatus(200)
+            ->assertViewIs('cities.create');
+
+    }
+
+    /**
+     * Test that the city edit page works correctly
+     * @return void
+     * @test
+     */
+    public function testCityEditWorks() {
+        $this->withoutExceptionHandling();
+        $city = factory(City::class)->create();
+        $response = $this->actingAs($this->user)->get(route('cities.edit', $city->id));
+        $response->assertStatus(200)
+            ->assertViewIs('cities.edit');
+
+    }
+
 
     /**
      * Test that a city can be successfully added
@@ -135,7 +180,17 @@ class CityTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->withoutMiddleware([Authenticate::class]);
+
+        Storage::fake('fake');
+
+        Permission::create(['name' => 'benutzerliste-lokal-sehen']);
+        Permission::create(['name' => 'rollen-bearbeiten']);
+
+        $this->user = factory(User::class)->create();
+        $this->user->givePermissionTo('benutzerliste-lokal-sehen');
+        $this->user->givePermissionTo('rollen-bearbeiten');
     }
 
 
