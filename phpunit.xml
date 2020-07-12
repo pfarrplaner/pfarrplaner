@@ -62,4 +62,8 @@
         <env name="DB_DATABASE" value=":memory:"/>
         <env name="FILESYSTEM_DRIVER" value="fake"/>
     </php>
+    <!-- ensure build/logs directory exists on your repo -->
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 </phpunit>
