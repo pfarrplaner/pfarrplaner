@@ -103,7 +103,7 @@ class DayController extends Controller
             }
             $day = Day::create($data);
         }
-        $this->updateAttachedCities($data, $day);
+        $day->cities()->sync($data['cities']);
         if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) {
             $day->delete();
         }
@@ -134,26 +134,6 @@ class DayController extends Controller
         $data['name'] = $data['name'] ?? Liturgy::getDayInfo($data['date'])['title'] ?? '';
         $data['description'] = $data['description'] ?? '';
         return $data;
-    }
-
-    /**
-     * @param array $data
-     * @param $day
-     */
-    protected function updateAttachedCities(array $data, $day): void
-    {
-        // add checked cities
-        if (count($data['cities'])) {
-            foreach ($data['cities'] as $city) {
-                $day->cities()->attach($city);
-            }
-        }
-        // remove unchecked cities
-        foreach (Auth::user()->writableCities->pluck('id') as $cityId) {
-            if (!in_array($cityId, $data['cities'])) {
-                $day->cities()->detach($cityId);
-            }
-        }
     }
 
     /**
@@ -192,7 +172,7 @@ class DayController extends Controller
 
 
         $day->update($data);
-        $this->updateAttachedCities($data, $day);
+        $day->cities()->sync($data['cities']);
         $date = $day->date;
         if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) {
             $day->delete();
