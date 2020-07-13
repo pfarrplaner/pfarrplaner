@@ -15,8 +15,7 @@ jobs:
         run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
       - name: Generate application key
         run: |
-          echo "APP_KEY=" > .env
-          php artisan key:generate
+          echo "APP_KEY=base64:M/vh3SEfI2RufB1yAOd45sIyWm4+pVfcnyzd28t+cuE=" > .env
       - name: Create folders
         run: |
           mkdir -p bootstrap/cache
