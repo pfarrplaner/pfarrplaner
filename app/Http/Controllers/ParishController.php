@@ -154,7 +154,7 @@ class ParishController extends Controller
             $ctr = $parish->importStreetsFromCSV($csv);
         }
 
-        $success = $ctr ? $ctr . ' Straßendatensätze wurden importiert.' : '';
+        $success = isset($ctr) ? $ctr . ' Straßendatensätze wurden importiert.' : '';
 
         return redirect()->route('parishes.index')->with('success', 'Das Pfarramt wurde geändert. ' . $success);
     }
