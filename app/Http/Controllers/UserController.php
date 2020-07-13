@@ -141,7 +141,7 @@ class UserController extends Controller
                 'office' => $request->get('office') ?: '',
                 'address' => $request->get('address') ?: '',
                 'phone' => $request->get('phone') ?: '',
-                'preference_cities' => '', // TODO: empty for now
+                'preference_cities' => '',
                 'manage_absences' => $request->get('manage_absences') ? 1 : 0,
             ]
         );
@@ -185,11 +185,13 @@ class UserController extends Controller
         // assign roles
         $roles = $request->get('roles');
         if (is_array($roles) && count($roles)) {
-            if ((($key = array_search('Super-Administrator*in', $roles)) !== false)
+            $key = array_search('Super-Administrator*in', $roles);
+            if (($key !== false)
                 && (!$user->hasRole('Superadmininistrator*in'))) {
                 unset($roles[$key]);
             }
-            if ((($key = array_search('Administrator*in', $roles)) !== false)
+            $key = array_search('Administrator*in', $roles);
+            if (($key !== false)
                 && (!$user->hasRole('Superadmininistrator*in'))
                 && (!$user->hasRole('Administrator*in'))) {
                 unset($roles[$key]);
@@ -308,7 +310,8 @@ class UserController extends Controller
             $user->name = $request->get('name');
             $user->email = $request->get('email');
             //if ($password = $request->get('password') != '') $user->password = Hash::make($password);
-            if (($password = $request->get('password')) != '') {
+            $password = $request->get('password');
+            if ($password != '') {
                 $user->password = Hash::make($password);
             }
             $user->title = $request->get('title') ?: '';
@@ -350,11 +353,13 @@ class UserController extends Controller
             // assign roles
             $roles = $request->get('roles');
             if (is_array($roles) && count($roles)) {
-                if ((($key = array_search('Super-Administrator*in', $roles)) !== false)
+                $key = array_search('Super-Administrator*in', $roles);
+                if (($key !== false)
                     && (!$user->hasRole('Superadmininistrator*in'))) {
                     unset($roles[$key]);
                 }
-                if ((($key = array_search('Administrator*in', $roles)) !== false)
+                $key = array_search('Administrator*in', $roles);
+                if (($key !== false)
                     && (!$user->hasRole('Superadmininistrator*in'))
                     && (!$user->hasRole('Administrator*in'))) {
                     unset($roles[$key]);
@@ -365,7 +370,8 @@ class UserController extends Controller
             // set subscriptions
             $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
         } else {
-            if (($password = $request->get('password')) != '') {
+            $password = $request->get('password');
+            if ($password != '') {
                 $user->password = Hash::make($password);
                 $user->save();
                 if (count($user->homeCities) == 0) {
