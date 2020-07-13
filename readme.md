@@ -1,5 +1,7 @@
 <p align="center"><img src="https://www.pfarrplaner.de/img/logo/pfarrplaner.png"></p>
 
+![PHPUnit Tests](https://github.com/potofcoffee/pfarrplaner/workflows/PHPUnit%20Tests/badge.svg)
+
 ## Über Pfarrplaner
 
 Der "Pfarrplaner" ist eine kollaborative Plattform, die es evangelischen Kirchengemeinden erlaubt, gemeinsam Gottesdienste zu planen, Urlaubskalender zu verwalten und Kasualien zu bearbeiten.
