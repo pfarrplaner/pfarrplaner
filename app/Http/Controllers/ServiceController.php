@@ -35,15 +35,13 @@ use App\Day;
 use App\Events\ServiceBeforeDelete;
 use App\Events\ServiceBeforeStore;
 use App\Events\ServiceBeforeUpdate;
+use App\Events\ServiceCreated;
+use App\Events\ServiceUpdated;
 use App\Http\Requests\StoreServiceRequest;
-use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Location;
-use App\Mail\ServiceCreated;
-use App\Mail\ServiceUpdated;
 use App\Participant;
 use App\Service;
 use App\ServiceGroup;
-use App\Subscription;
 use App\Tag;
 use App\Traits\HandlesAttachmentsTrait;
 use App\User;
@@ -53,7 +51,6 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
@@ -112,10 +109,7 @@ class ServiceController extends Controller
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
         // emit event so that integrations may react
-        event(new \App\Events\ServiceCreated($service));
-
-        // notify:
-        Subscription::send($service, ServiceCreated::class);
+        event(new ServiceCreated($service));
 
         return redirect()->route(
             'calendar',
@@ -222,18 +216,7 @@ class ServiceController extends Controller
         $success = '';
         if ($service->isChanged()) {
             $service->storeDiff();
-
-            // emit event so that integrations can react to the update
-            event(new \App\Events\ServiceUpdated($service));
-
-            // find participants who have been removed:
-            $removed = new Collection();
-            foreach ($originalParticipants as $participant) {
-                if (!$service->participants->contains($participant)) {
-                    $removed->push($participant);
-                }
-            }
-            Subscription::send($service, ServiceUpdated::class, [], $removed);
+            event(new ServiceUpdated($service, $originalParticipants));
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
         }
 
