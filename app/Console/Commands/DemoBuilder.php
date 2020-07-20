@@ -104,6 +104,7 @@ class DemoBuilder extends Command
             $oldName = $city->name;
             $city->name = $faker->city;
             $city->public_events_calendar_url = $city->op_domain = $city->op_customer_key = $city->op_customer_token = '';
+            $city->konfiapp_apikey = '';
             $city->save();
             $locations = Location::where('city_id', $city->id)->get();
             /** @var Location $location */
