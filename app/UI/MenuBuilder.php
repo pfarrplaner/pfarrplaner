@@ -47,6 +47,7 @@ use App\Tag;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -75,12 +76,15 @@ class MenuBuilder
      */
     protected static function configure(): array
     {
+        $request = request();
+        $route = Route::currentRouteName();
         $menu = [];
         $menu[] = [
             'text' => 'Kalender',
             'icon' => 'fa fa-calendar',
             'url' => route('calendar'),
             'icon_color' => 'blue',
+            'active' => $request->is(['calendar*', 'service*'])
         ];
 
         $absenceMenu = [
@@ -88,6 +92,7 @@ class MenuBuilder
             'icon' => 'fa fa-globe-europe',
             'url' => route('absences.index'),
             'icon_color' => 'orange',
+            'active' => $request->is(['absences*', 'approvals*'])
         ];
         if (count(Auth::user()->approvableUsers()) > 0) {
             $absenceMenu['url'] = '';
@@ -96,6 +101,7 @@ class MenuBuilder
                     'text' => 'Urlaubskalender',
                     'icon' => 'fa fa-globe-europe',
                     'url' => route('absences.index'),
+                    'active' => Route::currentRouteName() == 'absences.index',
                 ],
                 [
                     'text' => 'Urlaubsanträge',
@@ -103,6 +109,7 @@ class MenuBuilder
                     'url' => route('approvals.index'),
                     'counter' => count(Auth::user()->absencesToBeApproved()),
                     'counter_class' => 'info',
+                    'active' => $route == 'approvals.index',
                 ],
             ];
         }
@@ -127,6 +134,7 @@ class MenuBuilder
                 'icon' => 'fa fa-keyboard',
                 'url' => '#',
                 'submenu' => $inputMenu,
+                'active' => $request->is(['input*']),
             ];
         }
 
@@ -135,57 +143,72 @@ class MenuBuilder
             'text' => 'Ausgabeformate',
             'icon' => 'fa fa-print',
             'url' => route('reports.list'),
+            'active' => $request->is(['report*']),
         ];
         $menu[] = [
             'text' => 'Outlook-Export',
             'icon' => 'fa fa-calendar-alt',
             'url' => route('ical.connect'),
+            'active' => $request->is(['ical*']),
         ];
 
 
         $adminMenu = [];
+        $adminActive = false;
         $user = Auth::user();
         if ($user->can('index', User::class)) {
             $adminMenu[] = [
                 'text' => 'Benutzer',
                 'icon' => 'fa fa-users',
                 'url' => route('users.index'),
+                'active' => $route == 'users.index',
             ];
+            $adminActive |= ($route == 'users.index');
         }
         if ($user->can('index', Role::class)) {
             $adminMenu[] = [
                 'text' => 'Benutzerrollen',
                 'icon' => 'fa fa-user-tag',
                 'url' => route('roles.index'),
+                'active' => $route == 'roles.index',
             ];
+            $adminActive |= ($route == 'roles.index');
         }
         if ($user->can('index', City::class)) {
             $adminMenu[] = [
                 'text' => 'Kirchengemeinden',
                 'icon' => 'fa fa-church',
                 'url' => route('cities.index'),
+                'active' => $route == 'cities.index',
             ];
+            $adminActive |= ($route == 'cities.index');
         }
         if ($user->can('index', Location::class)) {
             $adminMenu[] = [
                 'text' => 'Kirche / GD-Orte',
                 'icon' => 'fa fa-map-marker',
                 'url' => route('locations.index'),
+                'active' => $route == 'locations.index',
             ];
+            $adminActive |= ($route == 'locations.index');
         }
         if ($user->can('index', Tag::class)) {
             $adminMenu[] = [
                 'text' => 'Kennzeichnungen',
                 'icon' => 'fa fa-tag',
                 'url' => route('tags.index'),
+                'active' => $route == 'tags.index',
             ];
+            $adminActive |= ($route == 'tags.index');
         }
         if ($user->can('index', Parish::class)) {
             $adminMenu[] = [
                 'text' => 'Pfarrämter',
                 'icon' => 'fa fa-building',
                 'url' => route('parishes.index'),
+                'active' => $route == 'parishes.index',
             ];
+            $adminActive |= ($route == 'parishes.index');
         }
         if (count($adminMenu)) {
             $menu[] = 'Administration';
@@ -194,6 +217,7 @@ class MenuBuilder
                 'icon' => 'fa fa-user-shield',
                 'url' => '#',
                 'submenu' => $adminMenu,
+                'active' => $adminActive,
             ];
         }
 
