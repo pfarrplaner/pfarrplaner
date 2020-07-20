@@ -55,9 +55,7 @@
                 @tab(['id' => 'integrations'])
                     <div class="row">
                         <div class="col-sm-2">
-                            <div class="img-fluid">
-                                <img src="{{ asset('img/external/konfiapp.png') }}" />
-                            </div>
+                            <img class="img-fluid" src="{{ asset('img/external/konfiapp.png') }}" />
                         </div>
                         <div class="col-sm-10">
                             <h4>KonfiApp</h4

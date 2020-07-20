@@ -84,7 +84,7 @@
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
                         @tabheader(['id' => 'konfiapp', 'title' => 'KonfiApp', 'active' => ($tab=='konfiapp')]) @endtabheader
                     @endif
-                    @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments')]) @endtabheader
+                    @tabheader(['id' => 'comments', 'titlKonfie' => 'Kommentare', 'active' => ($tab=='comments'), 'count' => (count($service->comments ?? []))]) @endtabheader
                     @can('admin')
                         @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
                     @endcan('admin')

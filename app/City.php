@@ -103,7 +103,8 @@ class City extends Model
         if ($user->hasRole('Super-Administrator*in')) {
             return true;
         }
-        if (($city = $user->cities->where('id', $this->id)->first()) && ($city->pivot->permission == 'a')) {
+        $city = $user->cities->where('id', $this->id)->first();
+        if ($city && ($city->pivot->permission == 'a')) {
             return true;
         }
         return false;

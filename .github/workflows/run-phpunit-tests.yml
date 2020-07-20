@@ -1,0 +1,24 @@
+name: PHPUnit Tests
+
+on: [pull_request, push]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-18.04
+
+    container:
+      image:  prooph/composer:7.2
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install dependencies
+        run: composer install --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+      - name: Generate application key
+        run: |
+          echo "APP_KEY=base64:M/vh3SEfI2RufB1yAOd45sIyWm4+pVfcnyzd28t+cuE=" > .env
+      - name: Create folders
+        run: |
+          mkdir -p bootstrap/cache
+      - name: Run tests
+        run: vendor/bin/phpunit
+

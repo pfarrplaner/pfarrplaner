@@ -201,11 +201,6 @@ class Service extends Model
      */
     private $auditData = [];
 
-    public static function boot()
-    {
-        parent::boot();
-    }
-
     /**
      * Mix a collection of services into an array of events
      * @param $events
@@ -528,10 +523,12 @@ class Service extends Model
     public function titleAndDescriptionCombinedText()
     {
         $description = [];
-        if (($x = $this->titleText(false, false)) != 'Gottesdienst') {
+        $x = $this->titleText(false, false);
+        if ($x != 'Gottesdienst') {
             $description[] = $x;
         }
-        if ($x = $this->descriptionText) {
+        $x = $this->descriptionText();
+        if ($x != '') {
             $description[] = $x;
         }
         return join('; ', $description);
@@ -545,18 +542,18 @@ class Service extends Model
     public function titleText($short = true, $skipRites = false)
     {
         $elements = [];
-        if ($x = $this->title) {
-            $elements[] = $x;
+        if ($this->title != '') {
+            $elements[] = $x = $this->title;
         }
         if (!$skipRites) {
-            if ($x = $this->weddingsText()) {
-                $elements[] = $x;
+            if ($this->weddingsText() != '') {
+                $elements[] = $x = $this->weddingsText();
             }
-            if ($x = $this->funeralsText()) {
-                $elements[] = $x;
+            if ($this->funeralsText() != '') {
+                $elements[] = $x = $this->funeralsText();
             }
-            if ($x = $this->baptismsText()) {
-                $elements[] = 'Taufe(n)';
+            if ($this->baptismsText() != '') {
+                $elements[] = $x = 'Taufe(n)';
             }
         }
         if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {

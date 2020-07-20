@@ -33,8 +33,11 @@ namespace Tests\Feature;
 use App\City;
 use App\Day;
 use App\Http\Middleware\Authenticate;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 /**
@@ -46,6 +49,12 @@ class DayTest extends TestCase
 
     use RefreshDatabase;
 
+    /** @var User  */
+    protected $user = null;
+
+    /** @var City  */
+    protected $city = null;
+
     /**
      * Test if a day can be created
      * @return void
@@ -53,9 +62,10 @@ class DayTest extends TestCase
      */
     public function testDayCanBeCreated()
     {
+        $this->withoutExceptionHandling();
         $data = factory(Day::class)->raw(['day_type' => 0]);
-        $response = $this->post(route('days.store'), $data);
-
+        $data['cities'] = [$this->city->id];
+        $response = $this->actingAs($this->user)->post(route('days.store'), $data);
         $response->assertStatus(302);
         $this->assertCount(1, Day::all());
         $this->assertInstanceOf(Carbon::class, Day::first()->date);
@@ -70,7 +80,7 @@ class DayTest extends TestCase
     {
         $data = factory(Day::class)->raw(['day_type' => 1]);
         $data['cities'] = [factory(City::class)->create()->id];
-        $response = $this->post(route('days.store'), $data);
+        $response = $this->actingAs($this->user)->post(route('days.store'), $data);
 
         $response->assertStatus(302);
         $this->assertCount(1, Day::all());
@@ -84,7 +94,7 @@ class DayTest extends TestCase
     public function testLimitedDayCannotBeCreatedWithoutCities()
     {
         $data = factory(Day::class)->raw(['day_type' => 1]);
-        $response = $this->post(route('days.store'), $data);
+        $response = $this->actingAs($this->user)->post(route('days.store'), $data);
 
         $response->assertSessionHasErrors('cities');
         $this->assertCount(0, Day::all());
@@ -97,7 +107,7 @@ class DayTest extends TestCase
      */
     public function testDayCannotBeCreatedWithoutDate()
     {
-        $response = $this->post(route('days.store'), factory(Day::class)->raw(['date' => null]));
+        $response = $this->actingAs($this->user)->post(route('days.store'), factory(Day::class)->raw(['date' => null]));
         $response->assertSessionHasErrors('date');
         $this->assertCount(0, Day::all());
     }
@@ -109,7 +119,7 @@ class DayTest extends TestCase
      */
     public function testDayCannotBeCreatedWithoutCorrectDateFormat()
     {
-        $response = $this->post(route('days.store'), factory(Day::class)->raw(['date' => str_random(5)]));
+        $response = $this->actingAs($this->user)->post(route('days.store'), factory(Day::class)->raw(['date' => str_random(5)]));
         $response->assertSessionHasErrors('date');
         $this->assertCount(0, Day::all());
     }
@@ -121,7 +131,7 @@ class DayTest extends TestCase
      */
     public function testDayCannotBeCreatedWithInvalidDayType()
     {
-        $response = $this->post(
+        $response = $this->actingAs($this->user)->post(
             route('days.store'),
             factory(Day::class)->raw(['day_type' => 5, 'date' => '01.01.1990'])
         );
@@ -137,7 +147,7 @@ class DayTest extends TestCase
     public function testDayCanBeUpdated()
     {
         $day = factory(Day::class)->create(['day_type' => 0]);
-        $response = $this->patch(
+        $response = $this->actingAs($this->user)->patch(
             route('days.update', $day->id),
             [
                 'date' => '01.01.1990',
@@ -160,7 +170,7 @@ class DayTest extends TestCase
         $data = factory(Day::class)->raw(['day_type' => 1]);
         $day = Day::create($data);
         $day->cities()->attach($city1);
-        $response = $this->patch(
+        $response = $this->actingAs($this->user)->patch(
             route('days.update', $day->id),
             [
                 'date' => '01.01.1990',
@@ -186,7 +196,7 @@ class DayTest extends TestCase
         $data = factory(Day::class)->raw(['day_type' => 1]);
         $day = Day::create($data);
         $day->cities()->attach([$city1, $city2]);
-        $response = $this->patch(
+        $response = $this->actingAs($this->user)->patch(
             route('days.update', $day->id),
             [
                 'date' => '01.01.1990',
@@ -207,7 +217,7 @@ class DayTest extends TestCase
     public function testDayCanBeDeleted()
     {
         $day = factory(Day::class)->create(['day_type' => 0]);
-        $response = $this->delete(route('days.destroy', $day->id));
+        $response = $this->actingAs($this->user)->delete(route('days.destroy', $day->id));
         $response->assertStatus(302);
         $this->assertCount(0, Day::all());
     }
@@ -215,7 +225,18 @@ class DayTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->withoutMiddleware([Authenticate::class]);
+        // now re-register all the roles and permissions
+        $this->app->make(PermissionRegistrar::class)->registerPermissions();
+
+        Permission::create(['name' => 'gd-bearbeiten']);
+
+        /** @var City */
+        $this->city = factory(City::class)->create();
+
+        /** @var User */
+        $this->user = factory(User::class)->create();
+        $this->user->writableCities()->attach($this->city);
+        $this->user->givePermissionTo('gd-bearbeiten');
     }
 
 }

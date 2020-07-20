@@ -267,7 +267,7 @@ class ServiceController extends Controller
 
         // KonfiApp-Integration
         if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate($service);
+            $service = KonfiAppIntegration::get($service->city)->handleServiceDelete($service);
         }
 
         $service->delete();
