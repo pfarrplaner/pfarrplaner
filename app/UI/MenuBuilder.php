@@ -62,11 +62,7 @@ class MenuBuilder
      */
     public static function sidebar()
     {
-        $config = self::configure();
-
-        // TODO: check, if active
-
-        return $config;
+        return self::configure();
     }
 
 
@@ -223,13 +219,5 @@ class MenuBuilder
 
 
         return $menu;
-    }
-
-
-    public
-    static function breadcrumbs()
-    {
-        $route = Request::route();
-        dd($route);
     }
 }
