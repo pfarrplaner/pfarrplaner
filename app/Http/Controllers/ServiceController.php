@@ -32,6 +32,9 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Day;
+use App\Events\ServiceBeforeDelete;
+use App\Events\ServiceBeforeStore;
+use App\Events\ServiceBeforeUpdate;
 use App\Http\Requests\StoreServiceRequest;
 use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Location;
@@ -98,23 +101,18 @@ class ServiceController extends Controller
         $validatedData = $request->validated();
         $service = new Service($validatedData);
 
+        // emit event so that integrations may react
+        event(new ServiceBeforeStore($service, $validatedData));
+
         $service->setDefaultOfferingValues();
         $service->save();
-
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate(
-                $service,
-                $service['konfiapp_event_type'] ?: ''
-            );
-        }
-
-
         $this->updateFromRequest($request, $service);
         $this->handleAttachments($request, $service);
         $this->handleIndividualAttachment($request, $service, 'songsheet');
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
+        // emit event so that integrations may react
+        event(new \App\Events\ServiceCreated($service));
 
         // notify:
         Subscription::send($service, ServiceCreated::class);
@@ -209,14 +207,8 @@ class ServiceController extends Controller
 
         $validatedData = $request->validated();
 
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate(
-                $service,
-                $validatedData['konfiapp_event_type'] ?: ''
-            );
-        }
-
+        // emit event, so that integrations can react to the intended update
+        event(new ServiceBeforeUpdate($service, $validatedData));
 
         $service->fill($validatedData);
         $service->setDefaultOfferingValues();
@@ -230,6 +222,9 @@ class ServiceController extends Controller
         $success = '';
         if ($service->isChanged()) {
             $service->storeDiff();
+
+            // emit event so that integrations can react to the update
+            event(new \App\Events\ServiceUpdated($service));
 
             // find participants who have been removed:
             $removed = new Collection();
@@ -265,10 +260,8 @@ class ServiceController extends Controller
     {
         $day = Day::find($service->day_id);
 
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceDelete($service);
-        }
+        // emit event so that integrations may react to impending delete
+        event(new ServiceBeforeDelete($service));
 
         $service->delete();
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
