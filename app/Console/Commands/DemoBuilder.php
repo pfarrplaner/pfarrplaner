@@ -64,16 +64,6 @@ class DemoBuilder extends Command
     protected $description = 'Build a new demo site';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return mixed
@@ -87,12 +77,10 @@ class DemoBuilder extends Command
         if (!env('DEMO_MODE')) {
             $this->error('Demo builder requires DEMO_MODE=1 to be set in .env, aborting.');
             return;
-            die();
         }
         if (false === strpos($dbName, 'demo')) {
             $this->error('Demo builder requires database name to contain "demo", aborting.');
             return;
-            die();
         }
         $this->info('Passed all demo checks.');
         $faker = Factory::create('de_DE');
@@ -203,5 +191,6 @@ class DemoBuilder extends Command
 
         Comment::query()->delete();
         $this->info('All comments deleted');
+        return;
     }
 }
