@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*
  * Pfarrplaner
  *
@@ -28,7 +29,6 @@
  */
 
 @import url(https://fonts.googleapis.com/css?family=Nunito);
-@charset "UTF-8";
 
 ul.nav-tabs {
     margin-bottom: 15px;
@@ -47,7 +47,7 @@ ul.nav-tabs {
 }
 
 .button-row .btn-default {
-    border-color: rgba(0,0,0,.2);;
+    border-color: rgba(0,0,0,.2);
     background-color: #ffffff;
     color: rgba(0,0,0,.5);
 }
@@ -72,7 +72,7 @@ body.login footer {
 body.slave .content-wrapper,
 body.login .content-wrapper {
     min-height: 100vh;
-    margin-left: 0px !important;
+    margin-left: 0 !important;
     font-size: .8rem;
 }
 
@@ -541,9 +541,6 @@ ul.sortable li.placeholder:before {
 }
 
 
-.tbl-absences .cal-cell.absent:hover {
-}
-
 .tbl-absences .cal-cell.absent.editable:hover {
     background-color: darkorange;
     border-right-color: darkorange;
@@ -581,8 +578,7 @@ ul.sortable li.placeholder:before {
 
 .loader {
     position:fixed;
-    padding:0;
-    padding-top: 10em;
+    padding: 10em 0 0;
     margin:0;
 
     top:0;
