@@ -34,6 +34,7 @@
         "spatie/laravel-permission": "^3.13",
         "squareboat/sneaker": "^5.0",
         "staudenmeir/belongs-to-through": "^2.3",
+        "ukfast/laravel-health-check": "^1.0",
         "venturecraft/revisionable": "1.*"
     },
     "require-dev": {
