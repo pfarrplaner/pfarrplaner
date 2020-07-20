@@ -61,13 +61,26 @@ class EventServiceProvider extends ServiceProvider
     ];
 
     /**
-     * Register any events for your application.
+     * Determine if events and listeners should be automatically discovered.
      *
-     * @return void
+     * @return bool
      */
-    public function boot()
+    public function shouldDiscoverEvents()
     {
-        parent::boot();
-        //
+        return true;
     }
+
+    /**
+     * Get the listener directories that should be used to discover events.
+     *
+     * @return array
+     */
+    protected function discoverEventsWithin()
+    {
+        return [
+            $this->app->path('Listeners'),
+            $this->app->path('Integrations'),
+        ];
+    }
+
 }

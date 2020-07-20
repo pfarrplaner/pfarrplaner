@@ -89,19 +89,18 @@
         @if((!isset($noNavBar)) || (!$noNavBar) )
             @auth
             <!-- Sidebar user panel (optional) -->
-            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                <div class="image">
-                    <i class="fa fa-user" style="font-size: 1.2em; color: white; margin: 7px 0 0 7px;"></i>
-                </div>
-                <div class="info">
-                    <a href="{{ route('user.profile') }}" class="d-block">{{ Auth::user()->fullName() }}</a>
-                </div>
-            </div>
 
             <!-- Sidebar Menu -->
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                     data-accordion="false">
+                    <li class="nav-item">
+                        <a href="{{ route('user.profile') }}" class="nav-link @if(request()->is('user/profile')) active @endif">
+                            <i class="nav-icon fa fa-user"></i>
+                            <p>{{ Auth::user()->fullName() }}</p>
+                        </a>
+                    </li>
+                    <div class="user-panel d-flex"></div>
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     @foreach(\App\UI\MenuBuilder::sidebar() as $item)
@@ -111,7 +110,7 @@
                             </li>
                         @else
                             <li class="nav-item @if(isset($item['submenu']))has-treeview @endif">
-                                <a class="nav-link" href="{{ $item['url'] }}">
+                                <a class="nav-link @if($item['active'] ?? false)active @endif" href="{{ $item['url'] }}">
                                     @if(isset($item['icon']))<i class="nav-icon {{ $item['icon'] }}"
                                                                 @if(isset($item['icon_color']))style="color: {{ $item['icon_color'] }};"@endif></i>@endif
                                     <p>
@@ -124,7 +123,7 @@
                                     <ul class="nav nav-treeview" style="display: none;">
                                         @foreach($item['submenu'] as $item2)
                                             <li class="nav-item">
-                                                <a class="nav-link" href="{{ $item2['url'] }}">
+                                                <a class="nav-link @if($item['active'] ?? false)active @endif" href="{{ $item2['url'] }}">
                                                     @if(isset($item2['icon']))<i class="nav-icon {{ $item2['icon'] }}"
                                                                                  @if(isset($item2['icon_color']))style="color: {{ $item2['icon_color'] }};"@endif></i>@endif
                                                     <p>

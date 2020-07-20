@@ -32,15 +32,16 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Day;
+use App\Events\ServiceBeforeDelete;
+use App\Events\ServiceBeforeStore;
+use App\Events\ServiceBeforeUpdate;
+use App\Events\ServiceCreated;
+use App\Events\ServiceUpdated;
 use App\Http\Requests\StoreServiceRequest;
-use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Location;
-use App\Mail\ServiceCreated;
-use App\Mail\ServiceUpdated;
 use App\Participant;
 use App\Service;
 use App\ServiceGroup;
-use App\Subscription;
 use App\Tag;
 use App\Traits\HandlesAttachmentsTrait;
 use App\User;
@@ -50,7 +51,6 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 
@@ -98,26 +98,18 @@ class ServiceController extends Controller
         $validatedData = $request->validated();
         $service = new Service($validatedData);
 
+        // emit event so that integrations may react
+        event(new ServiceBeforeStore($service, $validatedData));
+
         $service->setDefaultOfferingValues();
         $service->save();
-
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate(
-                $service,
-                $service['konfiapp_event_type'] ?: ''
-            );
-        }
-
-
         $this->updateFromRequest($request, $service);
         $this->handleAttachments($request, $service);
         $this->handleIndividualAttachment($request, $service, 'songsheet');
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
-
-        // notify:
-        Subscription::send($service, ServiceCreated::class);
+        // emit event so that integrations may react
+        event(new ServiceCreated($service));
 
         return redirect()->route(
             'calendar',
@@ -209,14 +201,8 @@ class ServiceController extends Controller
 
         $validatedData = $request->validated();
 
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceUpdate(
-                $service,
-                $validatedData['konfiapp_event_type'] ?: ''
-            );
-        }
-
+        // emit event, so that integrations can react to the intended update
+        event(new ServiceBeforeUpdate($service, $validatedData));
 
         $service->fill($validatedData);
         $service->setDefaultOfferingValues();
@@ -230,15 +216,7 @@ class ServiceController extends Controller
         $success = '';
         if ($service->isChanged()) {
             $service->storeDiff();
-
-            // find participants who have been removed:
-            $removed = new Collection();
-            foreach ($originalParticipants as $participant) {
-                if (!$service->participants->contains($participant)) {
-                    $removed->push($participant);
-                }
-            }
-            Subscription::send($service, ServiceUpdated::class, [], $removed);
+            event(new ServiceUpdated($service, $originalParticipants));
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
         }
 
@@ -265,10 +243,8 @@ class ServiceController extends Controller
     {
         $day = Day::find($service->day_id);
 
-        // KonfiApp-Integration
-        if (KonfiAppIntegration::isActive($service->city)) {
-            $service = KonfiAppIntegration::get($service->city)->handleServiceDelete($service);
-        }
+        // emit event so that integrations may react to impending delete
+        event(new ServiceBeforeDelete($service));
 
         $service->delete();
         return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])

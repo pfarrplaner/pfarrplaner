@@ -1,6 +1,7 @@
 <div id="otherParticipantsWithText">
     <div class="template" style="display:none;">
         @select(['name' => '', 'label' => '', 'items' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'id' => 'peopleTemplate'])
+        @select(['name' => '', 'label' => '', 'items' => $ministries, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'strings' => true, 'empty' => true, 'id' => 'ministryTitleTemplate'])
     </div>
     <label><span class="fa fa-users"></span> Weitere Dienste</label>
     <div class="row form-group">

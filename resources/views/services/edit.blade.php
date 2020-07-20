@@ -84,7 +84,7 @@
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
                         @tabheader(['id' => 'konfiapp', 'title' => 'KonfiApp', 'active' => ($tab=='konfiapp')]) @endtabheader
                     @endif
-                    @tabheader(['id' => 'comments', 'titlKonfie' => 'Kommentare', 'active' => ($tab=='comments'), 'count' => (count($service->comments ?? []))]) @endtabheader
+                    @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments'), 'count' => (count($service->comments ?? []))]) @endtabheader
                     @can('admin')
                         @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
                     @endcan('admin')
@@ -313,7 +313,7 @@
                 $('#otherParticipantsWithText').append(
                     '<div class="row form-group ministry-row" style="display:none;" id="ministryRow' + ctrMinistryRows + '">'
                     + '<div class="col-5">'
-                    + '<input class="form-control" type="text" name="ministries[' + ctrMinistryRows + '][description]" value="" />'
+                    + '<select id="ministryDescription' + ctrMinistryRows + '" class="form-control" type="text" name="ministries[' + ctrMinistryRows + '][description]"></select>'
                     + '</div>'
                     + '<div class="col-6">'
                     + '<select type="form-control" name="ministries[' + ctrMinistryRows + '][people][]" id="ministrySelect' + ctrMinistryRows + '" multiple placeholder="Eine oder mehrere Personen (keine Anmerkungen!)">'
@@ -325,8 +325,12 @@
                     + '</div>'
                 );
                 $('#ministrySelect' + ctrMinistryRows).attr('disabled', $('#peopleTemplate_input').attr('disabled'));
+                $('#ministryDescription' + ctrMinistryRows).attr('disabled', $('#ministryTitleTemplate_input').attr('disabled'));
                 $('#peopleTemplate_input option').each(function () {
                     $('#ministrySelect' + ctrMinistryRows).append('<option value="' + $(this).attr('value') + '">' + $(this).html() + '</option>');
+                });
+                $('#ministryTitleTemplate_input option').each(function () {
+                    $('#ministryDescription' + ctrMinistryRows).append('<option>' + $(this).html() + '</option>');
                 });
                 $('#ministrySelect' + ctrMinistryRows).selectize({
                     create: true,
@@ -336,8 +340,16 @@
                         }
                     },
                 });
+                $('#ministryDescription' + ctrMinistryRows).selectize({
+                    create: true,
+                    placeholder: 'Auswählen oder eingeben',
+                    render: {
+                        option_create: function (data, escape) {
+                            return '<div class="create">' + escape(data.input) + '</div>';
+                        }
+                    },
+                });
                 $('#ministryRow' + ctrMinistryRows).show();
-                enableMinistryRows();
             });
 
 
