@@ -500,6 +500,10 @@ class UserController extends Controller
         return view('users.services', compact('user', 'services'));
     }
 
+    /**
+     * @param User $user
+     * @return RedirectResponse
+     */
     public function switch(User $user)
     {
         if (!Auth::user()->isAdmin) {
@@ -508,5 +512,14 @@ class UserController extends Controller
         Auth::logout();
         Auth::login($user);
         return redirect()->route('home');
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
     }
 }

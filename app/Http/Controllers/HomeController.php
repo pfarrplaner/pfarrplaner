@@ -63,6 +63,16 @@ class HomeController extends Controller
     }
 
     /**
+     * Route /
+     */
+    public function root() {
+        if (Auth::user()) {
+            return redirect()->route('home');
+        }
+        return redirect()->route('login');
+    }
+
+    /**
      * Show the application dashboard.
      *
      * @return Renderable
