@@ -31,6 +31,7 @@
 use App\Service;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
+
 Breadcrumbs::for(
     'absences.index',
     function (BreadcrumbsGenerator $trail) {
@@ -59,6 +60,14 @@ Breadcrumbs::for(
         }
         $trail->parent('absences.index');
         $trail->push('Urlaub bearbeiten', route('absences.edit', $absence));
+    }
+);
+
+Breadcrumbs::for(
+    'about',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->parent('home');
+        $trail->push('Über Pfarrplaner', route('about'));
     }
 );
 

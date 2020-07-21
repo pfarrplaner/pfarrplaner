@@ -230,6 +230,9 @@ Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessa
     'service.livechat.message.post'
 );
 
+//about
+Route::get('/about', 'HomeController@about')->name('about');
+
 // test/debug routes
 Route::get('/test/mail/{address}', 'TestController@mail');
 
