@@ -201,4 +201,38 @@ class HomeController extends Controller
         return response()->json(compact('count', 'data'));
     }
 
+    public function about() {
+
+        // get git history
+        $output = array();
+        chdir(base_path());
+        exec("git log",$output);
+        $history = array();
+        foreach($output as $line){
+            if(strpos($line, 'commit')===0){
+                if(!empty($commit)){
+                    if (strpos($commit['message'], PHP_EOL) === 0) $commit['message'] = substr($commit['message'], strlen(PHP_EOL));
+                    array_push($history, $commit);
+                    $commit = [];
+                }
+                $commit['hash']   = trim(substr($line, strlen('commit')));
+            }
+            else if(strpos($line, 'Author')===0){
+                $commit['author'] = trim(substr($line, strlen('Author:')));
+            }
+            else if(strpos($line, 'Date')===0){
+                $commit['date']   = trim(substr($line, strlen('Date:')));
+            }
+            else {
+                if (!isset($commit['message'])) {
+                    $commit['message'] = trim($line);
+                } else {
+                    $commit['message'] .= PHP_EOL.trim($line);
+                }
+            }
+        }
+
+        return view('about', compact('history'));
+    }
+
 }

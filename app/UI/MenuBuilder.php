@@ -217,6 +217,14 @@ class MenuBuilder
             ];
         }
 
+        $menu[] = 'Information';
+        $menu[] = [
+            'text' => 'Über Pfarrplaner',
+            'icon' => 'fa fa-info',
+            'url' => route('about'),
+            'active' => ($route == 'about'),
+        ];
+
 
         return $menu;
     }
