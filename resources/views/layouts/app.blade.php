@@ -180,9 +180,12 @@
                 @include('components.flashmessage')
                 @yield('content')
             </div>
-            <div class="footer" style="font-size: .6em;">
-                <hr />
-                Pfarrplaner &middot; &copy; 2018-{{ \Carbon\Carbon::now()->format('Y') }} Christoph Fischer. Build #{{ config('app.build') }}
+            <div class="footer">
+                {{ \Carbon\Carbon::now()->format('Y-m-d H:i:s') }} &middot;
+                <a href="{{ config('app.build_repository') }}" target="_blank">Pfarrplaner</a> &middot;
+                &copy; 2018-{{ \Carbon\Carbon::now()->format('Y') }} Christoph Fischer
+                &middot; Build <a href="{{ config('app.build_url') }}" target="_blank">#{{ config('app.build_number') }}</a>
+                ({{ config('app.build') }}, {{ Carbon\Carbon::createFromTimeString(config('app.build_date'))->setTimezone('Europe/Berlin')->format('Y-m-d H:i:s') }})
             </div>
         </div>
     </div>
