@@ -729,3 +729,14 @@ body.login .main-sidebar:hover .login-form.hidden-collapsed {
 tr.changed, tr.changed td, tr.changed th {
     background-color: lightgreen;
 }
+
+.content .footer {
+    padding-left: 10px;
+    font-size: .6em;
+    color: darkgray;
+}
+
+.content .footer a {
+    color: darkgray;
+    font-weight: bold;
+}
