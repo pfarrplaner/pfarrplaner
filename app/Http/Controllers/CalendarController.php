@@ -442,4 +442,14 @@ class CalendarController extends Controller
         );
         return $pdf->stream($year . '-' . str_pad($month, 2, 0, STR_PAD_LEFT) . ' Dienstplan.pdf');
     }
+
+    /**
+     * @param bool $switch
+     * @return false|string
+     */
+    public function showLimitedColumns(bool $switch)
+    {
+        Session::put('showLimitedDays', (bool)$switch);
+        return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
+    }
 }

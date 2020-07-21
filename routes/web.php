@@ -159,27 +159,13 @@ Route::get('/wedding/destroy/{wedding}', ['as' => 'wedding.destroy', 'uses' => '
 
 // Home routes
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
-Route::get(
-    '/',
-    function () {
-        if (Auth::user()) {
-            return redirect()->route('home');
-        }
-        return redirect()->route('login');
-    }
-);
+Route::get(    '/', ['as' => 'root', 'uses' => 'HomeController@root']);
 
 Route::get('/changePassword', 'HomeController@showChangePassword');
 Route::post('/changePassword', 'HomeController@changePassword')->name('changePassword');
 
 Auth::routes();
-Route::get(
-    '/logout',
-    function () {
-        Auth::logout();
-        return redirect()->route('login');
-    }
-);
+Route::get('/logout', 'UserController@logout')->name('logout');
 
 Route::get('/ical/private/{name}/{token}', ['uses' => 'ICalController@private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', ['uses' => 'ICalController@byLocation'])->name('ical.byLocation');
@@ -199,21 +185,12 @@ Route::get('/whatsnew', ['as' => 'whatsnew', 'uses' => 'HomeController@whatsnew'
 Route::get('/kinderkirche/{city}/pdf', ['as' => 'cc-public-pdf', 'uses' => 'PublicController@childrensChurch']);
 Route::get('/kinderkirche/{city}', ['as' => 'cc-public', 'uses' => 'PublicController@childrensChurch']);
 
-Route::post(
-    '/showLimitedColumns/{switch}',
-    function ($switch) {
-        Session::put('showLimitedDays', (bool)$switch);
-        return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
-    }
-)->middleware('auth')->name('showLimitedColumns');
-
-Route::get(
-    '/showLimitedColumns/{switch}',
-    function ($switch) {
-        Session::put('showLimitedDays', (bool)$switch);
-        return json_encode(['showLimitedDays', Session::get('showLimitedDays')]);
-    }
-)->middleware('auth')->name('showLimitedColumns');
+Route::post('/showLimitedColumns/{switch}', 'CalendarController@showLimitedColumns')
+    ->middleware('auth')
+    ->name('showLimitedColumns');
+Route::get('/showLimitedColumns/{switch}', 'CalendarController@showLimitedColumns')
+    ->middleware('auth')
+    ->name('showLimitedColumns');
 
 // last service updated (timestamp)
 Route::get('/lastUpdate', ['as' => 'lastUpdate', 'uses' => 'ServiceController@lastUpdate']);
@@ -257,21 +234,3 @@ Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessa
 Route::get('/test/mail/{address}', 'TestController@mail');
 
 
-// demo function for exception handling
-Route::get(
-    'panic',
-    function () {
-        throw new Exception('Diese Fehlermeldung dient nur zu Demonstrationszwecken.');
-    }
-);
-
-/**
- * Test route
- * Allows for quick test code in a file that is excluded from Git
- */
-Route::get(
-    'test',
-    function () {
-        include(base_path('build/test.php'));
-    }
-);

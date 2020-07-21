@@ -72,15 +72,3 @@ Route::namespace('Api')->group(
     }
 );
 
-Route::get(
-    'test',
-    function () {
-        return response()->json();
-    }
-);
-
-
-
-
-
-

@@ -180,6 +180,10 @@
                 @include('components.flashmessage')
                 @yield('content')
             </div>
+            <div class="footer" style="font-size: .6em;">
+                <hr />
+                Pfarrplaner &middot; &copy; 2018-{{ \Carbon\Carbon::now()->format('Y') }} Christoph Fischer. Build #{{ config('app.build') }}
+            </div>
         </div>
     </div>
     <!-- Control Sidebar -->

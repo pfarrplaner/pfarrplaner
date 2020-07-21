@@ -45,18 +45,13 @@
         <div><b>Online: </b><span id="onlineUsers"></span></div>
         <hr />
         <h2>Logs</h2>
-        @foreach ($logs as $entry)
-            <div class="alert alert-light }} log-entry-{{$entry['level']}}">
-                <b style="font-size: 0.7em;"><span class="badge badge-{{ $entry['level_class'] }}"><span class="fa fa-{{ $entry['level_img'] }}"></span>&nbsp;{{ strtoupper($entry['level']) }}</span>
-                    {{ (new \Carbon\Carbon($entry['date']))->format('Y-m-d H:i:s') }}</b> <br />
-                {!! $entry['text'] !!}
-                @if($entry['stack'])
-                    <hr />
-                    <a class="btn btn-sm btn-{{ $entry['level_class'] }} btnToggleStack">Stack Trace</a><br />
-                <pre style="display:none;">{!! $entry['stack'] !!}</pre>
-                @endif
-            </div>
-        @endforeach
+@foreach($levels->all() as $level)
+    <span class="badge badge-{{ $levels->cssClass($level) }} level on" data-level="{{ $level }}" data-levelclass="{{ $levels->cssClass($level) }}" style="cursor: pointer;">{{ $level }}</span>
+@endforeach
+        <pre>
+@foreach ($logs as $entry)
+<span class="logline logline-{{ $entry['level'] }}"><span class="@if($entry['stack'])btnToggleStack @endif badge badge-{{ $entry['level_class'] }}" title="{{ strtoupper($entry['level']) }}"><span class="fa fa-{{ $entry['level_img'] }}"></span> {{ $entry['level'] }}</span> {{ (new \Carbon\Carbon($entry['date']))->setTimezone('Europe/Berlin')->format('Y-m-d H:i:s') }} {!! $entry['text'] !!} @if($entry['stack'])<div class="stacktrace" style="display:none; background-color: black; border: solid 1px darkgray; color: lightgreen; font-size: .7em;"><br />{!! $entry['stack'] !!}</div> @endif<br /></span>@endforeach
+        </pre>
     @endcomponent
 @endsection
 
@@ -100,7 +95,7 @@
         function enableStackTraceButtons() {
             $('.btnToggleStack').click(function(e){
                 e.preventDefault();
-                $(this).parent().find('pre').first().toggle();
+                $(this).parent().find('.stacktrace').first().toggle();
             });
         }
 
@@ -113,6 +108,18 @@
             $('.card-counter').click(function(e) {
                 if ($(this).data('route')) {
                     window.location.href=$(this).data('route');
+                }
+            });
+
+            $('.level').click(function(){
+                if($(this).hasClass('on')) {
+                    $(this).removeClass('on').addClass('off');
+                    $(this).removeClass('badge-' + $(this).data('levelclass')).addClass('badge-secondary');
+                    $('.logline-'+$(this).data('level')).hide();
+                } else {
+                    $(this).addClass('on').removeClass('off');
+                    $(this).addClass('badge-' + $(this).data('levelclass')).removeClass('badge-secondary');
+                    $('.logline-'+$(this).data('level')).show();
                 }
             });
         });

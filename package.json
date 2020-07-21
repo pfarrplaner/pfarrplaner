@@ -23,5 +23,12 @@
         "sass-loader": "^7.1.0",
         "vue": "^2.5.17",
         "vue-template-compiler": "^2.6.10"
+    },
+    "dependencies": {
+        "admin-lte": "^3.0.5",
+        "bootstrap-datepicker": "^1.9.0",
+        "jquery-ui": "^1.12.1",
+        "selectize": "^0.12.6",
+        "tempusdominus-bootstrap-4": "^5.1.2"
     }
 }
