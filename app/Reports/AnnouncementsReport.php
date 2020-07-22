@@ -471,14 +471,14 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         if (count($baptisms)) {
             $this->renderParagraph(self::NO_INDENT, [['Taufen', self::BOLD_UNDERLINE]]);
 
-            $weddingArray = [];
+            $baptismArray = [];
             foreach ($baptisms as $baptism) {
-                $weddingArray[$baptism->service->trueDate()->format('YmdHis')][] = $baptism;
+                $baptismArray[$baptism->service->trueDate()->format('YmdHis')][] = $baptism;
             }
-            ksort($weddingArray);
+            ksort($baptismArray);
 
-            foreach ($weddingArray as $baptisms) {
-                $baptism = array_first($baptisms);
+            foreach ($baptismArray as $baptisms) {
+                $baptism = $baptisms[array_key_first($baptisms)];
                 if ($baptism->service->id != $service->id) {
                     $textRun = $this->renderParagraph();
                     if ($baptism->service->trueDate() == $service->trueDate()) {
@@ -538,7 +538,7 @@ des Sohnes und des Heiligen Geistes.'
             ksort($weddingArray);
 
             foreach ($weddingArray as $weddings) {
-                $wedding = array_first($weddings);
+                $wedding = $weddings[array_key_first($weddings)];
                 if ($wedding->service->id != $service->id) {
                     $textRun = $this->renderParagraph();
                     if ($wedding->service->trueDate() == $service->trueDate()) {
