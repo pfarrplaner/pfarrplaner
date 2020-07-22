@@ -58,13 +58,8 @@ class AttachmentFeatureTest extends TestCase
      */
     public function testFuneralAttachmentCanBeCreated()
     {
-        $this->withoutExceptionHandling();
-        Storage::fake('fake');
-        $raw = factory(Funeral::class)->raw();
-        $raw['attachments'][] = UploadedFile::fake()->image('test.jpg');
-
         $this->actingAs($this->user)
-            ->post(route('funerals.store'), $raw)
+            ->post(route('funerals.store'), $this->fakeFuneralAttachmentData())
             ->assertStatus(302);
 
         $this->assertCount(1, Funeral::all());
@@ -78,11 +73,7 @@ class AttachmentFeatureTest extends TestCase
      */
     public function testFuneralAttachmentCanBeRemoved()
     {
-        $this->withoutExceptionHandling();
-        Storage::fake('fake');
-        $raw = factory(Funeral::class)->raw();
-        $raw['attachments'][] = UploadedFile::fake()->image('test.jpg');
-
+        $raw = $this->fakeFuneralAttachmentData();
         $this->actingAs($this->user)
             ->post(route('funerals.store'), $raw)
             ->assertStatus(302);
@@ -99,6 +90,23 @@ class AttachmentFeatureTest extends TestCase
         $this->assertCount(0, Funeral::first()->attachments);
     }
 
+    /**
+     * Prepare data for fake attachment
+     * @return array
+     */
+    protected function fakeFuneralAttachmentData(): array
+    {
+        Storage::fake('fake');
+        $raw = factory(Funeral::class)->raw();
+        $raw['attachments'][1] = UploadedFile::fake()->image('test.jpg');
+        $raw['attachment_text'][1] = 'Testing';
+        return $raw;
+    }
+
+
+    /**
+     * Setup test
+     */
     protected function setUp(): void
     {
         $this->traitSetUp();
