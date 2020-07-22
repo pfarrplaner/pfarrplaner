@@ -46,6 +46,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use NumberFormatter;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Exception\Exception;
@@ -170,6 +171,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         )->where('date', '<', $service->day->date)
             ->orderBy('date', 'DESC')->limit(10)->get();
 
+        $fmt = new NumberFormatter( 'de_DE', NumberFormatter::CURRENCY );
 
         // add up all offerings for the day
         $offerings = [];
@@ -182,7 +184,9 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                 //$amount += (float)filter_var(strtr($dayService->offering_amount, [',' => '.', ' ' => '', '€' => '']), FILTER_SANITIZE_NUMBER_FLOAT);
                 $amount += (float)strtr($dayService->offering_amount, [' ' => '', '€' => '']);
             }
-            $offerings[$day->id] = trim(money_format('%=*^#0.2n', $amount));
+
+            //$offerings[$day->id] = trim(money_format('%=*^#0.2n', $amount));
+            $offerings[$day->id] = trim($fmt->formatCurrency($amount, 'EUR'));
         }
 
         return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
@@ -467,14 +471,14 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         if (count($baptisms)) {
             $this->renderParagraph(self::NO_INDENT, [['Taufen', self::BOLD_UNDERLINE]]);
 
-            $weddingArray = [];
+            $baptismArray = [];
             foreach ($baptisms as $baptism) {
-                $weddingArray[$baptism->service->trueDate()->format('YmdHis')][] = $baptism;
+                $baptismArray[$baptism->service->trueDate()->format('YmdHis')][] = $baptism;
             }
-            ksort($weddingArray);
+            ksort($baptismArray);
 
-            foreach ($weddingArray as $baptisms) {
-                $baptism = array_first($baptisms);
+            foreach ($baptismArray as $baptisms) {
+                $baptism = $baptisms[array_key_first($baptisms)];
                 if ($baptism->service->id != $service->id) {
                     $textRun = $this->renderParagraph();
                     if ($baptism->service->trueDate() == $service->trueDate()) {
@@ -534,7 +538,7 @@ des Sohnes und des Heiligen Geistes.'
             ksort($weddingArray);
 
             foreach ($weddingArray as $weddings) {
-                $wedding = array_first($weddings);
+                $wedding = $weddings[array_key_first($weddings)];
                 if ($wedding->service->id != $service->id) {
                     $textRun = $this->renderParagraph();
                     if ($wedding->service->trueDate() == $service->trueDate()) {
