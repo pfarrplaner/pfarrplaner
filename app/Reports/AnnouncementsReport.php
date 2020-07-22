@@ -46,6 +46,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use NumberFormatter;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Exception\Exception;
@@ -170,6 +171,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         )->where('date', '<', $service->day->date)
             ->orderBy('date', 'DESC')->limit(10)->get();
 
+        $fmt = new NumberFormatter( 'de_DE', NumberFormatter::CURRENCY );
 
         // add up all offerings for the day
         $offerings = [];
@@ -182,7 +184,9 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                 //$amount += (float)filter_var(strtr($dayService->offering_amount, [',' => '.', ' ' => '', '€' => '']), FILTER_SANITIZE_NUMBER_FLOAT);
                 $amount += (float)strtr($dayService->offering_amount, [' ' => '', '€' => '']);
             }
-            $offerings[$day->id] = trim(money_format('%=*^#0.2n', $amount));
+
+            //$offerings[$day->id] = trim(money_format('%=*^#0.2n', $amount));
+            $offerings[$day->id] = trim($fmt->formatCurrency($amount, 'EUR'));
         }
 
         return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
