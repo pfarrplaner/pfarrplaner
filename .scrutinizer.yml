@@ -1,0 +1,29 @@
+build:
+  environment:
+    php: 7.4.8
+  nodes:
+    analysis:
+      services:
+        mysql: 8.0
+        redis: 4
+      project_setup:
+        override:
+          - 'true'
+      tests:
+        override:
+          - php-scrutinizer-run
+          -
+            command: phpcs-run
+            use_website_config: true
+          - js-scrutinizer-run
+    tests: true
+filter:
+  paths:
+    - 'app/*'
+  excluded_paths:
+    - 'app/views/*'
+    - 'app/config/*'
+    - 'app/database/*'
+checks:
+  php: true
+  javascript: true
