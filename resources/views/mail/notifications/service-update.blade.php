@@ -15,7 +15,7 @@
             <br>{{ $service->locationText() }}<br/>
             <small style="font-size: 8pt;">
                 Geändert am {{ date('d.m.Y') }} um {{ date('H:i') }} Uhr
-                durch {{ \Illuminate\Support\Facades\Auth::user()->name }}
+                durch {{ $user->name }}
             </small>
         @endslot
 
