@@ -65,6 +65,9 @@ class AbstractServiceMailable extends Mailable
     /** @var Service $original */
     protected $original;
 
+    /** @var User */
+    protected $originatingUser;
+
     /**
      * @var array|mixed
      */
@@ -76,13 +79,14 @@ class AbstractServiceMailable extends Mailable
      * @param Service $service
      * @param array $data
      */
-    public function __construct(User $user, Service $service, array $data)
+    public function __construct(User $user, Service $service, User $originatingUser, array $data)
     {
         $this->user = $user;
         $this->service = $service;
         $this->original = $service->originalObject;
         $this->changed = $service->changedFields;
         $this->data = $data;
+        $this->originatingUser = $originatingUser;
     }
 
 }
