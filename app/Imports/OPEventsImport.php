@@ -112,6 +112,7 @@ class OPEventsImport
      */
     public function getEvents()
     {
+        if (($this->city->op_customer_token ?? '') == '') return [];
         $url = 'https://backend.online-geplant.de/public/event/' . $this->city->op_customer_token . '/' . $this->city->op_customer_key;
         $cacheKey = 'OPEventsImport_' . $url;
         if (Cache::has($cacheKey)) {

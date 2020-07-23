@@ -43,11 +43,14 @@ class ServiceUpdated extends AbstractServiceMailable
     /**
      * Create a new message instance.
      *
-     * @return void
+     * @param User $user
+     * @param Service $service
+     * @param User $originatingUser
+     * @param array $data
      */
-    public function __construct(User $user, Service $service, array $data)
+    public function __construct(User $user, Service $service, User $originatingUser, array $data)
     {
-        parent::__construct($user, $service, $data);
+        parent::__construct($user, $service, $originatingUser, $data);
         $this->changed = $service->changed;
     }
 
@@ -105,6 +108,7 @@ class ServiceUpdated extends AbstractServiceMailable
                     'changes' => $this->changed,
                     'participants' => $participants,
                     'user' => $this->user,
+                    'originatingUser' => $this->originatingUser,
                 ]
             )->attachData(
                 $ics,

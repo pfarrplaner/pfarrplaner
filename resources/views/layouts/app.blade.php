@@ -185,7 +185,7 @@
                 <a href="{{ config('app.build_repository') }}" target="_blank">Pfarrplaner</a> &middot;
                 &copy; 2018-{{ \Carbon\Carbon::now()->format('Y') }} Christoph Fischer
                 &middot; Build <a href="{{ config('app.build_url') }}" target="_blank">#{{ config('app.build_number') }}</a>
-                ({{ config('app.build') }}, {{ Carbon\Carbon::createFromTimeString(config('app.build_date'))->setTimezone('Europe/Berlin')->format('Y-m-d H:i:s') }})
+                ({{ config('app.build') }}, {{ Carbon\Carbon::createFromTimeString(config('app.build_date') ?: '2018-08-01 0:00:00')->setTimezone('Europe/Berlin')->format('Y-m-d H:i:s') }})
             </div>
         </div>
     </div>

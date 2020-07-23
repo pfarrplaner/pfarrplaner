@@ -662,6 +662,11 @@
                                                                         align="center">{{ strftime('%A, %d. %B %Y', $service->day->date->timestamp) }}
                                                                         , {{ $service->timeText() }}
                                                                         <br>{{ $service->locationText() }}</h5>
+                                                                    <small style="font-size: 8pt;">
+                                                                        Angelegt am {{ date('d.m.Y') }} um {{ date('H:i') }} Uhr
+                                                                        durch {{ $originatingUser->name }}
+                                                                    </small>
+
 
                                                                     <div class="hr "
                                                                          style="width: 100%; margin: 20px 0; border: 0;">

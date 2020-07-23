@@ -62,6 +62,7 @@ class ServiceCreated extends AbstractServiceMailable
                     'service' => $this->service,
                     'user' => $this->user,
                     'data' => $this->data,
+                    'originatingUser' => $this->originatingUser,
                 ]
             )->attachData(
                 $ics,
