@@ -22,10 +22,10 @@ class BaptismPolicy
 
     /**
      * @param User $user
-     * @param Baptism $baptism
+     * @param Baptism|null $baptism
      * @return bool
      */
-    protected function mayChange(User $user, Baptism $baptism): bool
+    protected function mayChange(User $user, Baptism $baptism = null): bool
     {
         if (!$user->hasPermissionTo('gd-bearbeiten')) {
             return false;
