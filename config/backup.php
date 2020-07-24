@@ -62,7 +62,7 @@ return [
                 /*
                  * Determines if symlinks should be followed.
                  */
-                'followLinks' => false,
+                'followLinks' => true,
             ],
 
             /*
