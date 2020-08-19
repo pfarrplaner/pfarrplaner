@@ -90,14 +90,15 @@ class EmbedContactLookupReport extends AbstractEmbedReport
         $request->validate(
             [
                 'cors-origin' => 'required|url',
-                'city' => 'required',
+                'includeCities' => 'required',
+                'includeCities.*' => 'required|exists:cities,id',
             ]
         );
-        $city = City::findOrFail($request->get('city'));
+        $cities = join(',', $request->get('includeCities'));
         $corsOrigin = $request->get('cors-origin');
         $report = $this->getKey();
 
-        $url = route('report.embed', compact('report', 'city', 'corsOrigin'));
+        $url = route('report.embed', compact('report', 'cities', 'corsOrigin'));
         $randomId = uniqid();
 
         return $this->renderView('render', compact('url', 'randomId'));
@@ -106,19 +107,26 @@ class EmbedContactLookupReport extends AbstractEmbedReport
 
     /**
      * @param Request $request
-     * @return Response
+     * @return Response|Application|Factory|View|string
      */
     public function embed(Request $request)
     {
-        $city = City::findOrFail($request->get('city'));
+        if ($request->has('city')) {
+            $cities = [$request->get('city')];
+        } elseif($request->has('resultCities')) {
+             $cities = $request->get('resultCities');
+        } else {
+            $cities = $request->get('cities');
+            if(!is_array($cities)) $cities = explode(',', $cities);
+        }
 
         $street = $request->get('street', '');
         $number = $request->get('number', '');
 
         $streetRanges = StreetRange::whereHas(
             'parish',
-            function ($query) use ($city) {
-                $query->where('parishes.city_id', $city->id);
+            function ($query) use ($cities) {
+                $query->whereIn('parishes.city_id', $cities);
             }
         )->get();
 
@@ -138,20 +146,26 @@ class EmbedContactLookupReport extends AbstractEmbedReport
         if ($request->has('parish')) {
             $parish = Parish::findOrFail($request->get('parish'));
         } elseif (($street != '') && ($number != '')) {
-            //dd (Parish::byAddress($street, $number)->where('city_id', $city)->toSql());
-            $parish = Parish::byAddress($street, $number)->where('city_id', $city->id)->first();
+            $parish = Parish::byAddress($street, $number)->whereIn('city_id', $cities)->first();
         } elseif ($request->cookie('parish')) {
             $parish = Parish::findOrFail($request->cookie('parish'));
         }
 
-        $url = route('report.embed', compact('report', 'city', 'corsOrigin'));
+        $url = route('report.embed', compact('report', 'corsOrigin'));
         $report = $this->getKey();
+
+        if (null === $parish) {
+            $randomId = uniqid();
+            $corsOrigin = $request->get('cors-origin');
+            return $this->renderView('render', compact('url', 'randomId'));
+        }
+
 
         /** @var Response $response */
         $response = response()
             ->view(
                 $this->getViewName('embed'),
-                compact('city', 'street', 'number', 'streets', 'randomId', 'url', 'parish', 'report')
+                compact('cities', 'street', 'number', 'streets', 'randomId', 'url', 'parish', 'report')
             );
 
         if (false !== $parish) {

@@ -7,7 +7,7 @@
                 <p class="bodytext">Damit wir einen Ansprechpartner für Sie ermitteln können, geben Sie bitte hier Ihre
                     Adresse ein:</p>
                 <div>
-                    <input type="hidden" name="city" value="{{ $city->id }}" />
+                    <input type="hidden" name="cities" value="{{ join(',', $cities) }}" />
                     <label for="street">Straße:</label>
                     <select id="street">
                         @foreach ($streets as $street)
@@ -25,7 +25,8 @@
     <script defer>
         $(document).ready(function () {
             $('#btnFind').click(function () {
-                var url = '{{ $url }}&street=' + $('#street').val() + '&number=' + $('#number').val();
+                var cities = $('input[name=cities]').val();
+                var url = '{{ $url }}?cities='+cities+'&street=' + $('#street').val() + '&number=' + $('#number').val();
                 if (($('#street').val() != '') && ($('number').val() != '')) {
                     $('#{{ $randomId }}').html('Bitte warten, Daten werden übertragen...');
                     fetch(url)

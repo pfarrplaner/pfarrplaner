@@ -7,13 +7,17 @@
         <div class="card">
             <div class="card-body">
                 @csrf
-                <div class="form-group form-group-hideable for-table-cities for-table-cc  for-table-baptismalservices">
-                    <label class="control-label">Widget für folgende Kirchengemeinde erstellen:</label>
-                    <select name="city" class="form-control">
-                        @foreach ($cities as $city)
-                            <option value="{{ $city->id }}">{{ $city->name }}</option>
-                        @endforeach
-                    </select>
+                <div class="form-group"> <!-- Radio group !-->
+                    <label class="control-label">Folgende Kirchengemeinden mit einbeziehen:</label>
+                    @foreach ($cities as $city)
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="includeCities[]" value="{{ $city->id }}"
+                                   id="defaultCheck{{$city->id}}" checked>
+                            <label class="form-check-label" for="defaultCheck{{$city->id}}">
+                                {{$city->name}}
+                            </label>
+                        </div>
+                    @endforeach
                 </div>
                 <div class="form-group">
                     <label for="cors-origin">Aufrufende Website:</label>
