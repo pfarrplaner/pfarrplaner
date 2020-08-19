@@ -28,6 +28,17 @@
                 <input type="text" class="form-control" name="code" value="{{ $parish->code }}"/>
             </div>
             <div class="form-group">
+                <label for="congregation_name">Name der Teilkirchengemeinde</label>
+                <input type="text" class="form-control" name="congregation_name"
+                       placeholder="Leer lassen, wenn keine Teilkirchengemeinde"
+                       value="{{ $parish->congregation_name }}"/>
+            </div>
+            <div class="form-group">
+                <label for="congregation_url">Link zur Teilkirchengemeinde</label>
+                <input type="text" class="form-control" name="congregation_url" value="{{ $parish->congregation_url }}"
+                       placeholder="Leer lassen, wenn keine Teilkirchengemeinde"/>
+            </div>
+            <div class="form-group">
                 <label for="adress">Straße:</label>
                 <input type="text" class="form-control" name="address" value="{{ $parish->address }}"/>
             </div>

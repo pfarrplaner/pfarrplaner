@@ -54,7 +54,9 @@ class Parish extends Model
         'zip',
         'city',
         'phone',
-        'email'
+        'email',
+        'congregation_name',
+        'congregation_url',
     ];
 
     /**

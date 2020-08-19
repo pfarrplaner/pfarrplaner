@@ -50,7 +50,7 @@ class ParishController extends Controller
      */
     public function index()
     {
-        $parishes = Parish::with('owningCity')->whereIn('city_id', Auth::user()->writableCities)->get();
+        $parishes = Parish::with('owningCity')->whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
         return view('parishes.index', compact('parishes'));
     }
 
@@ -73,28 +73,7 @@ class ParishController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'owningCity' => 'required|int',
-                'name' => 'required',
-                'code' => 'required',
-            ]
-        );
-
-        $owningCity = City::findOrFail($request->get('owningCity'));
-        $parish = new Parish(
-            [
-                'city_id' => $owningCity->id,
-                'name' => $request->get('name'),
-                'code' => $request->get('code'),
-                'address' => $request->get('address', ''),
-                'zip' => $request->get('zip', ''),
-                'city' => $request->get('city', ''),
-                'phone' => $request->get('phone', ''),
-                'email' => $request->get('email', ''),
-            ]
-        );
-        $parish->save();
+        Parish::create($this->validateRequest($request));
         return redirect()->route('parishes.index')->with('success', 'Das Pfarramt wurde angelegt.');
     }
 
@@ -130,23 +109,7 @@ class ParishController extends Controller
      */
     public function update(Request $request, Parish $parish)
     {
-        $request->validate(
-            [
-                'owningCity' => 'required|int',
-                'name' => 'required',
-                'code' => 'required',
-            ]
-        );
-
-        $parish->name = $request->get('name');
-        $parish->code = $request->get('code');
-        $parish->city_id = $request->get('owningCity');
-        $parish->address = $request->get('address', '');
-        $parish->zip = $request->get('zip', '');
-        $parish->city = $request->get('city', '');
-        $parish->phone = $request->get('phone', '');
-        $parish->email = $request->get('email', '');
-        $parish->save();
+        $parish->update($this->validateRequest($request));
 
         // import street ranges from csv
         $csv = $request->get('csv', '');
@@ -173,5 +136,28 @@ class ParishController extends Controller
         }
         $parish->delete();
         return redirect()->route('parishes.index')->with('success', 'Das Pfarramt wurde gelöscht.');
+    }
+
+    /**
+     * Validate submitted data
+     * @param Request $request
+     * @return array
+     */
+    protected function validateRequest(Request $request) {
+        return $request->validate(
+            [
+                'owningCity' => 'required|int|exists:cities,id',
+                'name' => 'required|string',
+                'code' => 'required|string',
+                'congregation_name' => 'nullable|string',
+                'congregation_url' => 'nullable|string',
+                'address' => 'nullable|string',
+                'zip' => 'nullable|zip',
+                'city' => 'nullable|string',
+                'phone' => 'nullable|phone_number',
+                'email' => 'nullable|email',
+            ]
+        );
+
     }
 }
