@@ -852,4 +852,12 @@ class User extends Authenticatable
         )->get();
     }
 
+    /**
+     * Automatically hash password
+     * @param $value
+     */
+    public function setPasswordAttribute($value) {
+        if ($value != '') $this->attributes['password'] = Hash::make($value);
+    }
+
 }
