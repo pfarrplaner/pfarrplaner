@@ -637,6 +637,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function getIsLocalAdminAttribute()
+    {
+        return (!$this->isAdmin) && (count($this->adminCities) >0);
+    }
+
+    /**
      * Find all users for which this user may see the absences
      *
      * Permission logic:
