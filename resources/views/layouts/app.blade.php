@@ -39,7 +39,8 @@
     <meta name="msapplication-config" content="/img/favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 </head>
-<body class="hold-transition sidebar-mini sidebar-collapse {{ strtolower(str_replace('.', '-', Request::route()->getName())) }} @if(isset($slave) && $slave) slave @endif">
+<body
+    class="hold-transition sidebar-mini sidebar-collapse {{ strtolower(str_replace('.', '-', Request::route()->getName())) }} @if(isset($slave) && $slave) slave @endif">
 
 <div class="wrapper">
     <!-- Navbar -->
@@ -47,9 +48,9 @@
         <!-- Left navbar links -->
         <ul class="navbar-nav">
             @if((!isset($noNavBar)) || (!$noNavBar) )
-            <li class="nav-item">
-                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                </li>
             @endif
             @yield('navbar-left')
         </ul>
@@ -57,13 +58,13 @@
 
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
-            @auth
-                <!-- Notifications Dropdown Menu -->
+        @auth
+            <!-- Notifications Dropdown Menu -->
                 @component('components.ui.whatsnew')
                 @endcomponent
                 <li class="nav-item" id="toggleControlSidebar" style="display: none;">
                     <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
-                                class="fas fa-cogs"></i></a>
+                            class="fas fa-cogs"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-navbar" href="{{ route('logout') }}">
@@ -76,7 +77,8 @@
     <!-- /.navbar -->
 
     <!-- Main Sidebar Container -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4" @if(config('app.dev')) style="background-color: orangered; "@endif>
+    <aside class="main-sidebar sidebar-dark-primary elevation-4"
+           @if(config('app.dev')) style="background-color: orangered; "@endif>
         <!-- Brand Logo -->
         <a href="{{ route('home') }}" class="brand-link" style="margin-left: 5px;">
             <img src="{{ asset('img/logo/pfarrplaner.png') }}" width="22" height="22" class="brand-image"
@@ -88,70 +90,76 @@
         <div class="sidebar">
         @if((!isset($noNavBar)) || (!$noNavBar) )
             @auth
-            <!-- Sidebar user panel (optional) -->
+                <!-- Sidebar user panel (optional) -->
 
-            <!-- Sidebar Menu -->
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                    data-accordion="false">
-                    <li class="nav-item">
-                        <a href="{{ route('user.profile') }}" class="nav-link @if(request()->is('user/profile')) active @endif">
-                            <i class="nav-icon fa fa-user"></i>
-                            <p>{{ Auth::user()->fullName() }}</p>
-                        </a>
-                    </li>
-                    <div class="user-panel d-flex"></div>
-                    <!-- Add icons to the links using the .nav-icon class
-                         with font-awesome or any other icon font library -->
-                    @foreach(\App\UI\MenuBuilder::sidebar() as $item)
-                        @if(!is_array($item))
-                            <li class="nav-header">
-                                {{ strtoupper($item) }}
-                            </li>
-                        @else
-                            <li class="nav-item @if(isset($item['submenu']))has-treeview @endif">
-                                <a class="nav-link @if($item['active'] ?? false)active @endif" href="{{ $item['url'] }}">
-                                    @if(isset($item['icon']))<i class="nav-icon {{ $item['icon'] }}"
-                                                                @if(isset($item['icon_color']))style="color: {{ $item['icon_color'] }};"@endif></i>@endif
-                                    <p>
-                                        {{ $item['text'] }}
-                                        @if(isset($item['submenu']))<i class="right fas fa-angle-left"></i>@endif
-                                    </p>
-
+                    <!-- Sidebar Menu -->
+                    <nav class="mt-2">
+                        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                            data-accordion="false">
+                            <li class="nav-item">
+                                <a href="{{ route('user.profile') }}"
+                                   class="nav-link @if(request()->is('user/profile')) active @endif">
+                                    <i class="nav-icon fa fa-user"></i>
+                                    <p>{{ Auth::user()->fullName() }}</p>
                                 </a>
-                                @if(isset($item['submenu']))
-                                    <ul class="nav nav-treeview" style="display: none;">
-                                        @foreach($item['submenu'] as $item2)
-                                            <li class="nav-item">
-                                                <a class="nav-link @if($item['active'] ?? false)active @endif" href="{{ $item2['url'] }}">
-                                                    @if(isset($item2['icon']))<i class="nav-icon {{ $item2['icon'] }}"
-                                                                                 @if(isset($item2['icon_color']))style="color: {{ $item2['icon_color'] }};"@endif></i>@endif
-                                                    <p>
-                                                        {{ $item2['text'] }}
-                                                        @if(isset($item2['counter']))
-                                                            <span class="badge right @if(isset($item2['counter_class'])) badge-{{$item2['counter_class']}} @else badge-info @endif">{{ $item2['counter'] }}</span>
-                                                        @endif
-                                                    </p>
-                                                </a>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @endif
                             </li>
-                        @endif
-                    @endforeach
-                </ul>
-            </nav>
-            <!-- /.sidebar-menu -->
-            @endauth
-            @guest
-                <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed login-form">
-                    @csrf
-                    @input(['name' => 'email', 'label' => 'E-Mailadresse'])
-                    @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password'])
-                    <input type="submit" class="btn btn-primary" value="Anmelden" />
-                </form>
-            @endguest
+                            <div class="user-panel d-flex"></div>
+                            <!-- Add icons to the links using the .nav-icon class
+                                 with font-awesome or any other icon font library -->
+                            @foreach(\App\UI\MenuBuilder::sidebar() as $item)
+                                @if(!is_array($item))
+                                    <li class="nav-header">
+                                        {{ strtoupper($item) }}
+                                    </li>
+                                @else
+                                    <li class="nav-item @if(isset($item['submenu']))has-treeview @endif">
+                                        <a class="nav-link @if($item['active'] ?? false)active @endif"
+                                           href="{{ $item['url'] }}">
+                                            @if(isset($item['icon']))<i class="nav-icon {{ $item['icon'] }}"
+                                                                        @if(isset($item['icon_color']))style="color: {{ $item['icon_color'] }};"@endif></i>@endif
+                                            <p>
+                                                {{ $item['text'] }}
+                                                @if(isset($item['submenu']))<i
+                                                    class="right fas fa-angle-left"></i>@endif
+                                            </p>
+
+                                        </a>
+                                        @if(isset($item['submenu']))
+                                            <ul class="nav nav-treeview" style="display: none;">
+                                                @foreach($item['submenu'] as $item2)
+                                                    <li class="nav-item">
+                                                        <a class="nav-link @if($item['active'] ?? false)active @endif"
+                                                           href="{{ $item2['url'] }}">
+                                                            @if(isset($item2['icon']))<i
+                                                                class="nav-icon {{ $item2['icon'] }}"
+                                                                @if(isset($item2['icon_color']))style="color: {{ $item2['icon_color'] }};"@endif></i>@endif
+                                                            <p>
+                                                                {{ $item2['text'] }}
+                                                                @if(isset($item2['counter']))
+                                                                    <span
+                                                                        class="badge right @if(isset($item2['counter_class'])) badge-{{$item2['counter_class']}} @else badge-info @endif">{{ $item2['counter'] }}</span>
+                                                                @endif
+                                                            </p>
+                                                        </a>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                    </li>
+                                @endif
+                            @endforeach
+                        </ul>
+                    </nav>
+                    <!-- /.sidebar-menu -->
+                @endauth
+                @guest
+                    <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed login-form">
+                        @csrf
+                        @input(['name' => 'email', 'label' => 'E-Mailadresse'])
+                        @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password'])
+                        <input type="submit" class="btn btn-primary" value="Anmelden"/>
+                    </form>
+                @endguest
             @endif
         </div>
         <!-- /.sidebar -->
@@ -167,7 +175,7 @@
                         <h1 class="m-0 text-dark">@yield('title')</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
-                            {{ \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render() }}
+                        {{ \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs::render() }}
                     </div><!-- /.col -->
                 </div><!-- /.row -->
             </div><!-- /.container-fluid -->
@@ -184,8 +192,13 @@
                 {{ \Carbon\Carbon::now()->format('Y-m-d H:i:s') }} &middot;
                 <a href="{{ config('app.build_repository') }}" target="_blank">Pfarrplaner</a> &middot;
                 &copy; 2018-{{ \Carbon\Carbon::now()->format('Y') }} Christoph Fischer
-                &middot; Build <a href="{{ config('app.build_url') }}" target="_blank">#{{ config('app.build_number') }}</a>
-                ({{ config('app.build') }}, {{ Carbon\Carbon::createFromTimeString(config('app.build_date') ?: '2018-08-01 0:00:00')->setTimezone('Europe/Berlin')->format('Y-m-d H:i:s') }})
+                &middot; Build <a href="{{ config('app.build_url') }}"
+                                  target="_blank">#{{ config('app.build_number') }}</a>
+                ({{ config('app.build') }}
+                , {{ Carbon\Carbon::createFromTimeString(config('app.build_date') ?: '2018-08-01 0:00:00')->setTimezone('Europe/Berlin')->format('Y-m-d H:i:s') }}
+                ) &middot; Session läuft
+                um {{ \Carbon\Carbon::now()->addMinutes(config('session.lifetime'))->setTimezone('Europe/Berlin')->format('H:i:s') }}
+                Uhr ab.
             </div>
         </div>
     </div>
@@ -194,7 +207,7 @@
         <div class="p-3 control-sidebar-content">
             @yield('control-sidebar')
         </div>
-    <!-- Control sidebar content goes here -->
+        <!-- Control sidebar content goes here -->
     </aside>
     <!-- /.control-sidebar -->
 
@@ -204,32 +217,52 @@
 <!-- REQUIRED SCRIPTS -->
 
 <!-- jQuery -->
-@auth
 <script>
+    @auth
     window.Laravel = {!! json_encode([
        'csrfToken' => csrf_token(),
        'apiToken' => Auth::user()->api_token ?? null,
-   ]) !!};
+       ]); !!};
+    @endauth
+    @guest
+        window.Laravel = {};
+    @endguest
+
+        window.Laravel.loggedIn = {{ json_encode(!Auth::guest()) }};
+    window.Laravel.timeout = {{ (config('session.lifetime')*60000)-30000 }};
+    window.Laravel.expires = new Date('{!! \Carbon\Carbon::now()->addMinutes(config('session.lifetime'))->toIso8601String() !!}');
+
+    window.setTimeout(function () {
+        if (window.Laravel.loggedIn) {
+            location.href = '{!! route('logout') !!}';
+        } else {
+            console.log('Refreshing window to update crsf token.');
+            location.reload();
+        }
+    }, window.Laravel.timeout);
 </script>
-@endauth
-<script src="{{ asset('js/bundle.js') }}" />
+<script src="{{ asset('js/bundle.js') }}"/>
 <!-- other libraries -->
 <script src="{{ asset('js/pfarrplaner/forms.js') }}"></script>
 @yield('scripts')
 @if(env('MATOMO_SITE') >0)
-<script>
-    var _paq = window._paq || [];
-    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-    _paq.push(['trackPageView']);
-    _paq.push(['enableLinkTracking']);
-    (function() {
-        var u="//matomo.pfarrplaner.de/";
-        _paq.push(['setTrackerUrl', u+'matomo.php']);
-        _paq.push(['setSiteId', '{{ env('MATOMO_SITE') }}']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
-    })();
-</script>
+    <script>
+        var _paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        (function () {
+            var u = "//matomo.pfarrplaner.de/";
+            _paq.push(['setTrackerUrl', u + 'matomo.php']);
+            _paq.push(['setSiteId', '{{ env('MATOMO_SITE') }}']);
+            var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+            g.type = 'text/javascript';
+            g.async = true;
+            g.defer = true;
+            g.src = u + 'matomo.js';
+            s.parentNode.insertBefore(g, s);
+        })();
+    </script>
 @endif
 </body>
 </html>
