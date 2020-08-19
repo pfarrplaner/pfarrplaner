@@ -72,10 +72,13 @@
                 </form>
             </div>
         </div>
-        <script>
-            $(document).ready(function(){
-                $('#email').focus();
-            });
-        </script>
     @endcomponent
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function(){
+            $('#email').focus();
+        });
+    </script>
 @endsection
