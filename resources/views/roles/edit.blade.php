@@ -11,7 +11,7 @@
                 <button type="submit" class="btn btn-primary">Speichern</button>
             @endslot
             @input(['label' =>  'Name', 'name' => 'name', 'value' => $role->name])
-            @selectize(['label' => 'Berechtigungen', 'name'=> 'permissions[]', 'items' => $permissions, 'value' => $role->permissions])
+            @select(['label' => 'Berechtigungen', 'name'=> 'permissions[]', 'items' => $permissions, 'value' => $role->permissions, 'id' => 'permissionSelect'])
         @endcomponent
     </form>
 @endsection
@@ -20,7 +20,7 @@
     <script>
         $(document).ready(function () {
 
-            $('.permissionSelect').selectize({
+            $('#permissionSelect_input').selectize({
                 create: true,
                 render: {
                     option_create: function (data, escape) {
