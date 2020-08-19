@@ -7,6 +7,7 @@
                 <p class="bodytext">Damit wir einen Ansprechpartner für Sie ermitteln können, geben Sie bitte hier Ihre
                     Adresse ein:</p>
                 <div>
+                    <input type="hidden" name="city" value="{{ $city->id }}" />
                     <label for="street">Straße:</label>
                     <select id="street">
                         @foreach ($streets as $street)

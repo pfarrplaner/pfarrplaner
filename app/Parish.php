@@ -126,12 +126,14 @@ class Parish extends Model
 
     /**
      * @param Builder $query
-     * @param $street
-     * @param $number
+     * @param string $street
+     * @param int $number
      * @return mixed
      */
     public function scopeByAddress(Builder $query, $street, $number)
     {
+        //if (!is_int($city)) $city = $city->id;
+
         return $this->whereHas(
             'streetRanges',
             function ($query2) use ($street, $number) {
