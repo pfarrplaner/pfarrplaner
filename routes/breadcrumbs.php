@@ -339,8 +339,7 @@ Breadcrumbs::for(
 
 Breadcrumbs::for(
     'parishes.edit',
-    function (BreadcrumbsGenerator $trail, $parish) {
-        $parish = \App\Parish::find($parish);
+    function (BreadcrumbsGenerator $trail, \App\Parish $parish) {
         $trail->parent('parishes.index');
         $trail->push($parish->name, route('parishes.edit', $parish));
     }
