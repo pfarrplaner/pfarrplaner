@@ -15,11 +15,12 @@
         <li class="nav-item">
             <a class="nav-link active" href="#users" role="tab" data-toggle="tab">Benutzer</a>
         </li>
-        @can('benutzer-bearbeiten')
+        @if(Auth::user()->can('benutzer-bearbeiten') || Auth::user()->isLocalAdmin)
             <li class="nav-item">
                 <a class="nav-link" href="#otherPeople" role="tab" data-toggle="tab">Weitere Personen</a>
             </li>
-        @endcan
+
+        @endif
     </ul>
 
     <div class="tab-content" style="padding-top: 15px;">
@@ -92,7 +93,7 @@
                 </table>
             @endcomponent
         </div>
-        @can('benutzer-bearbeiten')
+        @if(Auth::user()->can('benutzer-bearbeiten') || Auth::user()->isLocalAdmin)
             <div role="tabpanel" class="tab-pane fade" id="otherPeople">
                 <div class="alert alert-info">Hier findest du eine Übersicht von Personen, die irgendwo im Plan
                     eingetragen wurden, aber keinen
@@ -164,7 +165,7 @@
                     </table>
                 @endcomponent
             </div>
-        @endcan
+        @endif
     </div>
 
     <hr/>

@@ -32,6 +32,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Parish;
+use App\Rules\CreatedInLocalAdminDomain;
 use App\Service;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -123,49 +124,13 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'name' => 'required|max:255',
-            ]
-        );
-
-        $user = new User(
-            [
-                'name' => $request->get('name'),
-                'email' => $request->get('email'),
-                'cities' => $request->get('cities'),
-                'title' => $request->get('title') ?: '',
-                'first_name' => $request->get('first_name') ?: '',
-                'last_name' => $request->get('last_name') ?: '',
-                'notifications' => $request->get('notifications') ? 1 : 0,
-                'office' => $request->get('office') ?: '',
-                'address' => $request->get('address') ?: '',
-                'phone' => $request->get('phone') ?: '',
-                'preference_cities' => '',
-                'manage_absences' => $request->get('manage_absences') ? 1 : 0,
-            ]
-        );
-
-        $user->office = $request->get('office', '');
-        $user->address = $request->get('address', '');
-        $user->phone = $request->get('phone', '');
-
-
-        if (($user->email != '') && ($request->get('password', '') != '')) {
-            $user->password = Hash::make($request->get('password'));
-        }
+        $user = User::create($this->validateRequest($request));
 
         if ($request->hasFile('image')) {
-            $user->image = $request->file('image')->store('user-images', 'public');
+            $user->update(['image' => $request->file('image')->store('user-images', 'public')]);
         }
 
         // api_token
-        if (($user->password != '') && ($user->api_token == '')) {
-            $user->api_token = Str::random(60);
-        }
-        if ($user->password == '') {
-            $user->api_token = '';
-        }
 
         $user->save();
 
@@ -301,52 +266,17 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         if ($user->administeredBy(Auth::user())) {
-            $request->validate(
-                [
-                    'name' => 'required|max:255',
-                ]
-            );
-
-            $user->name = $request->get('name');
-            $user->email = $request->get('email');
-            //if ($password = $request->get('password') != '') $user->password = Hash::make($password);
-            $password = $request->get('password');
-            if ($password != '') {
-                $user->password = Hash::make($password);
-            }
-            $user->title = $request->get('title') ?: '';
-            $user->first_name = $request->get('first_name') ?: '';
-            $user->last_name = $request->get('last_name') ?: '';
-            $user->notifications = $request->get('notifications') ? 1 : 0;
-            $user->office = $request->get('office') ?: '';
-            $user->address = $request->get('address') ?: '';
-            $user->phone = $request->get('phone') ?: '';
-            $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
-            $user->manage_absences = $request->get('manage_absences') ? 1 : 0;
-            $user->office = $request->get('office', '');
-            $user->address = $request->get('address', '');
-            $user->phone = $request->get('phone', '');
-
+            $user->update($this->validateRequest($request, $user));
             if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
                 if ($user->image != '') {
                     Storage::delete($user->image);
                 }
-                $user->image = '';
+                $user->update(['image' => '']);
             }
             if ($request->hasFile('image')) {
-                $user->image = $request->file('image')->store('user-images', 'public');
+                $user->update(['image' => $request->file('image')->store('user-images', 'public')]);
             }
 
-            // api_token
-            if (($user->password != '') && ($user->api_token == '')) {
-                $user->api_token = Str::random(60);
-            }
-            if ($user->password == '') {
-                $user->api_token = '';
-            }
-
-
-            $user->save();
             $user->homeCities()->sync($request->get('homeCities') ?: []);
             $user->parishes()->sync($request->get('parishes') ?: []);
             $user->approvers()->sync($request->get('approvers') ?: []);
@@ -372,8 +302,7 @@ class UserController extends Controller
         } else {
             $password = $request->get('password');
             if ($password != '') {
-                $user->password = Hash::make($password);
-                $user->save();
+                $user->update(['password' => $password]);
                 if (count($user->homeCities) == 0) {
                     if (count(Auth::user()->adminCities)) {
                         $user->homeCities()->attach(Auth::user()->adminCities->first()->id);
@@ -521,5 +450,70 @@ class UserController extends Controller
     {
         Auth::logout();
         return redirect()->route('login');
+    }
+
+
+    /**
+     * Check if the user is a local admin and has set city permissions
+     * @param Request $request
+     */
+    protected function validateCityPermissions(Request $request)
+    {
+        if (Auth::user()->isLocalAdmin) {
+            $permissions = $request->get('cityPermission');
+            dd(Auth::user()->adminCities->pluck('id'), $permissions);
+        }
+    }
+
+
+    /**
+     * Validate submitted data
+     * @param Request $request
+     * @param User|null $user
+     * @return array
+     */
+    protected function validateRequest(Request $request, $user = null)
+    {
+        $rules = [
+            'name' => 'required|string|max:255',
+            'first_name' => 'nullable|string',
+            'last_name' => 'nullable|string',
+            'title' => 'nullable|string',
+            'email' => 'nullable|email',
+            'password' => 'nullable|string',
+            'notifications' => 'nullable|string',
+            'office' => 'nullable|string',
+            'address' => 'nullable|string',
+            'phone' => 'nullable|phone_number',
+            'preference_cities' => 'nullable|string',
+            'manage_absences' => 'nullable|string',
+            'homeCities' => 'required',
+            'homeCities.*' => 'int|exists:cities,id',
+        ];
+
+        // special treatment if the submitter is a local admin
+        if (Auth::user()->isLocalAdmin) {
+            // on create:
+            if ($request->route()->getName() == 'users.store') {
+                // check if at least one permission is set
+                $rules['cityPermission'] = [new CreatedInLocalAdminDomain()];
+
+                // force setting a password
+                $rules['email'] = 'required|email';
+                $rules['password'] = 'required|string';
+            }
+        }
+
+        // if a password is set, an email is required
+        if ($request->get('password', '') != '') $rules['email'] = 'required|email';
+
+        $data = $request->validate($rules);
+
+        // api token
+        if (($user === null) || ($user->api_token == '')) {
+            $data['api_token'] = $data['password'] == '' ? '' : Str::random(60);
+        }
+
+        return $data;
     }
 }

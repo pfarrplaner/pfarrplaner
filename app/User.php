@@ -42,6 +42,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Shetabit\Visitor\Traits\Visitable;
 use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;

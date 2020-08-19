@@ -105,6 +105,9 @@ class UserPolicy
                 }
             }
         }
+        if ($user->isLocalAdmin && ($model->password == '')) {
+            return true;
+        }
         return false;
     }
 
