@@ -61,7 +61,8 @@ class ParishPolicy
         if ($user->hasRole('Administrator*in')) {
             return true;
         }
-        return false;
+        if ($user->isLocalAdmin) return true;
+        return $user->hasPermissionTo('pfarramt-bearbeiten');
     }
 
     /**
@@ -74,7 +75,7 @@ class ParishPolicy
         if ($user->adminCities->contains($model->owningCity)) {
             return true;
         }
-        return false;
+        return $user->hasPermissionTo('pfarramt-bearbeiten');
     }
 
     /**
@@ -87,7 +88,7 @@ class ParishPolicy
         if ($user->adminCities->contains($model->owningCity)) {
             return true;
         }
-        return false;
+        return $user->hasPermissionTo('pfarramt-bearbeiten');
     }
 
     /**
@@ -100,7 +101,7 @@ class ParishPolicy
         if ($user->adminCities->contains($model->owningCity)) {
             return true;
         }
-        return false;
+        return $user->hasPermissionTo('pfarramt-bearbeiten');
     }
 
     /**
@@ -110,7 +111,7 @@ class ParishPolicy
      */
     public function restore(User $user, Parish $model)
     {
-        return false;
+        return $user->hasPermissionTo('pfarramt-bearbeiten');
     }
 
     /**
@@ -120,6 +121,6 @@ class ParishPolicy
      */
     public function forceDelete(User $user, Parish $model)
     {
-        return false;
+        return $user->hasPermissionTo('pfarramt-bearbeiten');
     }
 }

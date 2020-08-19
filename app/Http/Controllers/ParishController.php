@@ -50,7 +50,7 @@ class ParishController extends Controller
      */
     public function index()
     {
-        $parishes = Parish::with('owningCity')->whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
+        $parishes = Parish::with('owningCity')->whereIn('city_id', Auth::user()->adminCities->pluck('id'))->get();
         return view('parishes.index', compact('parishes'));
     }
 
