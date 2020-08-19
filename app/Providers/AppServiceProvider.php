@@ -30,9 +30,13 @@
 
 namespace App\Providers;
 
+use App\QueryLog;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 
 /**
  * Class AppServiceProvider
@@ -91,6 +95,8 @@ class AppServiceProvider extends ServiceProvider
                 return preg_match('/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/i', $value);
             }
         );
+
+        QueryLog::register();
     }
 
     /**
