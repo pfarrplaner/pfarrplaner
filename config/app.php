@@ -32,7 +32,7 @@ return [
 
     'dev' => env('THIS_IS_MY_DEV_HOST', false),
     'build' => env('APP_BUILD', ''),
-    'build_date' => env('BUILD_DATE', ''),
+    'build_date' => \Carbon\Carbon::parse(env('BUILD_DATE', '')),
     'build_number' => env('BUILD_NUMBER', ''),
     'build_url' => env('BUILD_URL', ''),
     'build_repository' => env('BUILD_REPOSITORY', 'https://github.com/potofcoffee/pfarrplaner'),
