@@ -13,9 +13,9 @@
             @endslot
 
             @tabheaders
-                @if ($user->administeredBy(Auth::user()))
-                    @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => $user->administeredBy(Auth::user())]) @endtabheader
-                    @tabheader(['id' => 'contact', 'title' => 'Kontaktdaten', 'active' => !$user->administeredBy(Auth::user())]) @endtabheader
+                @if ($user->administeredBy(Auth::user()) || ($user->password == ''))
+                    @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => ($user->administeredBy(Auth::user()) | ($user->password==''))]) @endtabheader
+                    @tabheader(['id' => 'contact', 'title' => 'Kontaktdaten', 'active' => !($user->administeredBy(Auth::user()) | ($user->password==''))]) @endtabheader
                     @tabheader(['id' => 'permissions', 'title' => 'Berechtigungen']) @endtabheader
                     @tabheader(['id' => 'absences', 'title' => 'Urlaub']) @endtabheader
                 @else
@@ -24,11 +24,13 @@
             @endtabheaders
 
             @tabs
-                @if ($user->administeredBy(Auth::user()))
+                @if ($user->administeredBy(Auth::user())  || ($user->password == ''))
                     @tab(['id' => 'home', 'active' => true])
                         @input(['name' => 'name', 'label' => 'Name', 'value' => $user->name])
                         @input(['name' => 'email', 'label' => 'E-Mailadresse', 'value' => $user->email])
-                        @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password', 'placeholder' => ($user->password != '' ? 'Nur eingeben, wenn Passwort geändert werden soll' : 'Passwort setzen, um diese Person als Benutzer anzulegen')])
+                        @if($user->administeredBy(Auth::user()))
+                            @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password', 'placeholder' => ($user->password != '' ? 'Nur eingeben, wenn Passwort geändert werden soll' : 'Passwort setzen, um diese Person als Benutzer anzulegen')])
+                        @endif
                         @input(['name' => 'title', 'label' => 'Titel', 'value' => $user->title])
                         @input(['name' => 'first_name', 'label' => 'Vorname', 'value' => $user->first_name])
                         @input(['name' => 'last_name', 'label' => 'Nachname', 'value' => $user->last_name])
@@ -156,7 +158,7 @@
                     @endif
                 @endforeach
             @endtab
-                @if ($user->administeredBy(Auth::user()))
+                @if ($user->administeredBy(Auth::user()) || ($user->password==''))
                     @tab(['id' => 'absences'])
                         @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten', 'value' => $user->manage_absences])
                         @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->approvers])

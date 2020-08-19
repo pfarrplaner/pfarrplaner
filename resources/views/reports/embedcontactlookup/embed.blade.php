@@ -7,6 +7,7 @@
                 <p class="bodytext">Damit wir einen Ansprechpartner für Sie ermitteln können, geben Sie bitte hier Ihre
                     Adresse ein:</p>
                 <div>
+                    <input type="hidden" name="cities" value="{{ join(',', $cities) }}" />
                     <label for="street">Straße:</label>
                     <select id="street">
                         @foreach ($streets as $street)
@@ -24,7 +25,8 @@
     <script defer>
         $(document).ready(function () {
             $('#btnFind').click(function () {
-                var url = '{{ $url }}&street=' + $('#street').val() + '&number=' + $('#number').val();
+                var cities = $('input[name=cities]').val();
+                var url = '{{ $url }}?cities='+cities+'&street=' + $('#street').val() + '&number=' + $('#number').val();
                 if (($('#street').val() != '') && ($('number').val() != '')) {
                     $('#{{ $randomId }}').html('Bitte warten, Daten werden übertragen...');
                     fetch(url)
@@ -53,8 +55,13 @@
     <div id="{{ $randomId }}_info" class="row ctype-textbox listtype-none showmobdesk-0">
         <div id="{{ $randomId }}_c1050561" class="col s12 bullme ">
             <div class="card-panel default">
-
-                <p class="bodytext"><b>Bitte wenden Sie sich an:</b></p>
+                @if($parish->congregation_name)<p>Sie gehören zur <b>
+                        @if($parish->congregation_url)<a href="{{ $parish->congregation_url }}">@endif
+                            {{ $parish->congregation_name }}
+                            @if($parish->congregation_url)</a>@endif
+                    </b>.</p>
+                @endif
+                <b>Bitte wenden Sie sich an:</b>
                 @if(count($parish->users))
                     <br/>
                     @foreach ($parish->users as $user)

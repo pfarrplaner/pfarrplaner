@@ -80,7 +80,6 @@ class CityTest extends TestCase
      * @test
      */
     public function testCityEditWorks() {
-        $this->withoutExceptionHandling();
         $city = factory(City::class)->create();
         $response = $this->actingAs($this->user)->get(route('cities.edit', $city->id));
         $response->assertStatus(200)
@@ -187,10 +186,12 @@ class CityTest extends TestCase
 
         Permission::create(['name' => 'benutzerliste-lokal-sehen']);
         Permission::create(['name' => 'rollen-bearbeiten']);
+        Permission::create(['name' => 'pfarramt-bearbeiten']);
 
         $this->user = factory(User::class)->create();
         $this->user->givePermissionTo('benutzerliste-lokal-sehen');
         $this->user->givePermissionTo('rollen-bearbeiten');
+        $this->user->givePermissionTo('pfarramt-bearbeiten');
     }
 
 

@@ -42,6 +42,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Shetabit\Visitor\Traits\Visitable;
 use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;
@@ -637,6 +638,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function getIsLocalAdminAttribute()
+    {
+        return (!$this->isAdmin) && (count($this->adminCities) >0);
+    }
+
+    /**
      * Find all users for which this user may see the absences
      *
      * Permission logic:
@@ -842,6 +851,14 @@ class User extends Authenticatable
                 $query->where('approver_id', $id);
             }
         )->get();
+    }
+
+    /**
+     * Automatically hash password
+     * @param $value
+     */
+    public function setPasswordAttribute($value) {
+        if ($value != '') $this->attributes['password'] = Hash::make($value);
     }
 
 }
