@@ -119,6 +119,7 @@ return [
     'not_in' => 'Der gewählte Wert für :attribute ist ungültig.',
     'not_regex' => ':attribute hat ein ungültiges Format.',
     'numeric' => ':attribute muss eine Zahl sein.',
+    'password' => ':attribute entspricht nicht deinem aktuellen Passwort.',
     'present' => ':attribute muss vorhanden sein.',
     'phone_number' => ':attribute muss eine gültige Telefonnummer sein.',
     'regex' => ':attribute Format ist ungültig.',
@@ -241,5 +242,8 @@ return [
         'spouse2_city' => 'Ort',
         'spouse2_phone' => 'Telefon',
         'spouse2_email' => 'E-Mail',
+        'current_password' => 'Aktuelles Passwort',
+        'new_password' => 'Neues Passwort',
+        'new_password_confirmation' => 'Passwortbestätigung',
     ],
 ];

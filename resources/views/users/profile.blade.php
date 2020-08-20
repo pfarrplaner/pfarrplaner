@@ -84,32 +84,9 @@
                     @slot('cardFooter')
                         <button type="submit" class="btn btn-primary">Passwort ändern</button>
                     @endslot
-                    <div class="form-group{{ $errors->has('current-password') ? ' has-error' : '' }}">
-                        <label for="new-password" class="control-label">Aktuelles Passwort</label>
-                        <input id="current-password" type="password" class="form-control" name="current-password"
-                               required>
-                        @if ($errors->has('current-password'))
-                            <span class="help-block">
-                                        <strong>{{ $errors->first('current-password') }}</strong>
-                                    </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group{{ $errors->has('new-password') ? ' has-error' : '' }}">
-                        <label for="new-password" class="control-label">Neues Passwort</label>
-                        <input id="new-password" type="password" class="form-control" name="new-password" required>
-                        @if ($errors->has('new-password'))
-                            <span class="help-block">
-                                        <strong>{{ $errors->first('new-password') }}</strong>
-                                    </span>
-                        @endif
-                    </div>
-
-                    <div class="form-group">
-                        <label for="new-password-confirm" class="control-label">Neues Passwort wiederholen</label>
-                        <input id="new-password-confirm" type="password" class="form-control"
-                               name="new-password_confirmation" required>
-                    </div>
+                    @input(['name' => 'current_password', 'label' => 'Aktuelles Passwort', 'type' => 'password'])
+                    @input(['name' => 'new_password', 'label' => 'Neues Passwort', 'type' => 'password'])
+                    @input(['name' => 'new_password_confirmation', 'label' => 'Neues Passwort wiederholen', 'type' => 'password'])
                 @endcomponent
             </form>
 
