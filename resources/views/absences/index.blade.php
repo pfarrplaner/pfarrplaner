@@ -10,7 +10,7 @@
         <li class="nav-item">
             <a class="btn btn-warning"
                href="{{ route('absences.create', ['year' => $year, 'month' => $month, 'user' => Auth::user()->id]) }}">Urlaubsantrag
-                stellen</a></th>
+                stellen</a>
         </li>
     @endif
     <li class="nav-item">
@@ -108,8 +108,8 @@
                                 day_{{ $today->format('D') }}
                         @if($services = $user->isBusy($today, true)) busy @endif
                         @if ($absence = $user->isAbsent($today, true)) absent has-absence absence-status-{{ $absence->status }}
-                        @if(Auth::user()->id == $user->id) @if(count($user->approvers) == 0 ))editable @endif
-                        @else (Auth::user()->can('editAbsences', $user)) editablem @endif
+                        @if(Auth::user()->id == $user->id) @if(count($user->approvers) == 0 ) editable @endif
+                        @else (Auth::user()->can('editAbsences', $user)) editable @endif
                         @if($absence->getReplacingUserIds()->contains(Auth::user()->id)) replacing @endif
                         @endif
                                 "
