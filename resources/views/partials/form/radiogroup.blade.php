@@ -8,4 +8,5 @@
         </label>
     </div>
     @endforeach
+    @include('partials.form.validation')
 </div>

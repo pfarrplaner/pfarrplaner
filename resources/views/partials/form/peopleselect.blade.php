@@ -11,4 +11,5 @@
             >{{ $user->name }}</option>
         @endforeach
     </select>
+    @include('partials.form.validation')
 </div>
