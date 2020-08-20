@@ -50,11 +50,7 @@
                                     @endforeach
                                 </optgroup>
                             </select>
-                            @if($errors->has('service'))
-                                @foreach($errors->get('service') as $message)
-                                    <div class="invalid-feedback">{!! $message !!}</div>
-                                @endforeach
-                            @endif
+                            @include('partials.form.validation', ['name' => 'service'])
                         </div>
                     @endif
                     @if(null === $service)
