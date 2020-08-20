@@ -110,6 +110,12 @@ class QueryLog
                 $bindings = $query->bindings ?? [];
                 $normalizedBindings = array_map(
                     function ($binding) {
+                        if (is_a($binding, \DateTime::class) || is_a($binding, Carbon::class)) {
+                            return '"'.$binding->format('Y-m-d H:i:s').'"';
+                        }
+                        if (is_object($binding) && method_exists($binding, '__toString')) {
+                            return '"'.$binding->__toString().'"';
+                        }
                         return is_string($binding) ? '"' . $binding . '"' : $binding;
                     },
                     $bindings
