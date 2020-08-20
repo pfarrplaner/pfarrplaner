@@ -152,14 +152,6 @@
                     </nav>
                     <!-- /.sidebar-menu -->
                 @endauth
-                @guest
-                    <form method="post" action="{{ route('login') }}" class="sidebar-form hidden-collapsed login-form">
-                        @csrf
-                        @input(['name' => 'email', 'label' => 'E-Mailadresse'])
-                        @input(['name' => 'password', 'label' => 'Passwort', 'type' => 'password'])
-                        <input type="submit" class="btn btn-primary" value="Anmelden"/>
-                    </form>
-                @endguest
             @endif
         </div>
         <!-- /.sidebar -->
@@ -241,7 +233,7 @@
         }
     }, window.Laravel.timeout);
 </script>
-<script src="{{ asset('js/bundle.js') }}"/>
+<script src="{{ asset('js/bundle.js') }}"></script>
 <!-- other libraries -->
 <script src="{{ asset('js/pfarrplaner/forms.js') }}"></script>
 @yield('scripts')
