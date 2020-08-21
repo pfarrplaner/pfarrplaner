@@ -220,7 +220,7 @@ class ICalController extends Controller
         if ($key == 'cityEvents') {
             $expires = Carbon::now()->addMinutes(60)->format('D, d M Y H:i:s \G\M\T');
             $cacheKey = 'ical_export_' . $key . '_' . $token;
-            if (Cache::has($cacheKey)) {
+            if ((!$request->has('no_cache')) && Cache::has($cacheKey)) {
                 $data = Cache::get($cacheKey);
             } else {
                 $data = $calendarLink->export($request, $user);
