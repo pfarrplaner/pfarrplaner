@@ -7,4 +7,5 @@
             >{{$thisDay->date->format('d.m.Y')}}</option>
         @endforeach
     </select>
+    @include('partials.form.validation')
 </div>

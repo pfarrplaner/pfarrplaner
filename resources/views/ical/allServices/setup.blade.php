@@ -24,6 +24,7 @@
                             </div>
                         @endforeach
                     </div>
+                    @checkbox(['label' => 'Versteckte Gottesdienste mit einbeziehen', 'name' => 'includeHidden'])
                     <hr />
                     <input type="submit" class="btn btn-primary" value="Weiter &gt;" />
                 </form>

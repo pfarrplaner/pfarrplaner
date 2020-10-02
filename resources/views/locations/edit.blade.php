@@ -3,6 +3,7 @@
 @section('title', 'Kirche / Gottesdienstort bearbeiten')
 
 @section('content')
+    @component('components.container')
     <form method="post" action="{{ route('locations.update', $location->id) }}">
         @method('PATCH')
         @csrf
@@ -10,54 +11,14 @@
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Speichern</button>
             @endslot
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" class="form-control" name="name" value="{{ $location->name }}"/>
-            </div>
-            <div class="form-group">
-                <label for="location_id">Kirchengemeinde:</label>
-                <select class="form-control" name="city_id">
-                    @foreach ($cities->all() as $city)
-                        <option value="{{ $city->id }}"
-                                @if ($city->id == old('city_id', $location->city_id))
-                                selected
-                                @endif
-                        >{{ $city->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="default_time">Gottesdienst um:</label>
-                <input type="text" class="form-control" name="default_time"
-                       value="{{ Carbon\Carbon::createFromTimeString($location->default_time)->format('H:i')}}"/>
-            </div>
-            <div class="form-group">
-                <label for="cc_default_location">Wenn parallel Kinderkirche stattfindet, dann normalerweise
-                    hier:</label>
-                <input type="text" class="form-control" id="cc_default_location" name="cc_default_location"
-                       value="{{ $location->cc_default_location }}"/>
-            </div>
-            <div class="form-group">
-                <label for="alternate_location_id">Alternativer Ort, wenn hier kein Gottesdienst stattfindet:</label>
-                <select class="form-control" name="alternate_location_id">
-                    <option></option>
-                    @foreach($alternateLocations as $alternateLocation)
-                        <option value="{{ $alternateLocation->id }}"
-                                @if($location->alternate_location_id == $alternateLocation->id) selected @endif>{{ $alternateLocation->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="at_text">Ortsangabe, wenn ein Gottesdienst hier stattfindet:</label>
-                <input type="text" class="form-control" id="at_text" name="at_text"
-                       placeholder="z.B.: in der Peterskirche; auf dem Friedhof; im Gemeindezentrum Stiegel"
-                       value="{{ $location->at_text }}"/>
-            </div>
-            <div class="form-group">
-                <label for="general_location_name">Allgemeine Ortsangabe:</label>
-                <input type="text" class="form-control" id="general_location_name" name="general_location_name"
-                       placeholder="z.B.: in Tailfingen" value="{{ $location->general_location_name }}"/>
-            </div>
+            @input(['name' => 'name', 'label' => 'Name', 'value' => $location->name])
+            @select(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'value' => $location->city_id])
+            @input(['name' => 'default_time', 'label' => 'Gottesdienst um', 'value' => substr($location->default_time, 0, 5)])
+            @input(['name' => 'cc_default_location', 'label' => 'Wenn parallel Kinderkirche stattfindet, dann normalerweise hier', 'value' => $location->cc_default_location])
+            @select(['name' => 'alternate_location_id', 'label' => 'Wenn parallel Kinderkirche stattfindet, dann normalerweise hier', 'items' => $alternateLocations, 'value' => $location->alternate_location_id, 'empty' => true])
+            @input(['name' => 'at_text', 'label' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'placeholder' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'value' => $location->at_text])
+            @input(['name' => 'general_location_name', 'label' => 'Allgemeine Ortsangabe', 'placeholder' => 'z.B.: in Tailfingen', 'value' => $location->general_location_name])
         @endcomponent
     </form>
+    @endcomponent
 @endsection

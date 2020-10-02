@@ -185,23 +185,7 @@ class AbsenceController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'from' => 'required',
-                'to' => 'required',
-                'user_id' => 'required'
-            ]
-        );
-
-        $absence = new Absence(
-            [
-                'from' => Carbon::createFromFormat('d.m.Y H:i:s', ($request->get('from') ?: '') . ' 0:00:00'),
-                'to' => Carbon::createFromFormat('d.m.Y H:i:s', ($request->get('to') ?: '') . ' 0:00:00'),
-                'user_id' => $request->get('user_id'),
-                'reason' => $request->get('reason') ?: '',
-                'replacement_notes' => $request->get('replacement_notes', ''),
-            ]
-        );
+        $absence = Absence::create($this->validateRequest($request));
 
         $absence->status = 'approved';
         $user = User::find($request->get('user_id'));
@@ -294,17 +278,7 @@ class AbsenceController extends Controller
      */
     public function update(Request $request, Absence $absence)
     {
-        $request->validate(
-            [
-                'from' => 'required',
-                'to' => 'required',
-            ]
-        );
-        $absence->from = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('from') . ' 0:00:00');
-        $absence->to = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('to') . ' 0:00:00');
-        $absence->reason = $request->get('reason') ?: '';
-        $absence->replacement_notes = $request->get('replacement_notes', '');
-        $absence->save();
+        $absence->update($this->validateRequest($request));
         $this->setupReplacements($absence, $request->get('replacement') ?: []);
         return redirect()->route(
             'absences.index',
@@ -373,5 +347,26 @@ class AbsenceController extends Controller
         event(new AbsenceRejected($absence));
         $absence->delete();
         return redirect()->route('approvals.index')->with('success', 'Du hast den Urlaubsantrag abgelehnt.');
+    }
+
+    /**
+     * Validate request data
+     * @param Request $request
+     * @return array
+     */
+    protected function validateRequest(Request $request) {
+        $rules = [
+            'from' => 'required|date_format:d.m.Y',
+            'to' => 'required|date_format:d.m.Y',
+            'reason' => 'nullable|string',
+            'replacement_notes' => 'nullable|string',
+        ];
+        if ($request->route()->getName() == 'absences.store') {
+            $rules['user_id'] = 'required|exists:users,id';
+        }
+        $data = $request->validate($rules);
+        $data['from'] = Carbon::createFromFormat('d.m.Y', $data['from'])->setTime(0,0,0);
+        $data['to'] = Carbon::createFromFormat('d.m.Y', $data['to'])->setTime(23,59,59);
+        return $data;
     }
 }

@@ -119,6 +119,7 @@ class EmbedEventsTableReport extends AbstractEmbedReport
         $end = $start->copy()->addDays($days)->setTime(23, 59, 59);
 
         $services = Service::with(['day', 'location'])
+            ->notHidden()
             ->whereDoesntHave('funerals')
             ->whereDoesntHave('weddings')
             ->regularForCity($city)

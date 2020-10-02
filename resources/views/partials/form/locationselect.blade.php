@@ -15,4 +15,5 @@
                 @if ((!isset($value)) || ($value == null)) selected @endif
         >Freie Ortsangabe</option>
     </select>
+    @include('partials.form.validation')
 </div>

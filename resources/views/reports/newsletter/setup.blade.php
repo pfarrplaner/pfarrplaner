@@ -7,30 +7,11 @@
         <div class="card">
             <div class="card-body">
                 @csrf
-                <div class="form-group"> <!-- Radio group !-->
-                    <label class="control-label">Folgende Kirchengemeinden mit einbeziehen:</label>
-                    @foreach ($cities as $city)
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="includeCities[]"
-                                   value="{{ $city->id }}"
-                                   id="defaultCheck{{$city->id}}"
-                                   @if(Auth::user()->cities->contains($city)) checked @endif >
-                            <label class="form-check-label" for="defaultCheck{{$city->id}}">
-                                {{$city->name}}
-                            </label>
-                        </div>
-                    @endforeach
-                </div>
-                <div class="form-group">
-                    <label for="start">Gottesdienste von:</label>
-                    <input type="text" class="form-control datepicker" name="start" value="{{ date('d.m.Y') }}"
-                           placeholder="TT.MM.JJJJ"/>
-                </div>
-                <div class="form-group">
-                    <label for="end">Bis:</label>
-                    <input type="text" class="form-control datepicker" name="end" value="{{ \Carbon\Carbon::now()->addDays(7)->format('d.m.Y') }}"
-                           placeholder="TT.MM.JJJJ"/>
-                </div>
+                @select(['name' => 'city', 'label' => 'Newsletter für folgende Kirchengemeinde', 'items' => $cities])
+                @input(['name' => 'start', 'label'=> 'Gottesdienste von', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => date('d.m.Y')])
+                @input(['name' => 'end', 'label'=> 'Bis', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => \Carbon\Carbon::now()->addDays(7)->format('d.m.Y')])
+                @checkbox(['name' => 'mixOutlook', 'label' => 'Veranstaltungen aus dem Outlook-Kalender mit aufnehmen. ', 'value' => 1, 'checked' => true])
+                @checkbox(['name' => 'mixOP', 'label' => 'Veranstaltungen aus dem Online-Planer mit aufnehmen. ', 'value' => 1, 'checked' => true])
             </div>
             <div class="card-footer">
                 <button type="submit" class="btn btn-primary">Erstellen</button>

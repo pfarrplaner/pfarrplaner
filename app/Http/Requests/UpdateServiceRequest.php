@@ -88,6 +88,7 @@ class UpdateServiceRequest extends FormRequest
             'cc_alt_time' => 'nullable|date_format:"H:i"',
             'internal_remarks' => 'nullable|string',
             'title' => 'nullable|string',
+            'hidden' => 'nullable|int|in:0,1',
         ];
     }
 
@@ -104,6 +105,8 @@ class UpdateServiceRequest extends FormRequest
         if (isset($data['special_location'])) {
             $data['location_id'] = 0;
         }
+
+        $data['hidden'] = $data['hidden'] ?? 0;
 
         return $data;
     }

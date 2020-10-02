@@ -173,7 +173,7 @@ class Broadcast
         // broadcast's status to "private".
         $status = new Google_Service_YouTube_LiveBroadcastStatus();
         $status->setPrivacyStatus($statusString);
-        $status->setSelfDeclaredMadeForKids(false);
+        $status->setSelfDeclaredMadeForKids('false');
 
         // Create the API request that inserts the liveBroadcast resource.
         $broadcastInsert = new Google_Service_YouTube_LiveBroadcast();
@@ -188,8 +188,21 @@ class Broadcast
             $broadcastInsert,
             []
         );
-
         $instance->setLiveBroadcast($broadcastsResponse);
+
+        $video = new \Google_Service_YouTube_Video();
+        $video->setId($broadcastsResponse->id);
+        $videoSnippet = new \Google_Service_YouTube_VideoSnippet();
+        $videoSnippet->setTitle($broadcastSnippet->getTitle());
+        $videoSnippet->setDescription($broadcastSnippet->getDescription());
+        $videoSnippet->setCategoryId(24);
+        $video->setSnippet($videoSnippet);
+        $videoStatus = new \Google_Service_YouTube_VideoStatus();
+        $videoStatus->setSelfDeclaredMadeForKids(false);
+        $video->setStatus($videoStatus);
+
+        $videoResponse = $instance->getYoutube()->videos->update('snippet,status', $video);
+
         return $instance;
     }
 
@@ -206,9 +219,9 @@ class Broadcast
      */
     public function getLiveDashboardUrl()
     {
-        return $this->liveBroadcast ? 'https://studio.youtube.com/channel/'
-            . $this->liveBroadcast->getSnippet()->getChannelId()
-            . '/livestreaming/dashboard?v=' . $this->liveBroadcast->getId() : '';
+        return $this->liveBroadcast ? 'https://studio.youtube.com/video/'
+            . $this->liveBroadcast->getId()
+            . '/livestreaming' : '';
     }
 
     /**

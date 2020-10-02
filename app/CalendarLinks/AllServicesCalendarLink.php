@@ -86,9 +86,10 @@ class AllServicesCalendarLink extends AbstractCalendarLink
     public function getRenderData(Request $request, User $user)
     {
         $cityIds = explode('-', $request->get('cities', ''));
-        return Service::with(['day', 'location'])
-            ->whereIn('city_id', $cityIds)
-            ->get();
+        $serviceQuery = Service::with(['day', 'location'])
+            ->whereIn('city_id', $cityIds);
+        if (!$request->get('includeHidden', 0)) $serviceQuery->notHidden();
+        return $serviceQuery->get();
     }
 
 

@@ -47,11 +47,8 @@ class YoutubeHelper
      */
     public static function getLiveDashboardUrl(City $city, $url)
     {
-        return 'https://studio.youtube.com/channel/'
-            . self::getChannelId($city->youtube_channel_url)
-            . (substr($city->youtube_channel_url, -1) == '/' ? '' : '/')
-            . 'livestreaming/dashboard?v='
-            . self::getCode($url);
+        return 'https://studio.youtube.com/video/'
+            . self::getCode($url).'/livestreaming';
     }
 
     /**

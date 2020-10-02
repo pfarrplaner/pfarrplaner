@@ -38,11 +38,9 @@
                         <div id="date-range12"></div>
                         <div id="date-range12-container"></div>
                     </div>
-                    <div class="form-group">
-                        <label for="reason">Beschreibung:</label>
-                        <input type="text" class="form-control" name="reason" value="{{ $absence->reason }}"
-                               placeholder="z.B. Urlaub, Fortbildung, o.ä."/>
-                    </div>
+                        @include('partials.form.validation', ['name' => 'from'])
+                        @include('partials.form.validation', ['name' => 'to'])
+                        @input(['name' => 'reason', 'label' => 'Beschreibung', 'placeholder' => 'z.B. Urlaub, Fortbildung, o.ä.', 'value' => $absence->reason])
                 @endcomponent
 
             </div>

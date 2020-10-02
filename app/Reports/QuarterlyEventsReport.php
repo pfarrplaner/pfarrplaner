@@ -102,6 +102,7 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
         $serviceList = [];
         foreach ($days as $day) {
             $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
+                ->notHidden()
                 ->where('day_id', $day->id)
                 ->where('location_id', $location->id)
                 ->orderBy('time', 'ASC')

@@ -95,6 +95,7 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
         $serviceList = [];
         foreach ($days as $day) {
             $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
+                ->notHidden()
                 ->where('day_id', $day->id)
                 ->where('cc', 1)
                 ->where('city_id', $city->id)

@@ -46,6 +46,7 @@
                             </optgroup>
                         </select>
                     </div>
+                    @include('partials.form.validation', ['name' => 'service'])
                     @if(!isset($service))
                         @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect', 'value' => $baptism->city_id])
                     @endif

@@ -30,7 +30,10 @@
 
 namespace App\Reports;
 
+use App\City;
 use App\Day;
+use App\Imports\EventCalendarImport;
+use App\Imports\OPEventsImport;
 use App\Liturgy;
 use App\Service;
 use Carbon\Carbon;
@@ -80,36 +83,52 @@ class NewsletterReport extends AbstractWordDocumentReport
     {
         $request->validate(
             [
-                'includeCities' => 'required',
+                'city' => 'required|int|exists:cities,id',
                 'start' => 'required|date|date_format:d.m.Y',
                 'end' => 'required|date|date_format:d.m.Y',
+                'mixOP' => 'nullable|in:1',
+                'mixOutlook' => 'nullable|in:1',
             ]
         );
+
+        $city = City::findOrFail($request->get('city'));
+        $start = Carbon::createFromFormat('d.m.Y', $request->get('start'))->setTime(0,0,0)->setTimezone('Europe/Berlin');
+        $end = Carbon::createFromFormat('d.m.Y', $request->get('end'))->setTime(23,59,59)->setTimezone('Europe/Berlin');
 
         $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')))
             ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')))
             ->orderBy('date', 'ASC')
             ->get();
+        $dayIds = $days->plucK('id');
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $dayTitle = $day->date->formatLocalized('%A, %d. %B %Y');
-            $liturgy = Liturgy::getDayInfo($day);
-            if (isset($liturgy['title'])) {
-                $dayTitle .= '&nbsp;&nbsp;&nbsp;' . $liturgy['title'];
-            }
+        $services = Service::with(['location', 'day'])
+            ->notHidden()
+            ->whereIn('day_id', $dayIds)
+            ->where('city_id', $city->id)
+            ->whereDoesntHave('funerals')
+            ->whereDoesntHave('weddings')
+            ->orderBy('time', 'ASC')
+            ->get();
 
+        $events = [];
+        $calendar = new EventCalendarImport($city->public_events_calendar_url);
+        $events = $calendar->mix($events, $start, $end, true, ($request->get('mixOutlook', 1) != 0));
 
-            $serviceList[$dayTitle] = Service::with(['location', 'day'])
-                ->where('day_id', $day->id)
-                ->whereIn('city_id', $request->get('includeCities'))
-                ->whereDoesntHave('funerals')
-                ->whereDoesntHave('weddings')
-                ->orderBy('time', 'ASC')
-                ->get();
+        // mix in services
+        if ($request->get('mixOutlook')) {
+            $events = Service::mix($events, $services, $start, $end);
+        } else {
+            $events = Service::mix([], $services, $start, $end);
         }
 
-        return view('reports.newsletter.render', compact('serviceList', 'days'));
+        // mix in OP events?
+        if ($request->get('mixOP')) {
+            $op = new OPEventsImport($city);
+            $events = $op->mix($events, $start, $end, true);
+        }
+
+
+        return view('reports.newsletter.render', compact('events', 'days'));
     }
 
 
