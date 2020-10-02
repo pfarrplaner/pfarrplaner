@@ -28,6 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use App\Location;
 use App\Service;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
@@ -419,6 +420,27 @@ Breadcrumbs::for(
         $trail->push($role->name, route('roles.edit', $role));
     }
 );
+
+Breadcrumbs::for(
+    'seatingSection.create',
+    function (BreadcrumbsGenerator $trail) {
+        $location = request()->get('location');
+        $trail->parent('locations.edit', $location);
+        $trail->push('Neue Zone', route('seatingSection.create'));
+    }
+);
+
+Breadcrumbs::for(
+    'seatingSection.edit',
+    function (BreadcrumbsGenerator $trail, \App\SeatingSection $seatingSection) {
+        if (!is_object($seatingSection)) $seatingSection = \App\SeatingSection::find($seatingSection);
+        $location = request()->get('location');
+        $trail->parent('locations.edit', $seatingSection->location_id);
+        $trail->push($seatingSection->title, route('seatingSection.edit', $seatingSection));
+    }
+);
+
+
 
 Breadcrumbs::for(
     'services.add',

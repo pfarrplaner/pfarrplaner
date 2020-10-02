@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
@@ -28,69 +28,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App;
+namespace App\Seating;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * Class Location
- * @package App
- */
-class Location extends Model
+use League\Flysystem\Adapter\AbstractAdapter;
+
+class SeatingModels
 {
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        'name',
-        'city_id',
-        'default_time',
-        'cc_default_location',
-        'alternate_location_id',
-        'general_location_name',
-        'at_text'
-    ];
 
-    /**
-     * @return BelongsTo
-     */
-    public function city()
-    {
-        return $this->belongsTo(City::class);
+
+    public static function all() {
+        $seatingModels = [];
+        foreach (glob(app_path('Seating') . '/*SeatingModel.php') as $file) {
+            if (substr(pathinfo($file, PATHINFO_FILENAME), 0, 8) !== 'Abstract') {
+                $seatingModelClass = 'App\\Seating\\' . pathinfo($file, PATHINFO_FILENAME);
+                if (class_exists($seatingModelClass)) {
+                    /** @var AbstractSeatingModel $seatingModel */
+                    $seatingModel = new $seatingModelClass();
+                    $seatingModels[$seatingModel->getTitle()] = $seatingModel;
+                }
+            }
+        }
+        ksort($seatingModels);
+        return $seatingModels;
     }
 
-    /**
-     * @return HasMany
-     */
-    public function services()
-    {
-        return $this->hasMany(Service::class);
+    public static function select() {
+        $seatingModels = [];
+        foreach (self::all() as $title => $class) {
+            $seatingModels[get_class($class)] = $title;
+        }
+        return $seatingModels;
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function alternateLocation()
-    {
-        return $this->belongsTo(Location::class, 'alternate_location_id');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function seatingSections() {
-        return $this->hasMany(SeatingSection::class);
-    }
-
-
-    /**
-     * @return mixed|string
-     */
-    public function atText()
-    {
-        return $this->at_text ?: '(' . $this->name . ')';
+    public static function byTitle($title) {
+        /** @var AbstractSeatingModel $class */
+        foreach (self::all() as $class) {
+            if ($class->getTitle() == $title) return $class;
+        }
+        return null;
     }
 
 }

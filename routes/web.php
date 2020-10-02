@@ -68,6 +68,8 @@ Route::get('absence/{absence}/reject', 'AbsenceController@approve')->name('absen
 Route::resource('tags', 'TagController')->middleware('auth');
 Route::resource('parishes', 'ParishController')->middleware('auth');
 
+Route::resource('seatingSection', 'SeatingSectionController');
+
 // embed in web site:
 Route::get(
     'services/embed/locations/{ids}/{limit?}',

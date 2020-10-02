@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
@@ -28,69 +28,45 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App;
+namespace App\Seating;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * Class Location
- * @package App
- */
-class Location extends Model
+use App\Location;
+use App\Service;
+
+class AbstractSeatingModel
 {
-    /**
-     * @var string[]
-     */
-    protected $fillable = [
-        'name',
-        'city_id',
-        'default_time',
-        'cc_default_location',
-        'alternate_location_id',
-        'general_location_name',
-        'at_text'
-    ];
+
+    protected $title = '';
+
+
+    public function findSeats($number, Location $location, Service $service) {
+        return null;
+    }
+
+    public function freeSeats(Location $location, Service $service) {
+        return 0;
+    }
+
+    public function getKey() {
+        return str_replace('App\\Seating\\', '', basename(get_called_class()));
+    }
 
     /**
-     * @return BelongsTo
+     * @return string
      */
-    public function city()
+    public function getTitle(): string
     {
-        return $this->belongsTo(City::class);
+        return $this->title;
     }
 
     /**
-     * @return HasMany
+     * @param string $title
      */
-    public function services()
+    public function setTitle(string $title): void
     {
-        return $this->hasMany(Service::class);
+        $this->title = $title;
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function alternateLocation()
-    {
-        return $this->belongsTo(Location::class, 'alternate_location_id');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function seatingSections() {
-        return $this->hasMany(SeatingSection::class);
-    }
-
-
-    /**
-     * @return mixed|string
-     */
-    public function atText()
-    {
-        return $this->at_text ?: '(' . $this->name . ')';
-    }
 
 }

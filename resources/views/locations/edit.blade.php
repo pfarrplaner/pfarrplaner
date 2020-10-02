@@ -4,21 +4,59 @@
 
 @section('content')
     @component('components.container')
-    <form method="post" action="{{ route('locations.update', $location->id) }}">
-        @method('PATCH')
-        @csrf
         @component('components.ui.card')
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Speichern</button>
             @endslot
-            @input(['name' => 'name', 'label' => 'Name', 'value' => $location->name])
-            @select(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'value' => $location->city_id])
-            @input(['name' => 'default_time', 'label' => 'Gottesdienst um', 'value' => substr($location->default_time, 0, 5)])
-            @input(['name' => 'cc_default_location', 'label' => 'Wenn parallel Kinderkirche stattfindet, dann normalerweise hier', 'value' => $location->cc_default_location])
-            @select(['name' => 'alternate_location_id', 'label' => 'Wenn parallel Kinderkirche stattfindet, dann normalerweise hier', 'items' => $alternateLocations, 'value' => $location->alternate_location_id, 'empty' => true])
-            @input(['name' => 'at_text', 'label' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'placeholder' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'value' => $location->at_text])
-            @input(['name' => 'general_location_name', 'label' => 'Allgemeine Ortsangabe', 'placeholder' => 'z.B.: in Tailfingen', 'value' => $location->general_location_name])
-        @endcomponent
-    </form>
-    @endcomponent
+            @tabheaders
+            @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => request()->get('tab', 'home') == 'home']) @endtabheader
+            @tabheader(['id' => 'seating', 'title' => 'Sitzplätze', 'active' => request()->get('tab', 'home') == 'seating']) @endtabheader
+            @endtabheaders
+            @tabs
+            @tab(['id' => 'home', 'active' => request()->get('tab', 'home') == 'home'])
+            <form method="post" action="{{ route('locations.update', $location->id) }}">
+                @method('PATCH')
+                @csrf
+                @input(['name' => 'name', 'label' => 'Name', 'value' => $location->name])
+                @select(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'value' => $location->city_id])
+                @input(['name' => 'default_time', 'label' => 'Gottesdienst um', 'value' => substr($location->default_time, 0, 5)])
+                @input(['name' => 'cc_default_location', 'label' => 'Wenn parallel Kinderkirche stattfindet, dann normalerweise hier', 'value' => $location->cc_default_location])
+                @select(['name' => 'alternate_location_id', 'label' => 'Wenn parallel Kinderkirche stattfindet, dann normalerweise hier', 'items' => $alternateLocations, 'value' => $location->alternate_location_id, 'empty' => true])
+                @input(['name' => 'at_text', 'label' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'placeholder' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'value' => $location->at_text])
+                @input(['name' => 'general_location_name', 'label' => 'Allgemeine Ortsangabe', 'placeholder' => 'z.B.: in Tailfingen', 'value' => $location->general_location_name])
+            </form>
+            @endtab
+            @tab(['id' => 'seating', 'active' => request()->get('tab', 'home') == 'seating'])
+            <div class="form-group">
+                <a class="btn btn-success"
+                   href="{{ route('seatingSection.create', ['location' => $location->id]) }}"><span
+                        class="fa fa-plus"></span> Neue Zone hinzufügen</a>
+            </div>
+            @if(count($location->seatingSections))
+                @foreach($location->seatingSections as $seatingSection)
+                    <div class="row mb-2">
+                        <div class="col-md-8">
+                            <b>{{ $seatingSection->title }}</b> ({{ $seatingSection->seating_model->getTitle() }})
+                        </div>
+                        <div class="col-md-4 text-right">
+                            <a class="btn btn-sm btn-secondary"
+                               href="{{ route('seatingSection.edit', $seatingSection) }}"><span
+                                    class="fa fa-edit"></span></a>
+                            <form class="form-inline" method="post"
+                                  action="{{ route('seatingSection.destroy', $seatingSection) }}" style="display: inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
+                            </form>
+                        </div>
+                    </div>
+
+                @endforeach
+            @else
+                Es sind noch keine Zonen definiert.
+                @endif
+                @endtab
+                @endtabs
+                @endcomponent
+                @endcomponent
 @endsection
