@@ -4,35 +4,40 @@
     <table>
         <thead></thead>
         <tbody>
-        @foreach($serviceList as $dayTitle => $services)
-            @if(count($services))
-                <tr>
-                    <td colspan="3"
-                        style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 12px 0 12px 0; color: #804070;">
-                        <strong>{!!  $dayTitle !!}</strong>
-                    </td>
-                </tr>
-                @if(isset($services[0]) && ($services[0]->offering_goal!=''))
+        @foreach($events as $dateCode => $theseEvents)
+            <?php
+                $date = \Carbon\Carbon::createFromFormat('YmdHis', $dateCode)->setTime(0,0,0);
+                $liturgy = \App\Liturgy::getDayInfo($date->format('d.m.Y'));
+            ?>
+            <tr>
+                <td colspan="3"
+                    style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 12px 0 12px 0; color: #804070;">
+                    <strong>{{ $date->formatLocalized('%A, %d. %B %Y') }}</strong>
+                </td>
+            </tr>
+            @foreach($theseEvents as $event)
+                @if (is_object($event))
                     <tr>
-                        <td colspan="3"
-                            style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 0 12px 0;">
-                            Opfer: {{ $services[0]->offering_goal }}
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            {{ $event->timeText(true, '.') }}</td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            <strong>{{ $event->titleText(false, false) }}</strong> ({{ $event->locationText() }})
                         </td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;" valign="top">
+                            <strong>{{ $event->participantsText('P') }}</strong></td>
+                    </tr>
+                @else
+                    <tr>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            {{ $event['start']->format('H:i') }} Uhr</td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            <strong>{{ $event['title'] }}</strong>@if($event['subtitle'] ?? '')<br />{{ $event['subtitle'] }} @endif
+                            @if($event['locationtitle'] ?? '')({{ $event['locationtitle'] }})@endif
+                        </td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;" valign="top"></td>
                     </tr>
                 @endif
-
-                @foreach ($services as $service)
-                    <tr>
-                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;">
-                            {{ $service->timeText(true, '.') }}</td>
-                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;">
-                            <strong>{{ $service->titleText(false, false) }}</strong> ({{ $service->locationText() }})
-                        </td>
-                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;">
-                            <strong>{{ $service->participantsText('P') }}</strong></td>
-                    </tr>
-                @endforeach
-            @endif
+            @endforeach
         @endforeach
         </tbody>
     </table>
@@ -40,35 +45,40 @@
     <textarea class="form-control" rows="20"><table>
         <thead></thead>
         <tbody>
-        @foreach($serviceList as $dayTitle => $services)
-            @if(count($services))
-                <tr>
+        @foreach($events as $dateCode => $theseEvents)
+            <?php
+            $date = \Carbon\Carbon::createFromFormat('YmdHis', $dateCode)->setTime(0,0,0);
+            $liturgy = \App\Liturgy::getDayInfo($date->format('d.m.Y'));
+            ?>
+            <tr>
                 <td colspan="3"
                     style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 12px 0 12px 0; color: #804070;">
-                    <strong>{!!  $dayTitle !!}</strong>
+                    <strong>{{ $date->formatLocalized('%A, %d. %B %Y') }}</strong>
                 </td>
             </tr>
-                @if(isset($services[0]) && ($services[0]->offering_goal!=''))
+            @foreach($theseEvents as $event)
+                @if (is_object($event))
                     <tr>
-                <td colspan="3"
-                    style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 0 12px 0;">
-                    Opfer: {{ $services[0]->offering_goal }}
-                </td>
-            </tr>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            {{ $event->timeText(true, '.') }}</td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            <strong>{{ $event->titleText(false, false) }}</strong> ({{ $event->locationText() }})
+                        </td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;" valign="top">
+                            <strong>{{ $event->participantsText('P') }}</strong></td>
+                    </tr>
+                @else
+                    <tr>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            {{ $event['start']->format('H.i') }} Uhr</td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                            <strong>{{ $event['title'] }}</strong>@if($event['subtitle'] ?? '')<br />{{ $event['subtitle'] }} @endif
+                            @if($event['locationtitle'] ?? '')({{ $event['locationtitle'] }})@endif
+                        </td>
+                        <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;" valign="top"></td>
+                    </tr>
                 @endif
-
-                @foreach ($services as $service)
-                    <tr>
-                    <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;">
-                        {{ $service->timeText(true, '.') }}</td>
-                    <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;">
-                        <strong>{{ $service->titleText(false, false) }}</strong> ({{ $service->locationText() }})
-                    </td>
-                    <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;">
-                        <strong>{{ $service->participantsText('P') }}</strong></td>
-                </tr>
-                @endforeach
-            @endif
+            @endforeach
         @endforeach
         </tbody>
     </table></textarea>
