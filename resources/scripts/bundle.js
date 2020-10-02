@@ -74,8 +74,6 @@ require('selectize');
 import(/* webpackIgnore: true */ 'https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.20.0/jquery.daterangepicker.min.js');
 
 $(document).ready(function () {
-    $('.fancy-selectize').selectize();
-
 
     $('.datepicker').datepicker({
         format: 'dd.mm.yyyy',
