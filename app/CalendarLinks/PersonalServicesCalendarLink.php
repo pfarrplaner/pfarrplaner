@@ -63,7 +63,7 @@ class PersonalServicesCalendarLink extends AbstractCalendarLink
      */
     public function setupRoute()
     {
-        return route('ical.link', ['key' => $this->getKey()]);
+        return route('ical.link', ['key' => $this->getKey(), 'includeHidden' => request()->get('includeHidden', 0)]);
     }
 
     /**
@@ -83,15 +83,16 @@ class PersonalServicesCalendarLink extends AbstractCalendarLink
      */
     public function getRenderData(Request $request, User $user)
     {
-        $data = Service::select('services.*')
+        $servicesQuery = Service::select('services.*')
             ->with('location', 'day', 'participants')
             ->whereHas(
                 'participants',
                 function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 }
-            )->get();
-        return $data;
+            );
+        if (!$request->get('includeHidden', 0)) $servicesQuery->notHidden();
+        return $servicesQuery->get();
     }
 
 

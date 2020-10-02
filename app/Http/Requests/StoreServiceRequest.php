@@ -99,6 +99,7 @@ class StoreServiceRequest extends FormRequest
             'sermon_description' => 'nullable|string',
             'konfiapp_event_type' => 'nullable|int',
             'konfiapp_event_qr' => 'nullable|string',
+            'hidden' => 'nullable|int|in:0,1',
         ];
     }
 
@@ -128,6 +129,8 @@ class StoreServiceRequest extends FormRequest
                 $data['cc_location'] = $data['cc_location'] ?: '';
             }
         }
+
+        $data['hidden'] = $data['hidden'] ?? 0;
 
         return $data;
     }

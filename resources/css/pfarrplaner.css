@@ -321,6 +321,13 @@ span.vacation-conflict {
     background-color: yellow;
 }
 
+.calendar-month .service-entry.hidden {
+    background-color: lightgray !important;
+}
+
+.calendar-month .service-entry.mine.hidden {
+    background-color: #7aa07a !important;
+}
 
 
 .calendar-month .service-entry.editable:hover {

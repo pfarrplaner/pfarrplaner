@@ -95,10 +95,11 @@ class CityEventsCalendarLink extends AbstractCalendarLink
         $city = City::findOrFail($request->get('city'));
         $events = [];
 
-        $services = Service::with(['day', 'location'])
-            ->where('city_id', $city->id)
-            ->get();
+        $servicesQuery = Service::with(['day', 'location'])
+            ->where('city_id', $city->id);
 
+        if (!$request->get('includeHidden', 0)) $servicesQuery->notHidden();
+        $services = $servicesQuery->get();
 
         $start = Carbon::createFromDate(1970, 1, 1);
         $end = Carbon::createFromDate(2070, 1, 1);

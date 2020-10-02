@@ -116,6 +116,7 @@ class EventListReport extends AbstractWordDocumentReport
 
         $services = Service::with(['day', 'location'])
             ->regularForCity($city)
+            ->notHidden()
             ->dateRange($start, $end)
             ->get();
 

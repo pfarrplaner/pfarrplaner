@@ -39,6 +39,7 @@
                     @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @checkbox(['name' => 'hidden', 'label' => 'Diesen Gottesdienst in öffentlichen Listen verbergen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'special'])
                     @checkbox(['name' => 'baptism', 'label' => 'Dies ist ein Taufgottesdienst.', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), ])

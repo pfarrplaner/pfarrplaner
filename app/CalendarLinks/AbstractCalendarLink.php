@@ -76,6 +76,7 @@ class AbstractCalendarLink
     public function __construct()
     {
         $this->data['key'] = $this->getKey();
+        if ($x = request()->get('includeHidden', 0)) $this->data['includeHidden'] = $x;
         if (null !== Auth::user()) {
             $this->user = Auth::user();
             $this->data['token'] = Auth::user()->getToken();
@@ -109,7 +110,7 @@ class AbstractCalendarLink
      */
     public function setupRoute()
     {
-        return route('ical.setup', ['key' => $this->getKey()]);
+        return route('ical.setup', ['key' => $this->getKey(), 'includeHidden' => request()->get('includeHidden', 0)]);
     }
 
     /**

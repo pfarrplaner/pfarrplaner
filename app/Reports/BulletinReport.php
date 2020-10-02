@@ -103,6 +103,7 @@ class BulletinReport extends AbstractWordDocumentReport
         $serviceList = [];
         foreach ($days as $day) {
             $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
+                ->notHidden()
                 ->where('day_id', $day->id)
                 ->whereIn('city_id', $request->get('includeCities'))
                 ->orderBy('time', 'ASC')

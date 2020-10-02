@@ -110,6 +110,7 @@ class EmbedStreamingReport extends AbstractEmbedReport
         $nextService = Service::where('city_id', $request->get('city'))
             ->select('services.*')
             ->join('days', 'days.id', 'services.day_id')
+            ->notHidden()
             ->whereHas(
                 'day',
                 function ($query) {
@@ -124,6 +125,7 @@ class EmbedStreamingReport extends AbstractEmbedReport
         $lastServices = Service::where('city_id', $request->get('city'))
             ->select('services.*')
             ->join('days', 'days.id', 'services.day_id')
+            ->notHidden()
             ->whereHas(
                 'day',
                 function ($query) {

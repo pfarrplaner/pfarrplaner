@@ -12,7 +12,8 @@
                 @endcomponent
                 <form method="post" action="{{ route('ical.link', ['key' => $calendarLink->getKey()]) }}">
                     @csrf
-                    @selectize(['name' => 'city', 'label' => 'Veranstaltungen für diese Kirchengemeinde anzeigen', 'items' => $cities])
+                    @select(['name' => 'city', 'label' => 'Veranstaltungen für diese Kirchengemeinde anzeigen', 'items' => $cities])
+                    @checkbox(['label' => 'Versteckte Gottesdienste mit einbeziehen', 'name' => 'includeHidden'])
                     <hr />
                     <input type="submit" class="btn btn-primary" value="Weiter &gt;" />
                 </form>

@@ -102,6 +102,7 @@ class NewsletterReport extends AbstractWordDocumentReport
         $dayIds = $days->plucK('id');
 
         $services = Service::with(['location', 'day'])
+            ->notHidden()
             ->whereIn('day_id', $dayIds)
             ->where('city_id', $city->id)
             ->whereDoesntHave('funerals')

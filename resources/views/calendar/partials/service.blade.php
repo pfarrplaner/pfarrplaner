@@ -3,6 +3,7 @@
         @if ((!$slave) && $service->participants->contains(Auth::user())) mine @endif
         @if (($slave) && ($highlight == $service->id)) highlighted @endif
         @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen']) @if($service->funerals->count()) funeral @endif @endcanany
+        @if($service->hidden) hidden @endif
                 "
         @can('update', $service)
         style="cursor: pointer;"

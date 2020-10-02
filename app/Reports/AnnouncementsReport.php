@@ -130,6 +130,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             ->regularForCity($city)
             ->select('services.*')
             ->join('days', 'services.day_id', 'days.id')
+            ->notHidden()
             ->whereHas(
                 'day',
                 function ($query) {
@@ -171,13 +172,14 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         )->where('date', '<', $service->day->date)
             ->orderBy('date', 'DESC')->limit(10)->get();
 
-        $fmt = new NumberFormatter( 'de_DE', NumberFormatter::CURRENCY );
+        $fmt = new NumberFormatter('de_DE', NumberFormatter::CURRENCY);
 
         // add up all offerings for the day
         $offerings = [];
         foreach ($lastDaysWithServices as $day) {
             $dayServices = Service::where('day_id', $day->id)
                 ->where('city_id', $service->city->id)
+                ->notHidden()
                 ->get();
             $amount = 0;
             foreach ($dayServices as $dayService) {
@@ -229,7 +231,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             ->whereHas(
                 'service',
                 function ($query) use ($service, $nextWeek) {
-                    $query->whereHas(
+                    $query->notHidden()->whereHas(
                         'day',
                         function ($query2) use ($service, $nextWeek) {
                             $query2->where('date', '>=', $service->day->date);
@@ -244,19 +246,21 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             ->whereHas(
                 'service',
                 function ($query) use ($service, $nextWeek) {
-                    $query->whereHas(
-                        'day',
-                        function ($query2) use ($service, $nextWeek) {
-                            $query2->where('date', '>=', $service->day->date);
-                            $query2->where('date', '<=', $nextWeek);
-                            $query2->where('city_id', $service->city->id);
-                        }
-                    );
+                    $query->notHidden()
+                        ->whereHas(
+                            'day',
+                            function ($query2) use ($service, $nextWeek) {
+                                $query2->where('date', '>=', $service->day->date);
+                                $query2->where('date', '<=', $nextWeek);
+                                $query2->where('city_id', $service->city->id);
+                            }
+                        );
                 }
             )->get();
 
 
         $services = Service::with(['day', 'location'])
+            ->notHidden()
             ->whereHas(
                 'day',
                 function ($query) use ($service, $nextWeek) {

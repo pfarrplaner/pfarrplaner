@@ -46,6 +46,16 @@
                 @endif
             @endforeach
 
+            @if(isset($changes['hidden']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'hidden',
+                         'key' => 'In öffentlichen Listen verbergen',
+                         'old' => $changes['hidden']['original'] ? '✔' : '✘',
+                         'new' => $changes['hidden']['changed'] ? '✔' : '✘',
+                         ])
+            @endif
+
+
             @if(isset($changes['city_id']))
                 @include('mail.notifications.service.changed-attribute', [
                          'title' => 'Kirchengemeinde',

@@ -187,6 +187,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         foreach ($days as $day) {
             foreach ($locations as $location) {
                 $service = Service::where('location_id', $location->id)
+                    ->notHidden()
                     ->where('day_id', $day->id)
                     ->get();
                 if (!count($service)) {
@@ -194,6 +195,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
                     $replacement = '';
                     if (null !== $location->alternateLocation) {
                         $service = Service::where('location_id', $location->alternateLocation->id)
+                            ->notHidden()
                             ->where('day_id', $day->id)
                             ->get();
                         if (count($service)) {
@@ -275,6 +277,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         foreach ($locations as $location) {
             foreach ($days as $day) {
                 $serviceList[$location->id][$day->date->format('Y-m-d')] = Service::with(['location', 'day', 'tags'])
+                    ->notHidden()
                     ->where('day_id', $day->id)
                     ->whereIn('city_id', $includeCities)
                     ->where('location_id', $location->id)
@@ -299,6 +302,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         $specialServices = [];
         foreach ($specialDays as $day) {
             $theseServices = Service::with('location', 'day', 'tags', 'serviceGroups')
+                ->notHidden()
                 ->whereHas('serviceGroups')
                 ->where('day_id', $day->id)
                 ->whereIn('city_id', $includeCities)

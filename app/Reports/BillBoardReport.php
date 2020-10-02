@@ -121,6 +121,7 @@ class BillBoardReport extends AbstractWordDocumentReport
         $end = $start->copy()->addDays(8)->subSecond(1);
 
         $services = Service::with(['day', 'location'])
+            ->notHidden()
             ->regularForCity($city)
             ->dateRange($start, $end)
             ->get();

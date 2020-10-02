@@ -120,6 +120,7 @@ class Service extends Model
         'internal_remarks' => 'Interne Anmerkungen',
         'offering_amount' => 'Opferbetrag',
         'title' => 'Titel',
+        'hidden' => 'Versteckt',
     );
 
     /**
@@ -162,6 +163,7 @@ class Service extends Model
         'sermon_description',
         'konfiapp_event_type',
         'konfiapp_event_qr',
+        'hidden',
     ];
 
     /**
@@ -1013,5 +1015,23 @@ class Service extends Model
     public function getLiturgyAttribute()
     {
         return $this->liturgy;
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeHidden(Builder $query)
+    {
+        return $query->where('hidden', 1);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotHidden(Builder $query)
+    {
+        return $query->where('hidden', 0);
     }
 }
