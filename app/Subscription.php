@@ -74,10 +74,11 @@ class Subscription extends Model
      * @param $mailClass
      * @param array $data
      * @param null $additionalSubscribers
+     * @param bool $isNew True, if this is a newly created service
      */
-    public static function send(Service $service, $mailClass, $data = [], $additionalSubscribers = null)
+    public static function send(Service $service, $mailClass, $data = [], $additionalSubscribers = null, $isNew = false)
     {
-        $subscribers = User::subscribedTo($service)->get();
+        $subscribers = User::subscribedTo($service, $isNew)->get();
 
         // add additional subscribers
         if (!is_null($additionalSubscribers)) {

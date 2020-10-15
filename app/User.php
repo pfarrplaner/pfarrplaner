@@ -453,9 +453,10 @@ class User extends Authenticatable
      *
      * @param Builder $query
      * @param Service $service
+     * @param bool $isNew True, if this is a newly created service
      * @return mixed
      */
-    public function scopeSubscribedTo(Builder $query, Service $service)
+    public function scopeSubscribedTo(Builder $query, Service $service, $isNew = false)
     {
         $query->whereHas(
             'subscriptions',
@@ -477,7 +478,7 @@ class User extends Authenticatable
         );
 
         // some users only get notified when time or day_id change
-        if (isset($service->changes['time']) || isset($service->changes['day_id'])) {
+        if ($isNew || isset($service->changes['time']) || isset($service->changes['day_id'])) {
             $query->orWhereHas('subscriptions',
                 function ($query) use ($service) {
                     $query->where('city_id', $service->city_id);
