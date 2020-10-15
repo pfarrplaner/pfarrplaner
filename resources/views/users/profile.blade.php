@@ -49,6 +49,12 @@
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio"
+                                                   name="subscribe[{{ $city->id }}]" value="4"
+                                                   @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_TIME_CHANGES) checked @endif>
+                                            <label class="form-check-label" for="subscribe[{{ $city->id }}]">nur bei Zeit-/Datumsänderungen</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio"
                                                    name="subscribe[{{ $city->id }}]" value="1"
                                                    @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_OWN) checked @endif>
                                             <label class="form-check-label" for="subscribe[{{ $city->id }}]">eigene

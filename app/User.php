@@ -457,7 +457,7 @@ class User extends Authenticatable
      */
     public function scopeSubscribedTo(Builder $query, Service $service)
     {
-        return $query->whereHas(
+        $query->whereHas(
             'subscriptions',
             function ($query) use ($service) {
                 $query->where('city_id', $service->city_id);
@@ -475,6 +475,18 @@ class User extends Authenticatable
                 );
             }
         );
+
+        // some users only get notified when time or day_id change
+        if (isset($service->changes['time']) || isset($service->changes['day_id'])) {
+            $query->orWhereHas('subscriptions',
+                function ($query) use ($service) {
+                    $query->where('city_id', $service->city_id);
+                    $query->where('subscription_type', Subscription::SUBSCRIBE_TIME_CHANGES);
+                }
+            );
+        }
+
+        return $query;
     }
 
     /**

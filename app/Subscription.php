@@ -45,6 +45,10 @@ class Subscription extends Model
     /**
      *
      */
+    public const SUBSCRIBE_TIME_CHANGES = 4;
+    /**
+     *
+     */
     public const SUBSCRIBE_ALL = 2;
     /**
      *
@@ -54,6 +58,7 @@ class Subscription extends Model
      *
      */
     public const SUBSCRIBE_NONE = 0;
+
 
     /**
      * @var string[]
