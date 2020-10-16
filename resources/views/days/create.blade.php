@@ -115,12 +115,12 @@
             $('.card .card-header').html($('#day_' + n).data('weekday'));
             $('input[name=date]').val($('#day_' + n).data('date'));
 
-            if ($('#day_' + n).hasClass('day-type-limited')) {
-                $('#check-type-limited').prop('checked', true);
-                $('#check-type-default').prop('checked', false);
-            } else {
+            if ($('#day_' + n).hasClass('day-type-default')) {
                 $('#check-type-limited').prop('checked', false);
                 $('#check-type-default').prop('checked', true);
+            } else {
+                $('#check-type-limited').prop('checked', true);
+                $('#check-type-default').prop('checked', false);
             }
             $('#submit').removeAttr('disabled');
 
@@ -150,6 +150,14 @@
                     $('#check-type-default').prop('checked', false);
                 }
             });
+
+            $('#check-type-default, #check-type-limited').change(function(){
+               if ($('#check-type-default').is(':checked')) {
+                   alert('Bitte lege Tage dieses Typs nur an, wenn du sicher bist, dass alle Gemeinden den Tag in ihrem Kalender sehen wollen. Im Normalfall trifft das nur auf allgemeine kirchliche Feiertage zu. Wenn du dir nicht sicher bist, wähle "Diesen Tag nur für folgende Gemeinden anzeigen" und schalte den Tag für deine Gemeinde frei.');
+               }
+            });
+
+            selectDay(1);
         });
     </script>
 @endsection
