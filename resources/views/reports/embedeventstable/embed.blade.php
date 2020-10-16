@@ -54,6 +54,19 @@
                                     @if (is_array($event)) @if(isset($event['place'])){{ $event['place'] }} @else @dd ($event) @endif @else {{ $event->locationText() }}@endif
                                 </td>
                             </tr>
+                            @if ($event->cc)
+                                <tr>
+                                    <td valign="top"
+                                        style="vertical-align:top;">{!! $eventStart->formatLocalized('%a.,&nbsp;%d.%m.') !!}</td>
+                                    <td valign="top">{{ str_replace(':', '.', ($event->cc_alt_text ?? $event->timeText(true, '.'))) }}</td>
+                                    <td valign="top">
+                                        <b>Kinderkirche</b>
+                                    </td>
+                                    <td valign="top" style="vertical-align:top;">
+                                        {{ $event->cc_location ?? $event->locationText() }}
+                                    </td>
+                                </tr>
+                            @endif
                         @endif
                         @endforeach
                     @endforeach

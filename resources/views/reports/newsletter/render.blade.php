@@ -26,10 +26,19 @@
                         <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;" valign="top">
                             <strong>{{ $event->participantsText('P') }}</strong></td>
                     </tr>
+                    @if($event->cc)
+                        <tr>
+                            <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">{{ $cc_alt_time ?? $event->timeText(true, '.') }}</td>
+                            <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
+                                <strong>Kinderkirche</strong> ({{ $event->cc_location ?? $event->locationText() }})
+                            </td>
+                            <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;" valign="top"></td>
+                        </tr>
+                    @endif
                 @else
                     <tr>
                         <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
-                            {{ $event['start']->format('H:i') }} Uhr</td>
+                            {{ $event['start']->format('H.i') }} Uhr</td>
                         <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
                             <strong>{{ $event['title'] }}</strong>@if($event['subtitle'] ?? '')<br />{{ $event['subtitle'] }} @endif
                             @if($event['locationtitle'] ?? '')({{ $event['locationtitle'] }})@endif
