@@ -358,7 +358,7 @@ class AbsenceController extends Controller
         $rules = [
             'from' => 'required|date_format:d.m.Y',
             'to' => 'required|date_format:d.m.Y',
-            'reason' => 'nullable|string',
+            'reason' => 'required|string',
             'replacement_notes' => 'nullable|string',
         ];
         if ($request->route()->getName() == 'absences.store') {
