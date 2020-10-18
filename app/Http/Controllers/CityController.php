@@ -31,7 +31,10 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Integrations\KonfiApp\KonfiAppIntegration;
+use App\Service;
 use App\Traits\HandlesAttachmentsTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -46,7 +49,7 @@ class CityController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except('qr');
     }
 
 
@@ -153,6 +156,23 @@ class CityController extends Controller
     {
         $city->delete();
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde gelöscht.');
+    }
+
+
+    /**
+     * Show QR codes
+     * @param Request $request
+     * @param string $city
+     */
+    public function qr(Request $request, $city) {
+        $city = City::where('name', 'like', '%' . str_replace('-', ' ', $city) . '%')->first();
+        $services = Service::where('city_id', $city->id)
+        ->whereHas('day', function($query) {
+            $query->where('date', Carbon::now()->setTime(0,0,0));
+        })->whereNotNull('konfiapp_event_qr')->get();
+        $types = KonfiAppIntegration::get($city)->listEventTypes();
+
+        return view('cities.qr', compact('services', 'city', 'types'));
     }
 
 }
