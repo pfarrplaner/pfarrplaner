@@ -14,7 +14,7 @@
 <body>
 <h1>Dienstplan für {{ $ministry }}</h1>
 <b>Von {{ $start }} bis {{ $end }}</b>
-<p><small>Stand: {{ \Carbon\Carbon::now()->format('d.m.Y H:i') }} Uhr. Immer aktuell auf <a href="https://www.pfarrplaner.de">www.pfarrplaner.de</a></small></p>
+<p><small>Stand: {{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->format('d.m.Y H:i') }} Uhr. Immer aktuell auf <a href="https://www.pfarrplaner.de">www.pfarrplaner.de</a></small></p>
 <hr/>
 <table style="width: 100%">
     <thead>
