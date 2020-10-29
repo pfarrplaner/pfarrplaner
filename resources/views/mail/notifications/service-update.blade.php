@@ -55,7 +55,6 @@
                          ])
             @endif
 
-
             @if(isset($changes['city_id']))
                 @include('mail.notifications.service.changed-attribute', [
                          'title' => 'Kirchengemeinde',
@@ -151,6 +150,26 @@
                              'new' => $changes[$attribute]['changed'],
                              ])
                 @endif
+
+                @if(isset($changes['needs_reservations']))
+                    @include('mail.notifications.service.changed-attribute', [
+                             'title' => 'needs_reservations',
+                             'key' => 'Anmeldung benötigt',
+                             'old' => $changes['needs_reservations']['original'] ? '✔' : '✘',
+                             'new' => $changes['needs_reservations']['changed'] ? '✔' : '✘',
+                             ])
+                @endif
+
+                @if(isset($changes['exclude_sections']))
+                    @include('mail.notifications.service.changed-attribute', [
+                             'title' => 'exclude_sections',
+                             'key' => 'Sitzplätze in folgenden Zonen nicht belegen',
+                             'old' => $changes['exclude_sections']['original'],
+                             'new' => $changes['exclude_sections']['changed'],
+                             ])
+                @endif
+
+
             @endforeach
         @endcomponent
 

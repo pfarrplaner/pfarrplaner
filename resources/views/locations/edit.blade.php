@@ -39,24 +39,66 @@
                             <b>{{ $seatingSection->title }}</b> ({{ $seatingSection->seating_model->getTitle() }})
                         </div>
                         <div class="col-md-4 text-right">
+                            <a class="btn btn-sm btn-success"
+                               href="{{ route('seatingRow.create', ['seatingSection' => $seatingSection->id]) }}"><span
+                                    class="fa fa-plus"></span> Reihe</a>
                             <a class="btn btn-sm btn-secondary"
                                href="{{ route('seatingSection.edit', $seatingSection) }}"><span
                                     class="fa fa-edit"></span></a>
                             <form class="form-inline" method="post"
-                                  action="{{ route('seatingSection.destroy', $seatingSection) }}" style="display: inline-block;">
+                                  action="{{ route('seatingSection.destroy', $seatingSection) }}"
+                                  style="display: inline-block;">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
                             </form>
                         </div>
+                        @if(count($seatingSection->seatingRows))
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Bezeichnung</th>
+                                    @if(is_a($seatingSection->seating_model, \App\Seating\RowBasedSeatingModel::class))
+                                        <th>Max. Haushalte</th>
+                                        <th>Max. Kapazität</th>
+                                    @endif
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($seatingSection->seatingRows as $seatingRow)
+                                    <tr>
+                                        <td>{{ $seatingRow->title }}</td>
+                                        @if(is_a($seatingSection->seating_model, \App\Seating\RowBasedSeatingModel::class))
+                                            <td>{{ $seatingRow->divides_into }}</td>
+                                            <td>{{ $seatingRow->seats }}</td>
+                                        @endif
+                                        <td class="text-right">
+                                            <a class="btn btn-sm btn-secondary"
+                                               href="{{ route('seatingRow.edit', $seatingRow) }}"><span
+                                                    class="fa fa-edit"></span></a>
+                                            <form class="form-inline" method="post"
+                                                  action="{{ route('seatingRow.destroy', $seatingRow) }}"
+                                                  style="display: inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="btn btn-sm btn-danger"><span class="fa fa-trash"></span></button>
+                                            </form>
+
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        @endif
                     </div>
 
                 @endforeach
             @else
                 Es sind noch keine Zonen definiert.
-                @endif
-                @endtab
-                @endtabs
-                @endcomponent
-                @endcomponent
+            @endif
+            @endtab
+            @endtabs
+        @endcomponent
+    @endcomponent
 @endsection

@@ -84,6 +84,9 @@
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
                         @tabheader(['id' => 'konfiapp', 'title' => 'KonfiApp', 'active' => ($tab=='konfiapp')]) @endtabheader
                     @endif
+                    @if($service->city->hasRegistrableLocations())
+                        @tabheader(['id' => 'registrations', 'title' => 'Anmeldungen', 'active' => ($tab=='registrations')]) @endtabheader
+                    @endif
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments'), 'count' => (count($service->comments ?? []))]) @endtabheader
                     @can('admin')
                         @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
@@ -156,6 +159,12 @@
                                     <a class="btn btn-secondary" href="{{ route('report.step', ['report' => 'KonfiAppQR', 'step' => 'single', 'service' => $service->id]) }}">QR-Code drucken</a>
                                 </div>
                             @endif
+                        @endtab
+                    @endif
+                    @if($service->city->hasRegistrableLocations())
+                        @tab(['id' => 'registrations', 'active' => ($tab=='registrations')])
+                        @checkbox(['label' => 'Für diesen Gottesdienst ist eine Anmeldung notwendig', 'name' => 'needs_reservations', 'value' => $service->needs_reservations])
+                        @input(['label' => 'Sitzplätze in diesen Zonen nicht besetzen', 'name' => 'exclude_sections', 'value' => $service->exclude_sections, 'placeholder' => 'kommagetrennte Liste, z.B. Empore, Gemeindesaal'])
                         @endtab
                     @endif
                     @can('admin')

@@ -89,6 +89,8 @@ class UpdateServiceRequest extends FormRequest
             'internal_remarks' => 'nullable|string',
             'title' => 'nullable|string',
             'hidden' => 'nullable|int|in:0,1',
+            'needs_reservations' => 'nullable|int|in:0,1',
+            'exclude_sections' => 'nullable|string',
         ];
     }
 

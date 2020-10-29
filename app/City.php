@@ -109,4 +109,12 @@ class City extends Model
         }
         return false;
     }
+
+    /**
+     * Check if this city has any locations where seating is defined
+     * @return bool True if such locations exist
+     */
+    public function hasRegistrableLocations() {
+        return Location::where('city_id', $this->id)->whereHas('seatingSections')->count() > 0;
+    }
 }

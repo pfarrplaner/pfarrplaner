@@ -212,7 +212,6 @@ class ServiceController extends Controller
         $this->handleIndividualAttachment($request, $service, 'songsheet');
         $this->handleIndividualAttachment($request, $service, 'sermon_image');
 
-
         $success = '';
         if ($service->isChanged()) {
             $service->storeDiff();

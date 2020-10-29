@@ -31,52 +31,7 @@
 namespace App\Seating;
 
 
-use App\Booking;
-use App\SeatingRow;
-
-class AbstractSeatingModel
+class CinemaSeatingModel extends AbstractSeatingModel
 {
-
-    protected $bookings = [];
-
-    public function getKey()
-    {
-        return str_replace('App\\Seating\\', '', basename(get_called_class()));
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    /**
-     * @param string $title
-     */
-    public function setTitle(string $title): void
-    {
-        $this->title = $title;
-    }
-
-
-    public function impact(SeatingRow $row, $number)
-    {
-        return -1;
-    }
-
-    public function book(SeatingRow $row, Booking $booking)
-    {
-    }
-
-    public function isAvailable(SeatingRow $row)
-    {
-        return true;
-    }
-
-    public function rowCapacity(SeatingRow $row)
-    {
-        return 0;
-    }
+    protected $title = 'Kinositzverfahren';
 }

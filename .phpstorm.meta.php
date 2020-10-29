@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2020-07-20 16:57:12.
+    * Generated on 2020-10-18 15:39:02.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -148,6 +148,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,
@@ -309,6 +310,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,
@@ -470,6 +472,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,
@@ -631,6 +634,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,
@@ -792,6 +796,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,
@@ -953,6 +958,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,
@@ -1114,6 +1120,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,
@@ -1275,6 +1282,7 @@ namespace PHPSTORM_META {
         'migration.repository' => \Illuminate\Database\Migrations\DatabaseMigrationRepository::class,
         'migrator' => \Illuminate\Database\Migrations\Migrator::class,
         'mpdf.wrapper' => \niklasravnsborg\LaravelPdf\PdfWrapper::class,
+        'qrcode' => \SimpleSoftwareIO\QrCode\Generator::class,
         'queue' => \Illuminate\Queue\QueueManager::class,
         'queue.connection' => \Illuminate\Queue\SyncQueue::class,
         'queue.failer' => \Illuminate\Queue\Failed\DatabaseFailedJobProvider::class,

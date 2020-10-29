@@ -30,6 +30,7 @@
 
 namespace App;
 
+use App\Seating\SeatFinder;
 use App\Tools\StringTool;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
@@ -164,6 +165,8 @@ class Service extends Model
         'konfiapp_event_type',
         'konfiapp_event_qr',
         'hidden',
+        'needs_reservations',
+        'exclude_sections',
     ];
 
     /**
@@ -202,6 +205,9 @@ class Service extends Model
      * @var array
      */
     private $auditData = [];
+
+    /** @var SeatFinder  */
+    protected $seatFinder = null;
 
     /**
      * Mix a collection of services into an array of events
@@ -377,6 +383,13 @@ class Service extends Model
             ->withPivot('category')
             ->wherePivotIn('category', ['P', 'O', 'M', 'A'], 'and', 'NotIn')
             ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function bookings() {
+        return $this->hasMany(Booking::class);
     }
 
     /**
@@ -1033,5 +1046,13 @@ class Service extends Model
     public function scopeNotHidden(Builder $query)
     {
         return $query->where('hidden', 0);
+    }
+
+    /**
+     * Get an instance of SeatFinder for this service
+     * @return SeatFinder
+     */
+    public function getSeatFinder() {
+        return $this->seatFinder ?? (new SeatFinder($this));
     }
 }

@@ -25,6 +25,13 @@ class SeatingSection extends Model
         return $this->belongsTo(Location::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function seatingRows() {
+        return $this->hasMany(SeatingRow::class);
+    }
+
     public function getSeatingModelAttribute() {
         $class = $this->attributes['seating_model'];
         return new $class();
@@ -35,6 +42,5 @@ class SeatingSection extends Model
         if (!is_string($seatingModel)) $seatingModel = get_class($seatingModel);
         $this->attributes['seating_model'] = $seatingModel;
     }
-
 
 }
