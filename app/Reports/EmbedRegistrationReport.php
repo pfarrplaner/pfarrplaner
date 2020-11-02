@@ -94,13 +94,16 @@ class EmbedRegistrationReport extends AbstractEmbedReport
                 'cors-origin' => 'required|url',
                 'includeCities' => 'required',
                 'includeCities.*' => 'required|exists:cities,id',
+                'singleDay' => 'nullable|date_format:d.m.Y',
             ]
         );
         $cities = join(',', $request->get('includeCities'));
         $corsOrigin = $request->get('cors-origin');
         $report = $this->getKey();
+        $singleDay = $request->get('singleDay', '');
+        if ($singleDay != '') $singleDay = Carbon::createFromFormat('d.m.Y', $singleDay)->format('Y-m-d');
 
-        $url = route('report.embed', compact('report', 'cities', 'corsOrigin'));
+        $url = route('report.embed', compact('report', 'cities', 'corsOrigin', 'singleDay'));
         $randomId = uniqid();
 
         return $this->renderView('render', compact('url', 'randomId'));
@@ -117,6 +120,17 @@ class EmbedRegistrationReport extends AbstractEmbedReport
         if (!is_array($cities)) {
             $cities = explode(',', $cities);
         }
+
+        $singleDay = $request->get('singleDay', '');
+        if ($singleDay != '') {
+            $start = Carbon::createFromFormat('Y-m-d', $request->get('singleDay'))->setTime(0,0,0);
+            $end = $start->copy()->setTime(23.59,59);
+
+        } else {
+            $start = Carbon::now();
+            $end = $start->copy()->addMonth(1);
+        }
+
 
         $errors = new MessageBag();
         $success = new MessageBag();
@@ -159,8 +173,9 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             ->where('hidden', '!=', 1)
             ->whereHas(
                 'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now());
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start);
+                    $query->where('date', '<=', $end);
                 }
             )
             ->orderBy('days.date', 'ASC')
@@ -175,7 +190,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
 
         $corsOrigin = $request->get('corsOrigin', '');
         $report = $this->getKey();
-        $url = route('report.embed', compact('report', 'corsOrigin'));
+        $url = route('report.embed', compact('report', 'corsOrigin', 'singleDay'));
 
         $randomId = uniqid();
         /** @var Response $response */

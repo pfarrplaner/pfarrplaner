@@ -23,7 +23,7 @@
                                 </td>
                                 <td valign="top" style="text-align: right;">
                                     @if($service->getSeatFinder()->remainingCapacity() > 0)
-                                        ca. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<br/>
+                                        max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
                                     <a class="btn btn-secondary show-reg-form" href="#"
                                        data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
                                     @else
