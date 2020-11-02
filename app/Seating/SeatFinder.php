@@ -493,4 +493,14 @@ class SeatFinder
         }
         return $capacity;
     }
+
+    /**
+     * Get the full row record, even for a partial row
+     * @param $key
+     * @return mixed
+     */
+    public function getFullRow($key) {
+        if (is_numeric($key)) return $this->originalGrid[$key]['row'];
+        return $this->originalGrid[substr($key, 0, -1)]['row'];
+    }
 }

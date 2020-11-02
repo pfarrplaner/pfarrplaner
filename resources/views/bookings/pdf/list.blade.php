@@ -85,11 +85,13 @@
     <tbody>
     @foreach($empty as $key => $place)
         <tr @if ($loop->index % 2 == 0)class="even" @endif>
-            <td width="4cm;">
+            <td width="4cm;" valign="top">
                 {{ $place['row']->seatingSection->title }}
             </td>
-            <td width="1cm;">
-                {{ $key }}
+            <td width="1cm;" valign="top">
+                {{ $key }}<span style="font-size: 8px;"><br />max. {{ $place['row']->seats }}
+                @if(!is_numeric($key))<br />Reihe: {{ $service->getSeatFinder()->getFullRow($key)->seats }}@endif
+                </span>
             </td>
             <td>
                 <br /><br /><br /><br />
