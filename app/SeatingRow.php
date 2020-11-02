@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SeatingRow extends Model
 {
-    protected $fillable = ['seating_section_id', 'title', 'seats', 'divides_into', 'spacing'];
+    protected $fillable = ['seating_section_id', 'title', 'seats', 'divides_into', 'spacing', 'split'];
 
     public $bookings = [];
 

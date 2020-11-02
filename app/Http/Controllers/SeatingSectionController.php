@@ -98,6 +98,7 @@ class SeatingSectionController extends Controller
                 'location_id' => 'required|int|exists:locations,id',
                 'title' => 'required',
                 'seating_model' => 'required',
+                'priority' => 'nullable|int',
             ]
         );
         $data['seating_model'] = get_class(SeatingModels::byTitle($data['seating_model']));

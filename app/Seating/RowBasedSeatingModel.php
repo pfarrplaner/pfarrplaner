@@ -88,5 +88,11 @@ class RowBasedSeatingModel extends AbstractSeatingModel
         return true;
     }
 
+    public function remainingSeats(SeatingRow $row) {
+        if (!$this->isAvailable($row)) return 0;
+        if (0 == count($row->bookings)) return $row->seats;
+        return -1;
+    }
+
 
 }

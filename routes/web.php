@@ -71,9 +71,15 @@ Route::resource('parishes', 'ParishController')->middleware('auth');
 Route::resource('seatingSection', 'SeatingSectionController');
 Route::resource('seatingRow', 'SeatingRowController');
 Route::resource('booking', 'BookingController');
+Route::get('service/{service}/bookings', 'BookingController@index')->name('service.bookings');
 Route::get('seatfinder/{service}/{number?}', 'BookingController@findSeat')->name('seatfinder');
+Route::get('service/{service}/bookingList', 'BookingController@finalize')->name('booking.finalize');
 
 Route::get('qr/{city}', 'CityController@qr')->name('qr');
+
+
+Route::resource('calendarConnection', 'CalendarConnectionController');
+Route::post('calendarConnection/configure', 'CalendarConnectionController@configure')->name('calendarConnection.configure');
 
 // embed in web site:
 Route::get(

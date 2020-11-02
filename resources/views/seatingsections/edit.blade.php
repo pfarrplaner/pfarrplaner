@@ -13,6 +13,7 @@
                 @endslot
                 @hidden(['name' => 'location_id', 'value' => $seatingSection->location_id])
                 @input(['label' => 'Bezeichnung', 'name' => 'title', 'value' => $seatingSection->title])
+                @input(['label' => 'Priorität', 'name' => 'priority', 'value' => $seatingSection->priority, 'type' => 'number'])
                 @select(['label' => 'Sitzplatzverteilung', 'name' => 'seating_model', 'items' => \App\Seating\SeatingModels::select(), 'value' => get_class($seatingSection->seating_model)])
             @endcomponent
         </form>

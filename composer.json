@@ -38,7 +38,9 @@
         "squareboat/sneaker": "^5.0",
         "staudenmeir/belongs-to-through": "^2.3",
         "ukfast/laravel-health-check": "^1.0",
-        "venturecraft/revisionable": "1.*"
+        "venturecraft/revisionable": "1.*",
+        "thybag/php-sharepoint-lists-api": "dev-master",
+        "php-ews/php-ews": "^1.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

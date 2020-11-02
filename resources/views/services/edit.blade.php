@@ -165,6 +165,16 @@
                         @tab(['id' => 'registrations', 'active' => ($tab=='registrations')])
                         @checkbox(['label' => 'Für diesen Gottesdienst ist eine Anmeldung notwendig', 'name' => 'needs_reservations', 'value' => $service->needs_reservations])
                         @input(['label' => 'Sitzplätze in diesen Zonen nicht besetzen', 'name' => 'exclude_sections', 'value' => $service->exclude_sections, 'placeholder' => 'kommagetrennte Liste, z.B. Empore, Gemeindesaal'])
+                        <hr />
+                            <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
+                                <span class="fa fa-ticket-alt"></span> Neue Anmeldung
+                            </a>&nbsp;
+                            <a class="btn btn-secondary" href="{{ route('booking.finalize', $service->id) }}">
+                                <span class="fa fa-clipboard-check"></span> Liste drucken
+                            </a>
+
+                        <hr />
+                        @include('bookings.partials.service-bookings')
                         @endtab
                     @endif
                     @can('admin')

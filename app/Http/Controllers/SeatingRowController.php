@@ -38,7 +38,10 @@ class SeatingRowController extends Controller
     public function store(Request $request)
     {
         $seatingRow = SeatingRow::create($this->validateRequest($request));
-        return redirect()->route('locations.edit', ['location' => $seatingRow->seatingSection->location, 'tab' => 'seating']);
+        return redirect()->route(
+            'locations.edit',
+            ['location' => $seatingRow->seatingSection->location, 'tab' => 'seating']
+        );
     }
 
     /**
@@ -60,7 +63,7 @@ class SeatingRowController extends Controller
      */
     public function edit(SeatingRow $seatingRow)
     {
-        //
+        return view('seatingrows.edit', compact('seatingRow'));
     }
 
     /**
@@ -72,7 +75,11 @@ class SeatingRowController extends Controller
      */
     public function update(Request $request, SeatingRow $seatingRow)
     {
-        //
+        $seatingRow->update($this->validateRequest($request));
+        return redirect()->route(
+            'locations.edit',
+            ['location' => $seatingRow->seatingSection->location, 'tab' => 'seating']
+        );
     }
 
     /**
@@ -102,12 +109,16 @@ class SeatingRowController extends Controller
                 'divides_into' => 'nullable|int',
                 'seats' => 'nullable|int',
                 'spacing' => 'nullable|int',
+                'split' => 'nullable|string|regex:/^((\d+)(,\s*\d+)+)$/i',
             ]
         );
-        if (is_numeric($data['title'])) $data['title'] = str_pad($data['title'], 2, 0, STR_PAD_LEFT);
+        if (is_numeric($data['title'])) {
+            $data['title'] = str_pad($data['title'], 2, 0, STR_PAD_LEFT);
+        }
         $data['divides_into'] = $data['divides_into'] ?? 1;
         $data['seats'] = $data['seats'] ?? 1;
         $data['spacing'] = $data['spacing'] ?? 0;
+        $data['split'] = str_replace(' ', '', $data['split']);
         return $data;
     }
 }

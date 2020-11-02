@@ -30,6 +30,7 @@
 
 use App\City;
 use App\Location;
+use App\SeatingRow;
 use App\Service;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
@@ -162,11 +163,24 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for('service.bookings', function (BreadcrumbsGenerator $trail, Service $service){
+    $trail->parent('services.edit', $service);
+    $trail->push('Anmeldungen', route('service.bookings', $service));
+});
+
 Breadcrumbs::for(
     'calendar',
     function (BreadcrumbsGenerator $trail) {
         $trail->parent('home');
         $trail->push('Gottesdienste', route('calendar'));
+    }
+);
+
+Breadcrumbs::for(
+    'calendarConnection.create',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->parent('user.profile');
+        $trail->push('Kalender verbinden', route('calendarConnection.create'));
     }
 );
 
@@ -464,6 +478,15 @@ Breadcrumbs::for(
         $seatingSection = request()->get('seatingSection');
         $trail->parent('seatingSection.edit', $seatingSection);
         $trail->push('Neue Reihe', route('seatingRow.create'));
+    }
+);
+
+Breadcrumbs::for(
+    'seatingRow.edit',
+    function (BreadcrumbsGenerator $trail, SeatingRow $seatingRow) {
+        $seatingSection = request()->get('seatingSection');
+        $trail->parent('seatingSection.edit', $seatingRow->seatingSection);
+        $trail->push($seatingRow->title, route('seatingRow.edit', $seatingRow));
     }
 );
 

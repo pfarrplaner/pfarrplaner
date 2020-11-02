@@ -35,6 +35,8 @@ use App\Booking;
 use App\Seating\SeatFinder;
 use App\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 class BookingController extends Controller
 {
@@ -42,6 +44,15 @@ class BookingController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except(['findSeat', 'store']);
+    }
+
+    public function index(Service $service) {
+        $bookings = Booking::where('service_id', $service->id)
+            ->get();
+
+        // for some unknown reason, this needs to be sorted after the query
+        $bookings = $bookings->sortBy('name')->sortBy('first_name');
+        return view('bookings.service', compact('service', 'bookings'));
     }
 
     /**
@@ -67,7 +78,30 @@ class BookingController extends Controller
         $data['code'] = Booking::createCode();
         $booking = Booking::create($data);
         $message = ($data['number'] == 1 ? 'Der Sitzplatz wurde reserviert.' : $data['number'] . ' zusammenhängenden Sitzplätze wurden reserviert.');
-        return redirect()->back()->with('success', $message.' (Code: '.strtoupper($booking->code).')');
+        return redirect()->route('service.bookings', $service->id)->with('success', $message.' (Code: '.strtoupper($booking->code).')');
+    }
+
+    public function destroy(Booking $booking)
+    {
+        $serviceId = $booking->service_id;
+        $booking->delete();
+        return redirect()->route('service.bookings', $serviceId);
+    }
+
+    public function finalize(Service $service) {
+        $result = $service->getSeatFinder()->finalList();
+
+        $pdf = PDF::loadView(
+            'bookings.pdf.list',
+            array_merge($result, compact('service')),
+            [],
+            [
+                'format' => 'A4',
+                'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
+            ]
+        );
+        return $pdf->download($service->day->date->format('Ymd').' '.$service->timeText(false,'-').' Sitzplan.pdf');
+
     }
 
     protected function validateRequest(Request $request)

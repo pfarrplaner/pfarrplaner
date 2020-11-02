@@ -33,7 +33,7 @@
                         class="fa fa-plus"></span> Neue Zone hinzufügen</a>
             </div>
             @if(count($location->seatingSections))
-                @foreach($location->seatingSections as $seatingSection)
+                @foreach($location->seatingSections->sortBy('priority') as $seatingSection)
                     <div class="row mb-2">
                         <div class="col-md-8">
                             <b>{{ $seatingSection->title }}</b> ({{ $seatingSection->seating_model->getTitle() }})
@@ -59,8 +59,8 @@
                                 <tr>
                                     <th>Bezeichnung</th>
                                     @if(is_a($seatingSection->seating_model, \App\Seating\RowBasedSeatingModel::class))
-                                        <th>Max. Haushalte</th>
-                                        <th>Max. Kapazität</th>
+                                        <th>Sitzplätze</th>
+                                        <th>Teilung möglich</th>
                                     @endif
                                     <th></th>
                                 </tr>
@@ -70,8 +70,14 @@
                                     <tr>
                                         <td>{{ $seatingRow->title }}</td>
                                         @if(is_a($seatingSection->seating_model, \App\Seating\RowBasedSeatingModel::class))
-                                            <td>{{ $seatingRow->divides_into }}</td>
                                             <td>{{ $seatingRow->seats }}</td>
+                                            <td>@if($seatingRow->split)@foreach (explode(',', $seatingRow->split) as $splitKey => $split)
+                                                    {{ chr(65+$splitKey) }}: {{ $split }}@if(!$loop->last), @endif
+                                                @endforeach
+                                                @else
+                                                    --
+                                                @endif
+                                            </td>
                                         @endif
                                         <td class="text-right">
                                             <a class="btn btn-sm btn-secondary"
