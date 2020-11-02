@@ -217,9 +217,10 @@ class UserController extends Controller
         $unusedCities = $allCities->whereNotIn('id', $sortedCities->pluck('id'));
         $calendarView = $user->getSetting('calendar_view', 'calendar.month');
         $homeScreen = $user->getHomeScreen();
+        $tab = $request->get('tab', '');
         return view(
             'users.profile',
-            compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView', 'homeScreen')
+            compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView', 'homeScreen', 'tab')
         );
     }
 

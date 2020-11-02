@@ -244,6 +244,13 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany
+     */
+    public function calendarConnections() {
+        return $this->hasMany(CalendarConnection::class);
+    }
+
+    /**
      * @param $area
      * @return bool
      */
