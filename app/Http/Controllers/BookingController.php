@@ -50,9 +50,11 @@ class BookingController extends Controller
         $bookings = Booking::where('service_id', $service->id)
             ->get();
 
+        $capacity = $service->getSeatFinder()->remainingCapacity();
+
         // for some unknown reason, this needs to be sorted after the query
         $bookings = $bookings->sortBy('name')->sortBy('first_name');
-        return view('bookings.service', compact('service', 'bookings'));
+        return view('bookings.service', compact('service', 'bookings', 'capacity'));
     }
 
     /**

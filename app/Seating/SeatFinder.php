@@ -49,9 +49,6 @@ class SeatFinder
     /** @var $service */
     protected $service;
 
-    /** @var Collection */
-    protected $rows;
-
     protected $capacity = 0;
 
     protected $grid = [];
@@ -65,7 +62,6 @@ class SeatFinder
     {
         $this->service = $service;
         $this->location = $service->location;
-        $this->rows = $this->getAllRows();
         $this->grid = $this->originalGrid = $this->buildGrid();
         $this->loadExistingBookings();
     }
@@ -107,6 +103,8 @@ class SeatFinder
      */
     public function find($number)
     {
+        if ($number > $this->remainingCapacity()) return false;
+
         $savedGrid = $this->grid;
 
         // insert new fake booking
@@ -126,7 +124,7 @@ class SeatFinder
     protected function loadExistingBookings()
     {
         $bookings = $this->service->bookings->sortByDesc('number');
-        foreach ($this->service->bookings as $booking) {
+        foreach ($bookings as $booking) {
             $this->getSeating($booking);
         }
     }
@@ -265,7 +263,9 @@ class SeatFinder
         $empty = [];
         foreach ($this->grid as $key => $place) {
             if (null !== $place['booking']) {
-                $final[$place['booking']->name . ($place['booking']->first_name ? ', ' . $place['booking']->first_name : '')] = $place;
+                $sortKey = $place['booking']->name . ($place['booking']->first_name ? ', ' . $place['booking']->first_name : '');
+                while(isset($final[$sortKey])) $sortKey.='_';
+                $final[$sortKey] = $place;
             } else {
                 $empty[$place['row']->seatingSection->prioriy.$key] = $place;
             }
@@ -485,12 +485,15 @@ class SeatFinder
 
     public function remainingCapacity()
     {
+        $saveGrid = $this->grid;
+        $this->optimize();
         $capacity = 0;
-        foreach ($this->grid as $place) {
+        foreach ($this->grid as $key => $place) {
             if (null === $place['booking']) {
                 $capacity += $place['row']->seats;
             }
         }
+        $this->grid = $saveGrid;
         return $capacity;
     }
 

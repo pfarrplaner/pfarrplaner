@@ -3,9 +3,13 @@
 @section('title', 'Anmeldungen für den Gottesdienst am '.$service->day->date->format('d.m.Y').' um '.$service->timeText())
 
 @section('navbar-left')
-    <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
-        <span class="fa fa-ticket-alt"></span> Neue Anmeldung
-    </a>&nbsp;
+    @if($capacity >0)
+        <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
+            <span class="fa fa-ticket-alt"></span> Neue Anmeldung
+        </a>&nbsp;
+    @else
+        <a href="#" class="btn btn-secondary">Keine weitere Anmeldung möglich.</a>&nbsp;
+    @endif
     <a class="btn btn-secondary" href="{{ route('booking.finalize', $service->id) }}">
         <span class="fa fa-clipboard-check"></span> Liste drucken
     </a>
@@ -15,7 +19,7 @@
     @if(count($bookings))
         @component('components.ui.card')
             @slot('cardHeader')
-                Anmeldungen ({{ $service->getSeatfinder()->remainingCapacity() }} / {{ $service->getSeatfinder()->maximumCapacity() }} Plätze frei)
+                Anmeldungen ({{ $capacity }} / {{ $service->getSeatfinder()->maximumCapacity() }} Plätze frei)
             @endslot
             @include('bookings.partials.service-bookings')
         @endcomponent
