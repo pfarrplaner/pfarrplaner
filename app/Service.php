@@ -691,6 +691,9 @@ class Service extends Model
     public function descriptionText()
     {
         $desc = [];
+        if ($this->needs_reservations) {
+            $desc[] = 'Anmeldung nötig';
+        }
         if ($this->baptism) {
             $desc[] = 'mit Taufen';
         }
