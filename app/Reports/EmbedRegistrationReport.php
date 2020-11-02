@@ -156,6 +156,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $cities)
+            ->where('hidden', '!=', 1)
             ->whereHas(
                 'day',
                 function ($query) {
