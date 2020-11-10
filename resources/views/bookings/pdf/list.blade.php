@@ -47,7 +47,7 @@
             <td>
                 {{ $place['booking']->name }}@if($place['booking']->first_name ), {{ $place['booking']->first_name }}@endif
             </td>
-            <td>
+            <td style="{{ $place['row']->getCSS() }}">
                 {{ $place['booking']->number }}
             </td>
             <td>
@@ -88,7 +88,7 @@
             <td width="4cm;" valign="top">
                 {{ $place['row']->seatingSection->title }}
             </td>
-            <td width="1cm;" valign="top">
+            <td width="1cm;" valign="top" style="{{ $place['row']->getCSS() }}">
                 {{ $key }}<span style="font-size: 8px;"><br />max. {{ $place['row']->seats }}
                 @if(!is_numeric($key))<br />Reihe: {{ $service->getSeatFinder()->getFullRow($key)->seats }}@endif
                 </span>

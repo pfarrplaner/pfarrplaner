@@ -9,59 +9,63 @@
                 style="border-radius: 3px; margin: 3px 10px; padding: 3px; background-color:green; color:white;">{{ $message }}</div>
         @endforeach
         <div id="{{ $randomId }}" class="col s12 bullme ">
-            @foreach ($services as $dayServices)
-                <h2 style="margin-bottom: 20px;">Gottesdienste am {{ $dayServices[0]->day->date->format('d.m.Y') }} ({{ \App\Liturgy::getDayInfo($dayServices[0]->day)['title'] }})</h2>
-                @foreach($dayServices as $service)
-                    <div class="card-panel default registrable-service" id="{{ $randomId }}-{{ $loop->index }}">
-                        <h3>{{ $service->titleText(false) }}</h3>
-                        <table>
-                            <tr>
-                                <td valign="top">
-                                    {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}<br/>
-                                    {{ $service->locationText() }}<br/><br/>
-                                    {{ $service->descriptionText() }}
-                                </td>
-                                <td valign="top" style="text-align: right;">
-                                    @if($service->getSeatFinder()->remainingCapacity() > 0)
-                                        max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
-                                    <a class="btn btn-secondary show-reg-form" href="#"
-                                       data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
-                                    @else
-                                        komplett ausgebucht
-                                    @endif
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="reg-form" id="{{ $randomId }}-{{ $loop->index }}-reg" style="display: none;"
-                             data-service="{{ $service->id }}">
-                            <label for="name">Name</label>
-                            <input name="name" value="" type="text"/>
-                            <label for="first_name">Vorname</label>
-                            <input name="first_name" value="" type="text"/>
-                            <label for="street">Straße, Hausnummer</label>
-                            <input name="street" value="" type="text"/>
-                            <label for="zip">Postleitzahl</label>
-                            <input name="zip" value="" type="text"/>
-                            <label for="city">Ort</label>
-                            <input name="city" value="" type="text"/>
-                            <label for="phone">Telefonnummer</label>
-                            <input name="phone" value="" type="text"/>
-                            <label for="number">Anzahl Personen</label>
-                            <input name="number" value="1" type="text"/><br/><br/>
-                            <button class="btn btn-secondary submit-reg-form" href="#"
-                                    data-container="#{{ $randomId }}-{{ $loop->index }}">Anmeldung absenden
-                            </button>
-                            <br/>
-                            <small>Die Erhebung dieser Daten erfolgt nach $6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
-                                können Sie nur
-                                nach korrekter Angabe Ihrer Kontaktdaten am Gottesdienst teilnehmen. Wir bitten hierfür
-                                um
-                                Verständnis.
-                            </small>
+            @if(count($services))
+                @foreach ($services as $dayServices)
+                    <h2 style="margin-bottom: 20px;">Gottesdienste am {{ $dayServices[0]->day->date->format('d.m.Y') }} ({{ \App\Liturgy::getDayInfo($dayServices[0]->day)['title'] }})</h2>
+                    @foreach($dayServices as $service)
+                        <div class="card-panel default registrable-service" id="{{ $randomId }}-{{ $loop->index }}">
+                            <h3>{{ $service->titleText(false) }}</h3>
+                            <table>
+                                <tr>
+                                    <td valign="top">
+                                        {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}<br/>
+                                        {{ $service->locationText() }}<br/><br/>
+                                        {{ $service->descriptionText() }}
+                                    </td>
+                                    <td valign="top" style="text-align: right;">
+                                        @if($service->getSeatFinder()->remainingCapacity() > 0)
+                                            max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
+                                        <a class="btn btn-secondary show-reg-form" href="#"
+                                           data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
+                                        @else
+                                            komplett ausgebucht
+                                        @endif
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="reg-form" id="{{ $randomId }}-{{ $loop->index }}-reg" style="display: none;"
+                                 data-service="{{ $service->id }}">
+                                <label for="name">Name</label>
+                                <input name="name" value="" type="text"/>
+                                <label for="first_name">Vorname</label>
+                                <input name="first_name" value="" type="text"/>
+                                <label for="street">Straße, Hausnummer</label>
+                                <input name="street" value="" type="text"/>
+                                <label for="zip">Postleitzahl</label>
+                                <input name="zip" value="" type="text"/>
+                                <label for="city">Ort</label>
+                                <input name="city" value="" type="text"/>
+                                <label for="phone">Telefonnummer</label>
+                                <input name="phone" value="" type="text"/>
+                                <label for="number">Anzahl Personen</label>
+                                <input name="number" value="1" type="text"/><br/><br/>
+                                <button class="btn btn-secondary submit-reg-form" href="#"
+                                        data-container="#{{ $randomId }}-{{ $loop->index }}">Anmeldung absenden
+                                </button>
+                                <br/>
+                                <small>Die Erhebung dieser Daten erfolgt nach $6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
+                                    können Sie nur
+                                    nach korrekter Angabe Ihrer Kontaktdaten am Gottesdienst teilnehmen. Wir bitten hierfür
+                                    um
+                                    Verständnis.
+                                </small>
+                            </div>
                         </div>
-                    </div>
+                    @endforeach
                 @endforeach
-            @endforeach
+            @else
+                <b>Aktuell gibt es keine Gottesdienste, für die eine Anmeldung benötigt wird.</b>
+            @endif
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>

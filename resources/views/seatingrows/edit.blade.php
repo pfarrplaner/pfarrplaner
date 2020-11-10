@@ -23,6 +23,7 @@
                     @input(['label' => 'Anzahl der Sitzplätze in der Reihe', 'name' => 'seats', 'value' => $seatingRow->seats])
                     @input(['label' => 'Freizulassende Sitzplätze zwischen Haushalten', 'name' => 'spacing', 'value' => $seatingRow->spacing])
                 @endif
+                @input(['label' => 'CSS-Farbklasse', 'name' => 'color', 'value' => $seatingRow->color, 'placeholder' => '#RRGGBB oder CSS-Farbname'])
             @endcomponent
         </form>
     @endcomponent

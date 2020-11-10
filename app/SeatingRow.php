@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SeatingRow extends Model
 {
-    protected $fillable = ['seating_section_id', 'title', 'seats', 'divides_into', 'spacing', 'split'];
+    protected $fillable = ['seating_section_id', 'title', 'seats', 'divides_into', 'spacing', 'split', 'color'];
 
     public $bookings = [];
 
@@ -24,6 +24,16 @@ class SeatingRow extends Model
      */
     public function seatingSection() {
         return $this->belongsTo(SeatingSection::class);
+    }
+
+    /**
+     * Get CSS style for background color
+     * @return mixed|string
+     */
+    public function getCSS() {
+        $color = $this->color ?: $this->seatingSection->color ?: '';
+        if ($color != '') $color = 'background-color: '.$color;
+        return $color;
     }
 
 }

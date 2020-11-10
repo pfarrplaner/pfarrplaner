@@ -99,6 +99,7 @@ class SeatingSectionController extends Controller
                 'title' => 'required',
                 'seating_model' => 'required',
                 'priority' => 'nullable|int',
+                'color' => 'nullable|string',
             ]
         );
         $data['seating_model'] = get_class(SeatingModels::byTitle($data['seating_model']));

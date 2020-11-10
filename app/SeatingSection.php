@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SeatingSection extends Model
 {
-    protected $fillable = ['location_id', 'title', 'seating_model', 'sorting', 'priority'];
+    protected $fillable = ['location_id', 'title', 'seating_model', 'sorting', 'priority', 'color'];
 
     protected static function boot() {
         parent::boot();

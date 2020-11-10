@@ -14,6 +14,7 @@
                 @input(['label' => 'Bezeichnung', 'name' => 'title'])
                 @input(['label' => 'Priorität', 'name' => 'priority', 'value' => old('priority'), 'type' => 'number'])
                 @select(['label' => 'Sitzplatzverteilung', 'name' => 'seating_model', 'items' => \App\Seating\SeatingModels::select()])
+                @input(['label' => 'CSS-Farbklasse', 'name' => 'color', 'placeholder' => '#RRGGBB oder CSS-Farbname'])
             @endcomponent
         </form>
     @endcomponent

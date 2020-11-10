@@ -110,6 +110,7 @@ class SeatingRowController extends Controller
                 'seats' => 'nullable|int',
                 'spacing' => 'nullable|int',
                 'split' => 'nullable|string|regex:/^((\d+)(,\s*\d+)+)$/i',
+                'color' => 'nullable|string',
             ]
         );
         if (is_numeric($data['title'])) {
