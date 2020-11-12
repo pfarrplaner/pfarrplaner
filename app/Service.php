@@ -1058,4 +1058,13 @@ class Service extends Model
     public function getSeatFinder() {
         return $this->seatFinder ?? (new SeatFinder($this));
     }
+
+    public function dateTime() {
+        list ($hour, $minute) = explode(':', $this->time);
+        return $this->day->date->copy()->setTime($hour, $minute, 0);
+    }
+
+    public function formatTime($s) {
+        return (false !== strpos($s, '%')) ? $this->dateTime()->formatLocalized($s) : $this->dateTime()->format($s);
+    }
 }
