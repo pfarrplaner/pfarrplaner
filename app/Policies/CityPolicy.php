@@ -51,6 +51,7 @@ class CityPolicy
         if ($user->hasRole('Administrator*in')) {
             return true;
         }
+        if ($user->can('ort-bearbeiten')) return true;
         return false;
     }
 
@@ -86,7 +87,7 @@ class CityPolicy
      */
     public function update(User $user, City $city)
     {
-        if (($user->can('gd-opfer-bearbeiten') || ($user->can('ort-bearbeiten '))) && $user->writableCities->contains(
+        if (($user->can('gd-opfer-bearbeiten') || $user->can('ort-bearbeiten')) && $user->writableCities->contains(
                 $city
             )) {
             return true;
