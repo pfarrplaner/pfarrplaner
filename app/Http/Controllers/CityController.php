@@ -37,6 +37,7 @@ use App\Traits\HandlesAttachmentsTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class CityController
@@ -60,7 +61,7 @@ class CityController extends Controller
      */
     public function index(Request $request)
     {
-        $cities = City::all();
+        $cities = Auth::user()->cities;
         return view('cities.index', compact('cities'));
     }
 
