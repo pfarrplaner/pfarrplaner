@@ -105,7 +105,7 @@ class YoutubeIntegration extends AbstractIntegration
      */
     public function getVideo($id)
     {
-        return $this->youtube->videos->listVideos('snippet,contentDetails,statistics', ['id' => $id])->getItems()[0];
+        return $this->youtube->videos->listVideos('snippet,contentDetails,statistics,status,liveStreamingDetails', ['id' => $id])->getItems()[0];
     }
 
     /**
@@ -170,6 +170,21 @@ class YoutubeIntegration extends AbstractIntegration
     public function setClient(Google_Client $client): void
     {
         $this->client = $client;
+    }
+
+    /**
+     * Get all streams (ids) for a city
+     * @return array Streams
+     */
+    public function getAllStreams() {
+        $streams = [];
+        $allStreams = $this->getYoutube()->liveStreams->listLiveStreams('id,snippet', ['mine' => 'true', 'maxResults' => 50]);
+        foreach ($allStreams as $stream) {
+            /** @var \Google_Service_YouTube_LiveStream $stream */
+            $streams[$stream->getId()] = $stream->getSnippet()->getTitle();
+        }
+        asort($streams);
+        return $streams;
     }
 
 

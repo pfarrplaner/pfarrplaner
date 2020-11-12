@@ -32,6 +32,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Integrations\KonfiApp\KonfiAppIntegration;
+use App\Integrations\Youtube\YoutubeIntegration;
 use App\Service;
 use App\Traits\HandlesAttachmentsTrait;
 use Carbon\Carbon;
@@ -115,6 +116,9 @@ class CityController extends Controller
                 'podcast_owner_email' => 'nullable|email',
                 'youtube_channel_url' => 'nullable|string',
                 'konfiapp_apikey' => 'nullable|string',
+                'youtube_active_stream_id' => 'nullable|string',
+                'youtube_passive_stream_id' => 'nullable|string',
+                'youtube_auto_startstop' => 'nullable|int',
             ]
         );
     }
@@ -122,14 +126,18 @@ class CityController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
+     * @param City $city
      * @return Response
      */
-    public function edit($id)
+    public function edit(City $city)
     {
-        $city = City::find($id);
+        if ($city->google_access_token) {
+            $streams = YoutubeIntegration::get($city)->getAllStreams();
+        } else {
+            $streams = [];
+        }
 
-        return view('cities.edit', compact('city'));
+        return view('cities.edit', compact('city', 'streams'));
     }
 
     /**

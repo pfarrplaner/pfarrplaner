@@ -66,6 +66,9 @@ class City extends Model
         'google_refresh_token',
         'youtube_channel_url',
         'konfiapp_apikey',
+        'youtube_active_stream_id',
+        'youtube_passive_stream_id',
+        'youtube_auto_startstop',
     ];
 
     /**

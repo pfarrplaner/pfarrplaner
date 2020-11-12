@@ -332,7 +332,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'cities.edit',
     function (BreadcrumbsGenerator $trail, $city) {
-        $city = \App\City::find($city);
+        if (is_numeric($city)) $city = \App\City::find($city);
         $trail->parent('cities.index');
         $trail->push($city->name, route('cities.edit', $city));
     }

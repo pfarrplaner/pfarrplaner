@@ -13,7 +13,8 @@
                 @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
-                @tabheader(['id' => 'podcast', 'title' => 'Streaming & Podcast']) @endtabheader
+                @tabheader(['id' => 'streaming', 'title' => 'Streaming']) @endtabheader
+                @tabheader(['id' => 'podcast', 'title' => 'Podcast']) @endtabheader
                 @tabheader(['id' => 'integrations', 'title' => 'Weitere Integrationen']) @endtabheader
         @endtabheaders
         @tabs
@@ -34,8 +35,13 @@
                 @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer'])
                 @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer'])
             @endtab
-            @tab(['id' => 'podcast'])
-                @input(['name' => 'youtube_channel_url', 'label' => 'URL für den Youtube-Kanal', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @tab(['id' => 'streaming'])
+                @input(['name' => 'youtube_channel_url', 'label' => 'URL für den Youtube-Kanal', 'value' => old('youtube_channel_url'), 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                @select(['name' => 'youtube_active_stream_id', 'label' => 'Streamschlüssel für die aktive Sendung', 'value' => old('youtube_active_stream_id'), 'items' => $streams, 'empty' => 1, 'useArrayKey' => 1])
+                @select(['name' => 'youtube_passive_stream_id', 'label' => 'Streamschlüssel für inaktive Sendungen', 'value' => old('youtube_passive_stream_id'), 'items' => $streams, 'empty' => 1, 'useArrayKey' => 1])
+                @checkbox(['name' => 'youtube_auto_startstop', 'label' => 'Sendungen automatisch starten und stoppen', 'value' => old('youtube_auto_startstop')])
+                @endtab
+                @tab(['id' => 'podcast'])
                 @input(['name' => 'podcast_title', 'label' => 'Titel des Podcasts', 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @upload(['name' => 'podcast_logo', 'label' => 'Logo für den Podcast', 'accept' => '.jpg,.jpeg'])
                 @upload(['name' => 'sermon_default_image', 'label' => 'Standard-Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])
