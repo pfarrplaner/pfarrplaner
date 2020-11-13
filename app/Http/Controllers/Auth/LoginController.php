@@ -84,7 +84,7 @@ class LoginController extends Controller
             return view('demo.login', compact('users'));
         } else {
             $blog = null;
-            if ($url = (env('BLOG_FEED', false))) {
+            if ($url = (config('blog.blog_feed', false))) {
                 $blog = simplexml_load_file($url);
 
                 if (count($blog->channel->item) > 3) $columns = 3;
