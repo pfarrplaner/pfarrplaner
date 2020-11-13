@@ -17,7 +17,7 @@
     @can('gd-loeschen')
         <li class="nav-item">
             <form class="form-inline" style="display: inline;" action="{{ route('services.destroy', $service->id)}}"
-                  method="post">
+                  method="post" onsubmit="return confirm('Mit dieser Aktion wird der Gottesdienst und alle damit verbundenen Einträge (Kasualien, Kommentare, Dateien, Anmeldungen, ...) unwiderruflich gelöscht. Bist du sicher, dass du fortfahren möchtest?');">
                 @csrf
                 @method('DELETE')
                 <button class="btn btn-danger" type="submit" title="Gottesdiensteintrag (UNWIDERRUFLICH!) löschen"><span
