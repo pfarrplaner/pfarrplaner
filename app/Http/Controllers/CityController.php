@@ -74,7 +74,7 @@ class CityController extends Controller
      */
     public function create()
     {
-        return view('cities.create');
+        return view('cities.create', ['streams' => []]);
     }
 
     /**
@@ -119,6 +119,7 @@ class CityController extends Controller
                 'youtube_active_stream_id' => 'nullable|string',
                 'youtube_passive_stream_id' => 'nullable|string',
                 'youtube_auto_startstop' => 'nullable|int',
+                'youtube_cutoff_days' => 'nullable|int',
             ]
         );
     }
