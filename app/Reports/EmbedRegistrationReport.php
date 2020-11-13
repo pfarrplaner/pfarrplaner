@@ -39,6 +39,7 @@ namespace App\Reports;
 
 
 use App\Booking;
+use App\Http\CORS;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -98,7 +99,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             ]
         );
         $cities = join(',', $request->get('includeCities'));
-        $corsOrigin = $request->get('cors-origin');
+        $corsOrigin = CORS::formatUrl($request->get('cors-origin'));
         $report = $this->getKey();
         $singleDay = $request->get('singleDay', '');
         if ($singleDay != '') $singleDay = Carbon::createFromFormat('d.m.Y', $singleDay)->format('Y-m-d');

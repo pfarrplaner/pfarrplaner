@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
@@ -28,40 +28,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Http\Middleware;
+namespace App\Http;
 
-use Closure;
-use Illuminate\Http\Request;
 
-/**
- * Class Cors
- * @package App\Http\Middleware
- */
-class Cors
+class CORS
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param Request $request
-     * @param Closure $next
-     * @return mixed
-     */
-    public function handle($request, Closure $next)
-    {
-        $corsOrigin = $request->get('cors-origin', $request->get('corsOrigin', false));
 
-        if ($corsOrigin) {
-            return $next($request)
-                ->header('Access-Control-Allow-Origin', \App\Http\CORS::formatUrl($corsOrigin))
-                ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-                ->header('Access-Control-Allow-Headers', '*')
-                ->header('X-CORS-MIDDLEWARE-ADDED', 1);
-        } else {
-            return $next($request)
-                ->header('Access-Control-Allow-Origin', '*')
-                ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-                ->header('Access-Control-Allow-Headers', '*')
-                ->header('X-CORS-MIDDLEWARE-ADDED', 2);
+    /**
+     * Format CORS url (remove trailing slash)
+     * @param string $url
+     * @return string $url
+     */
+    public static function formatUrl($url)
+    {
+        if (substr($url, -1) == '/') {
+            $url = substr($url, 0, -1);
         }
+        return $url;
     }
+
 }
