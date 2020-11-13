@@ -49,9 +49,10 @@
                                 <input name="phone" value="" type="text"/>
                                 <label for="number">Anzahl Personen</label>
                                 <input name="number" value="1" type="text"/><br/><br/>
-                                <button class="btn btn-secondary submit-reg-form" href="#"
-                                        data-container="#{{ $randomId }}-{{ $loop->index }}">Anmeldung absenden
-                                </button>
+                                <input type="submit" class="btn btn-secondary submit-reg-form" href="#"
+                                        style="width: auto; height: auto; position: relative; background-color: none;"
+                                        data-container="#{{ $randomId }}-{{ $loop->index }}" value="Anmeldung absenden" />
+                                </input>
                                 <br/>
                                 <small>Die Erhebung dieser Daten erfolgt nach $6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
                                     können Sie nur
