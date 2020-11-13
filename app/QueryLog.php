@@ -52,12 +52,12 @@ class QueryLog
      * Get the path to the query log
      * @return string
      */
-    public static function file()
+    public static function file($log = '')
     {
         if (self::$logFile != '') {
             $file = self::$logFile;
         } else {
-            $file = self::$logFile = storage_path('/logs/query.log');
+            $file = self::$logFile = storage_path('/logs/query.log'.($log ? '.'.$log : ''));
         }
         return $file;
     }
@@ -76,9 +76,9 @@ class QueryLog
      * @return array
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public static function all()
+    public static function all($log = '')
     {
-        if (!File::exists(self::file())) {
+        if (!File::exists(self::file($log))) {
             return [];
         }
 
