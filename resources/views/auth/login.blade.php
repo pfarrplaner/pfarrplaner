@@ -38,6 +38,26 @@
                     E-Mail <a href="mailto:christoph.fischer@elkw.de">christoph.fischer@elkw.de</a>
                 </p>
             @endcomponent
+            @if((null !== $blog) && (count($blog->channel->item)))
+                @component('components.ui.card')
+                    @slot('cardHeader')
+                        Neuigkeiten / Infos zum Pfarrplaner
+                    @endslot
+                        <div class="row">
+                            @foreach ($blog->channel->item as $item)
+                                <div class="col-md-{{ $columns }}">
+                                    <a href="{{ $item->link }}" target="_blank">
+                                        @if (isset($item->enclosure) && ((string)$item->enclosure['type'] == 'image/jpeg'))
+                                            <img class="img-fluid" src="{{ (string)$item->enclosure['url'] }}" />
+                                        @endif
+                                        <h2>{{ $item->title }}</h2></a>
+                                    <span>{!! (new \Carbon\Carbon($item->pubDate))->formatLocalized('%A, %d. %B %Y') !!}</span>
+                                    <p>{!! $item->description !!}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                @endcomponent
+            @endif
     @endcomponent
 @endsection
 
