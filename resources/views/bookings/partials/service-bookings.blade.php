@@ -17,11 +17,7 @@
                 <td>{!!  nl2br($booking->contact) !!}</td>
                 <td>{{ $booking->code }}</td>
                 <td class="text-right">
-                    <form class="form-inline" method="post" action="{{ route('booking.destroy', $booking->id) }}">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-sm btn-danger" title="Anmeldung löschen"><span class="fa fa-trash"></span></button>
-                    </form>
+                    <a class="btn btn-sm btn-danger btn-delete-booking" title="Anmeldung löschen" data-route="{{ route('booking.destroy', $booking->id) }}" style="color: white;"><span class="fa fa-trash"></span></a>
                 </td>
             </tr>
         @endforeach

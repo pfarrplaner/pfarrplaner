@@ -27,3 +27,25 @@
         <p>Es liegen noch keine Anmeldungen vor.</p>
     @endif
 @endsection
+
+@section('scripts')
+    <script>
+    $(document).ready(function(){
+        $('.btn-delete-booking').click(function(e) {
+            e.preventDefault();
+            if (confirm('Soll diese Anmeldung wirklich gelöscht werden?')) {
+                fetch($(this).data('route'), {
+                    method: 'DELETE',
+                    body: '_method=DELETE',
+                    headers: {
+                        "X-CSRF-Token": window.Laravel.csrfToken
+                    }
+                })
+                    .then(res => {
+                        $(this).parent().parent().remove();
+                    })
+            }
+        });
+    });
+    </script>
+@endsection
