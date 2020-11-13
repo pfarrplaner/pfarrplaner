@@ -7,7 +7,7 @@
                     <option @if(isset($item->id))value="{{ $item->id }}" @endif @if(isset($value) && ($value->contains($item))) selected @endif>@if(isset($item->name)){{ $item->name }}@else{{$item}}@endif</option>
                 @else
                     <?php $checkValue = is_object($item) ? $item->id : (isset($useArrayKey) ? $key : $item); ?>
-                    <option @if(is_object($item) && isset($item->id))value="{{ $item->id }}" @else value="{{ $key }}" @endif @if(isset($value) && ($value == $checkValue)) selected @endif>@if(isset($item->name)){{ $item->name }}@else{{$item}}@endif</option>
+                    <option @if(is_object($item) && isset($item->id))value="{{ $item->id }}" @else value="{{ $checkValue }}" @endif @if(isset($value) && ($value == $checkValue)) selected @endif>@if(isset($item->name)){{ $item->name }}@else{{$item}}@endif</option>
                 @endif
         @endforeach
     </select>
