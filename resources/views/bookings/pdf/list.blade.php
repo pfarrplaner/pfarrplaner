@@ -64,8 +64,16 @@
     @endforeach
     </tbody>
 </table>
-
-<h2>Leere Plätze</h2>
+@if(($service->exclude_sections != '') || ($service->exclude_places != ''))
+    <h2>Reservierte/Gesperrte Bereiche</h2>
+    @if((trim($service->exclude_sections) != ''))
+        <p><b>Folgende Zonen sind für diesen Gottesdienst reserviert/gesperrt:</b><br /> {{ str_replace(',', ', ', $service->exclude_sections) }}</p>
+    @endif
+    @if(($service->exclude_places != ''))
+        <p><b>Folgende Sitzplätze/Reihen sind für diesen Gottesdienst reserviert/gesperrt:</b><br /> {{ str_replace(',', ', ', $service->exclude_places) }}</p>
+    @endif
+@endif
+<h2>Freie Plätze</h2>
 <p><b>Bitte nur ausfüllen, wenn das für diesen Gottesdienst erlaubt ist.</b></p>
 @endif
 @if(count($empty))

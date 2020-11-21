@@ -347,16 +347,22 @@ class SeatFinder
 
     /**
      * Split a row into its parts
-     * @param $key Grid key
+     * @param string $key Grid key
+     * @param array $grid Optional: use alternative grid array instead of $this->grid
+     * @param bool $isRowGrid Optional: Grid only contains rows, no bookings
+     * @return array Grid with split row
      */
-    protected function splitRow($key)
+    protected function splitRow($key, $grid = null, $isRowGrid = false)
     {
         // do not split an already split row (letter in $key)
         if (!is_numeric($key)) {
             return;
         }
 
-        $splits = explode(',', $this->grid[$key]['row']->split ?: $this->grid[$key]['row']->seats);
+        $tmpGrid = $grid ?? $this->grid;
+
+        $targetRow = $isRowGrid ? $tmpGrid[$key] : $tmpGrid[$key]['row'];
+        $splits = explode(',', $targetRow->split ?: $targetRow->seats);
 
         // only split splittable rows
         if (count($splits) == 1) return;
@@ -364,15 +370,22 @@ class SeatFinder
         // insert the new split rows
         foreach ($splits as $splitKey => $split) {
             $rowKey = $key . chr(65 + $splitKey);
-            $row = clone($this->grid[$key]['row']);
+            $row = clone($targetRow);
             $row->title = $rowKey;
             $row->seats = $split;
             $row->split = '';
-            $this->grid[$rowKey] = ['row' => $row, 'booking' => null];
+            $tmpGrid[$rowKey] = $isRowGrid ? $row : ['row' => $row, 'booking' => null];
         }
 
         // delete old full row
-        unset ($this->grid[$key]);
+        unset ($tmpGrid[$key]);
+
+        // restore target grid from $tmpGrid
+        if (null===$grid) {
+            $this->grid = $tmpGrid;
+        }
+
+        return $tmpGrid;
     }
 
     /**
@@ -458,7 +471,7 @@ class SeatFinder
      * Get all rows available for seating
      * @return array
      */
-    protected function getAllRows()
+    public function getAllRows()
     {
         $rows = [];
         foreach ($this->getAvailableSections() as $section) {
@@ -466,7 +479,21 @@ class SeatFinder
                 $rows[$row->title] = $row;
             }
         }
-        // TODO: Take bookings into account
+
+        // unset pre-reserved rows:
+        $preReservedPlaces = explode(',', $this->service->exclude_places);
+        foreach ($preReservedPlaces as $preReservedPlace) {
+            $preReservedPlace = trim($preReservedPlace);
+            if (!is_numeric($preReservedPlace)) {
+                $rowNumber = str_pad(preg_replace("/[^0-9]/","",$preReservedPlace), 2, 0, STR_PAD_LEFT);
+                $placeLetter = preg_replace("/[0-9]/","",$preReservedPlace);
+                $rows = $this->splitRow($rowNumber, $rows, true);
+                unset($rows[$rowNumber.$placeLetter]);
+            } else {
+                $preReservedPlace = str_pad($preReservedPlace, 2, 0, STR_PAD_LEFT);
+                unset ($rows[$preReservedPlace]);
+            }
+        }
         return $rows;
     }
 
