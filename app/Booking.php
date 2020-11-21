@@ -17,7 +17,10 @@ class Booking extends Model
         'name',
         'first_name',
         'contact',
-        'number'
+        'number',
+        'fixed_seat',
+        'override_seats',
+        'override_split',
     ];
 
     protected $encrypted = [

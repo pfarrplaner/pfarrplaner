@@ -72,7 +72,7 @@ class BookingController extends Controller
         $data = $this->validateRequest($request);
         $service = Service::findOrFail($data['service_id']);
         $seatFinder = new SeatFinder($service);
-        if (!$seatFinder->find($data['number'])) {
+        if (!$seatFinder->find($data['number'], $data['fixed_seat'], $data['override_seats'], $data['override_split'])) {
             $message = ($data['number'] == 1 ? 'Es konnte kein Sitzplatz in diesem Gottesdienst reserviert werden.' : 'Es konnten keine ' . $data['number'] . ' zusammenhängenden Sitzplätze in diesem Gottesdienst reserviert werden.');
             return redirect()->back()->with('error', $message);
         }
@@ -116,8 +116,17 @@ class BookingController extends Controller
                 'first_name' => 'nullable',
                 'contact' => 'required|string',
                 'number' => 'required|int|min:1',
+                'fixed_seat' => 'nullable|string',
+                'override_seats' => 'nullable|string',
+                'override_split' => 'nullable|string',
             ]
         );
+
+        $data['fixed_seat'] = $data['fixed_seat'] ?? '';
+        $data['override_seats'] = $data['override_seats'] ?? '';
+        $data['override_split'] = $data['override_split'] ?? '';
+
+
         return $data;
     }
 
