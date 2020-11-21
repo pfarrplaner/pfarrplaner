@@ -91,6 +91,9 @@ class UpdateServiceRequest extends FormRequest
             'hidden' => 'nullable|int|in:0,1',
             'needs_reservations' => 'nullable|int|in:0,1',
             'exclude_sections' => 'nullable|string',
+            'registration_active' => 'nullable|int|in:0,1',
+            'exclude_places' => 'nullable|string',
+            'registration_phone' => 'nullable|string',
         ];
     }
 
@@ -109,6 +112,8 @@ class UpdateServiceRequest extends FormRequest
         }
 
         $data['hidden'] = $data['hidden'] ?? 0;
+        $data['needs_reservations'] = $data['needs_reservations'] ?? 0;
+        $data['registration_active'] = $data['registration_active'] ?? 0;
 
         return $data;
     }

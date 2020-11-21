@@ -161,12 +161,39 @@
                          ])
             @endif
 
+            @if(isset($changes['registration_active']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'registration_active',
+                         'key' => 'Online-Anmeldung aktiv',
+                         'old' => $changes['registration_active']['original'] ? '✔' : '✘',
+                         'new' => $changes['registration_active']['changed'] ? '✔' : '✘',
+                         ])
+            @endif
+
             @if(isset($changes['exclude_sections']))
                 @include('mail.notifications.service.changed-attribute', [
                          'title' => 'exclude_sections',
                          'key' => 'Sitzplätze in folgenden Zonen nicht belegen',
                          'old' => $changes['exclude_sections']['original'],
                          'new' => $changes['exclude_sections']['changed'],
+                         ])
+            @endif
+
+            @if(isset($changes['exclude_places']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'exclude_places',
+                         'key' => 'Folgende Sitzplätze nicht belegen',
+                         'old' => $changes['exclude_places']['original'],
+                         'new' => $changes['exclude_places']['changed'],
+                         ])
+            @endif
+
+            @if(isset($changes['registration_phone']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'registration_phone',
+                         'key' => 'Nummer für telefonische Anmeldung',
+                         'old' => $changes['registration_phone']['original'],
+                         'new' => $changes['registration_phone']['changed'],
                          ])
             @endif
 

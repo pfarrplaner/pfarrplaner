@@ -23,12 +23,19 @@
                                         {{ $service->descriptionText() }}
                                     </td>
                                     <td valign="top" style="text-align: right;">
-                                        @if($service->getSeatFinder()->remainingCapacity() > 0)
-                                            max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
-                                        <a class="btn btn-secondary show-reg-form" href="#"
-                                           data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
+                                        @if($service->registration_active)
+                                            @if($service->getSeatFinder()->remainingCapacity() > 0)
+                                                max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
+                                            <a class="btn btn-secondary show-reg-form" href="#"
+                                               data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
+                                            @else
+                                                komplett ausgebucht
+                                            @endif
                                         @else
-                                            komplett ausgebucht
+                                            <b>Keine Online-Anmeldung mehr möglich.</b>
+                                            @if($service->registration_phone)
+                                                <br /><small>Evtl. ist unter {{ $service->registration_phone }} noch eine telefonische Anmeldung möglich.</small>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

@@ -164,7 +164,10 @@
                     @if($service->city->hasRegistrableLocations())
                         @tab(['id' => 'registrations', 'active' => ($tab=='registrations')])
                         @checkbox(['label' => 'Für diesen Gottesdienst ist eine Anmeldung notwendig', 'name' => 'needs_reservations', 'value' => $service->needs_reservations])
+                        @checkbox(['label' => 'Online-Anmeldung aktiv', 'name' => 'registration_active', 'value' => $service->registration_active])
                         @input(['label' => 'Sitzplätze in diesen Zonen nicht besetzen', 'name' => 'exclude_sections', 'value' => $service->exclude_sections, 'placeholder' => 'kommagetrennte Liste, z.B. Empore, Gemeindesaal'])
+                        @input(['label' => 'Folgende Sitzplätze nicht besetzen', 'name' => 'exclude_places', 'value' => $service->exclude_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B'])
+                        @input(['label' => 'Telefonnummer für die telefonische Anmeldung', 'name' => 'registration_phone', 'value' => $service->registration_phone])
                         <hr />
                             <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
                                 <span class="fa fa-ticket-alt"></span> Neue Anmeldung

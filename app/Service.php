@@ -167,6 +167,9 @@ class Service extends Model
         'hidden',
         'needs_reservations',
         'exclude_sections',
+        'registration_active',
+        'exclude_places',
+        'registration_phone',
     ];
 
     /**
