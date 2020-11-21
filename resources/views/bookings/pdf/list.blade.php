@@ -47,16 +47,16 @@
             <td>
                 {{ $place['booking']->name }}@if($place['booking']->first_name ), {{ $place['booking']->first_name }}@endif
             </td>
-            <td style="{{ $place['row']->getCSS() }}">
+            <td>
                 {{ $place['booking']->number }}
             </td>
             <td>
                 <small>{{ str_replace("\n", '; ', $place['booking']->contact) }}</small>
             </td>
-            <td>
+            <td style="{{ $place['row']->getCSS() }}">
                 {{ $place['row']->seatingSection->title }}
             </td>
-            <td>
+            <td style="{{ $place['row']->getCSS() }}">
                 {{ $place['row']->title }}
             </td>
         </tr>
