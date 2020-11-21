@@ -481,19 +481,22 @@ class SeatFinder
         }
 
         // unset pre-reserved rows:
-        $preReservedPlaces = explode(',', $this->service->exclude_places);
-        foreach ($preReservedPlaces as $preReservedPlace) {
-            $preReservedPlace = trim($preReservedPlace);
-            if (!is_numeric($preReservedPlace)) {
-                $rowNumber = str_pad(preg_replace("/[^0-9]/","",$preReservedPlace), 2, 0, STR_PAD_LEFT);
-                $placeLetter = preg_replace("/[0-9]/","",$preReservedPlace);
-                $rows = $this->splitRow($rowNumber, $rows, true);
-                unset($rows[$rowNumber.$placeLetter]);
-            } else {
-                $preReservedPlace = str_pad($preReservedPlace, 2, 0, STR_PAD_LEFT);
-                unset ($rows[$preReservedPlace]);
+        if (trim($this->service->exclude_places) != '') {
+            $preReservedPlaces = explode(',', $this->service->exclude_places);
+            foreach ($preReservedPlaces as $preReservedPlace) {
+                $preReservedPlace = trim($preReservedPlace);
+                if (!is_numeric($preReservedPlace)) {
+                    $rowNumber = str_pad(preg_replace("/[^0-9]/","",$preReservedPlace), 2, 0, STR_PAD_LEFT);
+                    $placeLetter = preg_replace("/[0-9]/","",$preReservedPlace);
+                    $rows = $this->splitRow($rowNumber, $rows, true);
+                    unset($rows[$rowNumber.$placeLetter]);
+                } else {
+                    $preReservedPlace = str_pad($preReservedPlace, 2, 0, STR_PAD_LEFT);
+                    unset ($rows[$preReservedPlace]);
+                }
             }
         }
+
         return $rows;
     }
 
