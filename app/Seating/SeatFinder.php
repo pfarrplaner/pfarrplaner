@@ -369,9 +369,11 @@ class SeatFinder
         // compile lists
         $final = [];
         $empty = [];
+        $number = 0;
         foreach ($this->grid as $key => $place) {
             if (null !== $place['booking']) {
                 $sortKey = $place['booking']->name . ($place['booking']->first_name ? ', ' . $place['booking']->first_name : '');
+                $number += $place['booking']->number;
                 while (isset($final[$sortKey])) {
                     $sortKey .= '_';
                 }
@@ -382,7 +384,7 @@ class SeatFinder
         }
         ksort($final);
         ksort($empty);
-        return ['list' => $final, 'empty' => $empty];
+        return ['list' => $final, 'empty' => $empty, 'number' => $number];
     }
 
     /**

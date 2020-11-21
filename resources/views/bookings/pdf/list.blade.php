@@ -64,6 +64,7 @@
     @endforeach
     </tbody>
 </table>
+<p>Zahl der angemeldeten Personen: {{ $number }}</p>
 @if(($service->exclude_sections != '') || ($service->exclude_places != ''))
     <h2>Reservierte/Gesperrte Bereiche</h2>
     @if((trim($service->exclude_sections) != ''))
