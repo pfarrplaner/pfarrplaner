@@ -73,13 +73,13 @@ class BookingController extends Controller
         $service = Service::findOrFail($data['service_id']);
         $seatFinder = new SeatFinder($service);
         if (!$seatFinder->find($data['number'], $data['fixed_seat'], $data['override_seats'], $data['override_split'])) {
-            $message = ($data['number'] == 1 ? 'Es konnte kein Sitzplatz in diesem Gottesdienst reserviert werden.' : 'Es konnten keine ' . $data['number'] . ' zusammenhängenden Sitzplätze in diesem Gottesdienst reserviert werden.');
-            return redirect()->back()->with('error', $message);
+            $error = $seatFinder->getError() ?: 'Bei der Reservierung ist ein Fehler aufgetreten.';
+            return redirect()->back()->with('error', $error);
         }
 
         $data['code'] = Booking::createCode();
         $booking = Booking::create($data);
-        $message = ($data['number'] == 1 ? 'Der Sitzplatz wurde reserviert.' : $data['number'] . ' zusammenhängenden Sitzplätze wurden reserviert.');
+        $message = ($data['number'] == 1 ? 'Der Sitzplatz wurde reserviert.' : $data['number'] . ' zusammenhängende Sitzplätze wurden reserviert.');
         return redirect()->route('service.bookings', $service->id)->with('success', $message.' (Code: '.strtoupper($booking->code).')');
     }
 
