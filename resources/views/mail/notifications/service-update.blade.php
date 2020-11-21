@@ -321,7 +321,7 @@
         <tbody>
         <tr>
             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"
-                align="left">© 2019 Pfarrplaner
+                align="left">© {{ \Carbon\Carbon::now()->format('Y') }} Pfarrplaner
             </td>
             <td class="text-right"
                 style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"
