@@ -102,7 +102,7 @@ class BookingController extends Controller
                 'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
             ]
         );
-        return $pdf->download($service->day->date->format('Ymd').' '.$service->timeText(false,'-').' Sitzplan.pdf');
+        return $pdf->download($service->day->date->format('Ymd').'-'.$service->timeText(false,'', false, false, true).' Sitzplan.pdf');
 
     }
 
