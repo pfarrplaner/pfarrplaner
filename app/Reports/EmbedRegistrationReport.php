@@ -128,7 +128,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             $end = $start->copy()->setTime(23.59,59);
 
         } else {
-            $start = Carbon::now();
+            $start = Carbon::now()->setTime(0,0,0);
             $end = $start->copy()->addMonth(1);
         }
 
