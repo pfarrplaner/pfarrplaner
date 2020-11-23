@@ -130,6 +130,7 @@ class ServiceController extends Controller
     public function update(UpdateServiceRequest $request, Service $service)
     {
         $service->trackChanges();
+        $originalParticipants = $service->participants;
         $service->update($request->validated());
         $service->associateParticipants($request, $service);
         $service->checkIfPredicantNeeded();
@@ -139,7 +140,8 @@ class ServiceController extends Controller
         $this->handleAttachments($request, $service);
 
         if ($service->isChanged()) {
-            Subscription::send($service, ServiceUpdated::class);
+            $service->storeDiff();
+            event(new \App\Events\ServiceUpdated($service, $originalParticipants));
         }
 
         return response()->json(compact('service'));
