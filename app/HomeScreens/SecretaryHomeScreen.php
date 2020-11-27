@@ -143,6 +143,7 @@ class SecretaryHomeScreen extends AbstractHomeScreen
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
             ->whereIn('city_id', $user->writableCities->pluck('id'))
+            ->whereHas('location')
             ->whereHas(
                 'day',
                 function ($query) use ($start, $end) {
