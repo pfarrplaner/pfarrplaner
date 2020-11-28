@@ -105,7 +105,7 @@ class SeatingRowController extends Controller
         $data = $request->validate(
             [
                 'seating_section_id' => 'required|int|exists:seating_sections,id',
-                'title' => 'required|int',
+                'title' => 'required|regex:/[0-9]+/i',
                 'divides_into' => 'nullable|int',
                 'seats' => 'nullable|int',
                 'spacing' => 'nullable|int',
