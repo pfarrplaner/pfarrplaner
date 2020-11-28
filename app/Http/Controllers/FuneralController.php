@@ -159,12 +159,14 @@ class FuneralController extends Controller
         $city = City::find($request->get('city'));
         $day = Day::find($request->get('day'));
 
-        if ($specialLocation = ($request->get('special_location') ?: '')) {
+        $locationId = $request->get('location_id') ?: 0;
+
+        if ((!id_numeric($locationId)) || (null === Location::find($locationId))) {
+            $specialLocation = $locationId;
             $locationId = 0;
             $time = $request->get('time') ?: '';
             $ccLocation = $request->get('cc_location') ?: '';
         } else {
-            $locationId = $request->get('location_id') ?: 0;
             if ($locationId) {
                 $location = Location::find($locationId);
                 $time = $request->get('time') ?: $location->default_time;

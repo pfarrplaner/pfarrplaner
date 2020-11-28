@@ -13,7 +13,6 @@
             @hidden(['name' => 'city', 'value'=> $city->id])
             @hidden(['name' => 'day', 'value'=> $day->id])
             @locationselect(['name' => 'location_id', 'label' => 'Kirche', 'locations' => $locations])
-            @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location'])
             @hidden(['name' => 'city_id', 'value' => $city->id])
             @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM'])
         @endcomponent
@@ -22,15 +21,15 @@
 
 @section('scripts')
     <script>
+        var defaultTime = {};
+        @foreach($locations as $location)defaultTime['{{ $location->id }}'] = '{{ substr($location->default_time,0, 5) }}';@endforeach
+
         function setDefaultTime() {
-            if ($('select[name=location_id]').val() == '0') {
-                $('input[name=time]').attr('placeholder', 'HH:MM');
-                $('#special_location').show();
-                $('#special_location input').first().focus();
+            var loc = $('select[name=location_id] option:selected').first().val();
+            if (undefined != defaultTime[loc]) {
+                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + defaultTime[loc]);
             } else {
-                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + ($('select[name=location_id]').children("option:selected").data('time')));
-                $('#special_location_input').val('');
-                $('#special_location').hide();
+                $('input[name=time]').attr('placeholder', '');
             }
         }
 

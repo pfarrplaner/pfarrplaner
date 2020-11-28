@@ -230,9 +230,13 @@
     <script src="{{ asset('js/pfarrplaner/comments.js') }}"></script>
     <script src="{{ asset('js/pfarrplaner/seating-lists.js') }}"></script>
     <script>
+        var defaultTime = {};
+        @foreach($locations as $location)defaultTime['{{ $location->id }}'] = '{{ substr($location->default_time,0, 5) }}';@endforeach
+
         function setDefaultTime() {
-            if (($('select[name=location_id]').children("option:selected").data('time')) != '') {
-                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + ($('select[name=location_id]').children("option:selected").data('time')));
+            var loc = $('select[name=location_id] option:selected').first().val();
+            if (undefined != defaultTime[loc]) {
+                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + defaultTime[loc]);
             } else {
                 $('input[name=time]').attr('placeholder', '');
             }
