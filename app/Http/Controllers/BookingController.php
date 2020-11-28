@@ -178,8 +178,8 @@ class BookingController extends Controller
         );
 
         $data['fixed_seat'] = strtoupper($data['fixed_seat'] ?? '');
-        $data['override_seats'] = $data['override_seats'] ?? '';
-        $data['override_split'] = $data['override_split'] ?? '';
+        $data['override_seats'] = strtoupper($data['override_seats'] ?? '');
+        $data['override_split'] = strtoupper($data['override_split'] ?? '');
 
 
         return $data;
