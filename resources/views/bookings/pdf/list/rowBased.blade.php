@@ -21,12 +21,12 @@
 </head>
 <body>
 <div style="padding-top: 17mm; padding-left: 12mm; width: 97mm; height: 57mm;">
-    <b>Sitzplan für den Gottesdienst<br />{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}<br />{{ $service->locationText() }}</b><br /><br />
+    <b>Besucherliste für den Gottesdienst<br />{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}<br />{{ $service->locationText() }}</b><br /><br />
     Nach §6 Abs. 2 CoronaVO<br />
     verwahren bis einschl. <br />
     <span style="color: red; font-weight: bold;">{{ $service->day->date->clone()->addWeek(4)->format('d.m.Y') }}</span>
 </div>
-<h1>Sitzplan für den Gottesdienst<br />{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}, {{ $service->locationText() }}</h1>
+<h1>Besucherliste für den Gottesdienst<br />{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}, {{ $service->locationText() }}</h1>
 @if (count($list))
 <h2>Angemeldete Besucher</h2>
 <table width="100%">
