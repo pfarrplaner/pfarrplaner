@@ -19,7 +19,7 @@
     @if(count($bookings))
         @component('components.ui.card')
             @slot('cardHeader')
-                Anmeldungen ({{ $capacity }} / {{ $service->getSeatfinder()->maximumCapacity() }} Plätze frei)
+                Anmeldungen ({{ $service->getSeatfinder()->freeSeatsText() }} Plätze frei)
             @endslot
             @include('bookings.partials.service-bookings')
         @endcomponent

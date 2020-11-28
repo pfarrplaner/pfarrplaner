@@ -37,8 +37,9 @@ use App\SeatingSection;
 use App\Service;
 use Illuminate\Support\Collection;
 
-class SeatFinder
+class RowBasedSeatFinder extends AbstractSeatFinder
 {
+    public $viewName = 'rowBased';
 
     protected const ROW_TOO_SMALL = -1;
     protected const ROW_FULL = -2;
@@ -69,7 +70,7 @@ class SeatFinder
      */
     public function __construct(Service $service, $preloadExistingBookings = true)
     {
-        $this->service = $service;
+        parent::__construct($service, $preloadExistingBookings);
         $this->location = $service->location;
         $this->grid = $this->originalGrid = $this->buildGrid();
         if ($preloadExistingBookings) {
@@ -219,7 +220,7 @@ class SeatFinder
             $success = $this->getSeating($booking);
             if (!$success) {
                 $this->setError(
-                        'number',
+                    'number',
                     $booking->number == 1 ? 'Es konnte kein Sitzplatz in diesem Gottesdienst reserviert werden.' : 'Es konnten keine ' . $booking->number . ' zusammenhängenden Sitzplätze in diesem Gottesdienst reserviert werden.'
                 );
                 return false;
@@ -400,6 +401,10 @@ class SeatFinder
         return $pts;
     }
 
+    /**
+     * Export the seating list to an array
+     * @return array|void
+     */
     public function finalList()
     {
         $this->optimize();
@@ -762,6 +767,7 @@ class SeatFinder
     protected function setError(string $key, string $error): void {
         $this->errors[$key] = $error;
     }
+
 
 
 }

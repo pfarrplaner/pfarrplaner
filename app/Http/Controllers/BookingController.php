@@ -32,7 +32,6 @@ namespace App\Http\Controllers;
 
 
 use App\Booking;
-use App\Seating\SeatFinder;
 use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -136,9 +135,10 @@ class BookingController extends Controller
     public function finalize(Service $service)
     {
         $result = $service->getSeatFinder()->finalList();
+        $viewName = $service->getSeatFinder()->viewName;
 
         $pdf = PDF::loadView(
-            'bookings.pdf.list',
+            'bookings.pdf.list.'.$viewName,
             array_merge($result, compact('service')),
             [],
             [

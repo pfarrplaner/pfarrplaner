@@ -30,7 +30,9 @@
 
 namespace App;
 
-use App\Seating\SeatFinder;
+use App\Seating\AbstractSeatFinder;
+use App\Seating\MaximumBasedSeatFinder;
+use App\Seating\RowBasedSeatFinder;
 use App\Tools\StringTool;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
@@ -218,7 +220,7 @@ class Service extends Model
      */
     private $auditData = [];
 
-    /** @var SeatFinder  */
+    /** @var AbstractSeatFinder  */
     protected $seatFinder = null;
 
     /**
@@ -1065,10 +1067,10 @@ class Service extends Model
 
     /**
      * Get an instance of SeatFinder for this service
-     * @return SeatFinder
+     * @return AbstractSeatFinder
      */
     public function getSeatFinder() {
-        return $this->seatFinder ?? (new SeatFinder($this));
+        return $this->seatFinder ?? (is_object($this->location) ? new RowBasedSeatFinder($this) : new MaximumBasedSeatFinder($this));
     }
 
     public function dateTime() {

@@ -57,7 +57,7 @@ class SeatingValidators
 
         /** @var Service $service */
         $service = Service::findOrFail($data['service_id']);
-        /** @var SeatFinder $seatFinder */
+        /** @var AbstractSeatFinder $seatFinder */
         $seatFinder = $service->getSeatFinder();
 
         if (isset($parameters[0]) && isset($data[$parameters[0]])) {
