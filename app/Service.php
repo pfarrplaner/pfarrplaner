@@ -1070,7 +1070,9 @@ class Service extends Model
      * @return AbstractSeatFinder
      */
     public function getSeatFinder() {
-        return $this->seatFinder ?? (is_object($this->location) ? new RowBasedSeatFinder($this) : new MaximumBasedSeatFinder($this));
+        if ($this->seatFinder) return $this->seatFinder;
+        if (is_object($this->location) && (count($this->location->seatingSections) >0)) return new RowBasedSeatFinder($this);
+        return new MaximumBasedSeatFinder($this);
     }
 
     public function dateTime() {
