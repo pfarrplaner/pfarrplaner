@@ -58,10 +58,11 @@ class BookingController extends Controller
             ->get();
 
         $capacity = $service->getSeatFinder()->remainingCapacity();
+        $seating = $service->getSeatFinder()->getSeatingTable();
 
         // for some unknown reason, this needs to be sorted after the query
         $bookings = $bookings->sortBy('name')->sortBy('first_name');
-        return view('bookings.service', compact('service', 'bookings', 'capacity'));
+        return view('bookings.service', compact('service', 'bookings', 'capacity', 'seating'));
     }
 
     /**
@@ -84,12 +85,7 @@ class BookingController extends Controller
         $data['code'] = Booking::createCode();
         $booking = Booking::create($data);
         $message = ($data['number'] == 1 ? 'Der Sitzplatz wurde reserviert.' : $data['number'] . ' zusammenhängende Sitzplätze wurden reserviert.');
-        return redirect()->route('service.bookings', $booking->service->id)->with(
-            'success',
-            $message . ' (Code: ' . strtoupper(
-                $booking->code
-            ) . ')'
-        );
+        return redirect()->route('service.bookings', $booking->service->id)->with('success', $message);
     }
 
     /**

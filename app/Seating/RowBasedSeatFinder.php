@@ -769,5 +769,25 @@ class RowBasedSeatFinder extends AbstractSeatFinder
     }
 
 
+    /**
+     * Get a seating table arranged by booking codes
+     * @return array
+     */
+    public function getSeatingTable(): array {
+        $savedGrid = $this->grid;
+        $this->optimize();
+
+        $list = [];
+        foreach ($this->grid as $placeKey => $place) {
+            if (null !== $place['booking']) {
+                $list[$place['booking']->code] = $placeKey;
+            }
+        }
+
+        $this->grid = $savedGrid;
+        return $list;
+    }
+
+
 
 }

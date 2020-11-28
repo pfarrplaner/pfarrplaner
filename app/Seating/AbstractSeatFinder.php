@@ -39,6 +39,8 @@ class AbstractSeatFinder
 {
     public $viewName = '';
 
+    public $hasSeats = true;
+
     /** @var Service $service  */
     protected $service = null;
     protected $errors = [];
@@ -135,8 +137,19 @@ class AbstractSeatFinder
         $this->errors[$key] = $error;
     }
 
+    /**
+     * Get the free seats text (usually something like "remaining / max")
+     * @return string
+     */
     public function freeSeatsText() {
         return $this->remainingCapacity().' / '.$this->maximumCapacity();
     }
 
+    /**
+     * Get a seating table arranged by booking codes
+     * @return array
+     */
+    public function getSeatingTable(): array {
+        return [];
+    }
 }

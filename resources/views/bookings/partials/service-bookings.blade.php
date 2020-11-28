@@ -5,7 +5,7 @@
             <th>Name</th>
             <th>Anzahl Personen</th>
             <th>Kontakt</th>
-            <th>Code</th>
+            @if($service->getSeatFinder()->hasSeats)<th>Platz*</th>@endif
             <th></th>
         </tr>
         </thead>
@@ -15,7 +15,12 @@
                 <td>{{ $booking->name }}@if($booking->first_name), {{ $booking->first_name }}@endif</td>
                 <td>{{ $booking->number }}</td>
                 <td>{!!  nl2br($booking->contact) !!}</td>
-                <td>{{ $booking->code }}@if($booking->fixed_seat)<br /><span style="color: red;"><small>Fester Platz: {{ $booking->fixed_seat }}</small></span>@endif</td>
+                @if($service->getSeatFinder()->hasSeats)
+                <td>
+                    <span style="@if($booking->fixed_seat) font-weight: bold; color: red; @else font-style: italic; @endif"
+                    title="@if($booking->fixed_seat) Manuell festgelegter Platz @else Vorläufige Platzzuweisung @endif">{{ $seating[$booking->code] }}</span>
+                </td>
+                @endif
                 <td class="text-right">
                     <a class="btn btn-sm btn-secondary" title="Anmeldung bearbeiten" href="{{ route ('booking.edit', $booking) }}"><span class="fa fa-edit"></span></a>
                     <a class="btn btn-sm btn-danger btn-delete-booking" title="Anmeldung löschen" data-route="{{ route('booking.destroy', $booking->id) }}" style="color: white;"><span class="fa fa-trash"></span></a>
@@ -24,4 +29,5 @@
         @endforeach
         </tbody>
     </table>
+    @if($service->getSeatFinder()->hasSeats)<small><b>*</b> <i>Kursiv</i> angegebene Plätze sind vorläufig und können sich noch ändern.</small>@endif
 </div>

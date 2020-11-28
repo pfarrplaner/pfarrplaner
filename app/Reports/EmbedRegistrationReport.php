@@ -157,7 +157,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
                     $data['code'] = Booking::createCode();
                     $booking = Booking::create($data);
                     $message = (($data['number'] == 1) ? 'Ihr Sitzplatz wurde ' : $data['number'].' Sitzplätze wurden ')
-                        .'erfolgreich reserviert. Ihr Bestätigungscode: '.strtoupper($data['code']).'. Am Eingang zum Gottesdienst erfahren Sie, '
+                        .'erfolgreich reserviert. Am Eingang zum Gottesdienst erfahren Sie, '
                         .'wo genau Sie sitzen.';
                     $success->add('success', $message);
                 } else {
