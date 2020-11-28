@@ -37,8 +37,7 @@
                     @hidden(['name' => 'city_id', 'value' => $city->id])
                     @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $day])
                     @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'time', 'label' => 'Uhrzeit', 'placeholder' => 'HH:MM', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @checkbox(['name' => 'hidden', 'label' => 'Diesen Gottesdienst in öffentlichen Listen verbergen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'special'])
@@ -110,17 +109,15 @@
     <script>var attachments = 0;</script>
     <script src="{{ asset('js/pfarrplaner/attachments.js') }}"></script>
     <script>
+        var defaultTime = {};
+        @foreach($locations as $location)defaultTime['{{ $location->id }}'] = '{{ substr($location->default_time,0, 5) }}';@endforeach
+
         function setDefaultTime() {
-            if ($('select[name=location_id]').val() == '') {
-                $('input[name=time]').attr('placeholder', 'HH:MM');
-                $('input[name=cc_default_location]').attr('placeholder', '');
-                $('#special_location').show();
-                $('#special_location input').first().focus();
+            var loc = $('select[name=location_id] option:selected').first().val();
+            if (undefined != defaultTime[loc]) {
+                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + defaultTime[loc]);
             } else {
-                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + ($('select[name=location_id]').children("option:selected").data('time')));
-                $('input[name=cc_location]').attr('placeholder', 'Leer lassen für ' + ($('select[name=location_id]').children("option:selected").data('cc')));
-                $('#special_location_input').val('');
-                $('#special_location').hide();
+                $('input[name=time]').attr('placeholder', '');
             }
         }
 
@@ -142,7 +139,7 @@
                 $('input[name=pastor]').focus();
             }
 
-            $('select[name=location_id]').change(function () {
+            $('.location-select').change(function () {
                 setDefaultTime();
             });
 

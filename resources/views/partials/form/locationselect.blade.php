@@ -1,6 +1,9 @@
 <div class="form-group">
     <label for="{{ $name }}">{{ $label }}</label>
-    <select class="form-control @if(isset($class)){{ $class }}@endif" name="{{ $name }}" @if(isset($enabled) && (!$enabled)) disabled @endcannot >
+    <select class="form-control location-select @if(isset($class)){{ $class }}@endif" name="{{ $name }}" @if(isset($enabled) && (!$enabled)) disabled @endcannot >
+        @if(isset($value) && isset($special) && (null === $value) && ($special != ''))<option data-time="" value="{{ $special }}" selected>{{ $special }}</option>
+            @else <option></option>
+        @endif
         @foreach($locations->sortBy('name') as $thisLocation)
             <option data-time="{{ strftime('%H:%M', strtotime($thisLocation->default_time)) }}"
                     value="{{$thisLocation->id}}"
@@ -11,9 +14,6 @@
                 {{$thisLocation->name}}
             </option>
         @endforeach
-        <option value="0"
-                @if ((!isset($value)) || ($value == null)) selected @endif
-        >Freie Ortsangabe</option>
     </select>
     @include('partials.form.validation')
 </div>

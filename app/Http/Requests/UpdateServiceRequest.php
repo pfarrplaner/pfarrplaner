@@ -30,6 +30,7 @@
 
 namespace App\Http\Requests;
 
+use App\Location;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -108,6 +109,16 @@ class UpdateServiceRequest extends FormRequest
     public function validated()
     {
         $data = parent::validated();
+
+        // set location
+        if (!is_numeric($data['location_id'])) {
+            $data['special_location'] = $data['location_id'];
+            unset($data['location_id']);
+        } else {
+            $location = Location::find($data['location_id']);
+            if (null === $location) $data['special_location'] = $data['location_id'];
+            unset($data['location_id']);
+        }
 
         // set time and place
         if (isset($data['special_location'])) {

@@ -122,6 +122,16 @@ class StoreServiceRequest extends FormRequest
     {
         $data = parent::validated();
 
+        // set location
+        if (!is_numeric($data['location_id'])) {
+            $data['special_location'] = $data['location_id'];
+            unset($data['location_id']);
+        } else {
+            $location = Location::find($data['location_id']);
+            if (null === $location) $data['special_location'] = $data['location_id'];
+            unset($data['location_id']);
+        }
+
         // set time and place
         if ($data['special_location'] = ($data['special_location'] ?? '')) {
             $data['location_id'] = 0;

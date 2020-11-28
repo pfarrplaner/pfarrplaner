@@ -30,6 +30,15 @@
 $(document).ready(function () {
     $('.fancy-selectize').selectize();
 
+    $('.location-select').selectize({
+        create: true,
+        render: {
+            option_create: function (data, escape) {
+                return '<div class="create">Freie Ortsangabe: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+            }
+        },
+    });
+
 
     $('.datepicker').datepicker({
         format: 'dd.mm.yyyy',

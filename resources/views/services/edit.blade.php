@@ -97,9 +97,8 @@
                     @tab(['id' => 'home', 'active' => ($tab=='home' || $tab == '')])
                     @hidden(['name' => 'city_id', 'value' => $service->city_id])
                     @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $service->day])
-                    @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'value' => $service->location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'value' => $service->special_location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'value' => $service->timeText(false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'value' => $service->location, 'special' => $service->special_location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'time', 'label' => 'Uhrzeit', 'placeholder' => 'HH:MM', 'value' => $service->timeText(false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @checkbox(['name' => 'hidden', 'label' => 'Diesen Gottesdienst in öffentlichen Listen verbergen', 'value' => $service->hidden, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'special', 'active' => ($tab=='special')])
@@ -232,14 +231,10 @@
     <script src="{{ asset('js/pfarrplaner/seating-lists.js') }}"></script>
     <script>
         function setDefaultTime() {
-            if ($('select[name=location_id]  option:selected').val() == 0) {
-                $('input[name=time]').attr('placeholder', 'HH:MM');
-                $('#special_location').show();
-                $('#special_location input').first().focus();
-            } else {
+            if (($('select[name=location_id]').children("option:selected").data('time')) != '') {
                 $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + ($('select[name=location_id]').children("option:selected").data('time')));
-                $('#special_location_input').val('');
-                $('#special_location').hide();
+            } else {
+                $('input[name=time]').attr('placeholder', '');
             }
         }
 
