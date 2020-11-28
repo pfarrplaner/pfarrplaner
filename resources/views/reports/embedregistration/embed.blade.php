@@ -24,17 +24,30 @@
                                     </td>
                                     <td valign="top" style="text-align: right;">
                                         @if($service->registration_active)
-                                            @if($service->getSeatFinder()->remainingCapacity() > 0)
-                                                max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
-                                            <a class="btn btn-secondary show-reg-form" href="#"
-                                               data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
+                                            @if(isset($service->registration_online_start) && ($service->registration_online_start > \Carbon\Carbon::now()))
+                                                Reservierung erst ab {{ $service->registration_online_start->format('d.m.Y, H:i') }} Uhr möglich
+                                            @elseif(isset($service->registration_online_end) && ($service->registration_online_end < \Carbon\Carbon::now()))
+                                                <b>Keine Online-Anmeldung mehr möglich.</b>
+                                                @if($service->getSeatFinder()->remainingCapacity() > 0)
+                                                    @if($service->registration_phone)
+                                                        <br /><small>Evtl. ist unter {{ $service->registration_phone }} noch eine telefonische Anmeldung möglich.</small>
+                                                    @endif
+                                                @endif
                                             @else
-                                                komplett ausgebucht
+                                                @if($service->getSeatFinder()->remainingCapacity() > 0)
+                                                    max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
+                                                <a class="btn btn-secondary show-reg-form" href="#"
+                                                   data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
+                                                @else
+                                                    komplett ausgebucht
+                                                @endif
                                             @endif
                                         @else
                                             <b>Keine Online-Anmeldung mehr möglich.</b>
-                                            @if($service->registration_phone)
-                                                <br /><small>Evtl. ist unter {{ $service->registration_phone }} noch eine telefonische Anmeldung möglich.</small>
+                                            @if($service->getSeatFinder()->remainingCapacity() > 0)
+                                                @if($service->registration_phone)
+                                                    <br /><small>Evtl. ist unter {{ $service->registration_phone }} noch eine telefonische Anmeldung möglich.</small>
+                                                @endif
                                             @endif
                                         @endif
                                     </td>

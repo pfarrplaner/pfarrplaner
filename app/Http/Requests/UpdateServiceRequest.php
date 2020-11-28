@@ -30,6 +30,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -94,6 +95,8 @@ class UpdateServiceRequest extends FormRequest
             'registration_active' => 'nullable|int|in:0,1',
             'exclude_places' => 'nullable|string',
             'registration_phone' => 'nullable|string',
+            'registration_max' => 'nullable|int',
+            'reserved_places' => 'nullable|string',
         ];
     }
 
@@ -114,6 +117,10 @@ class UpdateServiceRequest extends FormRequest
         $data['hidden'] = $data['hidden'] ?? 0;
         $data['needs_reservations'] = $data['needs_reservations'] ?? 0;
         $data['registration_active'] = $data['registration_active'] ?? 0;
+
+        if (isset($data['registration_online_start'])) $data['registration_online_start'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_start']);
+        if (isset($data['registration_online_end'])) $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
+        dd($data);
 
         return $data;
     }

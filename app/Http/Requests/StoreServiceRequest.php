@@ -32,6 +32,7 @@ namespace App\Http\Requests;
 
 use App\Location;
 use App\Service;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -105,6 +106,10 @@ class StoreServiceRequest extends FormRequest
             'registration_active' => 'nullable|int|in:0,1',
             'exclude_places' => 'nullable|string',
             'registration_phone' => 'nullable|string',
+            'registration_online_start' => 'nullable',
+            'registration_online_end' => 'nullable',
+            'registration_max' => 'nullable|int',
+            'reserved_places' => 'nullable|string',
         ];
     }
 
@@ -138,6 +143,12 @@ class StoreServiceRequest extends FormRequest
         $data['hidden'] = $data['hidden'] ?? 0;
         $data['needs_reservations'] = $data['needs_reservations'] ?? 0;
         $data['registration_active'] = $data['registration_active'] ?? 0;
+
+        $data['exclude_places'] = strtoupper($data['exclude_places'] ?? '');
+        $data['reserved_places'] = strtoupper($data['reserved_places'] ?? '');
+
+        if (isset($data['registration_online_start'])) $data['registration_online_start'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_start']);
+        if (isset($data['registration_online_end'])) $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
 
         return $data;
     }

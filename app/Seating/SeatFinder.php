@@ -58,6 +58,10 @@ class SeatFinder
 
     protected $loaded = false;
 
+    protected $remain = 0;
+
+    protected $reserved = [];
+
     /**
      * SeatFinder constructor.
      * @param Service $service
@@ -72,6 +76,7 @@ class SeatFinder
             $this->loadExistingBookings();
             $this->loaded = true;
         }
+        $this->remain = $this->remainingCapacity();
     }
 
     /**
@@ -87,6 +92,7 @@ class SeatFinder
             $grid[$row->title] = ['row' => $row, 'booking' => null];
         }
         ksort($grid);
+
         return $grid;
     }
 
@@ -115,7 +121,7 @@ class SeatFinder
      */
     public function find($number, $fixedSeat = '', $overrideSeats = '', $overrideSplit = '', $bookings = null)
     {
-        if ($number > $this->remainingCapacity()) {
+        if ($number > $this->remain) {
             return false;
         }
 
@@ -161,13 +167,17 @@ class SeatFinder
         $bookings = $this->service->bookings->filter(function ($item) use ($booking){
             return $item->id != $booking->id;
         });
-        return $this->find(
+        $remain = $this->remain;
+        $this->remain += $booking['number'];
+        $success =  $this->find(
             $data['number'],
             $data['fixed_seat'],
             $data['override_seats'],
             $data['override_split'],
             $bookings
         );
+        $this->remain = $remain;
+        return $success;
     }
 
     /**
@@ -394,12 +404,17 @@ class SeatFinder
     {
         $this->optimize();
 
+        // add back all reserved rows
+        $this->grid = $this->grid + $this->reserved;
+        ksort($this->grid);
+
         // split all empty rows:
         foreach ($this->grid as $key => $place) {
             if (null === $place['booking']) {
                 $this->splitRow($key);
             }
         }
+        ksort($this->grid);
 
         // compile lists
         $final = [];
@@ -595,8 +610,8 @@ class SeatFinder
      */
     protected function getAvailableSections()
     {
-        // TODO: Take settings into account (sections may be closed)
         $sections = $this->location->seatingSections->sortBy('priority');
+        // take care of excluded sections
         if (trim($this->service->exclude_sections) != '') {
             $excludedSections = [];
             foreach (explode(',', $this->service->exclude_sections) as $e) {
@@ -629,6 +644,25 @@ class SeatFinder
             }
         }
 
+        // see if any rows should bee kept back
+        if ($this->service->reserved_places) {
+            foreach (explode(',', $this->service->reserved_places) as $reservedPlace) {
+                if (!is_numeric($reservedPlace)) {
+                    $rowNumber = str_pad(preg_replace("/[^0-9]/", "", $reservedPlace), 2, 0, STR_PAD_LEFT);
+                    $placeLetter = preg_replace("/[0-9]/", "", $reservedPlace);
+                    $rows = $this->splitRow($rowNumber, $rows, true);
+                    $this->reserved[$rowNumber . $placeLetter] = ['row' => $rows[$rowNumber . $placeLetter], 'booking' => null];
+                    unset($rows[$rowNumber . $placeLetter]);
+                } else {
+                    $reservedPlace = str_pad($reservedPlace, 2, 0, STR_PAD_LEFT);
+                    $this->reserved[$reservedPlace] = ['row' => $rows[$reservedPlace], 'booking' => null];
+                    unset ($rows[$reservedPlace]);
+                }
+
+            }
+        }
+
+
         // unset pre-reserved rows:
         if (trim($this->service->exclude_places) != '') {
             $preReservedPlaces = explode(',', $this->service->exclude_places);
@@ -646,6 +680,7 @@ class SeatFinder
             }
         }
 
+
         return $rows;
     }
 
@@ -659,18 +694,33 @@ class SeatFinder
         foreach ($this->getAllRows() as $seatingRow) {
             $capacity += $seatingRow->seats;
         }
+        if ($this->service->registration_max) $capacity = min($capacity, $this->service->registration_max);
         return $capacity;
     }
 
-    public function remainingCapacity()
+    public function remainingCapacity($bookings = null)
     {
         $saveGrid = $this->grid;
+        if (null !== $bookings) {
+            $savedBookings = $this->service->bookings;
+            $this->bookings = $bookings;
+        }
         $this->optimize();
         $capacity = 0;
+        $seated = 0;
         foreach ($this->grid as $key => $place) {
             if (null === $place['booking']) {
                 $capacity += $place['row']->seats;
+            } else {
+                $seated += $place['booking']->number;
             }
+        }
+        if ($this->service->registration_max) {
+            $capacity = min($capacity, $this->service->registration_max - $seated);
+        }
+
+        if (null !== $bookings) {
+            $this->service->bookings = $savedBookings;
         }
         $this->grid = $saveGrid;
         return $capacity;
@@ -684,9 +734,9 @@ class SeatFinder
     public function getFullRow($key)
     {
         if (is_numeric($key)) {
-            return $this->originalGrid[$key]['row'];
+            return $this->originalGrid[$key]['row'] ?? $this->reserved[$key]['row'];
         }
-        return $this->originalGrid[substr($key, 0, -1)]['row'];
+        return $this->originalGrid[substr($key, 0, -1)]['row'] ?? $this->reserved[substr($key, 0, -1)]['row'];
     }
 
     /**

@@ -164,20 +164,34 @@
                     @if($service->city->hasRegistrableLocations())
                         @tab(['id' => 'registrations', 'active' => ($tab=='registrations')])
                         @checkbox(['label' => 'Für diesen Gottesdienst ist eine Anmeldung notwendig', 'name' => 'needs_reservations', 'value' => $service->needs_reservations])
-                        @checkbox(['label' => 'Online-Anmeldung aktiv', 'name' => 'registration_active', 'value' => $service->registration_active])
-                        @input(['label' => 'Sitzplätze in diesen Zonen nicht besetzen', 'name' => 'exclude_sections', 'value' => $service->exclude_sections, 'placeholder' => 'kommagetrennte Liste, z.B. Empore, Gemeindesaal'])
-                        @input(['label' => 'Folgende Sitzplätze nicht besetzen', 'name' => 'exclude_places', 'value' => $service->exclude_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B'])
                         @input(['label' => 'Telefonnummer für die telefonische Anmeldung', 'name' => 'registration_phone', 'value' => $service->registration_phone])
+                        @checkbox(['label' => 'Online-Anmeldung aktiv', 'name' => 'registration_active', 'value' => $service->registration_active])
+                        <div class="row">
+                            <div class="col-md-6">
+                                @datetimepicker(['label' => 'Anmeldung online ab', 'name' => 'registration_online_start',
+                                    'value' => ($service->registration_online_start ? $service->registration_online_start->format('d.m.Y H:i') : '')])
+                            </div>
+                            <div class="col-md-6">
+                                @datetimepicker(['label' => 'Anmeldung online bis', 'name' => 'registration_online_end',
+                                    'value' => ($service->registration_online_end ? $service->registration_online_end->format('d.m.Y H:i') : '')])
+                            </div>
+                        </div>
+                        <hr />
+                        @input(['label' => 'Anmeldungen begrenzen auf maximal', 'name' => 'registration_max', 'value' => $service->registration_max, 'placeholder' => 'Leer lassen = keine Begrenzung'])
+                        @input(['label' => 'Folgende Bereiche sind gesperrt', 'name' => 'exclude_sections', 'value' => $service->exclude_sections, 'placeholder' => 'kommagetrennte Liste, z.B. Empore, Gemeindesaal'])
+                        @input(['label' => 'Folgende Sitzplätze sind gesperrt', 'name' => 'exclude_places', 'value' => $service->exclude_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B', 'class' => 'seatingRowList'])
+                        @input(['label' => 'Folgende Sitzplätze zurückhalten', 'name' => 'reserved_places', 'value' => $service->reserved_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B', 'class' => 'seatingRowList'])
                         <hr />
                             <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
                                 <span class="fa fa-ticket-alt"></span> Neue Anmeldung
+                            </a>&nbsp;
+                            <a class="btn btn-secondary" href="{{ route('service.bookings', $service->id) }}">
+                                <span class="fa fa-ticket-alt"></span> Anmeldungen
                             </a>&nbsp;
                             <a class="btn btn-secondary" href="{{ route('booking.finalize', $service->id) }}">
                                 <span class="fa fa-clipboard-check"></span> Liste drucken
                             </a>
 
-                        <hr />
-                        @include('bookings.partials.service-bookings')
                         @endtab
                     @endif
                     @can('admin')
@@ -215,6 +229,7 @@
         var commentOwnerClass = 'App\\Service';
     </script>
     <script src="{{ asset('js/pfarrplaner/comments.js') }}"></script>
+    <script src="{{ asset('js/pfarrplaner/seating-lists.js') }}"></script>
     <script>
         function setDefaultTime() {
             if ($('select[name=location_id]  option:selected').val() == 0) {
@@ -408,8 +423,9 @@
                 }
             });
 
-
+            loadSeatingLists();
         });
+
 
 
     </script>

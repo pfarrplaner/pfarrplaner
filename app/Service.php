@@ -170,6 +170,10 @@ class Service extends Model
         'registration_active',
         'exclude_places',
         'registration_phone',
+        'registration_online_start',
+        'registration_online_end',
+        'registration_max',
+        'reserved_places',
     ];
 
     /**
@@ -202,6 +206,11 @@ class Service extends Model
      */
     protected $attributes = [
         'offering_type' => 'eO',
+    ];
+
+    protected $dates = [
+        'registration_online_start',
+        'registration_online_end',
     ];
 
     /**
