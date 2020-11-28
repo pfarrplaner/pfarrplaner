@@ -37,7 +37,7 @@ function loadSeatingLists() {
             items.push(e.trim());
         });
         $(this).html('<span class="fa fa-spinner fa-spin"></span> Sitzplatzliste wird geladen...');
-        var sel = '<select name="' + $(el).attr('name').'">';
+        var sel = '<select name="' + $(el).attr('name') +'">';
         sel += '</select>';
     });
 }
