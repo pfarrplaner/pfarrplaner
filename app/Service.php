@@ -706,7 +706,7 @@ class Service extends Model
     {
         $desc = [];
         if ($this->needs_reservations) {
-            $desc[] = 'Anmeldung nötig';
+            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis '.$this->registration_online_end->format('d.m.Y, H:i').' Uhr' : 'Anmeldung nötig');
         }
         if ($this->baptism) {
             $desc[] = 'mit Taufen';
