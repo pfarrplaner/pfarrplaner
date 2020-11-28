@@ -152,4 +152,9 @@ class AbstractSeatFinder
     public function getSeatingTable(): array {
         return [];
     }
+
+    public function remainingCapacityText($format = ''): string {
+        if ($format == '') return $this->remainingCapacity();
+        return sprintf($format, $this->remainingCapacity());
+    }
 }

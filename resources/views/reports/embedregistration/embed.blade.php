@@ -35,7 +35,7 @@
                                                 @endif
                                             @else
                                                 @if($service->getSeatFinder()->remainingCapacity() > 0)
-                                                    max. {{ $service->getSeatFinder()->remainingCapacity() }} freie Plätze<b>*</b><br/>
+                                                    {!! $service->getSeatFinder()->remainingCapacityText('noch ca. %s Plätze<b>*</b>') !!}<br/>
                                                 <a class="btn btn-secondary show-reg-form" href="#"
                                                    data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
                                                 @else
