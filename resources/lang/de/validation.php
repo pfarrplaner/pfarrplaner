@@ -123,7 +123,7 @@ return [
     'present' => ':attribute muss vorhanden sein.',
     'phone_number' => ':attribute muss eine gültige Telefonnummer sein.',
     'regex' => ':attribute Format ist ungültig.',
-    'required' => ':attribute muss ausgefüllt sein.',
+    'required' => 'Das Feld ":attribute" muss ausgefüllt sein.',
     'required_if' => ':attribute muss ausgefüllt sein, wenn :other :value ist.',
     'required_unless' => ':attribute muss ausgefüllt sein, wenn :other nicht :values ist.',
     'required_with' => ':attribute muss angegeben werden, wenn :values ausgefüllt wurde.',
@@ -145,6 +145,11 @@ return [
     'url' => ':attribute muss eine URL sein.',
     'uuid' => ':attribute muss ein UUID sein.',
     'zip' => ':attribute muss eine gültige Postleitzahl sein.',
+
+    // seatable validators
+    'seatable' => 'Die gewünschte Anzahl zusammenhängender Plätze (:input) ist in diesem Gottesdienst nicht verfügbar.',
+    'seatable_fixed' => 'Der gewünschte Platz :input ist in diesem Gottesdienst nicht verfügbar.',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -408,6 +413,9 @@ return [
         'visitor_id' => 'visitor_id',
         'spouse1_birth_name' => 'spouse1_birth_name',
         'spouse2_birth_name' => 'spouse2_birth_name',
+        'contact' => 'Kontaktdaten'
+
+
 //===AUTO_INSERTED_ATTRIBUTES===//
     ],
 ];

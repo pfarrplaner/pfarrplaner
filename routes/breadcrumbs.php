@@ -28,6 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use App\Booking;
 use App\City;
 use App\Location;
 use App\SeatingRow;
@@ -167,6 +168,14 @@ Breadcrumbs::for('service.bookings', function (BreadcrumbsGenerator $trail, Serv
     $trail->parent('services.edit', $service);
     $trail->push('Anmeldungen', route('service.bookings', $service));
 });
+
+Breadcrumbs::for('booking.edit', function (BreadcrumbsGenerator $trail, Booking $booking){
+    if (!is_object($booking)) $booking = \App\Booking::findOrFail($booking);
+    $trail->parent('service.bookings', $booking->service);
+    $trail->push('#'.$booking->id, route('booking.edit', $booking));
+});
+
+
 
 Breadcrumbs::for(
     'calendar',

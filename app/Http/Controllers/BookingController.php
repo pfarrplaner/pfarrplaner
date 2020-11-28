@@ -41,12 +41,20 @@ use niklasravnsborg\LaravelPdf\Facades\Pdf;
 class BookingController extends Controller
 {
 
+    /**
+     * BookingController constructor.
+     */
     public function __construct()
     {
-        $this->middleware('auth')->except(['findSeat', 'store']);
+        $this->middleware('auth');
     }
 
-    public function index(Service $service) {
+    /**
+     * @param Service $service
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function index(Service $service)
+    {
         $bookings = Booking::where('service_id', $service->id)
             ->get();
 
@@ -67,22 +75,52 @@ class BookingController extends Controller
         return view('bookings.seatfinder', compact('service'));
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $data = $this->validateRequest($request);
-        $service = Service::findOrFail($data['service_id']);
-        $seatFinder = new SeatFinder($service);
-        if (!$seatFinder->find($data['number'], $data['fixed_seat'], $data['override_seats'], $data['override_split'])) {
-            $error = $seatFinder->getError() ?: 'Bei der Reservierung ist ein Fehler aufgetreten.';
-            return redirect()->back()->with('error', $error);
-        }
-
         $data['code'] = Booking::createCode();
         $booking = Booking::create($data);
         $message = ($data['number'] == 1 ? 'Der Sitzplatz wurde reserviert.' : $data['number'] . ' zusammenhängende Sitzplätze wurden reserviert.');
-        return redirect()->route('service.bookings', $service->id)->with('success', $message.' (Code: '.strtoupper($booking->code).')');
+        return redirect()->route('service.bookings', $booking->service->id)->with(
+            'success',
+            $message . ' (Code: ' . strtoupper(
+                $booking->code
+            ) . ')'
+        );
     }
 
+    /**
+     * @param Booking $booking
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function edit(Booking $booking)
+    {
+        return view('bookings.edit', compact('booking'));
+    }
+
+    /**
+     * Update an existing booking
+     * @param Request $request
+     * @param Booking $booking
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, Booking $booking)
+    {
+        $data = $this->validateRequest($request);
+        $booking->update($data);
+        return redirect()->route('service.bookings', $booking->service->id)
+            ->with('success', 'Die Buchung wurde erfolgreich geändert.');
+    }
+
+    /**
+     * @param Booking $booking
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
     public function destroy(Booking $booking)
     {
         $serviceId = $booking->service_id;
@@ -90,7 +128,13 @@ class BookingController extends Controller
         return redirect()->route('service.bookings', $serviceId);
     }
 
-    public function finalize(Service $service) {
+    /**
+     * Finalize seating and export the seating list to PDF
+     * @param Service $service
+     * @return mixed
+     */
+    public function finalize(Service $service)
+    {
         $result = $service->getSeatFinder()->finalList();
 
         $pdf = PDF::loadView(
@@ -102,10 +146,21 @@ class BookingController extends Controller
                 'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
             ]
         );
-        return $pdf->download($service->day->date->format('Ymd').'-'.$service->timeText(false,'', false, false, true).' Sitzplan.pdf');
-
+        return $pdf->download(
+            $service->day->date->format('Ymd') . '-' . $service->timeText(
+                false,
+                '',
+                false,
+                false,
+                true
+            ) . ' Sitzplan.pdf'
+        );
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     protected function validateRequest(Request $request)
     {
         $data = $request->validate(
@@ -115,9 +170,9 @@ class BookingController extends Controller
                 'name' => 'required',
                 'first_name' => 'nullable',
                 'contact' => 'required|string',
-                'number' => 'required|int|min:1',
-                'fixed_seat' => 'nullable|string',
-                'override_seats' => 'nullable|string',
+                'number' => 'required|int|min:1|seatable:booking_id',
+                'fixed_seat' => 'nullable|string|seatable_fixed:booking_id',
+                'override_seats' => 'nullable|int',
                 'override_split' => 'nullable|string',
             ]
         );

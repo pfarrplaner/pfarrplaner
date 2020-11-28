@@ -54,7 +54,7 @@ class SeatFinder
     protected $grid = [];
     protected $originalGrid = [];
 
-    protected $error = '';
+    protected $errors = [];
 
     protected $loaded = false;
 
@@ -107,9 +107,13 @@ class SeatFinder
     /**
      * Check if a specified number of people can still be seated in the location
      * @param $number Number of people
-     * @return bool
+     * @param string $fixedSeat Desired fixed seating position
+     * @param string $overrideSeats Override the default maximum number of seats for a fixed position
+     * @param string $overrideSplit Override the default splitting configuration for a fixed position
+     * @param Collection $bookings Existing bookings used for the check
+     * @return bool True if this booking can be added
      */
-    public function find($number, $fixedSeat = '', $overrideSeats = '', $overrideSplit = '')
+    public function find($number, $fixedSeat = '', $overrideSeats = '', $overrideSplit = '', $bookings = null)
     {
         if ($number > $this->remainingCapacity()) {
             return false;
@@ -122,7 +126,9 @@ class SeatFinder
         $this->grid = $this->originalGrid;
 
         // add a fake booking to the existing bookings and try again
-        $bookings = $this->service->bookings;
+        if (null === $bookings) {
+            $bookings = $this->service->bookings;
+        }
         $myBooking = new Booking(
             [
                 'service_id' => $this->service->id,
@@ -141,6 +147,27 @@ class SeatFinder
             $this->grid = $savedGrid;
         }
         return $success;
+    }
+
+    /**
+     * Check if seating is still possible after proposed changes to a booking
+     * @param Booking $booking
+     * @param array $data
+     * @return bool True if this booking can be changed
+     */
+    public function checkIfBookingCanBeChanged(Booking $booking, array $data): bool
+    {
+        // test: remove this booking from the existing list and re-add it with changed data
+        $bookings = $this->service->bookings->filter(function ($item) use ($booking){
+            return $item->id != $booking->id;
+        });
+        return $this->find(
+            $data['number'],
+            $data['fixed_seat'],
+            $data['override_seats'],
+            $data['override_split'],
+            $bookings
+        );
     }
 
     /**
@@ -171,7 +198,9 @@ class SeatFinder
                 $autoBookings[] = $booking;
             } else {
                 $success = $this->manualPlacement($booking);
-                if (!$success) return false;
+                if (!$success) {
+                    return false;
+                }
             }
         }
 
@@ -179,7 +208,10 @@ class SeatFinder
         foreach ($autoBookings as $booking) {
             $success = $this->getSeating($booking);
             if (!$success) {
-                $this->setError($booking->number == 1 ? 'Es konnte kein Sitzplatz in diesem Gottesdienst reserviert werden.' : 'Es konnten keine ' . $booking->number . ' zusammenhängenden Sitzplätze in diesem Gottesdienst reserviert werden.');
+                $this->setError(
+                        'number',
+                    $booking->number == 1 ? 'Es konnte kein Sitzplatz in diesem Gottesdienst reserviert werden.' : 'Es konnten keine ' . $booking->number . ' zusammenhängenden Sitzplätze in diesem Gottesdienst reserviert werden.'
+                );
                 return false;
             }
         }
@@ -218,14 +250,17 @@ class SeatFinder
                 $this->grid[$rowKey]['booking'] = $booking;
                 return true;
             } else {
-                $this->setError('Der gewünschte Platz '.$rowKey.' ist bereits für '
-                                .$this->grid[$rowKey]['booking']->name
-                                .($this->grid[$rowKey]['booking']->first_name ? ', '.$this->grid[$rowKey]['booking']->first_name : '')
-                                .' reserviert.');
+                $this->setError(
+                    'fixed_seat',
+                    'Der gewünschte Platz ' . $rowKey . ' ist bereits für '
+                    . $this->grid[$rowKey]['booking']->name
+                    . ($this->grid[$rowKey]['booking']->first_name ? ', ' . $this->grid[$rowKey]['booking']->first_name : '')
+                    . ' reserviert.'
+                );
                 return false;
             }
         } else {
-            $this->setError('Der gewünschte Platz '.$rowKey.' ist nicht verfügbar.');
+            $this->setError('fixed_seat','Der gewünschte Platz ' . $rowKey . ' ist nicht verfügbar.');
             return false;
         }
     }
@@ -655,19 +690,27 @@ class SeatFinder
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getError(): string
+    public function getErrors(): array
     {
-        return $this->error;
+        return $this->errors;
     }
 
     /**
+     * @param string $errors
+     */
+    public function setErrors(array $errors): void
+    {
+        $this->errors = $errors;
+    }
+
+    /**
+     * Add an error message
      * @param string $error
      */
-    public function setError(string $error): void
-    {
-        $this->error = $error;
+    protected function setError(string $key, string $error): void {
+        $this->errors[$key] = $error;
     }
 
 
