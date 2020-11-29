@@ -74,11 +74,7 @@
                                 </div>
                             @endforeach
                         @endtab
-                        @if(null !== $homeScreen)
-                            @tab(['id' => 'homescreen', 'active' => $tab == 'homescreen'])
-                                {!! $homeScreen->renderConfigurationView() !!}
-                            @endtab
-                        @endif
+                        @include('users.profile.homescreen')
                         @if (strpos($user->email, '@elkw.de') !== false)
                             @tab(['id' => 'calendars', 'active' => $tab == 'calendars'])
                                 <p>Wenn du ein elkw.de-Konto hast, kannst du hier Kalender aus deinem Outlook oder auf dem Sharepoint verbinden.
@@ -117,4 +113,6 @@
 @endsection
 
 @section('scripts')
+    <script src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
+    <script src="{{ asset('js/pfarrplaner/profile-homescreen.js') }}"></script>
 @endsection

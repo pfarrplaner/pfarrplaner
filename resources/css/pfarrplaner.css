@@ -747,3 +747,10 @@ tr.changed, tr.changed td, tr.changed th {
     color: darkgray;
     font-weight: bold;
 }
+
+.profile-homescreen-accordion {
+    min-height: 20px;
+    background-color: #dddddd;
+    padding: 5px;
+    border: solid 1px #aaaaaa;
+}

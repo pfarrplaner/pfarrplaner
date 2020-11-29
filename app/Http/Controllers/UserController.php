@@ -31,6 +31,7 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\HomeScreen\Tabs\HomeScreenTabFactory;
 use App\Parish;
 use App\Rules\CreatedInLocalAdminDomain;
 use App\Service;
@@ -44,7 +45,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
@@ -217,10 +217,31 @@ class UserController extends Controller
         $unusedCities = $allCities->whereNotIn('id', $sortedCities->pluck('id'));
         $calendarView = $user->getSetting('calendar_view', 'calendar.month');
         $homeScreen = $user->getHomeScreen();
+
+        // homeScreenTabs
+        $activeTabs = explode(',', $user->getSetting('homeScreenTabs', ''));
+        if ($activeTabs == [0 => '']) $activeTabs = [];
+        $homeScreenTabsInactive = HomeScreenTabFactory::all();
+        $homeScreenTabsActive = [];
+        foreach ($activeTabs as $tab) {
+            $homeScreenTabsActive[$tab] = $homeScreenTabsInactive[$tab];
+            unset($homeScreenTabsInactive[$tab]);
+        }
+
         $tab = $request->get('tab', '');
         return view(
             'users.profile',
-            compact('user', 'cities', 'sortedCities', 'unusedCities', 'calendarView', 'homeScreen', 'tab')
+            compact(
+                'user',
+                'cities',
+                'sortedCities',
+                'unusedCities',
+                'calendarView',
+                'homeScreen',
+                'tab',
+                'homeScreenTabsActive',
+                'homeScreenTabsInactive',
+            )
         );
     }
 
@@ -252,6 +273,19 @@ class UserController extends Controller
         if (null !== $homeScreen) {
             $homeScreen->setConfiguration($request);
         }
+        if ($request->has('homeScreenTabs')) {
+            $user->setSetting('homeScreenTabs', $request->get('homeScreenTabs'));
+        }
+
+        // settings
+        if ($request->has('settings')) {
+            foreach ($request->get('settings') as $settingKey => $setting) {
+                if (is_array($setting)) $setting = json_encode($setting);
+                $user->setSetting($settingKey, $setting);
+            }
+        }
+
+
 
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
@@ -506,7 +540,9 @@ class UserController extends Controller
         }
 
         // if a password is set, an email is required
-        if ($request->get('password', '') != '') $rules['email'] = 'required|email';
+        if ($request->get('password', '') != '') {
+            $rules['email'] = 'required|email';
+        }
 
         $data = $request->validate($rules);
 
