@@ -88,7 +88,7 @@ class AbstractHomeScreenTab
         $viewName = $this->viewName($viewName);
         if (View::exists($viewName)) {
             return View::make($viewName, $data);
-        } else return '';
+        } else return '<i>Für diesen Reiter gibt es nichts einzustellen.</i>';
     }
 
 }

@@ -378,8 +378,11 @@ class User extends Authenticatable
      */
     public function getSetting($key, $default = null, $returnObject = false)
     {
+        // need to trick error reporting or else this will fail with an E_NOTICE
+        $err = error_reporting();
+        error_reporting(0);
         $setting = UserSetting::where('key', $key)->where('user_id', $this->id)->first();
-        if ((!$setting) && (!is_null($default))) {
+        if (null === $setting) {
             $setting = new UserSetting(
                 [
                     'user_id' => $this->id,
@@ -387,8 +390,12 @@ class User extends Authenticatable
                     'value' => $default,
                 ]
             );
+        } else {
+            if (substr($setting->value, 0, 5) == '_____') $setting->value = unserialize(substr($setting->value, 5));
         }
-        return ($returnObject ? $setting : $setting->value);
+        $return = ($returnObject ? $setting : $setting->value);
+        error_reporting($err);
+        return $return;
     }
 
     /**
@@ -570,6 +577,7 @@ class User extends Authenticatable
      */
     public function setSetting($key, $value)
     {
+        if (is_array($value)) $value = '_____'.serialize($value);
         if ($this->hasSetting($key)) {
             $setting = $this->getSetting($key, null, true);
             $setting->value = $value;

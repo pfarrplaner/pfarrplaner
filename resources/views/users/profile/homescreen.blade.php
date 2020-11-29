@@ -18,8 +18,8 @@
 
                 <div id="collapse{{ $loop->index }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ $loop->index }}" data-parent="#activeHomeScreenTabs">
                     <div class="card-body">
-                        {{ $homeScreenTab->getDescription() }}<br />
-                        {!! $homeScreenTab->view('config') !!}
+                        {{ $homeScreenTab->getDescription() }}<hr />
+                        {!! $homeScreenTab->view('config', ['config' => ($homeScreenTabsConfig[$homeScreenTab->getKey()] ?? [])]) !!}
                     </div>
                 </div>
             </div>
@@ -27,7 +27,7 @@
     </div>
     <h3 style="margin-top: 1em;">Deaktivierte Elemente</h3>
     <p>Die folgenden Reiter werden auf deinem Startbildschirm nicht angezeigt. Um sie zu aktivieren, ziehe sie einfach in die Liste oben.</p>
-    <input type="hidden" name="homeScreenTabs" value="">
+    <input type="hidden" name="homeScreenTabs" value="{{ join(',',$activeTabs) }}">
     <div class="profile-homescreen-accordion" role="tablist">
         @foreach ($homeScreenTabsInactive as $homeScreenTab)
         <div class="card" data-key="{{ $homeScreenTab->getKey() }}">
