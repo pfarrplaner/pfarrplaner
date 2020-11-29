@@ -227,6 +227,7 @@ class UserController extends Controller
             $homeScreenTabsActive[$tab] = $homeScreenTabsInactive[$tab];
             unset($homeScreenTabsInactive[$tab]);
         }
+        $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig');
 
         $tab = $request->get('tab', '');
         return view(
@@ -241,6 +242,8 @@ class UserController extends Controller
                 'tab',
                 'homeScreenTabsActive',
                 'homeScreenTabsInactive',
+                'activeTabs',
+                'homeScreenTabsConfig'
             )
         );
     }
@@ -280,7 +283,6 @@ class UserController extends Controller
         // settings
         if ($request->has('settings')) {
             foreach ($request->get('settings') as $settingKey => $setting) {
-                if (is_array($setting)) $setting = json_encode($setting);
                 $user->setSetting($settingKey, $setting);
             }
         }
