@@ -39,6 +39,13 @@ $(document).ready(function () {
         },
     });
 
+    $('.form-check-input').change(function(){
+        var name = '"'+$(this).attr('name').replace('_check', '')+'"';
+        var checked = this.checked;
+        var value = checked ? 1 : 0;
+        $('input[name='+name+']').val(value);
+    });
+
 
     $('.datepicker').datepicker({
         format: 'dd.mm.yyyy',
