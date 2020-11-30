@@ -7,15 +7,15 @@
     <div id="activeHomeScreenTabs" class="profile-homescreen-accordion" role="tablist">
         @foreach ($homeScreenTabsActive as $homeScreenTab)
             <div class="card" data-key="{{ $homeScreenTab->getKey() }}">
-                <div class="card-header" role="tab" id="heading{{ $loop->index }}">
+                <div class="card-header" role="tab" id="heading{{ ucfirst($homeScreenTab->getKey()) }}">
                     <h5 class="mb-0">
-                        <a data-toggle="collapse" href="#collapse{{ $loop->index }}" aria-expanded="true" aria-controls="collapse{{ $loop->index }}">
+                        <a data-toggle="collapse" href="#collapse{{ ucfirst($homeScreenTab->getKey()) }}" aria-expanded="true" aria-controls="collapse{{ ucfirst($homeScreenTab->getKey()) }}">
                             <i class="fa fa-arrows" aria-hidden="true"></i> {{ $homeScreenTab->getTitle() }}
                         </a>
                     </h5>
                 </div>
 
-                <div id="collapse{{ $loop->index }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ $loop->index }}" data-parent="#activeHomeScreenTabs">
+                <div id="collapse{{ ucfirst($homeScreenTab->getKey()) }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ ucfirst($homeScreenTab->getKey()) }}" data-parent="#activeHomeScreenTabs">
                     <div class="card-body">
                         {{ $homeScreenTab->getDescription() }}<hr />
                         {!! $homeScreenTab->view('config', ['config' => ($homeScreenTabsConfig[$homeScreenTab->getKey()] ?? [])]) !!}
@@ -29,17 +29,18 @@
     <div class="profile-homescreen-accordion" role="tablist">
         @foreach ($homeScreenTabsInactive as $homeScreenTab)
         <div class="card" data-key="{{ $homeScreenTab->getKey() }}">
-            <div class="card-header" role="tab" id="heading{{ $loop->index }}">
+            <div class="card-header" role="tab" id="heading{{ ucfirst($homeScreenTab->getKey()) }}">
                 <h5 class="mb-0">
-                    <a data-toggle="collapse" href="#collapse{{ $loop->index }}" aria-expanded="true" aria-controls="collapse{{ $loop->index }}">
+                    <a data-toggle="collapse" href="#collapse{{ ucfirst($homeScreenTab->getKey()) }}" aria-expanded="true" aria-controls="collapse{{ ucfirst($homeScreenTab->getKey()) }}">
                         <i class="fa fa-arrows" aria-hidden="true"></i> {{ $homeScreenTab->getTitle() }}
                     </a>
                 </h5>
             </div>
 
-            <div id="collapse{{ $loop->index }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ $loop->index }}" data-parent="#activeHomeScreenTabs">
+            <div id="collapse{{ ucfirst($homeScreenTab->getKey()) }}" class="collapse" role="tabpanel" aria-labelledby="heading{{ ucfirst($homeScreenTab->getKey()) }}" data-parent="#activeHomeScreenTabs">
                 <div class="card-body">
-                    {{ $homeScreenTab->getDescription() }}
+                    {{ $homeScreenTab->getDescription() }}<hr />
+                    {!! $homeScreenTab->view('config', ['config' => ($homeScreenTabsConfig[$homeScreenTab->getKey()] ?? [])]) !!}
                 </div>
             </div>
         </div>
