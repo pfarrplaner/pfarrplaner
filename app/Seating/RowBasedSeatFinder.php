@@ -521,19 +521,23 @@ class RowBasedSeatFinder extends AbstractSeatFinder
      */
     protected function splitRow($key, $grid = null, $isRowGrid = false)
     {
-        // do not split an already split row (letter in $key)
-        if (!is_numeric($key)) {
-            return;
-        }
 
         $tmpGrid = $grid ?? $this->grid;
+
+        if (!isset($tmpGrid[$key])) return $tmpGrid;
+
+        // do not split an already split row (letter in $key)
+        if (!is_numeric($key)) {
+            return $tmpGrid;
+        }
+
 
         $targetRow = $isRowGrid ? $tmpGrid[$key] : $tmpGrid[$key]['row'];
         $splits = explode(',', $targetRow->split ?: $targetRow->seats);
 
         // only split splittable rows
         if (count($splits) == 1) {
-            return;
+            return $tmpGrid;
         }
 
         // insert the new split rows
@@ -649,7 +653,8 @@ class RowBasedSeatFinder extends AbstractSeatFinder
             }
         }
 
-        // see if any rows should bee kept back
+
+        // see if any rows should be kept back
         if ($this->service->reserved_places) {
             foreach (explode(',', $this->service->reserved_places) as $reservedPlace) {
                 if (!is_numeric($reservedPlace)) {
@@ -684,7 +689,6 @@ class RowBasedSeatFinder extends AbstractSeatFinder
                 }
             }
         }
-
 
         return $rows;
     }
