@@ -1,10 +1,8 @@
 @if(null !== $homeScreen)
     @tab(['id' => 'homescreen', 'active' => $tab == 'homescreen'])
-    {!! $homeScreen->renderConfigurationView() !!}
-
-    <hr />
     <h3>Inhalte des Startbildschirms</h3>
     <p>Die folgenden Reiter werden auf deinem Startbildschirm angezeigt. Um sie zu sortieren, kannst du sie ziehen und an der passenden Stelle ablegen.</p>
+    <input type="hidden" name="homeScreenTabs" value="{{ join(',',$activeTabs) }}">
     <div id="activeHomeScreenTabs" class="profile-homescreen-accordion" role="tablist">
         @foreach ($homeScreenTabsActive as $homeScreenTab)
             <div class="card" data-key="{{ $homeScreenTab->getKey() }}">
@@ -27,7 +25,6 @@
     </div>
     <h3 style="margin-top: 1em;">Deaktivierte Elemente</h3>
     <p>Die folgenden Reiter werden auf deinem Startbildschirm nicht angezeigt. Um sie zu aktivieren, ziehe sie einfach in die Liste oben.</p>
-    <input type="hidden" name="homeScreenTabs" value="{{ join(',',$activeTabs) }}">
     <div class="profile-homescreen-accordion" role="tablist">
         @foreach ($homeScreenTabsInactive as $homeScreenTab)
         <div class="card" data-key="{{ $homeScreenTab->getKey() }}">
