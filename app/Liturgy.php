@@ -72,7 +72,7 @@ class Liturgy
                 true
             );
             foreach ($tmpData['content']['days'] as $key => $val) {
-                $data[$val['date']] = $val;
+                if (!isset($data[$val['date']])) $data[$val['date']] = $val;
             }
             Cache::put('liturgicalDays', $data, 86400);
         } else {

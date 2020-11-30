@@ -77,6 +77,13 @@ class Location extends Model
         return $this->belongsTo(Location::class, 'alternate_location_id');
     }
 
+    /**
+     * @return HasMany
+     */
+    public function seatingSections() {
+        return $this->hasMany(SeatingSection::class);
+    }
+
 
     /**
      * @return mixed|string
@@ -85,4 +92,5 @@ class Location extends Model
     {
         return $this->at_text ?: '(' . $this->name . ')';
     }
+
 }

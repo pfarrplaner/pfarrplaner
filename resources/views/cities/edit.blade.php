@@ -22,7 +22,8 @@
                 @tabheader(['id' => 'home', 'title' => 'Allgemeines', 'active' => true]) @endtabheader
                 @tabheader(['id' => 'offerings', 'title' => 'Opfer']) @endtabheader
                 @tabheader(['id' => 'calendars', 'title' => 'Externe Kalender']) @endtabheader
-                @tabheader(['id' => 'podcast', 'title' => 'Streaming & Podcast']) @endtabheader
+                @tabheader(['id' => 'streaming', 'title' => 'Streaming']) @endtabheader
+                @tabheader(['id' => 'podcast', 'title' => 'Podcast']) @endtabheader
                 @tabheader(['id' => 'integrations', 'title' => 'Weitere Integrationen']) @endtabheader
             @endtabheaders
             @tabs
@@ -43,8 +44,14 @@
                     @input(['name' => 'op_customer_key', 'label' => 'Kundenschlüssel (customer key) für den Online-Planer', 'value' => $city->op_customer_key, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @input(['name' => 'op_customer_token', 'label' => 'Token (customer token) für den Online-Planer', 'value' => $city->op_customer_token, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
-                @tab(['id' => 'podcast'])
+                @tab(['id' => 'streaming'])
                     @input(['name' => 'youtube_channel_url', 'label' => 'URL für den Youtube-Kanal', 'value' => $city->youtube_channel_url, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    @select(['name' => 'youtube_active_stream_id', 'label' => 'Streamschlüssel für die aktive Sendung', 'value' => $city->youtube_active_stream_id, 'items' => $streams, 'empty' => 1, 'useArrayKey' => 1])
+                    @select(['name' => 'youtube_passive_stream_id', 'label' => 'Streamschlüssel für inaktive Sendungen', 'value' => $city->youtube_passive_stream_id, 'items' => $streams, 'empty' => 1, 'useArrayKey' => 1])
+                    @checkbox(['name' => 'youtube_auto_startstop', 'label' => 'Sendungen automatisch starten und stoppen', 'value' => $city->youtube_auto_startstop])
+                    @input(['name' => 'youtube_cutoff_days', 'label' => 'Aufzeichnungen auf Youtube nach __ Tagen automatisch auf privat schalten', 'value' => $city->youtube_cutoff_days, 'enabled' => Auth::user()->can('ort-bearbeiten'), 'placeholder' => '0 um diese Funktion zu deaktivieren', 'type' => 'number'])
+                @endtab
+                @tab(['id' => 'podcast'])
                     @input(['name' => 'podcast_title', 'label' => 'Titel des Podcasts', 'value' => $city->podcast_title, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                     @upload(['name' => 'podcast_logo', 'label' => 'Logo für den Podcast', 'value' => $city->podcast_logo, 'prettyName' => $city->name.'-Podcast-Logo', 'accept' => '.jpg,.jpeg'])
                     @upload(['name' => 'sermon_default_image', 'label' => 'Standard-Titelbild zur Predigt', 'value' => $city->sermon_default_image, 'prettyName' => $city->name.'-Standard-Predigtbild', 'accept' => '.jpg,.jpeg'])

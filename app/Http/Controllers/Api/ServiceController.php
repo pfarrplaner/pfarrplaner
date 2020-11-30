@@ -130,16 +130,25 @@ class ServiceController extends Controller
     public function update(UpdateServiceRequest $request, Service $service)
     {
         $service->trackChanges();
+        $originalParticipants = $service->participants;
         $service->update($request->validated());
-        $service->associateParticipants($request, $service);
-        $service->checkIfPredicantNeeded();
+        if ($request->has('participants')) {
+            $service->associateParticipants($request, $service);
+            $service->checkIfPredicantNeeded();
+        }
 
-        $service->tags()->sync($request->get('tags') ?: []);
-        $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
+        if ($request->has('tags')) {
+            $service->tags()->sync($request->get('tags') ?: []);
+        }
+
+        if ($request->has('serviceGroups')) {
+            $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
+        }
         $this->handleAttachments($request, $service);
 
         if ($service->isChanged()) {
-            Subscription::send($service, ServiceUpdated::class);
+            $service->storeDiff();
+            event(new \App\Events\ServiceUpdated($service, $originalParticipants));
         }
 
         return response()->json(compact('service'));

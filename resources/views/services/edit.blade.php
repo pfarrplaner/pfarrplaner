@@ -17,7 +17,7 @@
     @can('gd-loeschen')
         <li class="nav-item">
             <form class="form-inline" style="display: inline;" action="{{ route('services.destroy', $service->id)}}"
-                  method="post">
+                  method="post" onsubmit="return confirm('Mit dieser Aktion wird der Gottesdienst und alle damit verbundenen Einträge (Kasualien, Kommentare, Dateien, Anmeldungen, ...) unwiderruflich gelöscht. Bist du sicher, dass du fortfahren möchtest?');">
                 @csrf
                 @method('DELETE')
                 <button class="btn btn-danger" type="submit" title="Gottesdiensteintrag (UNWIDERRUFLICH!) löschen"><span
@@ -84,6 +84,9 @@
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
                         @tabheader(['id' => 'konfiapp', 'title' => 'KonfiApp', 'active' => ($tab=='konfiapp')]) @endtabheader
                     @endif
+                    @if($service->city->hasRegistrableLocations())
+                        @tabheader(['id' => 'registrations', 'title' => 'Anmeldungen', 'active' => ($tab=='registrations')]) @endtabheader
+                    @endif
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments'), 'count' => (count($service->comments ?? []))]) @endtabheader
                     @can('admin')
                         @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
@@ -94,9 +97,8 @@
                     @tab(['id' => 'home', 'active' => ($tab=='home' || $tab == '')])
                     @hidden(['name' => 'city_id', 'value' => $service->city_id])
                     @dayselect(['name' => 'day_id', 'label' => 'Datum', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'days' => $days, 'value' => $service->day])
-                    @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'value' => $service->location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'special_location', 'label' => 'Freie Ortsangabe', 'id' => 'special_location', 'value' => $service->special_location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM', 'value' => $service->timeText(false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @locationselect(['name' => 'location_id', 'label' => 'Kirche / Gottesdienstort', 'locations' => $locations, 'value' => $service->location, 'special' => $service->special_location, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @input(['name' => 'time', 'label' => 'Uhrzeit', 'placeholder' => 'HH:MM', 'value' => $service->timeText(false, ':', false, false, true), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @checkbox(['name' => 'hidden', 'label' => 'Diesen Gottesdienst in öffentlichen Listen verbergen', 'value' => $service->hidden, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'special', 'active' => ($tab=='special')])
@@ -158,6 +160,39 @@
                             @endif
                         @endtab
                     @endif
+                    @if($service->city->hasRegistrableLocations())
+                        @tab(['id' => 'registrations', 'active' => ($tab=='registrations')])
+                        @checkbox(['label' => 'Für diesen Gottesdienst ist eine Anmeldung notwendig', 'name' => 'needs_reservations', 'value' => $service->needs_reservations])
+                        @input(['label' => 'Telefonnummer für die telefonische Anmeldung', 'name' => 'registration_phone', 'value' => $service->registration_phone])
+                        @checkbox(['label' => 'Online-Anmeldung aktiv', 'name' => 'registration_active', 'value' => $service->registration_active])
+                        <div class="row">
+                            <div class="col-md-6">
+                                @datetimepicker(['label' => 'Anmeldung online ab', 'name' => 'registration_online_start',
+                                    'value' => ($service->registration_online_start ? $service->registration_online_start->format('d.m.Y H:i') : '')])
+                            </div>
+                            <div class="col-md-6">
+                                @datetimepicker(['label' => 'Anmeldung online bis', 'name' => 'registration_online_end',
+                                    'value' => ($service->registration_online_end ? $service->registration_online_end->format('d.m.Y H:i') : '')])
+                            </div>
+                        </div>
+                        <hr />
+                        @input(['label' => 'Anmeldungen begrenzen auf maximal', 'name' => 'registration_max', 'value' => $service->registration_max, 'placeholder' => 'Leer lassen = keine Begrenzung'])
+                        @input(['label' => 'Folgende Bereiche sind gesperrt', 'name' => 'exclude_sections', 'value' => $service->exclude_sections, 'placeholder' => 'kommagetrennte Liste, z.B. Empore, Gemeindesaal'])
+                        @input(['label' => 'Folgende Sitzplätze sind gesperrt', 'name' => 'exclude_places', 'value' => $service->exclude_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B', 'class' => 'seatingRowList'])
+                        @input(['label' => 'Folgende Sitzplätze zurückhalten', 'name' => 'reserved_places', 'value' => $service->reserved_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B', 'class' => 'seatingRowList'])
+                        <hr />
+                            <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
+                                <span class="fa fa-ticket-alt"></span> Neue Anmeldung
+                            </a>&nbsp;
+                            <a class="btn btn-secondary" href="{{ route('service.bookings', $service->id) }}">
+                                <span class="fa fa-ticket-alt"></span> Anmeldungen
+                            </a>&nbsp;
+                            <a class="btn btn-secondary" href="{{ route('booking.finalize', $service->id) }}">
+                                <span class="fa fa-clipboard-check"></span> Liste drucken
+                            </a>
+
+                        @endtab
+                    @endif
                     @can('admin')
                         @include('partials.service.tabs.history')
                     @endcan
@@ -193,16 +228,17 @@
         var commentOwnerClass = 'App\\Service';
     </script>
     <script src="{{ asset('js/pfarrplaner/comments.js') }}"></script>
+    <script src="{{ asset('js/pfarrplaner/seating-lists.js') }}"></script>
     <script>
+        var defaultTime = {};
+        @foreach($locations as $location)defaultTime['{{ $location->id }}'] = '{{ substr($location->default_time,0, 5) }}';@endforeach
+
         function setDefaultTime() {
-            if ($('select[name=location_id]  option:selected').val() == 0) {
-                $('input[name=time]').attr('placeholder', 'HH:MM');
-                $('#special_location').show();
-                $('#special_location input').first().focus();
+            var loc = $('select[name=location_id] option:selected').first().val();
+            if (undefined != defaultTime[loc]) {
+                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + defaultTime[loc]);
             } else {
-                $('input[name=time]').attr('placeholder', 'HH:MM, leer lassen für: ' + ($('select[name=location_id]').children("option:selected").data('time')));
-                $('#special_location_input').val('');
-                $('#special_location').hide();
+                $('input[name=time]').attr('placeholder', '');
             }
         }
 
@@ -370,8 +406,25 @@
                 });
             });
 
+            $('.btn-delete-booking').click(function(e) {
+                e.preventDefault();
+                if (confirm('Soll diese Anmeldung wirklich gelöscht werden?')) {
+                    fetch($(this).data('route'), {
+                        method: 'DELETE',
+                        body: '_method=DELETE',
+                        headers: {
+                            "X-CSRF-Token": window.Laravel.csrfToken
+                        }
+                    })
+                        .then(res => {
+                            $(this).parent().parent().remove();
+                        })
+                }
+            });
 
+            loadSeatingLists();
         });
+
 
 
     </script>

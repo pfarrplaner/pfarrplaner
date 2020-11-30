@@ -244,6 +244,13 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany
+     */
+    public function calendarConnections() {
+        return $this->hasMany(CalendarConnection::class);
+    }
+
+    /**
      * @param $area
      * @return bool
      */
@@ -367,12 +374,16 @@ class User extends Authenticatable
      * @param $key
      * @param null $default
      * @param bool $returnObject
+     * @param bool $unserialize
      * @return UserSetting|mixed
      */
-    public function getSetting($key, $default = null, $returnObject = false)
+    public function getSetting($key, $default = null, $returnObject = false, $unserialize = true)
     {
+        // need to trick error reporting or else this will fail with an E_NOTICE
+        $err = error_reporting();
+        error_reporting(0);
         $setting = UserSetting::where('key', $key)->where('user_id', $this->id)->first();
-        if ((!$setting) && (!is_null($default))) {
+        if (null === $setting) {
             $setting = new UserSetting(
                 [
                     'user_id' => $this->id,
@@ -380,8 +391,12 @@ class User extends Authenticatable
                     'value' => $default,
                 ]
             );
+        } else {
+            if ($unserialize && (substr($setting->value, 0, 5) == '_____')) $setting->value = unserialize(substr($setting->value, 5));
         }
-        return ($returnObject ? $setting : $setting->value);
+        $return = ($returnObject ? $setting : $setting->value);
+        error_reporting($err);
+        return $return;
     }
 
     /**
@@ -453,11 +468,12 @@ class User extends Authenticatable
      *
      * @param Builder $query
      * @param Service $service
+     * @param bool $isNew True, if this is a newly created service
      * @return mixed
      */
-    public function scopeSubscribedTo(Builder $query, Service $service)
+    public function scopeSubscribedTo(Builder $query, Service $service, $isNew = false)
     {
-        return $query->whereHas(
+        $query->whereHas(
             'subscriptions',
             function ($query) use ($service) {
                 $query->where('city_id', $service->city_id);
@@ -475,6 +491,18 @@ class User extends Authenticatable
                 );
             }
         );
+
+        // some users only get notified when time or day_id change
+        if ($isNew || isset($service->changes['time']) || isset($service->changes['day_id'])) {
+            $query->orWhereHas('subscriptions',
+                function ($query) use ($service) {
+                    $query->where('city_id', $service->city_id);
+                    $query->where('subscription_type', Subscription::SUBSCRIBE_TIME_CHANGES);
+                }
+            );
+        }
+
+        return $query;
     }
 
     /**
@@ -550,6 +578,7 @@ class User extends Authenticatable
      */
     public function setSetting($key, $value)
     {
+        if (is_array($value)) $value = '_____'.serialize($value);
         if ($this->hasSetting($key)) {
             $setting = $this->getSetting($key, null, true);
             $setting->value = $value;

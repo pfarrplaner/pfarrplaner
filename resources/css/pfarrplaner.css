@@ -603,11 +603,11 @@ ul.sortable li.placeholder:before {
     border: 0;
 }
 
-#absenceTab a {
+#absencesTab a {
     background-color: sandybrown;
 }
 
-#absenceTab a.active {
+#absencesTab a.active {
     background-color: orange;
 }
 
@@ -746,4 +746,11 @@ tr.changed, tr.changed td, tr.changed th {
 .content .footer a {
     color: darkgray;
     font-weight: bold;
+}
+
+.profile-homescreen-accordion {
+    min-height: 20px;
+    background-color: #dddddd;
+    padding: 5px;
+    border: solid 1px #aaaaaa;
 }

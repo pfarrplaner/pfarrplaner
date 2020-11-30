@@ -456,7 +456,28 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                                 ]
                             ]
                         );
+
+                        // add children's church
+                        if ($event->cc) {
+                            $this->renderParagraph(
+                                self::INDENT,
+                                [
+                                    [
+                                        Carbon::createFromFormat(
+                                            'Y-m-d H:i',
+                                            $event->day->date->format('Y-m-d') . ' ' . ($event->cc_alt_time ?? $event->time)
+                                        )->formatLocalized('%H.%M Uhr') . "\t",
+                                        []
+                                    ],
+                                    ['Kinderkirche', []],
+                                    [' (' . ($event->cc_location ?? $event->locationText()) . ')', []],
+                                ]
+                            );
+
+                        }
+
                     }
+
 
                     if ((isset($event['allDay']) && $event['allDay'])) {
                         $textRun = $this->renderParagraph();

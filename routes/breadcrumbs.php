@@ -28,6 +28,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use App\Booking;
+use App\City;
+use App\Location;
+use App\SeatingRow;
 use App\Service;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 
@@ -87,6 +91,14 @@ Breadcrumbs::for(
         $trail->push('API Token', route('apitoken'));
     }
 );
+
+Breadcrumbs::for('bookings.create', function (BreadcrumbsGenerator $trail){
+    $trail->push('Neue Reservierung');
+});
+
+Breadcrumbs::for('seatfinder', function (BreadcrumbsGenerator $trail){
+    $trail->push('Neue Reservierung');
+});
 
 Breadcrumbs::for(
     'approvals.index',
@@ -152,11 +164,32 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for('service.bookings', function (BreadcrumbsGenerator $trail, Service $service){
+    $trail->parent('services.edit', $service);
+    $trail->push('Anmeldungen', route('service.bookings', $service));
+});
+
+Breadcrumbs::for('booking.edit', function (BreadcrumbsGenerator $trail, Booking $booking){
+    if (!is_object($booking)) $booking = \App\Booking::findOrFail($booking);
+    $trail->parent('service.bookings', $booking->service);
+    $trail->push('#'.$booking->id, route('booking.edit', $booking));
+});
+
+
+
 Breadcrumbs::for(
     'calendar',
     function (BreadcrumbsGenerator $trail) {
         $trail->parent('home');
         $trail->push('Gottesdienste', route('calendar'));
+    }
+);
+
+Breadcrumbs::for(
+    'calendarConnection.create',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->parent('user.profile');
+        $trail->push('Kalender verbinden', route('calendarConnection.create'));
     }
 );
 
@@ -308,7 +341,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'cities.edit',
     function (BreadcrumbsGenerator $trail, $city) {
-        $city = \App\City::find($city);
+        if (is_numeric($city)) $city = \App\City::find($city);
         $trail->parent('cities.index');
         $trail->push($city->name, route('cities.edit', $city));
     }
@@ -356,6 +389,15 @@ Breadcrumbs::for(
     'password.reset',
     function (BreadcrumbsGenerator $trail) {
         $trail->push('Passwort zurücksetzen');
+    }
+);
+
+Breadcrumbs::for(
+    'qr',
+    function (BreadcrumbsGenerator  $trail, $city) {
+        $city = City::where('name', 'like', '%' . $city . '%')->first();
+        $trail->parent('home');
+        $trail->push('QR-Codes', route('qr', $city));
     }
 );
 
@@ -419,6 +461,47 @@ Breadcrumbs::for(
         $trail->push($role->name, route('roles.edit', $role));
     }
 );
+
+Breadcrumbs::for(
+    'seatingSection.create',
+    function (BreadcrumbsGenerator $trail) {
+        $location = request()->get('location');
+        $trail->parent('locations.edit', $location);
+        $trail->push('Neue Zone', route('seatingSection.create'));
+    }
+);
+
+Breadcrumbs::for(
+    'seatingSection.edit',
+    function (BreadcrumbsGenerator $trail, $seatingSection) {
+        if (!is_object($seatingSection)) $seatingSection = \App\SeatingSection::find($seatingSection);
+        $location = request()->get('location');
+        $trail->parent('locations.edit', $seatingSection->location_id);
+        $trail->push($seatingSection->title, route('seatingSection.edit', $seatingSection));
+    }
+);
+
+Breadcrumbs::for(
+    'seatingRow.create',
+    function (BreadcrumbsGenerator $trail) {
+        $seatingSection = request()->get('seatingSection');
+        $trail->parent('seatingSection.edit', $seatingSection);
+        $trail->push('Neue Reihe', route('seatingRow.create'));
+    }
+);
+
+Breadcrumbs::for(
+    'seatingRow.edit',
+    function (BreadcrumbsGenerator $trail, SeatingRow $seatingRow) {
+        $seatingSection = request()->get('seatingSection');
+        $trail->parent('seatingSection.edit', $seatingRow->seatingSection);
+        $trail->push($seatingRow->title, route('seatingRow.edit', $seatingRow));
+    }
+);
+
+
+
+
 
 Breadcrumbs::for(
     'services.add',

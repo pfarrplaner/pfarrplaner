@@ -68,6 +68,19 @@ Route::get('absence/{absence}/reject', 'AbsenceController@approve')->name('absen
 Route::resource('tags', 'TagController')->middleware('auth');
 Route::resource('parishes', 'ParishController')->middleware('auth');
 
+Route::resource('seatingSection', 'SeatingSectionController');
+Route::resource('seatingRow', 'SeatingRowController');
+Route::resource('booking', 'BookingController');
+Route::get('services/{service}/bookings', 'BookingController@index')->name('service.bookings');
+Route::get('seatfinder/{service}/{number?}', 'BookingController@findSeat')->name('seatfinder');
+Route::get('services/{service}/bookingList', 'BookingController@finalize')->name('booking.finalize');
+
+Route::get('qr/{city}', 'CityController@qr')->name('qr');
+
+
+Route::resource('calendarConnection', 'CalendarConnectionController');
+Route::post('calendarConnection/configure', 'CalendarConnectionController@configure')->name('calendarConnection.configure');
+
 // embed in web site:
 Route::get(
     'services/embed/locations/{ids}/{limit?}',
@@ -235,5 +248,17 @@ Route::get('/about', 'HomeController@about')->name('about');
 
 // test/debug routes
 Route::get('/test/mail/{address}', 'TestController@mail');
-
+Route::get('/test', function(){
+    $service = \App\Service::find(1310);
+    $ct = 0;
+    do {
+        $sf = new \App\Seating\AbstractSeatFinder($service);
+        $ct++;
+        $i = rand(1, 9);
+        if ($x = $sf->find(1,9)) {
+            \App\Booking::create(['service_id' => 1310, 'first_name' => '', 'name' => 'test'.$ct, 'contact' => '', 'number' => $i, 'code' => \App\Booking::createCode()]);
+            echo $ct.' -> '.$i.' Personen, verbleiben: '.$sf->remainingCapacity();
+        }
+    } while ($x);
+});
 

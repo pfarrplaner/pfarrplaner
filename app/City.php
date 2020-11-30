@@ -66,6 +66,10 @@ class City extends Model
         'google_refresh_token',
         'youtube_channel_url',
         'konfiapp_apikey',
+        'youtube_active_stream_id',
+        'youtube_passive_stream_id',
+        'youtube_auto_startstop',
+        'youtube_cutoff_days',
     ];
 
     /**
@@ -108,5 +112,13 @@ class City extends Model
             return true;
         }
         return false;
+    }
+
+    /**
+     * Check if this city has any locations where seating is defined
+     * @return bool True if such locations exist
+     */
+    public function hasRegistrableLocations() {
+        return Location::where('city_id', $this->id)->whereHas('seatingSections')->count() > 0;
     }
 }

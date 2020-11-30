@@ -16,15 +16,18 @@
 
 
                     @tabheaders
-                        @tabheader(['id' => 'profile', 'title' => 'Profile', 'active' => true]) @endtabheader
-                        @tabheader(['id' => 'notifications', 'title' => 'Benachrichtigungen']) @endtabheader
+                        @tabheader(['id' => 'profile', 'title' => 'Profile', 'active' => $tab == '']) @endtabheader
+                        @tabheader(['id' => 'notifications', 'title' => 'Benachrichtigungen', 'active' => $tab == 'notifications']) @endtabheader
                         @if(null !== $homeScreen)
-                            @tabheader(['id' => 'homescreen', 'title' => 'Startbildschirm']) @endtabheader
+                            @tabheader(['id' => 'homescreen', 'title' => 'Startbildschirm', 'active' => $tab == 'homescreen']) @endtabheader
+                        @endif
+                        @if (strpos($user->email, '@elkw.de') !== false)
+                            @tabheader(['id' => 'calendars', 'title' => 'Verbundene Kalender', 'active' => $tab == 'calendars']) @endtabheader
                         @endif
                     @endtabheaders
 
                     @tabs
-                        @tab(['id' => 'profile', 'active' => true])
+                        @tab(['id' => 'profile', 'active' => $tab == ''])
                             @input(['label' => 'Name', 'name' => 'email', 'id' => 'email', 'value' => $user->email])
                             <hr/>
                             @input(['label' => 'Pfarramt/Büro', 'name' => 'office', 'value' => $user->office])
@@ -32,7 +35,7 @@
                             @input(['label' => 'Telefon', 'name' => 'phone', 'value' => $user->phone])
                             @input(['name' => 'api_token', 'label' => 'API-Token', 'value' => $user->api_token])
                         @endtab
-                        @tab(['id' => 'notifications'])
+                        @tab(['id' => 'notifications', 'active' => $tab == 'notifications'])
                             <div class="form-group">
                                 <label>Benachrichtige mich per E-Mail bei Änderungen an Gottesdiensten für:</label>
                             </div>
@@ -46,6 +49,12 @@
                                                    @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_ALL) checked @endif>
                                             <label class="form-check-label" for="subscribe[{{ $city->id }}]">alle
                                                 Gottesdienste</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio"
+                                                   name="subscribe[{{ $city->id }}]" value="4"
+                                                   @if($user->getSubscriptionType($city) == \App\Subscription::SUBSCRIBE_TIME_CHANGES) checked @endif>
+                                            <label class="form-check-label" for="subscribe[{{ $city->id }}]">nur bei Zeit-/Datumsänderungen</label>
                                         </div>
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio"
@@ -65,9 +74,18 @@
                                 </div>
                             @endforeach
                         @endtab
-                        @if(null !== $homeScreen)
-                            @tab(['id' => 'homescreen'])
-                                {!! $homeScreen->renderConfigurationView() !!}
+                        @include('users.profile.homescreen')
+                        @if (strpos($user->email, '@elkw.de') !== false)
+                            @tab(['id' => 'calendars', 'active' => $tab == 'calendars'])
+                                <p>Wenn du ein elkw.de-Konto hast, kannst du hier Kalender aus deinem Outlook oder auf dem Sharepoint verbinden.
+                                    Diese werden dann automatisch mit den hier angelegten Gottesdiensten befüllt.</p>
+                                @if(count($user->calendarConnections) == 0)
+                                    <p>Aktuell sind noch keine externen Kalender verbunden.</p>
+                                @else
+                                    @foreach($user->calendarConnections as $calendarConnection)
+                                    @endforeach
+                                @endif
+                                <a class="btn btn-success" href="{{ route('calendarConnection.create') }}"><span class="fa fa-plus"></span> Kalender verbinden</a>
                             @endtab
                         @endif
                     @endtabs
@@ -95,4 +113,6 @@
 @endsection
 
 @section('scripts')
+    <script src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
+    <script src="{{ asset('js/pfarrplaner/profile-homescreen.js') }}"></script>
 @endsection

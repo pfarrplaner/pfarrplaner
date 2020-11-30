@@ -44,7 +44,7 @@ class ServiceCreatedListener
     public function handle(ServiceCreated $event)
     {
         Log::debug('Preparing to send ServiceCreated notifications for service #'.$event->service->id);
-        Subscription::send($event->service, \App\Mail\ServiceCreated::class);
+        Subscription::send($event->service, \App\Mail\ServiceCreated::class, [], null, true);
     }
 
 }

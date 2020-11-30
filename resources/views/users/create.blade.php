@@ -33,10 +33,7 @@
                         <label for="homescreen">Erster Bildschirm nach der Anmeldung</label>
                         <select class="form-control" name="homescreen">
                             <option value="route:calendar" selected>Kalender</option>
-                            <option value="homescreen:pastor">Zusammenfassung für Pfarrer</option>
-                            <option value="homescreen:ministry">Zusammenfassung für andere Beteiligte</option>
-                            <option value="homescreen:secretary">Zusammenfassung für Sekretär</option>
-                            <option value="homescreen:office">Zusammenfassung für Kirchenpflege/Kirchenregisteramt</option>
+                            <option value="homescreen:configurable">Konfigurierbare Startseite</option>
                             <option value="homescreen:admin">Zusammenfassung für Administrator*innen</option>
                         </select>
                     </div>

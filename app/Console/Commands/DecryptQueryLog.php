@@ -16,7 +16,7 @@ class DecryptQueryLog extends Command
      *
      * @var string
      */
-    protected $signature = 'query:list';
+    protected $signature = 'query:list {log?}';
 
     /**
      * The console command description.
@@ -42,6 +42,7 @@ class DecryptQueryLog extends Command
      */
     public function handle()
     {
+        $log = $this->argument('log') ?? '';
         $queries = QueryLog::all();
         foreach ($queries as $query) {
             $this->line($query['query']);

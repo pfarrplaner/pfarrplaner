@@ -30,6 +30,9 @@
 
 namespace App;
 
+use App\Seating\AbstractSeatFinder;
+use App\Seating\MaximumBasedSeatFinder;
+use App\Seating\RowBasedSeatFinder;
 use App\Tools\StringTool;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
@@ -164,6 +167,15 @@ class Service extends Model
         'konfiapp_event_type',
         'konfiapp_event_qr',
         'hidden',
+        'needs_reservations',
+        'exclude_sections',
+        'registration_active',
+        'exclude_places',
+        'registration_phone',
+        'registration_online_start',
+        'registration_online_end',
+        'registration_max',
+        'reserved_places',
     ];
 
     /**
@@ -198,10 +210,18 @@ class Service extends Model
         'offering_type' => 'eO',
     ];
 
+    protected $dates = [
+        'registration_online_start',
+        'registration_online_end',
+    ];
+
     /**
      * @var array
      */
     private $auditData = [];
+
+    /** @var AbstractSeatFinder  */
+    protected $seatFinder = null;
 
     /**
      * Mix a collection of services into an array of events
@@ -377,6 +397,13 @@ class Service extends Model
             ->withPivot('category')
             ->wherePivotIn('category', ['P', 'O', 'M', 'A'], 'and', 'NotIn')
             ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function bookings() {
+        return $this->hasMany(Booking::class);
     }
 
     /**
@@ -678,6 +705,9 @@ class Service extends Model
     public function descriptionText()
     {
         $desc = [];
+        if ($this->needs_reservations) {
+            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis '.$this->registration_online_end->format('d.m.Y, H:i').' Uhr' : 'Anmeldung nötig');
+        }
         if ($this->baptism) {
             $desc[] = 'mit Taufen';
         }
@@ -1033,5 +1063,24 @@ class Service extends Model
     public function scopeNotHidden(Builder $query)
     {
         return $query->where('hidden', 0);
+    }
+
+    /**
+     * Get an instance of SeatFinder for this service
+     * @return AbstractSeatFinder
+     */
+    public function getSeatFinder() {
+        if ($this->seatFinder) return $this->seatFinder;
+        if (is_object($this->location) && (count($this->location->seatingSections) >0)) return new RowBasedSeatFinder($this);
+        return new MaximumBasedSeatFinder($this);
+    }
+
+    public function dateTime() {
+        list ($hour, $minute) = explode(':', $this->time);
+        return $this->day->date->copy()->setTime($hour, $minute, 0);
+    }
+
+    public function formatTime($s) {
+        return (false !== strpos($s, '%')) ? $this->dateTime()->formatLocalized($s) : $this->dateTime()->format($s);
     }
 }

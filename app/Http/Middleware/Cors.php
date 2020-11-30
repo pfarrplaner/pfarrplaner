@@ -52,7 +52,7 @@ class Cors
 
         if ($corsOrigin) {
             return $next($request)
-                ->header('Access-Control-Allow-Origin', $corsOrigin)
+                ->header('Access-Control-Allow-Origin', \App\Http\CORS::formatUrl($corsOrigin))
                 ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
                 ->header('Access-Control-Allow-Headers', '*')
                 ->header('X-CORS-MIDDLEWARE-ADDED', 1);

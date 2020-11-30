@@ -181,6 +181,7 @@
                         service_id: service,
                         city_id: $(this).data('city'),
                         day_id: $(this).data('day'),
+                        offering_goal: $('#service_' + service + '_offering_goal').val(),
                         offering_description: $('#service_' + service + '_offering_description').val(),
                         offering_amount: $('#service_' + service + '_offering_amount').val(),
                         offerings_counter1: $('#service_' + service + '_offerings_counter1').val(),

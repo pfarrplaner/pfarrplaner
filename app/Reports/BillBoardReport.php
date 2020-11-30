@@ -321,6 +321,25 @@ class BillBoardReport extends AbstractWordDocumentReport
                     ]
                 );
             }
+
+            // add children's church
+            if ($event->cc) {
+                $this->renderParagraph(
+                    self::DEFAULT,
+                    [
+                        [
+                            Carbon::createFromFormat(
+                                'Y-m-d H:i',
+                                $event->day->date->format('Y-m-d') . ' ' . ($event->cc_alt_time ?? $event->time)
+                            )->formatLocalized('%H.%M Uhr') . "\t",
+                            []
+                        ],
+                        ['Kinderkirche', self::BOLD],
+                        [' (' . ($event->cc_location ?? $event->locationText()) . ')', []],
+                    ]
+                );
+
+            }
         }
     }
 

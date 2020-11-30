@@ -48,13 +48,12 @@
 
             @if(isset($changes['hidden']))
                 @include('mail.notifications.service.changed-attribute', [
-                         'title' => 'hidden',
-                         'key' => 'In öffentlichen Listen verbergen',
+                         'title' => 'In öffentlichen Listen verbergen',
+                         'key' => 'hidden',
                          'old' => $changes['hidden']['original'] ? '✔' : '✘',
                          'new' => $changes['hidden']['changed'] ? '✔' : '✘',
                          ])
             @endif
-
 
             @if(isset($changes['city_id']))
                 @include('mail.notifications.service.changed-attribute', [
@@ -67,8 +66,8 @@
 
             @if(isset($changes['need_predicant']))
             @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'need_predicant',
-                     'key' => 'Prädikant benötigt',
+                     'title' => 'Prädikant benötigt',
+                     'key' => 'need_predicant',
                      'old' => $original->need_predicant ? '✔' : '✘',
                      'new' => $changed->need_predicant ? '✔' : '✘',
                      ])
@@ -83,8 +82,8 @@
 
             @if(isset($changes['baptism']))
             @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'baptism',
-                     'key' => 'Taufgottesdienst',
+                     'title' => 'Taufgottesdienst',
+                     'key' => 'baptism',
                      'old' => $changes['baptism']['original'] ? '✔' : '✘',
                      'new' => $changes['baptism']['changed'] ? '✔' : '✘',
                      ])
@@ -92,8 +91,8 @@
 
             @if(isset($changes['eucharist']))
             @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'eucharist',
-                     'key' => 'Abendmahlsgottesdienst',
+                     'title' => 'Abendmahlsgottesdienst',
+                     'key' => 'eucharist',
                      'old' => $changes['eucharist']['original'] ? '✔' : '✘',
                      'new' => $changes['eucharist']['changed'] ? '✔' : '✘',
                      ])
@@ -120,8 +119,8 @@
 
             @if(isset($changes['cc']))
             @include('mail.notifications.service.changed-attribute', [
-                     'title' => 'cc',
-                     'key' => 'Kinderkirche',
+                     'title' => 'Kinderkirche',
+                     'key' => 'cc',
                      'old' => $changes['cc']['original'] ? '✔' : '✘',
                      'new' => $changes['cc']['changed'] ? '✔' : '✘',
                      ])
@@ -147,11 +146,59 @@
                 @if(isset($changes[$attribute]))
                     @include('mail.notifications.service.changed-attribute', [
                              'title' => $title,
+                             'key' => $attribute,
                              'old' => $changes[$attribute]['original'],
                              'new' => $changes[$attribute]['changed'],
                              ])
                 @endif
             @endforeach
+
+            @if(isset($changes['needs_reservations']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'Anmeldung benötigt',
+                         'key' => 'needs_reservations',
+                         'old' => $changes['needs_reservations']['original'] ? '✔' : '✘',
+                         'new' => $changes['needs_reservations']['changed'] ? '✔' : '✘',
+                         ])
+            @endif
+
+            @if(isset($changes['registration_active']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'Online-Anmeldung aktiv',
+                         'key' => 'registration_active',
+                         'old' => $changes['registration_active']['original'] ? '✔' : '✘',
+                         'new' => $changes['registration_active']['changed'] ? '✔' : '✘',
+                         ])
+            @endif
+
+            @if(isset($changes['exclude_sections']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'Sitzplätze in folgenden Zonen nicht belegen',
+                         'key' => 'exclude_sections',
+                         'old' => $changes['exclude_sections']['original'],
+                         'new' => $changes['exclude_sections']['changed'],
+                         ])
+            @endif
+
+            @if(isset($changes['exclude_places']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'Folgende Sitzplätze nicht belegen',
+                         'key' => 'exclude_places',
+                         'old' => $changes['exclude_places']['original'],
+                         'new' => $changes['exclude_places']['changed'],
+                         ])
+            @endif
+
+            @if(isset($changes['registration_phone']))
+                @include('mail.notifications.service.changed-attribute', [
+                         'title' => 'Nummer für telefonische Anmeldung',
+                         'key' => 'registration_phone',
+                         'old' => $changes['registration_phone']['original'],
+                         'new' => $changes['registration_phone']['changed'],
+                         ])
+            @endif
+
+
         @endcomponent
 
 
@@ -275,7 +322,7 @@
         <tbody>
         <tr>
             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"
-                align="left">© 2019 Pfarrplaner
+                align="left">© {{ \Carbon\Carbon::now()->format('Y') }} Pfarrplaner
             </td>
             <td class="text-right"
                 style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-top-width: 0; border-bottom-width: 0; margin: 0;"

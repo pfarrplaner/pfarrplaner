@@ -30,6 +30,22 @@
 $(document).ready(function () {
     $('.fancy-selectize').selectize();
 
+    $('.location-select').selectize({
+        create: true,
+        render: {
+            option_create: function (data, escape) {
+                return '<div class="create">Freie Ortsangabe: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+            }
+        },
+    });
+
+    $('.form-check-input').change(function(){
+        var name = '"'+$(this).attr('name').replace('_check', '')+'"';
+        var checked = this.checked;
+        var value = checked ? 1 : 0;
+        $('input[name='+name+']').val(value);
+    });
+
 
     $('.datepicker').datepicker({
         format: 'dd.mm.yyyy',

@@ -30,6 +30,8 @@
 
 namespace App\Http\Requests;
 
+use App\Location;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -89,6 +91,13 @@ class UpdateServiceRequest extends FormRequest
             'internal_remarks' => 'nullable|string',
             'title' => 'nullable|string',
             'hidden' => 'nullable|int|in:0,1',
+            'needs_reservations' => 'nullable|int|in:0,1',
+            'exclude_sections' => 'nullable|string',
+            'registration_active' => 'nullable|int|in:0,1',
+            'exclude_places' => 'nullable|string',
+            'registration_phone' => 'nullable|string',
+            'registration_max' => 'nullable|int',
+            'reserved_places' => 'nullable|string',
         ];
     }
 
@@ -101,12 +110,28 @@ class UpdateServiceRequest extends FormRequest
     {
         $data = parent::validated();
 
+        // set location
+        if (!is_numeric($data['location_id'])) {
+            $data['special_location'] = $data['location_id'];
+            unset($data['location_id']);
+        } else {
+            $location = Location::find($data['location_id']);
+            if (null === $location) $data['special_location'] = $data['location_id'];
+            unset($data['location_id']);
+        }
+
         // set time and place
         if (isset($data['special_location'])) {
             $data['location_id'] = 0;
         }
 
         $data['hidden'] = $data['hidden'] ?? 0;
+        $data['needs_reservations'] = $data['needs_reservations'] ?? 0;
+        $data['registration_active'] = $data['registration_active'] ?? 0;
+
+        if (isset($data['registration_online_start'])) $data['registration_online_start'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_start']);
+        if (isset($data['registration_online_end'])) $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
+        dd($data);
 
         return $data;
     }

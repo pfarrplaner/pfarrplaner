@@ -139,9 +139,26 @@ class SecretaryHomeScreen extends AbstractHomeScreen
 
         $missing = Service::withOpenMinistries(unserialize($user->getSetting('homeScreen_ministries', '')) ?: []);
 
+        $registrable = Service::where('needs_reservations', 1)
+            ->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereIn('city_id', $user->writableCities->pluck('id'))
+            ->whereHas('location')
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC')
+            ->get();
+
+
         return $this->renderView(
             'homescreen.secretary',
-            compact('user', 'services', 'funerals', 'baptisms', 'weddings', 'missing')
+            compact('user', 'services', 'funerals', 'baptisms', 'weddings', 'missing', 'registrable')
         );
     }
 

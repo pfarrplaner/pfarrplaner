@@ -21,12 +21,12 @@
 @if ($errors->any())
     <div class="alert alert-danger alert-block">
         <button type="button" class="close" data-dismiss="alert">×</button>
-        Bitte überprüfe deine Eingaben.
+        Bitte überprüfe deine Eingaben:<br />
+        <small><ul>
+            @foreach($errors->all() as $message)
+                <li>{!! $message !!}</li>
+            @endforeach
+            </ul>
+        </small>
     </div>
-    @foreach($errors->all() as $message)
-        <div class="alert alert-danger alert-block">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            {!! $message !!}
-        </div>
-    @endforeach
 @endif

@@ -54,19 +54,8 @@
                                 <option value="route:calendar" @if($homescreen == 'route:calendar')selected @endif>
                                     Kalender
                                 </option>
-                                <option value="homescreen:pastor" @if($homescreen == 'homescreen:pastor')selected @endif>
-                                    Zusammenfassung für Pfarrer*in
-                                </option>
-                                <option value="homescreen:ministry"
-                                        @if($homescreen == 'homescreen:ministry')selected @endif>Zusammenfassung für andere
-                                    Beteiligte
-                                </option>
-                                <option value="homescreen:secretary"
-                                        @if($homescreen == 'homescreen:secretary')selected @endif>Zusammenfassung für
-                                    Sekretär*in
-                                </option>
-                                <option value="homescreen:office" @if($homescreen == 'homescreen:office')selected @endif>
-                                    Zusammenfassung für Kirchenpflege/Kirchenregisteramt
+                                <option value="homescreen:configurable" @if($homescreen == 'homescreen:configurable')selected @endif>
+                                    Konfigurierbare Startseite
                                 </option>
                                 <option value="homescreen:admin" @if($homescreen == 'homescreen:admin')selected @endif>
                                     Zusammenfassung für Administrator*innen

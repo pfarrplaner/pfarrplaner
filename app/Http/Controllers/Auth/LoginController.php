@@ -78,11 +78,18 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        $columns = 4;
         if (env('DEMO_MODE')) {
             $users = User::with('roles', 'homeCities')->get();
             return view('demo.login', compact('users'));
         } else {
-            return view('auth.login');
+            $blog = null;
+            if ($url = (config('blog.blog_feed', false))) {
+                $blog = simplexml_load_file($url);
+
+                if (count($blog->channel->item) > 3) $columns = 3;
+            }
+            return view('auth.login', compact('blog', 'columns'));
         }
     }
 

@@ -31,6 +31,7 @@
 namespace App\Providers;
 
 use App\QueryLog;
+use App\Seating\SeatingValidators;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -95,6 +96,9 @@ class AppServiceProvider extends ServiceProvider
                 return preg_match('/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/i', $value);
             }
         );
+
+        // seating Validators
+        SeatingValidators::register();
 
         QueryLog::register();
     }

@@ -25,6 +25,7 @@
             <li class="nav-item">
                 <a class="nav-link" href="#weddings" role="tab" data-toggle="tab">Trauungen @if($weddings->count())<span class="badge badge-primary">{{ $weddings->count() }}</span> @endif </a>
             </li>
+            @tabheader(['id' => 'register', 'title' => 'Anmeldungen', 'count' => count($registrable)]) @endtabheader
             @endcanany
             @if(count($missing))
                 @tabheader(['id' => 'missing', 'title' => 'Fehlende Einträge', 'count' => count($missing), 'badge_type' => 'danger']) @endtabheader
@@ -208,6 +209,9 @@
                 </div>
             </div>
             @endcanany
+            @tab(['id' => 'register'])
+            @include('homescreen.partials.tabs.registrable')
+            @endtab
             @include('homescreen.partials.tabs.missing')
             @if(Auth::user()->manage_absences)
                 @include('homescreen.tabs.absences')
