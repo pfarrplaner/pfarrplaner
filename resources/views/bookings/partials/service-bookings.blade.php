@@ -17,7 +17,7 @@
                 <td>{!!  nl2br($booking->contact) !!}</td>
                 @if($service->getSeatFinder()->hasSeats)
                 <td>
-                    @include('bookings.partials.place', ['place' => $seating['list'][$booking->code], 'seating' => $seating, 'taken' => 1, 'auto' => ($booking->fixed_seat == '')])
+                    @include('bookings.partials.place', ['place' => $seating['list'][$booking->code], 'seating' => $seating, 'taken' => 1, 'auto' => ($booking->fixed_seat == ''), 'number' => $booking->number])
                 </td>
                 @endif
                 <td class="text-right">
