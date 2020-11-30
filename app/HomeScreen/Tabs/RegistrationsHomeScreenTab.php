@@ -66,10 +66,12 @@ class RegistrationsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
+        $cities = Auth::user()->writableCities->pluck('id');
+
         $query = Service::where('needs_reservations', 1)
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', Auth::user()->pluck('id'))
+            ->whereIn('city_id', $cities)
             ->whereHas('location')
             ->whereHas(
                 'day',
