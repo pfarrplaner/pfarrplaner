@@ -1,6 +1,7 @@
 @if(null !== $homeScreen)
     @tab(['id' => 'homescreen', 'active' => $tab == 'homescreen'])
     <h3>Inhalte des Startbildschirms</h3>
+    @checkbox(['label' => 'Schaltflächen für das schnelle Erstellen von Kasualien anzeigen', 'name' => 'settings[homescreenConfig][wizardButtons]', 'value' => \Illuminate\Support\Facades\Auth::user()->getSetting('homeScreenConfig', ['wizardButtons' => 0])['wizardButtons']])
     <p>Die folgenden Reiter werden auf deinem Startbildschirm angezeigt. Um sie zu sortieren, kannst du sie ziehen und an der passenden Stelle ablegen.</p>
     <input type="hidden" name="homeScreenTabs" value="{{ join(',',$activeTabs) }}">
     <div id="activeHomeScreenTabs" class="profile-homescreen-accordion" role="tablist">
