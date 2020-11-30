@@ -52,7 +52,12 @@ $(document).ready(function() {
         connectWith: ".profile-homescreen-accordion",
         items: '.card'
     }).bind('sortupdate', function(e, ui) {
-        console.log('make ajax');
+        var activeHomeScreenTabs = [];
+        $('#activeHomeScreenTabs div.card').each(function(item){
+            var key = $(this).data('key');
+            if (undefined != key) activeHomeScreenTabs.push($(this).data('key'));
+        });
+        $('input[name=homeScreenTabs]').val(activeHomeScreenTabs);
     });
 
 } );
