@@ -606,7 +606,7 @@ class RowBasedSeatFinder extends AbstractSeatFinder
                 $impact += $split;
             }
         }
-        return $row->seats - $impact;
+        return $row->seats - $impact + $possible;
     }
 
     /**
