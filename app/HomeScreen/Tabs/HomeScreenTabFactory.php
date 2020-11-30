@@ -34,20 +34,48 @@ namespace App\HomeScreen\Tabs;
 class HomeScreenTabFactory
 {
 
-    public static function all() {
+    /**
+     * Get homescreen tabs
+     * @param array $config
+     * @param array $filter
+     * @return array
+     */
+    public static function get(array $config, array $filter = [])
+    {
         $homeScreenTabs = [];
         foreach ((glob(app_path('HomeScreen/Tabs/*HomeScreenTab.php'))) as $file) {
             if (basename($file, 'HomeScreenTab.php') != 'Abstract') {
-                $class='App\\HomeScreen\\Tabs\\'.basename($file, '.php');
+                $key = lcfirst(basename($file, 'HomeScreenTab.php'));
+                if (!isset($config[$key])) $config[$key] = [];
+                $class = 'App\\HomeScreen\\Tabs\\' . basename($file, '.php');
                 /** @var AbstractHomeScreenTab $object */
-                $object = new $class();
+                $object = new $class($config);
                 $homeScreenTabs[$object->getTitle()] = $object;
             }
         }
         ksort($homeScreenTabs);
         $tabs = [];
-        foreach ($homeScreenTabs as $tab) $tabs[$tab->getKey()] = $tab;
+        foreach ($homeScreenTabs as $tab) {
+            $tabs[$tab->getKey()] = $tab;
+        }
+        if (count($filter)) {
+            $allTabs = $tabs;
+            $tabs = [];
+            foreach ($filter as $tab) {
+                $tabs[$tab] = $allTabs[$tab];
+            }
+        }
         return $tabs;
+    }
+
+    /**
+     * Get all homescreen tabs
+     * @param array $config
+     * @return array
+     */
+    public static function all(array $config)
+    {
+        return self::get($config, []);
     }
 
 }

@@ -31,8 +31,57 @@
 namespace App\HomeScreen\Tabs;
 
 
+use App\Absence;
+use App\Replacement;
+use App\Service;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class AbsencesHomeScreenTab extends AbstractHomeScreenTab
 {
     protected $title = 'Mein Urlaub';
     protected $description = 'Zeigt den eigenen Urlaub und andere Abwesenheiten';
+    protected $absenceQuery;
+    protected $replacementQuery;
+
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        $this->buildQueries();
+    }
+
+    public function getTitle(): string
+    {
+        return parent::getTitle();
+    }
+
+    public function getContent($data = [])
+    {
+        $data['absences'] = $this->absenceQuery->get();
+        $data['replacements'] = $this->replacementQuery->get();
+        return parent::getContent($data);
+    }
+
+    /**
+     * Build the queries
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQueries() {
+        $start = Carbon::now()->setTime(0, 0, 0);
+        $end = Carbon::now()->addMonth(2);
+
+        $this->absenceQuery = Absence::where('user_id', Auth::user()->id)->where('to', '>=', now());
+        $this->replacementQuery = Replacement::with('absence')
+            ->whereHas(
+                'users',
+                function ($query) {
+                    $query->where('users.id', Auth::user()->id);
+                }
+            )
+            ->where('to', '>=', now())
+            ->orderBy('from')
+            ->orderBy('to');
+    }
+
+
 }

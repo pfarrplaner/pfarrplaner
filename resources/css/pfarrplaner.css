@@ -603,11 +603,11 @@ ul.sortable li.placeholder:before {
     border: 0;
 }
 
-#absenceTab a {
+#absencesTab a {
     background-color: sandybrown;
 }
 
-#absenceTab a.active {
+#absencesTab a.active {
     background-color: orange;
 }
 

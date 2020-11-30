@@ -31,8 +31,69 @@
 namespace App\HomeScreen\Tabs;
 
 
+use App\Service;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class FuneralsHomeScreenTab extends AbstractHomeScreenTab
 {
     protected $title = 'Beerdigungen';
     protected $description = 'Zeigt die anstehenden Beerdigungen';
+
+    public function __construct($config = [])
+    {
+        $this->setDefaultConfig($config, ['mine' => 0]);
+        parent::__construct($config);
+        $this->query = $this->buildQuery();
+    }
+
+    public function getTitle(): string
+    {
+        if ($this->config['mine']) return 'Meine Beerdigungen';
+        return parent::getTitle();
+    }
+
+    public function getCount()
+    {
+        return $this->query->count();
+    }
+
+    public function getContent($data = [])
+    {
+        $data['funerals'] = $this->query->get();
+        return parent::getContent($data);
+    }
+
+    /**
+     * Build the query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQuery() {
+        $start = Carbon::now()->setTime(0, 0, 0);
+        $end = Carbon::now()->addMonth(2);
+
+        $query = Service::with(['funerals', 'location', 'day'])
+            ->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereHas('funerals')
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start->copy()->subWeeks(2));
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+        if ($this->config['mine']) {
+            $query->whereHas(
+                'participants',
+                function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                }
+            );
+        }
+        return $query;
+    }
+
+
 }

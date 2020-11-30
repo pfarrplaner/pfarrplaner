@@ -38,6 +38,12 @@ class AbstractHomeScreenTab
 
     protected $title = '';
     protected $description = '';
+    protected $config = [];
+
+    public function __construct($config = [])
+    {
+        if (!count($config)) $this->setConfig($config);
+    }
 
     /**
      * @return string
@@ -72,10 +78,40 @@ class AbstractHomeScreenTab
     }
 
     /**
+     * @return array|mixed
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param array|mixed $config
+     */
+    public function setConfig($config): void
+    {
+        if (isset($config[$this->getKey()])) {
+            $this->config = $config[$this->getKey()];
+        } else {
+            $this->config = $config;
+        }
+    }
+
+
+    protected function setDefaultConfig(array $config, array $defaults) {
+        if (isset($config[$this->getKey()])) $config = $config[$this->getKey()];
+        foreach ($defaults as $key => $val) {
+            if (!isset($config[$key])) $config[$key] = $val;
+        }
+        $this->setConfig($config);
+    }
+
+
+    /**
      * Get the class's key
      * @return string
      */
-    public function getKey() {
+    public function getKey(): string {
         return lcfirst(basename(str_replace('\\', '/', get_called_class()), 'HomeScreenTab'));
     }
 
@@ -84,11 +120,50 @@ class AbstractHomeScreenTab
         return ('homescreen.tabs.'.$this->getKey().'.'.$viewName);
     }
 
+    /**
+     * Render a specific view
+     * @return string|Illuminate\Contracts\View\View Rendered view
+     */
     public function view($viewName, $data = []) {
         $viewName = $this->viewName($viewName);
+        $data = array_merge($data, ['tab' => $this, 'config' => $this->config]);
         if (View::exists($viewName)) {
             return View::make($viewName, $data);
-        } else return '<i>Für diesen Reiter gibt es nichts einzustellen.</i>';
+        } else {
+            if ($viewName == 'config') {
+                return '<i>Für diesen Reiter gibt es nichts einzustellen.</i>';
+            } else {
+                return '';
+            }
+        }
+    }
+
+    /**
+     * Render the tab header
+     * @param array $data
+     * @return string|Illuminate\Contracts\View\View
+     */
+    public function getHeader($data = []) {
+        return $this->view('tabHeader', $data);
+    }
+
+    /**
+     * Render the tab content
+     * @return string|Illuminate\Contracts\View\View
+     */
+    public function getContent($data = []) {
+        return $this->view('tab', $data);
+    }
+
+    /**
+     * Get the name of a config key
+     * @param string $name
+     * @param bool $isArray
+     * @return string
+     */
+    public function configKey($name = '', bool $isArray = false)
+    {
+        return 'settings[homeScreenTabsConfig]['.$this->getKey().']'.($name ? '['.$name.']' : '').($isArray ? '[]' : '');
     }
 
 }

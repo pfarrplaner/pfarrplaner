@@ -31,8 +31,84 @@
 namespace App\HomeScreen\Tabs;
 
 
+use App\Baptism;
+use App\Service;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class BaptismsHomeScreenTab extends AbstractHomeScreenTab
 {
     protected $title = 'Taufen';
     protected $description = 'Zeigt die anstehenden Taufen';
+    protected $baptismQuery = null;
+    protected $baptismRequestQuery = null;
+
+    public function __construct($config = [])
+    {
+        // preset default config
+        $this->setDefaultConfig($config, ['mine' => 0, 'showRequests' => 0]);
+
+        parent::__construct($config);
+        $this->buildQueries();
+    }
+
+    public function getTitle(): string
+    {
+        if ($this->config['mine']) return 'Meine Taufen';
+        return parent::getTitle();
+    }
+
+    public function getBaptismCount()
+    {
+        return $this->baptismQuery->count();
+    }
+
+    public function getBaptismRequestCount()
+    {
+        return $this->baptismRequestQuery->count();
+    }
+
+    public function getContent($data = [])
+    {
+        $data['baptisms'] = $this->baptismQuery->get()->load('day');
+        $data['baptismRequests'] = $this->baptismRequestQuery->get();
+        return parent::getContent($data);
+    }
+
+    /**
+     * Build the query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQueries() {
+        $start = Carbon::now()->setTime(0, 0, 0);
+        $end = Carbon::now()->addMonth(2);
+
+        $this->baptismQuery = Service::with(['baptisms', 'location', 'day'])
+            ->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereHas('baptisms')
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+
+        if ($this->config['mine']) {
+            $this->baptismQuery->whereHas(
+                'participants',
+                function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                }
+            );
+        }
+
+        $this->baptismRequestQuery = Baptism::whereNull('service_id')
+            ->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
+
+    }
+
 }

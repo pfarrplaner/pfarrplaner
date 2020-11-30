@@ -31,9 +31,71 @@
 namespace App\HomeScreen\Tabs;
 
 
+use App\Service;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class NextServicesHomeScreenTab extends AbstractHomeScreenTab
 {
 
     protected $title = 'Nächste Gottesdienste';
     protected $description = 'Zeigt die nächsten Gottesdienste an';
+    protected $query = null;
+
+    public function __construct($config = [])
+    {
+        // preset default config
+        $this->setDefaultConfig($config, ['mine' => 0]);
+        parent::__construct($config);
+        $this->query = $this->buildQuery();
+    }
+
+    public function getTitle(): string
+    {
+        if ($this->config['mine']) return 'Meine Gottesdienste';
+        return parent::getTitle();
+    }
+
+    public function getCount()
+    {
+        return $this->query->count();
+    }
+
+    public function getContent($data = [])
+    {
+        $data['services'] = $this->query->get();
+        return parent::getContent($data);
+    }
+
+    /**
+     * Build the query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQuery() {
+        $start = Carbon::now()->setTime(0, 0, 0);
+        $end = Carbon::now()->addMonth(2);
+
+        $query = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
+            ->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+        if ($this->config['mine']) {
+            $query->whereHas(
+                'participants',
+                function ($query) {
+                    $query->where('user_id', Auth::user()->id);
+                }
+            );
+        }
+        return $query;
+    }
+
 }

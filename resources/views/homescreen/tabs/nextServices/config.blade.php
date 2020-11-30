@@ -1,1 +1,2 @@
-@checkbox(['label' => 'Nur meine eigenen Gottesdienste anzeigen', 'name' => 'settings[homeScreenTabsConfig][nextServices][mine]', 'value' => $config['mine']])
+@checkbox(['label' => 'Nur meine eigenen Gottesdienste anzeigen', 'name' => $tab->configKey('mine'), 'value' => $config['mine']])
+

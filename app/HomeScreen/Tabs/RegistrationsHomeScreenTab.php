@@ -31,8 +31,56 @@
 namespace App\HomeScreen\Tabs;
 
 
+use App\Service;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class RegistrationsHomeScreenTab extends AbstractHomeScreenTab
 {
     protected $title = 'Anmeldungen';
     protected $description = 'Zeigt Gottesdienste mit Anmeldefunktionen';
+    protected $query = null;
+
+    public function __construct($config = [])
+    {
+        parent::__construct($config);
+        $this->query = $this->buildQuery();
+    }
+
+    public function getCount()
+    {
+        return $this->query->count();
+    }
+
+    public function getContent($data = [])
+    {
+        $data['registrable'] = $this->query->get();
+        return parent::getContent($data);
+    }
+
+    /**
+     * Build the query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQuery() {
+        $start = Carbon::now()->setTime(0, 0, 0);
+        $end = Carbon::now()->addMonth(2);
+
+        $query = Service::where('needs_reservations', 1)
+            ->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereIn('city_id', Auth::user()->pluck('id'))
+            ->whereHas('location')
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+        return $query;
+    }
+
 }

@@ -31,8 +31,43 @@
 namespace App\HomeScreen\Tabs;
 
 
+use App\Service;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class MissingEntriesHomeScreenTab extends AbstractHomeScreenTab
 {
     protected $title = 'Fehlende Einträge';
     protected $description = 'Zeigt Gottesdienste mit fehlenden Einträgen';
+    protected $missing = [];
+
+    public function __construct($config = [])
+    {
+        // preset default config
+        $this->setDefaultConfig($config, ['ministries' => []]);
+        parent::__construct($config);
+//        if (!is_array($this->config['ministries'])) $this->config['ministries'] = [$this->config['ministries']];
+        $this->missing = $this->getMissing();
+    }
+
+    public function getCount()
+    {
+        return count($this->missing);
+    }
+
+    public function getContent($data = [])
+    {
+        $data['missing'] = $this->missing;
+        return parent::getContent($data);
+    }
+
+    /**
+     * Build the query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function getMissing() {
+        $missing = Service::withOpenMinistries($this->config['ministries']);
+        return $missing;
+    }
+
 }

@@ -28,11 +28,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\HomeScreen\Tabs;
+namespace App\HomeScreens;
 
 
-class BaptismRequestsHomeScreenTab extends AbstractHomeScreenTab
+use App\HomeScreen\Tabs\HomeScreenTabFactory;
+use Illuminate\Support\Facades\Auth;
+
+class ConfigurableHomeScreen extends AbstractHomeScreen
 {
-    protected $title = 'Taufanfragen';
-    protected $description = 'Zeigt die ausstehenden Taufanfragen';
+
+    public function render()
+    {
+        $user = Auth::user();
+        $activeTabs = explode(',', $user->getSetting('homeScreenTabs'));
+        $config = $user->getSetting('homeScreenTabsConfig');
+        $tabs = HomeScreenTabFactory::get($config, $activeTabs);
+
+        return $this->renderView('homescreen.configurable', compact('tabs', 'user'));
+    }
+
 }

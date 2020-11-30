@@ -219,15 +219,15 @@ class UserController extends Controller
         $homeScreen = $user->getHomeScreen();
 
         // homeScreenTabs
+        $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig');
         $activeTabs = explode(',', $user->getSetting('homeScreenTabs', ''));
         if ($activeTabs == [0 => '']) $activeTabs = [];
-        $homeScreenTabsInactive = HomeScreenTabFactory::all();
+        $homeScreenTabsInactive = HomeScreenTabFactory::all($homeScreenTabsConfig);
         $homeScreenTabsActive = [];
         foreach ($activeTabs as $tab) {
             $homeScreenTabsActive[$tab] = $homeScreenTabsInactive[$tab];
             unset($homeScreenTabsInactive[$tab]);
         }
-        $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig');
 
         $tab = $request->get('tab', '');
         return view(
