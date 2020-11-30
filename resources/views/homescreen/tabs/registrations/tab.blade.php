@@ -22,7 +22,7 @@
                         @include('partials.service.details', ['service', $service])
                     </td>
                     <td>
-                        {{ $service->getSeatfinder()->remainingCapacityText() }}
+                        {{ $service->getSeatfinder()->freeSeatsText() }}
                     </td>
                     <td>
                         <a class="btn btn-sm btn-success" href="{{route('seatfinder', $service->id)}}" title="Anmeldung eintragen"><span class="fa fa-ticket-alt"></span> Neue Anmeldung</a>
