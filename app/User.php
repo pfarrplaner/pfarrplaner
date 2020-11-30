@@ -374,9 +374,10 @@ class User extends Authenticatable
      * @param $key
      * @param null $default
      * @param bool $returnObject
+     * @param bool $unserialize
      * @return UserSetting|mixed
      */
-    public function getSetting($key, $default = null, $returnObject = false)
+    public function getSetting($key, $default = null, $returnObject = false, $unserialize = true)
     {
         // need to trick error reporting or else this will fail with an E_NOTICE
         $err = error_reporting();
@@ -391,7 +392,7 @@ class User extends Authenticatable
                 ]
             );
         } else {
-            if (substr($setting->value, 0, 5) == '_____') $setting->value = unserialize(substr($setting->value, 5));
+            if ($unserialize && (substr($setting->value, 0, 5) == '_____')) $setting->value = unserialize(substr($setting->value, 5));
         }
         $return = ($returnObject ? $setting : $setting->value);
         error_reporting($err);
