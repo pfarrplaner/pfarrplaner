@@ -16,6 +16,20 @@
 @endsection
 
 @section('content')
+    @if ($service->exclude_sections)<p><b>Gesperrte Bereiche:</b> {{ $service->exclude_sections }}</p> @endif
+    @if ($service->exclude_places)<p><b>Gesperrte Plätze:</b>
+        @foreach(explode(',', $service->exclude_places) as $place) @include('bookings.partials.place', ['place' => $place, 'seating' => $seating]) @endforeach
+    </p>@endif
+    @if ($service->reserved_places)<p><b>Zurückgehaltene Plätze:</b>
+    @foreach(explode(',', $service->reserved_places) as $place) @include('bookings.partials.place', ['place' => $place, 'seating' => $seating]) @endforeach
+    </p>@endif
+    @if (isset($seating['free']) && count($seating['free']))<p><b>Freie Plätze:</b>
+        @foreach ($seating['free'] as $place) @include('bookings.partials.place', ['place' => $place, 'seating' => $seating]) @endforeach
+    </p>@endif
+    @if(isset($seating['count']))
+        <p><b>Zahl der angemeldeten Personen:</b> {{ $seating['count'] }} @if(isset($seating['load'])) (Raumnutzung: {{ (int)$seating['load'] }}%) @endif
+        </p>
+    @endif
     @if(count($bookings))
         @component('components.ui.card')
             @slot('cardHeader')

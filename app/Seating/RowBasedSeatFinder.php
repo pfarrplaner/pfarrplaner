@@ -782,14 +782,34 @@ class RowBasedSeatFinder extends AbstractSeatFinder
         $this->optimize();
 
         $list = [];
+        $free = [];
+        $grid = [];
+        $count = 0;
+
         foreach ($this->grid as $placeKey => $place) {
             if (null !== $place['booking']) {
                 $list[$place['booking']->code] = $placeKey;
+                $count += $place['booking']->number;
+            } else {
+                $free[$placeKey] = $placeKey;
             }
         }
 
+        foreach ($this->originalGrid as $placeKey => $place) {
+            $grid[$placeKey] = $place['row'];
+            if ($place['row']['split']) {
+                foreach (explode(',', $place['row']['split']) as $splitKey => $splitSeats) {
+                    $row = clone($place['row']);
+                    $row->seats = $splitSeats;
+                    $grid[$placeKey.chr(65+$splitKey)] = $row;
+                }
+            }
+        }
+
+        $load = $count / $this->maximumCapacity() * 100;
+
         $this->grid = $savedGrid;
-        return $list;
+        return compact('list', 'free', 'grid', 'count', 'load');
     }
 
 

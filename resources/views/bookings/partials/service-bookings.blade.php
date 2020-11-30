@@ -17,8 +17,7 @@
                 <td>{!!  nl2br($booking->contact) !!}</td>
                 @if($service->getSeatFinder()->hasSeats)
                 <td>
-                    <span style="@if($booking->fixed_seat) font-weight: bold; color: red; @else font-style: italic; @endif"
-                    title="@if($booking->fixed_seat) Manuell festgelegter Platz @else Vorläufige Platzzuweisung @endif">{{ $seating[$booking->code] ?? '' }}</span>
+                    @include('bookings.partials.place', ['place' => $seating['list'][$booking->code], 'seating' => $seating, 'taken' => 1, 'auto' => ($booking->fixed_seat == '')])
                 </td>
                 @endif
                 <td class="text-right">
