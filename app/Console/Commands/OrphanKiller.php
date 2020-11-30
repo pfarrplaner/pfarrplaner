@@ -3,14 +3,12 @@
 namespace App\Console\Commands;
 
 use App\Absence;
-use App\Attachment;
 use App\Baptism;
 use App\Booking;
 use App\CalendarConnection;
 use App\Funeral;
 use App\Location;
 use App\Parish;
-use App\Participant;
 use App\Replacement;
 use App\SeatingRow;
 use App\SeatingSection;

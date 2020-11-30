@@ -82,7 +82,6 @@ class PreventOrphans extends Migration
         $this->createCascadingDelete('user_settings', 'user_id', 'users');
         $this->createCascadingDelete('user_approver', 'user_id', 'users');
         $this->createCascadingDelete('user_approver', 'approver_id', 'users');
-        $this->createCascadingDelete('replacement_user', 'user_id', 'users');
         $this->createCascadingDelete('service_service_group', 'service_group_id', 'service_groups');
         $this->createCascadingDelete('service_tag', 'service_id', 'services');
         $this->createCascadingDelete('service_tag', 'tag_id', 'tags');
@@ -90,6 +89,17 @@ class PreventOrphans extends Migration
         $this->createCascadingDelete('parish_user', 'parish_id', 'parishes');
         $this->createCascadingDelete('city_day', 'city_id', 'cities');
         $this->createCascadingDelete('city_day', 'day_id', 'days');
+
+        $this->createCascadingDelete('service_user', 'service_id', 'services');
+        $this->createCascadingDelete('service_user', 'user_id', 'users');
+        $this->createCascadingDelete('city_user', 'city_id', 'cities');
+        $this->createCascadingDelete('city_user', 'user_id', 'users');
+        $this->createCascadingDelete('user_home', 'city_id', 'cities');
+        $this->createCascadingDelete('user_home', 'user_id', 'users');
+        $this->createCascadingDelete('replacement_user', 'replacement_id', 'replacements');
+        $this->createCascadingDelete('replacement_user', 'user_id', 'users');
+        $this->createCascadingDelete('service_service_group', 'service_id', 'services');
+
 
     }
 
