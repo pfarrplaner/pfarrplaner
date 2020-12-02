@@ -62,7 +62,7 @@ class HomeScreenTabFactory
             $allTabs = $tabs;
             $tabs = [];
             foreach ($filter as $tab) {
-                $tabs[$tab] = $allTabs[$tab];
+                if (isset($allTabs[$tab])) $tabs[$tab] = $allTabs[$tab];
             }
         }
         return $tabs;

@@ -17,11 +17,15 @@
                 anlegen...</a>
         @endif
         <hr />
-        @tabheaders
-            @foreach ($tabs as $tab){!! $tab->getHeader(['index' => $loop->index]) !!}@endforeach
-        @endtabheaders
-        @tabs
-            @foreach ($tabs as $tab){!! $tab->getContent(['index' => $loop->index]) !!}@endforeach
-        @endtabs
+        @if(count($tabs) >0 )
+            @tabheaders
+                @foreach ($tabs as $tab){!! $tab->getHeader(['index' => $loop->index]) !!}@endforeach
+            @endtabheaders
+            @tabs
+                @foreach ($tabs as $tab){!! $tab->getContent(['index' => $loop->index]) !!}@endforeach
+            @endtabs
+        @else
+            <p>Hier gibt es noch nicht viel zu sehen. In deinem <a href="{{ route('user.profile') }}">Profil</a> kannst du die Inhalte deines Startbildschirms selbst einstellen.</p>
+        @endif
     @endcomponent
 @endsection

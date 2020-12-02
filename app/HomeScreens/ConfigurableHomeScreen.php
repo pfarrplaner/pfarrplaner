@@ -40,11 +40,11 @@ class ConfigurableHomeScreen extends AbstractHomeScreen
     public function render()
     {
         $user = Auth::user();
-        $activeTabs = explode(',', $user->getSetting('homeScreenTabs'));
-        $config = $user->getSetting('homeScreenTabsConfig');
+        $activeTabs = explode(',', $user->getSetting('homeScreenTabs')) ?? [];
+        $config = $user->getSetting('homeScreenTabsConfig') ?? [];
         $tabs = HomeScreenTabFactory::get($config, $activeTabs);
 
-        return $this->renderView('homescreen.configurable', compact('tabs', 'user'));
+        return $this->renderView('homescreen.configurable', compact('tabs', 'user', 'config'));
     }
 
 }

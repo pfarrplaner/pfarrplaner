@@ -219,8 +219,8 @@ class UserController extends Controller
         $homeScreen = $user->getHomeScreen();
 
         // homeScreenTabs
-        $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig');
-        $activeTabs = explode(',', $user->getSetting('homeScreenTabs', ''));
+        $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig') ?? [];
+        $activeTabs = explode(',', $user->getSetting('homeScreenTabs', '')) ?? [];
         if ($activeTabs == [0 => '']) $activeTabs = [];
         $homeScreenTabsInactive = HomeScreenTabFactory::all($homeScreenTabsConfig);
         $homeScreenTabsActive = [];
