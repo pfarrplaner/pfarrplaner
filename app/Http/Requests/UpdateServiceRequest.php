@@ -110,20 +110,24 @@ class UpdateServiceRequest extends FormRequest
     {
         $data = parent::validated();
 
-        // set location
-        if (!is_numeric($data['location_id'])) {
-            $data['special_location'] = $data['location_id'];
-            unset($data['location_id']);
-        } else {
-            $location = Location::find($data['location_id']);
-            if (null === $location) $data['special_location'] = $data['location_id'];
-            unset($data['location_id']);
+        if (isset($data['location_id']) || isset($data['special_location'])) {
+            // set location
+            if (!is_numeric($data['location_id'])) {
+                $data['special_location'] = $data['location_id'];
+                unset($data['location_id']);
+            } else {
+                $location = Location::find($data['location_id']);
+                if (null === $location) $data['special_location'] = $data['location_id'];
+                unset($data['location_id']);
+            }
+
+            // set time and place
+            if (isset($data['special_location'])) {
+                $data['location_id'] = 0;
+            }
+
         }
 
-        // set time and place
-        if (isset($data['special_location'])) {
-            $data['location_id'] = 0;
-        }
 
         $data['hidden'] = $data['hidden'] ?? 0;
         $data['needs_reservations'] = $data['needs_reservations'] ?? 0;

@@ -43,6 +43,9 @@
     class="hold-transition sidebar-mini sidebar-collapse {{ strtolower(str_replace('.', '-', Request::route()->getName())) }} @if(isset($slave) && $slave) slave @endif">
 
 <div class="wrapper">
+
+@if((!isset($noNav)) || (!$noNav) )
+
     <!-- Navbar -->
     <nav class="main-header navbar navbar-expand navbar-white navbar-light">
         <!-- Left navbar links -->
@@ -156,7 +159,7 @@
         </div>
         <!-- /.sidebar -->
     </aside>
-
+@endif
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->

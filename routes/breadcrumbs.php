@@ -108,6 +108,18 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for('checkin.create', function (BreadcrumbsGenerator $trail, $location){
+    if (is_numeric($location)) $location = Location::find($location);
+    $trail->push($location->name);
+    $trail->push('Check-In', route('checkin.create', $location));
+});
+
+Breadcrumbs::for('checkin.store', function (BreadcrumbsGenerator $trail, $service){
+    if (is_numeric($service)) $service = Service::find($service);
+    $trail->push($service->location->name);
+    $trail->push('Check-In', route('checkin.create', $service->location));
+});
+
 Breadcrumbs::for(
     'days.edit',
     function (BreadcrumbsGenerator $trail, $day) {

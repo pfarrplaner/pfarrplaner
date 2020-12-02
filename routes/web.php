@@ -246,19 +246,7 @@ Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessa
 //about
 Route::get('/about', 'HomeController@about')->name('about');
 
-// test/debug routes
-Route::get('/test/mail/{address}', 'TestController@mail');
-Route::get('/test', function(){
-    $service = \App\Service::find(1310);
-    $ct = 0;
-    do {
-        $sf = new \App\Seating\AbstractSeatFinder($service);
-        $ct++;
-        $i = rand(1, 9);
-        if ($x = $sf->find(1,9)) {
-            \App\Booking::create(['service_id' => 1310, 'first_name' => '', 'name' => 'test'.$ct, 'contact' => '', 'number' => $i, 'code' => \App\Booking::createCode()]);
-            echo $ct.' -> '.$i.' Personen, verbleiben: '.$sf->remainingCapacity();
-        }
-    } while ($x);
-});
-
+//checkIn
+Route::get('/checkin/{location}', 'CheckInController@create')->name('checkin.create');
+Route::post('/checkin/{service}', 'CheckInController@store')->name('checkin.store');
+Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr');
