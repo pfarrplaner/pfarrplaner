@@ -74,4 +74,7 @@ $(document).ready(function () {
         $(this).val(value);
 
     });
+
+    $('form:first :input:enabled:visible:first').focus();
+
 });
