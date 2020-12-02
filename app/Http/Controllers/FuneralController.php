@@ -161,7 +161,7 @@ class FuneralController extends Controller
 
         $locationId = $request->get('location_id') ?: 0;
 
-        if ((!id_numeric($locationId)) || (null === Location::find($locationId))) {
+        if ((!is_numeric($locationId)) || (null === Location::find($locationId))) {
             $specialLocation = $locationId;
             $locationId = 0;
             $time = $request->get('time') ?: '';
@@ -185,7 +185,7 @@ class FuneralController extends Controller
                 'day_id' => $day->id,
                 'location_id' => $locationId,
                 'time' => $time,
-                'special_location' => $specialLocation,
+                'special_location' => $specialLocation ?? null,
                 'city_id' => $city->id,
                 'others' => '',
                 'description' => '',
