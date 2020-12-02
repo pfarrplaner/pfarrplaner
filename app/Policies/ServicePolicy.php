@@ -81,9 +81,6 @@ class ServicePolicy
         if ($user->hasPermissionTo('gd-bearbeiten') && $this->hasCityPermission($user, $service)) {
             return true;
         }
-        if ($service->pastors->contains($user)) {
-            return true;
-        }
         return false;
     }
 

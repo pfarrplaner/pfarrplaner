@@ -4,6 +4,7 @@
 @can('update', $service)
     <a class="btn btn-sm btn-primary" href="{{route('services.edit', $service->id)}}" title="Bearbeiten"><span
             class="fa fa-edit"></span></a>
+@endcan
     @if(is_object($service->location) && count($service->location->seatingSections))
         <br/>
         <div style="margin-top: 2px;">
@@ -19,4 +20,3 @@
             </a>
         </div>
     @endif
-@endcan
