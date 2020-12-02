@@ -32,12 +32,11 @@ namespace App\Providers;
 
 use App\QueryLog;
 use App\Seating\SeatingValidators;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
 
 /**
  * Class AppServiceProvider
@@ -94,6 +93,27 @@ class AppServiceProvider extends ServiceProvider
             'zip',
             function ($attribute, $value, $parameters) {
                 return preg_match('/^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$/i', $value);
+            }
+        );
+
+        Validator::extend(
+            'hash',
+            function ($attribute, $value, $parameters) {
+                return Hash::check($value, $parameters[0]);
+            }
+        );
+
+        Validator::extend(
+            'not_hash',
+            function ($attribute, $value, $parameters) {
+                return !Hash::check($value, $parameters[0]);
+            }
+        );
+
+        Validator::extend(
+            'not_current_password',
+            function ($attribute, $value, $parameters) {
+                return !Hash::check($value, Auth::user()->password);
             }
         );
 

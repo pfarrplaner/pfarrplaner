@@ -379,6 +379,13 @@ Breadcrumbs::for(
 );
 
 Breadcrumbs::for(
+    'password.edit',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->push('Passwort ändern');
+    }
+);
+
+Breadcrumbs::for(
     'password.request',
     function (BreadcrumbsGenerator $trail) {
         $trail->push('Passwort vergessen');

@@ -145,6 +145,7 @@ return [
     'url' => ':attribute muss eine URL sein.',
     'uuid' => ':attribute muss ein UUID sein.',
     'zip' => ':attribute muss eine gültige Postleitzahl sein.',
+    'not_current_password' => 'Das neue Passwort darf nicht das alte sein.',
 
     // seatable validators
     'seatable' => 'Die gewünschte Anzahl zusammenhängender Plätze (:input) ist in diesem Gottesdienst nicht verfügbar.',

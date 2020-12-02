@@ -174,8 +174,8 @@ Route::get('/wedding/destroy/{wedding}', ['as' => 'wedding.destroy', 'uses' => '
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 Route::get(    '/', ['as' => 'root', 'uses' => 'HomeController@root']);
 
-Route::get('/changePassword', 'HomeController@showChangePassword');
-Route::post('/changePassword', 'HomeController@changePassword')->name('changePassword');
+Route::get('/password/change', 'HomeController@showChangePassword')->name('password.edit');
+Route::post('/password/change', 'HomeController@changePassword')->name('password.change');
 
 Auth::routes();
 Route::get('/logout', 'UserController@logout')->name('logout');
