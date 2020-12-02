@@ -122,12 +122,14 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             $cities = explode(',', $cities);
         }
 
+        $noScript = $request->get('noScript', 0);
+        $singleService = $request->get('singleService', '');
+
         $singleDay = $request->get('singleDay', '');
         if ($singleDay != '') {
             $start = Carbon::createFromFormat('Y-m-d', $request->get('singleDay'))->setTime(0,0,0);
             $end = $start->copy()->setTime(23.59,59);
-
-        } else {
+        }else {
             $start = Carbon::now()->setTime(0,0,0);
             $end = $start->copy()->addMonth(1);
         }
@@ -167,22 +169,26 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             }
         }
 
-        $tmpServices = Service::where('needs_reservations', 1)
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $cities)
-            ->where('hidden', '!=', 1)
-            ->whereHas('location')
-            ->whereHas(
-                'day',
-                function ($query) use ($start, $end) {
-                    $query->where('date', '>=', $start);
-                    $query->where('date', '<=', $end);
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
-            ->get();
+        if ($singleService) {
+            $tmpServices = Service::with('day')->where('id', $singleService)->where('hidden', '!=', 1)->get();
+        } else {
+            $tmpServices = Service::where('needs_reservations', 1)
+                ->select(['services.*', 'days.date'])
+                ->join('days', 'days.id', '=', 'day_id')
+                ->whereIn('city_id', $cities)
+                ->where('hidden', '!=', 1)
+                ->whereHas('location')
+                ->whereHas(
+                    'day',
+                    function ($query) use ($start, $end) {
+                        $query->where('date', '>=', $start);
+                        $query->where('date', '<=', $end);
+                    }
+                )
+                ->orderBy('days.date', 'ASC')
+                ->orderBy('time', 'ASC')
+                ->get();
+        }
 
         $services = [];
         foreach ($tmpServices as $service) {
@@ -192,14 +198,14 @@ class EmbedRegistrationReport extends AbstractEmbedReport
 
         $corsOrigin = $request->get('corsOrigin', '');
         $report = $this->getKey();
-        $url = route('report.embed', compact('report', 'corsOrigin', 'singleDay'));
+        $url = route('report.embed', compact('report', 'corsOrigin', 'singleDay', 'singleService', 'noScript'));
 
         $randomId = uniqid();
         /** @var Response $response */
         $response = response()
             ->view(
                 $this->getViewName('embed'),
-                compact('randomId', 'services', 'url', 'cities', 'errors', 'success')
+                compact('randomId', 'services', 'url', 'cities', 'errors', 'success', 'singleService', 'noScript')
             );
 
 

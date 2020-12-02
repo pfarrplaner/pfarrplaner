@@ -11,7 +11,9 @@
         <div id="{{ $randomId }}" class="col s12 bullme ">
             @if(count($services))
                 @foreach ($services as $dayServices)
+                    @if(!$singleService)
                     <h2 style="margin-bottom: 20px;">Gottesdienste am {{ $dayServices[0]->day->date->format('d.m.Y') }} ({{ \App\Liturgy::getDayInfo($dayServices[0]->day)['title'] }})</h2>
+                    @endif
                     @foreach($dayServices as $service)
                         <div class="card-panel default registrable-service" id="{{ $randomId }}-{{ $loop->index }}">
                             <h3>{{ $service->titleText(false) }}</h3>
@@ -69,12 +71,11 @@
                                 <input name="phone" value="" type="text"/>
                                 <label for="number">Anzahl Personen</label>
                                 <input name="number" value="1" type="text"/><br/><br/>
-                                <input type="submit" class="btn btn-secondary submit-reg-form" href="#"
+                                <a class="btn btn-secondary submit-reg-form" href="#"
                                         style="width: auto; height: auto; position: relative; background-color: none;"
-                                        data-container="#{{ $randomId }}-{{ $loop->index }}" value="Anmeldung absenden" />
-                                </input>
+                                   data-container="#{{ $randomId }}-{{ $loop->index }}">Anmeldung absenden</a>
                                 <br/>
-                                <small>Die Erhebung dieser Daten erfolgt nach $6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
+                                <small>Die Erhebung dieser Daten erfolgt nach §6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
                                     können Sie nur
                                     nach korrekter Angabe Ihrer Kontaktdaten am Gottesdienst teilnehmen. Wir bitten hierfür
                                     um
@@ -89,10 +90,13 @@
             @endif
         </div>
     </div>
+    @if($noScript == 0)
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
     <script defer>
+        var blockSubmission = false;
+
         $(document).ready(function () {
-            $('.show-reg-form').click(function () {
+            $('#{{ $randomId }} .show-reg-form').click(function () {
                 $('.registrable-service').hide();
                 $($(this).data('container')).show();
                 $($(this).data('container') + '-reg').show();
@@ -100,7 +104,8 @@
                 $($(this).data('container') + '-reg input[name="name"]').focus();
             });
 
-            $('.submit-reg-form').click(function () {
+            $('#{{ $randomId }} .submit-reg-form').click(function (event) {
+                event.preventDefault();
                 var url = '{{ $url }}&cities={{ join(',', $cities) }}';
                 var check = true;
                 ['name', 'first_name', 'street', 'zip', 'city', 'phone', 'number'].forEach(element => {
@@ -112,6 +117,8 @@
                 if (check) {
 
                     url += '&service=' + encodeURI($($(this).data('container') + '-reg').data('service'));
+                    @if ($singleService) url += '&singleService={{ $singleService }}'; @endif
+                    @if ($noScript) url += '&noScript=1'; @endif
 
                     ['name', 'first_name', 'number'].forEach(element => {
                         if (element != 'contact') {
@@ -126,16 +133,21 @@
                         + $($(this).data('container') + '-reg input[name="city"]').val() + "\n"
                         + $($(this).data('container') + '-reg input[name="phone"]').val()
                     );
-                    fetch(url)
-                        .then((res) => {
-                            return res.text();
-                        })
-                        .then((data) => {
-                            $('#{{ $randomId }}').html(data);
-                        });
+                    if (!blockSubmission) {
+                        blockSubmission = true;
+                        fetch(url)
+                            .then((res) => {
+                                return res.text();
+                            })
+                            .then((data) => {
+                                $('#{{ $randomId }}').html(data);
+                                blockSubmission = false;
+                            });
+                    }
 
                 }
             });
         });
     </script>
+    @endif
 </div>
