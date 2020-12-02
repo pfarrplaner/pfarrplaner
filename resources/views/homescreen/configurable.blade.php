@@ -4,7 +4,7 @@
 
 @section('content')
     @component('components.ui.card')
-        <h1>Willkommen, {{ $user->name }}!</h1>
+        <h1>Willkommen, {{ $user->first_name ?: $user->name }}!</h1>
         <a class="btn btn-primary btn-lg" href="{{ route('calendar') }}"><span class="fa fa-calendar"></span> Zum Kalender</a>
         @if(\Illuminate\Support\Facades\Auth::user()->getSetting('homeScreenConfig', ['wizardButtons' => 0])['wizardButtons'])
             <a class="btn btn-secondary btn-lg" href="{{ route('baptisms.create') }}"><span class="fa fa-water"></span>
