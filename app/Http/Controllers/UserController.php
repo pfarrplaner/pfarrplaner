@@ -524,7 +524,7 @@ class UserController extends Controller
             'phone' => 'nullable|phone_number',
             'preference_cities' => 'nullable|string',
             'manage_absences' => 'nullable|string',
-            'homeCities' => 'required',
+            'homeCities' => 'nullable',
             'homeCities.*' => 'int|exists:cities,id',
         ];
 
