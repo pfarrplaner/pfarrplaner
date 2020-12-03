@@ -74,6 +74,7 @@ class EmbedController extends Controller
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('location_id', $ids)
+            ->where('hidden', '!=', 1)
             ->whereHas(
                 'day',
                 function ($query) {
@@ -101,6 +102,7 @@ class EmbedController extends Controller
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
+            ->where('hidden', '!=', 1)
             ->whereHas(
                 'day',
                 function ($query) {
@@ -130,6 +132,7 @@ class EmbedController extends Controller
         $services = Service::with(['location', 'participants'])
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
+            ->where('hidden', '!=', 1)
             ->whereIn('city_id', $ids)
             ->whereHas(
                 'day',
