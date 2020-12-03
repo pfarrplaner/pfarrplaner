@@ -170,7 +170,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
         }
 
         if ($singleService) {
-            $tmpServices = Service::with('day')->where('id', $singleService)->where('hidden', '!=', 1)->get();
+            $tmpServices = Service::with('day')->where('id', $singleService)->get();
         } else {
             $tmpServices = Service::where('needs_reservations', 1)
                 ->select(['services.*', 'days.date'])
