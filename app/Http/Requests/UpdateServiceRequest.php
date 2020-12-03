@@ -114,11 +114,11 @@ class UpdateServiceRequest extends FormRequest
             // set location
             if (!is_numeric($data['location_id'])) {
                 $data['special_location'] = $data['location_id'];
-                unset($data['location_id']);
+                $data['location_id'] = 0;
             } else {
                 $location = Location::find($data['location_id']);
                 if (null === $location) $data['special_location'] = $data['location_id'];
-                unset($data['location_id']);
+                $data['location_id'] = 0;
             }
 
             // set time and place
