@@ -45,8 +45,9 @@ class CheckInController extends Controller
             ]
         );
         $data['service_id'] = $service->id;
-        //$booking = Booking::create($data)
-        $booking = new Booking($data);
+        $data['contact'] = $data['address']."\n".$data['zip'].' '.$data['city']."\n".$data['phone'];
+        $data['code'] = Booking::createCode();
+        $booking = Booking::create($data);
         return view('checkin.store', compact('service', 'booking'));
     }
 
