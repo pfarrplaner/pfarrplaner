@@ -135,7 +135,6 @@ class UpdateServiceRequest extends FormRequest
 
         if (isset($data['registration_online_start'])) $data['registration_online_start'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_start']);
         if (isset($data['registration_online_end'])) $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
-        dd($data);
 
         return $data;
     }
