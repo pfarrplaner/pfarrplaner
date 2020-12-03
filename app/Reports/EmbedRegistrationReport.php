@@ -93,18 +93,20 @@ class EmbedRegistrationReport extends AbstractEmbedReport
         $request->validate(
             [
                 'cors-origin' => 'required|url',
-                'includeCities' => 'required',
-                'includeCities.*' => 'required|exists:cities,id',
+                'includeCities' => 'nullable',
+                'includeCities.*' => 'nullable|exists:cities,id',
                 'singleDay' => 'nullable|date_format:d.m.Y',
+                'singleService' => 'nullable|exists:services,id',
             ]
         );
-        $cities = join(',', $request->get('includeCities'));
+        $cities = join(',', $request->get('includeCities', []));
         $corsOrigin = CORS::formatUrl($request->get('cors-origin'));
         $report = $this->getKey();
         $singleDay = $request->get('singleDay', '');
+        $singleService = $request->get('singleService', '');
         if ($singleDay != '') $singleDay = Carbon::createFromFormat('d.m.Y', $singleDay)->format('Y-m-d');
 
-        $url = route('report.embed', compact('report', 'cities', 'corsOrigin', 'singleDay'));
+        $url = route('report.embed', compact('report', 'cities', 'corsOrigin', 'singleDay', 'singleService'));
         $randomId = uniqid();
 
         return $this->renderView('render', compact('url', 'randomId'));
