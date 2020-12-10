@@ -63,6 +63,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::include('partials.form.select', 'select');
         Blade::include('partials.form.selectize', 'selectize');
         Blade::include('partials.form.dayselect', 'dayselect');
+        Blade::include('partials.form.cityselect', 'cityselect');
         Blade::include('partials.form.locationselect', 'locationselect');
         Blade::include('partials.form.peopleselect', 'peopleselect');
         Blade::include('partials.form.checkbox', 'checkbox');
