@@ -57,7 +57,7 @@
                             </table>
                             <div class="reg-form" id="{{ $randomId }}-{{ $loop->index }}-reg" style="display: none;"
                                  data-service="{{ $service->id }}">
-                                <label for="name">Name</label>
+                                <label for="name">Nachname</label>
                                 <input name="name" value="" type="text"/>
                                 <label for="first_name">Vorname</label>
                                 <input name="first_name" value="" type="text"/>
