@@ -86,8 +86,8 @@
                     @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
             @endtabs
-    </form>
     @endcomponent
+    </form>
 @endsection
 
 @section('scripts')

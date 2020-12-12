@@ -430,7 +430,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                                     []
                                 ],
                                 [
-                                    trim($event['title'] . ' (' . $event['place'] . ')'),
+                                    trim(StringTool::sanitizeXMLString($event['title']) . ' (' . StringTool::sanitizeXMLString($event['place']) . ')'),
                                     []
                                 ]
                             ]
