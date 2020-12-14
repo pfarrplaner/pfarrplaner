@@ -4,7 +4,7 @@
 
 @section('navbar-left')
     @if($capacity >0)
-        <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
+        <a class="btn btn-success btn-new-registration" href="{{ route('seatfinder', $service->id) }}">
             <span class="fa fa-ticket-alt"></span> Neue Anmeldung
         </a>&nbsp;
     @else
@@ -16,6 +16,7 @@
 @endsection
 
 @section('content')
+    @if(!$service->registration_active)<div class="alert alert-warning">Anmeldung momentan deaktiviert.</div>@endif
     @if ($service->exclude_sections)<p><b>Gesperrte Bereiche:</b> {{ $service->exclude_sections }}</p> @endif
     @if ($service->exclude_places)<p><b>Gesperrte Plätze:</b>
         @foreach(explode(',', $service->exclude_places) as $place) @include('bookings.partials.place', ['place' => $place, 'seating' => $seating]) @endforeach
@@ -60,6 +61,16 @@
                     })
             }
         });
+
+        @if(!$service->registration_active)
+            $('.btn-new-registration').click(function(e){
+                if (!confirm('Die Anmeldung für diesen Gottesdienst ist momentan deaktiviert. Möchtest du wirklich trotzdem eine neue Anmeldung anlegen?')) {
+                    e.preventDefault();
+                }
+            });
+        @endif
+
+
     });
     </script>
 @endsection
