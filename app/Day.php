@@ -102,4 +102,10 @@ class Day extends Model
         }
     }
 
+    public function scopeInMonth($query, Carbon $date) {
+        $date->setTime(0,0,0)->setDay(1);
+        return $query->where('date', '>=', $date)
+            ->where('date', '<=', $date->copy()->addMonth(1)->subSecond(1));
+    }
+
 }

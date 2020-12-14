@@ -688,3 +688,9 @@ Breadcrumbs::for(
         $trail->push('Liturgie', route('liturgyBlocks.index', $service));
     }
 );
+
+
+
+Breadcrumbs::for('cal.index', function(BreadcrumbsGenerator  $trail, $date = null){
+    $trail->push('Kalender', route('cal.index'));
+});

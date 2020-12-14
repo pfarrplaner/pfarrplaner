@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 /**
  * Class AppServiceProvider
@@ -122,6 +123,8 @@ class AppServiceProvider extends ServiceProvider
         SeatingValidators::register();
 
         QueryLog::register();
+
+        Inertia::setRootView('inertia-app');
     }
 
     /**

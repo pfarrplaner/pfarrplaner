@@ -58,3 +58,17 @@ mix.js('resources/scripts/bundle.js', 'public/js')
     .styles(['https://fonts.googleapis.com/css?family=Nunito',
         'resources/css/pfarrplaner.css'], 'public/css/pfarrplaner.css');
 //.js('resources/scripts/pfarrplaner-scripts.js', 'public/js');
+
+mix.js('resources/js/inertia-app.js', 'public/js')
+    .sass('resources/sass/app.scss', 'public/css')
+    .webpackConfig({
+        output: { chunkFilename: 'js/[name].js?id=[chunkhash]' },
+        resolve: {
+            alias: {
+                vue$: 'vue/dist/vue.runtime.esm.js',
+                '@': path.resolve('resources/js/components'),
+            },
+        }})
+    .babelConfig({
+        plugins: ['@babel/plugin-syntax-dynamic-import'],
+    });

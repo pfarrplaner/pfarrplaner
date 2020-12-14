@@ -39,6 +39,8 @@
 |
 */
 
+use Inertia\Inertia;
+
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
@@ -250,3 +252,7 @@ Route::get('/about', 'HomeController@about')->name('about');
 Route::get('/checkin/{location}', 'CheckInController@create')->name('checkin.create');
 Route::post('/checkin/{service}', 'CheckInController@store')->name('checkin.store');
 Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr');
+
+
+// inertia testing
+Route::get('/cal/{date?}', 'CalController@index')->name('cal.index');

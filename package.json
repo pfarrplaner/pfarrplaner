@@ -25,6 +25,9 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+        "@inertiajs/inertia": "^0.7.0",
+        "@inertiajs/inertia-vue": "^0.4.3",
         "admin-lte": "^3.0.5",
         "bootstrap-datepicker": "^1.9.0",
         "jquery-ui": "^1.12.1",
