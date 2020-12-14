@@ -9758,6 +9758,15 @@
          *
          * @static 
          */ 
+        public static function inertia()
+        {
+                        return \Illuminate\Http\Request::inertia();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function visitor()
         {
                         return \Illuminate\Http\Request::visitor();
@@ -10878,6 +10887,18 @@
         {
                         /** @var \Illuminate\Routing\Router $instance */
                         return $instance->macroCall($method, $parameters);
+        }
+                    /**
+         * 
+         *
+         * @param mixed $uri
+         * @param mixed $component
+         * @param mixed $props
+         * @static 
+         */ 
+        public static function inertia($uri, $component, $props = [])
+        {
+                        return \Illuminate\Routing\Router::inertia($uri, $component, $props);
         }
          
     }
@@ -15996,6 +16017,15 @@
          *
          * @static 
          */ 
+        public static function inertia()
+        {
+                        return \Illuminate\Http\Request::inertia();
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
         public static function visitor()
         {
                         return \Illuminate\Http\Request::visitor();
@@ -16006,6 +16036,26 @@
 }
 
     namespace Illuminate\Routing { 
+            /**
+     * 
+     *
+     * @mixin \Illuminate\Routing\RouteRegistrar
+     */ 
+        class Router {
+                    /**
+         * 
+         *
+         * @param mixed $uri
+         * @param mixed $component
+         * @param mixed $props
+         * @static 
+         */ 
+        public static function inertia($uri, $component, $props = [])
+        {
+                        return \Illuminate\Routing\Router::inertia($uri, $component, $props);
+        }
+         
+    }
             /**
      * 
      *

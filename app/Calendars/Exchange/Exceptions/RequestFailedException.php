@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Calendars\Exchange;
+namespace App\Calendars\Exchange\Exceptions;
 
 
 use Exception;

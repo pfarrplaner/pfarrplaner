@@ -20,6 +20,7 @@
         "doctrine/dbal": "^2.9",
         "fideloper/proxy": "^4.0",
         "google/apiclient": "^2.0",
+        "inertiajs/inertia-laravel": "^0.3.4",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "~1.0",
@@ -27,6 +28,7 @@
         "mpdf/qrcode": "^1.0",
         "niklasravnsborg/laravel-pdf": "^3.0",
         "paragonie/random_compat": "9.99.99 as 2.0.18",
+        "php-ews/php-ews": "^1.0",
         "phpoffice/phpspreadsheet": "^1.6",
         "phpoffice/phpword": "^0.16.0",
         "predis/predis": "^1.1",
@@ -37,10 +39,9 @@
         "spatie/laravel-permission": "^3.13",
         "squareboat/sneaker": "^5.0",
         "staudenmeir/belongs-to-through": "^2.3",
-        "ukfast/laravel-health-check": "^1.0",
-        "venturecraft/revisionable": "1.*",
         "thybag/php-sharepoint-lists-api": "dev-master",
-        "php-ews/php-ews": "^1.0"
+        "ukfast/laravel-health-check": "^1.0",
+        "venturecraft/revisionable": "1.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",
