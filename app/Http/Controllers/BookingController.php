@@ -170,6 +170,7 @@ class BookingController extends Controller
                 'fixed_seat' => 'nullable|string|seatable_fixed:booking_id',
                 'override_seats' => 'nullable|int',
                 'override_split' => 'nullable|string',
+                'email' => 'nullable|email',
             ]
         );
 

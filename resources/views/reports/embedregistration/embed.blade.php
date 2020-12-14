@@ -69,6 +69,8 @@
                                 <input name="city" value="" type="text"/>
                                 <label for="phone">Telefonnummer</label>
                                 <input name="phone" value="" type="text"/>
+                                <label for="email">E-Mailadresse (falls vorhanden)</label>
+                                <input name="email" value="" type="text" />
                                 <label for="number">Anzahl Personen</label>
                                 <input name="number" value="1" type="text"/><br/><br/>
                                 <a class="btn btn-secondary submit-reg-form" href="#"
@@ -120,7 +122,7 @@
                     @if ($singleService) url += '&singleService={{ $singleService }}'; @endif
                     @if ($noScript) url += '&noScript=1'; @endif
 
-                    ['name', 'first_name', 'number'].forEach(element => {
+                    ['name', 'first_name', 'number', 'email'].forEach(element => {
                         if (element != 'contact') {
                             url += '&' + element + '=' + encodeURI($($(this).data('container') + '-reg input[name="' + element + '"]').val())
                         } else {

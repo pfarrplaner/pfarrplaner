@@ -21,12 +21,14 @@ class Booking extends Model
         'fixed_seat',
         'override_seats',
         'override_split',
+        'email',
     ];
 
     protected $encrypted = [
         'name',
         'first_name',
-        'contact'
+        'contact',
+        'email'
     ];
 
     /**

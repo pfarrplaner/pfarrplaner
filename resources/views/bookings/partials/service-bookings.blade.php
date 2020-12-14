@@ -14,7 +14,7 @@
             <tr>
                 <td>{{ $booking->name }}@if($booking->first_name), {{ $booking->first_name }}@endif</td>
                 <td>{{ $booking->number }}</td>
-                <td>{!!  nl2br($booking->contact) !!}</td>
+                <td>{!!  nl2br($booking->contact) !!}@if ($booking->email)<br />{{ $booking->email }}@endif</td>
                 @if($service->getSeatFinder()->hasSeats)
                 <td>
                     @include('bookings.partials.place', ['place' => $seating['list'][$booking->code], 'seating' => $seating, 'taken' => 1, 'auto' => ($booking->fixed_seat == ''), 'number' => $booking->number])

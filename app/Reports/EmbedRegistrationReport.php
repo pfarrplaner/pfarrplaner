@@ -147,6 +147,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
                     'name' => 'required|string',
                     'first_name' => 'required|string',
                     'contact' => 'required|string',
+                    'email' => 'nullable|email',
                     'number' => 'required|int|min:1',
                     'service' => 'required|int:exists:services,id'
                 ]
