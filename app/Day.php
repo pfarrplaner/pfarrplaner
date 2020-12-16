@@ -59,6 +59,10 @@ class Day extends Model
      * @var string[]
      */
     protected $dates = ['date'];
+    /**
+     * @var string[]
+     */
+    protected $appends = ['liturgy'];
 
     /**
      * @param string $date Date (Y-m-d)
@@ -100,6 +104,14 @@ class Day extends Model
         } else {
             $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $date);
         }
+    }
+
+    /**
+     * Add liturgy attribute
+     * @return array
+     */
+    public function getLiturgyAttribute(): array {
+        return Liturgy::getDayInfo($this);
     }
 
     public function scopeInMonth($query, Carbon $date) {
