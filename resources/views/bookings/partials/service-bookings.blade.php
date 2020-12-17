@@ -5,16 +5,18 @@
             <th>Name</th>
             <th>Anzahl Personen</th>
             <th>Kontakt</th>
+            <th>Zeit der Anmeldung</th>
             @if($service->getSeatFinder()->hasSeats)<th>Platz*</th>@endif
             <th></th>
         </tr>
         </thead>
         <tbody>
-        @foreach($service->bookings as $booking)
+        @foreach($service->bookings->sortBy('created_at') as $booking)
             <tr>
                 <td>{{ $booking->name }}@if($booking->first_name), {{ $booking->first_name }}@endif</td>
                 <td>{{ $booking->number }}</td>
                 <td>{!!  nl2br($booking->contact) !!}@if ($booking->email)<br />{{ $booking->email }}@endif</td>
+                <td>{{ $booking->created_at->format('d.m.Y, H:i') }} Uhr</td>
                 @if($service->getSeatFinder()->hasSeats)
                 <td>
                     @include('bookings.partials.place', ['place' => $seating['list'][$booking->code], 'seating' => $seating, 'taken' => 1, 'auto' => ($booking->fixed_seat == ''), 'number' => $booking->number])
