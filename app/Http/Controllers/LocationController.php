@@ -92,10 +92,11 @@ class LocationController extends Controller
                 'name' => 'required|max:255',
                 'city_id' => 'required|integer',
                 'default_time' => 'nullable|date_format:H:i',
-                'cc_default_location' => 'nullable',
-                'alternate_location_id' => 'nullable',
-                'general_location_name' => 'nullable',
-                'at_text' => 'nullable',
+                'cc_default_location' => 'nullable|string',
+                'alternate_location_id' => 'nullable|string',
+                'general_location_name' => 'nullable|string',
+                'at_text' => 'nullable|string',
+                'instructions' => 'nullable|string'
             ]
         );
     }

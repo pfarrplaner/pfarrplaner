@@ -24,6 +24,7 @@
                 @selectize(['name' => 'alternate_location_id', 'label' => 'Wenn parallel Kinderkirche stattfindet, dann normalerweise hier', 'items' => $alternateLocations, 'value' => $location->alternate_location_id, 'empty' => true])
                 @input(['name' => 'at_text', 'label' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'placeholder' => 'Ortsangabe, wenn ein Gottesdienst hier stattfindet', 'value' => $location->at_text])
                 @input(['name' => 'general_location_name', 'label' => 'Allgemeine Ortsangabe', 'placeholder' => 'z.B.: in Tailfingen', 'value' => $location->general_location_name])
+                @textarea(['name' => 'instructions', 'label' => 'Wichtige Informationen für Besucher', 'value' => $location->instructions])
             </form>
             @endtab
             @tab(['id' => 'seating', 'active' => request()->get('tab', 'home') == 'seating'])

@@ -98,6 +98,7 @@ class EmbedController extends Controller
     {
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
+        $withStreaming = $request->get('withStreaming', false);
         $services = Service::with(['location', 'participants'])
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
@@ -115,8 +116,10 @@ class EmbedController extends Controller
             ->orderBy('time', 'ASC')
             ->limit($limit)
             ->get();
-        return response()
-            ->view('embed.services.table', compact('services', 'ids', 'title'));
+
+        $id = uniqid();
+
+        return view('embed.services.table', compact('services', 'ids', 'title', 'withStreaming', 'id'));
     }
 
     /**

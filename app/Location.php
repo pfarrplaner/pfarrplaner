@@ -50,7 +50,8 @@ class Location extends Model
         'cc_default_location',
         'alternate_location_id',
         'general_location_name',
-        'at_text'
+        'at_text',
+        'instructions'
     ];
 
     /**
