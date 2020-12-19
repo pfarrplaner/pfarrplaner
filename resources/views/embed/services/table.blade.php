@@ -65,7 +65,7 @@
                         @endif
                         <br />
                         @if ($service->songsheet) <span class="small-button" href="{{ $service->songsheetUrl }}" title="Klicken Sie hier, um das Liedblatt herunterzuladen"><span class="fa fa-file-pdf"></span> Liedblatt</span> @endif
-                        @if ($service->offerings_url) <span class="small-button" href="{{ $service->offerings_url }}" title="Klicken Sie hier, um online zu spenden"><span class="fa fa-coins"></span> Spenden</span> @endif
+                        @if ($service->offerings_url) <span class="small-button" href="{{ $service->offerings_url }}" title="Klicken Sie hier, um online zu spenden"><span class="fa fa-coins"></span> Opfer</span> @endif
                         @if ($service->cc_streaming_url) <span class="small-button" href="{{ $service->cc_streaming_url }}"title="Klicken Sie hier, um den Kindergottesdienst auf YouTube anzuschauen"><img src="{{ asset('img/cc.png') }}" height="12px"> Kinderkirche</span> @endif
                         @if ($service->external_url) <span class="small-button" href="{{ $service->external_url }}"  title="Klicken Sie hier, um zur Predigtseite zu gelangen"><span class="fa fa-globe"></span> Externe Seite zur Predigt</span> @endif
                     </td>
