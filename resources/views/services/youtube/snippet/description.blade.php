@@ -9,7 +9,9 @@ Sing mit! Ein Liedblatt zu diesem Gottesdienst gibt es hier zum Download:
 
 
 Zu diesem Gottesdienst bitten wir um Spenden für folgenden Zweck: {!! $service->offering_goal !!}@if($service->offerings_url)
-Spenden kannst du ganz einfach online hier: {!! $service->offerings_url !!} @endif @endif @if($service->sermon_title)
+
+Spenden kannst du ganz einfach online hier:
+{!! $service->offerings_url !!} @endif @endif @if($service->sermon_title)
 
 
 Predigt: "{!! $service->sermon_title !!}" ({!! $service->sermon_reference !!})
