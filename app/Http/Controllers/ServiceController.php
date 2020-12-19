@@ -30,6 +30,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Broadcast;
 use App\City;
 use App\Day;
 use App\Events\ServiceBeforeDelete;
@@ -217,6 +218,12 @@ class ServiceController extends Controller
             $service->storeDiff();
             event(new ServiceUpdated($service, $originalParticipants));
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
+
+            // update YouTube as well
+            if ($service->youtube_url) {
+                Broadcast::get($service)->update();
+                $success .= ' Diese wurden automatisch auch auf YouTube aktualisiert.';
+            }
         }
 
         $route = $request->get('routeBack') ?: '';
