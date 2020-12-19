@@ -70,7 +70,7 @@ class City extends Model
         'youtube_passive_stream_id',
         'youtube_auto_startstop',
         'youtube_cutoff_days',
-        'default_offering_url',C
+        'default_offering_url',
     ];
 
     /**
