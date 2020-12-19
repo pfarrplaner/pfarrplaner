@@ -75,7 +75,7 @@
                                 <input style="width: 100%; margin-bottom: 3px; "  name="number" value="1" type="text"/><br/><br/>
                                 <a class="btn btn-secondary submit-reg-form" href="#"
                                         style="width: auto; height: auto; position: relative; background-color: none;"
-                                   data-container="#{{ $randomId }}-{{ $loop->index }}">Anmeldung absenden</a>
+                                   data-container="#{{ $randomId }}-{{ $dayKey }}-{{ $serviceKey }}">Anmeldung absenden</a>
                                 <br/>
                                 <small>Die Erhebung dieser Daten erfolgt nach §6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
                                     können Sie nur
