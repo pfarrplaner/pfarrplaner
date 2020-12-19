@@ -113,16 +113,21 @@ class GoogleApiController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param Service $service
      * @return JsonResponse
      */
-    function createBroadcast(Service $service)
+    function createBroadcast(Request $request, Service $service)
     {
         $broadcast = Broadcast::create($service);
         $service->update(['youtube_url' => $broadcast->getSharerUrl()]);
-        return response()->json(
-            ['url' => $broadcast->getSharerUrl(), 'liveDashboard' => $broadcast->getLiveDashboardUrl()]
-        );
+        if ($request->get('json', false)) {
+            return response()->json(
+                ['url' => $broadcast->getSharerUrl(), 'liveDashboard' => $broadcast->getLiveDashboardUrl()]
+            );
+        } else {
+            return redirect()->back()->with('success', 'Der Livestream wurde angelegt.');
+        }
     }
 
     function deleteBroadcast(Service $service) {

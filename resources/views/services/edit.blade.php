@@ -395,7 +395,7 @@
             $('#btn_build_livestream').click(function (e) {
                 e.preventDefault();
                 $('#build_livestream').html('<img src="{{ asset('img/spinner.gif') }}" /> Livestream wird erstellt...');
-                fetch('{{ route('broadcast.create', $service) }}').then((response) => {
+                fetch('{{ route('broadcast.create', ['service' => $service, 'json' => 1]) }}').then((response) => {
                     return response.json();
                 }).then((data) => {
                     $('#link_livedash a').attr('href', data.liveDashboard);

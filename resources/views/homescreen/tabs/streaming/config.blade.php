@@ -1,2 +1,2 @@
-@checkbox(['label' => 'Nur meine eigenen Gottesdienste anzeigen', 'name' => $tab->configKey('mine'), 'value' => $config['mine']])
+@locationselect(['label' => 'Folgende Kirchen/Orte als Streamingstandorte anzeigen', 'name' => $tab->configKey('locations', true), 'locations' => $locations, 'value' => $config['locations']])
 
