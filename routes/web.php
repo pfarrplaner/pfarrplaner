@@ -60,6 +60,7 @@ Route::resource('comments', 'CommentController')->middleware('auth');
 Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
+Route::get('/service/{service}/songsheet', 'ServiceController@songsheet')->name('service.songsheet');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
@@ -234,9 +235,12 @@ Route::get('/podcasts/{cityName}.xml', 'PodcastController@podcast')->name('podca
 
 // google api
 Route::get('/google/auth/city', 'GoogleApiController@auth')->name('google-auth');
-Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name(
-    'broadcast.create'
-);
+Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')
+    ->name('broadcast.create');
+Route::get('/google/youtube/serviceBroadcast/{service}/refresh', 'GoogleApiController@refreshBroadcast')
+    ->name('broadcast.refresh');
+Route::delete('/google/youtube/serviceBroadcast/{service}', 'GoogleApiController@deleteBroadcast')
+    ->name('broadcast.delete');
 
 // youtube live chat
 Route::get('/livechat/{service}', 'LiveChatController@liveChat')->name('service.livechat');
@@ -256,3 +260,5 @@ Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr')
 
 // inertia testing
 Route::get('/cal/{date?}', 'CalController@index')->name('cal.index');
+
+

@@ -31,8 +31,60 @@
 namespace App\HomeScreen\Tabs;
 
 
+use App\Service;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 class StreamingHomeScreenTab extends AbstractHomeScreenTab
 {
     protected $title = 'Streaming';
     protected $description = 'Zeigt Gottesdienste mit Streamingfunktionen';
+    protected $query = null;
+
+    public function __construct($config = [])
+    {
+        // preset default config
+        $this->setDefaultConfig($config, []);
+        parent::__construct($config);
+        $this->query = $this->buildQuery();
+    }
+
+    public function getCount()
+    {
+        return $this->query->count();
+    }
+
+    public function getContent($data = [])
+    {
+        $data['services'] = $this->query->get();
+        return parent::getContent($data);
+    }
+
+    /**
+     * Build the query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function buildQuery() {
+        $start = Carbon::now()->setTime(0, 0, 0);
+        $end = Carbon::now()->addMonth(2);
+
+        $query = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
+            ->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->whereHas(
+                'day',
+                function ($query) use ($start, $end) {
+                    $query->where('date', '>=', $start)
+                        ->where('date', '<=', $end);
+                }
+            )
+            ->where('youtube_url', '!=', '')
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+        return $query;
+    }
+
+
+
 }

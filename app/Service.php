@@ -39,6 +39,9 @@ use App\Traits\HasCommentsTrait;
 use App\Traits\TracksChangesTrait;
 use Carbon\Carbon;
 use Exception;
+use Google_Service_YouTube_LiveBroadcastSnippet;
+use Google_Service_YouTube_VideoSnippet;
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -1082,5 +1085,45 @@ class Service extends Model
 
     public function formatTime($s) {
         return (false !== strpos($s, '%')) ? $this->dateTime()->formatLocalized($s) : $this->dateTime()->format($s);
+    }
+
+    public function getBroadcastTitleAttribute() {
+        $liturgy = Liturgy::getDayInfo($this->day);
+        return ($this->title ?: (isset($liturgy['title']) ? $liturgy['title']
+            . ' (' . $this->day->date->format('d.m.Y') . ')'
+            : 'Gottesdienst mit ' . $this->participantsText('P', true)));
+    }
+
+    public function getBroadcastDescriptionAttribute() {
+        return (view('services.youtube.snippet.description', ['service' => $this, 'liturgy' => Liturgy::getDayInfo($this->day)])->render());
+    }
+
+    public function getVideoTimeStringAttribute()
+    {
+        $thisTime = Carbon::createFromTimeString($this->day->date->format('Y-m-d') . ' ' . $this->time,
+            'Europe/Berlin'
+        );
+        return $thisTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
+    }
+
+    public function getSongsheetUrlAttribute() {
+        return route('storage', ['path' => pathinfo($this->songsheet, PATHINFO_FILENAME), 'prettyName' => $this->day->date->format('Ymd').'-Liedblatt.'.pathinfo($this->songsheet, PATHINFO_EXTENSION)]);
+    }
+
+
+    public function getBroadcastSnippet(): Google_Service_YouTube_LiveBroadcastSnippet {
+        $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
+        $broadcastSnippet->setTitle($this->broadcastTitle);
+        $broadcastSnippet->setDescription($this->broadcastDescription);
+        $broadcastSnippet->setScheduledStartTime($this->videoTimeString);
+        return $broadcastSnippet;
+    }
+
+    public function getVideoSnippet(): Google_Service_YouTube_VideoSnippet {
+        $videoSnippet = new \Google_Service_YouTube_VideoSnippet();
+        $videoSnippet->setTitle($this->broadcastTitle);
+        $videoSnippet->setDescription($this->broadcastDescription);
+        $videoSnippet->setCategoryId(24);
+        return $videoSnippet;
     }
 }

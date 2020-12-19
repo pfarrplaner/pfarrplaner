@@ -31,6 +31,7 @@
 namespace App;
 
 use App\Helpers\YoutubeHelper;
+use App\Integrations\Youtube\YoutubeIntegration;
 use Carbon\Carbon;
 use Google_Client;
 use Google_Exception;
@@ -85,8 +86,6 @@ class Broadcast
         $instance->authenticate($service->city);
         $broadcast = null;
 
-        $serviceTimeString = self::timeString($service);
-
         $broadcastsResponse = $instance->getYoutube()->liveBroadcasts->listLiveBroadcasts(
             'id,snippet',
             ['id' => YoutubeHelper::getCode($service->youtube_url)]
@@ -114,14 +113,6 @@ class Broadcast
      * @param Service $service
      * @return string
      */
-    public static function timeString(Service $service)
-    {
-        $serviceTime = Carbon::createFromTimeString(
-            $service->day->date->format('Y-m-d') . ' ' . $service->time,
-            'Europe/Berlin'
-        );
-        return $serviceTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
-    }
 
     /**
      * @return Google_Service_YouTube
@@ -153,21 +144,7 @@ class Broadcast
         $liturgy = Liturgy::getDayInfo($service->day);
 
         $broadcast = null;
-        $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
-        $broadcastSnippet->setTitle(
-            ($service->title ?: (isset($liturgy['title']) ? $liturgy['title'] . ' (' . $service->day->date->format(
-                    'd.m.Y'
-                ) . ')' : 'Gottesdienst mit ' . $service->participantsText('P', true)))
-        );
-        $broadcastSnippet->setDescription(
-            ($service->title ?: 'Gottesdienst') . ' am ' . $service->day->date->format(
-                'd.m.Y'
-            ) . (isset($liturgy['title']) ? ' (' . $liturgy['title'] . ')' : '') . ' mit ' . $service->participantsText(
-                'P',
-                true
-            )
-        );
-        $broadcastSnippet->setScheduledStartTime(self::timeString($service));
+        $broadcastSnippet = $service->getBroadcastSnippet();
 
         // Create an object for the liveBroadcast resource's status, and set the
         // broadcast's status to "private".
@@ -177,7 +154,7 @@ class Broadcast
 
         // Create the API request that inserts the liveBroadcast resource.
         $broadcastInsert = new Google_Service_YouTube_LiveBroadcast();
-        $broadcastInsert->setSnippet($broadcastSnippet);
+        $broadcastInsert->setSnippet($service->getBroadcastSnippet());
         $broadcastInsert->setStatus($status);
         $broadcastInsert->setKind('youtube#liveBroadcast');
 
@@ -192,11 +169,7 @@ class Broadcast
 
         $video = new \Google_Service_YouTube_Video();
         $video->setId($broadcastsResponse->id);
-        $videoSnippet = new \Google_Service_YouTube_VideoSnippet();
-        $videoSnippet->setTitle($broadcastSnippet->getTitle());
-        $videoSnippet->setDescription($broadcastSnippet->getDescription());
-        $videoSnippet->setCategoryId(24);
-        $video->setSnippet($videoSnippet);
+        $video->setSnippet($service->getVideoSnippet());
         $videoStatus = new \Google_Service_YouTube_VideoStatus();
         $videoStatus->setSelfDeclaredMadeForKids(false);
         $video->setStatus($videoStatus);
@@ -204,6 +177,19 @@ class Broadcast
         $videoResponse = $instance->getYoutube()->videos->update('snippet,status', $video);
 
         return $instance;
+    }
+
+    public static function delete(Service $service)
+    {
+        $youtube = YoutubeIntegration::get($service->city)->getYoutube();
+        $youtube->liveBroadcasts->delete(YoutubeHelper::getCode($service->youtube_url));
+        $service->update(['youtube_url' => '']);
+    }
+
+    public function update() {
+        $broadcast = $this->getLiveBroadcast();
+        $broadcast->setSnippet($this->service->getBroadcastSnippet());
+        $this->getYoutube()->liveBroadcasts->update('id,snippet', $broadcast);
     }
 
     /**

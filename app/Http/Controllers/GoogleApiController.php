@@ -124,4 +124,15 @@ class GoogleApiController extends Controller
             ['url' => $broadcast->getSharerUrl(), 'liveDashboard' => $broadcast->getLiveDashboardUrl()]
         );
     }
+
+    function deleteBroadcast(Service $service) {
+        Broadcast::delete($service);
+        return redirect()->back();
+    }
+
+    function refreshBroadcast(Service $service) {
+        $broadcast = Broadcast::get($service);
+        $broadcast->update();
+        return redirect()->back()->with('success', 'Die Beschreibung des Gottesdiensts auf YouTube wurde angepasst.');
+    }
 }
