@@ -1126,4 +1126,9 @@ class Service extends Model
         $videoSnippet->setCategoryId(24);
         return $videoSnippet;
     }
+
+    public function getOfferingsUrlAttribute()
+    {
+        return $this->attributes['offerings_url'] ?: $this->city->default_offering_url;
+    }
 }

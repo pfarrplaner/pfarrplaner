@@ -28,6 +28,7 @@
                 @input(['name' => 'default_funeral_offering_description', 'label' => 'Opferbeschreibung für Beerdigungen'])
                 @input(['name' => 'default_wedding_offering_goal', 'label' => 'Opferzweck für Trauungen'])
                 @input(['name' => 'default_wedding_offering_description', 'label' => 'Opferbeschreibung für Trauungen'])
+                @input(['name' => 'default_offering_url', 'label' => 'Allgemeine Spendenseite'])
             @endtab
             @tab(['id' => 'calendars'])
                 @input(['name' => 'public_events_calendar_url', 'label' => 'URL für einen öffentlichen Kalender auf elkw.de'])
