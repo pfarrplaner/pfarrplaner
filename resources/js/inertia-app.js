@@ -29,12 +29,42 @@
 
 import { InertiaApp } from '@inertiajs/inertia-vue'
 import Vue from 'vue'
-import moment from 'moment'
+
+import AdminLayout from "./Pages/Layouts/AdminLayout";
+
+import CalendarPaneHorizontal from './components/Calendar/Pane/Horizontal';
+import CalendarNavTop from './components/Calendar/Nav/Top.vue';
+import CalendarDayHeader from './components/Calendar/Day/Header';
+import CalendarDayColumn from './components/Calendar/Day/Column';
+import CalendarCityRow from './components/Calendar/City/Row';
+import CalendarService from './components/Calendar/Service.vue';
+import CalendarServiceParticipants from './components/Calendar/Service/Participants.vue';
+import CalendarServiceWedding from './components/Calendar/Service/Wedding.vue';
+import CalendarServiceFuneral from './components/Calendar/Service/Funeral.vue';
+import CalendarServiceBaptism from './components/Calendar/Service/Baptism.vue';
+
+Vue.component('admin-layout', AdminLayout)
+
+Vue.component('calendar-pane-horizontal', CalendarPaneHorizontal);
+Vue.component('calendar-nav-top', CalendarNavTop);
+Vue.component('calendar-day-header', CalendarDayHeader);
+Vue.component('calendar-day-column', CalendarDayColumn);
+Vue.component('calendar-city-row', CalendarCityRow);
+Vue.component('calendar-service', CalendarService);
+Vue.component('calendar-service-participants', CalendarServiceParticipants);
+Vue.component('calendar-service-wedding', CalendarServiceWedding);
+Vue.component('calendar-service-funeral', CalendarServiceFuneral);
+Vue.component('calendar-service-baptism', CalendarServiceBaptism);
+
+
 
 Vue.config.productionTip = false
-Vue.filter('calendarTitle', function(value) {
-    if (value) {
-        return moment(String(value)).locale('de').format('MMMM YYYY')
+
+
+Vue.mixin({
+    methods: {
+        route: route,
+        moment: moment
     }
 });
 

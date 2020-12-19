@@ -30,12 +30,14 @@
 
 namespace App;
 
+use App\Helpers\YoutubeHelper;
 use App\Seating\AbstractSeatFinder;
 use App\Seating\MaximumBasedSeatFinder;
 use App\Seating\RowBasedSeatFinder;
 use App\Tools\StringTool;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
+use App\Traits\IncludesPermissionAttributes;
 use App\Traits\TracksChangesTrait;
 use Carbon\Carbon;
 use Exception;
@@ -60,6 +62,7 @@ class Service extends Model
     use HasCommentsTrait;
     use TracksChangesTrait;
     use HasAttachmentsTrait;
+    use IncludesPermissionAttributes;
 
     /**
      * @var array
@@ -196,6 +199,12 @@ class Service extends Model
         'descriptionText',
         'liturgy',
         'ministriesByCategory',
+        'isShowable',
+        'isEditable',
+        'isDeletable',
+        'isMine',
+        'titleText',
+        'liveDashboardUrl',
     ];
 
     /**
@@ -950,6 +959,11 @@ class Service extends Model
         return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
     }
 
+    public function getTitleTextAttribute()
+    {
+        return $this->titleText(true, true);
+    }
+
     /**
      * @return string
      */
@@ -1248,5 +1262,29 @@ class Service extends Model
         $videoSnippet->setDescription($this->broadcastDescription);
         $videoSnippet->setCategoryId(24);
         return $videoSnippet;
+    }
+
+
+
+    public function scopeInMonth(Builder $query, Carbon $date) {
+        return $query->whereHas('day', function($query2) use ($date) {
+            return $query2->inMonth($date);
+        });
+    }
+
+    public function scopeInCities(Builder $query, $cities)
+    {
+        if ((!is_array($cities)) && (is_object($cities->first()))) $cities = $cities->pluck('id');
+        return $query->whereIn('city_id', $cities);
+    }
+
+
+    public function getIsMineAttribute() {
+        return $this->participants->contains(Auth::user());
+    }
+
+    public function getLiveDashboardUrlAttribute()
+    {
+        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
     }
 }

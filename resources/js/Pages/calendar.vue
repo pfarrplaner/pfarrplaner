@@ -1,26 +1,43 @@
 <template>
-    <div>
-        <h1>Kalender für {{ date | calendarTitle }}</h1>
-        <table border="1">
-            <thead>
+    <admin-layout>
+        <template #navbar-left>
+            <calendar-nav-top :date="date" :years="years"></calendar-nav-top>
+        </template>
+        <div class="calendar-month calendar-horizontal">
+            <table class="table table-bordered">
+                <thead>
                 <tr>
-                    <th></th>
-                    <th v-for="day in days" v-bind="day.id">
-                        {{ day.date }}
-                    </th>
+                    <th class="no-print text-left">Kirchengemeinde<!-- // TODO: slave mode --></th>
+                    <calendar-day-header
+                        v-for="(day,index) in days"
+                        :day="day"
+                        :key="day.id"
+                        :index="index"/>
                 </tr>
-            </thead>
-            <tr v-for="city in cities" v-bind="city.id">
-                <td>{{ city.name }}</td>
-                <th v-for="day in days" v-bind="day.id">
-                </th>
-            </tr>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                <calendar-city-row
+                    v-for="(city,index) in cities"
+                    :city="city"
+                    :index="index"
+                    :key="city.id"
+                    :services="services[city.id]"
+                    :days="days"/>
+                </tbody>
+            </table>
+        </div>
+    </admin-layout>
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
-    props: ['date', 'days', 'cities']
+    props: ['date', 'days', 'cities', 'services', 'years'],
+    methods: {
+        title: function (d) {
+            return moment(d).locale('de-DE').format('MMMM YYYY');
+        }
+    }
 }
 </script>

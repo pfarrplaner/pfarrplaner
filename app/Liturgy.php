@@ -75,14 +75,20 @@ class Liturgy
             $data = Cache::get('liturgicalDays');
         }
 
+        $result = null;
         if (isset($data[$day->date->format('d.m.Y')])) {
-            return $data[$day->date->format('d.m.Y')];
+            $result = $data[$day->date->format('d.m.Y')];
         } elseif ($fallback) {
             $date = $day->date;
             while (!isset($data[$date->format('d.m.Y')])) {
                 $date = $date->subDays(1);
             }
-            return isset($data[$date->format('d.m.Y')]) ? $data[$date->format('d.m.Y')] : [];
+            $result = isset($data[$date->format('d.m.Y')]) ? $data[$date->format('d.m.Y')] : [];
+        }
+        if (!is_null($result)) {
+            $result['currentPerikope'] = $result['litTextsPerikope'.$result['perikope']];
+            $result['currentPerikopeLink'] = $result['litTextsPerikope'.$result['perikope'].'Link'];
+            return $result;
         }
         return [];
     }
