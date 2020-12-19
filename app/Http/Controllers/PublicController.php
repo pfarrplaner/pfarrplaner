@@ -196,4 +196,28 @@ class PublicController extends Controller
             ]
         );
     }
+
+    /**
+     * @param string|City $city
+     */
+    public function nextStream($city)
+    {
+        if (!is_a(City::class, $city)) $city = City::where('name', 'like', '%' . $city . '%')->first();
+        if (!$city) {
+            return redirect()->route('home');
+        }
+
+        $service = Service::select('services.*')
+            ->join('days', 'days.id', 'services.day_id')
+            ->whereHas('day', function($query) {
+                $query->where('date', '>=', Carbon::now());
+            })
+            ->where('youtube_url', '!=', '')
+            ->orderBy('days.date')
+            ->orderBy('time')
+            ->first();
+
+        return redirect($service->youtube_url);
+    }
+
 }

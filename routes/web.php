@@ -61,6 +61,7 @@ Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
 Route::get('/service/{service}/songsheet', 'ServiceController@songsheet')->name('service.songsheet');
+Route::get('/services/{city}/streaming/next', 'PublicController@nextStream')->name('service.nextstream');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
