@@ -35,7 +35,7 @@
                 <th>Ort</th>
             @endif
             <th></th>
-            <th>Pfarrer</th>
+            <th>Liturg*in</th>
             </thead>
             <tbody>
             <?php $lastDate = ''; ?>
