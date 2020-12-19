@@ -202,9 +202,18 @@ class PublicController extends Controller
      */
     public function nextStream($city)
     {
-        if (!is_a(City::class, $city)) $city = City::where('name', 'like', '%' . $city . '%')->first();
-        if (!$city) {
-            return redirect()->route('home');
+        $cityIds = [];
+        if (!is_a(City::class, $city)) {
+            $cities = explode(',', $city);
+            foreach ($cities as $cityName) {
+                $city = City::where('name', 'like', '%' . trim($cityName) . '%')->first();
+                if ($city) $cityIds[] = $city->id;
+            }
+        } else {
+            $cityIds = [$city->id];
+        }
+        if (!count($cityIds)) {
+            abort(404);
         }
 
         $service = Service::select('services.*')
@@ -212,10 +221,12 @@ class PublicController extends Controller
             ->whereHas('day', function($query) {
                 $query->where('date', '>=', Carbon::now());
             })
+            ->whereIn('city_id', $cityIds)
             ->where('youtube_url', '!=', '')
             ->orderBy('days.date')
             ->orderBy('time')
             ->first();
+        if (!$service) abort(404);
 
         return redirect($service->youtube_url);
     }
