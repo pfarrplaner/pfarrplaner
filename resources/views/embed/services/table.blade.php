@@ -56,13 +56,11 @@
                             <br/>@endif
                         {!! nl2br($service->location->instructions) !!}<br/>
                         @endif
-                        @if ($withStreaming)
                             @if ($service->youtube_url)
                                 @if ($service->descriptionText()!='')<br/>@endif
                                 <img src="{{ asset('img/brands/youtube.png') }}" height="10px"/> Klicken Sie hier, um
                                 den Gottesdienst auf YouTube anzuschauen
                             @endif
-                        @endif
                         <br />
                         @if ($service->songsheet) <span class="small-button" href="{{ $service->songsheetUrl }}" title="Klicken Sie hier, um das Liedblatt herunterzuladen"><span class="fa fa-file-pdf"></span> Liedblatt</span> @endif
                         @if ($service->offerings_url) <span class="small-button" href="{{ $service->offerings_url }}" title="Klicken Sie hier, um online zu spenden"><span class="fa fa-coins"></span> Opfer</span> @endif
