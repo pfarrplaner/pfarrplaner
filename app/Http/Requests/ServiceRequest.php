@@ -31,16 +31,16 @@
 namespace App\Http\Requests;
 
 use App\Location;
+use App\Service;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 /**
- * Class UpdateServiceRequest
+ * Class ServiceRequest
  * @package App\Http\Requests
  */
-class UpdateServiceRequest extends FormRequest
+class ServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -50,9 +50,9 @@ class UpdateServiceRequest extends FormRequest
     public function authorize()
     {
         if ($service = $this->route('service')) {
-            return Auth::user()->can('update', $service);
+            return $this->user()->can('update', $service);
         } else {
-            return false;
+            return $this->user()->can('create', Service::class);
         }
     }
 
@@ -64,11 +64,11 @@ class UpdateServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'day_id' => 'nullable|integer|exists:days,id',
+            'day_id' => 'required|integer|exists:days,id',
             'location_id' => 'nullable',
             'time' => 'nullable|date_format:"H:i"',
             'description' => 'nullable|string',
-            'city_id' => 'nullable|exists:cities,id',
+            'city_id' => 'required|exists:cities,id',
             'special_location' => 'nullable|string',
             'need_predicant' => 'checkbox',
             'baptism' => 'checkbox',
@@ -79,7 +79,6 @@ class UpdateServiceRequest extends FormRequest
             'offering_description' => 'nullable|string',
             'offering_amount' => 'nullable',
             'offering_type' => [
-                'nullable',
                 Rule::in(['eO', 'PO', ''])
             ],
             'others' => 'nullable|string',
@@ -90,12 +89,25 @@ class UpdateServiceRequest extends FormRequest
             'cc_alt_time' => 'nullable|date_format:"H:i"',
             'internal_remarks' => 'nullable|string',
             'title' => 'nullable|string',
+            'youtube_url' => 'nullable|string',
+            'cc_streaming_url' => 'nullable|string',
+            'offerings_url' => 'nullable|string',
+            'meeting_url' => 'nullable|string',
+            'recording_url' => 'nullable|string',
+            'external_url' => 'nullable|string',
+            'sermon_title' => 'nullable|string',
+            'sermon_reference' => 'nullable|string',
+            'sermon_description' => 'nullable|string',
+            'konfiapp_event_type' => 'nullable|int',
+            'konfiapp_event_qr' => 'nullable|string',
             'hidden' => 'nullable|int|in:0,1',
             'needs_reservations' => 'nullable|int|in:0,1',
             'exclude_sections' => 'nullable|string',
             'registration_active' => 'nullable|int|in:0,1',
             'exclude_places' => 'nullable|string',
             'registration_phone' => 'nullable|string',
+            'registration_online_start' => 'nullable',
+            'registration_online_end' => 'nullable',
             'registration_max' => 'nullable|int',
             'reserved_places' => 'nullable|string',
         ];
@@ -110,31 +122,52 @@ class UpdateServiceRequest extends FormRequest
     {
         $data = parent::validated();
 
-        if (isset($data['location_id']) || isset($data['special_location'])) {
-            // set location
-            if (!is_numeric($data['location_id'])) {
+        // set location
+        if (!is_numeric($data['location_id'])) {
+            $data['special_location'] = $data['location_id'];
+            $data['location_id'] = 0;
+        } else {
+            $location = Location::find($data['location_id']);
+            if (null === $location) {
                 $data['special_location'] = $data['location_id'];
                 $data['location_id'] = 0;
-            } else {
-                $location = Location::find($data['location_id']);
-                if (null === $location) $data['special_location'] = $data['location_id'];
-                $data['location_id'] = 0;
             }
-
-            // set time and place
-            if (isset($data['special_location'])) {
-                $data['location_id'] = 0;
-            }
-
         }
 
+        // set time and place
+        if ($data['special_location'] = ($data['special_location'] ?? '')) {
+            $data['location_id'] = 0;
+            $data['time'] = $data['time'] ?: '';
+            $data['cc_location'] = $data['cc_location'] ?: '';
+        } elseif (isset($data['location_id'])) {
+            $locationId = $data['location_id'] ?: 0;
+            if ($locationId) {
+                $location = Location::find($locationId);
+                $data['location_id'] = $locationId;
+                $data['time'] = $data['time'] ?: $location->default_time;
+                $data['cc_location'] = $data['cc_location'] ?? ($data['cc'] ? $location->cc_default_location : '');
+            } else {
+                $data['time'] = $data['time'] ?: '';
+                $data['cc_location'] = $data['cc_location'] ?: '';
+            }
+        }
 
         $data['hidden'] = $data['hidden'] ?? 0;
         $data['needs_reservations'] = $data['needs_reservations'] ?? 0;
         $data['registration_active'] = $data['registration_active'] ?? 0;
 
-        if (isset($data['registration_online_start'])) $data['registration_online_start'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_start']);
-        if (isset($data['registration_online_end'])) $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
+        $data['exclude_places'] = strtoupper($data['exclude_places'] ?? '');
+        $data['reserved_places'] = strtoupper($data['reserved_places'] ?? '');
+
+        if (isset($data['registration_online_start'])) {
+            $data['registration_online_start'] = Carbon::createFromFormat(
+                'd.m.Y H:i',
+                $data['registration_online_start']
+            );
+        }
+        if (isset($data['registration_online_end'])) {
+            $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
+        }
 
         return $data;
     }

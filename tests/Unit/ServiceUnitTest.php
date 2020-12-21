@@ -30,7 +30,7 @@
 
 namespace Tests\Unit;
 
-use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\ServiceRequest;
 use App\Service;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -93,7 +93,7 @@ class ServiceUnitTest extends TestCase
     public function testCheckBoxesCanBeSetAndUnset()
     {
         $service = factory(Service::class)->raw(['need_predicant' => 1]);
-        $rules = (new StoreServiceRequest())->rules();
+        $rules = (new ServiceRequest())->rules();
         $validator = app('validator')->make($service, $rules);
         $this->assertTrue($validator->passes());
         $data = $validator->validate();
