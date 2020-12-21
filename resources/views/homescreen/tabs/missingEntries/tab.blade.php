@@ -11,15 +11,16 @@
     </tr>
     </thead>
     <tbody>
-    @foreach ($missing as $record)
+    @foreach ($missing as $service)
         <tr>
-            <td>{{ $record['service']->day->date->format('d.m.Y') }}</td>
-            <td>{{ $record['service']->timeText() }}</td>
-            <td>{{ $record['service']->locationText() }}</td>
-            <td> @include('partials.service.details', ['service' => $record['service']])</td>
-            <td> @badges(['items' => $record['missing'], 'badge_type' => 'info'])</td>
+            <td>{{ $service->day->date->format('d.m.Y') }}</td>
+            <td>{{ $service->timeText() }}</td>
+            <td>{{ $service->locationText() }}</td>
+            <td> @include('partials.service.details', ['service' => $service])</td>
+            <td>@foreach($config['ministries'] as $ministry)@if($service->participantsText($ministry) == '')
+                    <span class="badge badge-info">{{ $ministry }}</span>@endif @endforeach</td>
             <td>
-                @include('partials.service.edit-rites-block', ['service' => $record['service']])
+                @include('partials.service.edit-rites-block', ['service' => $service])
             </td>
         </tr>
     @endforeach

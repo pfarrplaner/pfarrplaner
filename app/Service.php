@@ -41,7 +41,6 @@ use Carbon\Carbon;
 use Exception;
 use Google_Service_YouTube_LiveBroadcastSnippet;
 use Google_Service_YouTube_VideoSnippet;
-use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -223,7 +222,7 @@ class Service extends Model
      */
     private $auditData = [];
 
-    /** @var AbstractSeatFinder  */
+    /** @var AbstractSeatFinder */
     protected $seatFinder = null;
 
     /**
@@ -248,6 +247,30 @@ class Service extends Model
         return $events;
     }
 
+    public function scopeHavingOpenMinistries(Builder $query, $ministries)
+    {
+        return $query->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereDoesntHave(
+                'participants',
+                function ($query) use ($ministries) {
+                    $query->whereIn('service_user.category', $ministries);
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+    }
+
+    public function scopeStartingFrom(Builder $query, Carbon $date)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query) {
+                $query->where('date', '>=', now());
+            }
+        );
+    }
+
     /**
      * Return services with empty entries for specific ministries
      * @param $ministries array
@@ -259,23 +282,9 @@ class Service extends Model
 
         foreach ($ministries as $ministry) {
             $missing2[$ministry] = Service::with(['location', 'day'])
-                ->whereDoesntHave(
-                    'participants',
-                    function ($query) use ($ministry) {
-                        $query->where('service_user.category', $ministry);
-                    }
-                )
                 ->whereIn('city_id', Auth::user()->writableCities->pluck('id'))
-                ->whereHas(
-                    'day',
-                    function ($query) {
-                        $query->where('date', '>=', now());
-                    }
-                )
-                ->select(['services.*', 'days.date'])
-                ->join('days', 'days.id', '=', 'day_id')
-                ->orderBy('days.date', 'ASC')
-                ->orderBy('time', 'ASC')
+                ->havingOpenMinistries([$ministry])
+                ->startingFrom(Carbon::now())
                 ->get();
         }
 
@@ -405,7 +414,8 @@ class Service extends Model
     /**
      * @return HasMany
      */
-    public function bookings() {
+    public function bookings()
+    {
         return $this->hasMany(Booking::class);
     }
 
@@ -709,7 +719,9 @@ class Service extends Model
     {
         $desc = [];
         if ($this->needs_reservations) {
-            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis '.$this->registration_online_end->format('d.m.Y, H:i').' Uhr' : 'Anmeldung nötig');
+            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis ' . $this->registration_online_end->format(
+                    'd.m.Y, H:i'
+                ) . ' Uhr' : 'Anmeldung nötig');
         }
         if ($this->baptism) {
             $desc[] = 'mit Taufen';
@@ -1072,46 +1084,70 @@ class Service extends Model
      * Get an instance of SeatFinder for this service
      * @return AbstractSeatFinder
      */
-    public function getSeatFinder() {
-        if ($this->seatFinder) return $this->seatFinder;
-        if (is_object($this->location) && (count($this->location->seatingSections) >0)) return new RowBasedSeatFinder($this);
+    public function getSeatFinder()
+    {
+        if ($this->seatFinder) {
+            return $this->seatFinder;
+        }
+        if (is_object($this->location) && (count($this->location->seatingSections) > 0)) {
+            return new RowBasedSeatFinder($this);
+        }
         return new MaximumBasedSeatFinder($this);
     }
 
-    public function dateTime() {
+    public function dateTime()
+    {
         list ($hour, $minute) = explode(':', $this->time);
         return $this->day->date->copy()->setTime($hour, $minute, 0);
     }
 
-    public function formatTime($s) {
+    public function formatTime($s)
+    {
         return (false !== strpos($s, '%')) ? $this->dateTime()->formatLocalized($s) : $this->dateTime()->format($s);
     }
 
-    public function getBroadcastTitleAttribute() {
+    public function getBroadcastTitleAttribute()
+    {
         $liturgy = Liturgy::getDayInfo($this->day);
         return ($this->title ?: (isset($liturgy['title']) ? $liturgy['title']
             . ' (' . $this->day->date->format('d.m.Y') . ')'
             : 'Gottesdienst mit ' . $this->participantsText('P', true)));
     }
 
-    public function getBroadcastDescriptionAttribute() {
-        return (view('services.youtube.snippet.description', ['service' => $this, 'liturgy' => Liturgy::getDayInfo($this->day)])->render());
+    public function getBroadcastDescriptionAttribute()
+    {
+        return (view(
+            'services.youtube.snippet.description',
+            ['service' => $this, 'liturgy' => Liturgy::getDayInfo($this->day)]
+        )->render());
     }
 
     public function getVideoTimeStringAttribute()
     {
-        $thisTime = Carbon::createFromTimeString($this->day->date->format('Y-m-d') . ' ' . $this->time,
+        $thisTime = Carbon::createFromTimeString(
+            $this->day->date->format('Y-m-d') . ' ' . $this->time,
             'Europe/Berlin'
         );
         return $thisTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
     }
 
-    public function getSongsheetUrlAttribute() {
-        return route('storage', ['path' => pathinfo($this->songsheet, PATHINFO_FILENAME), 'prettyName' => $this->day->date->format('Ymd').'-Liedblatt.'.pathinfo($this->songsheet, PATHINFO_EXTENSION)]);
+    public function getSongsheetUrlAttribute()
+    {
+        return route(
+            'storage',
+            [
+                'path' => pathinfo($this->songsheet, PATHINFO_FILENAME),
+                'prettyName' => $this->day->date->format('Ymd') . '-Liedblatt.' . pathinfo(
+                        $this->songsheet,
+                        PATHINFO_EXTENSION
+                    )
+            ]
+        );
     }
 
 
-    public function getBroadcastSnippet(): Google_Service_YouTube_LiveBroadcastSnippet {
+    public function getBroadcastSnippet(): Google_Service_YouTube_LiveBroadcastSnippet
+    {
         $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
         $broadcastSnippet->setTitle($this->broadcastTitle);
         $broadcastSnippet->setDescription($this->broadcastDescription);
@@ -1119,7 +1155,8 @@ class Service extends Model
         return $broadcastSnippet;
     }
 
-    public function getVideoSnippet(): Google_Service_YouTube_VideoSnippet {
+    public function getVideoSnippet(): Google_Service_YouTube_VideoSnippet
+    {
         $videoSnippet = new \Google_Service_YouTube_VideoSnippet();
         $videoSnippet->setTitle($this->broadcastTitle);
         $videoSnippet->setDescription($this->broadcastDescription);
