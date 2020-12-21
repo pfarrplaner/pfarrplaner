@@ -116,10 +116,6 @@ Route::get(
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
 Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
-Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name(
-    'calendar.printsetup'
-);
-Route::post('/calendar/{year?}/{month?}/print', ['uses' => 'CalendarController@print'])->name('calendar.print');
 
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);

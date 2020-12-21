@@ -33,6 +33,7 @@ namespace App;
 use App\Tools\StringTool;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,6 +64,51 @@ class Absence extends Model
         'to'
     ];
 
+// SCOPES
+    /**
+     * @param $query
+     * @param $user
+     * @return mixed
+     */
+    public function scopeVisibleForUser($query, $user)
+    {
+        $userId = $user->id;
+        $users = $user->getViewableAbsenceUsers();
+
+        return $query->whereIn('user_id', $users->pluck('id'))
+            ->orWhere(
+                function ($query2) use ($userId) {
+                    $query2->whereHas(
+                        'replacements',
+                        function ($query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        }
+                    );
+                }
+            );
+    }
+
+    public function scopeByPeriod(Builder $query, Carbon $start, Carbon $end) {
+        return $query->where('from', '<=', $end)
+            ->where('to', '>=', $start);
+    }
+
+    /**
+     * @param $query
+     * @param User $user
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return mixed
+     */
+    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end)
+    {
+        return $query->where('user_id', $user->id)
+            ->where('from', '<=', $end)
+            ->where('to', '>=', $start);
+    }
+// END SCOPES
+
+// SETTERS
     /**
      * @return HasMany
      */
@@ -168,42 +214,7 @@ class Absence extends Model
         return parent::delete();
     }
 
-
-    /**
-     * @param $query
-     * @param $user
-     * @return mixed
-     */
-    public function scopeVisibleForUser($query, $user)
-    {
-        $userId = $user->id;
-        $users = $user->getViewableAbsenceUsers();
-
-        return $query->whereIn('user_id', $users->pluck('id'))
-            ->orWhere(
-                function ($query2) use ($userId) {
-                    $query2->whereHas(
-                        'replacements',
-                        function ($query) use ($userId) {
-                            $query->where('user_id', $userId);
-                        }
-                    );
-                }
-            );
-    }
-
-
-    /**
-     * @param $query
-     * @param User $user
-     * @param Carbon $start
-     * @param Carbon $end
-     * @return mixed
-     */
-    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end)
-    {
-        return $query->where('user_id', $user->id)
-            ->where('from', '<=', $end)
-            ->where('to', '>=', $start);
+    public function containsDate(Carbon $date) {
+        return ($date >= $this->from) && ($date <= $this->to);
     }
 }

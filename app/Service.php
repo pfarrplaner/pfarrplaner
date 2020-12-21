@@ -623,6 +623,18 @@ class Service extends Model
 
     /**
      * @param Builder $query
+     * @param int $year Year
+     * @param int $month Month
+     * @return Builder
+     */
+    public function scopeInMonth(Builder $query, $year, $month) {
+        $monthStart = Carbon::createFromFormat('Y-m-d H:i:s', $year . '-' . $month . '-01 0:00:00');
+        $monthEnd = (clone $monthStart)->addMonth(1)->subSecond(1);
+        return $query->between($monthStart, $monthEnd);
+    }
+
+    /**
+     * @param Builder $query
      * @param City $city
      * @return Builder
      */

@@ -3,12 +3,12 @@
     <div class="button-row no-print btn-toolbar" role="toolbar">
         <div class="btn-group mr-2" role="group">
             <a class="btn btn-default"
-               href="{{ route('calendar', ['year' => $year, 'month' => $month-1]) }}"
+               href="{{ route('calendar', ['year' => \Carbon\Carbon::create($year, $month, 1)->subMonth(1)->format('Y-m')]) }}"
                title="Einen Monat zurück">
                 <span class="fa fa-backward"></span>
             </a>
             <a class="btn btn-default"
-               href="{{ route('calendar', ['year' => date('Y'), 'month' => date('m')]) }}"
+               href="{{ route('calendar', ['year' => \Carbon\Carbon::now()->format('Y-m')]) }}"
                title="Gehe zum aktuellen Monat">
                 <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute</span></a>
 
@@ -20,7 +20,7 @@
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                     @foreach($months as $thisMonth => $thisMonthText)
                         <a class="dropdown-item"
-                           href="{{ route('calendar', ['year' => $year, 'month' => $thisMonth]) }}">{{$thisMonthText}}</a>
+                           href="{{ route('calendar', ['year' => $year.'-'.$thisMonth]) }}">{{$thisMonthText}}</a>
                     @endforeach
                 </div>
             </div>
@@ -32,12 +32,12 @@
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
                     @foreach($years as $thisYear)
                         <a class="dropdown-item"
-                           href="{{ route('calendar', ['year' => $thisYear, 'month' => $month]) }}">{{$thisYear}}</a>
+                           href="{{ route('calendar', ['year' => $thisYear.'-'.$month]) }}">{{$thisYear}}</a>
                     @endforeach
                 </div>
             </div>
             <a class="btn btn-default"
-               href="{{ route('calendar', ['year' => $year, 'month' => $month+1]) }}"
+               href="{{ route('calendar', ['year' => \Carbon\Carbon::create($year, $month, 1)->addMonth(1)->format('Y-m')]) }}"
                title="Einen Monat weiter">
                 <span class="fa fa-forward"></span>
             </a>

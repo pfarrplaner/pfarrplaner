@@ -30,7 +30,9 @@
 
 namespace App;
 
+use App\Database\Scopes\OrderScope;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -64,6 +66,63 @@ class Day extends Model
      */
     protected $appends = ['liturgy'];
 
+    protected static function boot() {
+        parent::boot();
+        static::addGlobalScope(new OrderScope('date', 'asc'));
+    }
+
+// ACCESSORS
+    /**
+     * Add liturgy attribute
+     * @return array
+     */
+    public function getLiturgyAttribute(): array {
+        return Liturgy::getDayInfo($this);
+    }
+
+// END ACCESSORS
+
+// MUTATORS
+    /**
+     * Accept a d.m.Y-formatted string as date attribute
+     * @param string $date
+     */
+    public function setDateAttribute($date)
+    {
+        if (is_a($date, Carbon::class)) {
+            $this->attributes['date'] = $date;
+        } else {
+            $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $date);
+        }
+    }
+// END MUTATORS
+
+// SCOPES
+    public function scopeInMonth(Builder $query, Carbon $date) {
+        $date->setTime(0,0,0)->setDay(1);
+        return $query->where('date', '>=', $date)
+            ->where('date', '<=', $date->copy()->addMonth(1)->subSecond(1));
+    }
+
+    public function scopeVisibleForCities(Builder $query, $cities) {
+        return $query->where(function($q) use ($cities) {
+            $q->where('day_type', self::DAY_TYPE_DEFAULT)
+                ->orWhereHas('cities', function ($q2) use ($cities){
+                    $q2->whereIn('city_id', $cities);
+                });
+        });
+    }
+
+    public function scopeStartingFrom(Builder $query, $date) {
+        return $query->where('date', '>=', $date);
+    }
+
+    public function scopeEndingAt(Builder $query, $date) {
+        return $query->where('date', '<=', $date);
+    }
+// END SCOPES
+
+// SETTERS
     /**
      * @param string $date Date (Y-m-d)
      * @return bool|Day False if not found, Day if found
@@ -93,31 +152,5 @@ class Day extends Model
         return $this->belongsToMany(City::class);
     }
 
-    /**
-     * Accept a d.m.Y-formatted string as date attribute
-     * @param string $date
-     */
-    public function setDateAttribute($date)
-    {
-        if (is_a($date, Carbon::class)) {
-            $this->attributes['date'] = $date;
-        } else {
-            $this->attributes['date'] = Carbon::createFromFormat('d.m.Y', $date);
-        }
-    }
-
-    /**
-     * Add liturgy attribute
-     * @return array
-     */
-    public function getLiturgyAttribute(): array {
-        return Liturgy::getDayInfo($this);
-    }
-
-    public function scopeInMonth($query, Carbon $date) {
-        $date->setTime(0,0,0)->setDay(1);
-        return $query->where('date', '>=', $date)
-            ->where('date', '<=', $date->copy()->addMonth(1)->subSecond(1));
-    }
 
 }
