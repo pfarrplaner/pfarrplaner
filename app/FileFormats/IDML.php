@@ -31,6 +31,7 @@
 namespace App\FileFormats;
 
 
+use Illuminate\Support\Str;
 use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\Shared\ZipArchive;
 use RecursiveDirectoryIterator;
@@ -228,7 +229,7 @@ class IDML
      */
     public function getUID($type = '')
     {
-        return $this->prefix . '_' . ($type ?: '') . '_' . str_random(16);
+        return $this->prefix . '_' . ($type ?: '') . '_' . Str::random(16);
     }
 
     /**

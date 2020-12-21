@@ -36,6 +36,7 @@ use App\Http\Middleware\Authenticate;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
@@ -119,7 +120,7 @@ class DayTest extends TestCase
      */
     public function testDayCannotBeCreatedWithoutCorrectDateFormat()
     {
-        $response = $this->actingAs($this->user)->post(route('days.store'), factory(Day::class)->raw(['date' => str_random(5)]));
+        $response = $this->actingAs($this->user)->post(route('days.store'), factory(Day::class)->raw(['date' => Str::random(5)]));
         $response->assertSessionHasErrors('date');
         $this->assertCount(0, Day::all());
     }

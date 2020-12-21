@@ -35,6 +35,7 @@ use App\Http\Middleware\Authenticate;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
@@ -57,7 +58,7 @@ class CityTest extends TestCase
      */
     public function testCityIndexWorks()
     {
-        $response = $this->get(route('cities.index'));
+        $response = $this->actingAs($this->user)->get(route('cities.index'));
         $response->assertStatus(200)
             ->assertViewIs('cities.index');
     }
@@ -132,7 +133,7 @@ class CityTest extends TestCase
             route('cities.store'),
             factory(City::class)->raw(
                 [
-                    'name' => str_random(256),
+                    'name' => Str::random(256),
                 ]
             )
         );
