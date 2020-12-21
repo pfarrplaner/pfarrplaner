@@ -57,6 +57,7 @@
                                 class="fa fa-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
                 </div>
             @endcan
+            <a class="btn btn-default" href="{{route('reports.setup', ['report' => 'ministryRequest'])}}" title="Dienstanfrage per E-Mail senden"><span class="fa fa-envelope"></span> Anfrage senden...</a>
         @else
             Diese Ansicht wird automatisch aktualisiert.
         @endif
