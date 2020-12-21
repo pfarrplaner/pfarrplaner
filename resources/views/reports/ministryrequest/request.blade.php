@@ -1,6 +1,6 @@
 @extends('layouts.app', ['noNavBar' => 1, 'noNav' => 1])
 
-@section('title', 'Dienstanfrage senden')
+@section('title', 'Dienstanfrage')
 
 @section('content')
     <form method="post" action="{{ route('ministry.request.fill', compact('ministry', 'user', 'sender')) }}">
