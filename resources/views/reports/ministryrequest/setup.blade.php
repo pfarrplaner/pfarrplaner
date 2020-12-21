@@ -12,10 +12,10 @@
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary">Weiter &gt;</button>
             @endslot
-            @locationselect(['name' => 'locations[]', 'label' => 'Anfrage für Kirchen/Orte', 'locations' => $locations])
+            @select(['name' => 'ministry', 'label' => 'Anfrage für folgenden Dienst senden', 'items' => \App\Ministry::all()])
             @input(['name' => 'start', 'label' => 'Gottesdienste von', 'class' => 'datepicker', 'placeholder' => 'TT.MM.JJJJ', 'value' => \Carbon\Carbon::now()->format('d.m.Y')])
             @input(['name' => 'end', 'label' => 'Bis', 'class' => 'datepicker', 'placeholder' => 'TT.MM.JJJJ', 'value' => $maxDate->format('d.m.Y')])
-            @select(['name' => 'ministry', 'label' => 'Anfrage für folgenden Dienst senden', 'items' => \App\Ministry::all()])
+            @locationselect(['name' => 'locations[]', 'label' => 'Auf Gottesdienste an folgendenn Orten beschränken', 'locations' => $locations])
         @endcomponent
     </form>
 @endsection
