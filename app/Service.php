@@ -616,8 +616,7 @@ class Service extends Model
         return $query->whereHas(
             'day',
             function ($query) use ($start, $end) {
-                $query->where('date', '>=', $start)
-                ->where('date', '<=', $end);
+                $query->whereBetween('date', [$start, $end]);
             }
         );
     }
