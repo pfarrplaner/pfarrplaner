@@ -263,3 +263,8 @@ Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr')
 Route::get('/cal/{date?}', 'CalController@index')->name('cal.index');
 
 
+// ministry request
+Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@ministryRequest')
+    ->name('ministry.request');
+Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRequestFilled')
+    ->name('ministry.request.fill');

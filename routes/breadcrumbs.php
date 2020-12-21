@@ -694,3 +694,11 @@ Breadcrumbs::for(
 Breadcrumbs::for('cal.index', function(BreadcrumbsGenerator  $trail, $date = null){
     $trail->push('Kalender', route('cal.index'));
 });
+
+
+Breadcrumbs::for('ministry.request', function(BreadcrumbsGenerator $trail) {
+    $trail->push('Dienstanfrage');
+});
+Breadcrumbs::for('ministry.request.fill', function(BreadcrumbsGenerator $trail) {
+    $trail->push('Zusage');
+});

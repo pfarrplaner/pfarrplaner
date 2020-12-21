@@ -32,6 +32,7 @@ namespace App\Http\Controllers;
 
 use App\City;
 use App\Day;
+use App\Mail\MinistryRequestFilled;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
@@ -41,6 +42,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
@@ -207,7 +210,9 @@ class PublicController extends Controller
             $cities = explode(',', $city);
             foreach ($cities as $cityName) {
                 $city = City::where('name', 'like', '%' . trim($cityName) . '%')->first();
-                if ($city) $cityIds[] = $city->id;
+                if ($city) {
+                    $cityIds[] = $city->id;
+                }
             }
         } else {
             $cityIds = [$city->id];
@@ -218,17 +223,63 @@ class PublicController extends Controller
 
         $service = Service::select('services.*')
             ->join('days', 'days.id', 'services.day_id')
-            ->whereHas('day', function($query) {
-                $query->where('date', '>=', Carbon::now());
-            })
+            ->whereHas(
+                'day',
+                function ($query) {
+                    $query->where('date', '>=', Carbon::now());
+                }
+            )
             ->whereIn('city_id', $cityIds)
             ->where('youtube_url', '!=', '')
             ->orderBy('days.date')
             ->orderBy('time')
             ->first();
-        if (!$service) abort(404);
+        if (!$service) {
+            abort(404);
+        }
 
         return redirect($service->youtube_url);
+    }
+
+    public function ministryRequest(Request $request, $ministry, $user, $services, $sender = null)
+    {
+        if (!$request->hasValidSignature()) abort(401);
+        $services = Service::select('services.*')
+            ->join('days', 'days.id', 'services.day_id')
+            ->whereIn('services.id', explode(',', $services))
+            ->orderBy('days.date')
+            ->orderBy('time')
+            ->get();
+        $user = User::findOrFail($user);
+        $report = 'ministryRequest';
+        return view(
+            'reports.ministryrequest.request',
+            compact('ministry', 'user', 'services', 'report', 'sender')
+        );
+    }
+
+    public function ministryRequestFilled(Request $request, $ministry, $user, $sender = null)
+    {
+        dump ($sender);
+        $user = User::findOrFail($user);
+        $services = [];
+        foreach($request->get('services', []) as $key => $service) {
+            if ($service) $services[] = $key;
+        };
+        $services = Service::whereIn('id', $services)->get();
+        foreach ($services as $service) {
+            $service->participants()->attach([$user->id => ['category' => $ministry]]);
+        }
+
+        if (null !== $sender) {
+            $sender = User::find($sender);
+            if (null !== $sender) {
+                Mail::to($sender->email)
+                    ->send(new MinistryRequestFilled($user, $sender, $ministry, $services));
+            }
+        }
+
+        return view('reports.ministryrequest.thanks', compact('user', 'ministry'));
     }
 
 }
