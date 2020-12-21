@@ -88,9 +88,6 @@
                         @tabheader(['id' => 'registrations', 'title' => 'Anmeldungen', 'active' => ($tab=='registrations')]) @endtabheader
                     @endif
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments'), 'count' => (count($service->comments ?? []))]) @endtabheader
-                    @can('admin')
-                        @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
-                    @endcan('admin')
                     @endtabheaders
 
                     @tabs
@@ -195,9 +192,6 @@
 
                         @endtab
                     @endif
-                    @can('admin')
-                        @include('partials.service.tabs.history')
-                    @endcan
                     @include('partials.service.tabs.comments')
                     @endtabs
 
