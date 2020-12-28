@@ -105,6 +105,7 @@ class Day extends Model
     }
 
     public function scopeVisibleForCities(Builder $query, $cities) {
+        if (count($cities) && isset($cities->first()->id)) $cities = $cities->pluck('id');
         return $query->where(function($q) use ($cities) {
             $q->where('day_type', self::DAY_TYPE_DEFAULT)
                 ->orWhereHas('cities', function ($q2) use ($cities){
