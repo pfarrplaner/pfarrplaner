@@ -31,6 +31,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\Cache;
+use Storage;
 
 /**
  * Class Liturgy
@@ -65,12 +66,7 @@ class Liturgy
             $day = new Day(['date' => $day]);
         }
         if (!Cache::has('liturgicalDays')) {
-            $tmpData = json_decode(
-                file_get_contents(
-                    'https://www.kirchenjahr-evangelisch.de/service.php?o=lcf&f=gaa&r=json&dl=user'
-                ),
-                true
-            );
+            $tmpData = json_decode(Storage::get('liturgy.json'), true);
             foreach ($tmpData['content']['days'] as $key => $val) {
                 if (!isset($data[$val['date']])) $data[$val['date']] = $val;
             }
