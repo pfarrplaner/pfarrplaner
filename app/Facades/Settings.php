@@ -31,11 +31,13 @@
 namespace App\Facades;
 
 
+use App\Services\SettingsService;
+
 class Settings extends \Illuminate\Support\Facades\Facade
 {
     protected static function getFacadeAccessor()
     {
-        return 'settings';
+        return SettingsService::class;
     }
 
 }
