@@ -28,12 +28,64 @@
   -->
 
 <template>
-    <td valign="top">
-        <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index" />
+    <td valign="top" v-bind:class="{
+            now: false, // TODO: next day
+            limited: day.day_type == 1, // DAY_TYPE_LIMITED
+            collapsed: collapsed,
+            'for-city': isForCity,
+        }"
+        @click="clickHandler()"
+    >
+        <div class="celldata">
+            <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"/>
+        </div>
     </td>
 </template>
 <script>
+import EventBus from "../../../plugins/EventBus";
+import { CalendarToggleDayColumnEvent} from "../../../events/CalendarToggleDayColumnEvent";
+
 export default {
-    props: ['city', 'day', 'services']
+    props: ['city', 'day', 'services'],
+    data: function() {
+        return {
+            collapsed: this.hasMine ? false : (this.day.day_type == 1),
+            initialCollapse: this.hasMine ? false : (this.day.day_type == 1),
+            initialHasMine: this.hasMine,
+            initialDayTypeBool: this.day.day_type == 1,
+        }
+    },
+    mounted() {
+        EventBus.listen(CalendarToggleDayColumnEvent, this.toggleHandler);
+        if ((this.hasMine) && (this.day.day_type == 1)) {
+            EventBus.publish(new CalendarToggleDayColumnEvent(this.day, false));
+        }
+    },
+    computed: {
+        isForCity() {
+            var found = false;
+            var city = this.city;
+            this.day.cities.forEach(function(thisCity){
+                if (thisCity.id == city.id) found = true;
+            });
+            return found;
+        },
+        hasMine() {
+            if (undefined == this.services) return undefined;
+            var found = false;
+            this.services.forEach(function(service){
+                found = found || service.isMine;
+            });
+            return found;
+        }
+    },
+    methods: {
+        clickHandler: function() {
+            EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
+        },
+        toggleHandler: function(e) {
+            if ((null === e.day) || (e.day.id == this.day.id)) this.collapsed = e.state;
+        }
+    }
 }
 </script>

@@ -30,7 +30,7 @@
 <template>
     <tr>
         <td class="no-print">{{ city.name }}</td>
-        <calendar-day-column v-for="(day,index) in days" :day="day" :key="day.id" :index="index" :services="services[day.id]" />
+        <calendar-day-column v-for="(day,index) in days" :day="day" :key="day.id" :index="index" :services="services[day.id]" :city="city" />
     </tr>
 </template>
 <script>

@@ -1,7 +1,7 @@
 <template>
     <admin-layout>
         <template #navbar-left>
-            <calendar-nav-top :date="date" :years="years"></calendar-nav-top>
+            <calendar-nav-top :date="new Date(date)" :years="years"></calendar-nav-top>
         </template>
         <div class="calendar-month calendar-horizontal">
             <table class="table table-bordered">
@@ -12,7 +12,8 @@
                         v-for="(day,index) in days"
                         :day="day"
                         :key="day.id"
-                        :index="index"/>
+                        :index="index"
+                        @toggle-day-column="toggleDayColumn" />
                 </tr>
                 </thead>
                 <tbody>
@@ -22,7 +23,8 @@
                     :index="index"
                     :key="city.id"
                     :services="services[city.id]"
-                    :days="days"/>
+                    :days="days"
+                    @toggle-day-column="toggleDayColumn" />
                 </tbody>
             </table>
         </div>
@@ -34,9 +36,21 @@ import moment from 'moment';
 
 export default {
     props: ['date', 'days', 'cities', 'services', 'years'],
+    data() {
+        return {
+        }
+    },
     methods: {
         title: function (d) {
             return moment(d).locale('de-DE').format('MMMM YYYY');
+        },
+        toggleDayColumn: function() {
+            alert('hi');
+        }
+    },
+    computed: {
+        storedDays() {
+            return this.$store.days;
         }
     }
 }

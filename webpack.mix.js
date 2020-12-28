@@ -60,6 +60,7 @@ mix.js('resources/scripts/bundle.js', 'public/js')
 //.js('resources/scripts/pfarrplaner-scripts.js', 'public/js');
 
 mix.js('resources/js/inertia-app.js', 'public/js')
+    .sourceMaps()
     .sass('resources/sass/app.scss', 'public/css')
     .webpackConfig({
         output: { chunkFilename: 'js/[name].js?id=[chunkhash]' },

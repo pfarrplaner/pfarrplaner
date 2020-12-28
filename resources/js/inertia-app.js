@@ -28,7 +28,10 @@
  */
 
 import { InertiaApp } from '@inertiajs/inertia-vue'
+import EventBus from './plugins/EventBus.js';
 import Vue from 'vue'
+import Vuex from 'vuex'
+import { InertiaProgress } from '@inertiajs/progress'
 
 import AdminLayout from "./Pages/Layouts/AdminLayout";
 
@@ -57,6 +60,36 @@ Vue.component('calendar-service-funeral', CalendarServiceFuneral);
 Vue.component('calendar-service-baptism', CalendarServiceBaptism);
 
 
+Vue.use(Vuex)
+const store = new Vuex.Store({
+    state: {
+        days: []
+    },
+    mutations: {
+        setDays (state, days) {
+            state.days = days;
+        }
+    }
+});
+
+InertiaProgress.init({
+    // The delay after which the progress bar will
+    // appear during navigation, in milliseconds.
+    delay: 100,
+
+    // The color of the progress bar.
+    color: '#29d',
+
+    // Whether to include the default NProgress styles.
+    includeCSS: true,
+
+    // Whether the NProgress spinner will be shown.
+    showSpinner: true,
+});
+
+
+Vue.use(EventBus)
+
 
 Vue.config.productionTip = false
 
@@ -73,7 +106,8 @@ Vue.use(InertiaApp)
 
 const app = document.getElementById('app')
 
-new Vue({
+window.vm = new Vue({
+    store: store,
     render: h => h(InertiaApp, {
         props: {
             initialPage: JSON.parse(app.dataset.page),

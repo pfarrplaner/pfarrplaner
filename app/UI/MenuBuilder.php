@@ -80,7 +80,7 @@ class MenuBuilder
             'icon' => 'fa fa-calendar',
             'url' => route('calendar'),
             'icon_color' => 'blue',
-            'active' => $request->is(['calendar*', 'service*'])
+            'active' => $request->is(['calendar*', 'service*', 'cal*'])
         ];
 
         $absenceMenu = [

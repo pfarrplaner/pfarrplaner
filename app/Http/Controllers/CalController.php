@@ -20,7 +20,7 @@ class CalController extends Controller
     public function index(Request $request, $date = null)
     {
         $date = $date ? new Carbon ($date.'-01') : Carbon::now();
-        $days = Day::inMonth($date)->orderBy('date')->get();
+        $days = Day::with('cities')->inMonth($date)->orderBy('date')->get();
         $cities = Auth::user()->cities;
 
         $years = Day::select(DB::raw('YEAR(days.date) as year'))->orderBy('date')->get()->pluck('year')->unique()->sort();

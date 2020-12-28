@@ -74,10 +74,34 @@
                         data-accordion="false">
                         <li class="nav-item">
                             <a :href="route('user.profile')"
-                               class="nav-link @if(request()->is('user/profile')) active @endif">
+                               class="nav-link"
+                               :class="{active: layout.currentRoute == 'user.profile'}">
                                 <i class="nav-icon fa fa-user"></i>
-                                <p>### USERNAME ###</p>
+                                <p>{{ layout.currentUser.name }}</p>
                             </a>
+                        </li>
+                        <li v-for="item in layout.menu" :class="{
+                            'nav-header': item.text == undefined ,
+                            'nav-item': item.text != undefined,
+                            'has-treeview': item.submenu != undefined,
+                        }">
+                            <span v-if="item.text == undefined">{{ item }}</span>
+                            <inertia-link v-else class="nav-link" :class="{ active: item.active }" :href="item.url">
+                                <i v-if="item.icon" class="nav-icon" :class="item.icon"></i> <p>{{ item.text }}
+                                <i v-if="item.submenu != undefined" class="right fas fa-angle-left"></i></p>
+                            </inertia-link>
+                            <ul class="nav nav-treeview" style="display: none;" v-if="item.submenu != undefined">
+                                <li class="nav-item" v-for="subitem in item.submenu">
+                                    <a class="nav-link" :class="{active: subitem.active}"
+                                       :href="subitem.url">
+                                        <i v-if="subitem.icon" class="nav-icon" :class="subitem.icon"
+                                           :style="subitem.icon_color ? 'color: '+subitem.icon_color+';' : ''"></i>
+                                        <p>{{ subitem.text }}
+                                            <span v-if="subitem.counter != undefined" class="badge right" :class="subitem.counter_class ? 'badge-'+subitem.counter_class : 'badge-info'">{{ subitem.counter}}</span>
+                                        </p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <div class="user-panel d-flex"></div>
                         <!-- Add icons to the links using the .nav-icon class
@@ -129,10 +153,12 @@
 <script>
 
 export default {
-    data: () => {
+    data() {
         return {
             noNavBar: false,
-        }
+            title: '',
+            layout: vm.$root.$children[0].$page.props,
+        };
     }
 }
 </script>

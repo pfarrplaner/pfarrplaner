@@ -30,7 +30,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Facades\Settings;
+use App\UI\MenuBuilder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -65,7 +69,13 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
-            //
+            'appName' => config('app.name'),
+            'currentUser' => fn () => $request->user()
+                ? $request->user()->only('id', 'name', 'email', 'title', 'first_name', 'last_name')
+                : null,
+            'menu' => MenuBuilder::sidebar(),
+            'currentRoute' => Route::currentRouteName(),
+            'settings' => Settings::all(Auth::user()),
         ]);
     }
 }

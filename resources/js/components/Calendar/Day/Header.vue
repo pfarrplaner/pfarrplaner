@@ -3,9 +3,9 @@
         v-bind:class="{
             now: false, // TODO: next day
             limited: day.day_type == 1, // DAY_TYPE_LIMITED
-            collapsed: day.day_type == 1,
-            'not-for-city': false, // TODO: not_for_city
+            collapsed: collapsed,
         }"
+        @click="clickHandler()"
         :title="day.day_type == 1 ? today().format('d.m.Y')+' (Klicken, um Ansicht umzuschalten)' : ''"
         :data-day="day.id">
         <div class="day-header-collapse-hover">{{ today().format('dddd, DD.') }}</div>
@@ -33,16 +33,34 @@
 
 <script>
 import moment from "moment";
+import EventBus from "../../../plugins/EventBus";
+import { CalendarToggleDayColumnEvent} from "../../../events/CalendarToggleDayColumnEvent";
 
 export default {
     props: ['day', 'index'],
+    data: function() {
+        return {
+            collapsed: this.hasMine ? false : (this.day.day_type == 1)
+        }
+    },
+    mounted() {
+        EventBus.listen(CalendarToggleDayColumnEvent, this.toggleHandler);
+    },
     methods: {
         moment: function (d) {
             return moment(d).locale('de-DE');
         },
         today: function () {
             return moment(this.day.date).locale('de-DE');
+        },
+        clickHandler: function() {
+            EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
+        },
+        toggleHandler: function(e) {
+            if ((null === e.day) || (e.day.id == this.day.id)) this.collapsed = e.state;
         }
+    },
+    computed: {
     }
 }
 </script>

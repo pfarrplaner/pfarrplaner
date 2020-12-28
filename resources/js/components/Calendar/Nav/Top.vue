@@ -31,14 +31,15 @@
     <div class="button-row no-print btn-toolbar" role="toolbar">
         <div class="btn-group mr-2" role="group">
             <inertia-link class="btn btn-default"
-               :href="route('cal.index', { date: moment(date).subtract(1, 'months').format('YYYY-MM') })"
-               title="Einen Monat zurück">
+                          :href="route('cal.index', { date: moment(date).subtract(1, 'months').format('YYYY-MM') })"
+                          title="Einen Monat zurück">
                 <span class="fa fa-backward"></span>
             </inertia-link>
             <inertia-link class="btn btn-default"
-               :href="route('cal.index', { date: moment().format('YYYY-MM') })"
-               title="Gehe zum aktuellen Monat">
-                <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute</span></inertia-link>
+                          :href="route('cal.index', { date: moment().format('YYYY-MM') })"
+                          title="Gehe zum aktuellen Monat">
+                <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute</span>
+            </inertia-link>
 
             <!-- TODO month / year dropdown -->
             <div class="btn-group" role="group">
@@ -47,18 +48,18 @@
                     {{ moment(date).locale('de-DE').format('MMMM') }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 1)">Januar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 2)">Februar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 3)">März</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 4)">April</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 5)">Mai</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 6)">Juni</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 7)">Juli</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 8)">August</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 9)">September</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 10)">Oktober</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 11)">November</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(date, 12)">Dezember</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(1)">Januar</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(2)">Februar</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(3)">März</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(4)">April</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(5)">Mai</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(6)">Juni</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(7)">Juli</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(8)">August</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(9)">September</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(10)">Oktober</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(11)">November</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(12)">Dezember</inertia-link>
                 </div>
             </div>
             <div class="btn-group" role="group">
@@ -67,22 +68,27 @@
                     {{ moment(date).format('YYYY') }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
-                    <inertia-link href="" v-for="year in years" class="dropdown-item" :key="year" :year="year">{{ year }}</inertia-link>
+                    <inertia-link v-for="year in years" class="dropdown-item"
+                                  :key="year" :year="year" :href="yearLink(year)">{{ year }}</inertia-link>
                 </div>
             </div>
 
 
             <inertia-link class="btn btn-default"
-               :href="route('cal.index', { date: moment(date).add(1, 'months').format('YYYY-MM') })"
-               title="Einen Monat weiter">
+                          :href="route('cal.index', { date: moment(date).add(1, 'months').format('YYYY-MM') })"
+                          title="Einen Monat weiter">
                 <span class="fa fa-forward"></span>
             </inertia-link>
         </div>
         <div class="btn-group mr-2" role="group" v-if="!slave">
             <a class="btn btn-default btn-toggle-limited-days"
-               href="#"
+               @click.prevent="toggleColumns"
                title="Alle ausgeblendeten Tage einblenden"><span
-                class="fa @if(Session::get('showLimitedDays') === true) fa-check-square @else fa-square @endif"></span></a>
+                :class="{
+                   'fa': true,
+                   'fa-square': !allColumnsOpen,
+                   'fa-check-square': allColumnsOpen,
+                }"></span></a>
         </div>
         <!-- TODO: filtered locations -->
     </div>
@@ -90,14 +96,33 @@
 </template>
 
 <script>
+import EventBus from "../../../plugins/EventBus";
+import {CalendarToggleDayColumnEvent} from "../../../events/CalendarToggleDayColumnEvent";
+
 export default {
-    data: {
-        slave: false,
+    data() {
+        return {
+            slave: false,
+            allColumnsOpen: false,
+        }
     },
-    props: ['date', 'years'],
+    props: {
+        'date': { type: Date}, 'years': { type: Object }
+    },
     methods: {
-        monthLink: function(date, month) {
-            return moment(date).set({'year': date.year, 'month': month, day: 1}).format('YYYY-MM');
+        monthLink: function (month) {
+            return route('cal.index', {
+                date: this.date.getFullYear()+'-'+month
+            });
+        },
+        yearLink: function (year) {
+            return route('cal.index', {
+                date: year+'-'+(this.date.getUTCMonth()+1)
+            });
+        },
+        toggleColumns() {
+            this.allColumnsOpen = !this.allColumnsOpen;
+            EventBus.publish(new CalendarToggleDayColumnEvent(null, !this.allColumnsOpen));
         }
     }
 }
