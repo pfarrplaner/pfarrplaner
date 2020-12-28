@@ -103,5 +103,13 @@ class SettingsService
         return $setting;
     }
 
+    public function all(User $user)
+    {
+        $this->cacheSettings($user);
+        return $this->settings[$user->id] ? $this->settings[$user->id]->map(function($item){
+            return substr($item->value, 0, 5) == '_____' ? unserialize(substr($item->value, 5)) : $item->value;
+        }) : [];
+    }
+
 
 }
