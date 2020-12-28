@@ -1266,7 +1266,7 @@ class Service extends Model
 
 
 
-    public function scopeInMonth(Builder $query, Carbon $date) {
+    public function scopeInMonthByDate(Builder $query, Carbon $date) {
         return $query->whereHas('day', function($query2) use ($date) {
             return $query2->inMonth($date);
         });

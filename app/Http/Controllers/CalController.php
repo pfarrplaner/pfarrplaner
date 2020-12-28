@@ -26,7 +26,7 @@ class CalController extends Controller
         $years = Day::select(DB::raw('YEAR(days.date) as year'))->orderBy('date')->get()->pluck('year')->unique()->sort();
 
         $services = Service::with(['baptisms', 'funerals', 'weddings', 'participants'])
-            ->inMonth($date)
+            ->inMonthByDate($date)
             ->inCities($cities->pluck('id'))
             ->notHidden()
             ->get()
