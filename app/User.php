@@ -47,6 +47,7 @@ use Shetabit\Visitor\Traits\Visitable;
 use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
+use App\Facades\Settings;
 
 /**
  * Class User
@@ -118,6 +119,9 @@ class User extends Authenticatable
      * @var string
      */
     protected $orderDirection = 'ASC';
+
+    /** @var string[] cached user settings  */
+    protected $settings = [];
 
     /**
      * @param $name
@@ -379,24 +383,7 @@ class User extends Authenticatable
      */
     public function getSetting($key, $default = null, $returnObject = false, $unserialize = true)
     {
-        // need to trick error reporting or else this will fail with an E_NOTICE
-        $err = error_reporting();
-        error_reporting(0);
-        $setting = UserSetting::where('key', $key)->where('user_id', $this->id)->first();
-        if (null === $setting) {
-            $setting = new UserSetting(
-                [
-                    'user_id' => $this->id,
-                    'key' => $key,
-                    'value' => $default,
-                ]
-            );
-        } else {
-            if ($unserialize && (substr($setting->value, 0, 5) == '_____')) $setting->value = unserialize(substr($setting->value, 5));
-        }
-        $return = ($returnObject ? $setting : $setting->value);
-        error_reporting($err);
-        return $return;
+        return Settings::get($this, $key, $default, $returnObject, $unserialize);
     }
 
     /**
@@ -578,20 +565,7 @@ class User extends Authenticatable
      */
     public function setSetting($key, $value)
     {
-        if (is_array($value)) $value = '_____'.serialize($value);
-        if ($this->hasSetting($key)) {
-            $setting = $this->getSetting($key, null, true);
-            $setting->value = $value;
-        } else {
-            $setting = new UserSetting(
-                [
-                    'user_id' => $this->id,
-                    'key' => $key,
-                    'value' => $value,
-                ]
-            );
-        }
-        $setting->save();
+        return Settings::set($this, $key, $value);
     }
 
     /**
