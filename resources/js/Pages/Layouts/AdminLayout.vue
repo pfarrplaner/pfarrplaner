@@ -171,5 +171,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .nprogress-busy .admin-layout {
+        margin-top: 2px;
+    }
 </style>

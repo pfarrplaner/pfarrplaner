@@ -78,9 +78,9 @@ class HandleInertiaRequests extends Middleware
                 'currentUser' => fn () => $request->user()
                     ? new UserResource($request->user())
                     : null,
-                'menu' => MenuBuilder::sidebar(),
-                'currentRoute' => Route::currentRouteName(),
-                'settings' => Settings::all(Auth::user()),
+                'menu' => fn() => MenuBuilder::sidebar(),
+                'currentRoute' => fn() => Route::currentRouteName(),
+                'settings' => fn() => Settings::all(Auth::user()),
             ]);
         }
 

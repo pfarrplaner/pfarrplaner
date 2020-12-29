@@ -45,6 +45,15 @@ class CalController extends Controller
         $canCreate = $user->can('create', Service::class);
 
 
+        $data = [
+            'days' => fn() => $days,
+            'cities' => fn() => $cities,
+            'services' => fn() => $services,
+            'years' => fn() => $years,
+            'absences' => fn() => $absences,
+            'canCreate' => fn() => $canCreate,
+        ];
+
         return Inertia::render('calendar', compact('date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate'));
     }
 }
