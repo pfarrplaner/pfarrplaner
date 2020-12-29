@@ -91,6 +91,7 @@ class SettingsService
         if ($this->has($user, $key)) {
             $setting = $this->get($user, $key, null, true);
             $setting->value = $value;
+            $setting->save();
         } else {
             $setting = UserSetting::create(
                 [
