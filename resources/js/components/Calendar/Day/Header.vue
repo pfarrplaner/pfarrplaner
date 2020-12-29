@@ -6,7 +6,7 @@
             collapsed: collapsed,
         }"
         @click="clickHandler()"
-        :title="day.day_type == 1 ? today().format('d.m.Y')+' (Klicken, um Ansicht umzuschalten)' : ''"
+        :title="day.day_type == 1 ? today().format('DD.MM.YYYY')+' (Klicken, um Ansicht umzuschalten)' : ''"
         :data-day="day.id">
         <div class="day-header-collapse-hover">{{ today().format('dddd, DD.') }}</div>
         <div class="card card-effect">
