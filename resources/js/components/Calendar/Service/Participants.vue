@@ -31,7 +31,7 @@
     <div class="service-team">
         <span class="designation">{{ category }}: </span>
         <span v-if="predicant" class="need-predicant">Prädikant benötigt</span>
-        <span v-for="person,index in participants">{{ formatName(person) }}<span v-if="index<participants.length-1"> | </span></span>
+        <span v-for="person,index in participants"><span :class="{me: person.id == user.id}">{{ formatName(person) }}</span><span v-if="index<participants.length-1"> | </span></span>
     </div>
 </template>
 
@@ -44,6 +44,7 @@ export default {
     data() {
         return {
             nameFormat: vm.$children[0].page.props.settings.calendar_name_format,
+            user: vm.$children[0].page.props.currentUser.data,
         }
     },
     mounted() {
@@ -53,11 +54,16 @@ export default {
         formatName(person) {
             switch(parseInt(this.nameFormat)) {
                 case 1:
-                    return [person.title, person.last_name].join(' ');
+                    if (person.last_name=='') return person.name;
+                    return [person.title, person.last_name].join(' ').trim();
                 case 2:
-                    return [person.title, person.first_name.substr(0,1)+'.', person.last_name].join(' ');
+                    if (person.last_name=='') return person.name;
+                    if (person.first_name=='') return person.name;
+                    return [person.title, person.first_name.substr(0,1)+'.', person.last_name].join(' ').trim();
                 case 3:
-                    return [person.title, person.first_name, person.last_name].join(' ');
+                    if (person.last_name=='') return person.name;
+                    if (person.first_name=='') return person.name;
+                    return [person.title, person.first_name, person.last_name].join(' ').trim();
                 default:
                     return '[['+this.nameFormat+']]';
             }
@@ -70,5 +76,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .me {
+        font-weight: bold;
+    }
 </style>
