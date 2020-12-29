@@ -90,7 +90,14 @@
                    'fa-check-square': allColumnsOpen,
                 }"></span></a>
         </div>
-        <!-- TODO: filtered locations -->
+        <div class="btn-group mr-2" role="group">
+            <a class="btn btn-success"
+               :href="route('days.add', {year: date.getFullYear(), month: date.getMonth()+1})"
+               title="Angezeigte Tage ändern"><span
+                class="fa fa-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
+        </div>
+        <a class="btn btn-default" :href="route('reports.setup', {report: 'ministryRequest'})" title="Dienstanfrage per E-Mail senden"><span class="fa fa-envelope"></span> Anfrage senden...</a>
+
     </div>
 
 </template>

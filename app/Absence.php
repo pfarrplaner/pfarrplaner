@@ -64,6 +64,30 @@ class Absence extends Model
         'to'
     ];
 
+    protected $appends = [
+        'durationText', 'replacementText'
+    ];
+
+// ACCESSORS
+    public function getReplacementTextAttribute()
+    {
+        return $this->replacementText();
+    }
+
+    public function getDurationTextAttribute()
+    {
+        return $this->durationText();
+    }
+
+    /**
+     * @return string
+     */
+    public function durationText()
+    {
+        return StringTool::durationText($this->from, $this->to);
+    }
+// END ACCESSORS
+
 // SCOPES
     /**
      * @param $query
@@ -88,7 +112,8 @@ class Absence extends Model
             );
     }
 
-    public function scopeByPeriod(Builder $query, Carbon $start, Carbon $end) {
+    public function scopeByPeriod(Builder $query, Carbon $start, Carbon $end)
+    {
         return $query->where('from', '<=', $end)
             ->where('to', '>=', $start);
     }
@@ -109,6 +134,26 @@ class Absence extends Model
 // END SCOPES
 
 // SETTERS
+// SETTERS
+    /**
+     * Get all absences keyed by days
+     * @param Collection|\Illuminate\Database\Eloquent\Collection $absences
+     * @param Collection|\Illuminate\Database\Eloquent\Collection $days
+     */
+    public static function getByDays($absences, $days)
+    {
+        $dayAbsences = [];
+        foreach ($days as $day) {
+            $dayAbsences[$day->id] = collect();
+            foreach ($absences as $absence) {
+                if ($absence->containsDate($day->date)) {
+                    $dayAbsences[$day->id]->push($absence);
+                }
+            }
+        }
+        return $dayAbsences;
+    }
+
     /**
      * @return HasMany
      */
@@ -131,14 +176,6 @@ class Absence extends Model
     public function approvals()
     {
         return $this->hasMany(Approval::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function durationText()
-    {
-        return StringTool::durationText($this->from, $this->to);
     }
 
     /**
@@ -214,7 +251,8 @@ class Absence extends Model
         return parent::delete();
     }
 
-    public function containsDate(Carbon $date) {
+    public function containsDate(Carbon $date)
+    {
         return ($date >= $this->from) && ($date <= $this->to);
     }
 }

@@ -46,7 +46,6 @@ use App\Parish;
 use App\Tag;
 use App\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Role;
 

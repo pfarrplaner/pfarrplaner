@@ -28,9 +28,11 @@
  */
 
 export default {
-    computed: {
-        currentUser() {
-            return window.currentUser.data;
-        },
+
+    install (Vue, options) {
+        Vue.prototype.hasPermission = function(p) {
+            return window.Laravel.permissions.includes(p);
+        }
     },
-};
+
+}

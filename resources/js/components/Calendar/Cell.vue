@@ -30,7 +30,7 @@
 <template>
     <td valign="top" v-bind:class="{
             now: false, // TODO: next day
-            limited: day.day_type == 1, // DAY_TYPE_LIMITED
+            limited: limited, // DAY_TYPE_LIMITED
             collapsed: collapsed,
             'for-city': isForCity,
         }"
@@ -38,21 +38,25 @@
     >
         <div class="celldata">
             <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"/>
+            <a v-if="canCreate && user.writableCities.includes(city.id)"
+               class="btn btn-success btn-sm btn-add-day"
+               title="Neuen Gottesdiensteintrag hinzufügen"
+               :href="route('services.add', {date: day.id, city: city.id})"><span
+                class="fa fa-plus" title="Neuen Gottesdienst hinzufügen"></span><span class="d-none d-md-inline"> Neuer GD</span></a>
         </div>
     </td>
 </template>
 <script>
-import EventBus from "../../../plugins/EventBus";
-import { CalendarToggleDayColumnEvent} from "../../../events/CalendarToggleDayColumnEvent";
+import EventBus from "../../plugins/EventBus";
+import { CalendarToggleDayColumnEvent} from "../../events/CalendarToggleDayColumnEvent";
 
 export default {
-    props: ['city', 'day', 'services'],
+    props: ['city', 'day', 'services', 'canCreate'],
     data: function() {
         return {
             collapsed: this.hasMine ? false : (this.day.day_type == 1),
-            initialCollapse: this.hasMine ? false : (this.day.day_type == 1),
-            initialHasMine: this.hasMine,
-            initialDayTypeBool: this.day.day_type == 1,
+            user: window.vm.$children[0].page.props.currentUser.data,
+            limited: this.day.day_type == 1,
         }
     },
     mounted() {
@@ -81,7 +85,7 @@ export default {
     },
     methods: {
         clickHandler: function() {
-            EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
+            if (this.limited) EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
         },
         toggleHandler: function(e) {
             if ((null === e.day) || (e.day.id == this.day.id)) this.collapsed = e.state;

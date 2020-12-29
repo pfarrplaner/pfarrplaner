@@ -1,52 +1,53 @@
 <template>
-    <admin-layout>
+    <admin-layout enable-control-sidebar="true">
         <template #navbar-left>
             <calendar-nav-top :date="new Date(date)" :years="years"></calendar-nav-top>
         </template>
-        <div class="calendar-month calendar-horizontal">
-            <table class="table table-bordered">
-                <thead>
-                <tr>
-                    <th class="no-print text-left">Kirchengemeinde<!-- // TODO: slave mode --></th>
-                    <calendar-day-header
-                        v-for="(day,index) in days"
-                        :day="day"
-                        :key="day.id"
-                        :index="index"
-                        @toggle-day-column="toggleDayColumn" />
-                </tr>
-                </thead>
-                <tbody>
-                <calendar-city-row
-                    v-for="(city,index) in cities"
-                    :city="city"
-                    :index="index"
-                    :key="city.id"
-                    :services="services[city.id]"
-                    :days="days"
-                    @toggle-day-column="toggleDayColumn" />
-                </tbody>
-            </table>
-        </div>
+        <template #control-sidebar>
+            <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities"/>
+        </template>
+        <calendar-pane-horizontal v-if="orientation == 'horizontal'"
+                                  :date="date" :days="days" :cities="cityList" :services="services" :years="years"
+                                  :absences="absences" :can-create="canCreate"/>
+        <calendar-pane-vertical v-else
+                                :date="date" :days="days" :cities="cityList" :services="services" :years="years"
+                                :absences="absences" :can-create="canCreate "/>
     </admin-layout>
 </template>
 
 <script>
 import moment from 'moment';
+import EventBus from "../plugins/EventBus";
+import {CalendarNewSortOrderEvent} from "../events/CalendarNewSortOrderEvent";
+import {CalendarNewOrientationEvent} from "../events/CalendarNewOrientationEvent";
 
 export default {
-    props: ['date', 'days', 'cities', 'services', 'years'],
+    props: ['date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate'],
     data() {
         return {
+            cityList: this.cities,
+            orientation: vm.$children[0].page.props.settings.calendar_view,
         }
+    },
+    mounted() {
+        EventBus.listen(CalendarNewSortOrderEvent, this.sortHandler);
+        EventBus.listen(CalendarNewOrientationEvent, this.orientationHandler);
     },
     methods: {
         title: function (d) {
             return moment(d).locale('de-DE').format('MMMM YYYY');
         },
-        toggleDayColumn: function() {
+        toggleDayColumn: function () {
             alert('hi');
-        }
+        },
+        sortHandler: function (e) {
+            this.cityList = e.list;
+        },
+        orientationHandler: function (e) {
+            console.log('orientation change received');
+            this.orientation = e.orientation;
+            console.log('new orientation: ' + this.orientation);
+        },
     },
     computed: {
         storedDays() {
@@ -55,3 +56,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+th, td {
+    vertical-align: top;
+}
+</style>

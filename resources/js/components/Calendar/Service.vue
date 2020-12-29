@@ -36,7 +36,7 @@
         'funeral': service.funerals.length > 0,
         'hidden': service.hidden}"
         :title="service.isEditable ? clickTitle(service) : null"
-         v-on:click="service.isEditable ? edit(service) : null"
+         @click.stop="service.isEditable ? edit(service) : null"
         :data-day="service.day.id"
     >
         <div v-if="service.location != null" :class="{'service-time': 1,  'service-special-time': isSpecialTime(service)}">
@@ -58,16 +58,30 @@
             <calendar-service-wedding v-for="(wedding,index) in service.weddings" :key="wedding.id" :wedding="wedding" trailer=", " :trail="index > 0"/>
         </div>
         <div class="service-description" v-if="service.funerals.length > 0">
-            <span class="fa fa-ring"></span>
+            <span class="fa fa-cross"></span>
             <calendar-service-funeral v-for="(funeral, index) in service.funerals" :key="funeral.id" :funeral="funeral" trailer=", " :trail="index > 0"/>
+        </div>
+        <div class="float-right service-calendar-button">
+            <a class="btn btn-sm btn-secondary"
+               :href="route('services.ical', {service: service})"
+               title="In Outlook übernehmen"><span
+                class="fa fa-calendar-alt"></span></a>
         </div>
 
         <calendar-service-participants :participants="service.pastors" category="P" :predicant="service.need_predicant" />
         <calendar-service-participants :participants="service.organists" category="O" :predicant="0" />
         <calendar-service-participants :participants="service.sacristans" category="M" :predicant="0" />
+        <calendar-service-participants v-for="participants,ministry in service.ministriesByCategory" :key="ministry"
+                                       :participants="participants" :category="ministry" :predicant="0" />
+        <div v-if="hasPermission('gd-kasualien-lesen') || hasPermission('gd-kasualien-nur-statistik')">
+            <div class="service-description" v-if="service.baptisms.length > 0">
+                <span class="fa fa-water" :title="hasPermission('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
+            </div>
+        </div>
     </div>
 </template>
 <script>
+
 
 export default {
     props: ['service'],
@@ -89,7 +103,7 @@ export default {
         },
         edit: function(service) {
             window.location.href = route('services.edit', service.id);
-        }
+        },
     }
 }
 

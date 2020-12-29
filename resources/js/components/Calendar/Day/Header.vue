@@ -28,6 +28,11 @@
                 {{day.liturgy.title}}
             </div>
         </div>
+        <div v-if="hasPermission('urlaub-lesen')">
+        <div class="vacation mr-1" v-for="absence in absences" :absence="absence"
+             :title="absence.user.name+': '+absence.reason+' ('+absence.durationText+') '+replacementText(absence)">
+            <span class="fa fa-globe-europe"></span> {{ absence.user.last_name }}</div>
+        </div>
     </th>
 </template>
 
@@ -37,10 +42,11 @@ import EventBus from "../../../plugins/EventBus";
 import { CalendarToggleDayColumnEvent} from "../../../events/CalendarToggleDayColumnEvent";
 
 export default {
-    props: ['day', 'index'],
+    props: ['day', 'index', 'absences'],
     data: function() {
         return {
-            collapsed: this.hasMine ? false : (this.day.day_type == 1)
+            collapsed: this.hasMine ? false : (this.day.day_type == 1),
+            limited: this.day.day_type == 1,
         }
     },
     mounted() {
@@ -54,11 +60,14 @@ export default {
             return moment(this.day.date).locale('de-DE');
         },
         clickHandler: function() {
-            EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
+            if (this.limited) EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
         },
         toggleHandler: function(e) {
             if ((null === e.day) || (e.day.id == this.day.id)) this.collapsed = e.state;
-        }
+        },
+        replacementText: function (absence) {
+            return absence.replacementText ? '[V: '+absence.replacementText+']' : '';
+        },
     },
     computed: {
     }

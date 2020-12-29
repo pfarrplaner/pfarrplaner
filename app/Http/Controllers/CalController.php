@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Absence;
 use App\Day;
 use App\Service;
 use Auth;
@@ -19,9 +20,11 @@ class CalController extends Controller
 
     public function index(Request $request, $date = null)
     {
-        $date = $date ? new Carbon ($date.'-01') : Carbon::now();
+        $date = ($date ? new Carbon ($date.'-01') : Carbon::now())->setTime(0,0,0);
+        $monthEnd = $date->copy()->addMonth(1)->subSecond(1);
         $days = Day::with('cities')->inMonth($date)->orderBy('date')->get();
-        $cities = Auth::user()->cities;
+        $user = Auth::user();
+        $cities = $user->cities;
 
         $years = Day::select(DB::raw('YEAR(days.date) as year'))->orderBy('date')->get()->pluck('year')->unique()->sort();
 
@@ -32,6 +35,16 @@ class CalController extends Controller
             ->get()
             ->groupBy(['city_id', 'day_id']);
 
-        return Inertia::render('calendar', compact('date', 'days', 'cities', 'services', 'years'));
+        $cities = array_values($user->getSortedCities()->all());
+
+        // absences
+        $absences = Absence::getByDays(Absence::with('user')->byPeriod($date, $monthEnd)
+            ->visibleForUser(\Illuminate\Support\Facades\Auth::user())
+            ->get(), $days);
+
+        $canCreate = $user->can('create', Service::class);
+
+
+        return Inertia::render('calendar', compact('date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate'));
     }
 }

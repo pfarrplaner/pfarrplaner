@@ -27,10 +27,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default {
-    computed: {
-        currentUser() {
-            return window.currentUser.data;
-        },
-    },
-};
+export class CalendarNewNameFormatEvent {
+
+    constructor(format){
+        this.format = format
+    }
+
+}
+

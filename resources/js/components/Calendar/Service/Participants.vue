@@ -29,15 +29,43 @@
 
 <template>
     <div class="service-team">
-        <span class="designation">{{ category}}: </span>
+        <span class="designation">{{ category }}: </span>
         <span v-if="predicant" class="need-predicant">Prädikant benötigt</span>
-        <span v-for="person in participants">{{ person.name }}</span>
+        <span v-for="person,index in participants">{{ formatName(person) }}<span v-if="index<participants.length-1"> | </span></span>
     </div>
 </template>
 
 <script>
+import EventBus from "../../../plugins/EventBus";
+import {CalendarNewNameFormatEvent} from "../../../events/CalendarNewNameFormatEvent";
+
 export default {
-    props: ['participants', 'category', 'predicant']
+    props: ['participants', 'category', 'predicant'],
+    data() {
+        return {
+            nameFormat: vm.$children[0].page.props.settings.calendar_name_format,
+        }
+    },
+    mounted() {
+        EventBus.listen(CalendarNewNameFormatEvent, this.handeNameFormatChange);
+    },
+    methods: {
+        formatName(person) {
+            switch(parseInt(this.nameFormat)) {
+                case 1:
+                    return [person.title, person.last_name].join(' ');
+                case 2:
+                    return [person.title, person.first_name.substr(0,1)+'.', person.last_name].join(' ');
+                case 3:
+                    return [person.title, person.first_name, person.last_name].join(' ');
+                default:
+                    return '[['+this.nameFormat+']]';
+            }
+        },
+        handeNameFormatChange(e) {
+            this.nameFormat = e.format;
+        }
+    }
 }
 </script>
 

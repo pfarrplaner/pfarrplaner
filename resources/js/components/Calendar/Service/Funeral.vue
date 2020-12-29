@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <span>{{ funeral.type }} von {{ funeral.buried_name }}</span>
+    <span v-if="hasPermission('gd-kasualien-lesen')">{{ funeral.type }} von {{ funeral.buried_name }}</span>
 </template>
 
 <script>

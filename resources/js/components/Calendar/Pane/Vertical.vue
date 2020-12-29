@@ -1,21 +1,20 @@
 <template>
-    <div class="calendar-month calendar-horizontal">
+    <div class="calendar-month calendar-vertical">
         <table class="table table-bordered">
             <thead>
             <tr>
                 <th class="no-print text-left">Kirchengemeinde<!-- // TODO: slave mode --></th>
-                <calendar-day-header
-                    v-for="(day,index) in days"
-                    :day="day"
-                    :key="day.id"
-                    :index="index"
-                    :absences="absences[day.id]"/>
+                <th v-for="city in cities">{{ city.name }}</th>
             </tr>
             </thead>
             <tbody>
-                <tr v-for="city in cities">
-                    <th>{{ city.name }}</th>
-                    <calendar-cell v-for="(day,index) in days" :day="day" :key="day.id" :index="index" :services="services[city.id][day.id]" :city="city" :can-create="canCreate"/>
+                <tr v-for="day,index in days">
+                    <calendar-day-header
+                        :day="day"
+                        :key="day.id"
+                        :absences="absences[day.id]"
+                    />
+                    <calendar-cell v-for="(city,index) in cities" :day="day" :key="city.id" :services="services[city.id][day.id]" :city="city" :can-create="canCreate"/>
                 </tr>
             </tbody>
         </table>

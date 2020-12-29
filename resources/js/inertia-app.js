@@ -35,29 +35,36 @@ import { InertiaProgress } from '@inertiajs/progress'
 
 import AdminLayout from "./Pages/Layouts/AdminLayout";
 
+import LaravelPermission from "./plugins/LaravelPermission";
+
 import CalendarPaneHorizontal from './components/Calendar/Pane/Horizontal';
+import CalendarPaneVertical from './components/Calendar/Pane/Vertical';
 import CalendarNavTop from './components/Calendar/Nav/Top.vue';
+import CalendarNavControlSidebar from './components/Calendar/Nav/ControlSidebar';
 import CalendarDayHeader from './components/Calendar/Day/Header';
-import CalendarDayColumn from './components/Calendar/Day/Column';
-import CalendarCityRow from './components/Calendar/City/Row';
+import CalendarCell from './components/Calendar/Cell';
 import CalendarService from './components/Calendar/Service.vue';
 import CalendarServiceParticipants from './components/Calendar/Service/Participants.vue';
 import CalendarServiceWedding from './components/Calendar/Service/Wedding.vue';
 import CalendarServiceFuneral from './components/Calendar/Service/Funeral.vue';
 import CalendarServiceBaptism from './components/Calendar/Service/Baptism.vue';
+import CalendarControlCitySort from './components/Calendar/Control/CitySort';
+
 
 Vue.component('admin-layout', AdminLayout)
 
 Vue.component('calendar-pane-horizontal', CalendarPaneHorizontal);
+Vue.component('calendar-pane-vertical', CalendarPaneVertical);
 Vue.component('calendar-nav-top', CalendarNavTop);
+Vue.component('calendar-nav-control-sidebar', CalendarNavControlSidebar);
 Vue.component('calendar-day-header', CalendarDayHeader);
-Vue.component('calendar-day-column', CalendarDayColumn);
-Vue.component('calendar-city-row', CalendarCityRow);
+Vue.component('calendar-cell', CalendarCell);
 Vue.component('calendar-service', CalendarService);
 Vue.component('calendar-service-participants', CalendarServiceParticipants);
 Vue.component('calendar-service-wedding', CalendarServiceWedding);
 Vue.component('calendar-service-funeral', CalendarServiceFuneral);
 Vue.component('calendar-service-baptism', CalendarServiceBaptism);
+Vue.component('calendar-control-city-sort', CalendarControlCitySort);
 
 
 Vue.use(Vuex)
@@ -88,6 +95,9 @@ InertiaProgress.init({
 });
 
 
+Vue.use(LaravelPermission);
+
+
 Vue.use(EventBus)
 
 
@@ -103,6 +113,7 @@ Vue.mixin({
 
 
 Vue.use(InertiaApp)
+
 
 const app = document.getElementById('app')
 

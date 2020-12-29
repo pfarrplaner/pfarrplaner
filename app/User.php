@@ -371,7 +371,7 @@ class User extends Authenticatable
      */
     public function hasSetting($key)
     {
-        return (UserSetting::where('key', $key)->where('user_id', $this->id)->get()->count() > 0);
+        return Settings::has($this, $key);
     }
 
     /**

@@ -117,6 +117,7 @@ Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('d
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
 Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
 
+
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
 Route::get('/report/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
@@ -264,3 +265,6 @@ Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@
     ->name('ministry.request');
 Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRequestFilled')
     ->name('ministry.request.fill');
+
+// settings
+Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.set');

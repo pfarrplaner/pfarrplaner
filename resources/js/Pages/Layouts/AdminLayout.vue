@@ -43,7 +43,7 @@
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <!-- Notifications Dropdown Menu -->
-                <li class="nav-item" id="toggleControlSidebar" style="display: none;">
+                <li class="nav-item" id="toggleControlSidebar" v-if="enableControlSidebar">
                     <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
                         class="fas fa-cogs"></i></a>
                 </li>
@@ -77,7 +77,7 @@
                                class="nav-link"
                                :class="{active: layout.currentRoute == 'user.profile'}">
                                 <i class="nav-icon fa fa-user"></i>
-                                <p>{{ layout.currentUser.name }}</p>
+                                <p>{{ layout.currentUser.data.name }}</p>
                             </a>
                         </li>
                         <li v-for="item in layout.menu" :class="{
@@ -153,9 +153,16 @@
 <script>
 
 export default {
+    props: {
+        'enableControlSidebar': {
+            default: false,
+        },
+        'noNavBar': {
+            default: false,
+        }
+    },
     data() {
         return {
-            noNavBar: false,
             title: '',
             layout: vm.$root.$children[0].$page.props,
         };
