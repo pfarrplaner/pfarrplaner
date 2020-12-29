@@ -159,11 +159,16 @@ export default {
         },
         'noNavBar': {
             default: false,
+        },
+        'title': {
+            default: '',
         }
+    },
+    mounted() {
+        if (this.title != '') document.title = this.title+' :: '+this.layout.appName;
     },
     data() {
         return {
-            title: '',
             layout: vm.$root.$children[0].$page.props,
         };
     }

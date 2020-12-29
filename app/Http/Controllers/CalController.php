@@ -18,8 +18,9 @@ class CalController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request, $date = null)
+    public function index(Request $request, $date = null, $month=null)
     {
+        if ($month) $date.='-'.$month;
         $date = ($date ? new Carbon ($date.'-01') : Carbon::now())->setTime(0,0,0);
         $monthEnd = $date->copy()->addMonth(1)->subSecond(1);
         $days = Day::with('cities')->inMonth($date)->orderBy('date')->get();

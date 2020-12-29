@@ -1,5 +1,5 @@
 <template>
-    <admin-layout enable-control-sidebar="true">
+    <admin-layout enable-control-sidebar="true" :title="title(date)">
         <template #navbar-left>
             <calendar-nav-top :date="new Date(date)" :years="years"></calendar-nav-top>
         </template>

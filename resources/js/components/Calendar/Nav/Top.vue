@@ -31,14 +31,12 @@
     <div class="button-row no-print btn-toolbar" role="toolbar">
         <div class="btn-group mr-2" role="group">
             <inertia-link class="btn btn-default"
-                          :href="route('cal.index', { date: moment(date).subtract(1, 'months').format('YYYY-MM') })"
-                          :only="['days','services','absences', 'date']"
+                          :href="route('calendar', { date: moment(date).subtract(1, 'months').format('YYYY-MM') })"
                           title="Einen Monat zurück">
                 <span class="fa fa-backward"></span>
             </inertia-link>
             <inertia-link class="btn btn-default"
-                          :href="route('cal.index', { date: moment().format('YYYY-MM') })"
-                          :only="['days','services','absences', 'date']"
+                          :href="route('calendar', { date: moment().format('YYYY-MM') })"
                           title="Gehe zum aktuellen Monat">
                 <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute</span>
             </inertia-link>
@@ -50,18 +48,18 @@
                     {{ moment(date).locale('de-DE').format('MMMM') }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <inertia-link class="dropdown-item" :href="monthLink(1)" :only="['days', 'services', 'absences', 'date']">Januar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(2)" :only="['days', 'services', 'absences', 'date']">Februar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(3)" :only="['days', 'services', 'absences', 'date']">März</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(4)" :only="['days', 'services', 'absences', 'date']">April</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(5)" :only="['days', 'services', 'absences', 'date']">Mai</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(6)" :only="['days', 'services', 'absences', 'date']">Juni</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(7)" :only="['days', 'services', 'absences', 'date']">Juli</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(8)" :only="['days', 'services', 'absences', 'date']">August</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(9)" :only="['days', 'services', 'absences', 'date']">September</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(10)" :only="['days', 'services', 'absences', 'date']">Oktober</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(11)" :only="['days', 'services', 'absences', 'date']">November</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(12)" :only="['days', 'services', 'absences', 'date']">Dezember</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(1)" >Januar</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(2)" >Februar</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(3)" >März</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(4)" >April</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(5)" >Mai</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(6)" >Juni</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(7)" >Juli</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(8)" >August</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(9)" >September</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(10)" >Oktober</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(11)" >November</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(12)" >Dezember</inertia-link>
                 </div>
             </div>
             <div class="btn-group" role="group">
@@ -71,15 +69,13 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
                     <inertia-link v-for="year in years" class="dropdown-item"
-                                  :only="['days','services','absences', 'date']"
                                   :key="year" :year="year" :href="yearLink(year)">{{ year }}</inertia-link>
                 </div>
             </div>
 
 
             <inertia-link class="btn btn-default"
-                          :href="route('cal.index', { date: moment(date).add(1, 'months').format('YYYY-MM') })"
-                          :only="['days','services','absences', 'date']"
+                          :href="route('calendar', { date: moment(date).add(1, 'months').format('YYYY-MM') })"
                           title="Einen Monat weiter">
                 <span class="fa fa-forward"></span>
             </inertia-link>
@@ -122,12 +118,12 @@ export default {
     },
     methods: {
         monthLink: function (month) {
-            return route('cal.index', {
+            return route('calendar', {
                 date: this.date.getFullYear()+'-'+month
             });
         },
         yearLink: function (year) {
-            return route('cal.index', {
+            return route('calendar', {
                 date: year+'-'+(this.date.getUTCMonth()+1)
             });
         },

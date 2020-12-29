@@ -57,7 +57,7 @@ export default {
     data() {
         return {
             list1: Object.values(this.cities),
-            list2: [],
+            list2: Object.values(window.vm.$children[0].$page.props.currentUser.data.hiddenCities),
             user: window.vm.$children[0].$page.props.currentUser.data,
         }
     },

@@ -30,7 +30,7 @@
 <template>
     <div>
         <div class="mb-1">
-            <a class="btn btn-primary" :href="route('cal.index', {
+            <a class="btn btn-primary" :href="route('calendar', {
                 date: moment(date).format('YYYY-MM'), slave: 1
             })"
                target="_blank"

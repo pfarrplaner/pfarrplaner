@@ -115,7 +115,7 @@ Route::get(
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
-Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
+//Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
 
 
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
@@ -257,7 +257,7 @@ Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr')
 
 
 // inertia testing
-Route::get('/cal/{date?}', 'CalController@index')->name('cal.index');
+Route::get('/calendar/{date?}/{month?}', 'CalController@index')->name('calendar');
 
 
 // ministry request
