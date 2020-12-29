@@ -30,7 +30,6 @@
 import { InertiaApp } from '@inertiajs/inertia-vue'
 import EventBus from './plugins/EventBus.js';
 import Vue from 'vue'
-import Vuex from 'vuex'
 import { InertiaProgress } from '@inertiajs/progress'
 
 import AdminLayout from "./Pages/Layouts/AdminLayout";
@@ -66,18 +65,6 @@ Vue.component('calendar-service-funeral', CalendarServiceFuneral);
 Vue.component('calendar-service-baptism', CalendarServiceBaptism);
 Vue.component('calendar-control-city-sort', CalendarControlCitySort);
 
-
-Vue.use(Vuex)
-const store = new Vuex.Store({
-    state: {
-        days: []
-    },
-    mutations: {
-        setDays (state, days) {
-            state.days = days;
-        }
-    }
-});
 
 InertiaProgress.init({
     // The delay after which the progress bar will
@@ -118,7 +105,6 @@ Vue.use(InertiaApp)
 const app = document.getElementById('app')
 
 window.vm = new Vue({
-    store: store,
     render: h => h(InertiaApp, {
         props: {
             initialPage: JSON.parse(app.dataset.page),
