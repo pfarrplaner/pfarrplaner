@@ -247,14 +247,7 @@ class Service extends Model
      */
     public function ministries()
     {
-        $ministries = [];
-        foreach ($this->participantsWithMinistry as $participant) {
-            if (!isset($ministries[$participant->pivot->category])) {
-                $ministries[$participant->pivot->category] = new Collection();
-            }
-            $ministries[$participant->pivot->category]->push($participant);
-        }
-        return $ministries;
+        return $this->participantsWithMinistry->groupBy('pivot.category');
     }
 
     /**
