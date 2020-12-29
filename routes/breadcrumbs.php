@@ -108,6 +108,18 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for('checkin.create', function (BreadcrumbsGenerator $trail, $location){
+    if (is_numeric($location)) $location = Location::find($location);
+    $trail->push($location->name);
+    $trail->push('Check-In', route('checkin.create', $location));
+});
+
+Breadcrumbs::for('checkin.store', function (BreadcrumbsGenerator $trail, $service){
+    if (is_numeric($service)) $service = Service::find($service);
+    $trail->push($service->location->name);
+    $trail->push('Check-In', route('checkin.create', $service->location));
+});
+
 Breadcrumbs::for(
     'days.edit',
     function (BreadcrumbsGenerator $trail, $day) {
@@ -375,6 +387,13 @@ Breadcrumbs::for(
     function (BreadcrumbsGenerator $trail, \App\Parish $parish) {
         $trail->parent('parishes.index');
         $trail->push($parish->name, route('parishes.edit', $parish));
+    }
+);
+
+Breadcrumbs::for(
+    'password.edit',
+    function (BreadcrumbsGenerator $trail) {
+        $trail->push('Passwort ändern');
     }
 );
 
@@ -669,3 +688,13 @@ Breadcrumbs::for(
         $trail->push('Liturgie', route('liturgyBlocks.index', $service));
     }
 );
+
+
+
+
+Breadcrumbs::for('ministry.request', function(BreadcrumbsGenerator $trail) {
+    $trail->push('Dienstanfrage');
+});
+Breadcrumbs::for('ministry.request.fill', function(BreadcrumbsGenerator $trail) {
+    $trail->push('Zusage');
+});

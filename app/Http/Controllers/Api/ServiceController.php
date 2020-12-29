@@ -41,7 +41,7 @@ namespace App\Http\Controllers\Api;
 use App\City;
 use App\Day;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UpdateServiceRequest;
+use App\Http\Requests\ServiceRequest;
 use App\Liturgy;
 use App\Mail\ServiceUpdated;
 use App\Service;
@@ -123,11 +123,11 @@ class ServiceController extends Controller
 
     /**
      * Update a service
-     * @param UpdateServiceRequest $request Request with validated data
+     * @param ServiceRequest $request Request with validated data
      * @param Service $service Service model
      * @return JsonResponse Response with new service data
      */
-    public function update(UpdateServiceRequest $request, Service $service)
+    public function update(ServiceRequest $request, Service $service)
     {
         $service->trackChanges();
         $originalParticipants = $service->participants;

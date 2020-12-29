@@ -74,6 +74,7 @@ class EmbedController extends Controller
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('location_id', $ids)
+            ->where('hidden', '!=', 1)
             ->whereHas(
                 'day',
                 function ($query) {
@@ -97,10 +98,12 @@ class EmbedController extends Controller
     {
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
+        $withStreaming = $request->get('withStreaming', false);
         $services = Service::with(['location', 'participants'])
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->whereIn('city_id', $ids)
+            ->where('hidden', '!=', 1)
             ->whereHas(
                 'day',
                 function ($query) {
@@ -113,8 +116,10 @@ class EmbedController extends Controller
             ->orderBy('time', 'ASC')
             ->limit($limit)
             ->get();
-        return response()
-            ->view('embed.services.table', compact('services', 'ids', 'title'));
+
+        $id = uniqid();
+
+        return view('embed.services.table', compact('services', 'ids', 'title', 'withStreaming', 'id'));
     }
 
     /**
@@ -130,6 +135,7 @@ class EmbedController extends Controller
         $services = Service::with(['location', 'participants'])
             ->select('services.*')
             ->join('days', 'services.day_id', '=', 'days.id')
+            ->where('hidden', '!=', 1)
             ->whereIn('city_id', $ids)
             ->whereHas(
                 'day',

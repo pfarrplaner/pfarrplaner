@@ -30,15 +30,19 @@
 
 namespace App;
 
+use App\Helpers\YoutubeHelper;
 use App\Seating\AbstractSeatFinder;
 use App\Seating\MaximumBasedSeatFinder;
 use App\Seating\RowBasedSeatFinder;
 use App\Tools\StringTool;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
+use App\Traits\IncludesPermissionAttributes;
 use App\Traits\TracksChangesTrait;
 use Carbon\Carbon;
 use Exception;
+use Google_Service_YouTube_LiveBroadcastSnippet;
+use Google_Service_YouTube_VideoSnippet;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -58,6 +62,7 @@ class Service extends Model
     use HasCommentsTrait;
     use TracksChangesTrait;
     use HasAttachmentsTrait;
+    use IncludesPermissionAttributes;
 
     /**
      * @var array
@@ -194,6 +199,12 @@ class Service extends Model
         'descriptionText',
         'liturgy',
         'ministriesByCategory',
+        'isShowable',
+        'isEditable',
+        'isDeletable',
+        'isMine',
+        'titleText',
+        'liveDashboardUrl',
     ];
 
     /**
@@ -214,14 +225,486 @@ class Service extends Model
         'registration_online_start',
         'registration_online_end',
     ];
-
+    /** @var AbstractSeatFinder */
+    protected $seatFinder = null;
     /**
      * @var array
      */
     private $auditData = [];
 
-    /** @var AbstractSeatFinder  */
-    protected $seatFinder = null;
+// ACCESSORS
+
+    /**
+     * @return array
+     */
+    public function getMinistriesByCategoryAttribute()
+    {
+        return $this->ministries();
+    }
+
+    /**
+     * @return array
+     */
+    public function ministries()
+    {
+        return $this->participantsWithMinistry->groupBy('pivot.category');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDateTextAttribute()
+    {
+        return $this->dateText();
+    }
+
+    /**
+     * @param string $format
+     * @return mixed
+     */
+    public function dateText($format = '%d.%m.%Y')
+    {
+        return $this->day->date->formatLocalized($format);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getPastorsAttribute()
+    {
+        return $this->pastors()->get();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function pastors()
+    {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'P')->withTimestamps();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getOrganistsAttribute()
+    {
+        return $this->organists()->get();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function organists()
+    {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'O')->withTimestamps();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getSacristansAttribute()
+    {
+        return $this->sacristans()->get();
+    }
+//
+
+    /**
+     * @return BelongsToMany
+     */
+    public function sacristans()
+    {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'M')->withTimestamps();
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getOtherParticipantsAttribute()
+    {
+        return $this->otherParticipants()->get();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function otherParticipants()
+    {
+        return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescriptionTextAttribute()
+    {
+        return $this->descriptionText();
+    }
+
+    /**
+     * @return string
+     */
+    public function descriptionText()
+    {
+        $desc = [];
+        if ($this->needs_reservations) {
+            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis ' . $this->registration_online_end->format(
+                    'd.m.Y, H:i'
+                ) . ' Uhr' : 'Anmeldung nötig');
+        }
+        if ($this->baptism) {
+            $desc[] = 'mit Taufen';
+        }
+        if ($this->eucharist) {
+            $desc[] = 'mit Abendmahl';
+        }
+        if ($this->getAttribute('description') != '') {
+            $desc[] = $this->getAttribute('description');
+        }
+        return join('; ', $desc);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getLocationTextAttribute()
+    {
+        return $this->locationText();
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function locationText()
+    {
+        return $this->special_location ?: (is_object($this->location) ? $this->location->name : '');
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeTextAttribute()
+    {
+        return $this->timeText();
+    }
+
+    /**
+     * @param bool $uhr
+     * @param string $separator
+     * @param bool $skipMinutes
+     * @param bool $nbsp
+     * @param bool $leadingZero
+     * @return string
+     */
+    public function timeText($uhr = true, $separator = ':', $skipMinutes = false, $nbsp = false, $leadingZero = false)
+    {
+        return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaptismsTextAttribute()
+    {
+        return $this->baptismsText(true);
+    }
+
+    /**
+     * @param bool $includeCount
+     * @param bool $includeText
+     * @return string
+     */
+    public function baptismsText($includeCount = false, $includeText = false)
+    {
+        $baptisms = [];
+        foreach ($this->baptisms as $baptism) {
+            $baptisms[] = $baptism->candidate_name;
+        }
+        return
+            ($includeText ? ($this->baptisms()->count() == 1 ? 'Taufe ' : 'Taufen ') . 'von ' : '')
+            . ($includeCount ? $this->baptisms()->count() . ' ' . ($this->baptisms()->count(
+                ) == 1 ? 'Taufe ' : 'Taufen ') : '')
+            . join('; ', $baptisms);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function baptisms()
+    {
+        return $this->hasMany(Baptism::class);
+    }
+
+    /**
+     * @return false|string
+     */
+    public function getTimeAttribute()
+    {
+        return isset($this->attributes['time']) ? substr($this->attributes['time'], 0, 5) : '';
+    }
+
+    /**
+     * @return array
+     */
+    public function getLiturgyAttribute()
+    {
+        return $this->liturgy;
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getBroadcastTitleAttribute()
+    {
+        $liturgy = Liturgy::getDayInfo($this->day);
+        return ($this->title ?: (isset($liturgy['title']) ? $liturgy['title']
+            . ' (' . $this->day->date->format('d.m.Y') . ')'
+            : 'Gottesdienst mit ' . $this->participantsText('P', true)));
+    }
+
+    /**
+     * @param $category
+     * @param bool $fullName
+     * @param bool $withTitle
+     * @param string $glue
+     * @return string
+     */
+    public function participantsText($category, $fullName = false, $withTitle = true, $glue = ', ')
+    {
+        $participants = $this->participantsByCategory($category);
+        $names = [];
+        foreach ($participants as $participant) {
+            $names[] = ($fullName ? $participant->fullName($withTitle) : $participant->lastName($withTitle));
+        }
+        return join($glue, $names);
+    }
+
+    /**
+     * @param $category
+     * @return Collection|mixed
+     */
+    public function participantsByCategory($category)
+    {
+        switch ($category) {
+            case 'P':
+                return $this->pastors;
+            case 'O':
+                return $this->organists;
+            case 'M':
+                return $this->sacristans;
+            case 'A':
+                return $this->otherParticipants;
+            default:
+                return $this->ministries()[$category] ?? collect([]);
+        }
+    }
+
+    /**
+     * @return array|string
+     * @throws \Throwable
+     */
+    public function getBroadcastDescriptionAttribute()
+    {
+        return (view(
+            'services.youtube.snippet.description',
+            ['service' => $this, 'liturgy' => Liturgy::getDayInfo($this->day)]
+        )->render());
+    }
+
+    /**
+     * @return string
+     */
+    public function getVideoTimeStringAttribute()
+    {
+        $thisTime = Carbon::createFromTimeString(
+            $this->day->date->format('Y-m-d') . ' ' . $this->time,
+            'Europe/Berlin'
+        );
+        return $thisTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSongsheetUrlAttribute()
+    {
+        return route(
+            'storage',
+            [
+                'path' => pathinfo($this->songsheet, PATHINFO_FILENAME),
+                'prettyName' => $this->day->date->format('Ymd') . '-Liedblatt.' . pathinfo(
+                        $this->songsheet,
+                        PATHINFO_EXTENSION
+                    )
+            ]
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getOfferingsUrlAttribute()
+    {
+        return $this->attributes['offerings_url'] ?: $this->city->default_offering_url;
+    }
+// END ACCESSORS
+
+// MUTATORS
+    /**
+     * @param $time
+     */
+    public function setTimeAttribute($time)
+    {
+        $this->attributes['time'] = substr($time, 0, 5);
+    }
+
+// SCOPES
+
+    /**
+     * @param Builder $query
+     * @param $ministries
+     * @return Builder
+     */
+    public function scopeHavingOpenMinistries(Builder $query, $ministries)
+    {
+        return $query->select(['services.*', 'days.date'])
+            ->join('days', 'days.id', '=', 'day_id')
+            ->whereDoesntHave(
+                'participants',
+                function ($query) use ($ministries) {
+                    $query->whereIn('service_user.category', $ministries);
+                }
+            )
+            ->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+    }
+
+    /**
+     * @param Builder $query
+     * @param Carbon $date
+     * @return Builder
+     */
+    public function scopeStartingFrom(Builder $query, Carbon $date)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query) use ($date) {
+                $query->where('date', '>=', $date);
+            }
+        );
+    }
+
+    /**
+     * @param Builder $query
+     * @param Carbon $date
+     * @return Builder
+     */
+    public function scopeEndingAtFrom(Builder $query, Carbon $date)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query) use ($date) {
+                $query->where('date', '<=', $date);
+            }
+        );
+    }
+
+    /**
+     * @param Builder $query
+     * @param Carbon $date
+     * @return Builder
+     */
+    public function scopeBetween(Builder $query, Carbon $start, Carbon $end)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query) use ($start, $end) {
+                $query->whereBetween('date', [$start, $end]);
+            }
+        );
+    }
+
+    /**
+     * @param Builder $query
+     * @param int $year Year
+     * @param int $month Month
+     * @return Builder
+     */
+    public function scopeInMonth(Builder $query, $year, $month) {
+        $monthStart = Carbon::createFromFormat('Y-m-d H:i:s', $year . '-' . $month . '-01 0:00:00');
+        $monthEnd = (clone $monthStart)->addMonth(1)->subSecond(1);
+        return $query->between($monthStart, $monthEnd);
+    }
+
+    /**
+     * @param Builder $query
+     * @param City $city
+     * @return Builder
+     */
+    public function scopeRegularForCity(Builder $query, City $city)
+    {
+        return $query->where('city_id', $city->id)
+            ->whereDoesntHave('funerals')
+            ->whereDoesntHave('weddings');
+    }
+
+    /**
+     * @param Builder $query
+     * @param $city
+     * @return Builder
+     */
+    public function scopeInCity(Builder $query, $city)
+    {
+        return $query->where('city_id', $city->id);
+    }
+
+    /**
+     * @param Builder $query
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return Builder
+     */
+    public function scopeDateRange(Builder $query, Carbon $start, Carbon $end)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query2) use ($start, $end) {
+                $query2->where('date', '>=', $start)
+                    ->where('date', '<=', $end);
+            }
+        );
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOrdered(Builder $query)
+    {
+        return $query->select('services.*')
+            ->join('days', 'services.day_id', 'days.id')
+            ->orderBy('days.date')
+            ->orderBy('time');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeHidden(Builder $query)
+    {
+        return $query->where('hidden', 1);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeNotHidden(Builder $query)
+    {
+        return $query->where('hidden', 0);
+    }
+
+// SETTERS
 
     /**
      * Mix a collection of services into an array of events
@@ -256,23 +739,9 @@ class Service extends Model
 
         foreach ($ministries as $ministry) {
             $missing2[$ministry] = Service::with(['location', 'day'])
-                ->whereDoesntHave(
-                    'participants',
-                    function ($query) use ($ministry) {
-                        $query->where('service_user.category', $ministry);
-                    }
-                )
                 ->whereIn('city_id', Auth::user()->writableCities->pluck('id'))
-                ->whereHas(
-                    'day',
-                    function ($query) {
-                        $query->where('date', '>=', now());
-                    }
-                )
-                ->select(['services.*', 'days.date'])
-                ->join('days', 'days.id', '=', 'day_id')
-                ->orderBy('days.date', 'ASC')
-                ->orderBy('time', 'ASC')
+                ->havingOpenMinistries([$ministry])
+                ->startingFrom(Carbon::now())
                 ->get();
         }
 
@@ -402,68 +871,9 @@ class Service extends Model
     /**
      * @return HasMany
      */
-    public function bookings() {
+    public function bookings()
+    {
         return $this->hasMany(Booking::class);
-    }
-
-    /**
-     * @return array
-     */
-    public function getMinistriesByCategoryAttribute()
-    {
-        return $this->ministries();
-    }
-
-    /**
-     * @return array
-     */
-    public function ministries()
-    {
-        $ministries = [];
-        foreach ($this->participantsWithMinistry as $participant) {
-            if (!isset($ministries[$participant->pivot->category])) {
-                $ministries[$participant->pivot->category] = new Collection();
-            }
-            $ministries[$participant->pivot->category]->push($participant);
-        }
-        return $ministries;
-    }
-
-    /**
-     * @param $category
-     * @param bool $fullName
-     * @param bool $withTitle
-     * @param string $glue
-     * @return string
-     */
-    public function participantsText($category, $fullName = false, $withTitle = true, $glue = ', ')
-    {
-        $participants = $this->participantsByCategory($category);
-        $names = [];
-        foreach ($participants as $participant) {
-            $names[] = ($fullName ? $participant->fullName($withTitle) : $participant->lastName($withTitle));
-        }
-        return join($glue, $names);
-    }
-
-    /**
-     * @param $category
-     * @return Collection|mixed
-     */
-    public function participantsByCategory($category)
-    {
-        switch ($category) {
-            case 'P':
-                return $this->pastors;
-            case 'O':
-                return $this->organists;
-            case 'M':
-                return $this->sacristans;
-            case 'A':
-                return $this->otherParticipants;
-            default:
-                return $this->ministries()[$category] ?? collect([]);
-        }
     }
 
     /**
@@ -487,55 +897,6 @@ class Service extends Model
             case 'A':
                 return $this->otherParticipants()->sync($participants);
         }
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function pastors()
-    {
-        return $this->belongsToMany(User::class)->wherePivot('category', 'P')->withTimestamps();
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function organists()
-    {
-        return $this->belongsToMany(User::class)->wherePivot('category', 'O')->withTimestamps();
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function sacristans()
-    {
-        return $this->belongsToMany(User::class)->wherePivot('category', 'M')->withTimestamps();
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function otherParticipants()
-    {
-        return $this->belongsToMany(User::class)->wherePivot('category', 'A')->withTimestamps();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDateTextAttribute()
-    {
-        return $this->dateText();
-    }
-
-    /**
-     * @param string $format
-     * @return mixed
-     */
-    public function dateText($format = '%d.%m.%Y')
-    {
-        return $this->day->date->formatLocalized($format);
     }
 
     /**
@@ -591,6 +952,11 @@ class Service extends Model
         return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
     }
 
+    public function getTitleTextAttribute()
+    {
+        return $this->titleText(true, true);
+    }
+
     /**
      * @return string
      */
@@ -617,32 +983,6 @@ class Service extends Model
             $funerals[] = $funeral->type . ' von ' . $funeral->buried_name;
         }
         return (join('; ', $funerals));
-    }
-
-    /**
-     * @param bool $includeCount
-     * @param bool $includeText
-     * @return string
-     */
-    public function baptismsText($includeCount = false, $includeText = false)
-    {
-        $baptisms = [];
-        foreach ($this->baptisms as $baptism) {
-            $baptisms[] = $baptism->candidate_name;
-        }
-        return
-            ($includeText ? ($this->baptisms()->count() == 1 ? 'Taufe ' : 'Taufen ') . 'von ' : '')
-            . ($includeCount ? $this->baptisms()->count() . ' ' . ($this->baptisms()->count(
-                ) == 1 ? 'Taufe ' : 'Taufen ') : '')
-            . join('; ', $baptisms);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function baptisms()
-    {
-        return $this->hasMany(Baptism::class);
     }
 
     /**
@@ -697,27 +1037,6 @@ class Service extends Model
     public function hasDescription(string $text): bool
     {
         return (false !== strpos(strtolower($this->descriptionText()), strtolower($text)));
-    }
-
-    /**
-     * @return string
-     */
-    public function descriptionText()
-    {
-        $desc = [];
-        if ($this->needs_reservations) {
-            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis '.$this->registration_online_end->format('d.m.Y, H:i').' Uhr' : 'Anmeldung nötig');
-        }
-        if ($this->baptism) {
-            $desc[] = 'mit Taufen';
-        }
-        if ($this->eucharist) {
-            $desc[] = 'mit Abendmahl';
-        }
-        if ($this->getAttribute('description') != '') {
-            $desc[] = $this->getAttribute('description');
-        }
-        return join('; ', $desc);
     }
 
     /**
@@ -803,119 +1122,6 @@ class Service extends Model
     }
 
     /**
-     * @return mixed|string
-     */
-    public function locationText()
-    {
-        return $this->special_location ?: (is_object($this->location) ? $this->location->name : '');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getPastorsAttribute()
-    {
-        return $this->pastors()->get();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getOrganistsAttribute()
-    {
-        return $this->organists()->get();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getSacristansAttribute()
-    {
-        return $this->sacristans()->get();
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getOtherParticipantsAttribute()
-    {
-        return $this->otherParticipants()->get();
-    }
-
-    /**
-     * @return string
-     */
-    public function getDescriptionTextAttribute()
-    {
-        return $this->descriptionText();
-    }
-
-    /**
-     * @return mixed|string
-     */
-    public function getLocationTextAttribute()
-    {
-        return $this->locationText();
-    }
-
-    /**
-     * @return string
-     */
-    public function getTimeTextAttribute()
-    {
-        return $this->timeText();
-    }
-
-    /**
-     * @param bool $uhr
-     * @param string $separator
-     * @param bool $skipMinutes
-     * @param bool $nbsp
-     * @param bool $leadingZero
-     * @return string
-     */
-    public function timeText($uhr = true, $separator = ':', $skipMinutes = false, $nbsp = false, $leadingZero = false)
-    {
-        return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBaptismsTextAttribute()
-    {
-        return $this->baptismsText(true);
-    }
-
-    /**
-     * @return false|string
-     */
-    public function getTimeAttribute()
-    {
-        return isset($this->attributes['time']) ? substr($this->attributes['time'], 0, 5) : '';
-    }
-
-    /**
-     * @param $time
-     */
-    public function setTimeAttribute($time)
-    {
-        $this->attributes['time'] = substr($time, 0, 5);
-    }
-
-    /**
-     * @param Builder $query
-     * @param City $city
-     * @return Builder
-     */
-    public function scopeRegularForCity(Builder $query, City $city)
-    {
-        return $query->where('city_id', $city->id)
-            ->whereDoesntHave('funerals')
-            ->whereDoesntHave('weddings');
-    }
-
-    /**
      * @return Carbon
      */
     public function trueDate()
@@ -929,45 +1135,6 @@ class Service extends Model
     public function atText()
     {
         return is_object($this->location) ? $this->location->atText() : '(' . $this->locationText() . ')';
-    }
-
-    /**
-     * @param Builder $query
-     * @param $city
-     * @return Builder
-     */
-    public function scopeInCity(Builder $query, $city)
-    {
-        return $query->where('city_id', $city->id);
-    }
-
-    /**
-     * @param Builder $query
-     * @param Carbon $start
-     * @param Carbon $end
-     * @return Builder
-     */
-    public function scopeDateRange(Builder $query, Carbon $start, Carbon $end)
-    {
-        return $query->whereHas(
-            'day',
-            function ($query2) use ($start, $end) {
-                $query2->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            }
-        );
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeOrdered(Builder $query)
-    {
-        return $query->select('services.*')
-            ->join('days', 'services.day_id', 'days.id')
-            ->orderBy('days.date')
-            ->orderBy('time');
     }
 
     public function setDefaultOfferingValues()
@@ -1040,47 +1207,77 @@ class Service extends Model
     }
 
     /**
-     * @return array
-     */
-    public function getLiturgyAttribute()
-    {
-        return $this->liturgy;
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeHidden(Builder $query)
-    {
-        return $query->where('hidden', 1);
-    }
-
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeNotHidden(Builder $query)
-    {
-        return $query->where('hidden', 0);
-    }
-
-    /**
      * Get an instance of SeatFinder for this service
      * @return AbstractSeatFinder
      */
-    public function getSeatFinder() {
-        if ($this->seatFinder) return $this->seatFinder;
-        if (is_object($this->location) && (count($this->location->seatingSections) >0)) return new RowBasedSeatFinder($this);
+    public function getSeatFinder()
+    {
+        if ($this->seatFinder) {
+            return $this->seatFinder;
+        }
+        if (is_object($this->location) && (count($this->location->seatingSections) > 0)) {
+            return new RowBasedSeatFinder($this);
+        }
         return new MaximumBasedSeatFinder($this);
     }
 
-    public function dateTime() {
+    /**
+     * @param $s
+     * @return mixed
+     */
+    public function formatTime($s)
+    {
+        return (false !== strpos($s, '%')) ? $this->dateTime()->formatLocalized($s) : $this->dateTime()->format($s);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function dateTime()
+    {
         list ($hour, $minute) = explode(':', $this->time);
         return $this->day->date->copy()->setTime($hour, $minute, 0);
     }
 
-    public function formatTime($s) {
-        return (false !== strpos($s, '%')) ? $this->dateTime()->formatLocalized($s) : $this->dateTime()->format($s);
+    public function getBroadcastSnippet(): Google_Service_YouTube_LiveBroadcastSnippet
+    {
+        $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
+        $broadcastSnippet->setTitle($this->broadcastTitle);
+        $broadcastSnippet->setDescription($this->broadcastDescription);
+        $broadcastSnippet->setScheduledStartTime($this->videoTimeString);
+        return $broadcastSnippet;
+    }
+
+    public function getVideoSnippet(): Google_Service_YouTube_VideoSnippet
+    {
+        $videoSnippet = new \Google_Service_YouTube_VideoSnippet();
+        $videoSnippet->setTitle($this->broadcastTitle);
+        $videoSnippet->setDescription($this->broadcastDescription);
+        $videoSnippet->setCategoryId(24);
+        return $videoSnippet;
+    }
+
+
+
+    public function scopeInMonthByDate(Builder $query, Carbon $date) {
+        return $query->whereHas('day', function($query2) use ($date) {
+            return $query2->inMonth($date);
+        });
+    }
+
+    public function scopeInCities(Builder $query, $cities)
+    {
+        if ((!is_array($cities)) && (is_object($cities->first()))) $cities = $cities->pluck('id');
+        return $query->whereIn('city_id', $cities);
+    }
+
+
+    public function getIsMineAttribute() {
+        return $this->participants->contains(Auth::user());
+    }
+
+    public function getLiveDashboardUrlAttribute()
+    {
+        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
     }
 }

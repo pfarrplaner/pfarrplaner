@@ -81,7 +81,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown3">
-                <a class="dropdown-item" href="{{ route('changePassword') }}">
+                <a class="dropdown-item" href="{{ route('password.edit') }}">
                     Passwort ändern
                 </a>
                 <a class="dropdown-item" href="{{ route('user.profile') }}">

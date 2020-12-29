@@ -36,7 +36,7 @@ $(document).ready(function () {
         language: 'de',
     });
 
-    $('.form-check-input').change(function(){
+    $('.form-check-input-blade').change(function(){
         var name = '"'+$(this).attr('name').replace('_check', '')+'"';
         var checked = this.checked;
         var value = checked ? 1 : 0;

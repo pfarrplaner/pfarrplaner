@@ -33,6 +33,7 @@ namespace Tests\Feature;
 use App\Http\Middleware\Authenticate;
 use App\Location;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -90,7 +91,7 @@ class LocationTest extends TestCase
     {
         $response = $this->post(
             route('locations.store'),
-            factory(Location::class)->raw(['default_time' => str_random(5)])
+            factory(Location::class)->raw(['default_time' => Str::random(5)])
         );
         $response->assertSessionHasErrors('default_time');
         $this->assertCount(0, Location::all());

@@ -85,11 +85,12 @@ class EmbedServiceTableReport extends AbstractEmbedReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'listType' => 'required',
                 'ids' => 'required',
                 'cors-origin' => 'required|url',
+                'withStreaming' => 'nullable|boolean',
             ]
         );
 
@@ -106,7 +107,7 @@ class EmbedServiceTableReport extends AbstractEmbedReport
 
         $randomId = uniqid();
 
-        return view('reports.embedservicetable.render', compact('url', 'randomId'));
+        return view('reports.embedservicetable.render', compact('url', 'randomId', 'withStreaming'));
     }
 
 

@@ -95,7 +95,7 @@
 
         </div>
         <div class="col-md-4">
-            <form method="post" action="{{ route('changePassword') }}">
+            <form method="post" action="{{ route('password.edit') }}">
                 @csrf
                 @component('components.ui.card')
                     @slot('cardHeader')Passwort ändern @endslot

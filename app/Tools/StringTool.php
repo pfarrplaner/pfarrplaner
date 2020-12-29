@@ -146,4 +146,13 @@ class StringTool
         }
         return join("\n", $lines);
     }
+
+    /**
+     * @param string $s
+     * @return string
+     */
+    public static function sanitizeXMLString(string $s): string
+    {
+        return htmlspecialchars($s, ENT_XML1 | ENT_COMPAT, 'UTF-8');
+    }
 }

@@ -33,6 +33,7 @@ namespace App;
 use App\Tools\StringTool;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,6 +64,96 @@ class Absence extends Model
         'to'
     ];
 
+    protected $appends = [
+        'durationText', 'replacementText'
+    ];
+
+// ACCESSORS
+    public function getReplacementTextAttribute()
+    {
+        return $this->replacementText();
+    }
+
+    public function getDurationTextAttribute()
+    {
+        return $this->durationText();
+    }
+
+    /**
+     * @return string
+     */
+    public function durationText()
+    {
+        return StringTool::durationText($this->from, $this->to);
+    }
+// END ACCESSORS
+
+// SCOPES
+    /**
+     * @param $query
+     * @param $user
+     * @return mixed
+     */
+    public function scopeVisibleForUser($query, $user)
+    {
+        $userId = $user->id;
+        $users = $user->getViewableAbsenceUsers();
+
+        return $query->whereIn('user_id', $users->pluck('id'))
+            ->orWhere(
+                function ($query2) use ($userId) {
+                    $query2->whereHas(
+                        'replacements',
+                        function ($query) use ($userId) {
+                            $query->where('user_id', $userId);
+                        }
+                    );
+                }
+            );
+    }
+
+    public function scopeByPeriod(Builder $query, Carbon $start, Carbon $end)
+    {
+        return $query->where('from', '<=', $end)
+            ->where('to', '>=', $start);
+    }
+
+    /**
+     * @param $query
+     * @param User $user
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return mixed
+     */
+    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end)
+    {
+        return $query->where('user_id', $user->id)
+            ->where('from', '<=', $end)
+            ->where('to', '>=', $start);
+    }
+// END SCOPES
+
+// SETTERS
+// SETTERS
+    /**
+     * Get all absences keyed by days
+     * @param Collection|\Illuminate\Database\Eloquent\Collection $absences
+     * @param Collection|\Illuminate\Database\Eloquent\Collection $days
+     */
+    public static function getByDays($absences, $days)
+    {
+        $dayAbsences = [];
+        foreach ($days as $day) {
+            $dayAbsences[$day->id] = collect();
+            foreach ($absences as $absence) {
+                if ($absence->containsDate($day->date)) {
+                    $dayAbsences[$day->id]->push($absence);
+                }
+            }
+        }
+        return $dayAbsences;
+    }
+
     /**
      * @return HasMany
      */
@@ -85,14 +176,6 @@ class Absence extends Model
     public function approvals()
     {
         return $this->hasMany(Approval::class);
-    }
-
-    /**
-     * @return string
-     */
-    public function durationText()
-    {
-        return StringTool::durationText($this->from, $this->to);
     }
 
     /**
@@ -168,42 +251,8 @@ class Absence extends Model
         return parent::delete();
     }
 
-
-    /**
-     * @param $query
-     * @param $user
-     * @return mixed
-     */
-    public function scopeVisibleForUser($query, $user)
+    public function containsDate(Carbon $date)
     {
-        $userId = $user->id;
-        $users = $user->getViewableAbsenceUsers();
-
-        return $query->whereIn('user_id', $users->pluck('id'))
-            ->orWhere(
-                function ($query2) use ($userId) {
-                    $query2->whereHas(
-                        'replacements',
-                        function ($query) use ($userId) {
-                            $query->where('user_id', $userId);
-                        }
-                    );
-                }
-            );
-    }
-
-
-    /**
-     * @param $query
-     * @param User $user
-     * @param Carbon $start
-     * @param Carbon $end
-     * @return mixed
-     */
-    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end)
-    {
-        return $query->where('user_id', $user->id)
-            ->where('from', '<=', $end)
-            ->where('to', '>=', $start);
+        return ($date >= $this->from) && ($date <= $this->to);
     }
 }

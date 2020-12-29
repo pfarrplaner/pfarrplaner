@@ -17,6 +17,7 @@
                 @input(['label' => 'Nachname', 'name' => 'name'])
                 @input(['label' => 'Vorname', 'name' => 'first_name'])
                 @textarea(['label' => 'Kontaktdaten', 'name' => 'contact'])
+                @input(['label' => 'E-Mailadresse', 'name' => 'email'])
                 @input(['label' => 'Anzahl Personen', 'name' => 'number', 'type' => 'number', 'value' => 1])
                 <hr />
                 <h3>Manuelle Platzierung</h3>

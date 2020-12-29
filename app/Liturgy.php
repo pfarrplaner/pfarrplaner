@@ -31,6 +31,7 @@
 namespace App;
 
 use Illuminate\Support\Facades\Cache;
+use Storage;
 
 /**
  * Class Liturgy
@@ -65,12 +66,7 @@ class Liturgy
             $day = new Day(['date' => $day]);
         }
         if (!Cache::has('liturgicalDays')) {
-            $tmpData = json_decode(
-                file_get_contents(
-                    'https://www.kirchenjahr-evangelisch.de/service.php?o=lcf&f=gaa&r=json&dl=user'
-                ),
-                true
-            );
+            $tmpData = json_decode(Storage::get('liturgy.json'), true);
             foreach ($tmpData['content']['days'] as $key => $val) {
                 if (!isset($data[$val['date']])) $data[$val['date']] = $val;
             }
@@ -79,14 +75,20 @@ class Liturgy
             $data = Cache::get('liturgicalDays');
         }
 
+        $result = null;
         if (isset($data[$day->date->format('d.m.Y')])) {
-            return $data[$day->date->format('d.m.Y')];
+            $result = $data[$day->date->format('d.m.Y')];
         } elseif ($fallback) {
             $date = $day->date;
             while (!isset($data[$date->format('d.m.Y')])) {
                 $date = $date->subDays(1);
             }
-            return isset($data[$date->format('d.m.Y')]) ? $data[$date->format('d.m.Y')] : [];
+            $result = isset($data[$date->format('d.m.Y')]) ? $data[$date->format('d.m.Y')] : [];
+        }
+        if (!is_null($result)) {
+            $result['currentPerikope'] = $result['litTextsPerikope'.$result['perikope']];
+            $result['currentPerikopeLink'] = $result['litTextsPerikope'.$result['perikope'].'Link'];
+            return $result;
         }
         return [];
     }

@@ -6,7 +6,8 @@
         @endcan
         @if(is_object($service->location) && count($service->location->seatingSections))
             <div style="margin-top: 2px;">
-                <a class="btn btn-sm btn-success" href="{{ route('seatfinder', $service) }}" title="Neue Anmeldung">
+                <a class="btn btn-sm btn-success" href="{{ route('seatfinder', $service) }}" title="Neue Anmeldung"
+                   @if(!$service->registration_active) onclick="return confirm('Die Anmeldung für diesen Gottesdienst ist momentan deaktiviert. Möchtest du wirklich trotzdem eine neue Anmeldung anlegen?');" @endif>
                     <span class="fa fa-ticket-alt"></span>
                 </a>
                 <a class="btn btn-sm btn-secondary" href="{{ route('service.bookings', $service) }}" title="Anmeldungen">

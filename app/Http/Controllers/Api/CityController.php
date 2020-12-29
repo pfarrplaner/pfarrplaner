@@ -108,6 +108,7 @@ class CityController extends Controller
                 'op_domain' => 'nullable',
                 'op_customer_key' => 'nullable',
                 'op_customer_token' => 'nullable',
+                'default_offering_url' => 'nullable|string',
             ]
         );
         return $data;

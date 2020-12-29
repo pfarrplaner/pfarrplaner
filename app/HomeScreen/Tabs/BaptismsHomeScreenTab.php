@@ -86,7 +86,7 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
         $this->baptismQuery = Service::with(['baptisms', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', Auth::user()->writableCities->pluck('id'))
+            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
             ->whereHas('baptisms')
             ->whereHas(
                 'day',
@@ -108,7 +108,7 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
         }
 
         $this->baptismRequestQuery = Baptism::whereNull('service_id')
-            ->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
+            ->whereIn('city_id', Auth::user()->cities->pluck('id'));
 
     }
 

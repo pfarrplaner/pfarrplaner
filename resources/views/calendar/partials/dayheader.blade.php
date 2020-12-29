@@ -23,15 +23,15 @@
                     </button>
                 </form>
             @endcan
-            @if (isset($liturgy[$day->id]['perikope']))
+            @if (isset($day->liturgy['perikope']))
                 <div class="liturgy">
                     <div class="liturgy-sermon">
                         <div class="liturgy-color"
-                             style="background-color: {{ $liturgy[$day->id]['litColor'].';'.($liturgy[$day->id]['litColor'] == 'white' ? 'border-color: darkgray;' : '') }}"
-                             title="{{ $liturgy[$day->id]['feastCircleName'] }}"></div>
-                        <a href="{{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope'].'Link'] }}"
+                             style="background-color: {{ $day->liturgy['litColor'].';'.($day->liturgy['litColor'] == 'white' ? 'border-color: darkgray;' : '') }}"
+                             title="{{ $day->liturgy['feastCircleName'] }}"></div>
+                        <a href="{{ $day->liturgy['litTextsPerikope'.$day->liturgy['perikope'].'Link'] }}"
                            target="_blank" title="Klicken, um den Text in einem neuen Tab zu lesen">
-                            {{ $liturgy[$day->id]['litTextsPerikope'.$liturgy[$day->id]['perikope']] }}</a>
+                            {{ $day->liturgy['litTextsPerikope'.$day->liturgy['perikope']] }}</a>
                     </div>
                 </div>
                 @else
@@ -40,23 +40,22 @@
         </div>
         @if ($day->name)
             <div class="card-footer day-name"
-                 title="@if(isset($liturgy[$day->id]['litProfileGist'])){{ $liturgy[$day->id]['litProfileGist'] }}@endif">{{ $day->name }}</div>
+                 title="@if(isset($day->liturgy['litProfileGist'])){{ $day->liturgy['litProfileGist'] }}@endif">{{ $day->name }}</div>
         @else
             <div class="card-footer day-name"
-                 title="@if(isset($liturgy[$day->id]['litProfileGist'])){{ $liturgy[$day->id]['litProfileGist'] }}@endif">@if(isset($liturgy[$day->id]['title'])){{ $liturgy[$day->id]['title'] }}@endif</div>
+                 title="@if(isset($day->liturgy['litProfileGist'])){{ $day->liturgy['litProfileGist'] }}@endif">@if(isset($day->liturgy['title'])){{ $day->liturgy['title'] }}@endif</div>
         @endif
     </div>
 
     @if ($day->description)
         <div class="day-description">{{ $day->description }}</div> @endif
     @can('urlaub-lesen')
-        @if (isset($vacations[$day->id]) && count($vacations[$day->id]))
-            @foreach ($vacations[$day->id] as $vacation)
+        @foreach ($absences as $absence)
+            @if($absence->containsDate($day->date))
                 <div class="vacation"
-                     title="{{ $vacation->user->fullName(true) }}: {{ $vacation->reason }} ({{ $vacation->durationText() }}) [{{ $vacation->replacementText('V:') }}]">
-                    <span class="fa fa-globe-europe"></span> {{ $vacation->user->lastName() }}
-                </div>
-            @endforeach
-        @endif
+                     title="{{ $absence->user->fullName(true) }}: {{ $absence->reason }} ({{ $absence->durationText() }}) [{{ $absence->replacementText('V:') }}]">
+                    <span class="fa fa-globe-europe"></span> {{ $absence->user->lastName() }}</div>
+            @endif
+        @endforeach
     @endcan
 </th>

@@ -9,4 +9,5 @@
             <option value="{{ $ministry }}" @if(in_array($ministry, $config['ministries'])) selected @endif>{{ $ministry }}</option>
         @endforeach
     </select>
+    @locationselect(['name' => $tab->configKey('locations', true), 'label' => 'Auf folgende Orte beschränken', 'locations' => $locations, 'value' => $config['locations']])
 </div>

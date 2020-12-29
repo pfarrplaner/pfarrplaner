@@ -30,6 +30,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -50,7 +51,8 @@ class Location extends Model
         'cc_default_location',
         'alternate_location_id',
         'general_location_name',
-        'at_text'
+        'at_text',
+        'instructions'
     ];
 
     /**
@@ -91,6 +93,10 @@ class Location extends Model
     public function atText()
     {
         return $this->at_text ?: '(' . $this->name . ')';
+    }
+
+    public function scopeInCities(Builder $query, $cities) {
+        return $query->whereIn('city_id', $cities);
     }
 
 }

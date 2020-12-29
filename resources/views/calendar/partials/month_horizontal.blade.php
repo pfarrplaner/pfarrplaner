@@ -34,9 +34,11 @@
                             data-day="{{ $day->id }}"
                         >
                             <div class="celldata">
-                                @foreach ($services[$city->id][$day->id] as $service)
-                                    @include('calendar.partials.service')
-                                @endforeach
+                                @if(isset($services[$city->id][$day->id]))
+                                    @foreach ($services[$city->id][$day->id] as $service)
+                                        @include('calendar.partials.service')
+                                    @endforeach
+                                @endif
                                 @include('calendar.partials.addbutton')
                             </div>
                         </td>

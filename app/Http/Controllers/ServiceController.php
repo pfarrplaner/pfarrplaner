@@ -30,6 +30,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Broadcast;
 use App\City;
 use App\Day;
 use App\Events\ServiceBeforeDelete;
@@ -37,7 +38,7 @@ use App\Events\ServiceBeforeStore;
 use App\Events\ServiceBeforeUpdate;
 use App\Events\ServiceCreated;
 use App\Events\ServiceUpdated;
-use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\ServiceRequest;
 use App\Location;
 use App\Participant;
 use App\Service;
@@ -90,10 +91,10 @@ class ServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreServiceRequest $request
+     * @param ServiceRequest $request
      * @return Response
      */
-    public function store(StoreServiceRequest $request)
+    public function store(ServiceRequest $request)
     {
         $validatedData = $request->validated();
         $service = new Service($validatedData);
@@ -119,10 +120,10 @@ class ServiceController extends Controller
     }
 
     /**
-     * @param StoreServiceRequest $request
+     * @param ServiceRequest $request
      * @param Service $service
      */
-    protected function updateFromRequest(StoreServiceRequest $request, Service $service): void
+    protected function updateFromRequest(ServiceRequest $request, Service $service): void
     {
         $service->associateParticipants($request, $service);
         $service->checkIfPredicantNeeded();
@@ -190,11 +191,11 @@ class ServiceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param StoreServiceRequest $request
+     * @param ServiceRequest $request
      * @param Service $service
      * @return Response
      */
-    public function update(StoreServiceRequest $request, Service $service)
+    public function update(ServiceRequest $request, Service $service)
     {
         $service->trackChanges();
         $originalParticipants = $service->participants;
@@ -217,6 +218,12 @@ class ServiceController extends Controller
             $service->storeDiff();
             event(new ServiceUpdated($service, $originalParticipants));
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
+
+            // update YouTube as well
+            if ($service->youtube_url) {
+                Broadcast::get($service)->update();
+                $success .= ' Diese wurden automatisch auch auf YouTube aktualisiert.';
+            }
         }
 
         $route = $request->get('routeBack') ?: '';

@@ -86,8 +86,8 @@ class NewsletterReport extends AbstractWordDocumentReport
                 'city' => 'required|int|exists:cities,id',
                 'start' => 'required|date|date_format:d.m.Y',
                 'end' => 'required|date|date_format:d.m.Y',
-                'mixOP' => 'nullable|in:1',
-                'mixOutlook' => 'nullable|in:1',
+                'mixOP' => 'nullable|int',
+                'mixOutlook' => 'nullable|int',
             ]
         );
 

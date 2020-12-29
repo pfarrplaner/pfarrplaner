@@ -18,15 +18,11 @@ class PreventOrphans extends Migration
         if (in_array($constraint, $existingConstraints)) {
             // drop existing foreign key constraint
             Schema::table($tableName, function(Blueprint $table) use ($constraint) {
-                echo 'Deleting existing foreign key constraint '.$constraint.PHP_EOL;
                 $table->dropForeign($constraint);
             });
         }
-        echo 'Creating constraint for '.$tableName.'/'.$foreignTableName.PHP_EOL;
         $keyType = $this->getColumnType($foreignTableName, 'id');
         $localKeyType = $this->getColumnType($tableName, $foreignKey);
-        echo 'Foreign key type: '.$keyType.PHP_EOL;
-        echo 'Local key type: '.$localKeyType.PHP_EOL;
         if ($keyType != $localKeyType) {
             Schema::table($tableName, function (Blueprint $table) use ($keyType, $foreignKey) {
                 if ($keyType == 'bigint') {

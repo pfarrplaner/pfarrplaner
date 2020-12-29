@@ -39,7 +39,7 @@ $(document).ready(function () {
         },
     });
 
-    $('.form-check-input').change(function(){
+    $('.form-check-input-blade').change(function(){
         var name = '"'+$(this).attr('name').replace('_check', '')+'"';
         var checked = this.checked;
         var value = checked ? 1 : 0;
@@ -74,4 +74,7 @@ $(document).ready(function () {
         $(this).val(value);
 
     });
+
+    $('form:first :input:enabled:visible:first').focus();
+
 });

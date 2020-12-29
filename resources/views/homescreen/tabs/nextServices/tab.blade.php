@@ -23,6 +23,7 @@
                     </td>
                     <td>
                         @include('partials.service.edit-rites-block', ['service', $service])
+                        @if($service->needs_reservations && (!$service->registration_active))<div class="alert alert-warning">Anmeldung momentan deaktiviert.</div> @endif
                     </td>
                 </tr>
             @endforeach

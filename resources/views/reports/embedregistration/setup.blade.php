@@ -20,6 +20,7 @@
                     @endforeach
                 </div>
                 @input(['label' => 'Begrenzen auf einen Tag?', 'name' => 'singleDay', 'placeholder' => 'Leer lassen, um alle Gottesdienste zu zeigen', 'class' => 'datepicker'])
+                @input(['label' => 'Nur einen bestimmten Gottesdienst anzeigen?', 'name' => 'singleService', 'placeholder' => 'ID des Gottesdienstes; leer, um alle Gottesdienste zu zeigen'])
                 <div class="form-group">
                     <label for="cors-origin">Aufrufende Website:</label>
                     <input type="text" class="form-control" name="cors-origin" value=""

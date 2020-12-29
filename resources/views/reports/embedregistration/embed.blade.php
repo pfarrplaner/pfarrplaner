@@ -10,10 +10,12 @@
         @endforeach
         <div id="{{ $randomId }}" class="col s12 bullme ">
             @if(count($services))
-                @foreach ($services as $dayServices)
+                @foreach ($services as $dayKey => $dayServices)
+                    @if(!$singleService)
                     <h2 style="margin-bottom: 20px;">Gottesdienste am {{ $dayServices[0]->day->date->format('d.m.Y') }} ({{ \App\Liturgy::getDayInfo($dayServices[0]->day)['title'] }})</h2>
-                    @foreach($dayServices as $service)
-                        <div class="card-panel default registrable-service" id="{{ $randomId }}-{{ $loop->index }}">
+                    @endif
+                    @foreach($dayServices as $serviceKey => $service)
+                        <div class="card-panel default registrable-service" id="{{ $randomId }}-{{ $dayKey }}-{{ $serviceKey }}">
                             <h3>{{ $service->titleText(false) }}</h3>
                             <table>
                                 <tr>
@@ -37,7 +39,7 @@
                                                 @if($service->getSeatFinder()->remainingCapacity() > 0)
                                                     {!! $service->getSeatFinder()->remainingCapacityText('noch ca. %s Plätze<b>*</b>') !!}<br/>
                                                 <a class="btn btn-secondary show-reg-form" href="#"
-                                                   data-container="#{{ $randomId }}-{{ $loop->index }}">Anmelden</a>
+                                                   data-container="#{{ $randomId }}-{{ $dayKey }}-{{ $serviceKey }}">Anmelden</a>
                                                 @else
                                                     komplett ausgebucht
                                                 @endif
@@ -53,28 +55,29 @@
                                     </td>
                                 </tr>
                             </table>
-                            <div class="reg-form" id="{{ $randomId }}-{{ $loop->index }}-reg" style="display: none;"
+                            <div class="reg-form" id="{{ $randomId }}-{{ $dayKey }}-{{ $serviceKey }}-reg" style="display: none;"
                                  data-service="{{ $service->id }}">
-                                <label for="name">Name</label>
-                                <input name="name" value="" type="text"/>
+                                <label for="name">Nachname</label>
+                                <input style="width: 100%; margin-bottom: 3px; "  name="name" value="" type="text"/>
                                 <label for="first_name">Vorname</label>
-                                <input name="first_name" value="" type="text"/>
+                                <input style="width: 100%; margin-bottom: 3px; "  name="first_name" value="" type="text"/>
                                 <label for="street">Straße, Hausnummer</label>
-                                <input name="street" value="" type="text"/>
+                                <input style="width: 100%; margin-bottom: 3px; "  name="street" value="" type="text"/>
                                 <label for="zip">Postleitzahl</label>
-                                <input name="zip" value="" type="text"/>
+                                <input style="width: 100%; margin-bottom: 3px; "  name="zip" value="" type="text"/>
                                 <label for="city">Ort</label>
-                                <input name="city" value="" type="text"/>
+                                <input style="width: 100%; margin-bottom: 3px; "  name="city" value="" type="text"/>
                                 <label for="phone">Telefonnummer</label>
-                                <input name="phone" value="" type="text"/>
+                                <input style="width: 100%; margin-bottom: 3px; "  name="phone" value="" type="text"/>
+                                <label for="email">E-Mailadresse (falls vorhanden)</label>
+                                <input style="width: 100%; margin-bottom: 3px; "  name="email" value="" type="text" />
                                 <label for="number">Anzahl Personen</label>
-                                <input name="number" value="1" type="text"/><br/><br/>
-                                <input type="submit" class="btn btn-secondary submit-reg-form" href="#"
+                                <input style="width: 100%; margin-bottom: 3px; "  name="number" value="1" type="text"/><br/><br/>
+                                <a class="btn btn-secondary submit-reg-form" href="#"
                                         style="width: auto; height: auto; position: relative; background-color: none;"
-                                        data-container="#{{ $randomId }}-{{ $loop->index }}" value="Anmeldung absenden" />
-                                </input>
+                                   data-container="#{{ $randomId }}-{{ $dayKey }}-{{ $serviceKey }}">Anmeldung absenden</a>
                                 <br/>
-                                <small>Die Erhebung dieser Daten erfolgt nach $6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
+                                <small>Die Erhebung dieser Daten erfolgt nach §6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
                                     können Sie nur
                                     nach korrekter Angabe Ihrer Kontaktdaten am Gottesdienst teilnehmen. Wir bitten hierfür
                                     um
@@ -89,10 +92,13 @@
             @endif
         </div>
     </div>
+    @if($noScript == 0)
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
     <script defer>
+        var blockSubmission = false;
+
         $(document).ready(function () {
-            $('.show-reg-form').click(function () {
+            $('#{{ $randomId }} .show-reg-form').click(function () {
                 $('.registrable-service').hide();
                 $($(this).data('container')).show();
                 $($(this).data('container') + '-reg').show();
@@ -100,7 +106,8 @@
                 $($(this).data('container') + '-reg input[name="name"]').focus();
             });
 
-            $('.submit-reg-form').click(function () {
+            $('#{{ $randomId }} .submit-reg-form').click(function (event) {
+                event.preventDefault();
                 var url = '{{ $url }}&cities={{ join(',', $cities) }}';
                 var check = true;
                 ['name', 'first_name', 'street', 'zip', 'city', 'phone', 'number'].forEach(element => {
@@ -112,8 +119,10 @@
                 if (check) {
 
                     url += '&service=' + encodeURI($($(this).data('container') + '-reg').data('service'));
+                    @if ($singleService) url += '&singleService={{ $singleService }}'; @endif
+                    @if ($noScript) url += '&noScript=1'; @endif
 
-                    ['name', 'first_name', 'number'].forEach(element => {
+                    ['name', 'first_name', 'number', 'email'].forEach(element => {
                         if (element != 'contact') {
                             url += '&' + element + '=' + encodeURI($($(this).data('container') + '-reg input[name="' + element + '"]').val())
                         } else {
@@ -126,16 +135,21 @@
                         + $($(this).data('container') + '-reg input[name="city"]').val() + "\n"
                         + $($(this).data('container') + '-reg input[name="phone"]').val()
                     );
-                    fetch(url)
-                        .then((res) => {
-                            return res.text();
-                        })
-                        .then((data) => {
-                            $('#{{ $randomId }}').html(data);
-                        });
+                    if (!blockSubmission) {
+                        blockSubmission = true;
+                        fetch(url)
+                            .then((res) => {
+                                return res.text();
+                            })
+                            .then((data) => {
+                                $('#{{ $randomId }}').html(data);
+                                blockSubmission = false;
+                            });
+                    }
 
                 }
             });
         });
     </script>
+    @endif
 </div>

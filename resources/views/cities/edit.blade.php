@@ -37,6 +37,7 @@
                     @input(['name' => 'default_funeral_offering_description', 'label' => 'Opferbeschreibung für Beerdigungen', 'value' => $city->default_funeral_offering_description])
                     @input(['name' => 'default_wedding_offering_goal', 'label' => 'Opferzweck für Trauungen', 'value' => $city->default_wedding_offering_goal])
                     @input(['name' => 'default_wedding_offering_description', 'label' => 'Opferbeschreibung für Trauungen', 'value' => $city->default_wedding_offering_description])
+                    @input(['name' => 'default_offering_url', 'label' => 'Allgemeine Spendenseite', 'value' => $city->default_offering_url])
                 @endtab
                 @tab(['id' => 'calendars'])
                     @input(['name' => 'public_events_calendar_url', 'label' => 'URL für einen öffentlichen Kalender auf elkw.de', 'value' => $city->public_events_calendar_url, 'enabled' => Auth::user()->can('ort-bearbeiten')])
@@ -86,8 +87,8 @@
                     @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                 @endtab
             @endtabs
-    </form>
     @endcomponent
+    </form>
 @endsection
 
 @section('scripts')

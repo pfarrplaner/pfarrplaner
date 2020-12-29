@@ -19,6 +19,7 @@
                 @input(['label' => 'Nachname', 'name' => 'name', 'value' => $booking->name])
                 @input(['label' => 'Vorname', 'name' => 'first_name', 'value' => $booking->first_name])
                 @textarea(['label' => 'Kontaktdaten', 'name' => 'contact', 'value' => $booking->contact])
+                @input(['label' => 'E-Mailadresse', 'name' => 'email', 'value' => $booking->email])
                 @input(['label' => 'Anzahl Personen', 'name' => 'number', 'type' => 'number', 'value' => $booking->number])
                 <hr />
                 <h3>Manuelle Platzierung</h3>

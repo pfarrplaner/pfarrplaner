@@ -9,7 +9,7 @@
             @else
                 {{ $history->created_at->format('d.m.Y, H:i:s') }}
                 : {{ is_object($history->userResponsible()) ? $history->userResponsible()->name : '<anonym>' }} hat "{{ $history->fieldName() }}" von
-                "{{ $history->oldValue() }}" zu "{{ $history->newValue() }}" geändert.
+                "{{ $history->oldValue() ?? '' }}" zu "{{ $history->newValue() ?? ''}}" geändert.
                 <br/>
             @endif
         @endforeach

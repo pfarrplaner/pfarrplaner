@@ -216,6 +216,7 @@ return [
         Shetabit\Visitor\Provider\VisitorServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
         SquareBoat\Sneaker\SneakerServiceProvider::class,
+        App\Providers\SettingsServiceProvider::class,
     ],
 
     /*
@@ -267,6 +268,7 @@ return [
         'PDF' => niklasravnsborg\LaravelPdf\Facades\Pdf::class,
         'DatabaseEncryption' => AustinHeap\Database\EncryptionFacade::class,
         'Visitor' => Shetabit\Visitor\Facade\Visitor::class,
+        'Settings' => \App\Facades\Settings::class,
     ],
 
 ];

@@ -76,7 +76,7 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
         $query = Service::with(['weddings', 'location', 'day'])
             ->select(['services.*', 'days.date'])
             ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', Auth::user()->writableCities->pluck('id'))
+            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
             ->whereHas('weddings')
             ->whereHas(
                 'day',

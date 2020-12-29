@@ -4,6 +4,7 @@
 namespace App\Calendars\Exchange;
 
 
+use App\Calendars\Exchange\Exceptions\RequestFailedException;
 use Closure;
 use jamesiarmes\PhpEws\ArrayType\ArrayOfResponseMessagesType;
 use jamesiarmes\PhpEws\ArrayType\NonEmptyArrayOfAllItemsType;

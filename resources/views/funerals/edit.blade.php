@@ -32,6 +32,7 @@
                 @component('components.ui.card')
                     @slot('cardHeader')Angehörige(r) @endslot
                     @input(['name' => 'relative_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname', 'value' => $funeral->relative_name])
+                    <a class="btn btn-sm btn-secondary" href="#" title="Adresse übernehmen"><span class="fa fa-copy"></span> Adresse übernehmen</a>
                     @input(['name' => 'relative_address', 'label'=> 'Adresse', 'value' => $funeral->relative_address])
                     @input(['name' => 'relative_zip', 'label'=> 'PLZ', 'value' => $funeral->relative_zip])
                     @input(['name' => 'relative_city', 'label'=> 'Ort', 'value' => $funeral->relative_city])
@@ -78,6 +79,13 @@
                 setFieldStates()
             });
             setFieldStates();
+
+            $('#copyAddress').click((e) => {
+                e.preventDefault();
+                $('input[name=relative_address]').val($('input[name=buried_address]').val());
+                $('input[name=relative_zip]').val($('input[name=buried_zip]').val());
+                $('input[name=relative_city]').val($('input[name=buried_city]').val());
+            });
         });
     </script>
 @endsection

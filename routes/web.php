@@ -39,6 +39,8 @@
 |
 */
 
+use Inertia\Inertia;
+
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
@@ -58,6 +60,8 @@ Route::resource('comments', 'CommentController')->middleware('auth');
 Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
+Route::get('/service/{service}/songsheet', 'ServiceController@songsheet')->name('service.songsheet');
+Route::get('/services/{city}/streaming/next', 'PublicController@nextStream')->name('service.nextstream');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
@@ -111,11 +115,8 @@ Route::get(
 
 Route::get('/days/add/{year}/{month}', ['uses' => 'DayController@add'])->name('days.add');
 Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->name('services.add');
-Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
-Route::get('/calendar/{year?}/{month?}/printsetup', ['uses' => 'CalendarController@printSetup'])->name(
-    'calendar.printsetup'
-);
-Route::post('/calendar/{year?}/{month?}/print', ['uses' => 'CalendarController@print'])->name('calendar.print');
+//Route::get('/calendar/{year?}/{month?}', ['uses' => 'CalendarController@month'])->name('calendar');
+
 
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
@@ -174,8 +175,8 @@ Route::get('/wedding/destroy/{wedding}', ['as' => 'wedding.destroy', 'uses' => '
 Route::get('/home', ['as' => 'home', 'uses' => 'HomeController@index']);
 Route::get(    '/', ['as' => 'root', 'uses' => 'HomeController@root']);
 
-Route::get('/changePassword', 'HomeController@showChangePassword');
-Route::post('/changePassword', 'HomeController@changePassword')->name('changePassword');
+Route::get('/password/change', 'HomeController@showChangePassword')->name('password.edit');
+Route::post('/password/change', 'HomeController@changePassword')->name('password.change');
 
 Auth::routes();
 Route::get('/logout', 'UserController@logout')->name('logout');
@@ -232,9 +233,12 @@ Route::get('/podcasts/{cityName}.xml', 'PodcastController@podcast')->name('podca
 
 // google api
 Route::get('/google/auth/city', 'GoogleApiController@auth')->name('google-auth');
-Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')->name(
-    'broadcast.create'
-);
+Route::get('/google/youtube/createServiceBroadcast/{service}', 'GoogleApiController@createBroadcast')
+    ->name('broadcast.create');
+Route::get('/google/youtube/serviceBroadcast/{service}/refresh', 'GoogleApiController@refreshBroadcast')
+    ->name('broadcast.refresh');
+Route::delete('/google/youtube/serviceBroadcast/{service}', 'GoogleApiController@deleteBroadcast')
+    ->name('broadcast.delete');
 
 // youtube live chat
 Route::get('/livechat/{service}', 'LiveChatController@liveChat')->name('service.livechat');
@@ -246,19 +250,21 @@ Route::post('/livechat/message/{service}', 'LiveChatController@liveChatPostMessa
 //about
 Route::get('/about', 'HomeController@about')->name('about');
 
-// test/debug routes
-Route::get('/test/mail/{address}', 'TestController@mail');
-Route::get('/test', function(){
-    $service = \App\Service::find(1310);
-    $ct = 0;
-    do {
-        $sf = new \App\Seating\AbstractSeatFinder($service);
-        $ct++;
-        $i = rand(1, 9);
-        if ($x = $sf->find(1,9)) {
-            \App\Booking::create(['service_id' => 1310, 'first_name' => '', 'name' => 'test'.$ct, 'contact' => '', 'number' => $i, 'code' => \App\Booking::createCode()]);
-            echo $ct.' -> '.$i.' Personen, verbleiben: '.$sf->remainingCapacity();
-        }
-    } while ($x);
-});
+//checkIn
+Route::get('/checkin/{location}', 'CheckInController@create')->name('checkin.create');
+Route::post('/checkin/{service}', 'CheckInController@store')->name('checkin.store');
+Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr');
 
+
+// inertia testing
+Route::get('/calendar/{date?}/{month?}', 'CalController@index')->name('calendar');
+
+
+// ministry request
+Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@ministryRequest')
+    ->name('ministry.request');
+Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRequestFilled')
+    ->name('ministry.request.fill');
+
+// settings
+Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.set');

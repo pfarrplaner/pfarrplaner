@@ -214,6 +214,7 @@
                 $('#service_' + thisService + '_offerings_counter2').val($('#service_' + prevService + '_offerings_counter2').val());
 
                 $('input:radio[name="service[' + thisService + '][offering_type]"]').val([$('input[name="service[' + prevService + '][offering_type]"]:checked').val()]);
+                $('#service_' + thisService + '_offering_goal').closest('tr').addClass('changed');
             });
         });
 

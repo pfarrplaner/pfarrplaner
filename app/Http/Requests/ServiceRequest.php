@@ -37,10 +37,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * Class StoreServiceRequest
+ * Class ServiceRequest
  * @package App\Http\Requests
  */
-class StoreServiceRequest extends FormRequest
+class ServiceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -125,11 +125,13 @@ class StoreServiceRequest extends FormRequest
         // set location
         if (!is_numeric($data['location_id'])) {
             $data['special_location'] = $data['location_id'];
-            unset($data['location_id']);
+            $data['location_id'] = 0;
         } else {
             $location = Location::find($data['location_id']);
-            if (null === $location) $data['special_location'] = $data['location_id'];
-            unset($data['location_id']);
+            if (null === $location) {
+                $data['special_location'] = $data['location_id'];
+                $data['location_id'] = 0;
+            }
         }
 
         // set time and place
@@ -157,8 +159,15 @@ class StoreServiceRequest extends FormRequest
         $data['exclude_places'] = strtoupper($data['exclude_places'] ?? '');
         $data['reserved_places'] = strtoupper($data['reserved_places'] ?? '');
 
-        if (isset($data['registration_online_start'])) $data['registration_online_start'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_start']);
-        if (isset($data['registration_online_end'])) $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
+        if (isset($data['registration_online_start'])) {
+            $data['registration_online_start'] = Carbon::createFromFormat(
+                'd.m.Y H:i',
+                $data['registration_online_start']
+            );
+        }
+        if (isset($data['registration_online_end'])) {
+            $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
+        }
 
         return $data;
     }

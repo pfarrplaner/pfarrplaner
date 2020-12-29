@@ -84,7 +84,7 @@ class BookingController extends Controller
         $data = $this->validateRequest($request);
         $data['code'] = Booking::createCode();
         $booking = Booking::create($data);
-        $message = ($data['number'] == 1 ? 'Der Sitzplatz wurde reserviert.' : $data['number'] . ' zusammenhängende Sitzplätze wurden reserviert.');
+        $message = ($data['number'] == 1 ? 'Der Platz wurde reserviert.' : $data['number'] . ' zusammenhängende Plätze wurden reserviert.');
         return redirect()->route('service.bookings', $booking->service->id)->with('success', $message);
     }
 
@@ -170,6 +170,7 @@ class BookingController extends Controller
                 'fixed_seat' => 'nullable|string|seatable_fixed:booking_id',
                 'override_seats' => 'nullable|int',
                 'override_split' => 'nullable|string',
+                'email' => 'nullable|email',
             ]
         );
 

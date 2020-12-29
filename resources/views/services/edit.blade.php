@@ -88,9 +88,6 @@
                         @tabheader(['id' => 'registrations', 'title' => 'Anmeldungen', 'active' => ($tab=='registrations')]) @endtabheader
                     @endif
                     @tabheader(['id' => 'comments', 'title' => 'Kommentare', 'active' => ($tab=='comments'), 'count' => (count($service->comments ?? []))]) @endtabheader
-                    @can('admin')
-                        @tabheader(['id' => 'history', 'title' => 'Bearbeitungen', 'active' => ($tab=='history')]) @endtabheader
-                    @endcan('admin')
                     @endtabheaders
 
                     @tabs
@@ -162,6 +159,7 @@
                     @endif
                     @if($service->city->hasRegistrableLocations())
                         @tab(['id' => 'registrations', 'active' => ($tab=='registrations')])
+                            @if($service->needs_reservations && (!$service->registration_active))<div class="alert alert-warning">Anmeldung momentan deaktiviert.</div> @endif
                         @checkbox(['label' => 'Für diesen Gottesdienst ist eine Anmeldung notwendig', 'name' => 'needs_reservations', 'value' => $service->needs_reservations])
                         @input(['label' => 'Telefonnummer für die telefonische Anmeldung', 'name' => 'registration_phone', 'value' => $service->registration_phone])
                         @checkbox(['label' => 'Online-Anmeldung aktiv', 'name' => 'registration_active', 'value' => $service->registration_active])
@@ -181,7 +179,8 @@
                         @input(['label' => 'Folgende Sitzplätze sind gesperrt', 'name' => 'exclude_places', 'value' => $service->exclude_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B', 'class' => 'seatingRowList'])
                         @input(['label' => 'Folgende Sitzplätze zurückhalten', 'name' => 'reserved_places', 'value' => $service->reserved_places, 'placeholder' => 'kommagetrennte Liste, z.B. 2,3A,5B', 'class' => 'seatingRowList'])
                         <hr />
-                            <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}">
+                            <a class="btn btn-success" href="{{ route('seatfinder', $service->id) }}"
+                               @if(!$service->registration_active) onclick="return confirm('Die Anmeldung für diesen Gottesdienst ist momentan deaktiviert. Möchtest du wirklich trotzdem eine neue Anmeldung anlegen?');" @endif>
                                 <span class="fa fa-ticket-alt"></span> Neue Anmeldung
                             </a>&nbsp;
                             <a class="btn btn-secondary" href="{{ route('service.bookings', $service->id) }}">
@@ -193,9 +192,6 @@
 
                         @endtab
                     @endif
-                    @can('admin')
-                        @include('partials.service.tabs.history')
-                    @endcan
                     @include('partials.service.tabs.comments')
                     @endtabs
 
@@ -393,7 +389,7 @@
             $('#btn_build_livestream').click(function (e) {
                 e.preventDefault();
                 $('#build_livestream').html('<img src="{{ asset('img/spinner.gif') }}" /> Livestream wird erstellt...');
-                fetch('{{ route('broadcast.create', $service) }}').then((response) => {
+                fetch('{{ route('broadcast.create', ['service' => $service, 'json' => 1]) }}').then((response) => {
                     return response.json();
                 }).then((data) => {
                     $('#link_livedash a').attr('href', data.liveDashboard);

@@ -62,7 +62,11 @@ class CityController extends Controller
      */
     public function index(Request $request)
     {
-        $cities = Auth::user()->cities;
+        if (Auth::user()->is_admin) {
+            $cities = City::all();
+        } else {
+            $cities = Auth::user()->cities;
+        }
         return view('cities.index', compact('cities'));
     }
 
@@ -120,6 +124,7 @@ class CityController extends Controller
                 'youtube_passive_stream_id' => 'nullable|string',
                 'youtube_auto_startstop' => 'nullable|int',
                 'youtube_cutoff_days' => 'nullable|int',
+                'default_offering_url' => 'nullable|string'
             ]
         );
     }

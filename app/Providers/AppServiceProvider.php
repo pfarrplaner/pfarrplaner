@@ -32,12 +32,12 @@ namespace App\Providers;
 
 use App\QueryLog;
 use App\Seating\SeatingValidators;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 /**
  * Class AppServiceProvider
@@ -64,6 +64,7 @@ class AppServiceProvider extends ServiceProvider
         Blade::include('partials.form.select', 'select');
         Blade::include('partials.form.selectize', 'selectize');
         Blade::include('partials.form.dayselect', 'dayselect');
+        Blade::include('partials.form.cityselect', 'cityselect');
         Blade::include('partials.form.locationselect', 'locationselect');
         Blade::include('partials.form.peopleselect', 'peopleselect');
         Blade::include('partials.form.checkbox', 'checkbox');
@@ -97,10 +98,33 @@ class AppServiceProvider extends ServiceProvider
             }
         );
 
+        Validator::extend(
+            'hash',
+            function ($attribute, $value, $parameters) {
+                return Hash::check($value, $parameters[0]);
+            }
+        );
+
+        Validator::extend(
+            'not_hash',
+            function ($attribute, $value, $parameters) {
+                return !Hash::check($value, $parameters[0]);
+            }
+        );
+
+        Validator::extend(
+            'not_current_password',
+            function ($attribute, $value, $parameters) {
+                return !Hash::check($value, Auth::user()->password);
+            }
+        );
+
         // seating Validators
         SeatingValidators::register();
 
         QueryLog::register();
+
+        Inertia::setRootView('inertia-app');
     }
 
     /**

@@ -93,18 +93,20 @@ class EmbedRegistrationReport extends AbstractEmbedReport
         $request->validate(
             [
                 'cors-origin' => 'required|url',
-                'includeCities' => 'required',
-                'includeCities.*' => 'required|exists:cities,id',
+                'includeCities' => 'nullable',
+                'includeCities.*' => 'nullable|exists:cities,id',
                 'singleDay' => 'nullable|date_format:d.m.Y',
+                'singleService' => 'nullable|exists:services,id',
             ]
         );
-        $cities = join(',', $request->get('includeCities'));
+        $cities = join(',', $request->get('includeCities', []));
         $corsOrigin = CORS::formatUrl($request->get('cors-origin'));
         $report = $this->getKey();
         $singleDay = $request->get('singleDay', '');
+        $singleService = $request->get('singleService', '');
         if ($singleDay != '') $singleDay = Carbon::createFromFormat('d.m.Y', $singleDay)->format('Y-m-d');
 
-        $url = route('report.embed', compact('report', 'cities', 'corsOrigin', 'singleDay'));
+        $url = route('report.embed', compact('report', 'cities', 'corsOrigin', 'singleDay', 'singleService'));
         $randomId = uniqid();
 
         return $this->renderView('render', compact('url', 'randomId'));
@@ -122,12 +124,14 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             $cities = explode(',', $cities);
         }
 
+        $noScript = $request->get('noScript', 0);
+        $singleService = $request->get('singleService', '');
+
         $singleDay = $request->get('singleDay', '');
         if ($singleDay != '') {
             $start = Carbon::createFromFormat('Y-m-d', $request->get('singleDay'))->setTime(0,0,0);
             $end = $start->copy()->setTime(23.59,59);
-
-        } else {
+        }else {
             $start = Carbon::now()->setTime(0,0,0);
             $end = $start->copy()->addMonth(1);
         }
@@ -143,6 +147,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
                     'name' => 'required|string',
                     'first_name' => 'required|string',
                     'contact' => 'required|string',
+                    'email' => 'nullable|email',
                     'number' => 'required|int|min:1',
                     'service' => 'required|int:exists:services,id'
                 ]
@@ -156,33 +161,36 @@ class EmbedRegistrationReport extends AbstractEmbedReport
                     $data['service_id'] = $data['service'];
                     $data['code'] = Booking::createCode();
                     $booking = Booking::create($data);
-                    $message = (($data['number'] == 1) ? 'Ihr Sitzplatz wurde ' : $data['number'].' Sitzplätze wurden ')
+                    $message = (($data['number'] == 1) ? 'Ihr Platz wurde ' : $data['number'].' Plätze wurden ')
                         .'erfolgreich reserviert. Am Eingang zum Gottesdienst erfahren Sie, '
                         .'wo genau Sie sitzen.';
                     $success->add('success', $message);
                 } else {
-                    $message = ($data['number'] == 1 ? 'Leider konnte in diesem Gottesdienst kein Sitzplatz reserviert werden.' : 'Leider konnten in diesem Gottesdiens tkeine ' . $data['number'] . ' zusammenhängenden Sitzplätze reserviert werden.');
+                    $message = ($data['number'] == 1 ? 'Leider konnte in diesem Gottesdienst kein Platz reserviert werden.' : 'Leider konnten in diesem Gottesdiens tkeine ' . $data['number'] . ' zusammenhängenden Platz reserviert werden.');
                     $errors->add('sorry', $message);
                 }
             }
         }
 
-        $tmpServices = Service::where('needs_reservations', 1)
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', $cities)
-            ->where('hidden', '!=', 1)
-            ->whereHas('location')
-            ->whereHas(
-                'day',
-                function ($query) use ($start, $end) {
-                    $query->where('date', '>=', $start);
-                    $query->where('date', '<=', $end);
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
-            ->get();
+        if ($singleService) {
+            $tmpServices = Service::with('day')->where('id', $singleService)->get();
+        } else {
+            $tmpServices = Service::where('needs_reservations', 1)
+                ->select(['services.*', 'days.date'])
+                ->join('days', 'days.id', '=', 'day_id')
+                ->whereIn('city_id', $cities)
+                ->where('hidden', '!=', 1)
+                ->whereHas(
+                    'day',
+                    function ($query) use ($start, $end) {
+                        $query->where('date', '>=', $start);
+                        $query->where('date', '<=', $end);
+                    }
+                )
+                ->orderBy('days.date', 'ASC')
+                ->orderBy('time', 'ASC')
+                ->get();
+        }
 
         $services = [];
         foreach ($tmpServices as $service) {
@@ -192,14 +200,14 @@ class EmbedRegistrationReport extends AbstractEmbedReport
 
         $corsOrigin = $request->get('corsOrigin', '');
         $report = $this->getKey();
-        $url = route('report.embed', compact('report', 'corsOrigin', 'singleDay'));
+        $url = route('report.embed', compact('report', 'corsOrigin', 'singleDay', 'singleService', 'noScript'));
 
         $randomId = uniqid();
         /** @var Response $response */
         $response = response()
             ->view(
                 $this->getViewName('embed'),
-                compact('randomId', 'services', 'url', 'cities', 'errors', 'success')
+                compact('randomId', 'services', 'url', 'cities', 'errors', 'success', 'singleService', 'noScript')
             );
 
 

@@ -65,7 +65,8 @@ class HomeController extends Controller
     /**
      * Route /
      */
-    public function root() {
+    public function root()
+    {
         if (Auth::user()) {
             return redirect()->route('home');
         }
@@ -79,6 +80,9 @@ class HomeController extends Controller
      */
     public function index()
     {
+        // check if the user still has a temp password
+        if (Hash::check('testtest', Auth::user()->password)) return redirect()->route('password.edit', ['from' => 'home']);
+
         $homeScreen = Auth::user()->getSetting('homeScreen', 'route:calendar');
         if (strpos($homeScreen, ':') !== false) {
             list($action, $data) = explode(':', $homeScreen);
@@ -108,7 +112,7 @@ class HomeController extends Controller
      */
     public function showChangePassword()
     {
-        return view('auth.changepassword');
+        return view('auth.passwords.change');
     }
 
     /**
@@ -117,16 +121,20 @@ class HomeController extends Controller
      */
     public function changePassword(Request $request)
     {
-        $validatedData = $request->validate(
-            [
-                'current_password' => 'required|password',
-                'new_password' => 'required|string|min:6|confirmed|different:current_password',
-                'new_password_confirmation' => 'required',
-            ]
-        );
+        $rules = [
+            'current_password' => 'required|hash:' . Auth::user()->password,
+            'new_password' => 'required|string|min:6|confirmed|not_current_password|notIn:testtest',
+            'new_password_confirmation' => 'required',
+        ];
+        $firstPassword = (Hash::check('testtest', Auth::user()->password));
+        if ((!$request->has('current_password')) && $firstPassword) {
+            unset($rules['current_password']);
+        }
+        $validatedData = $request->validate($rules);
         //Change Password
         Auth::user()->update(['password' => $validatedData['new_password']]);
-        return redirect()->back()->with("success", "Password changed successfully !");
+        if ($firstPassword) return redirect()->route('home')->with("success", "Dein Passwort wurde geändert.");
+        return redirect()->back()->with("success", "Dein Passwort wurde geändert.");
     }
 
     public function connect()
@@ -186,33 +194,36 @@ class HomeController extends Controller
         return response()->json(compact('count', 'data'));
     }
 
-    public function about() {
-
+    public function about()
+    {
         // get git history
         $output = array();
         chdir(base_path());
-        exec("git log",$output);
+        exec("git log", $output);
         $history = array();
-        foreach($output as $line){
-            if(strpos($line, 'commit')===0){
-                if(!empty($commit)){
-                    if (strpos($commit['message'], PHP_EOL) === 0) $commit['message'] = substr($commit['message'], strlen(PHP_EOL));
+        foreach ($output as $line) {
+            if (strpos($line, 'commit') === 0) {
+                if (!empty($commit)) {
+                    if (strpos($commit['message'], PHP_EOL) === 0) {
+                        $commit['message'] = substr($commit['message'], strlen(PHP_EOL));
+                    }
                     array_push($history, $commit);
                     $commit = [];
                 }
-                $commit['hash']   = trim(substr($line, strlen('commit')));
-            }
-            else if(strpos($line, 'Author')===0){
-                $commit['author'] = trim(substr($line, strlen('Author:')));
-            }
-            else if(strpos($line, 'Date')===0){
-                $commit['date']   = trim(substr($line, strlen('Date:')));
-            }
-            else {
-                if (!isset($commit['message'])) {
-                    $commit['message'] = trim($line);
+                $commit['hash'] = trim(substr($line, strlen('commit')));
+            } else {
+                if (strpos($line, 'Author') === 0) {
+                    $commit['author'] = trim(substr($line, strlen('Author:')));
                 } else {
-                    $commit['message'] .= PHP_EOL.trim($line);
+                    if (strpos($line, 'Date') === 0) {
+                        $commit['date'] = trim(substr($line, strlen('Date:')));
+                    } else {
+                        if (!isset($commit['message'])) {
+                            $commit['message'] = trim($line);
+                        } else {
+                            $commit['message'] .= PHP_EOL . trim($line);
+                        }
+                    }
                 }
             }
         }
