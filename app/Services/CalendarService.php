@@ -47,7 +47,7 @@ class CalendarService
     public static function initializeMonth($year, $month)
     {
         $days = collect();
-        $today = Carbon::createFromDate($year, $month, 1);
+        $today = Carbon::create($year, $month, 1,0,0,0);
         while ($today->month == $month) {
             if ($today->dayOfWeek == 0) {
                 $day = Day::create(
