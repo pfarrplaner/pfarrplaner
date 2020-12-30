@@ -14,7 +14,7 @@
                         :key="day.id"
                         :absences="absences[day.id]"
                     />
-                    <calendar-cell v-for="(city,index) in cities" :day="day" :key="city.id" :services="services[city.id][day.id]" :city="city" :can-create="canCreate"/>
+                    <calendar-cell v-for="(city,index) in cities" :day="day" :key="city.id" :services="getServices(city,day)" :city="city" :can-create="canCreate"/>
                 </tr>
             </tbody>
         </table>
@@ -29,6 +29,11 @@ export default {
         title: function (d) {
             return moment(d).locale('de-DE').format('MMMM YYYY');
         },
+        getServices(city, day) {
+            if (this.services[city.id] == undefined) return [];
+            if (this.services[city.id][day.id] == undefined) return [];
+            return this.services[city.id][day.id];
+        }
     }
 }
 </script>

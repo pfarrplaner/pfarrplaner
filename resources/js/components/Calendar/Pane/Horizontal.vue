@@ -15,7 +15,7 @@
             <tbody>
                 <tr v-for="city in cities">
                     <th>{{ city.name }}</th>
-                    <calendar-cell v-for="(day,index) in days" :day="day" :key="day.id" :index="index" :services="services[city.id][day.id]" :city="city" :can-create="canCreate"/>
+                    <calendar-cell v-for="(day,index) in days" :day="day" :key="day.id" :index="index" :services="getServices(city,day)" :city="city" :can-create="canCreate"/>
                 </tr>
             </tbody>
         </table>
@@ -30,6 +30,11 @@ export default {
         title: function (d) {
             return moment(d).locale('de-DE').format('MMMM YYYY');
         },
+        getServices(city, day) {
+            if (this.services[city.id] == undefined) return [];
+            if (this.services[city.id][day.id] == undefined) return [];
+            return this.services[city.id][day.id];
+        }
     }
 }
 </script>
