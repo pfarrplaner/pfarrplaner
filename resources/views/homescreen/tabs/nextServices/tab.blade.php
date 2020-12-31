@@ -22,7 +22,7 @@
                     <td>
                         @if(isset($service->day->liturgy['title'])){{ $service->day->liturgy['title'] }}<br />@endif
                         @if(isset($service->day->liturgy['currentPerikopeLink']))
-                            <a href="$service->day->liturgy['currentPerikopeLink']" target="_blank">
+                            <a href="{{$service->day->liturgy['currentPerikopeLink']}}" target="_blank">
                                 {{ $service->day->liturgy['currentPerikope'] }}
                             </a><br />@endif
                     </td>
