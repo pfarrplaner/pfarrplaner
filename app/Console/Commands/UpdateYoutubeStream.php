@@ -121,7 +121,7 @@ class UpdateYoutubeStream extends Command
             $contentDetails = $broadcast->getContentDetails();
 
             if ($contentDetails->getBoundStreamId() == ($active ? $service->city->youtube_passive_stream_id : $service->city_youtube_active_stream_id)) {
-                $this->line('Setting stream key');
+                $this->line('Setting '.($active ? 'active' : 'passive').' stream key');
                 $youtube->getYoutube()->liveBroadcasts->bind($broadcast->getId(), 'id,snippet,status', ['streamId' => ($active ? $service->city->youtube_active_stream_id : $service->city_youtube_passive_stream_id)]);
             }
             if ($service->city->youtube_auto_startstop) {
