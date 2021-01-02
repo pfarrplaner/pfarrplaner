@@ -67,6 +67,10 @@
                title="In Outlook übernehmen"><span
                 class="fa fa-calendar-alt"></span></a>
         </div>
+        <div class="service-description" v-html="service.descriptionText"></div>
+        <div class="service-description" v-if="service.internal_remarks">
+            <span class="fa fa-eye-slash" title="Anmerkung nur für den internen Gebrauch"></span> {{ service.internal_remarks }}
+        </div>
 
         <calendar-service-participants :participants="service.pastors" category="P" :predicant="service.need_predicant" />
         <calendar-service-participants :participants="service.organists" category="O" :predicant="0" />
