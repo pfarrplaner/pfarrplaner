@@ -112,10 +112,7 @@ class ServiceController extends Controller
         // emit event so that integrations may react
         event(new ServiceCreated($service));
 
-        return redirect()->route(
-            'calendar',
-            ['year' => $service->day->date->year, 'month' => $service->day->date->month]
-        )
+        return redirect()->route('calendar', $service->day->date->format('Y-m'))
             ->with('success', 'Der Gottesdienst wurde hinzugefügt');
     }
 
@@ -231,10 +228,7 @@ class ServiceController extends Controller
             return redirect($route)->with('success', $success);
         } else {
             // default: redirect to calendar
-            return redirect()->route(
-                'calendar',
-                ['year' => $service->day->date->year, 'month' => $service->day->date->month]
-            )
+            return redirect()->route('calendar', $service->day->date->format('Y-m'))
                 ->with('success', $success);
         }
     }
