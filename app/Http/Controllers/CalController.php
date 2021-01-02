@@ -40,6 +40,7 @@ class CalController extends Controller
             ->inMonthByDate($date)
             ->inCities($cities->pluck('id'))
             ->notHidden()
+            ->orderBy('time')
             ->get()
             ->groupBy(['city_id', 'day_id']);
 
