@@ -39,7 +39,7 @@
          @click.stop="service.isEditable ? edit(service) : null"
         :data-day="service.day.id"
     >
-        <div v-if="service.location != null" :class="{'service-time': 1,  'service-special-time': isSpecialTime(service)}">
+        <div :class="{'service-time': 1,  'service-special-time': isSpecialTime(service)}">
             {{ service.time }} Uhr
         </div>
         <span class="separator">|</span>
@@ -89,21 +89,25 @@
 
 export default {
     props: ['service'],
+    computed: {
+    },
     methods: {
-        clickTitle: function (service) {
-            return service.isEditable ? 'Klicken, um diesen Eintrag zu bearbeiten (#'+service.id+')' : 'Nicht bearbeitbar';
-        },
-        redirect: function(url) {
-            window.location.href=url;
-        },
         isSpecialTime: function(service) {
-            return this.isSpecialLocation ? (service.time != service.location.default_time) : true;
+            if (null == service.location) return true;
+            console.log('isSpecialTime', this.isSpecialLocation(service), service.time, service.location.default_time.substr(0,5));
+            return service.time != service.location.default_time.substr(0,5);
         },
         isSpecialLocation: function(service) {
             return service.location == null;
         },
         ccTitle: function(service) {
             return 'Parallel Kinderkirche ('+service.cc_location+') zum Thema "'+service.cc_lesson+'": '+service.cc_staff;
+        },
+        clickTitle: function (service) {
+            return service.isEditable ? 'Klicken, um diesen Eintrag zu bearbeiten (#'+service.id+')' : 'Nicht bearbeitbar';
+        },
+        redirect: function(url) {
+            window.location.href=url;
         },
         edit: function(service) {
             window.location.href = route('services.edit', service.id);
