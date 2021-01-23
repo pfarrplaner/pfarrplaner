@@ -124,7 +124,8 @@ class CityController extends Controller
                 'youtube_passive_stream_id' => 'nullable|string',
                 'youtube_auto_startstop' => 'nullable|int',
                 'youtube_cutoff_days' => 'nullable|int',
-                'default_offering_url' => 'nullable|string'
+                'default_offering_url' => 'nullable|string',
+                'youtube_self_declared_for_children' => 'nullable|int',
             ]
         );
     }

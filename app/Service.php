@@ -182,6 +182,8 @@ class Service extends Model
         'registration_online_end',
         'registration_max',
         'reserved_places',
+        'youtube_prefix_description',
+        'youtube_postfix_description',
     ];
 
     /**
@@ -344,23 +346,24 @@ class Service extends Model
     /**
      * @return string
      */
-    public function descriptionText()
+    public function descriptionText($exclude = [])
     {
         $desc = [];
         if ($this->needs_reservations) {
-            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis ' . $this->registration_online_end->format(
+            $desc['needs_reservations'] = ($this->registration_online_end ? 'Anmeldung nötig bis ' . $this->registration_online_end->format(
                     'd.m.Y, H:i'
                 ) . ' Uhr' : 'Anmeldung nötig');
         }
         if ($this->baptism) {
-            $desc[] = 'mit Taufen';
+            $desc['baptism'] = 'mit Taufen';
         }
         if ($this->eucharist) {
-            $desc[] = 'mit Abendmahl';
+            $desc['eucharist'] = 'mit Abendmahl';
         }
         if ($this->getAttribute('description') != '') {
-            $desc[] = $this->getAttribute('description');
+            $desc['description'] = $this->getAttribute('description');
         }
+        foreach ($exclude as $key) if (isset($desc[$key])) unset($desc[$key]);
         return join('; ', $desc);
     }
 

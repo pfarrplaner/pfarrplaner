@@ -1,7 +1,10 @@
-{!! $service->titleText(false) !!} am {!! $service->day->date->format('d.m.Y') !!} @if(isset($liturgy['title'])) ({!! $liturgy['title'] !!})@endif mit {!! $service->participantsText('P') !!}@if ($service->descriptionText()!='')
+{!! $service->titleText(false) !!} am {!! $service->day->date->format('d.m.Y') !!} @if(isset($liturgy['title'])) ({!! $liturgy['title'] !!})@endif mit {!! $service->participantsText('P') !!}@if($service->youtube_prefix_description)
 
 
-{!! $service->descriptionText() !!}@endif @if($service->songsheet)
+{!! $service->youtube_prefix_description !!} @endif    @if ($service->descriptionText(['needs_reservations'])!='')
+
+
+{!! $service->descriptionText(['needs_reservations']) !!}@endif @if($service->songsheet)
 
 
 Sing mit! Ein Liedblatt zu diesem Gottesdienst gibt es hier zum Download:
@@ -29,4 +32,7 @@ Natürlich gibt es online auch einen Kindergottesdienst:
 
 Direkt im Anschluss an den Gottesdienst laden wir online zu einem "virtuellen Kirchencafé" ein. Wenn du teilnehmen möchtest,
 klicke einfach auf den folgenden Link:
-{!! $service->meeting_url !!} @endif
+{!! $service->meeting_url !!} @endif @if($service->youtube_postfix_description)
+
+
+{!! $service->youtube_postfix_description !!} @endif

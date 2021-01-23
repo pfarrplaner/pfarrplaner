@@ -71,7 +71,9 @@
                     @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite für ein "virtuelles Kirchencafé"', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'accept' => '.pdf'])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'accept' => '.pdf', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_prefix_description', 'label' => 'Einleitender Text für die Beschreibung auf YouTube', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_postfix_description', 'label' => 'Ergänzender Text für die Beschreibung auf YouTube', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'sermon'])
                         @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])

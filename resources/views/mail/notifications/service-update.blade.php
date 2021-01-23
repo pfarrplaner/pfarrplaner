@@ -138,6 +138,8 @@
                 'recording_url' => 'URL zur Audioaufzeichnung',
                 'songsheet' => 'URL zum Liedblatt',
                 'external_url' => 'Externe Seite zum Gottesdienst',
+                'youtube_prefix_description' => 'Einleitender Text zur Beschreibung auf YouTube',
+                'youtube_postfix_description' => 'Ergänzender Text zur Beschreibung auf YouTube',
                 'sermon_title' => 'Titel der Predigt',
                 'sermon_reference' => 'Predigttext',
                 'sermon_image' => 'Titelbild der Predigt',

@@ -171,7 +171,7 @@ class Broadcast
         $video->setId($broadcastsResponse->id);
         $video->setSnippet($service->getVideoSnippet());
         $videoStatus = new \Google_Service_YouTube_VideoStatus();
-        $videoStatus->setSelfDeclaredMadeForKids(false);
+        $videoStatus->setSelfDeclaredMadeForKids($service->city->youtube_self_declared_for_children == 1);
         $video->setStatus($videoStatus);
 
         $videoResponse = $instance->getYoutube()->videos->update('snippet,status', $video);

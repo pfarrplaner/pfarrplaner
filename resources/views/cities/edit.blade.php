@@ -50,6 +50,7 @@
                     @select(['name' => 'youtube_active_stream_id', 'label' => 'Streamschlüssel für die aktive Sendung', 'value' => $city->youtube_active_stream_id, 'items' => $streams, 'empty' => 1, 'useArrayKey' => 1])
                     @select(['name' => 'youtube_passive_stream_id', 'label' => 'Streamschlüssel für inaktive Sendungen', 'value' => $city->youtube_passive_stream_id, 'items' => $streams, 'empty' => 1, 'useArrayKey' => 1])
                     @checkbox(['name' => 'youtube_auto_startstop', 'label' => 'Sendungen automatisch starten und stoppen', 'value' => $city->youtube_auto_startstop])
+                    @checkbox(['name' => 'youtube_self_declared_for_children', 'label' => 'Sendungen als "für Kinder" markieren', 'value' => $city->youtube_self_declared_for_children])
                     @input(['name' => 'youtube_cutoff_days', 'label' => 'Aufzeichnungen auf Youtube nach __ Tagen automatisch auf privat schalten', 'value' => $city->youtube_cutoff_days, 'enabled' => Auth::user()->can('ort-bearbeiten'), 'placeholder' => '0 um diese Funktion zu deaktivieren', 'type' => 'number'])
                 @endtab
                 @tab(['id' => 'podcast'])

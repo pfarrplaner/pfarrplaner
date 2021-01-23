@@ -137,7 +137,9 @@
                     @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'value' => $service->offerings_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite für ein "virtuelles Kirchencafé"', 'value' => $service->meeting_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'value' => $service->recording_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt', 'accept' => '.pdf'])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt', 'accept' => '.pdf', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_prefix_description', 'label' => 'Einleitender Text für die Beschreibung auf YouTube', 'value' => $service->youtube_prefix_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_postfix_description', 'label' => 'Ergänzender Text für die Beschreibung auf YouTube', 'value' => $service->youtube_postfix_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'sermon', 'active' => ($tab=='sermon')])
                     @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'value' => $service->sermon_title, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
