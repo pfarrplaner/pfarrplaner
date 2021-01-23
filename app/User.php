@@ -123,6 +123,143 @@ class User extends Authenticatable
     /** @var string[] cached user settings  */
     protected $settings = [];
 
+// ACCESSORS
+    /**
+     * @return array
+     */
+    public function getAllPermissionsAttribute()
+    {
+        $permissions = [];
+        foreach (Permission::all() as $permission) {
+            if (Auth::user()->can($permission->name)) {
+                $permissions[] = $permission->name;
+            }
+        }
+        return $permissions;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->hasRole('Administrator*in') || $this->hasRole('Super-Administrator*in');
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsLocalAdminAttribute()
+    {
+        return (!$this->isAdmin) && (count($this->adminCities) >0);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPlanNameAttribute()
+    {
+        return $this->lastName(true);
+    }
+
+    /**
+     * @return City[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getWritableCitiesAttribute()
+    {
+        if ((!Auth::guest()) && Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
+            return City::all();
+        }
+        return $this->writableCities()->get();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function writableCities()
+    {
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
+    }
+
+    /**
+     * @return City[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getAdminCitiesAttribute()
+    {
+        if ($this->hasRole(AuthServiceProvider::SUPER)) {
+            return City::all();
+        }
+        return $this->adminCities()->get();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function adminCities()
+    {
+        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
+    }
+// END ACCESSORS
+
+// MUTATORS
+    /**
+     * Automatically hash password
+     * @param $value
+     */
+    public function setPasswordAttribute($value) {
+        if ($value != '') $this->attributes['password'] = Hash::make($value);
+    }
+// END MUTATORS
+
+// SCOPES
+    /**
+     * Query for users subscribed to a specific service
+     *
+     * This requires one of two condition sets to be true:
+     * 1) User is subscribed to all services for this city
+     * 2) User is subscribed to own services for this city AND is a participant in this service
+     *
+     * @param Builder $query
+     * @param Service $service
+     * @param bool $isNew True, if this is a newly created service
+     * @return mixed
+     */
+    public function scopeSubscribedTo(Builder $query, Service $service, $isNew = false)
+    {
+        $query->whereHas(
+            'subscriptions',
+            function ($query) use ($service) {
+                $query->where('city_id', $service->city_id);
+                $query->where('subscription_type', Subscription::SUBSCRIBE_ALL);
+            }
+        )->orWhere(
+            function ($query) use ($service) {
+                $query->whereIn('id', $service->participants->pluck('id'));
+                $query->whereHas(
+                    'subscriptions',
+                    function ($query) use ($service) {
+                        $query->where('city_id', $service->city_id);
+                        $query->where('subscription_type', Subscription::SUBSCRIBE_OWN);
+                    }
+                );
+            }
+        );
+
+        // some users only get notified when time or day_id change
+        if ($isNew || isset($service->changes['time']) || isset($service->changes['day_id'])) {
+            $query->orWhereHas('subscriptions',
+                function ($query) use ($service) {
+                    $query->where('city_id', $service->city_id);
+                    $query->where('subscription_type', Subscription::SUBSCRIBE_TIME_CHANGES);
+                }
+            );
+        }
+
+        return $query;
+    }
+// END SCOPES
+
+// SETTERS
     /**
      * @param $name
      * @return int|mixed|string
@@ -447,52 +584,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Query for users subscribed to a specific service
-     *
-     * This requires one of two condition sets to be true:
-     * 1) User is subscribed to all services for this city
-     * 2) User is subscribed to own services for this city AND is a participant in this service
-     *
-     * @param Builder $query
-     * @param Service $service
-     * @param bool $isNew True, if this is a newly created service
-     * @return mixed
-     */
-    public function scopeSubscribedTo(Builder $query, Service $service, $isNew = false)
-    {
-        $query->whereHas(
-            'subscriptions',
-            function ($query) use ($service) {
-                $query->where('city_id', $service->city_id);
-                $query->where('subscription_type', Subscription::SUBSCRIBE_ALL);
-            }
-        )->orWhere(
-            function ($query) use ($service) {
-                $query->whereIn('id', $service->participants->pluck('id'));
-                $query->whereHas(
-                    'subscriptions',
-                    function ($query) use ($service) {
-                        $query->where('city_id', $service->city_id);
-                        $query->where('subscription_type', Subscription::SUBSCRIBE_OWN);
-                    }
-                );
-            }
-        );
-
-        // some users only get notified when time or day_id change
-        if ($isNew || isset($service->changes['time']) || isset($service->changes['day_id'])) {
-            $query->orWhereHas('subscriptions',
-                function ($query) use ($service) {
-                    $query->where('city_id', $service->city_id);
-                    $query->where('subscription_type', Subscription::SUBSCRIBE_TIME_CHANGES);
-                }
-            );
-        }
-
-        return $query;
-    }
-
-    /**
      * @param $subscriptions
      */
     public function setSubscriptionsFromArray($subscriptions)
@@ -523,20 +614,6 @@ class User extends Authenticatable
         $subscription->subscription_type = $type;
         $subscription->save();
         return $subscription;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllPermissionsAttribute()
-    {
-        $permissions = [];
-        foreach (Permission::all() as $permission) {
-            if (Auth::user()->can($permission->name)) {
-                $permissions[] = $permission->name;
-            }
-        }
-        return $permissions;
     }
 
     /**
@@ -633,22 +710,6 @@ class User extends Authenticatable
     }
 
     /**
-     * @return bool
-     */
-    public function getIsAdminAttribute()
-    {
-        return $this->hasRole('Administrator*in') || $this->hasRole('Super-Administrator*in');
-    }
-
-    /**
-     * @return bool
-     */
-    public function getIsLocalAdminAttribute()
-    {
-        return (!$this->isAdmin) && (count($this->adminCities) >0);
-    }
-
-    /**
      * Find all users for which this user may see the absences
      *
      * Permission logic:
@@ -712,14 +773,6 @@ class User extends Authenticatable
         $users = $userQuery->get();
 
         return $users;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPlanNameAttribute()
-    {
-        return $this->lastName(true);
     }
 
     /**
@@ -795,44 +848,6 @@ class User extends Authenticatable
     }
 
     /**
-     * @return City[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function getWritableCitiesAttribute()
-    {
-        if ((!Auth::guest()) && Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
-            return City::all();
-        }
-        return $this->writableCities()->get();
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function writableCities()
-    {
-        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['w', 'a']);
-    }
-
-    /**
-     * @return City[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function getAdminCitiesAttribute()
-    {
-        if ($this->hasRole(AuthServiceProvider::SUPER)) {
-            return City::all();
-        }
-        return $this->adminCities()->get();
-    }
-
-    /**
-     * @return BelongsToMany
-     */
-    public function adminCities()
-    {
-        return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
-    }
-
-    /**
      * @return mixed
      */
     public function absencesToBeApproved()
@@ -857,11 +872,17 @@ class User extends Authenticatable
     }
 
     /**
-     * Automatically hash password
-     * @param $value
+     * Check if the user has at least one of an array of permissions
+     * @param string[] $permissions
+     * @param mixed $data
+     * @return bool
      */
-    public function setPasswordAttribute($value) {
-        if ($value != '') $this->attributes['password'] = Hash::make($value);
+    public function canAny($permissions, $data = null)
+    {
+        $can = false;
+        foreach ($permissions as $permission) {
+            $can = $can || $this->can($permission, $data);
+        }
+        return $can;
     }
-
 }
