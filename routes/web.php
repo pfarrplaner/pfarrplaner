@@ -258,6 +258,8 @@ Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr')
 
 // inertia testing
 Route::get('/calendar/{date?}/{month?}', 'CalController@index')->name('calendar');
+Route::get('/services/{service}/liturgy', 'LiturgyEditorController@editor')->name('services.liturgy.editor');
+Route::post('/services/{service}/liturgy', 'LiturgyEditorController@save')->name('services.liturgy.save');
 
 
 // ministry request

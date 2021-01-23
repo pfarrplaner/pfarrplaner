@@ -31,6 +31,7 @@
 namespace App;
 
 use App\Helpers\YoutubeHelper;
+use App\Liturgy\Block;
 use App\Seating\AbstractSeatFinder;
 use App\Seating\MaximumBasedSeatFinder;
 use App\Seating\RowBasedSeatFinder;
@@ -1279,5 +1280,10 @@ class Service extends Model
     public function getLiveDashboardUrlAttribute()
     {
         return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
+    }
+
+    public function liturgyBlocks()
+    {
+        return $this->hasMany(Block::class);
     }
 }
