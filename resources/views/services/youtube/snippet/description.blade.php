@@ -24,4 +24,9 @@ Zu dieser Predigt gibt es noch mehr Infos auf folgender Seite:
 
 
 Natürlich gibt es online auch einen Kindergottesdienst:
-{!! $service->cc_streaming_url !!} @endif
+{!! $service->cc_streaming_url !!} @endif @if($service->meeting_url)
+
+
+Direkt im Anschluss an den Gottesdienst laden wir online zu einem "virtuellen Kirchencafé" ein. Wenn du teilnehmen möchtest,
+klicke einfach auf den folgenden Link:
+{!! $service->meeting_url !!} @endif
