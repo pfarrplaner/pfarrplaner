@@ -1289,4 +1289,13 @@ class Service extends Model
     {
         return $this->hasMany(Block::class);
     }
+
+    /**
+     * Get total number of participants + bookings
+     */
+    public function estimatePeoplePresent() {
+        $number = $this->participants->count();
+        foreach ($this->bookings as $booking) $number += $booking->number;
+        return $number;
+    }
 }
