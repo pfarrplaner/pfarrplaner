@@ -13,7 +13,3 @@ findet statt.
 Freundliche Grüße,\
 {{ \Illuminate\Support\Facades\Auth::user()->fullName(true) }}\
 ###KIRCHENGEMEINDE###
-
-----------
-Diese Nachricht wurde automatisiert über www.pfarrplaner.de versendet. Bei Rückfragen wenden Sie sich bitte direkt an {{ \Illuminate\Support\Facades\Auth::user()->fullName(true) }},
-Tel. {{ \Illuminate\Support\Facades\Auth::user()->phone }}, E-Mail {{ \Illuminate\Support\Facades\Auth::user()->email }}.
