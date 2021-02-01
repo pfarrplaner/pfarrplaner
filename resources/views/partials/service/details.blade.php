@@ -44,3 +44,5 @@
 </div>
 
 @if($service->cc) <img src="{{ env('APP_URL') }}img/cc.png" title="Parallel Kinderkirche ({{ $service->cc_location }}) zum Thema {{ '"'.$service->cc_lesson.'"' }}: {{ $service->cc_staff }}"/> @endif
+<textarea id="service-credits-{{ $service->id }}" style="position: absolute;   opacity: .01;   height: 0;   overflow: hidden;">{{ $service->credits }}</textarea>
+<button class="btn btn-sm btn-secondary" onclick="var el= document.getElementById('service-credits-{{ $service->id }}'); el.focus(); el.select(); document.execCommand('copy'); "><span class="fa fa-clipboard"></span> Credits kopieren</button>

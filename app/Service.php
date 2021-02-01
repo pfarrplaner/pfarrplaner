@@ -1298,4 +1298,14 @@ class Service extends Model
         foreach ($this->bookings as $booking) $number += $booking->number;
         return $number;
     }
+
+    public function getCreditsAttribute() {
+        $credits = ['Liturgie' => 'Liturgie: '.$this->participantsText('P', true), 'Orgel' => 'Orgel: '.$this->participantsText('O', true)];
+        foreach ($this->ministries() as $ministry => $people) {
+            $credits[$ministry] = $ministry.': '.$this->participantsText($ministry, true, true);
+        }
+        $credits['Mesner*in'] = 'Mesnerdienst: '.$this->participantsText('M', true, true);
+        $separator = utf8_encode(' '.chr(183).' ');
+        return join ($separator, $credits);
+    }
 }
