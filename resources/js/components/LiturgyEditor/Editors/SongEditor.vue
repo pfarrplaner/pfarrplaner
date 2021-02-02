@@ -34,7 +34,7 @@
                 <label for="title">Titel im Ablaufplan</label>
                 <input class="form-control" v-model="editedElement.title" v-focus/>
             </div>
-            <div v-if="this.songs.length == 0">
+            <div v-if="this.songs === null">
                 Bitte warten, Liederliste wird geladen...
             </div>
             <div v-else>
@@ -123,8 +123,6 @@
                 </inertia-link>
             </div>
         </div>
-        <hr/>
-        <pre>{{ JSON.stringify(editedElement, null, 4) }}</pre>
     </form>
 </template>
 
@@ -168,7 +166,7 @@ export default {
             editedElement: e,
             emptySong: emptySong,
             editSong: false,
-            songs: {},
+            songs: null,
             songIsDirty: false,
         };
     },

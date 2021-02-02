@@ -34,7 +34,7 @@
                 <label for="title">Titel im Ablaufplan</label>
                 <input class="form-control" v-model="editedElement.title" v-focus/>
             </div>
-            <div v-if="this.texts.length == 0">
+            <div v-if="this.texts === null">
                 Bitte warten, Textliste wird geladen...
             </div>
             <div v-else>
@@ -98,7 +98,7 @@ export default {
         if (undefined == e.data.text) e.data.text = '';
         return {
             editedElement: e,
-            texts: {},
+            texts: null,
             selectedText: {
                 id: -1,
                 title: '',

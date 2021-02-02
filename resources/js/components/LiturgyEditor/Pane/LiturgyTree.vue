@@ -37,10 +37,18 @@
                      :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
                      @click="focusBlock(blockIndex)">
                     <div class="row">
-                        <div class="col-8 liturgy-block-title">
+                        <div class="col-11 liturgy-block-title">
                             <span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ block.title }}
                         </div>
-                        <div class="col-4 text-right" v-if="editable">
+                        <div class="col-1 text-right" v-if="editable">
+                            <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
+                                    title="Abschnitt löschen">
+                                <span class="fa fa-trash"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row" v-if="editable">
+                        <div class="col-12">
                             <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light"
                                     title="Freitext hinzufügen"><span class="fa fa-file"></span>
                             </button>
@@ -58,10 +66,6 @@
                             <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light"
                                     title="Liturgischen Text hinzufügen"><span
                                 class="fa fa-file-alt"></span></button>
-                            <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
-                                    title="Abschnitt löschen">
-                                <span class="fa fa-trash"></span>
-                            </button>
                         </div>
                     </div>
                     <details-pane v-if="block.editing == true" :service="service" :element="block"/>
@@ -291,6 +295,7 @@ export default {
                     }
                     return title;
                 case 'song':
+                    if (undefined == item.data.song) return '';
                     var title = item.data.song.title;
                     if (item.data.song.reference) {
                         title = item.data.song.reference + ' ' + title;
