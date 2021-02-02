@@ -31,30 +31,58 @@
     <div class="card">
         <div class="card-header">Ablauf der Liturgie</div>
         <div class="card-body">
-            <draggable :list="blocks" group="blocks" v-bind:="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list" @start="focusOff">
-                <div v-for="block,blockIndex in blocks" class="liturgy-block" :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}" @click="focusBlock(blockIndex)">
+            <draggable :list="blocks" group="blocks" v-bind:="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
+                       @start="focusOff" @end="saveState" :disabled="!editable">
+                <div v-for="block,blockIndex in blocks" class="liturgy-block"
+                     :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
+                     @click="focusBlock(blockIndex)">
                     <div class="row">
                         <div class="col-8 liturgy-block-title">
-                            {{ block.title}}
+                            <span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ block.title }}
                         </div>
-                        <div class="col-4 text-right">
-                            <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light" title="Freitext hinzufügen"><span class="fa fa-file"></span>
+                        <div class="col-4 text-right" v-if="editable">
+                            <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light"
+                                    title="Freitext hinzufügen"><span class="fa fa-file"></span>
                             </button>
-                            <button @click.stop="addItem(blockIndex, 'Psalm')" class="btn btn-sm btn-light" title="Psalm hinzufügen"><span class="fa fa-praying-hands"></span>
+                            <button @click.stop="addItem(blockIndex, 'Psalm')" class="btn btn-sm btn-light"
+                                    title="Psalm hinzufügen"><span class="fa fa-praying-hands"></span>
                             </button>
-                            <button @click.stop="addItem(blockIndex, 'Reading')" class="btn btn-sm btn-light" title="Schriftlesung hinzufügen"><span class="fa fa-bible"></span>
+                            <button @click.stop="addItem(blockIndex, 'Reading')" class="btn btn-sm btn-light"
+                                    title="Schriftlesung hinzufügen"><span class="fa fa-bible"></span>
                             </button>
-                            <button @click.stop="addItem(blockIndex, 'Sermon')" class="btn btn-sm btn-light" title="Predigt hinzufügen"><span
+                            <button @click.stop="addItem(blockIndex, 'Sermon')" class="btn btn-sm btn-light"
+                                    title="Predigt hinzufügen"><span
                                 class="fa fa-microphone-alt"></span></button>
-                            <button @click.stop="addItem(blockIndex, 'Song')" class="btn btn-sm btn-light" title="Lied hinzufügen"><span class="fa fa-music"></span></button>
-                            <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light" title="Liturgischen Text hinzufügen"><span
+                            <button @click.stop="addItem(blockIndex, 'Song')" class="btn btn-sm btn-light"
+                                    title="Lied hinzufügen"><span class="fa fa-music"></span></button>
+                            <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light"
+                                    title="Liturgischen Text hinzufügen"><span
                                 class="fa fa-file-alt"></span></button>
+                            <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
+                                    title="Abschnitt löschen">
+                                <span class="fa fa-trash"></span>
+                            </button>
                         </div>
                     </div>
+                    <details-pane v-if="block.editing == true" :service="service" :element="block"/>
 
-                    <draggable :list="block.items" group="items" class="liturgy-items-list" v-bind:="{ghostClass: 'ghost-item'}" @start="focusOff">
-                        <div v-for="item,itemIndex in block.items" class="liturgy-item" @click.stop="focusItem(blockIndex, itemIndex)" :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}">
-                            {{ item.title }}</div>
+                    <draggable :list="block.items" group="items" class="liturgy-items-list"
+                               v-bind:="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
+                               :disabled="!editable">
+                        <div v-for="item,itemIndex in block.items" class="liturgy-item"
+                             @click.stop="focusItem(blockIndex, itemIndex)"
+                             :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}">
+                            <div class="row">
+                                <div class="col-10 item-title"><span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ item.title }}</div>
+                                <div class="col-2 text-right" v-if="editable">
+                                    <button @click.stop="deleteItem(blockIndex, itemIndex)"
+                                            class="btn btn-sm btn-danger" title="Element löschen">
+                                        <span class="fa fa-trash"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <details-pane v-if="item.editing == true" :service="service" :element="item"/>
+                        </div>
                     </draggable>
                 </div>
             </draggable>
@@ -62,22 +90,21 @@
         <div class="card-footer">
             <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt hinzufügen
             </button>
-            <button class="btn btn-primary" @click="save"">Speichern</button>
         </div>
-        <hr />
-        <pre>{{ JSON.stringify(blocks, null, 4) }}</pre>
     </div>
 </template>
 
 <script>
 import draggable from 'vuedraggable'
 import LiturgyBlock from "../Elements/LiturgyBlock";
-import { BlockType, FreetextType, LiturgicType, PsalmType, ReadingType, SermonType, SongType } from "../Types/LiturgyItemTypes";
+import {PsalmType, SongType} from "../Types/LiturgyItemTypes";
+import DetailsPane from "./DetailsPane";
 
 export default {
     name: "LiturgyTree",
     components: {
         LiturgyBlock,
+        DetailsPane,
         draggable
     },
     props: ['service'],
@@ -85,69 +112,131 @@ export default {
         // here we need to do some dirty checking and saving!
     },
     data() {
+        var myBlocks = this.service.liturgy_blocks;
+        myBlocks.forEach(function (val, idx) {
+            myBlocks[idx].data_type = 'block';
+            myBlocks[idx].typeDescription = 'Abschnitt';
+            myBlocks[idx].editing = false;
+            myBlocks[idx].items.forEach(function (val2, idx2) {
+                myBlocks[idx].items[idx2].editing = false;
+            });
+        });
+
         return {
+            blocks: myBlocks,
             focusedBlock: null,
             focusedItem: null,
-        }
-    },
-    computed: {
-        blocks() {
-            var myBlocks = this.service.liturgy_blocks;
-            myBlocks.forEach(function(val, idx){
-                myBlocks[idx].type = 'block';
-                myBlocks[idx].typeDescription = 'Abschnitt';
-            });
-            return myBlocks;
+            editable: true,
         }
     },
     methods: {
         addBlock() {
-            var index = this.blocks.push(new BlockType());
-            this.focusBlock(index-1);
+            this.$inertia.post('/liturgy/' + this.service.id + '/block',
+                {title: 'Abschnitt ' + (this.blocks.length + 1)},
+                {
+                    preserveState: false
+                }
+            );
         },
         deleteBlock(index) {
-            this.blocks.splice(index, 1);
+            this.$inertia.delete(route('liturgy.block.destroy', {
+                service: this.service.id,
+                block: this.blocks[index].id,
+            }), {
+                preserveState: false
+            });
+        },
+        saveState() {
+            var i = 0;
+            this.blocks.forEach(function (block) {
+                block.sortable = i++;
+                var j=0;
+                block.items.forEach(function (item) {
+                    item.sortable = j++;
+                })
+            })
+            this.$inertia.post(route('services.liturgy.save', this.service.id), this.blocks)
         },
         addItem(blockIndex, type) {
+            if (!this.editable) return false;
             var obj;
             switch (type) {
                 case 'Freetext':
-                    obj = new FreetextType();
+                    this.$inertia.post(route('liturgy.item.store', {
+                        service: this.service.id,
+                        block: this.blocks[blockIndex].id
+                    }), {
+                        title: 'Freier Text',
+                        data_type: 'freetext',
+                        data: {description: ''},
+                    }, {preserveState: false});
                     break;
                 case 'Liturgic':
-                    obj = new LiturgicType();
+                    this.$inertia.post(route('liturgy.item.store', {
+                        service: this.service.id,
+                        block: this.blocks[blockIndex].id
+                    }), {
+                        title: 'Liturgischer Text',
+                        data_type: 'liturgic',
+                        data: { id: -1, title: '', text: ''}
+                    }, {preserveState: false});
                     break;
                 case 'Psalm':
                     obj = new PsalmType();
                     break;
                 case 'Reading':
-                    obj = new ReadingType();
+                    this.$inertia.post(route('liturgy.item.store', {
+                        service: this.service.id,
+                        block: this.blocks[blockIndex].id
+                    }), {
+                        title: 'Schriftlesung',
+                        data_type: 'reading',
+                        data: {reference: ''},
+                    }, {preserveState: false});
                     break;
                 case 'Sermon':
-                    obj = new SermonType();
+                    this.$inertia.post(route('liturgy.item.store', {
+                        service: this.service.id,
+                        block: this.blocks[blockIndex].id
+                    }), {
+                        title: 'Predigt',
+                        data_type: 'sermon',
+                    }, {preserveState: false});
                     break;
                 case 'Song':
                     obj = new SongType();
                     break;
             }
             var index = this.blocks[blockIndex].items.push(obj);
-            this.focusItem(blockIndex, index-1);
+        },
+        deleteItem(blockIndex, itemIndex) {
+            this.$inertia.delete(route('liturgy.item.destroy', {
+                service: this.service.id,
+                block: this.blocks[blockIndex].id,
+                item: this.blocks[blockIndex].items[itemIndex].id,
+            }), {preserveState: false});
         },
         focusBlock(blockIndex) {
+            if (!this.editable) return false;
             if (this.focusedBlock == blockIndex) {
+                this.blocks[blockIndex].editing = false;
                 this.focusOff();
             } else {
                 this.focusOff();
+                this.blocks[blockIndex].editing = true;
                 this.focusedBlock = blockIndex;
                 this.focusedItem = null;
                 this.updateFocus(this.blocks[blockIndex]);
             }
         },
         focusItem(blockIndex, itemIndex) {
+            if (!this.editable) return false;
             if ((this.focusedBlock == blockIndex) && (this.focusedItem == itemIndex)) {
+                this.blocks[blockIndex].items[itemIndex].editing = false;
                 this.focusOff();
             } else {
                 this.focusOff();
+                this.blocks[blockIndex].items[itemIndex].editing = true;
                 this.focusedBlock = blockIndex;
                 this.focusedItem = itemIndex;
                 this.updateFocus(this.blocks[blockIndex].items[itemIndex]);
@@ -158,25 +247,17 @@ export default {
             this.updateFocus(null);
         },
         updateFocus(object) {
-            console.log('hi');
+            this.editable = (object === null);
             this.$emit('update-focus', this.focusedBlock, this.focusedItem, object);
         },
         save() {
-            // TODO:
-            // save strategy:
-            // 1. save blocks
-            // 2. save items
-
-y
-            this.$inertia.post(route('services.liturgy.save', {service: this.service}), {blocks: this.blocks}, { preserveState: true});
+            this.$inertia.post(route('services.liturgy.save', {service: this.service}), {blocks: this.blocks}, {preserveState: true});
         }
     }
 }
 </script>
 
 <style scoped>
-
-
 
 
 .liturgy-block {
@@ -205,11 +286,22 @@ y
     font-size: 1.4em;
     color: rgb(145, 45, 125);
 }
+
 .liturgy-item {
     border-top: dotted 1px gray;
     padding: 3px 0;
-    margin: 3px 5px;
+    margin: 3px 0px;
     cursor: pointer;
+}
+
+.liturgy-item.focused .item-title {
+    padding-left: 13px;
+    font-weight: bold;
+}
+
+.liturgy-item.focused .item-title span.fa,
+.liturgy-block.focused .liturgy-block-title span.fa {
+    display: inline !important;
 }
 
 .liturgy-item.focused {

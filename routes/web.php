@@ -258,9 +258,25 @@ Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr')
 
 // inertia testing
 Route::get('/calendar/{date?}/{month?}', 'CalController@index')->name('calendar');
+
+// liturgy editor
 Route::get('/services/{service}/liturgy', 'LiturgyEditorController@editor')->name('services.liturgy.editor');
 Route::post('/services/{service}/liturgy', 'LiturgyEditorController@save')->name('services.liturgy.save');
 
+// liturgy blocks
+Route::post('/liturgy/{service}/block', 'LiturgyBlockController@store')->name('liturgy.block.store');
+Route::post('/liturgy/{service}/block/{block}', 'LiturgyBlockController@sync')->name('liturgy.block.sync');
+Route::patch('/liturgy/{service}/block/{block}', 'LiturgyBlockController@update')->name('liturgy.block.update');
+Route::delete('/liturgy/{service}/block/{block}', 'LiturgyBlockController@destroy')->name('liturgy.block.destroy');
+
+// liturgy items
+Route::post('/liturgy/{service}/block/{block}/item', 'LiturgyItemController@store')->name('liturgy.item.store');
+Route::patch('/liturgy/{service}/block/{block}/item/{item}', 'LiturgyItemController@update')->name('liturgy.item.update');
+Route::delete('/liturgy/{service}/block/{block}/item/{item}', 'LiturgyItemController@destroy')->name('liturgy.item.destroy');
+
+// liturgical texts
+Route::get('/liturgy/texts', 'LiturgicalTextsController@index')->name('liturgy.text.index');
+Route::post('/liturgy/texts', 'LiturgicalTextsController@store')->name('liturgy.text.store');
 
 // ministry request
 Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@ministryRequest')
@@ -270,3 +286,4 @@ Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRe
 
 // settings
 Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.set');
+

@@ -31,42 +31,9 @@
 namespace App\Liturgy;
 
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-
-class Item extends Model
+class Text extends \Illuminate\Database\Eloquent\Model
 {
+    protected $table = 'liturgical_texts';
 
-    protected $appends = ['data'];
-
-    protected $table = 'liturgy_items';
-
-    protected $fillable= ['liturgy_block_id', 'title', 'instructions', 'data_type', 'serialized_data', 'sortable'];
-
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Order by sortable ASC
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('sortable', 'asc');
-        });
-    }
-
-
-    public function block()
-    {
-        return $this->belongsTo(Block::class, 'liturgy_block_id');
-    }
-
-    public function getDataAttribute()
-    {
-        return unserialize($this->attributes['serialized_data']) ?: new \stdClass();
-    }
-
-    public function setDataAttribute($data)
-    {
-        return $this->attributes['serialized_data'] = serialize($data);
-    }
-
+    protected $fillable = ['title', 'text'];
 }

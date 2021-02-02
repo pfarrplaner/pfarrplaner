@@ -28,21 +28,47 @@
   -->
 
 <template>
-    <div class="liturgy-item-block-editor">
-        <div class="form-group">
-            <label for="title">Titel des Abschnitts</label>
-            <input class="form-control" v-model="element.title" v-focus/>
+    <form @submit.prevent="save">
+        <div class="liturgy-item-block-editor">
+            <div class="form-group">
+                <label for="title">Titel des Abschnitts</label>
+                <input class="form-control" v-model="editedElement.title" v-focus/>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" @click="save">Speichern</button>
+                <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', element.service_id)">Abbrechen
+                </inertia-link>
+            </div>
         </div>
-    </div>
+        <hr v-if="element.items.length > 0"/>
+    </form>
 </template>
 
 <script>
 export default {
     name: "BlockEditor",
     props: ['element'],
+    data() {
+        return {
+            editedElement: this.element,
+        };
+    },
+    methods: {
+        save: function () {
+            this.$inertia.patch('/liturgy/' + this.element.service_id + '/block/' + this.element.id, this.editedElement, {
+                preserveState: false,
+            });
+        },
+        cancel: function () {
+            this.$emit('cancel');
+        }
+    }
 }
 </script>
 
 <style scoped>
+.liturgy-item-block-editor {
+    padding: 5px;
+}
 
 </style>

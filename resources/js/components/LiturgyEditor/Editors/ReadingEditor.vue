@@ -28,21 +28,51 @@
   -->
 
 <template>
-    <div class="liturgy-item-block-editor">
-        <div class="form-group">
-            <label for="title">Titel des Abschnitts</label>
-            <input class="form-control" v-model="element.title" v-focus/>
+    <form @submit.prevent="save">
+        <div class="liturgy-item-reading-editor">
+                <div class="form-group">
+                    <label for="title">Titel des Abschnitts</label>
+                    <input class="form-control" v-model="editedElement.title" v-focus/>
+                </div>
+                <div class="form-group">
+                    <label for="description">Bibelstelle</label>
+                    <input class="form-control" type="text" v-model="editedElement.data.reading"></input>
+                </div>
+            <div class="form-group">
+                <button class="btn btn-primary" @click="save">Speichern</button>
+                <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)">
+                    Abbrechen
+                </inertia-link>
+            </div>
         </div>
-    </div>
+    </form>
 </template>
 
 <script>
 export default {
     name: "ReadingEditor",
-    props: ['element'],
+    props: ['element', 'service'],
+    data() {
+        var e = this.element;
+        if (undefined == e.data.reference) e.data.reference = '';
+        return {
+            editedElement: e,
+        };
+    },
+    methods: {
+        save: function () {
+            this.$inertia.patch(route('liturgy.item.update', {
+                service: this.service.id,
+                block: this.element.liturgy_block_id,
+                item: this.element.id,
+            }), this.element, {preserveState: false});
+        },
+    }
 }
 </script>
 
 <style scoped>
-
+    .liturgy-item-reading-editor {
+        padding: 5px;
+    }
 </style>

@@ -28,18 +28,52 @@
   -->
 
 <template>
-    <div class="liturgy-item-block-editor">
-        <div class="form-group">
-            <label for="title">Titel des Abschnitts</label>
-            <input class="form-control" v-model="element.title" v-focus/>
+    <form @submit.prevent="save">
+        <div class="liturgy-item-song-editor card">
+            <div class="card-header">Lied/Musikstück bearbeiten</div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="title">Titel des Abschnitts</label>
+                    <input class="form-control" v-model="editedElement.title" v-focus/>
+                </div>
+                <div v-if="count(this.songs) == 0">
+                    Bitte warten, Liederliste wird geladen...
+                </div>
+                <div v-else>
+                    Liederliste geladen.
+                </div>
+            </div>
+            <div class="card-footer">
+                <button class="btn btn-primary" @click="save">Speichern</button>
+                <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)">
+                    Abbrechen
+                </inertia-link>
+            </div>
         </div>
-    </div>
+    </form>
 </template>
 
 <script>
 export default {
     name: "SongEditor",
-    props: ['element'],
+    props: ['element', 'service'],
+    data() {
+        var e = this.element;
+        if (undefined == e.data.description) e.data.description = '';
+        return {
+            editedElement: e,
+            songs: {},
+        };
+    },
+    methods: {
+        save: function () {
+            this.$inertia.patch(route('liturgy.item.update', {
+                service: this.service.id,
+                block: this.element.liturgy_block_id,
+                item: this.element.id,
+            }), this.element, {preserveState: false});
+        },
+    }
 }
 </script>
 

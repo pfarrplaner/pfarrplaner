@@ -2,12 +2,8 @@
     <admin-layout enable-control-sidebar="true" :title="title(service)">
         <info-pane :service="service" />
         <div class="row">
-            <div class="col-6">
+            <div class="col-12">
                 <liturgy-tree :service="service" @update-focus="updateFocus"/>
-            </div>
-            <div class="col-6">
-                <div v-if="element == null">Wähle ein Element aus der Ablaufliste, um es zu bearbeiten.</div>
-                <details-pane v-else :element="element" />
             </div>
         </div>
     </admin-layout>
@@ -15,17 +11,15 @@
 
 <script>
 import moment from 'moment';
-import EventBus from "../plugins/EventBus";
+
 const InfoPane = () => import('../components/LiturgyEditor/Pane/InfoPane');
 const LiturgyTree = () => import('../components/LiturgyEditor/Pane/LiturgyTree');
-const DetailsPane = () => import('../components/LiturgyEditor/Pane/DetailsPane');
 
 export default {
     props: ['service'],
     components: {
         InfoPane,
         LiturgyTree,
-        DetailsPane,
     },
     data() {
         return {
@@ -42,6 +36,7 @@ export default {
             this.blockIndex = blockIndex;
             this.itemIndex = itemIndex;
             this.element = element;
+            this.showModal = true;
         }
     }
 }

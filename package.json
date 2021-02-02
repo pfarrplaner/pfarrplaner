@@ -35,6 +35,7 @@
         "jquery-ui": "^1.12.1",
         "selectize": "^0.12.6",
         "tempusdominus-bootstrap-4": "^5.1.2",
+        "vue-nl2br": "^0.1.2",
         "vuedraggable": "^2.24.3"
     }
 }

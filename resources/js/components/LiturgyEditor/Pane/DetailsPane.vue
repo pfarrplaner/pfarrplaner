@@ -28,11 +28,8 @@
   -->
 
 <template>
-    <div class="liturgy-editor-details-pane card">
-        <div class="card-header">{{ element.typeDescription }} bearbeiten</div>
-        <div class="card-body">
-            <component :is="editorComponent" :element="element" v-model="element" />
-        </div>
+    <div class="liturgy-editor-details-pane">
+        <component :is="editorComponent" :element="element" v-model="element" :service="service"/>
     </div>
 </template>
 
@@ -57,10 +54,10 @@ export default {
         SermonEditor,
         SongEditor
     },
-    props: ['element'],
+    props: ['element', 'service'],
     data() {
         return {
-            editorComponent: this.element.type.charAt(0).toUpperCase() + this.element.type.slice(1)+'Editor',
+            editorComponent: this.element.data_type.charAt(0).toUpperCase() + this.element.data_type.slice(1)+'Editor',
         }
     }
 }

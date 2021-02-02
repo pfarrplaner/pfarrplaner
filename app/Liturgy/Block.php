@@ -32,6 +32,7 @@ namespace App\Liturgy;
 
 
 use App\Service;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class Block extends Model
@@ -40,7 +41,18 @@ class Block extends Model
 
     protected $table = 'liturgy_blocks';
 
-    protected $fillable= ['title', 'instructions', 'service_id'];
+    protected $fillable= ['title', 'instructions', 'service_id', 'sortable'];
+
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Order by sortable ASC
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('sortable', 'asc');
+        });
+    }
 
     public function service() {
         return $this->belongsTo(Service::class);

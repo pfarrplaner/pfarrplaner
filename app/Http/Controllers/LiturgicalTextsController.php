@@ -28,45 +28,48 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Liturgy;
+namespace App\Http\Controllers;
 
 
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
+use App\Liturgy\Text;
+use Illuminate\Http\Request;
 
-class Item extends Model
+class LiturgicalTextsController extends Controller
 {
 
-    protected $appends = ['data'];
-
-    protected $table = 'liturgy_items';
-
-    protected $fillable= ['liturgy_block_id', 'title', 'instructions', 'data_type', 'serialized_data', 'sortable'];
-
-    protected static function boot()
+    public function __construct()
     {
-        parent::boot();
-
-        // Order by sortable ASC
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('sortable', 'asc');
-        });
+        $this->middleware('auth');
     }
 
-
-    public function block()
+    public function index()
     {
-        return $this->belongsTo(Block::class, 'liturgy_block_id');
+        return response()->json(Text::all());
     }
 
-    public function getDataAttribute()
+    /**
+     * @param Request $request
+     */
+    public function store(Request $request)
     {
-        return unserialize($this->attributes['serialized_data']) ?: new \stdClass();
+        $data = $this->validateRequest($request);
+        $text = Text::create($data);
+        $texts = Text::all();
+        return response()->json(compact('text', 'texts'));
     }
 
-    public function setDataAttribute($data)
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    protected function validateRequest(Request $request)
     {
-        return $this->attributes['serialized_data'] = serialize($data);
+        return $request->validate(
+            [
+                'title' => 'required|string',
+                'text' => 'required|string',
+            ]
+        );
     }
 
 }
