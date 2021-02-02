@@ -73,7 +73,26 @@
                              @click.stop="focusItem(blockIndex, itemIndex)"
                              :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}">
                             <div class="row">
-                                <div class="col-10 item-title"><span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ item.title }}</div>
+                                <div class="col-sm-3 item-title"><span class="fa fa-chevron-circle-right"
+                                                                       style="display: none;"></span> {{ item.title }}
+                                </div>
+                                <div class="col-sm-4">{{ itemDescription(item) }}</div>
+                                <div class="col-sm-3 responsible-list"
+                                     @click="editResponsibles(blockIndex, itemIndex, item)">
+                                    <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"/>
+                                    <div v-else>
+                                        <div v-if="item.data.responsible.length > 0">
+                                            <span class="badge badge-light" v-for="record in item.data.responsible"
+                                                  v-html="displayResponsible(record)"/>
+                                        </div>
+                                        <div v-else>
+                                            <div v-if="editable">
+                                                <span class="fa fa-users"></span> Hier klicken, um Verantwortliche
+                                                auszuwählen.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-2 text-right" v-if="editable">
                                     <button @click.stop="deleteItem(blockIndex, itemIndex)"
                                             class="btn btn-sm btn-danger" title="Element löschen">
@@ -97,14 +116,16 @@
 <script>
 import draggable from 'vuedraggable'
 import LiturgyBlock from "../Elements/LiturgyBlock";
-import {PsalmType, SongType} from "../Types/LiturgyItemTypes";
+import {PsalmType} from "../Types/LiturgyItemTypes";
 import DetailsPane from "./DetailsPane";
+import PeoplePane from "./PeoplePane";
 
 export default {
     name: "LiturgyTree",
     components: {
         LiturgyBlock,
         DetailsPane,
+        PeoplePane,
         draggable
     },
     props: ['service'],
@@ -119,6 +140,8 @@ export default {
             myBlocks[idx].editing = false;
             myBlocks[idx].items.forEach(function (val2, idx2) {
                 myBlocks[idx].items[idx2].editing = false;
+                myBlocks[idx].items[idx2].editResponsibles = false;
+                if (undefined == myBlocks[idx].items[idx2].data.responsible) myBlocks[idx].items[idx2].data.responsible = [];
             });
         });
 
@@ -150,7 +173,7 @@ export default {
             var i = 0;
             this.blocks.forEach(function (block) {
                 block.sortable = i++;
-                var j=0;
+                var j = 0;
                 block.items.forEach(function (item) {
                     item.sortable = j++;
                 })
@@ -178,7 +201,7 @@ export default {
                     }), {
                         title: 'Liturgischer Text',
                         data_type: 'liturgic',
-                        data: { id: -1, title: '', text: ''}
+                        data: {id: -1, title: '', text: ''}
                     }, {preserveState: false});
                     break;
                 case 'Psalm':
@@ -204,7 +227,13 @@ export default {
                     }, {preserveState: false});
                     break;
                 case 'Song':
-                    obj = new SongType();
+                    this.$inertia.post(route('liturgy.item.store', {
+                        service: this.service.id,
+                        block: this.blocks[blockIndex].id
+                    }), {
+                        title: 'Lied',
+                        data_type: 'song',
+                    }, {preserveState: false});
                     break;
             }
             var index = this.blocks[blockIndex].items.push(obj);
@@ -246,12 +275,70 @@ export default {
             this.focusedBlock = this.focusedItem = null;
             this.updateFocus(null);
         },
+        itemDescription(item) {
+            switch (item.data_type) {
+                case 'freetext':
+                    if (null === item.data.description) return '';
+                    if (undefined === item.data.description) return '';
+                    return item.data.description.length > 40 ? item.data.description.substr(0, 40) + '...' : item.data.description;
+                case 'liturgic':
+                    return item.data.title;
+                case 'sermon':
+                    var title = this.service.sermon_title != '' ? this.service.sermon_title : '';
+                    if (this.service.sermon_reference) {
+                        if (title) title = title + ' (' + this.service.sermon_reference + ')';
+                        else title = this.service.sermon_reference;
+                    }
+                    return title;
+                case 'song':
+                    var title = item.data.song.title;
+                    if (item.data.song.reference) {
+                        title = item.data.song.reference + ' ' + title;
+                    }
+                    if (item.data.song.songbook_abbreviation) {
+                        title = item.data.song.songbook_abbreviation + ' ' + title;
+                    } else if (item.data.song.songbook) {
+                        title = item.data.song.songbook + ' ' + title;
+                    }
+                    if (item.data.verses) {
+                        title = title + ', ' + item.data.verses;
+                    }
+                    return title;
+            }
+            return '';
+        },
         updateFocus(object) {
             this.editable = (object === null);
             this.$emit('update-focus', this.focusedBlock, this.focusedItem, object);
         },
         save() {
             this.$inertia.post(route('services.liturgy.save', {service: this.service}), {blocks: this.blocks}, {preserveState: true});
+        },
+        editResponsibles(blockIndex, itemIndex, item) {
+            this.editable = false;
+            this.focusItem(blockIndex, itemIndex);
+            item.editResponsibles = true;
+        },
+        displayResponsible(record) {
+            var title = '';
+            var tmp = record.split(':');
+            console.log(tmp);
+            if (tmp[0] == 'user') {
+                this.service.participants.forEach(function (person) {
+                    if (person.id == tmp[1]) title = '<span class="fa fa-user"></span> ' + person.name;
+                });
+                return title;
+            } else {
+                switch (tmp[1]) {
+                    case 'pastors':
+                        return '<span class="fa fa-users"></span> Pfarrer*in';
+                    case 'organists':
+                        return '<span class="fa fa-users"></span> Organist*in';
+                    case 'sacristans':
+                        return '<span class="fa fa-users"></span> Mesner*in';
+                }
+                return "<span class=\"fa fa-users\"></span> " + tmp[1] + "";
+            }
         }
     }
 }
@@ -312,6 +399,10 @@ export default {
 
 .liturgy-items-list .liturgy-item:first-child {
     border-top: 0;
+}
+
+.responsible-list {
+    color: gray;
 }
 
 .ghost-item {

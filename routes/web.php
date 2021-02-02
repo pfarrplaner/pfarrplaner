@@ -273,10 +273,16 @@ Route::delete('/liturgy/{service}/block/{block}', 'LiturgyBlockController@destro
 Route::post('/liturgy/{service}/block/{block}/item', 'LiturgyItemController@store')->name('liturgy.item.store');
 Route::patch('/liturgy/{service}/block/{block}/item/{item}', 'LiturgyItemController@update')->name('liturgy.item.update');
 Route::delete('/liturgy/{service}/block/{block}/item/{item}', 'LiturgyItemController@destroy')->name('liturgy.item.destroy');
+Route::post('/liturgy/{service}/block/{block}/item/{item}/roster', 'LiturgyItemController@roster')->name('liturgy.item.roster');
 
 // liturgical texts
 Route::get('/liturgy/texts', 'LiturgicalTextsController@index')->name('liturgy.text.index');
 Route::post('/liturgy/texts', 'LiturgicalTextsController@store')->name('liturgy.text.store');
+
+// songs
+Route::get('/liturgy/songs', 'SongController@index')->name('liturgy.song.index');
+Route::post('/liturgy/songs', 'SongController@store')->name('liturgy.song.store');
+Route::patch('/liturgy/songs/{song}', 'SongController@update')->name('liturgy.song.update');
 
 // ministry request
 Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@ministryRequest')

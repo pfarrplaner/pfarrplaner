@@ -31,7 +31,7 @@
     <form @submit.prevent="save">
         <div class="liturgy-item-freetext-editor">
                 <div class="form-group">
-                    <label for="title">Titel des Abschnitts</label>
+                    <label for="title">Titel im Ablaufplan</label>
                     <input class="form-control" v-model="editedElement.title" v-focus/>
                 </div>
                 <div class="form-group">
