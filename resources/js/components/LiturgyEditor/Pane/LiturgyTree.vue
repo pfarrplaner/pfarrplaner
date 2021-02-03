@@ -209,7 +209,13 @@ export default {
                     }, {preserveState: false});
                     break;
                 case 'Psalm':
-                    obj = new PsalmType();
+                    this.$inertia.post(route('liturgy.item.store', {
+                        service: this.service.id,
+                        block: this.blocks[blockIndex].id
+                    }), {
+                        title: 'Psalmgebet',
+                        data_type: 'psalm',
+                    }, {preserveState: false});
                     break;
                 case 'Reading':
                     this.$inertia.post(route('liturgy.item.store', {
@@ -287,6 +293,18 @@ export default {
                     return item.data.description.length > 40 ? item.data.description.substr(0, 40) + '...' : item.data.description;
                 case 'liturgic':
                     return item.data.title;
+                case 'psalm':
+                    if (undefined == item.data.psalm) return '';
+                    var title = item.data.psalm.title;
+                    if (item.data.psalm.reference) {
+                        title = item.data.psalm.reference + ' ' + title;
+                    }
+                    if (item.data.psalm.songbook_abbreviation) {
+                        title = item.data.psalm.songbook_abbreviation + ' ' + title;
+                    } else if (item.data.psalm.songbook) {
+                        title = item.data.psalm.songbook + ' ' + title;
+                    }
+                    return title;
                 case 'sermon':
                     var title = this.service.sermon_title != '' ? this.service.sermon_title : '';
                     if (this.service.sermon_reference) {

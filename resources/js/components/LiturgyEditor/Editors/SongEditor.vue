@@ -29,7 +29,7 @@
 
 <template>
     <form @submit.prevent="save">
-        <div class="liturgy-item-song-editor">
+        <div class="liturgy-item-psalm-editor">
             <div class="form-group">
                 <label for="title">Titel im Ablaufplan</label>
                 <input class="form-control" v-model="editedElement.title" v-focus/>
@@ -47,7 +47,8 @@
                 </div>
                 <div class="form-group">
                     <label for="verses">Zu singende Strophen</label>
-                    <input class="form-control" v-model="editedElement.data.verses" placeholder="Gültiges Format z.B. 1-2+4"/>
+                    <input class="form-control" v-model="editedElement.data.verses"
+                           placeholder="Gültiges Format z.B. 1-2+4"/>
                     <small>Strophen: {{ getVersesToDisplay(editedElement.data.verses) }}</small>
                 </div>
                 <div v-if="(editedElement.data.song.id == -1) || editSong">
@@ -57,7 +58,8 @@
                     </div>
                     <div class="form-group">
                         <label>Kehrvers</label>
-                        <textarea class="form-control" v-model="editedElement.data.song.refrain" placeholder="Leer lassen, wenn es keinen Kehrvers gibt"></textarea>
+                        <textarea class="form-control" v-model="editedElement.data.song.refrain"
+                                  placeholder="Leer lassen, wenn es keinen Kehrvers gibt"></textarea>
                     </div>
                     <div class="row" v-for="verse in editedElement.data.song.verses">
                         <div class="col-1 form-group">
@@ -70,10 +72,12 @@
                                 <textarea class="form-control" v-model="verse.text"></textarea>
                             </div>
                             <div class="form-check-inline">
-                                <input type="checkbox" v-model="verse.refrain_before" /> &nbsp;Kehrvers vor dieser Strophe
+                                <input type="checkbox" v-model="verse.refrain_before"/> &nbsp;Kehrvers vor dieser
+                                Strophe
                             </div>
                             <div class="form-check-inline">
-                                <input type="checkbox" v-model="verse.refrain_after" />  &nbsp;Kehrvers nach dieser Strophe
+                                <input type="checkbox" v-model="verse.refrain_after"/> &nbsp;Kehrvers nach dieser
+                                Strophe
                             </div>
                         </div>
                         <div class="col-1 text-right" style="margin-top: 2em;">
@@ -86,17 +90,13 @@
                         <label>Copyrights</label>
                         <textarea class="form-control" v-model="editedElement.data.song.copyrights"></textarea>
                     </div>
-                    <div class="row">
-                        <div class="col-11">
-                            <div class="form-group">
-                                <label>Liederbuch</label>
-                                <textarea class="form-control" v-model="editedElement.data.song.songbook"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-1 form-group">
-                            <label>Abkürzung</label>
-                            <input type="text" class="form-control" v-model="editedElement.data.song.songbook_abbreviation"/>
-                        </div>
+                    <div class="form-group">
+                        <label>Liederbuch</label>
+                        <selectize v-model="songbook" :settings="selectizeSettings">
+                            <option v-for="songbook in songbooks" :value="songbook">
+                                {{ songbookTitle(songbook) }}
+                            </option>
+                        </selectize>
                     </div>
                     <div class="form-group">
                         <label for="reference">Liednummer</label>
@@ -104,8 +104,11 @@
                     </div>
                     <div class="form-group">
                         <button class="btn btn-sm btn-light" @click.prevent="addVerse">Strophe hinzufügen</button>
-                        <button class="btn btn-sm btn-light" @click.prevent="saveText" v-if="!editSong">Als neues Lied speichern</button>
-                        <button class="btn btn-sm btn-light" @click.prevent="updateText" v-if="editSong" :title="songIsDirty ? 'Es existieren ungespeicherte Änderungen am Lied.' : ''">
+                        <button class="btn btn-sm btn-light" @click.prevent="saveText" v-if="!editSong">Als neues Lied
+                            speichern
+                        </button>
+                        <button class="btn btn-sm btn-light" @click.prevent="updateText" v-if="editSong"
+                                :title="songIsDirty ? 'Es existieren ungespeicherte Änderungen am Lied.' : ''">
                             <span v-if="songIsDirty" class="fa fa-exclamation-triangle" style="color:red;"></span>
                             Änderungen am Lied speichern
                         </button>
@@ -113,11 +116,13 @@
                 </div>
                 <div v-else>
                     <button class="btn btn-sm btn-light" @click.prevent="editSong = true">Lied bearbeiten</button>
-                    <div class="liturgical-text-quote" v-html="quotableText()" />
+                    <div class="liturgical-text-quote" v-html="quotableText()"/>
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary" @click="save" :disabled="songIsDirty" :title="songIsDirty ? 'Du musst zuerst die Änderungen am Lied speichern.' : ''">Speichern</button>
+                <button class="btn btn-primary" @click="save" :disabled="songIsDirty"
+                        :title="songIsDirty ? 'Du musst zuerst die Änderungen am Lied speichern.' : ''">Speichern
+                </button>
                 <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)">
                     Abbrechen
                 </inertia-link>
@@ -128,11 +133,13 @@
 
 <script>
 import Nl2br from 'vue-nl2br';
+import Selectize from 'vue2-selectize';
 
 export default {
     name: "SongEditor",
     components: {
         Nl2br,
+        Selectize,
     },
     props: ['element', 'service'],
     /**
@@ -143,6 +150,19 @@ export default {
         const songs = await axios.get(route('liturgy.song.index'))
         if (songs.data) {
             this.songs = songs.data;
+        }
+        const songbooks = await axios.get(route('liturgy.song.songbooks'));
+        if (songbooks.data) {
+            console.log(songbooks.data)
+            var mySongbooks = [];
+            var e = this.editedElement.data;
+            Object.entries(songbooks.data).forEach(function (book) {
+                book = book[1];
+                console.log(book);
+                mySongbooks.push(book.title + '||' + book.abbreviation);
+            });
+            this.songbooks = mySongbooks;
+            console.log('songbooks', mySongbooks, this.songbooks);
         }
     },
     data() {
@@ -167,7 +187,22 @@ export default {
             emptySong: emptySong,
             editSong: false,
             songs: null,
+            songbook: e.data.song.songbook+'||'+e.data.song.songbook_abbreviation,
+            songbooks: null,
             songIsDirty: false,
+            selectizeSettings: {
+                create: function (input, callback) {
+                    return callback({
+                        value: input + '||' + window.prompt('Bitte gib eine Abkürzung für "' + input + '" ein'),
+                        text: input,
+                    })
+                },
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Neues Liederbuch anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            }
         };
     },
     watch: {
@@ -176,6 +211,15 @@ export default {
                 this.songIsDirty = this.editSong;
             },
             deep: true,
+        },
+        songbook: {
+            handler: function (newVal, oldVal) {
+                console.log('songbook', oldVal, newVal);
+                var tmp = newVal.split('||');
+                this.editedElement.data.song.songbook = tmp[0];
+                this.editedElement.data.song.songbook_abbreviation = tmp[1];
+                console.log(this.editedElement.data.song.songbook, this.editedElement.data.song.songbook_abbreviation);
+            }
         }
     },
     methods: {
@@ -222,13 +266,13 @@ export default {
         },
         displayTitle(song) {
             var title = song.title;
-            if (song.reference)  {
-                title = song.reference+' '+title;
+            if (song.reference) {
+                title = song.reference + ' ' + title;
             }
             if (song.songbook_abbreviation) {
-                title = song.songbook_abbreviation+' '+title;
+                title = song.songbook_abbreviation + ' ' + title;
             } else if (song.songbook) {
-                title = song.songbook+' '+title;
+                title = song.songbook + ' ' + title;
             }
             return title;
         },
@@ -236,19 +280,19 @@ export default {
             var text = '';
             var title = this.displayTitle(this.editedElement.data.song);
             if (title.trim().length > 0) {
-                text = '<b>'+title+"</b>\n\n";
+                text = '<b>' + title + "</b>\n\n";
             }
 
             var e = this.editedElement;
-            this.getVersesToDisplay(e.data.verses).forEach(function(verseNumber){
+            this.getVersesToDisplay(e.data.verses).forEach(function (verseNumber) {
                 e.data.song.verses.forEach(function (verse) {
                     if (verse.number == verseNumber) {
                         if (verse.refrain_before) {
-                            text = text + "<p>"+e.data.song.refrain+"</p>";
+                            text = text + "<p>" + e.data.song.refrain + "</p>";
                         }
-                        text = text + "<p>"+(verse.number != '' ? verse.number+'. ' : '')+verse.text+"</p>";
+                        text = text + "<p>" + (verse.number != '' ? verse.number + '. ' : '') + verse.text + "</p>";
                         if (verse.refrain_after) {
-                            text = text + "<p>"+e.data.song.refrain+"</p>";
+                            text = text + "<p>" + e.data.song.refrain + "</p>";
                         }
                     }
                 });
@@ -260,17 +304,17 @@ export default {
             var verses = [];
             if ((null === range) || (undefined === range)) return [];
             if (range == '') {
-                this.editedElement.data.song.verses.forEach(function (verse){
+                this.editedElement.data.song.verses.forEach(function (verse) {
                     verses.push(verse.number);
                 });
                 return verses;
             }
-            range.split('+').forEach(function (subRange){
+            range.split('+').forEach(function (subRange) {
                 if (subRange.indexOf('-') >= 0) {
                     var tmp = subRange.split('-');
-                    if ((tmp[0] != '') && (tmp[1] !='' )) {
+                    if ((tmp[0] != '') && (tmp[1] != '')) {
                         if ((!isNaN(tmp[0])) && (!isNaN(tmp[1]))) {
-                            for (var i=parseInt(tmp[0]); i<=parseInt(tmp[1]); i++) {
+                            for (var i = parseInt(tmp[0]); i <= parseInt(tmp[1]); i++) {
                                 verses.push(i.toString());
                             }
                         }
@@ -283,12 +327,16 @@ export default {
             });
             return verses;
         },
+        songbookTitle(songbook) {
+            var tmp = songbook.split('||');
+            return tmp[0]+' ('+tmp[1]+')';
+        }
     }
 }
 </script>
 
 <style scoped>
-.liturgy-item-song-editor {
+.liturgy-item-psalm-editor {
     padding: 5px;
 }
 

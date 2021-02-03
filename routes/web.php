@@ -281,8 +281,14 @@ Route::post('/liturgy/texts', 'LiturgicalTextsController@store')->name('liturgy.
 
 // songs
 Route::get('/liturgy/songs', 'SongController@index')->name('liturgy.song.index');
+Route::get('/liturgy/songs/songbooks', 'SongController@songbooks')->name('liturgy.song.songbooks');
 Route::post('/liturgy/songs', 'SongController@store')->name('liturgy.song.store');
 Route::patch('/liturgy/songs/{song}', 'SongController@update')->name('liturgy.song.update');
+
+// psalms
+Route::get('/liturgy/psalms', 'PsalmController@index')->name('liturgy.psalm.index');
+Route::post('/liturgy/psalms', 'PsalmController@store')->name('liturgy.psalm.store');
+Route::patch('/liturgy/psalms/{psalm}', 'PsalmController@update')->name('liturgy.psalm.update');
 
 // ministry request
 Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@ministryRequest')
@@ -292,4 +298,5 @@ Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRe
 
 // settings
 Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.set');
+
 

@@ -32,15 +32,13 @@ namespace App\Http\Controllers;
 
 
 use App\Liturgy\Psalm;
-use App\Liturgy\Song;
-use App\Liturgy\SongVerse;
 use Illuminate\Http\Request;
 
-class SongController extends Controller
+class PsalmController extends Controller
 {
 
     /**
-     * SongController constructor.
+     * PsalmController constructor.
      */
     public function __construct()
     {
@@ -52,22 +50,7 @@ class SongController extends Controller
      */
     public function index()
     {
-        return response()->json(Song::all());
-    }
-
-    /**
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function songbooks()
-    {
-        $songbooks = [];
-        foreach (Song::all() as $song) {
-            $songbooks[$song->songbook_abbreviation] = ['title' => $song->songbook, 'abbreviation' => $song->songbook_abbreviation];
-        }
-        foreach (Psalm::all() as $song) {
-            $songbooks[$song->songbook_abbreviation] = ['title' => $song->songbook, 'abbreviation' => $song->songbook_abbreviation];
-        }
-        return response()->json($songbooks);
+        return response()->json(Psalm::all());
     }
 
     /**
@@ -77,33 +60,23 @@ class SongController extends Controller
     public function store(Request $request)
     {
         $data = $this->validateRequest($request);
-        $song = Song::create($data);
-        foreach ($data['verses'] as $verse) {
-            $verse['song_id'] = $song->id;
-            SongVerse::create($verse);
-        }
-        $songs = Song::all();
-        return response()->json(compact('song', 'songs'));
+        $psalm = Psalm::create($data);
+        $psalms = Psalm::all();
+        return response()->json(compact('psalm', 'psalms'));
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Song $song)
+    public function update(Request $request, Psalm $psalm)
     {
         $data = $this->validateRequest($request);
 
-        $song->update($data);
-        $song->verses()->delete();
-        foreach ($data['verses'] as $verse) {
-            $verse['song_id'] = $song->id;
-            SongVerse::create($verse);
-        }
-        $song->refresh();
-        $song->load('verses');
-        $songs = Song::all();
-        return response()->json(compact('song', 'songs'));
+        $psalm->update($data);
+        $psalm->refresh();
+        $psalms = Psalm::all();
+        return response()->json(compact('psalm', 'psalms'));
     }
 
     /**
@@ -115,15 +88,12 @@ class SongController extends Controller
         return $request->validate(
             [
                 'title' => 'required|string',
-                'refrain' => 'nullable|string',
+                'intro' => 'nullable|string',
+                'text' => 'nullable|string',
                 'copyrights' => 'nullable|string',
                 'songbook' => 'nullable|string',
                 'songbook_abbreviation' => 'nullable|string',
                 'reference' => 'nullable|string',
-                'verses.*.number' => 'nullable',
-                'verses.*.text' => 'nullable|string',
-                'verses.*.refrain_before' => 'nullable|bool',
-                'verses.*.refrain_after' => 'nullable|bool',
             ]
         );
     }
