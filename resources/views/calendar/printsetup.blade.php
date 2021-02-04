@@ -18,7 +18,7 @@
                         </ul>
                     </div><br/>
                 @endif
-                <form method="post" action="{{ route('calendar.print', ['year' => $year, 'month' => $month]) }}">
+                <form method="post" action="{{ route('calendar.print', $year.'-'.$month) }}">
                     @csrf
                     <div class="form-group"> <!-- Radio group !-->
                         <label class="control-label">Folgende Kirchengemeinden mit einbeziehen:</label>

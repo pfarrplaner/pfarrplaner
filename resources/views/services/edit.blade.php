@@ -5,7 +5,7 @@
 @section('navbar-left')
     <li class="nav-item">
         <a id="btnBack" class="btn btn-navbar" @if ($backRoute)href="{{ $backRoute }}"
-           @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}"
+           @else href="{{ route('calendar', $service->day->date->format('Y-m')) }}"
            @endif title="Schließen ohne Änderungen">
             <span class="fa fa-times"></span>
         </a>
@@ -63,7 +63,7 @@
                             </button>
                         @else
                             <a class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}"
-                               @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Zurück</a>
+                               @else href="{{ route('calendar', $service->day->date->format('Y-m')) }}" @endif>Zurück</a>
                         @endcan
                     @endslot
 

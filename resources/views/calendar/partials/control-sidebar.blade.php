@@ -1,5 +1,5 @@
 <div class="mb-1">
-    <a class="btn btn-primary" href="{{ route('calendar', ['year' => null, 'month' => null, 'slave' => 1]) }}"
+    <a class="btn btn-primary" href="{{ route('calendar', ['date' => null, 'month' => null, 'slave' => 1]) }}"
        target="_blank"
        title="Öffnet ein weiteres Fenster mit einer Kalenderansicht, die der hier dargestellten automatisch folgt.">
         <span class="fa fa-desktop"></span> 2. Bildschirm anzeigen

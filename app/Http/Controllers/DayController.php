@@ -219,7 +219,7 @@ class DayController extends Controller
     public function add($year, $month)
     {
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
-            return redirect()->route('calendar', ['year' => date('Y'), 'month' => date('m')]);
+            return redirect()->route('calendar',date('Y-m'));
         }
         $start = Carbon::create($year, $month, 1);
         $end = $start->copy()->addMonth(1)->subSecond(1);

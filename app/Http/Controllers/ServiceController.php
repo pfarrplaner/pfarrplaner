@@ -247,7 +247,7 @@ class ServiceController extends Controller
         event(new ServiceBeforeDelete($service));
 
         $service->delete();
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+        return redirect()->route('calendar', $day->date->format('Y-m'))
             ->with('success', 'Der Gottesdiensteintrag wurde gelöscht.');
     }
 
