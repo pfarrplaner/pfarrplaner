@@ -107,7 +107,7 @@ class DayController extends Controller
         if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) {
             $day->delete();
         }
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month]);
+        return redirect()->route('calendar', $day->date->format('Y-m'));
     }
 
     /**
@@ -178,7 +178,7 @@ class DayController extends Controller
             $day->delete();
         }
 
-        return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month])
+        return redirect()->route('calendar', $day->date->format('Y-m'))
             ->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
@@ -207,7 +207,7 @@ class DayController extends Controller
         }
 
 
-        return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month])
+        return redirect()->route('calendar', $date->format('Y-m'))
             ->with('success', 'Der ' . $date->format('d.m.Y') . ' wurde aus der Liste entfernt');
     }
 

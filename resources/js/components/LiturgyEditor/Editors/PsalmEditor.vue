@@ -40,10 +40,9 @@
             <div v-else>
                 <div class="form-group">
                     <label for="existing_text">Psalm</label>
-                    <select class="form-control" name="existing_text" v-model="editedElement.data.psalm">
-                        <option :value="emptyPsalm"></option>
-                        <option v-for="psalm in psalms" :value="psalm">{{ displayTitle(psalm) }}</option>
-                    </select>
+                    <selectize class="form-control" name="existing_text" v-model="selectedPsalm">
+                        <option v-for="psalm in psalms" :value="psalm.id">{{ displayTitle(psalm) }}</option>
+                    </selectize>
                 </div>
                 <div v-if="(editedElement.data.psalm.id == -1) || editPsalm">
                     <div class="form-group">
@@ -107,11 +106,13 @@
 
 <script>
 import Nl2br from 'vue-nl2br';
+import Selectize from 'vue2-selectize';
 
 export default {
     name: "PsalmEditor",
     components: {
         Nl2br,
+        Selectize,
     },
     props: ['element', 'service'],
     /**
@@ -144,9 +145,20 @@ export default {
             editPsalm: false,
             psalms: null,
             psalmIsDirty: false,
+            selectedPsalm: e.data.psalm.id,
         };
     },
     watch: {
+        selectedPsalm: {
+            handler: function (newVal, oldVal) {
+                var found = false;
+                this.psalms.forEach(function(psalm) {
+                    if (psalm.id == newVal) found = psalm;
+                })
+                if (found) this.editedElement.data.psalm = found;
+          D      this.psalmIsDirty = this.editPsalm;
+            },
+        },
         'editedElement.data.psalm': {
             handler: function (oldVal, newVal) {
                 this.psalmIsDirty = this.editPsalm;
@@ -189,10 +201,10 @@ export default {
             if (psalm.reference)  {
                 title = psalm.reference+' '+title;
             }
-            if (psalm.psalmbook_abbreviation) {
-                title = psalm.psalmbook_abbreviation+' '+title;
-            } else if (psalm.psalmbook) {
-                title = psalm.psalmbook+' '+title;
+            if (psalm.songbook_abbreviation) {
+                title = psalm.songbook_abbreviation+' '+title;
+            } else if (psalm.songbook) {
+                title = psalm.songbook+' '+title;
             }
             return title;
         },
