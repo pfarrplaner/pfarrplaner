@@ -45,18 +45,22 @@ class SongItemHelper extends AbstractItemHelper
     public function getActiveVerseNumbers()
     {
         $verseRefs = [];
-        foreach (explode('+', $this->item->data['verses']) as $range) {
-            $subRange = explode('-', $range);
-            if (!is_array($subRange)) {
-                $verseRefs[] = $subRange;
-            } else {
-                if (count($subRange) == 1) {
-                    $verseRefs[] = $subRange[0];
+        if (($this->item->data['verses'] ?? '') == '') {
+            foreach ($this->item->data['song']['verses'] as $verse) $verseRefs[] = $verse['number'];
+        } else {
+            foreach (explode('+', $this->item->data['verses']) as $range) {
+                $subRange = explode('-', $range);
+                if (!is_array($subRange)) {
+                    $verseRefs[] = $subRange;
                 } else {
-                    if (is_numeric($subRange[0]) && is_numeric($subRange[1]) && ($subRange[0] < $subRange[1])) {
-                        for ($i=$subRange[0]; $i<= $subRange[1]; $i++) $verseRefs[] = $i;
+                    if (count($subRange) == 1) {
+                        $verseRefs[] = $subRange[0];
                     } else {
-                        $verseRefs[] = $range;
+                        if (is_numeric($subRange[0]) && is_numeric($subRange[1]) && ($subRange[0] < $subRange[1])) {
+                            for ($i=$subRange[0]; $i<= $subRange[1]; $i++) $verseRefs[] = $i;
+                        } else {
+                            $verseRefs[] = $range;
+                        }
                     }
                 }
             }

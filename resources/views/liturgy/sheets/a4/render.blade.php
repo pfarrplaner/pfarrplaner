@@ -248,29 +248,33 @@
         </tr>
         @foreach ($block->items as $item)
             <tr>
-                <td valign="top" style="font-weight: bold">{{ $item->title }}</td>
+                <td valign="top" width="25%" style="font-weight: bold">{{ $item->title }}</td>
                 @if($item->data_type == 'freetext')
                     <td valign="top"></td>
                 @elseif($item->data_type == 'liturgic')
                     <td valign="top"></td>
                 @elseif($item->data_type == 'song')
                     <td valign="top">
-                        {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
-                        {{ $item->data['song']['reference'] ?: '' }}
-                        {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                        @if(isset($item->data['song']))
+                            {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
+                            {{ $item->data['song']['reference'] ?: '' }}
+                            {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                        @endif
                     </td>
                 @elseif($item->data_type == 'psalm')
                     <td valign="top">
-                        {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
-                        {{ $item->data['psalm']['reference'] ?: '' }}
-                        {{ $item->data['psalm']['title'] ?: '' }}
+                        @if(isset($item->data['psalm']))
+                            {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
+                            {{ $item->data['psalm']['reference'] ?: '' }}
+                            {{ $item->data['psalm']['title'] ?: '' }}
+                        @endif
                     </td>
                 @elseif($item->data_type == 'reading')
                     <td valign="top">{{ $item->data['reference'] }}</td>
                 @elseif($item->data_type == 'sermon')
                     <td valign="top">@if($service->sermon_title){{ $service->sermon_title }} @if($service->sermon_reference)({{ $service->sermon_reference }})@endif @else {{ $service->sermon_reference }} @endif</td>
                 @endif
-                <td valign="top">{{ join(', ', $item->recipients()) }}</td>
+                <td width="25% "valign="top">{{ join(', ', $item->recipients()) }}</td>
             </tr>
         @endforeach
     @endforeach
@@ -302,29 +306,33 @@
             </tr>
             @foreach ($block->items as $item)
                 <tr>
-                    <td valign="top" style="font-weight: bold">{{ $item->title }}</td>
+                    <td valign="top" width="25%" style="font-weight: bold">{{ $item->title }}</td>
                     @if($item->data_type == 'freetext')
                         <td valign="top"></td>
                     @elseif($item->data_type == 'liturgic')
                         <td valign="top"></td>
                     @elseif($item->data_type == 'song')
                         <td valign="top">
-                            {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
-                            {{ $item->data['song']['reference'] ?: '' }}
-                            {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                            @if(isset($item->data['song']))
+                                {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
+                                {{ $item->data['song']['reference'] ?: '' }}
+                                {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                            @endif
                         </td>
                     @elseif($item->data_type == 'psalm')
                         <td valign="top">
-                            {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
-                            {{ $item->data['psalm']['reference'] ?: '' }}
-                            {{ $item->data['psalm']['title'] ?: '' }}
+                            @if(isset($item->data['psalm']))
+                                {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
+                                {{ $item->data['psalm']['reference'] ?: '' }}
+                                {{ $item->data['psalm']['title'] ?: '' }}
+                            @endif
                         </td>
                     @elseif($item->data_type == 'reading')
                         <td valign="top">{{ $item->data['reference'] }}</td>
                     @elseif($item->data_type == 'sermon')
                         <td valign="top">@if($service->sermon_title){{ $service->sermon_title }} @if($service->sermon_reference)({{ $service->sermon_reference }})@endif @else {{ $service->sermon_reference }} @endif</td>
                     @endif
-                    <td valign="top">{{ join(', ', $item->recipients()) }}</td>
+                    <td width="25% "valign="top">{{ join(', ', $item->recipients()) }}</td>
                 </tr>
             @endforeach
         @endforeach
