@@ -11,8 +11,6 @@
             even-footer-name: html_PageFooter;
         }
 
-
-
         body {
             line-height: 1.1em;
             font-size: 11pt;
@@ -276,65 +274,5 @@
     @endforeach
     </tbody>
 </table>
-<p style="margin-top: 0.5cm;"><small>
-    Stand: {{ \Carbon\Carbon::now()->format('d.m.Y, H:i') }} Uhr
-</small></p>
-
-@foreach ($recipients as $recipient)
-    <pagebreak resetpagenum="1" />
-    <table class="head" cellpadding="0" cellspacing="0">
-        <tr>
-            <td valign="top">
-                <h1 >{{ $service->titleText(false) }}</h1>
-            </td>
-            <td valign="top" style="font-size: 8pt; text-align: right;">
-                {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }} <br />
-                Plan für {{ $recipient }}
-            </td>
-        </tr>
-
-    </table>
-    <table class="table" border="0">
-        <tbody>
-        @foreach($service->liturgyBlocks as $block)
-            <tr @if($loop->first) class="first" @endif>
-                <td class="section-title" colspan="3" valign="top"><h3>{{ $block->title }}</h3></td>
-            </tr>
-            @foreach ($block->items as $item)
-                <tr>
-                    <td valign="top" style="font-weight: bold">{{ $item->title }}</td>
-                    @if($item->data_type == 'freetext')
-                        <td valign="top"></td>
-                    @elseif($item->data_type == 'liturgic')
-                        <td valign="top"></td>
-                    @elseif($item->data_type == 'song')
-                        <td valign="top">
-                            {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
-                            {{ $item->data['song']['reference'] ?: '' }}
-                            {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
-                        </td>
-                    @elseif($item->data_type == 'psalm')
-                        <td valign="top">
-                            {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
-                            {{ $item->data['psalm']['reference'] ?: '' }}
-                            {{ $item->data['psalm']['title'] ?: '' }}
-                        </td>
-                    @elseif($item->data_type == 'reading')
-                        <td valign="top">{{ $item->data['reference'] }}</td>
-                    @elseif($item->data_type == 'sermon')
-                        <td valign="top">@if($service->sermon_title){{ $service->sermon_title }} @if($service->sermon_reference)({{ $service->sermon_reference }})@endif @else {{ $service->sermon_reference }} @endif</td>
-                    @endif
-                    <td valign="top">{{ join(', ', $item->recipients()) }}</td>
-                </tr>
-            @endforeach
-        @endforeach
-        </tbody>
-    </table>
-    <p style="margin-top: 0.5cm;"><small>
-            Stand: {{ \Carbon\Carbon::now()->format('d.m.Y, H:i') }} Uhr
-        </small></p>
-
-@endforeach
-
 </body>
 </html>

@@ -33,20 +33,11 @@ namespace App\Liturgy\LiturgySheets;
 
 use App\Service;
 
-class A4LiturgySheet extends AbstractLiturgySheet
+class A5LiturgySheet extends AbstractLiturgySheet
 {
-    protected $title = 'Ablaufplan (DIN A4)';
+    protected $title = 'Ablaufplan (DIN A5)';
     protected $icon = 'fa fa-file-pdf';
 
-    protected function getData(Service $service) {
-        $recipients = [];
-        foreach ($service->liturgyBlocks as $block) {
-            foreach ($block->items as $item) {
-                $recipients = array_merge($item->recipients(), $recipients);
-            }
-        }
-        $recipients = array_unique($recipients);
-        sort($recipients);
-        return compact('recipients');
-    }
+    protected $layout = ['format' => 'A5'];
+
 }
