@@ -3,7 +3,7 @@
         <info-pane :service="service" />
         <div class="row">
             <div class="col-12">
-                <liturgy-tree :service="service" @update-focus="updateFocus"/>
+                <liturgy-tree :service="service" :sheets="liturgySheets" @update-focus="updateFocus"/>
             </div>
         </div>
     </admin-layout>
@@ -16,7 +16,7 @@ const InfoPane = () => import('../components/LiturgyEditor/Pane/InfoPane');
 const LiturgyTree = () => import('../components/LiturgyEditor/Pane/LiturgyTree');
 
 export default {
-    props: ['service'],
+    props: ['service', 'liturgySheets'],
     components: {
         InfoPane,
         LiturgyTree,

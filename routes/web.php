@@ -261,6 +261,7 @@ Route::get('/calendar/{date?}/{month?}', 'CalController@index')->name('calendar'
 
 // liturgy editor
 Route::get('/services/{service}/liturgy', 'LiturgyEditorController@editor')->name('services.liturgy.editor');
+Route::get('/services/{service}/liturgy/download/{key}', 'LiturgyEditorController@download')->name('services.liturgy.download');
 Route::post('/services/{service}/liturgy', 'LiturgyEditorController@save')->name('services.liturgy.save');
 
 // liturgy blocks

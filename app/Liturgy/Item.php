@@ -31,6 +31,7 @@
 namespace App\Liturgy;
 
 
+use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -41,16 +42,21 @@ class Item extends Model
 
     protected $table = 'liturgy_items';
 
-    protected $fillable= ['liturgy_block_id', 'title', 'instructions', 'data_type', 'serialized_data', 'sortable'];
+    protected $fillable = ['liturgy_block_id', 'title', 'instructions', 'data_type', 'serialized_data', 'sortable'];
+
+    protected const replacement = ['pastors' => 'P', 'organists' => 'O', 'sacristans' => 'M'];
 
     protected static function boot()
     {
         parent::boot();
 
         // Order by sortable ASC
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('sortable', 'asc');
-        });
+        static::addGlobalScope(
+            'order',
+            function (Builder $builder) {
+                $builder->orderBy('sortable', 'asc');
+            }
+        );
     }
 
 
@@ -61,12 +67,27 @@ class Item extends Model
 
     public function getDataAttribute()
     {
-        return unserialize($this->attributes['serialized_data']) ?: new \stdClass();
+        return unserialize($this->attributes['serialized_data']) ?: [];
     }
 
     public function setDataAttribute($data)
     {
         return $this->attributes['serialized_data'] = serialize($data);
+    }
+
+    public function recipients() {
+        $list = (isset($this->data['responsible']) ? $this->data['responsible'] : []);
+        $p = [];
+        foreach ($list as $participant) {
+            list($type, $id) = explode(':', $participant);
+            if ($type == 'ministry') {
+                $id = isset(self::replacement[$id]) ? self::replacement[$id] : $id;
+                $p[] = $this->block->service->participantsText($id, true, false);
+            } else {
+                $p[] = User::find($id)->fullName(false);
+            }
+        }
+        return array_unique($p);
     }
 
 }

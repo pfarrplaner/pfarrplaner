@@ -1,0 +1,126 @@
+<?php
+/*
+ * Pfarrplaner
+ *
+ * @package Pfarrplaner
+ * @author Christoph Fischer <chris@toph.de>
+ * @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
+ * @link https://github.com/potofcoffee/pfarrplaner
+ * @version git: $Id$
+ *
+ * Sponsored by: Evangelischer Kirchenbezirk Balingen, https://www.kirchenbezirk-balingen.de
+ *
+ * Pfarrplaner is based on the Laravel framework (https://laravel.com).
+ * This file may contain code created by Laravel's scaffolding functions.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace App\Liturgy\LiturgySheets;
+
+
+use App\Service;
+use Illuminate\Support\Facades\Auth;
+use PDF;
+
+class AbstractLiturgySheet
+{
+
+    protected $title = '';
+
+    protected $icon = 'fa fa-file';
+    protected $layout = ['format' => 'A4'];
+    protected $fileTitle= 'Liturgie';
+
+
+    protected function getData(Service $service)
+    {
+        return [];
+    }
+
+    /**
+     * @param Service $service
+     */
+    public function render(Service $service)
+    {
+        $pdf = PDF::loadView(
+            $this->getRenderViewName(),
+            array_merge(compact('service'), $this->getData($service)),
+            [],
+            array_merge(
+                [
+                    'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
+                ],
+                $this->layout,
+            ),
+            $this->layout
+        );
+
+        $filename = $service->dateTime()->format('Ymd-Hi').' '.$this->fileTitle.'.pdf';
+
+        return $pdf->download($filename);
+
+    }
+
+    protected function getRenderViewName()
+    {
+        return 'liturgy.sheets.'.strtolower($this->getKey().'.render');
+    }
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return strtr(get_called_class(), [
+            'App\\Liturgy\\LiturgySheets\\' => '',
+            'LiturgySheet' => '',
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIcon(): string
+    {
+        return $this->icon;
+    }
+
+    /**
+     * @param string $icon
+     */
+    public function setIcon(string $icon): void
+    {
+        $this->icon = $icon;
+    }
+
+
+}

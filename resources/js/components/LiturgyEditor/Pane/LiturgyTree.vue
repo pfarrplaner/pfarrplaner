@@ -29,7 +29,26 @@
 
 <template>
     <div class="card">
-        <div class="card-header">Ablauf der Liturgie</div>
+        <div class="card-header">
+            <div class="row">
+                <div class="col-8">Ablauf der Liturgie</div>
+                <div class="col-4 text-right">
+                    <div class="dropdown" v-if="(blocks.length > 0)">
+                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                title="Dokumente herunterladen">
+                            <span class="fa fa-download"></span> Herunterladen
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item" v-for="sheet in sheets"
+                                          :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
+                                <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card-body">
             <draggable :list="blocks" group="blocks" v-bind:="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
                        @start="focusOff" @end="saveState" :disabled="!editable">
@@ -120,7 +139,6 @@
 <script>
 import draggable from 'vuedraggable'
 import LiturgyBlock from "../Elements/LiturgyBlock";
-import {PsalmType} from "../Types/LiturgyItemTypes";
 import DetailsPane from "./DetailsPane";
 import PeoplePane from "./PeoplePane";
 
@@ -132,7 +150,7 @@ export default {
         PeoplePane,
         draggable
     },
-    props: ['service'],
+    props: ['service', 'sheets'],
     beforeUnmount() {
         // here we need to do some dirty checking and saving!
     },
