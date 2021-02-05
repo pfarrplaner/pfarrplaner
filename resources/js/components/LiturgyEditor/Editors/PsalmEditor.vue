@@ -156,7 +156,7 @@ export default {
                     if (psalm.id == newVal) found = psalm;
                 })
                 if (found) this.editedElement.data.psalm = found;
-          D      this.psalmIsDirty = this.editPsalm;
+                this.psalmIsDirty = this.editPsalm;
             },
         },
         'editedElement.data.psalm': {

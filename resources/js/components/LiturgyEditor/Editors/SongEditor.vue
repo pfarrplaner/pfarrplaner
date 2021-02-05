@@ -40,10 +40,9 @@
             <div v-else>
                 <div class="form-group">
                     <label for="existing_text">Lied</label>
-                    <select class="form-control" name="existing_text" v-model="editedElement.data.song">
-                        <option :value="emptySong"></option>
-                        <option v-for="song in songs" :value="song">{{ displayTitle(song) }}</option>
-                    </select>
+                    <selectize class="form-control" name="existing_text" v-model="selectedSong">
+                        <option v-for="song in songs" :value="song.id">{{ displayTitle(song) }}</option>
+                    </selectize>
                 </div>
                 <div class="form-group">
                     <label for="verses">Zu singende Strophen</label>
@@ -190,6 +189,7 @@ export default {
             songbook: e.data.song.songbook+'||'+e.data.song.songbook_abbreviation,
             songbooks: null,
             songIsDirty: false,
+            selectedSong: e.data.song.id,
             selectizeSettings: {
                 create: function (input, callback) {
                     return callback({
@@ -212,13 +212,22 @@ export default {
             },
             deep: true,
         },
+        selectedSong: {
+            handler: function(newVal, oldVal) {
+                console.log('watch handler for selectedSong called', this.selectedSong, newVal, oldVal);
+                var found = false;
+                this.songs.forEach(function (song){
+                    if (song.id == newVal) found = song;
+                });
+                if (found) this.editedElement.data.song = found;
+                if (found) console.log('found: ', found, this.editedElement.data.song);
+            }
+        },
         songbook: {
             handler: function (newVal, oldVal) {
-                console.log('songbook', oldVal, newVal);
                 var tmp = newVal.split('||');
                 this.editedElement.data.song.songbook = tmp[0];
                 this.editedElement.data.song.songbook_abbreviation = tmp[1];
-                console.log(this.editedElement.data.song.songbook, this.editedElement.data.song.songbook_abbreviation);
             }
         }
     },
