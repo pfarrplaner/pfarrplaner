@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group">
                     <label for="description">Bibelstelle</label>
-                    <input class="form-control" type="text" v-model="editedElement.data.reading"></input>
+                    <input class="form-control" type="text" v-model="editedElement.data.reference"></input>
                 </div>
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern</button>

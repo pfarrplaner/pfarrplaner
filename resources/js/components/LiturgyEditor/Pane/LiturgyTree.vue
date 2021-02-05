@@ -330,6 +330,8 @@ export default {
                         else title = this.service.sermon_reference;
                     }
                     return title;
+                case 'reading':
+                    return item.data.reference;
                 case 'song':
                     if (undefined == item.data.song) return '';
                     var title = item.data.song.title;
