@@ -31,6 +31,8 @@
 namespace App\Liturgy;
 
 
+use App\Liturgy\ItemHelpers\AbstractItemHelper;
+use App\Liturgy\ItemHelpers\ItemHelperNotFoundException;
 use App\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -88,6 +90,17 @@ class Item extends Model
             }
         }
         return array_unique($p);
+    }
+
+    /**
+     * @return AbstractItemHelper
+     * @throws ItemHelperNotFoundException
+     */
+    public function getHelper(): AbstractItemHelper {
+        if (class_exists($class = 'App\\Liturgy\\ItemHelpers\\'.ucfirst($this->data_type).'ItemHelper')) {
+            return new $class($this);
+        }
+        throw new ItemHelperNotFoundException('Item helper class not found for data_type '.$this->data_type);
     }
 
 }

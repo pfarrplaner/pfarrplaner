@@ -1,0 +1,125 @@
+Gen:
+    - Genesis
+    - 1.Mose
+Exo:
+    - Exodus
+    - 2.Mose
+Lev:
+    - Leviticus
+    - 3.Mose
+Num:
+    - Numeri
+    - 4.Mose
+Deu:
+    - Deuteronomium
+    - 5.Mose
+Jos: Josua
+Jdg: Richter
+Rut: Ruth
+1Sa: 1.Samuel
+2Sa: 2.Samuel
+1Ki: 1.Könige
+2Ki: 2.Könige
+1Ch: 1.Chronik
+2Ch: 2.Chronik
+Ezr: Ezra
+Neh: Nehemia
+Est:
+    - Esther
+    - Ester
+Job:
+    - Hiob
+    - Ijob
+    - Job
+Psa:
+    - Psalm
+    - Psalmen
+    - Psalter
+Pro: Sprüche
+Ecc:
+    - Ecclesiates
+    - Prediger
+    - Kohelez
+    - Qohelet
+Sol:
+    - Hohelied
+    - Hoheslied
+Isa: Jesaja
+Jer: Jeremia
+Lam: Klagelieder
+Eze:
+    - Hesekiel
+    - Ezechiel
+Dan: Daniel
+Hos: Hosea
+Joe: Joel
+Amo: Amos
+Oba:
+    - Obadja
+    - Obadia
+Jon: Jona
+Mic: Micha
+Nah: Nahum
+Hab: Habakkuk
+Zep:
+    - Zefania
+    - Zefanja
+Hag: Haggai
+Zec:
+    - Sacharia
+    - Sacharja
+Mal: Maleachi
+Mat:
+    - Matthäus
+    - Mt
+Mar:
+    - Markus
+    - Mk
+Luk:
+    - Lukas
+    - Lk
+Joh:
+    - Johannes
+    - Jn
+    - Jh
+Act:
+    - Apostelgeschichte
+    - Apg
+Rom:
+    - Römer
+    - Romer
+1Co:
+    - 1.Korinther
+    - 1.Kor
+    - 1Kor
+2Co:
+    - 2.Korinther
+    - 2.Kor
+    - 2Kor
+Gal: Galater
+Eph: Epheser
+Phi: Philipper
+Col: Kolosser
+1Th: 1.Thessalonicher
+2Th: 2.Thessalonicher
+1Ti:
+    - 1.Timotheus
+    - 1.Tim
+    - 1.Ti
+2Ti:
+    - 2.Timotheus
+    - 2.Tim
+    - 2.Ti
+Tit: Titus
+Phm: Philemon
+Heb: Hebräer
+Jam: Jakobus
+1Pe: 1.Petrus
+2Pe: 2.Petrus
+1Jo: 1.Johannes
+2Jo: 2.Johannes
+3Jo: 3.Johannes
+Jud: Judas
+Rev:
+    - Offenbarung
+    - Offb

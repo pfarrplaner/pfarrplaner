@@ -1,0 +1,139 @@
+<?php
+/*
+ * Pfarrplaner
+ *
+ * @package Pfarrplaner
+ * @author Christoph Fischer <chris@toph.de>
+ * @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+ * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
+ * @link https://github.com/potofcoffee/pfarrplaner
+ * @version git: $Id$
+ *
+ * Sponsored by: Evangelischer Kirchenbezirk Balingen, https://www.kirchenbezirk-balingen.de
+ *
+ * Pfarrplaner is based on the Laravel framework (https://laravel.com).
+ * This file may contain code created by Laravel's scaffolding functions.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace App\Liturgy\LiturgySheets;
+
+
+use App\Documents\Word\DefaultA5WordDocument;
+use App\Documents\Word\DefaultWordDocument;
+use App\Liturgy\Bible\BibleText;
+use App\Liturgy\Bible\ReferenceParser;
+use App\Liturgy\Item;
+use App\Liturgy\ItemHelpers\PsalmItemHelper;
+use App\Liturgy\ItemHelpers\SongItemHelper;
+use App\Service;
+
+class FullTextLiturgySheet extends AbstractLiturgySheet
+{
+    protected $title = 'Volltext';
+    protected $icon = 'fa fa-file-word';
+    protected $service = null;
+
+
+    public function render(Service $service)
+    {
+        $this->service = $service;
+
+        $doc = new DefaultA5WordDocument();
+
+        $doc->getSection()->addTitle($service->titleText(false)."<w:br />"
+                                         .$service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
+                                         .$service->locationText(), 1);
+
+        foreach ($service->liturgyBlocks as $block) {
+            $doc->getSection()->addTitle($block->title, 1);
+            foreach ($block->items as $item) {
+                $doc->getSection()->addTitle($item->title, 2);
+                if (method_exists($this, ($method = 'render' . ucfirst($item->data_type . 'Item')))) {
+                    $this->$method($doc, $item);
+                }
+            }
+        }
+        $filename = $service->dateTime()->format('Ymd-Hi') . ' ' . $this->getFileTitle() . '.docx';
+        $doc->sendToBrowser($filename);
+    }
+
+    public function getFileTitle(): string
+    {
+        return 'Gottesdienst' . ((!is_null(
+                    $this->service
+                ) && ($this->service->sermon_titel != '')) ? ' - ' . $this->service->sermon_title : '');
+    }
+
+    protected function renderFreetextItem(DefaultWordDocument $doc, Item $item)
+    {
+        $doc->renderNormalText($item->data['description']);
+    }
+
+    protected function renderLiturgicItem(DefaultWordDocument $doc, Item $item)
+    {
+        $doc->renderNormalText($item->data['text']);
+    }
+
+    protected function renderSermonItem(DefaultWordDocument $doc, Item $item)
+    {
+        $doc->renderNormalText('Hier kommt die Predigt hin.', ['italic' => true]);
+    }
+
+    protected function renderPsalmItem(DefaultWordDocument $doc, Item $item)
+    {
+        /** @var PsalmItemHelper $helper */
+        $helper = $item->getHelper();
+        $doc->getSection()->addTitle($helper->getTitleText(),3);
+        $doc->renderNormalText($item->data['psalm']['text']);
+    }
+
+    protected function renderSongItem(DefaultWordDocument $doc, Item $item)
+    {
+        /** @var SongItemHelper $helper */
+        $helper = $item->getHelper();
+        $doc->getSection()->addTitle($helper->getTitleText(),3);
+
+        foreach ($helper->getActiveVerses() as $verse) {
+            if ($verse['refrain_before']) {
+                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+            }
+            $doc->renderNormalText($verse['number'].'. '.$verse['text']);
+            if ($verse['refrain_after']) {
+                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+            }
+        }
+    }
+
+    protected function renderReadingItem(DefaultWordDocument $doc, Item $item)
+    {
+        $doc->getSection()->addTitle($item->data['reference'], 3);
+
+        $ref = ReferenceParser::getInstance()->parse($item->data['reference']);
+        $bibleText = (new BibleText())->get($ref);
+
+        $run = [];
+        foreach ($bibleText as $range) {
+            foreach ($range['text'] as $verse) {
+                $run[] = [$verse['verse'].' ', ['superScript' => true]];
+                $run[] = [$verse['text']."\n", []];
+            }
+        }
+
+        $doc->renderParagraph($doc::NORMAL, $run);
+
+    }
+
+}

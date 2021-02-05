@@ -68,7 +68,7 @@ class AbstractLiturgySheet
             $this->layout
         );
 
-        $filename = $service->dateTime()->format('Ymd-Hi').' '.$this->fileTitle.'.pdf';
+        $filename = $service->dateTime()->format('Ymd-Hi').' '.$this->getFileTitle().'.pdf';
 
         return $pdf->download($filename);
 
@@ -120,6 +120,38 @@ class AbstractLiturgySheet
     public function setIcon(string $icon): void
     {
         $this->icon = $icon;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getLayout(): array
+    {
+        return $this->layout;
+    }
+
+    /**
+     * @param string[] $layout
+     */
+    public function setLayout(array $layout): void
+    {
+        $this->layout = $layout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileTitle(): string
+    {
+        return $this->fileTitle;
+    }
+
+    /**
+     * @param string $fileTitle
+     */
+    public function setFileTitle(string $fileTitle): void
+    {
+        $this->fileTitle = $fileTitle;
     }
 
 
