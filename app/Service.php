@@ -548,7 +548,7 @@ class Service extends Model
      */
     public function getOfferingsUrlAttribute()
     {
-        return $this->attributes['offerings_url'] ?: $this->city->default_offering_url;
+        return $this->attributes['offerings_url'] ?: ($this->city ? $this->city->default_offering_url : '');
     }
 // END ACCESSORS
 
@@ -1143,6 +1143,7 @@ class Service extends Model
 
     public function setDefaultOfferingValues()
     {
+        if (null === $this->city) return;
         if ($this->offering_goal == '') {
             if ((count($this->funerals) > 0) && $this->city->default_funeral_offering_goal != '') {
                 $this->offering_goal = $this->city->default_funeral_offering_goal;
@@ -1282,6 +1283,7 @@ class Service extends Model
 
     public function getLiveDashboardUrlAttribute()
     {
+        if (null === $this->city) return '';
         return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
     }
 
