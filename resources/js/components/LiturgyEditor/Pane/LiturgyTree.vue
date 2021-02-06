@@ -30,7 +30,7 @@
 <template>
     <div class="card">
         <div class="card-header">
-            <div class="row">
+            <div class="row" title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
                 <div class="col-8">Ablauf der Liturgie</div>
                 <div class="col-4 text-right">
                     <div class="dropdown" v-if="(blocks.length > 0)">
@@ -95,7 +95,7 @@
                         <div v-for="item,itemIndex in block.items" class="liturgy-item"
                              @click.stop="focusItem(blockIndex, itemIndex)"
                              :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}">
-                            <div class="row">
+                            <div class="row" title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
                                 <div class="col-sm-3 item-title"><span class="fa fa-chevron-circle-right"
                                                                        style="display: none;"></span> {{ item.title }}
                                 </div>
