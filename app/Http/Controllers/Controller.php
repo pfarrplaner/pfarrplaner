@@ -34,6 +34,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /**
  * Class Controller
@@ -42,4 +44,50 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+
+    public static function defaultRoutes($prefix = '')
+    {
+        $class = get_called_class();
+        $className = str_replace('App\\Http\\Controllers\\', '', $class);
+        $key = strtolower(str_replace('Controller', '', $className));
+        $plural = Str::plural($key);
+
+
+        // default routes
+        if (method_exists($class, 'index')) {
+            Route::get(($prefix ? '/' . $prefix : '') . '/' . $plural, $className . '@index')->name(
+                ($prefix ? $prefix . '.' : '') . $key . '.index'
+            );
+        }
+        if (method_exists($class, 'store')) {
+            Route::post(($prefix ? '/' . $prefix : '') . '/' . $plural, $className . '@store')->name(
+                ($prefix ? $prefix . '.' : '') . $key . '.store'
+            );
+        }
+        if (method_exists($class, 'show')) {
+            Route::get(($prefix ? '/' . $prefix : '') . '/' . $plural . '/{' . $key . '}', $className . '@show')->name(
+                ($prefix ? $prefix . '.' : '') . $key . '.show'
+            );
+        }
+        if (method_exists($class, 'edit')) {
+            Route::get(
+                ($prefix ? '/' . $prefix : '') . '/' . $plural . '/{' . $key . '}/edit',
+                $className . '@edit'
+            )->name(($prefix ? $prefix . '.' : '') . $key . '.edit');
+        }
+        if (method_exists($class, 'update')) {
+            Route::patch(
+                ($prefix ? '/' . $prefix : '') . '/' . $plural . '/{' . $key . '}',
+                $className . '@update'
+            )->name(($prefix ? $prefix . '.' : '') . $key . '.update');
+        }
+        if (method_exists($class, 'delete')) {
+            Route::delete(
+                ($prefix ? '/' . $prefix : '') . '/' . $plural . '/{' . $key . '}',
+                $className . '@destroy'
+            )->name(($prefix ? $prefix . '.' : '') . $key . '.destroy');
+        }
+    }
+
 }
