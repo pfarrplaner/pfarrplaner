@@ -26,6 +26,7 @@
         "league/flysystem-aws-s3-v3": "~1.0",
         "league/flysystem-sftp": "~1.0",
         "mpdf/qrcode": "^1.0",
+        "nesbot/carbon": "^2.44",
         "niklasravnsborg/laravel-pdf": "^3.0",
         "paragonie/random_compat": "9.99.99 as 2.0.18",
         "php-ews/php-ews": "^1.0",
@@ -42,9 +43,7 @@
         "thybag/php-sharepoint-lists-api": "dev-master",
         "tightenco/ziggy": "^1.0",
         "ukfast/laravel-health-check": "^1.0",
-        "venturecraft/revisionable": "1.*",
-        "thybag/php-sharepoint-lists-api": "dev-master",
-        "php-ews/php-ews": "^1.0"
+        "venturecraft/revisionable": "1.*"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.2",

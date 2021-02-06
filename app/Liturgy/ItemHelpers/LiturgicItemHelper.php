@@ -35,6 +35,7 @@ use App\Baptism;
 use App\Funeral;
 use App\Service;
 use App\Wedding;
+use Carbon\Carbon;
 
 class LiturgicItemHelper extends AbstractItemHelper
 {
@@ -58,9 +59,18 @@ class LiturgicItemHelper extends AbstractItemHelper
                         [
                             'verstorben:vorname' => trim($firstName),
                             'verstorben:lastname' => trim($lastName),
-                            'verstorben:name' => trim($firstName).' '.trim($lastName),
-                            'verstorben:todesdatum' => $funeral->dod ? $funeral->dod->format('d.m.Y') : 'verstorben:todesdatum',
-                            'verstorben:geburtsdatum' => $funeral->dob ? $funeral->dob->format('d.m.Y') : 'verstorben:geburtsdatum',
+                            'verstorben:name' => trim($firstName) . ' ' . trim($lastName),
+                            'verstorben:todesdatum' => $funeral->dod ? $funeral->dod->format(
+                                'd.m.Y'
+                            ) : 'verstorben:todesdatum',
+                            'verstorben:todesdatum:relativ' =>
+                                $funeral->dod ? $this->relativeDateString(
+                                    $service->date,
+                                    $funeral->dod
+                                ) : 'verstorben:todesdatum:relativ',
+                            'verstorben:geburtsdatum' => $funeral->dob ? $funeral->dob->format(
+                                'd.m.Y'
+                            ) : 'verstorben:geburtsdatum',
 
                         ] as $marker => $value
                     ) {
@@ -77,7 +87,7 @@ class LiturgicItemHelper extends AbstractItemHelper
                         [
                             'taufe:vorname' => trim($firstName),
                             'taufe:lastname' => trim($lastName),
-                            'taufe:name' => trim($firstName).' '.trim($lastName),
+                            'taufe:name' => trim($firstName) . ' ' . trim($lastName),
 
                         ] as $marker => $value
                     ) {
@@ -95,10 +105,10 @@ class LiturgicItemHelper extends AbstractItemHelper
                         [
                             'trauung:vorname1' => trim($firstName1),
                             'trauung:lastname1' => trim($lastName1),
-                            'trauung:name1' => trim($firstName1).' '.trim($lastName1),
+                            'trauung:name1' => trim($firstName1) . ' ' . trim($lastName1),
                             'trauung:vorname2' => trim($firstName2),
                             'trauung:lastname2' => trim($lastName2),
-                            'trauung:name2' => trim($firstName2).' '.trim($lastName2),
+                            'trauung:name2' => trim($firstName2) . ' ' . trim($lastName2),
 
                         ] as $marker => $value
                     ) {
@@ -109,5 +119,26 @@ class LiturgicItemHelper extends AbstractItemHelper
         }
         return $text;
     }
+
+    protected function relativeDateString(Carbon $relativeToday, Carbon $dateToDescribe)
+    {
+        $diff = $dateToDescribe->diffInDays($relativeToday);
+        if ($diff == 1) {
+            return 'gestern';
+        }
+        if ($diff == 2) {
+            return 'vorgestern';
+        }
+        if ($diff >= 3 && $diff <= 9) {
+            if ($dateToDescribe->weekNumberInMonth == $relativeToday->weekNumberInMonth) {
+                return 'am ' . $dateToDescribe->formatLocalized('%A');
+            }
+            return 'letzten ' . $dateToDescribe->formatLocalized('%A');
+        }
+        $weeks = sprintf('%d', floor($diff / 7));
+        $d2 = $relativeToday->copy()->subDays($diff % 7);
+        return relativeDateString($relativeToday, $d2) . ' vor ' . $weeks . ' Woche' . ($weeks > 1 ? 'n' : '');
+    }
+
 
 }
