@@ -68,6 +68,9 @@ class LiturgicalTextsController extends Controller
             [
                 'title' => 'required|string',
                 'text' => 'required|string',
+                'agenda_code' => 'nullable|string',
+                'needs_replacement' => 'nullable|string',
+                'source' => 'nullable|string',
             ]
         );
     }

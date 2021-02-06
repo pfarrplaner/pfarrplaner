@@ -550,6 +550,31 @@ class Service extends Model
     {
         return $this->attributes['offerings_url'] ?: ($this->city ? $this->city->default_offering_url : '');
     }
+
+    public function getTitleTextAttribute()
+    {
+        return $this->titleText(false, false);
+    }
+
+    public function getIsMineAttribute() {
+        return $this->participants->contains(Auth::user());
+    }
+
+    public function getLiveDashboardUrlAttribute()
+    {
+        if (null === $this->city) return '';
+        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
+    }
+
+    public function getCreditsAttribute() {
+        $credits = ['Liturgie' => 'Liturgie: '.$this->participantsText('P', true), 'Orgel' => 'Orgel: '.$this->participantsText('O', true)];
+        foreach ($this->ministries() as $ministry => $people) {
+            $credits[$ministry] = $ministry.': '.$this->participantsText($ministry, true, true);
+        }
+        $credits['Mesner*in'] = 'Mesnerdienst: '.$this->participantsText('M', true, true);
+        $separator = utf8_encode(' '.chr(183).' ');
+        return join ($separator, $credits);
+    }
 // END ACCESSORS
 
 // MUTATORS
@@ -562,7 +587,6 @@ class Service extends Model
     }
 
 // SCOPES
-
     /**
      * @param Builder $query
      * @param $ministries
@@ -663,6 +687,14 @@ class Service extends Model
 
     /**
      * @param Builder $query
+     * @return Builder
+     */
+    public function scopeWritable(Builder $query) {
+        return $query->whereIn('city_id', Auth::user()->writableCities);
+    }
+
+    /**
+     * @param Builder $query
      * @param Carbon $start
      * @param Carbon $end
      * @return Builder
@@ -694,6 +726,18 @@ class Service extends Model
      * @param Builder $query
      * @return Builder
      */
+    public function scopeOrderedDesc(Builder $query)
+    {
+        return $query->select('services.*')
+            ->join('days', 'services.day_id', 'days.id')
+            ->orderByDesc('days.date')
+            ->orderByDesc('time');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
     public function scopeHidden(Builder $query)
     {
         return $query->where('hidden', 1);
@@ -708,8 +752,38 @@ class Service extends Model
         return $query->where('hidden', 0);
     }
 
-// SETTERS
+    public function scopeInMonthByDate(Builder $query, Carbon $date) {
+        return $query->whereHas('day', function($query2) use ($date) {
+            return $query2->inMonth($date);
+        });
+    }
 
+    public function scopeInCities(Builder $query, $cities)
+    {
+        if ((!is_array($cities)) && (is_object($cities->first()))) $cities = $cities->pluck('id');
+        return $query->whereIn('city_id', $cities);
+    }
+
+    /**
+     * Get services used as agenda
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeIsAgenda(Builder $query) {
+        return $query->whereHas('day', function ($query2) { $query2->where('date', '1978-03-05'); });
+    }
+
+    /**
+     * Get services not used as agenda
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeIsNotAgenda(Builder $query) {
+        return $query->whereHas('day', function ($query2) { $query2->where('date', '!=', '1978-03-05'); });
+    }
+
+// SETTERS
+// SETTERS
     /**
      * Mix a collection of services into an array of events
      * @param $events
@@ -954,11 +1028,6 @@ class Service extends Model
             $elements[0] = ($short ? 'GD' : 'Gottesdienst') . ' mit ' . $elements[0];
         }
         return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
-    }
-
-    public function getTitleTextAttribute()
-    {
-        return $this->titleText(true, true);
     }
 
     /**
@@ -1262,31 +1331,6 @@ class Service extends Model
         return $videoSnippet;
     }
 
-
-
-    public function scopeInMonthByDate(Builder $query, Carbon $date) {
-        return $query->whereHas('day', function($query2) use ($date) {
-            return $query2->inMonth($date);
-        });
-    }
-
-    public function scopeInCities(Builder $query, $cities)
-    {
-        if ((!is_array($cities)) && (is_object($cities->first()))) $cities = $cities->pluck('id');
-        return $query->whereIn('city_id', $cities);
-    }
-
-
-    public function getIsMineAttribute() {
-        return $this->participants->contains(Auth::user());
-    }
-
-    public function getLiveDashboardUrlAttribute()
-    {
-        if (null === $this->city) return '';
-        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
-    }
-
     public function liturgyBlocks()
     {
         return $this->hasMany(Block::class);
@@ -1299,15 +1343,5 @@ class Service extends Model
         $number = $this->participants->count();
         foreach ($this->bookings as $booking) $number += $booking->number;
         return $number;
-    }
-
-    public function getCreditsAttribute() {
-        $credits = ['Liturgie' => 'Liturgie: '.$this->participantsText('P', true), 'Orgel' => 'Orgel: '.$this->participantsText('O', true)];
-        foreach ($this->ministries() as $ministry => $people) {
-            $credits[$ministry] = $ministry.': '.$this->participantsText($ministry, true, true);
-        }
-        $credits['Mesner*in'] = 'Mesnerdienst: '.$this->participantsText('M', true, true);
-        $separator = utf8_encode(' '.chr(183).' ');
-        return join ($separator, $credits);
     }
 }

@@ -42,7 +42,8 @@
 </template>
 
 <script>
-import DefaultFields from "./DefaultFields";
+import DefaultFields from "./Elements/DefaultFields";
+
 export default {
     name: "BlockEditor",
     components: {

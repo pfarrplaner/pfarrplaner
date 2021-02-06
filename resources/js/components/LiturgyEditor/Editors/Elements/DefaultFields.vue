@@ -33,6 +33,13 @@
             <label for="title">Titel im Ablaufplan</label>
             <input class="form-control" v-model="element.title" v-focus/>
         </div>
+        <div v-if="agendaMode" class="form-group">
+            <label for="agenda_instructions">Agendarische Hinweise</label>
+            <textarea class="form-control" v-model="editedElement.data.agenda_instructions" v-focus/>
+        </div>
+        <div v-else v-if="editedElement.data.agenda_instructions" class="agenda-instructions">
+            {{ editedElement.data.agenda_instructions }}
+        </div>
     </div>
 
 </template>
@@ -48,9 +55,18 @@ export default {
             default: false,
         }
     },
+    data() {
+        var e = this.element;
+        if (undefined == e.data.agenda_instructions) e.data.agenda_instructions = '';
+        return {
+            editedElement: e,
+        }
+    }
 }
 </script>
 
 <style scoped>
-
+    .agenda-instructions {
+        italic: true;
+    }
 </style>

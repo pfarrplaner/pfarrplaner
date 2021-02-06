@@ -35,5 +35,5 @@ class Text extends \Illuminate\Database\Eloquent\Model
 {
     protected $table = 'liturgical_texts';
 
-    protected $fillable = ['title', 'text'];
+    protected $fillable = ['title', 'text', 'agenda_code', 'needs_replacement', 'source'];
 }

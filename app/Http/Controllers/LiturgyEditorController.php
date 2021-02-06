@@ -22,6 +22,7 @@ class LiturgyEditorController extends Controller
     {
         $service->load('day', 'liturgyBlocks');
         $liturgySheets = LiturgySheets::all();
+        $services = [];
         return Inertia::render('liturgyEditor', compact('service', 'liturgySheets'));
     }
 
@@ -49,5 +50,33 @@ class LiturgyEditorController extends Controller
         /** @var AbstractLiturgySheet $sheet */
         $sheet = new $class();
         $sheet->render($service);
+    }
+
+    public function sources(Service $service)
+    {
+        $services = Service::isNotAgenda()->writable()->orderedDesc()->limit(50)->get();
+        $agendas = Service::isAgenda()->get();
+        return response()->json(compact('services', 'agendas'));
+    }
+
+    public function import(Service $service, Service $source) {
+        $ct = count($service->liturgyBlocks);
+        foreach ($source->liturgyBlocks as $sourceBlock) {
+            $ct++;
+            unset($sourceBlock->id);
+            $newBlock = $sourceBlock->replicate();
+            $newBlock->sortable = $ct;
+            $newBlock->service_id = $service->id;
+            $newBlock->save();
+            $itemCtr = 0;
+            foreach ($sourceBlock->items as $sourceItem) {
+                $itemCtr++;
+                $newItem = $sourceItem->replicate();
+                $newItem->liturgy_block_id = $newBlock->id;
+                $newItem->sortable = $itemCtr;
+                $newItem->save();
+            }
+        }
+        return redirect()->route('services.liturgy.editor', $service->id);
     }
 }

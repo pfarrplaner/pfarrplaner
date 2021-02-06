@@ -30,9 +30,10 @@
 <template>
     <form @submit.prevent="save">
         <div class="liturgy-item-liturgic-editor">
-            <div class="form-group">
-                <label for="title">Titel im Ablaufplan</label>
-                <input class="form-control" v-model="editedElement.title" v-focus/>
+            <default-fields :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
+            <div v-if="agendaMode" class="form-group">
+                <label for="text_filter">Agenda-Code zum Filtern der Textliste</label>
+                <input class="form-control" type="text" name="text_filter" v-model="editedElement.data.text_filter"/>
             </div>
             <div v-if="this.texts === null">
                 Bitte warten, Textliste wird geladen...
@@ -40,10 +41,26 @@
             <div v-else>
                 <div class="form-group">
                     <label for="existing_text">Liturgische Texte</label>
-                    <select class="form-control" name="existing_text" v-model="editedElement.data" @input="selectText">
-                        <option :value="{id: -1, text: '', title: ''}"></option>
-                        <option v-for="text in texts" :value="text">{{ text.title }}</option>
-                    </select>
+                    <selectize class="form-control" name="existing_text" v-model="selectedText">
+                        <option value="-1"></option>
+                        <optgroup v-if="(editedElement.data.text_filter != '')" label="Vorgeschlagene Texte">
+                            <option v-for="text in texts"
+                                    v-if="editedElement.data.text_filter == text.agenda_code"
+                                    :value="text.id">
+                                <div><span class="option-text-title">{{ text.title }}</span> <span class="option-text-source">{{ (text.source ? '('+text.source+')' : '')}}</span></div>
+                            </option>
+                        </optgroup>
+                        <optgroup v-if="(editedElement.data.text_filter != '')" label="Andere Texte">
+                            <option v-for="text in texts"
+                                    v-if="editedElement.data.text_filter != text.agenda_code"
+                                    :value="text.id">
+                                <div><span class="option-text-title">{{ text.title }}</span> <span class="option-text-source">{{ (text.source ? '('+text.source+')' : '')}}</span></div>
+                            </option>
+                        </optgroup>
+                        <option v-if="(editedElement.data.text_filter == '')" v-for="text in texts" :value="text.id">
+                            <div><span class="option-text-title">{{ text.title }}</span> <span class="option-text-source">{{ (text.source ? '('+text.source+')' : '')}}</span></div>
+                        </option>
+                    </selectize>
                 </div>
                 <div v-if="editedElement.data.id == -1">
                     <div class="form-group">
@@ -51,15 +68,33 @@
                         <input class="form-control" v-model="editedElement.data.title"/>
                     </div>
                     <div class="form-group">
-                        <label for="title">Text</label>
+                        <label for="text">Text</label>
                         <textarea class="form-control" v-model="editedElement.data.text"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="agenda_code">Agenda-Code</label>
+                        <input class="form-control" v-model="editedElement.data.agenda_code"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="source">Quellenangaben</label>
+                        <textarea class="form-control" v-model="editedElement.data.source"/>
+                    </div>
+                    <div v-if="agendaMode">
+                        <label for="needs_replacement">Enthält automatisch zu ersetzende Tags:</label>
+                        <select class="form-control" name="needs_replacement"
+                                v-model="editedElement.data.needs_replacement">
+                            <option value="">Keine</option>
+                            <option value="funeral">Bestattung</option>
+                            <option value="baptism">Taufe</option>
+                            <option value="wedding">Trauung</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-sm btn-light" @click.prevent="saveText">Als neuen Text speichern</button>
                     </div>
                 </div>
                 <div v-else class="liturgical-text-quote">
-                    <nl2br tag="div" :text="editedElement.data.text" />
+                    <nl2br tag="div" :text="editedElement.data.text"/>
                 </div>
             </div>
             <div class="form-group">
@@ -74,11 +109,15 @@
 
 <script>
 import Nl2br from 'vue-nl2br';
+import DefaultFields from "./Elements/DefaultFields";
+import Selectize from "vue2-selectize";
 
 export default {
     name: "LiturgicEditor",
     components: {
         Nl2br,
+        DefaultFields,
+        Selectize,
     },
     props: {
         element: Object,
@@ -103,15 +142,44 @@ export default {
         if (undefined == e.data.id) e.data.id = -1;
         if (undefined == e.data.title) e.data.title = '';
         if (undefined == e.data.text) e.data.text = '';
+        if (undefined == e.data.text_filter) e.data.text_filter = '';
+        if (undefined == e.data.agenda_code) e.data.agenda_code = '';
+        if (undefined == e.data.needs_replacement) e.data.needs_replacement = '';
+        if (undefined == e.data.replacement) e.data.replacement = '';
+        if (undefined == e.data.source) e.data.source = '';
+        if (undefined == e.data.responsible) e.data.responsible = [];
         return {
+            initialElement: e,
             editedElement: e,
             texts: null,
-            selectedText: {
-                id: -1,
-                title: '',
-                text: '',
-            }
+            selectedText: e.data.id,
         };
+    },
+    watch: {
+        selectedText: {
+            handler: function(newVal, oldVal) {
+                if (newVal == -1) {
+                    var data = {
+                        ...this.initialElement.data,
+                        id: -1,
+                        title: '',
+                        text: '',
+                        agenda_code: '',
+                        needs_replacement: '',
+                    }
+                    this.editedElement.data = data;
+                    return;
+                }
+                var found = false;
+                this.texts.forEach(function (thisText){
+                    if (thisText.id == newVal) found = thisText;
+                });
+                if (found) this.editedElement.data = {
+                    ...this.editedElement.data,
+                    ...found,
+                };
+            }
+        }
     },
     methods: {
         save: function () {
@@ -122,30 +190,34 @@ export default {
             }), this.editedElement, {preserveState: false});
         },
         saveText() {
-            axios.post(route('liturgy.text.store'), {
-                title: this.editedElement.data.title,
-                text: this.editedElement.data.text,
-            }).then(response => {
+            axios.post(route('liturgy.text.store'), this.editedElement.data)
+            .then(response => {
                 return response.data;
             }).then(data => {
                 this.texts = data.texts;
                 this.editedElement.data = data.text;
             });
         },
-        selectText() {
-            this.editedElement.data = this.selectedText;
-        }
     }
 }
 </script>
 
 <style scoped>
-    .liturgy-item-liturgic-editor {
-        padding: 5px;
-    }
-    .liturgical-text-quote {
-        padding: 20px;
-        border-left: solid 3px lightgray;
-        margin: 10px;
-    }
+.liturgy-item-liturgic-editor {
+    padding: 5px;
+}
+
+.liturgical-text-quote {
+    padding: 20px;
+    border-left: solid 3px lightgray;
+    margin: 10px;
+}
+
+.option-text-title {
+    font-weight: bold;
+}
+.option-text-source {
+    font-weight: normal;
+    font-size: .7em;
+}
 </style>

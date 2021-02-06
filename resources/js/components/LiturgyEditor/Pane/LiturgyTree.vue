@@ -33,7 +33,7 @@
             <div class="row" title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
                 <div class="col-8">Ablauf der Liturgie</div>
                 <div class="col-4 text-right">
-                    <div class="dropdown" v-if="(blocks.length > 0)">
+                    <div class="dropdown" v-if="hasDownload">
                         <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                 title="Dokumente herunterladen">
@@ -41,7 +41,7 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <a class="dropdown-item" v-for="sheet in sheets"
-                                          :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
+                               :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
                                 <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
                             </a>
                         </div>
@@ -87,7 +87,8 @@
                                 class="fa fa-file-alt"></span></button>
                         </div>
                     </div>
-                    <details-pane v-if="block.editing == true" :service="service" :element="block"/>
+                    <details-pane v-if="block.editing == true" :service="service" :element="block"
+                                  :agenda-mode="agendaMode"/>
 
                     <draggable :list="block.items" group="items" class="liturgy-items-list"
                                v-bind:="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
@@ -95,7 +96,8 @@
                         <div v-for="item,itemIndex in block.items" class="liturgy-item"
                              @click.stop="focusItem(blockIndex, itemIndex)"
                              :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}">
-                            <div class="row" title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
+                            <div class="row"
+                                 title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
                                 <div class="col-sm-3 item-title"><span class="fa fa-chevron-circle-right"
                                                                        style="display: none;"></span> {{ item.title }}
                                 </div>
@@ -123,15 +125,43 @@
                                     </button>
                                 </div>
                             </div>
-                            <details-pane v-if="item.editing == true" :service="service" :element="item"/>
+                            <details-pane v-if="item.editing == true" :service="service" :element="item"
+                                          :agenda-mode="agendaMode"/>
                         </div>
                     </draggable>
                 </div>
             </draggable>
         </div>
         <div class="card-footer">
-            <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt hinzufügen
-            </button>
+            <div class="row">
+                <div class="col-sm-3">
+                    <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt
+                        hinzufügen
+                    </button>
+                </div>
+                <div class="col-sm-9">
+                    <div v-if="importFrom != null">
+                        <selectize class="form-control source-select" @input="importElements" v-model="importFrom" :settings="{
+                            placeholder: sourceWait,
+                        }">
+                            <optgroup label="Vorlagen">
+                                <option v-for="agenda in agendas" :value="agenda.id">
+                                    {{ agenda.title }}{{ (agenda.source ? ' (' + agenda.source + ')' : '') }}
+                                </option>
+                            </optgroup>
+                            <optgroup label="Gottesdienste">
+                                <option v-for="service in services" :value="service.id">
+                                    {{ moment(service.day.date).format('DD.MM.YYYY') }}, {{ service.timeText }} -
+                                    {{ service.titleText }} ({{ service.locationText }})
+                                </option>
+                            </optgroup>
+                        </selectize>
+                    </div>
+                    <div v-else class="text-align: right; width: 100%; color: darkgray;">
+                        Importmöglichquellen werden geladen... <span class="fa fa-spin fa-spinner"></span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -141,6 +171,7 @@ import draggable from 'vuedraggable'
 import LiturgyBlock from "../Elements/LiturgyBlock";
 import DetailsPane from "./DetailsPane";
 import PeoplePane from "./PeoplePane";
+import Selectize from "vue2-selectize";
 
 export default {
     name: "LiturgyTree",
@@ -148,7 +179,8 @@ export default {
         LiturgyBlock,
         DetailsPane,
         PeoplePane,
-        draggable
+        draggable,
+        Selectize,
     },
     props: {
         service: Object,
@@ -156,6 +188,19 @@ export default {
         agendaMode: {
             type: Boolean,
             default: false,
+        },
+    },
+    /**
+     * Load existing sources
+     * @returns {Promise<void>}
+     */
+    async created() {
+        const sources = await axios.get(route('services.liturgy.sources', this.service.id))
+        if (sources.data) {
+            this.agendas = sources.data.agendas;
+            this.services = sources.data.services;
+            this.sourceWait = 'Ablaufelemente importieren...';
+            this.importFrom = -1;
         }
     },
     beforeUnmount() {
@@ -183,6 +228,11 @@ export default {
             focusedBlock: null,
             focusedItem: null,
             editable: true,
+            importFrom: null,
+            services: [],
+            agendas: [],
+            hasDownload: (myBlocks.length > 0) && (Object.keys(this.sheets).length > 0),
+            sourceWait: 'Bitte warten, Quellen werden geladen...',
         }
     },
     methods: {
@@ -393,7 +443,13 @@ export default {
                 }
                 return "<span class=\"fa fa-users\"></span> " + tmp[1] + "";
             }
-        }
+        },
+        importElements() {
+            if (this.importFrom == -1) return;
+            this.$inertia.post(route('services.liturgy.import', {service: this.service, source: this.importFrom}), {}, {
+                preserveState: false,
+            })
+        },
     }
 }
 </script>
@@ -457,6 +513,10 @@ export default {
 
 .responsible-list {
     color: gray;
+}
+
+.source-select {
+    text-align: left;
 }
 
 .ghost-item {

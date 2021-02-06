@@ -1,10 +1,11 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(service)">
-        <info-pane v-if="!agendaMode" :service="service" />
-        <agenda-info-pane v-if="agendaMode" :agenda="service" />
+        <info-pane v-if="!agendaMode" :service="service"/>
+        <agenda-info-pane v-if="agendaMode" :agenda="service"/>
         <div class="row">
             <div class="col-12">
-                <liturgy-tree :service="service" :sheets="liturgySheets" :agenda-mode="agendaMode" @update-focus="updateFocus"/>
+                <liturgy-tree :service="service" :sheets="agendaMode ? {} : liturgySheets" :agenda-mode="agendaMode"
+                               @update-focus="updateFocus"/>
             </div>
         </div>
     </admin-layout>
@@ -18,7 +19,10 @@ const AgendaInfoPane = () => import('../components/AgendaEditor/Pane/InfoPane');
 const LiturgyTree = () => import('../components/LiturgyEditor/Pane/LiturgyTree');
 
 export default {
-    props: ['service', 'liturgySheets'],
+    props: {
+        service: Object,
+        liturgySheets: Object,
+    },
     components: {
         InfoPane,
         AgendaInfoPane,
@@ -35,7 +39,7 @@ export default {
     methods: {
         title(service) {
             if (this.agendaMode) return 'Agende bearbeiten';
-            return 'Liturgie für '+moment(service.day.date).locale('de-DE').format('DD.MM.YYYY')+', '+service.timeText;
+            return 'Liturgie für ' + moment(service.day.date).locale('de-DE').format('DD.MM.YYYY') + ', ' + service.timeText;
         },
         updateFocus(blockIndex, itemIndex, element) {
             this.blockIndex = blockIndex;
