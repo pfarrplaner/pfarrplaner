@@ -426,7 +426,6 @@ export default {
         displayResponsible(record) {
             var title = '';
             var tmp = record.split(':');
-            console.log(tmp);
             if (tmp[0] == 'user') {
                 this.service.participants.forEach(function (person) {
                     if (person.id == tmp[1]) title = '<span class="fa fa-user"></span> ' + person.name;

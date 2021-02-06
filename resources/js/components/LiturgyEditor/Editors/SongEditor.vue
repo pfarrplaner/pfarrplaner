@@ -159,7 +159,6 @@ export default {
         }
         const songbooks = await axios.get(route('liturgy.song.songbooks'));
         if (songbooks.data) {
-            console.log(songbooks.data)
             var mySongbooks = [];
             var e = this.editedElement.data;
             Object.entries(songbooks.data).forEach(function (book) {
@@ -168,7 +167,6 @@ export default {
                 mySongbooks.push(book.title + '||' + book.abbreviation);
             });
             this.songbooks = mySongbooks;
-            console.log('songbooks', mySongbooks, this.songbooks);
         }
     },
     data() {

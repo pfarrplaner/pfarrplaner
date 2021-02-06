@@ -62,6 +62,24 @@
                         </option>
                     </selectize>
                 </div>
+                <div v-if="editedElement.data.needs_replacement == 'funeral'" class="form-group">
+                    <label>Platzhalter ersetzen für Beerdigung</label>
+                    <select class="form-control" v-model="editedElement.data.replacement">
+                        <option v-for="funeral in service.funerals" :value="funeral.id">{{ funeral.buried_name }}</option>
+                    </select>
+                </div>
+                <div v-if="editedElement.data.needs_replacement == 'baptism'" class="form-group">
+                    <label>Platzhalter ersetzen für Taufe</label>
+                    <select class="form-control" v-model="editedElement.data.replacement">
+                        <option v-for="funeral in service.baptisms" :value="baptism.id">{{ funeral.candidate_name }}</option>
+                    </select>
+                </div>
+                <div v-if="editedElement.data.needs_replacement == 'wedding'" class="form-group">
+                    <label>Platzhalter ersetzen für Trauung</label>
+                    <select class="form-control" v-model="editedElement.data.replacement">
+                        <option v-for="funeral in service.wedding" :value="wedding.id">{{ funeral.spouse1_name }} &amp; {{ funeral.spouse2_name }} </option>
+                    </select>
+                </div>
                 <div v-if="editedElement.data.id == -1">
                     <div class="form-group">
                         <label for="title">Titel des Texts</label>
@@ -148,6 +166,9 @@ export default {
         if (undefined == e.data.replacement) e.data.replacement = '';
         if (undefined == e.data.source) e.data.source = '';
         if (undefined == e.data.responsible) e.data.responsible = [];
+
+        e = this.checkReplacement(e);
+
         return {
             initialElement: e,
             editedElement: e,
@@ -174,10 +195,13 @@ export default {
                 this.texts.forEach(function (thisText){
                     if (thisText.id == newVal) found = thisText;
                 });
-                if (found) this.editedElement.data = {
-                    ...this.editedElement.data,
-                    ...found,
-                };
+                if (found) {
+                    this.editedElement.data = {
+                        ...this.editedElement.data,
+                        ...found,
+                    };
+                    this.editedElement = this.checkReplacement(this.editedElement);
+                }
             }
         }
     },
@@ -197,6 +221,19 @@ export default {
                 this.texts = data.texts;
                 this.editedElement.data = data.text;
             });
+        },
+        checkReplacement(e) {
+            var record = e;
+            if ((record.data.needs_replacement == 'funeral') && (this.service.funerals.length > 0) && (record.data.replacement == '')) {
+                record.data.replacement = this.service.funerals[0].id;
+            }
+            if ((record.data.needs_replacement == 'baptism') && (this.service.baptisms.length > 0) && (record.data.replacement == '')) {
+                record.data.replacement = this.service.baptisms[0].id;
+            }
+            if ((record.data.needs_replacement == 'wedding') && (this.service.weddings.length > 0) && (record.data.replacement == '')) {
+                record.data.replacement = this.service.weddings[0].id;
+            }
+            return record;
         },
     }
 }
