@@ -25,6 +25,7 @@ class CalController extends Controller
             $date .= '-' . $month;
         }
         $date = ($date ? new Carbon ($date . '-01') : Carbon::now())->setTime(0, 0, 0);
+        if ($date->format('Ym') < 201801) abort(404);
         $monthEnd = $date->copy()->addMonth(1)->subSecond(1);
         $days = Day::with('cities')->inMonth($date)->orderBy('date')->get();
         if (count($days) == 0) {
@@ -33,8 +34,13 @@ class CalController extends Controller
         $user = Auth::user();
         $cities = $user->cities;
 
-        $years = Day::select(DB::raw('YEAR(days.date) as year'))->orderBy('date')->get()->pluck('year')->unique()->sort(
-        );
+        $years = Day::select(DB::raw('YEAR(days.date) as year'))
+            ->where('days.date', '>=', '2018-01-01')
+            ->orderBy('date')
+            ->get()
+            ->pluck('year')
+            ->unique()
+            ->sort();
 
         $services = Service::with(['baptisms', 'funerals', 'weddings', 'participants'])
             ->inMonthByDate($date)
