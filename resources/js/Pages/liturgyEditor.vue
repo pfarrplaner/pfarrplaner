@@ -1,9 +1,10 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(service)">
-        <info-pane :service="service" />
+        <info-pane v-if="!agendaMode" :service="service" />
+        <agenda-info-pane v-if="agendaMode" :agenda="service" />
         <div class="row">
             <div class="col-12">
-                <liturgy-tree :service="service" :sheets="liturgySheets" @update-focus="updateFocus"/>
+                <liturgy-tree :service="service" :sheets="liturgySheets" :agenda-mode="agendaMode" @update-focus="updateFocus"/>
             </div>
         </div>
     </admin-layout>
@@ -13,12 +14,14 @@
 import moment from 'moment';
 
 const InfoPane = () => import('../components/LiturgyEditor/Pane/InfoPane');
+const AgendaInfoPane = () => import('../components/AgendaEditor/Pane/InfoPane');
 const LiturgyTree = () => import('../components/LiturgyEditor/Pane/LiturgyTree');
 
 export default {
     props: ['service', 'liturgySheets'],
     components: {
         InfoPane,
+        AgendaInfoPane,
         LiturgyTree,
     },
     data() {
@@ -26,10 +29,12 @@ export default {
             blockIndex: null,
             itemIndex: null,
             element: null,
+            agendaMode: moment(this.service.day.date).format('YYYYMMDD') == 19780305,
         }
     },
     methods: {
         title(service) {
+            if (this.agendaMode) return 'Agende bearbeiten';
             return 'Liturgie für '+moment(service.day.date).locale('de-DE').format('DD.MM.YYYY')+', '+service.timeText;
         },
         updateFocus(blockIndex, itemIndex, element) {

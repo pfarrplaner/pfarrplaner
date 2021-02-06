@@ -291,6 +291,10 @@ Route::get('/liturgy/psalms', 'PsalmController@index')->name('liturgy.psalm.inde
 Route::post('/liturgy/psalms', 'PsalmController@store')->name('liturgy.psalm.store');
 Route::patch('/liturgy/psalms/{psalm}', 'PsalmController@update')->name('liturgy.psalm.update');
 
+// agenda
+\App\Http\Controllers\AgendaController::defaultRoutes('liturgy');
+
+
 // ministry request
 Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@ministryRequest')
     ->name('ministry.request');

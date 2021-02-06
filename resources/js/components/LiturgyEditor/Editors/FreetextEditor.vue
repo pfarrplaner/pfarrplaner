@@ -51,7 +51,14 @@
 <script>
 export default {
     name: "FreetextEditor",
-    props: ['element', 'service'],
+    props: {
+        element: Object,
+        service: Object,
+        agendaMode: {
+            type: Boolean,
+            default: false,
+        }
+    },
     data() {
         var e = this.element;
         if (undefined == e.data.description) e.data.description = '';

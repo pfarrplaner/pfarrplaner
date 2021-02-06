@@ -99,6 +99,7 @@ Vue.directive('focus', {
     inserted: function (el) {
         // Focus the element
         el.focus()
+        el.select();
     }
 })
 

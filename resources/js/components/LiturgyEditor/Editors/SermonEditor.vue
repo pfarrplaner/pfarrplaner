@@ -47,7 +47,14 @@
 <script>
 export default {
     name: "SermonEditor",
-    props: ['element', 'service'],
+    props: {
+        element: Object,
+        service: Object,
+        agendaMode: {
+            type: Boolean,
+            default: false,
+        }
+    },
     data() {
         var e = this.element;
         return {

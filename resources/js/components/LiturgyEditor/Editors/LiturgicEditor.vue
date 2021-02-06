@@ -80,7 +80,14 @@ export default {
     components: {
         Nl2br,
     },
-    props: ['element', 'service'],
+    props: {
+        element: Object,
+        service: Object,
+        agendaMode: {
+            type: Boolean,
+            default: false,
+        }
+    },
     /**
      * Load existing texts
      * @returns {Promise<void>}

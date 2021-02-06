@@ -66,20 +66,16 @@ class Day extends Model
      */
     protected $appends = ['liturgy'];
 
-    protected static function boot() {
-        parent::boot();
-        static::addGlobalScope(new OrderScope('date', 'asc'));
-    }
-
 // ACCESSORS
+
     /**
      * Add liturgy attribute
      * @return array
      */
-    public function getLiturgyAttribute(): array {
+    public function getLiturgyAttribute(): array
+    {
         return Liturgy::getDayInfo($this);
     }
-
 // END ACCESSORS
 
 // MUTATORS
@@ -98,31 +94,43 @@ class Day extends Model
 // END MUTATORS
 
 // SCOPES
-    public function scopeInMonth(Builder $query, Carbon $date) {
-        $date->setTime(0,0,0)->setDay(1);
+    public function scopeInMonth(Builder $query, Carbon $date)
+    {
+        $date->setTime(0, 0, 0)->setDay(1);
         return $query->where('date', '>=', $date)
             ->where('date', '<=', $date->copy()->addMonth(1)->subSecond(1));
     }
 
-    public function scopeVisibleForCities(Builder $query, $cities) {
-        if (count($cities) && isset($cities->first()->id)) $cities = $cities->pluck('id');
-        return $query->where(function($q) use ($cities) {
-            $q->where('day_type', self::DAY_TYPE_DEFAULT)
-                ->orWhereHas('cities', function ($q2) use ($cities){
-                    $q2->whereIn('city_id', $cities);
-                });
-        });
+    public function scopeVisibleForCities(Builder $query, $cities)
+    {
+        if (count($cities) && isset($cities->first()->id)) {
+            $cities = $cities->pluck('id');
+        }
+        return $query->where(
+            function ($q) use ($cities) {
+                $q->where('day_type', self::DAY_TYPE_DEFAULT)
+                    ->orWhereHas(
+                        'cities',
+                        function ($q2) use ($cities) {
+                            $q2->whereIn('city_id', $cities);
+                        }
+                    );
+            }
+        );
     }
 
-    public function scopeStartingFrom(Builder $query, $date) {
+    public function scopeStartingFrom(Builder $query, $date)
+    {
         return $query->where('date', '>=', $date);
     }
 
-    public function scopeEndingAt(Builder $query, $date) {
+    public function scopeEndingAt(Builder $query, $date)
+    {
         return $query->where('date', '<=', $date);
     }
 // END SCOPES
 
+// SETTERS
 // SETTERS
     /**
      * @param string $date Date (Y-m-d)
@@ -135,6 +143,35 @@ class Day extends Model
             return false;
         }
         return $day;
+    }
+
+    /**
+     * Get the day that agendas are attached to
+     *
+     * This is needed because agendas are basically fake services linked to
+     * the date of 1978-03-05.
+     *
+     * @return Day
+     */
+    public static function getAgendaDay()
+    {
+        $day = Day::where('date', '1978-03-05')->first();
+        if (null === $day) {
+            $day = Day::create(
+                [
+                    'date' => Carbon::create(1978, 3, 5, 0, 0, 0),
+                    'name' => '__AgendaDay',
+                    'description' => 'Hier werden alle Agenden angelegt.'
+                ]
+            );
+        }
+        return $day;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new OrderScope('date', 'asc'));
     }
 
     /**

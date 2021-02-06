@@ -3,7 +3,7 @@
   -
   - @package Pfarrplaner
   - @author Christoph Fischer <chris@toph.de>
-  - @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+  - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/potofcoffee/pfarrplaner
   - @version git: $Id$
@@ -28,32 +28,18 @@
   -->
 
 <template>
-    <div class="liturgy-editor-details-pane">
-        <component :is="editorComponent" :element="element" v-model="element" :service="service" :agenda-mode="agendaMode"/>
+    <div class="default-fields">
+        <div class="form-group">
+            <label for="title">Titel im Ablaufplan</label>
+            <input class="form-control" v-model="element.title" v-focus/>
+        </div>
     </div>
+
 </template>
 
 <script>
-
-import BlockEditor from "../Editors/BlockEditor";
-import FreetextEditor from "../Editors/FreetextEditor";
-import LiturgicEditor from "../Editors/LiturgicEditor";
-import PsalmEditor from "../Editors/PsalmEditor";
-import ReadingEditor from "../Editors/ReadingEditor";
-import SermonEditor from "../Editors/SermonEditor";
-import SongEditor from "../Editors/SongEditor";
-
 export default {
-    name: "DetailsPane",
-    components: {
-        BlockEditor,
-        FreetextEditor,
-        LiturgicEditor,
-        PsalmEditor,
-        ReadingEditor,
-        SermonEditor,
-        SongEditor
-    },
+    name: "DefaultFields",
     props: {
         element: Object,
         service: Object,
@@ -62,11 +48,6 @@ export default {
             default: false,
         }
     },
-    data() {
-        return {
-            editorComponent: this.element.data_type.charAt(0).toUpperCase() + this.element.data_type.slice(1)+'Editor',
-        }
-    }
 }
 </script>
 

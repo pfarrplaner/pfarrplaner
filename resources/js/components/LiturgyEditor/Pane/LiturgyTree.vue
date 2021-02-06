@@ -150,12 +150,23 @@ export default {
         PeoplePane,
         draggable
     },
-    props: ['service', 'sheets'],
+    props: {
+        service: Object,
+        sheets: Object,
+        agendaMode: {
+            type: Boolean,
+            default: false,
+        }
+    },
     beforeUnmount() {
         // here we need to do some dirty checking and saving!
     },
     data() {
-        var myBlocks = this.service.liturgy_blocks;
+        if (undefined != this.service.liturgy_blocks) {
+            var myBlocks = this.service.liturgy_blocks;
+        } else {
+            var myBlocks = [];
+        }
         myBlocks.forEach(function (val, idx) {
             myBlocks[idx].data_type = 'block';
             myBlocks[idx].typeDescription = 'Abschnitt';

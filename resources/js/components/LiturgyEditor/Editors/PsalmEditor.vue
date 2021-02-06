@@ -114,7 +114,14 @@ export default {
         Nl2br,
         Selectize,
     },
-    props: ['element', 'service'],
+    props: {
+        element: Object,
+        service: Object,
+        agendaMode: {
+            type: Boolean,
+            default: false,
+        }
+    },
     /**
      * Load existing psalms
      * @returns {Promise<void>}

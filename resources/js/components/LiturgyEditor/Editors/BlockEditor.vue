@@ -30,10 +30,7 @@
 <template>
     <form @submit.prevent="save">
         <div class="liturgy-item-block-editor">
-            <div class="form-group">
-                <label for="title">Titel im Ablaufplan</label>
-                <input class="form-control" v-model="editedElement.title" v-focus/>
-            </div>
+            <DefaultFields :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern</button>
                 <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', element.service_id)">Abbrechen
@@ -45,9 +42,20 @@
 </template>
 
 <script>
+import DefaultFields from "./DefaultFields";
 export default {
     name: "BlockEditor",
-    props: ['element'],
+    components: {
+        DefaultFields,
+    },
+    props: {
+        element: Object,
+        service: Object,
+        agendaMode: {
+            type: Boolean,
+            default: false,
+        }
+    },
     data() {
         return {
             editedElement: this.element,
