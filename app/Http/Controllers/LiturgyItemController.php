@@ -58,9 +58,11 @@ class LiturgyItemController extends Controller
         $data = $this->validateRequest($request);
         $data['liturgy_block_id'] = $block->id;
         $data['sortable'] = count($block->items);
+
         $item = Item::create($data);
         if (isset($data['data'])) {
             $item->data = $data['data'];
+            $item->checkMarkerReplacementSettings();
             $item->save();
         }
         return redirect()->route('services.liturgy.editor', $service->id);
@@ -79,6 +81,7 @@ class LiturgyItemController extends Controller
         $item->update($data);
         if ($data['data']) {
             $item->data = $data['data'];
+            $item->checkMarkerReplacementSettings();
             $item->save();
         }
         return redirect()->route('services.liturgy.editor', $service->id);
