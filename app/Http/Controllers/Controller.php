@@ -60,6 +60,11 @@ class Controller extends BaseController
                 ($prefix ? $prefix . '.' : '') . $key . '.index'
             );
         }
+        if (method_exists($class, 'create')) {
+            Route::get(($prefix ? '/' . $prefix : '') . '/create' . $plural, $className . '@create')->name(
+                ($prefix ? $prefix . '.' : '') . $key . '.create'
+            );
+        }
         if (method_exists($class, 'store')) {
             Route::post(($prefix ? '/' . $prefix : '') . '/' . $plural, $className . '@store')->name(
                 ($prefix ? $prefix . '.' : '') . $key . '.store'
