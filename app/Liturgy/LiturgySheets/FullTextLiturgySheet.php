@@ -36,6 +36,7 @@ use App\Documents\Word\DefaultWordDocument;
 use App\Liturgy\Bible\BibleText;
 use App\Liturgy\Bible\ReferenceParser;
 use App\Liturgy\Item;
+use App\Liturgy\ItemHelpers\LiturgicItemHelper;
 use App\Liturgy\ItemHelpers\PsalmItemHelper;
 use App\Liturgy\ItemHelpers\SongItemHelper;
 use App\Service;
@@ -84,7 +85,9 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderLiturgicItem(DefaultWordDocument $doc, Item $item)
     {
-        $doc->renderNormalText($item->data['text']);
+        /** @var LiturgicItemHelper $helper */
+        $helper = $item->getHelper();
+        $doc->renderNormalText($helper->getReplacedText($this->service));
     }
 
     protected function renderSermonItem(DefaultWordDocument $doc, Item $item)
