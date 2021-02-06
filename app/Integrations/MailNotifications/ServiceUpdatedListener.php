@@ -33,6 +33,7 @@ namespace App\Integrations\MailNotifications;
 
 use App\Events\ServiceUpdated;
 use App\Subscription;
+use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class ServiceUpdatedListener
@@ -43,6 +44,9 @@ class ServiceUpdatedListener
      */
     public function handle(ServiceUpdated $event)
     {
+        // don't send notifications for past services
+        if ($event->service->day->date < Carbon::now()) return;
+
         // find participants who have been removed:
         $removed = new Collection();
         foreach ($event->originalParticipants as $participant) {
