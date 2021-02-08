@@ -33,6 +33,8 @@ namespace App\Liturgy\ItemHelpers;
 
 use App\Baptism;
 use App\Funeral;
+use App\Liturgy\PronounSets\AbstractPronounSet;
+use App\Liturgy\PronounSets\PronounSets;
 use App\Service;
 use App\Wedding;
 use Carbon\Carbon;
@@ -51,7 +53,7 @@ class LiturgicItemHelper extends AbstractItemHelper
         }
         switch ($this->item->data['needs_replacement']) {
             case 'funeral':
-                $funeralId = $this->item->data['replacement'];
+                $funeralId = $this->item->data['replacement'] ?: $service->funerals->first()->id;
                 if ($service->funerals->pluck('id')->contains($funeralId)) {
                     $funeral = Funeral::find($funeralId);
                     list($lastName, $firstName) = explode(',', $funeral->buried_name);
@@ -76,10 +78,13 @@ class LiturgicItemHelper extends AbstractItemHelper
                     ) {
                         $text = str_replace('[' . $marker . ']', $value, $text);
                     }
+                    /** @var AbstractPronounSet $pronounSet */
+                    $pronounSet = PronounSets::get($funeral->pronoun_set);
+                    $text = $pronounSet->replacePronouns($text, 'bestattung');
                 }
                 break;
             case 'baptism':
-                $baptismId = $this->item->data['replacement'];
+                $baptismId = $this->item->data['replacement'] ?? $service->baptisms->first()->id;
                 if ($service->baptisms->pluck('id')->contains($baptismId)) {
                     $baptism = Baptism::find($baptismId);
                     list($lastName, $firstName) = explode(',', $baptismId->candidate_name);
@@ -93,27 +98,35 @@ class LiturgicItemHelper extends AbstractItemHelper
                     ) {
                         $text = str_replace('[' . $marker . ']', $value, $text);
                     }
+                    /** @var AbstractPronounSet $pronounSet */
+                    $pronounSet = PronounSets::get($baptism->pronoun_set);
+                    $text = $pronounSet->replacePronouns($text, 'taufe');
                 }
                 break;
             case 'wedding':
-                $weddingId = $this->item->data['replacement'];
+                $weddingId = $this->item->data['replacement']  ?: $service->weddings->first()->id;
                 if ($service->weddings->pluck('id')->contains($weddingId)) {
                     $wedding = Wedding::find($weddingId);
                     list($lastName1, $firstName1) = explode(',', $wedding->spouse1_name);
                     list($lastName2, $firstName2) = explode(',', $wedding->spouse2_name);
                     foreach (
                         [
-                            'trauung:vorname1' => trim($firstName1),
-                            'trauung:lastname1' => trim($lastName1),
-                            'trauung:name1' => trim($firstName1) . ' ' . trim($lastName1),
-                            'trauung:vorname2' => trim($firstName2),
-                            'trauung:lastname2' => trim($lastName2),
-                            'trauung:name2' => trim($firstName2) . ' ' . trim($lastName2),
+                            'trauung:person1:vorname' => trim($firstName1),
+                            'trauung:person1:nachname' => trim($lastName1),
+                            'trauung::person1:name' => trim($firstName1) . ' ' . trim($lastName1),
+                            'trauung:person2:vorname' => trim($firstName2),
+                            'trauung:person2:nachname' => trim($lastName2),
+                            'trauung::person2:name' => trim($firstName2) . ' ' . trim($lastName2),
 
                         ] as $marker => $value
                     ) {
                         $text = str_replace('[' . $marker . ']', $value, $text);
                     }
+                    /** @var AbstractPronounSet $pronounSet */
+                    $pronounSet1 = PronounSets::get($wedding->pronoun_set1);
+                    $text = $pronounSet->replacePronouns($text, 'trauung:person1');
+                    $pronounSet2 = PronounSets::get($wedding->pronoun_set2);
+                    $text = $pronounSet->replacePronouns($text, 'trauung:person2');
                 }
                 break;
         }

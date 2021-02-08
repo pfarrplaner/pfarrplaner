@@ -55,4 +55,10 @@ class PronounSets
         return $items;
     }
 
+    public static function get($key) {
+        $class = '\\App\\Liturgy\\PronounSets\\'.ucfirst($key).'PronounSet';
+        if (!class_exists($class)) return null;
+        return new $class();
+    }
+
 }

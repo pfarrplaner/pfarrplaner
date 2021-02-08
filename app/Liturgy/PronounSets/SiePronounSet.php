@@ -36,4 +36,19 @@ class SiePronounSet extends AbstractPronounSet
 
     protected $label = 'sie/ihr/ihr/sie';
 
+    protected $pronouns = [
+        'er' => 'sie',
+        'seiner' => 'ihrer',
+        'ihm' => 'sie',
+        'ihn' => 'sie',
+        // possessive
+        'sein' => 'ihr',
+        'seine' => 'ihre',
+        'seines' => 'ihres',
+        'seinem' => 'ihrem',
+        'seinen' => 'ihren',
+    ];
+
+
+
 }

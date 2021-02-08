@@ -112,6 +112,7 @@ class Item extends Model
         $service = $this->block->service;
         $data = $this->data;
         $data['needs_replacement'] ??= '';
+        $data['replacement'] ??= '';
         foreach (['funeral' => $service->funerals, 'baptism' => $service->baptisms, 'wedding' => $service->weddings] as $key => $records) {
             if (($data['needs_replacement'] == $key) && ($data['replacement'] == '')) {
                 if (count($records)) {

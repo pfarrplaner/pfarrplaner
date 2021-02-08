@@ -35,6 +35,8 @@ class AbstractPronounSet
 {
     protected $label;
 
+    protected $pronouns = [];
+
     public function getKey()
     {
         return lcfirst(strtr(get_called_class(), ['App\\Liturgy\\PronounSets\\' => '', 'PronounSet' => '']));
@@ -54,6 +56,34 @@ class AbstractPronounSet
     public function setLabel($label): void
     {
         $this->label = $label;
+    }
+
+
+    public function replacePronouns($text, $prefix)
+    {
+        foreach ($this->pronouns as $pronoun => $replacement) {
+            $text = strtr($text, [
+                '[' . $prefix . ':' . ucfirst($pronoun) . ']' => ucfirst($replacement),
+                '[' . $prefix . ':' .$pronoun . ']' => $replacement,
+                ]);
+        }
+        return $text;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPronouns(): array
+    {
+        return $this->pronouns;
+    }
+
+    /**
+     * @param array $pronouns
+     */
+    public function setPronouns(array $pronouns): void
+    {
+        $this->pronouns = $pronouns;
     }
 
 

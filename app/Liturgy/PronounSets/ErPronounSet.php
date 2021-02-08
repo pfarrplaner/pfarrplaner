@@ -36,4 +36,17 @@ class ErPronounSet extends AbstractPronounSet
 
     protected $label = 'er/sein/ihm/ihn';
 
+    protected $pronouns = [
+        'er' => 'er',
+        'seiner' => 'seiner',
+        'ihm' => 'ihm',
+        'ihn' => 'ihn',
+        // possessive
+        'sein' => 'sein',
+        'seine' => 'seine',
+        'seines' => 'seines',
+        'seinem' => 'seinem',
+        'seinen' => 'seinen',
+    ];
+
 }
