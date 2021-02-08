@@ -57,20 +57,20 @@ class LiturgicItemHelper extends AbstractItemHelper
                     list($lastName, $firstName) = explode(',', $funeral->buried_name);
                     foreach (
                         [
-                            'verstorben:vorname' => trim($firstName),
-                            'verstorben:lastname' => trim($lastName),
-                            'verstorben:name' => trim($firstName) . ' ' . trim($lastName),
-                            'verstorben:todesdatum' => $funeral->dod ? $funeral->dod->format(
+                            'bestattung:vorname' => trim($firstName),
+                            'bestattung:lastname' => trim($lastName),
+                            'bestattung:name' => trim($firstName) . ' ' . trim($lastName),
+                            'bestattung:todesdatum' => $funeral->dod ? $funeral->dod->format(
                                 'd.m.Y'
-                            ) : 'verstorben:todesdatum',
-                            'verstorben:todesdatum:relativ' =>
+                            ) : 'bestattung:todesdatum',
+                            'bestattung:todesdatum:relativ' =>
                                 $funeral->dod ? $this->relativeDateString(
                                     $service->date,
                                     $funeral->dod
-                                ) : 'verstorben:todesdatum:relativ',
-                            'verstorben:geburtsdatum' => $funeral->dob ? $funeral->dob->format(
+                                ) : 'bestattung:todesdatum:relativ',
+                            'bestattung:geburtsdatum' => $funeral->dob ? $funeral->dob->format(
                                 'd.m.Y'
-                            ) : 'verstorben:geburtsdatum',
+                            ) : 'bestattung:geburtsdatum',
 
                         ] as $marker => $value
                     ) {
