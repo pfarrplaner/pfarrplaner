@@ -60,6 +60,18 @@ class LiturgicalTextsController extends Controller
 
     /**
      * @param Request $request
+     * @param Text $text
+     */
+    public function update(Request $request, Text $text)
+    {
+        $data = $this->validateRequest($request);
+        $text->update($data);
+        $texts = Text::all();
+        return response()->json(compact('text', 'texts'));
+    }
+
+    /**
+     * @param Request $request
      * @return mixed
      */
     protected function validateRequest(Request $request)

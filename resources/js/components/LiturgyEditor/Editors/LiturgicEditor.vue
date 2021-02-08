@@ -80,7 +80,7 @@
                         <option v-for="funeral in service.wedding" :value="wedding.id">{{ funeral.spouse1_name }} &amp; {{ funeral.spouse2_name }} </option>
                     </select>
                 </div>
-                <div v-if="editedElement.data.id == -1">
+                <div v-if="(editedElement.data.id == -1) || editingText">
                     <div class="form-group">
                         <label for="title">Titel des Texts</label>
                         <input class="form-control" v-model="editedElement.data.title"/>
@@ -107,12 +107,18 @@
                             <option value="wedding">Trauung</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" v-if="!editingText">
                         <button class="btn btn-sm btn-light" @click.prevent="saveText">Als neuen Text speichern</button>
+                    </div>
+                    <div class="form-group" v-if="editingText">
+                        <button class="btn btn-sm btn-light" @click.prevent="updateText">Geänderten Text speichern</button>
                     </div>
                 </div>
                 <div v-else class="liturgical-text-quote">
                     <nl2br tag="div" :text="editedElement.data.text"/>
+                </div>
+                <div class="form-group" v-if="(!editingText) && (editedElement.data.id != -1)">
+                    <button class="btn btn-sm btn-light" @click.prevent="editingText = true">Text bearbeiten</button>
                 </div>
             </div>
             <div class="form-group">
@@ -174,6 +180,7 @@ export default {
             editedElement: e,
             texts: null,
             selectedText: e.data.id,
+            editingText: false,
         };
     },
     watch: {
@@ -220,6 +227,16 @@ export default {
             }).then(data => {
                 this.texts = data.texts;
                 this.editedElement.data = data.text;
+            });
+        },
+        updateText() {
+            axios.patch(route('liturgy.text.update', this.editedElement.data.id), this.editedElement.data)
+            .then(response => {
+                return response.data;
+            }).then(data => {
+                this.texts = data.texts;
+                this.editedElement.data = data.text;
+                this.editingText = false;
             });
         },
         checkReplacement(e) {
