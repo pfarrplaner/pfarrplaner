@@ -15,6 +15,7 @@
                         @hidden(['name' => 'wizard', 'value' => $wizard])
                         @hidden(['name' => 'service_id', 'value' => $service->id])
                         @input(['name' => 'buried_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname'])
+                        @radiogroup(['name' => 'pronoun_set', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items()])
                         @input(['name' => 'dob', 'label'=> 'Geburtsdatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker'])
                         @input(['name' => 'dod', 'label'=> 'Sterbedatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker'])
                         @input(['name' => 'buried_address', 'label'=> 'Adresse'])

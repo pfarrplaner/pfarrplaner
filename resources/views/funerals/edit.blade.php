@@ -15,6 +15,7 @@
                     @endslot
                     @hidden(['name' => 'service_id', 'value' => $service->id])
                     @input(['name' => 'buried_name', 'label'=> 'Name', 'placeholder' => 'Nachname, Vorname', 'value' => $funeral->buried_name])
+                    @radiogroup(['name' => 'pronoun_set', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items(), 'value' => $funeral->pronoun_set])
                     @input(['name' => 'dob', 'label'=> 'Geburtsdatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->dob) ? $funeral->dob->format('d.m.Y') : '')])
                     @input(['name' => 'dod', 'label'=> 'Sterbedatum', 'placeholder' => 'TT.MM.JJJJ', 'class' => 'datepicker', 'value' => (is_object($funeral->dod) ? $funeral->dod->format('d.m.Y') : '')])
                     @input(['name' => 'buried_address', 'label'=> 'Adresse', 'value' => $funeral->buried_address])

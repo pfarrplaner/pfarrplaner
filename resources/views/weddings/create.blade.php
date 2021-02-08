@@ -19,6 +19,7 @@
                                 <label for="spouse1_name">Name</label>
                                 <input type="text" class="form-control" name="spouse1_name" placeholder="Nachname, Vorname"/>
                             </div>
+                            @radiogroup(['name' => 'pronoun_set1', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items()])
                             <div class="form-group">
                                 <label for="spouse1_birth_name">evtl. Geburtsname</label>
                                 <input type="text" class="form-control" name="spouse1_birth_name" placeholder="Nachname"/>
@@ -37,6 +38,7 @@
                                 <label for="spouse2_name">Name</label>
                                 <input type="text" class="form-control" name="spouse2_name" placeholder="Nachname, Vorname"/>
                             </div>
+                            @radiogroup(['name' => 'pronoun_set2', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items()])
                             <div class="form-group">
                                 <label for="spouse2_birth_name">evtl. Geburtsname</label>
                                 <input type="text" class="form-control" name="spouse2_birth_name" placeholder="Nachname"/>

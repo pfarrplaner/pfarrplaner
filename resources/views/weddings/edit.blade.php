@@ -21,6 +21,7 @@
                                        placeholder="Nachname, Vorname"
                                        value="{{ $wedding->spouse1_name }}"/>
                             </div>
+                            @radiogroup(['name' => 'pronoun_set1', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items(), 'value' => $wedding->pronoun_set1])
                             <div class="form-group">
                                 <label for="spouse1_birth_name">evtl. Geburtsname</label>
                                 <input type="text" class="form-control" name="spouse1_birth_name"
@@ -46,6 +47,7 @@
                                        placeholder="Nachname, Vorname"
                                        value="{{ $wedding->spouse2_name }}"/>
                             </div>
+                            @radiogroup(['name' => 'pronoun_set2', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items(), 'value' => $wedding->pronoun_set2])
                             <div class="form-group">
                                 <label for="spouse2_birth_name">evtl. Geburtsname</label>
                                 <input type="text" class="form-control" name="spouse2_birth_name"
