@@ -44,8 +44,10 @@ class LiturgyEditorController extends Controller
 
     public function download(Request $request, Service $service, $key)
     {
-        $class = 'App\\Liturgy\\LiturgySheets\\'.$key.'LiturgySheet';
-        if (!class_exists($class)) abort(404);
+        $class = 'App\\Liturgy\\LiturgySheets\\' . $key . 'LiturgySheet';
+        if (!class_exists($class)) {
+            abort(404);
+        }
 
         /** @var AbstractLiturgySheet $sheet */
         $sheet = new $class();
@@ -59,7 +61,8 @@ class LiturgyEditorController extends Controller
         return response()->json(compact('services', 'agendas'));
     }
 
-    public function import(Service $service, Service $source) {
+    public function import(Service $service, Service $source)
+    {
         $ct = count($service->liturgyBlocks);
         foreach ($source->liturgyBlocks as $sourceBlock) {
             $ct++;
@@ -74,6 +77,18 @@ class LiturgyEditorController extends Controller
                 $newItem = $sourceItem->replicate();
                 $newItem->liturgy_block_id = $newBlock->id;
                 $newItem->sortable = $itemCtr;
+                if ($newItem->data_type == 'liturgic') {
+                    foreach (['funeral' => $service->funerals, 'baptism' => $service->baptisms, 'wedding' => $service->weddings] as $key => $collection) {
+                        if ($newItem->data['needs_replacement'] == $key) {
+                            $newItem->setData('foo', 'bar');
+                            if ($collection->count()) {
+                                $newItem->setData('replacement', $collection->first()->id);
+                            } else {
+                                $newItem->setData('replacement', '');
+                            }
+                        }
+                    }
+                }
                 $newItem->save();
             }
         }

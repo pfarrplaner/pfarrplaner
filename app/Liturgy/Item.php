@@ -123,4 +123,9 @@ class Item extends Model
         $this->data = $data;
     }
 
+    public function setData($key, $value)
+    {
+        $this->setDataAttribute(array_merge($this->getDataAttribute(), [$key => $value]));
+    }
+
 }
