@@ -111,6 +111,7 @@ class Item extends Model
         if ($this->data_type != 'liturgic') return;
         $service = $this->block->service;
         $data = $this->data;
+        $data['needs_replacement'] ??= '';
         foreach (['funeral' => $service->funerals, 'baptism' => $service->baptisms, 'wedding' => $service->weddings] as $key => $records) {
             if (($data['needs_replacement'] == $key) && ($data['replacement'] == '')) {
                 if (count($records)) {
