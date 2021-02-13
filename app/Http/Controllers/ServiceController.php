@@ -216,8 +216,8 @@ class ServiceController extends Controller
             event(new ServiceUpdated($service, $originalParticipants));
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
 
-            // update YouTube as well
-            if ($service->youtube_url) {
+            // update YouTube as well (but only if there's a connected account for this city
+            if (($service->youtube_url != '') && ($service->city->google_access_token != '')) {
                 Broadcast::get($service)->update();
                 $success .= ' Diese wurden automatisch auch auf YouTube aktualisiert.';
             }
