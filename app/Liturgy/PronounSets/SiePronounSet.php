@@ -47,6 +47,25 @@ class SiePronounSet extends AbstractPronounSet
         'seines' => 'ihres',
         'seinem' => 'ihrem',
         'seinen' => 'ihren',
+        // relative
+        'der' => 'die',
+        'dessen' => 'deren',
+        'dem' => 'der',
+        'den' => 'die',
+        // demonstrative
+        'dieser' => 'diese',
+        'welcher' => 'welche',
+        // misc
+        'Sohn' => 'Tochter',
+        'Bruder' => 'Schwester',
+        'Mann' => 'Frau',
+        'Ehemann' => 'Ehefrau',
+        'Ehegatte' => 'Ehegattin',
+        'Verstorbener' => 'Verstorbene',
+        'der Verstorbene' => 'die Verstorbene',
+        'des Verstorbenen' => 'der Verstorbenen',
+        'dem Verstorbenen' => 'der Verstorbenen',
+        'den Verstorbenen' => 'die Verstorbene',
     ];
 
 

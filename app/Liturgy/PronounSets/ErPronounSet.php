@@ -47,6 +47,25 @@ class ErPronounSet extends AbstractPronounSet
         'seines' => 'seines',
         'seinem' => 'seinem',
         'seinen' => 'seinen',
+        // relative
+        'der' => 'der',
+        'dessen' => 'dessen',
+        'dem' => 'dem',
+        'den' => 'den',
+        // demonstrative
+        'dieser' => 'dieser',
+        'welcher' => 'welcher',
+        // misc
+        'Sohn' => 'Sohn',
+        'Bruder' => 'Bruder',
+        'Mann' => 'Mann',
+        'Ehemann' => 'Ehemann',
+        'Ehegatte' => 'Ehegatte',
+        'Verstorbener' => 'Verstorbene',
+        'der Verstorbene' => 'der Verstorbene',
+        'des Verstorbenen' => 'des Verstorbenen',
+        'dem Verstorbenen' => 'dem Verstorbenen',
+        'den Verstorbenen' => 'den Verstorbenen',
     ];
 
 }
