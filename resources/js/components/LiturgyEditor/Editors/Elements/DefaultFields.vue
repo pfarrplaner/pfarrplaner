@@ -40,8 +40,7 @@
         <div v-else v-if="editedElement.data.agenda_instructions" class="agenda-instructions">
             {{ editedElement.data.agenda_instructions }}
         </div>
-    </div>
-
+   </div>
 </template>
 
 <script>
@@ -57,6 +56,7 @@ export default {
     },
     data() {
         var e = this.element;
+        if (undefined == e.data) e.data = {};
         if (undefined == e.data.agenda_instructions) e.data.agenda_instructions = '';
         return {
             editedElement: e,

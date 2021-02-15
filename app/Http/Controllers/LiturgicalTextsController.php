@@ -33,6 +33,7 @@ namespace App\Http\Controllers;
 
 use App\Liturgy\Text;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class LiturgicalTextsController extends Controller
 {
@@ -43,6 +44,12 @@ class LiturgicalTextsController extends Controller
     }
 
     public function index()
+    {
+        $texts = Text::all();
+        return Inertia::render('texts', compact('texts'));
+    }
+
+    public function list()
     {
         return response()->json(Text::all());
     }
@@ -70,6 +77,54 @@ class LiturgicalTextsController extends Controller
         return response()->json(compact('text', 'texts'));
     }
 
+    public function import(Request $request)
+    {
+        $data = $request->validate(['data' => 'required|string'])['data'];
+        $records = [];
+        $record = $newRecord = [
+            'agenda_code' => '',
+            'title' => '',
+            'text' => [],
+            'notice' => [],
+            'source' => [],
+            'needs_replacement' => '',
+        ];
+        $code = '';
+        foreach (explode("\n", $data) as $line) {
+            if (substr($line, 0, 4) == '    ') {
+                $line = "\t".trim($line);
+            } else {
+                $line = trim($line);
+            }
+            if ($line == '---') {
+                // insert line breaks
+                foreach (['text', 'notice', 'source'] as $key) {
+                    $record[$key] = join("\n", $record[$key]);
+                }
+                // check if replacement is needed
+                foreach (['funeral' => 'bestattung', 'baptism' => 'taufe', 'wedding' => 'trauung'] as $keyCode => $key) {
+                    if (false !== strpos($record['text'], '['.$key)) $record['needs_replacement'] = $keyCode;
+                }
+                if (trim($record['text'])) {
+                    $records[] = Text::create($record);
+                }
+                $record = $newRecord;
+                $record['agenda_code'] = $code;
+            } elseif(substr($line, 0, 1) == '#') {
+                $record['agenda_code'] = $code = trim(substr($line, 1));
+            } elseif(substr($line, 0, 2) == 'T:') {
+                $record['title'] = trim(substr($line, 2));
+            } elseif(substr($line, 0, 2) == 'Q:') {
+                $record['source'][] = trim(substr($line, 2));
+            } elseif(substr($line, 0, 2) == '//') {
+                $record['notice'][] = trim(substr($line, 2));
+            } else {
+                $record['text'][] = $line;
+            }
+        }
+        return redirect()->route('liturgy.text.index');
+    }
+
     /**
      * @param Request $request
      * @return mixed
@@ -83,6 +138,7 @@ class LiturgicalTextsController extends Controller
                 'agenda_code' => 'nullable|string',
                 'needs_replacement' => 'nullable|string',
                 'source' => 'nullable|string',
+                'notice' => 'nullable|string',
             ]
         );
     }

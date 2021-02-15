@@ -30,8 +30,8 @@
 <template>
     <form @submit.prevent="save">
         <div class="liturgy-item-liturgic-editor">
-            <default-fields :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
-            <div v-if="agendaMode" class="form-group">
+            <default-fields v-if="service" :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
+            <div v-if="(agendaMode) && (service)" class="form-group">
                 <label for="text_filter">Agenda-Code zum Filtern der Textliste</label>
                 <input class="form-control" type="text" name="text_filter" v-model="editedElement.data.text_filter"/>
             </div>
@@ -39,46 +39,67 @@
                 Bitte warten, Textliste wird geladen...
             </div>
             <div v-else>
-                <div class="form-group">
-                    <label for="existing_text">Liturgische Texte</label>
-                    <selectize class="form-control" name="existing_text" v-model="selectedText">
-                        <option value="-1"></option>
-                        <optgroup v-if="(editedElement.data.text_filter != '')" label="Vorgeschlagene Texte">
-                            <option v-for="text in texts"
-                                    v-if="editedElement.data.text_filter == text.agenda_code"
+                <div v-if="service">
+                    <div class="form-group">
+                        <label for="existing_text">Liturgische Texte</label>
+                        <selectize class="form-control" name="existing_text" v-model="selectedText">
+                            <option value="-1"></option>
+                            <optgroup v-if="(editedElement.data.text_filter != '')" label="Vorgeschlagene Texte">
+                                <option v-for="text in texts"
+                                        v-if="editedElement.data.text_filter == text.agenda_code"
+                                        :value="text.id">
+                                    <div><span class="option-text-title">{{ text.title }}</span> <span
+                                        class="option-text-source">{{
+                                            (text.source ? '(' + text.source + ')' : '')
+                                        }}</span>
+                                    </div>
+                                </option>
+                            </optgroup>
+                            <optgroup v-if="(editedElement.data.text_filter != '')" label="Andere Texte">
+                                <option v-for="text in texts"
+                                        v-if="editedElement.data.text_filter != text.agenda_code"
+                                        :value="text.id">
+                                    <div><span class="option-text-title">{{ text.title }}</span> <span
+                                        class="option-text-source">{{
+                                            (text.source ? '(' + text.source + ')' : '')
+                                        }}</span>
+                                    </div>
+                                </option>
+                            </optgroup>
+                            <option v-if="(editedElement.data.text_filter == '')" v-for="text in texts"
                                     :value="text.id">
-                                <div><span class="option-text-title">{{ text.title }}</span> <span class="option-text-source">{{ (text.source ? '('+text.source+')' : '')}}</span></div>
+                                <div><span class="option-text-title">{{ text.title }}</span> <span
+                                    class="option-text-source">{{ (text.source ? '(' + text.source + ')' : '') }}</span>
+                                </div>
                             </option>
-                        </optgroup>
-                        <optgroup v-if="(editedElement.data.text_filter != '')" label="Andere Texte">
-                            <option v-for="text in texts"
-                                    v-if="editedElement.data.text_filter != text.agenda_code"
-                                    :value="text.id">
-                                <div><span class="option-text-title">{{ text.title }}</span> <span class="option-text-source">{{ (text.source ? '('+text.source+')' : '')}}</span></div>
+                        </selectize>
+                    </div>
+                    <div v-if="editedElement.data.needs_replacement == 'funeral'" class="form-group">
+                        <label>Platzhalter ersetzen für Beerdigung</label>
+                        <select class="form-control" v-model="editedElement.data.replacement">
+                            <option v-for="funeral in service.funerals" :value="funeral.id">{{
+                                    funeral.buried_name
+                                }}
                             </option>
-                        </optgroup>
-                        <option v-if="(editedElement.data.text_filter == '')" v-for="text in texts" :value="text.id">
-                            <div><span class="option-text-title">{{ text.title }}</span> <span class="option-text-source">{{ (text.source ? '('+text.source+')' : '')}}</span></div>
-                        </option>
-                    </selectize>
-                </div>
-                <div v-if="editedElement.data.needs_replacement == 'funeral'" class="form-group">
-                    <label>Platzhalter ersetzen für Beerdigung</label>
-                    <select class="form-control" v-model="editedElement.data.replacement">
-                        <option v-for="funeral in service.funerals" :value="funeral.id">{{ funeral.buried_name }}</option>
-                    </select>
-                </div>
-                <div v-if="editedElement.data.needs_replacement == 'baptism'" class="form-group">
-                    <label>Platzhalter ersetzen für Taufe</label>
-                    <select class="form-control" v-model="editedElement.data.replacement">
-                        <option v-for="funeral in service.baptisms" :value="baptism.id">{{ funeral.candidate_name }}</option>
-                    </select>
-                </div>
-                <div v-if="editedElement.data.needs_replacement == 'wedding'" class="form-group">
-                    <label>Platzhalter ersetzen für Trauung</label>
-                    <select class="form-control" v-model="editedElement.data.replacement">
-                        <option v-for="funeral in service.wedding" :value="wedding.id">{{ funeral.spouse1_name }} &amp; {{ funeral.spouse2_name }} </option>
-                    </select>
+                        </select>
+                    </div>
+                    <div v-if="editedElement.data.needs_replacement == 'baptism'" class="form-group">
+                        <label>Platzhalter ersetzen für Taufe</label>
+                        <select class="form-control" v-model="editedElement.data.replacement">
+                            <option v-for="funeral in service.baptisms" :value="baptism.id">{{
+                                    funeral.candidate_name
+                                }}
+                            </option>
+                        </select>
+                    </div>
+                    <div v-if="editedElement.data.needs_replacement == 'wedding'" class="form-group">
+                        <label>Platzhalter ersetzen für Trauung</label>
+                        <select class="form-control" v-model="editedElement.data.replacement">
+                            <option v-for="funeral in service.wedding" :value="wedding.id">{{ funeral.spouse1_name }}
+                                &amp; {{ funeral.spouse2_name }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
                 <div v-if="(editedElement.data.id == -1) || editingText">
                     <div class="form-group">
@@ -97,7 +118,7 @@
                         <label for="source">Quellenangaben</label>
                         <textarea class="form-control" v-model="editedElement.data.source"/>
                     </div>
-                    <div v-if="agendaMode">
+                    <div v-if="agendaMode" class="form-group">
                         <label for="needs_replacement">Enthält automatisch zu ersetzende Tags:</label>
                         <select class="form-control" name="needs_replacement"
                                 v-model="editedElement.data.needs_replacement">
@@ -107,11 +128,14 @@
                             <option value="wedding">Trauung</option>
                         </select>
                     </div>
-                    <div class="form-group" v-if="!editingText">
-                        <button class="btn btn-sm btn-light" @click.prevent="saveText">Als neuen Text speichern</button>
-                    </div>
-                    <div class="form-group" v-if="editingText">
-                        <button class="btn btn-sm btn-light" @click.prevent="updateText">Geänderten Text speichern</button>
+                    <div v-if="!textOnlyMode">
+                        <div class="form-group" v-if="!editingText">
+                            <button class="btn btn-sm btn-light" @click.prevent="saveText">Als neuen Text speichern</button>
+                        </div>
+                        <div class="form-group" v-if="editingText">
+                            <button class="btn btn-sm btn-light" @click.prevent="updateText">Geänderten Text speichern
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div v-else class="liturgical-text-quote">
@@ -121,9 +145,17 @@
                     <button class="btn btn-sm btn-light" @click.prevent="editingText = true">Text bearbeiten</button>
                 </div>
             </div>
-            <div class="form-group">
+            <div class="form-group" v-if="service">
                 <button class="btn btn-primary" @click="save">Speichern</button>
-                <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)">
+                <inertia-link class="btn btn-secondary"
+                              :href="route('services.liturgy.editor', this.service.id)">
+                    Abbrechen
+                </inertia-link>
+            </div>
+            <div class="form-group" v-else>
+                <button class="btn btn-primary" @click="updateText">Speichern</button>
+                <inertia-link class="btn btn-secondary"
+                              :href="route('liturgy.text.index')">
                     Abbrechen
                 </inertia-link>
             </div>
@@ -149,6 +181,10 @@ export default {
         agendaMode: {
             type: Boolean,
             default: false,
+        },
+        openToEdit: {
+            type: Boolean,
+            default: false,
         }
     },
     /**
@@ -156,7 +192,7 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        const texts = await axios.get(route('liturgy.text.index'))
+        const texts = await axios.get(route('liturgy.text.list'))
         if (texts.data) {
             this.texts = texts.data;
         }
@@ -180,12 +216,13 @@ export default {
             editedElement: e,
             texts: null,
             selectedText: e.data.id,
-            editingText: false,
+            editingText: this.openToEdit,
+            textOnlyMode: this.openToEdit,
         };
     },
     watch: {
         selectedText: {
-            handler: function(newVal, oldVal) {
+            handler: function (newVal, oldVal) {
                 if (newVal == -1) {
                     var data = {
                         ...this.initialElement.data,
@@ -199,7 +236,7 @@ export default {
                     return;
                 }
                 var found = false;
-                this.texts.forEach(function (thisText){
+                this.texts.forEach(function (thisText) {
                     if (thisText.id == newVal) found = thisText;
                 });
                 if (found) {
@@ -222,24 +259,26 @@ export default {
         },
         saveText() {
             axios.post(route('liturgy.text.store'), this.editedElement.data)
-            .then(response => {
-                return response.data;
-            }).then(data => {
+                .then(response => {
+                    return response.data;
+                }).then(data => {
                 this.texts = data.texts;
                 this.editedElement.data = data.text;
             });
         },
         updateText() {
             axios.patch(route('liturgy.text.update', this.editedElement.data.id), this.editedElement.data)
-            .then(response => {
-                return response.data;
-            }).then(data => {
+                .then(response => {
+                    return response.data;
+                }).then(data => {
                 this.texts = data.texts;
                 this.editedElement.data = data.text;
                 this.editingText = false;
+                if (this.agendaMode && this.textOnlyMode) this.$inertia.visit(route('liturgy.text.index'));
             });
         },
         checkReplacement(e) {
+            if (undefined === this.service) return e;
             var record = e;
             if ((record.data.needs_replacement == 'funeral') && (this.service.funerals.length > 0) && (record.data.replacement == '')) {
                 record.data.replacement = this.service.funerals[0].id;
@@ -270,6 +309,7 @@ export default {
 .option-text-title {
     font-weight: bold;
 }
+
 .option-text-source {
     font-weight: normal;
     font-size: .7em;

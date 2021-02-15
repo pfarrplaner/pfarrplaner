@@ -280,7 +280,9 @@ Route::post('/liturgy/{service}/block/{block}/item/{item}/roster', 'LiturgyItemC
 
 // liturgical texts
 Route::get('/liturgy/texts', 'LiturgicalTextsController@index')->name('liturgy.text.index');
+Route::get('/liturgy/texts/list', 'LiturgicalTextsController@list')->name('liturgy.text.list');
 Route::post('/liturgy/texts', 'LiturgicalTextsController@store')->name('liturgy.text.store');
+Route::post('/liturgy/texts/import', 'LiturgicalTextsController@import')->name('liturgy.text.import');
 Route::patch('/liturgy/texts/{text}', 'LiturgicalTextsController@update')->name('liturgy.text.update');
 
 // songs
