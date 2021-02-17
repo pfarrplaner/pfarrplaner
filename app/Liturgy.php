@@ -66,6 +66,7 @@ class Liturgy
             $day = new Day(['date' => $day]);
         }
         if (!Cache::has('liturgicalDays')) {
+            if (!Storage::exists('liturgy.json')) return [];
             $tmpData = json_decode(Storage::get('liturgy.json'), true);
             foreach ($tmpData['content']['days'] as $key => $val) {
                 if (!isset($data[$val['date']])) $data[$val['date']] = $val;
