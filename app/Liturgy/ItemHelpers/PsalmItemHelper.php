@@ -41,4 +41,23 @@ class PsalmItemHelper extends AbstractItemHelper
         return trim(str_replace('  ', ' ', $title));
     }
 
+    public function getVerses()
+    {
+        $verses = [];
+        $verse = [];
+        $indent = false;
+        foreach(explode("\n", $this->item->data['psalm']['text']) as $line) {
+            if ($indent && (substr($line, 0, 1) != "\t")) {
+                $indent = false;
+                $verses[] = $verse;
+                $verse = [$line];
+            } else {
+                $verse[] = $line;
+                $indent = (substr($line, 0, 1) == "\t");
+            }
+        }
+        if (count($verse)) $verses[] = $verse;
+        return $verses;
+    }
+
 }

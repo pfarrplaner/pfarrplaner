@@ -30,6 +30,7 @@
         "niklasravnsborg/laravel-pdf": "^3.0",
         "paragonie/random_compat": "9.99.99 as 2.0.18",
         "php-ews/php-ews": "^1.0",
+        "phpoffice/phppresentation": "dev-master",
         "phpoffice/phpspreadsheet": "^1.6",
         "phpoffice/phpword": "^0.16.0",
         "predis/predis": "^1.1",
