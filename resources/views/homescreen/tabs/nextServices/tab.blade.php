@@ -34,7 +34,6 @@
                         @if($service->needs_reservations && (!$service->registration_active))<div class="alert alert-warning">Anmeldung momentan deaktiviert.</div> @endif
                     </td>
                 </tr>
-                @dd($service->credits)
             @endforeach
             </tbody>
         </table>
