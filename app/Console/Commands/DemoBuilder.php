@@ -70,7 +70,7 @@ class DemoBuilder extends Command
      */
     public function handle()
     {
-        $universalPassword = Hash::make('test');
+        $universalPassword = 'test';
 
         $dbName = Config::get('database.connections.' . Config::get('database.default') . '.database');
         $this->line('Demo builder, using database "' . $dbName . '"');
@@ -117,7 +117,7 @@ class DemoBuilder extends Command
                 }
                 $user->email = strtolower($user->first_name . '.' . $user->last_name) . '@demo.pfarrplaner.de';
             } else {
-                $user->password = Hash::make('admin');
+                $user->password = 'admin';
             }
             $user->save();
         }
