@@ -103,6 +103,15 @@ Vue.directive('focus', {
     }
 })
 
+// Register a global custom directive called `v-scrollTo`
+Vue.directive('scrollTo', {
+    // When the bound element is inserted into the DOM...
+    inserted: function (el) {
+        // Focus the element
+        el.scrollTo()
+    }
+})
+
 
 Vue.use(InertiaApp)
 

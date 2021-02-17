@@ -18,12 +18,14 @@ class LiturgyEditorController extends Controller
         $this->middleware('auth')->except(['download']);
     }
 
-    public function editor(Service $service)
+    public function editor(Request $request, Service $service)
     {
         $service->load('day', 'liturgyBlocks');
         $liturgySheets = LiturgySheets::all();
         $services = [];
-        return Inertia::render('liturgyEditor', compact('service', 'liturgySheets'));
+        $autoFocusBlock = $request->get('autoFocusBlock', null);
+        $autoFocusItem = $request->get('autoFocusItem', null);
+        return Inertia::render('liturgyEditor', compact('service', 'liturgySheets', 'autoFocusBlock', 'autoFocusItem'));
     }
 
     public function save(Request $request, Service $service)

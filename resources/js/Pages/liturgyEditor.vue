@@ -5,6 +5,7 @@
         <div class="row">
             <div class="col-12">
                 <liturgy-tree :service="service" :sheets="agendaMode ? {} : liturgySheets" :agenda-mode="agendaMode"
+                              :auto-focus-block="autoFocusBlock" :auto-focus-item="autoFocusItem"
                                @update-focus="updateFocus"/>
             </div>
         </div>
@@ -22,6 +23,14 @@ export default {
     props: {
         service: Object,
         liturgySheets: Object,
+        autoFocusBlock: {
+            type: Number,
+            default: null,
+        },
+        autoFocusItem: {
+            type: Number,
+            default: null,
+        },
     },
     components: {
         InfoPane,

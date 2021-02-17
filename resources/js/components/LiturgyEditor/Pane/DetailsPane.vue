@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <div class="liturgy-editor-details-pane">
+    <div class="liturgy-editor-details-pane" v-scroll-to>
         <component :is="editorComponent" :element="element" v-model="element" :service="service" :agenda-mode="agendaMode"/>
     </div>
 </template>

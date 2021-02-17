@@ -189,6 +189,14 @@ export default {
             type: Boolean,
             default: false,
         },
+        autoFocusBlock: {
+            type: Number,
+            default: null,
+        },
+        autoFocusItem: {
+            type: Number,
+            default: null,
+        },
     },
     /**
      * Load existing sources
@@ -201,6 +209,15 @@ export default {
             this.services = sources.data.services;
             this.sourceWait = 'Ablaufelemente importieren...';
             this.importFrom = -1;
+        }
+    },
+    mounted() {
+        if (this.autoFocusItem && this.autoFocusBlock) {
+            this.focusItem(this.autoFocusBlock, this.autoFocusItem);
+        } else {
+            if (this.autoFocusBlock) {
+                this.focusBlock(this.autoFocusBlock);
+            }
         }
     },
     beforeUnmount() {
