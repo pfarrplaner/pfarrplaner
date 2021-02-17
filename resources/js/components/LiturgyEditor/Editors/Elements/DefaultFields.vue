@@ -35,7 +35,7 @@
         </div>
         <div v-if="agendaMode" class="form-group">
             <label for="agenda_instructions">Agendarische Hinweise</label>
-            <textarea class="form-control" v-model="editedElement.data.agenda_instructions" v-focus/>
+            <textarea class="form-control" v-model="editedElement.data.agenda_instructions" />
         </div>
         <div v-else v-if="editedElement.data.agenda_instructions" class="agenda-instructions">
             {{ editedElement.data.agenda_instructions }}
