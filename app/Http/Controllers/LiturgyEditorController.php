@@ -15,7 +15,7 @@ class LiturgyEditorController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['download']);
     }
 
     public function editor(Service $service)
@@ -51,7 +51,7 @@ class LiturgyEditorController extends Controller
 
         /** @var AbstractLiturgySheet $sheet */
         $sheet = new $class();
-        $sheet->render($service);
+        return $sheet->render($service);
     }
 
     public function sources(Service $service)
