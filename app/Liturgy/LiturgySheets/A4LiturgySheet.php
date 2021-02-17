@@ -39,13 +39,19 @@ class A4LiturgySheet extends AbstractLiturgySheet
     protected $icon = 'fa fa-file-pdf';
 
     protected function getData(Service $service) {
+        if (request()->has('noRecipients')) return ['recipients' => []];
+
         $recipients = [];
         foreach ($service->liturgyBlocks as $block) {
             foreach ($block->items as $item) {
                 $recipients = array_merge($item->recipients(), $recipients);
             }
         }
-        $recipients = array_unique($recipients);
+        $recipients2 = array_unique($recipients);
+        $recipients = [];
+        foreach ($recipients2 as $recipient) {
+            if ($recipient != '') $recipients[] = $recipient;
+        }
         sort($recipients);
         return compact('recipients');
     }
