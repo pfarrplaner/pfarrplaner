@@ -58,7 +58,7 @@
                                 @foreach($ministries as $key => $ministry)
                                     <td>
                                         <div class="form-group">
-                                            @peopleselect(['name' => 'service['.$service->id.'][ministries]['.$key.'][]', 'label' => '', 'people' => $users, 'value' => $service->participantsByCategory($key), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'useItemId' => true])
+                                            @peopleselect(['name' => 'service['.$service->id.'][ministries]['.$key.'][]', 'label' => '', 'people' => $users, 'value' => $service->participantsByCategory($key), 'useItemId' => true])
                                         </div>
 
                                     </td>

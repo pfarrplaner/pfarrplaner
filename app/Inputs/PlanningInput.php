@@ -123,7 +123,7 @@ class PlanningInput extends AbstractInput
                     }
                     break;
                 default:
-                    if (Auth::user()->can('gd-allgemein-bearbeiten')) {
+                    if (Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-freie-dienste-bearbeiten')) {
                         $ministries[$ministry] = $ministry;
                     }
             }
