@@ -7,6 +7,7 @@ use App\Liturgy\Item;
 use App\Liturgy\LiturgySheets\AbstractLiturgySheet;
 use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Liturgy\Resources\BlockResourceCollection;
+use App\Participant;
 use App\Service;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -25,7 +26,9 @@ class LiturgyEditorController extends Controller
         $services = [];
         $autoFocusBlock = $request->get('autoFocusBlock', null);
         $autoFocusItem = $request->get('autoFocusItem', null);
-        return Inertia::render('liturgyEditor', compact('service', 'liturgySheets', 'autoFocusBlock', 'autoFocusItem'));
+        $ministries = $this->getAvailableMinistries();
+
+        return Inertia::render('liturgyEditor', compact('service', 'liturgySheets', 'autoFocusBlock', 'autoFocusItem', 'ministries'));
     }
 
     public function save(Request $request, Service $service)
@@ -96,4 +99,27 @@ class LiturgyEditorController extends Controller
         }
         return redirect()->route('services.liturgy.editor', $service->id);
     }
+
+    /**
+     * @param $reqMinistries
+     * @return array
+     */
+    protected function getAvailableMinistries()
+    {
+        $ministries = [];
+        foreach (Participant::all()->pluck('category')->unique() as $ministry) {
+            switch ($ministry) {
+                case 'P':
+                case 'O':
+                case 'M':
+                case 'A':
+                    break;
+                default:
+                    $ministries[$ministry] = $ministry;
+            }
+        }
+        return $ministries;
+    }
+
+
 }

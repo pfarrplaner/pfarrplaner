@@ -104,7 +104,7 @@
                                 <div class="col-sm-4">{{ itemDescription(item) }}</div>
                                 <div class="col-sm-3 responsible-list"
                                      @click="editResponsibles(blockIndex, itemIndex, item)">
-                                    <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"/>
+                                    <people-pane v-if="item.editResponsibles==true" :service="service" :element="item" :ministries="ministries"/>
                                     <div v-else>
                                         <div v-if="item.data.responsible.length > 0">
                                             <span class="badge badge-light" v-for="record in item.data.responsible"
@@ -196,6 +196,10 @@ export default {
         autoFocusItem: {
             type: Number,
             default: null,
+        },
+        ministries: {
+            type: Object,
+            default: [],
         },
     },
     /**

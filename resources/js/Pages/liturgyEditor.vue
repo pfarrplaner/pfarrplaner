@@ -6,6 +6,7 @@
             <div class="col-12">
                 <liturgy-tree :service="service" :sheets="agendaMode ? {} : liturgySheets" :agenda-mode="agendaMode"
                               :auto-focus-block="autoFocusBlock" :auto-focus-item="autoFocusItem"
+                              :ministries="ministries"
                                @update-focus="updateFocus"/>
             </div>
         </div>
@@ -30,6 +31,10 @@ export default {
         autoFocusItem: {
             type: Number,
             default: null,
+        },
+        ministries: {
+            type: Object,
+            default: [],
         },
     },
     components: {

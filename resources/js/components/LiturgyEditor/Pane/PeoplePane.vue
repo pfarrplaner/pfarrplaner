@@ -48,6 +48,13 @@
                                 :value="'user:'+person.id">{{ person.name }}
                         </option>
                     </optgroup>
+                    <optgroup v-if="Object.keys(ministries).length > 0" v-for="ministry,ministryIndex in ministries" label="Alle bekannten Dienste">
+                        <option :value="'ministry:'+ministryIndex">{{ ministryIndex }} (Alle Eingeteilten)
+                        </option>
+                        <option v-for="person,personIndex in service.ministriesByCategory[ministryIndex]"
+                                :value="'user:'+person.id">{{ person.name }}
+                        </option>
+                    </optgroup>
                 </selectize>
             </div>
             <hr/>
@@ -65,7 +72,14 @@ import Selectize from 'vue2-selectize';
 
 export default {
     name: "PeoplePane",
-    props: ['element', 'service'],
+    props: {
+        element: Object,
+        service: Object,
+        ministries: {
+            type: Object,
+            default: [],
+        }
+    },
     components: {
         Selectize,
     },
@@ -77,7 +91,6 @@ export default {
         };
         if (undefined == e.data.responsible) e.data.responsible = [emptyOption];
         if (e.data.responsible.length == 0) e.data.responsible = [emptyOption];
-
 
         return {
             emptyOption: emptyOption,
