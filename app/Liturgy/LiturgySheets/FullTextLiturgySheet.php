@@ -39,6 +39,7 @@ use App\Liturgy\Item;
 use App\Liturgy\ItemHelpers\LiturgicItemHelper;
 use App\Liturgy\ItemHelpers\PsalmItemHelper;
 use App\Liturgy\ItemHelpers\SongItemHelper;
+use App\Liturgy\Replacement\Replacement;
 use App\Service;
 
 class FullTextLiturgySheet extends AbstractLiturgySheet
@@ -80,14 +81,14 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderFreetextItem(DefaultWordDocument $doc, Item $item)
     {
-        $doc->renderNormalText($item->data['description']);
+        $doc->renderNormalText(Replacement::replaceAll($item->data['description'], $this->service));
     }
 
     protected function renderLiturgicItem(DefaultWordDocument $doc, Item $item)
     {
         /** @var LiturgicItemHelper $helper */
         $helper = $item->getHelper();
-        $doc->renderNormalText($helper->getReplacedText($this->service));
+        $doc->renderNormalText(Replacement::replaceAll($helper->getReplacedText($this->service), $this->service));
     }
 
     protected function renderSermonItem(DefaultWordDocument $doc, Item $item)
