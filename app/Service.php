@@ -85,7 +85,8 @@ class Service extends Model
         'participantsWithMinistry',
         'funerals',
         'baptisms',
-        'weddings'
+        'weddings',
+        'sermon',
     ];
 
     /**
@@ -184,6 +185,7 @@ class Service extends Model
         'reserved_places',
         'youtube_prefix_description',
         'youtube_postfix_description',
+        'sermon_id'
     ];
 
     /**
@@ -556,6 +558,62 @@ class Service extends Model
         return $this->titleText(false, false);
     }
 
+    /**
+     * @param bool $short
+     * @param bool $skipRites
+     * @return string
+     */
+    public function titleText($short = true, $skipRites = false)
+    {
+        $elements = [];
+        if ($this->title != '') {
+            $elements[] = $x = $this->title;
+        }
+        if (!$skipRites) {
+            if ($this->weddingsText() != '') {
+                $elements[] = $x = $this->weddingsText();
+            }
+            if ($this->funeralsText() != '') {
+                $elements[] = $x = $this->funeralsText();
+            }
+            if ($this->baptismsText() != '') {
+                $elements[] = $x = 'Taufe(n)';
+            }
+        }
+        if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {
+            $elements[0] = ($short ? 'GD' : 'Gottesdienst') . ' mit ' . $elements[0];
+        }
+        return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
+    }
+
+    /**
+     * @return string
+     */
+    public function weddingsText()
+    {
+        $weddings = [];
+        /** @var Wedding $wedding */
+        foreach ($this->weddings as $wedding) {
+            $weddings[] = 'Trauung von ' . $wedding->spouse1_name
+                . ($wedding->spouse1_birth_name ? ' (' . $wedding->spouse1_birth_name . ')' : '')
+                . ' und ' . $wedding->spouse2_name
+                . ($wedding->spouse2_birth_name ? ' (' . $wedding->spouse2_birth_name . ')' : '');
+        }
+        return (join('; ', $weddings));
+    }
+
+    /**
+     * @return string
+     */
+    public function funeralsText()
+    {
+        $funerals = [];
+        foreach ($this->funerals as $funeral) {
+            $funerals[] = $funeral->type . ' von ' . $funeral->buried_name;
+        }
+        return (join('; ', $funerals));
+    }
+
     public function getIsMineAttribute() {
         return $this->participants->contains(Auth::user());
     }
@@ -784,6 +842,7 @@ class Service extends Model
 
 // SETTERS
 // SETTERS
+// SETTERS
     /**
      * Mix a collection of services into an array of events
      * @param $events
@@ -1000,62 +1059,6 @@ class Service extends Model
             $description[] = $x;
         }
         return join('; ', $description);
-    }
-
-    /**
-     * @param bool $short
-     * @param bool $skipRites
-     * @return string
-     */
-    public function titleText($short = true, $skipRites = false)
-    {
-        $elements = [];
-        if ($this->title != '') {
-            $elements[] = $x = $this->title;
-        }
-        if (!$skipRites) {
-            if ($this->weddingsText() != '') {
-                $elements[] = $x = $this->weddingsText();
-            }
-            if ($this->funeralsText() != '') {
-                $elements[] = $x = $this->funeralsText();
-            }
-            if ($this->baptismsText() != '') {
-                $elements[] = $x = 'Taufe(n)';
-            }
-        }
-        if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {
-            $elements[0] = ($short ? 'GD' : 'Gottesdienst') . ' mit ' . $elements[0];
-        }
-        return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
-    }
-
-    /**
-     * @return string
-     */
-    public function weddingsText()
-    {
-        $weddings = [];
-        /** @var Wedding $wedding */
-        foreach ($this->weddings as $wedding) {
-            $weddings[] = 'Trauung von ' . $wedding->spouse1_name
-                . ($wedding->spouse1_birth_name ? ' (' . $wedding->spouse1_birth_name . ')' : '')
-                . ' und ' . $wedding->spouse2_name
-                . ($wedding->spouse2_birth_name ? ' (' . $wedding->spouse2_birth_name . ')' : '');
-        }
-        return (join('; ', $weddings));
-    }
-
-    /**
-     * @return string
-     */
-    public function funeralsText()
-    {
-        $funerals = [];
-        foreach ($this->funerals as $funeral) {
-            $funerals[] = $funeral->type . ' von ' . $funeral->buried_name;
-        }
-        return (join('; ', $funerals));
     }
 
     /**
@@ -1343,5 +1346,11 @@ class Service extends Model
         $number = $this->participants->count();
         foreach ($this->bookings as $booking) $number += $booking->number;
         return $number;
+    }
+
+
+    public function sermon()
+    {
+        return $this->belongsTo(Sermon::class);
     }
 }

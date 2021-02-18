@@ -50,6 +50,7 @@ import CalendarServiceBaptism from './components/Calendar/Service/Baptism.vue';
 import CalendarControlCitySort from './components/Calendar/Control/CitySort';
 
 
+
 Vue.component('admin-layout', AdminLayout)
 
 Vue.component('calendar-pane-horizontal', CalendarPaneHorizontal);
@@ -79,7 +80,7 @@ Vue.use(InertiaProgress);
 Vue.use(LaravelPermission);
 
 
-Vue.use(EventBus)
+Vue.use(EventBus);
 
 
 Vue.config.productionTip = false

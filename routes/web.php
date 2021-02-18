@@ -309,4 +309,8 @@ Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRe
 // settings
 Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.set');
 
-
+// sermons
+Route::get('/services/{service}/sermon', 'SermonController@editorByService')->name('services.sermon.editor');
+Route::post('/services/{service}/sermon', 'SermonController@store')->name('services.sermon.store');
+Route::get('/sermons/{sermon}', 'SermonController@editor')->name('sermon.editor');
+Route::patch('/sermons/{sermon}', 'SermonController@update')->name('sermon.update');
