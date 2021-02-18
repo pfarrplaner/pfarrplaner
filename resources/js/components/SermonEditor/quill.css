@@ -41,7 +41,7 @@
     display: none;
 }
 .quill-editor.focused .ql-container.ql-snow {
-    border-top: 0px !important;
+    border-top: 0 !important;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
 }
