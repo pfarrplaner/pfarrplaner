@@ -101,7 +101,21 @@
                                 <div class="col-sm-3 item-title"><span class="fa fa-chevron-circle-right"
                                                                        style="display: none;"></span> {{ item.title }}
                                 </div>
-                                <div class="col-sm-4">{{ itemDescription(item) }}</div>
+                                <div class="col-sm-4" v-if="item.data_type == 'sermon'">
+                                    <div v-if="service.sermon === null">
+                                        <small>Für diesen Gottesdienst wurde noch keine Predigt angelegt.</small><br />
+                                        <inertia-link :href="route('services.sermon.editor', {service: service.id})"
+                                                      @click.stop="" title="Hier klicken, um die Predigt jetzt anzulegen"
+                                        >Jetzt anlegen</inertia-link>
+                                    </div>
+                                    <div v-else>
+                                        <inertia-link :href="route('sermon.editor', {sermon: service.sermon.id})" @click.stop="" title="Hier klicken, um die Predigt zu bearbeiten">
+                                            {{ service.sermon.title }}<span v-if="service.sermon.subtitle">: {{ service.sermon.subtitle}}</span>
+                                        </inertia-link><br />
+                                        <small>{{ service.sermon.reference}}</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" v-else>{{ itemDescription(item) }}</div>
                                 <div class="col-sm-3 responsible-list"
                                      @click="editResponsibles(blockIndex, itemIndex, item)">
                                     <people-pane v-if="item.editResponsibles==true" :service="service" :element="item" :ministries="ministries"/>
