@@ -312,5 +312,6 @@ Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.se
 // sermons
 Route::get('/services/{service}/sermon', 'SermonController@editorByService')->name('services.sermon.editor');
 Route::post('/services/{service}/sermon', 'SermonController@store')->name('services.sermon.store');
+Route::delete('/services/{service}/sermon', 'SermonController@uncouple')->name('services.sermon.uncouple');
 Route::get('/sermons/{sermon}', 'SermonController@editor')->name('sermon.editor');
 Route::patch('/sermons/{sermon}', 'SermonController@update')->name('sermon.update');

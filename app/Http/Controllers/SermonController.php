@@ -49,6 +49,21 @@ class SermonController extends Controller
         return redirect()->back();
     }
 
+    public function uncouple(Request $request, Service $service)
+    {
+        if (null === $service->sermon) abort(404);
+        /** @var Sermon $sermon */
+        $sermon = $service->sermon;
+        $service->update(['sermon_id' => null]);
+        $sermon->refresh();
+        if (count($sermon->services) == 0) {
+            $sermon->delete();
+            return redirect()->route('services.liturgy.editor', $service->id);
+        } else {
+            return redirect()->route('sermon.editor', $sermon->id);
+        }
+    }
+
     protected function validateRequest(Request $request)
     {
         return $request->validate(

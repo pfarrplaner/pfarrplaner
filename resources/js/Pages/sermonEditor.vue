@@ -35,12 +35,31 @@
                     <div class="card-header">Predigt bearbeiten</div>
                     <div class="card-body">
                         <div v-if="services.length > 0">
-                            <ul>
-                                <li v-for="service in services">
-                                    <a :href="route('services.edit', {service: service.id})">
+                            <label>{{ services.length > 1 ? 'Gottesdienste' : 'Gottesdienst'}}</label>
+                            <table class="table table-hover table-striped">
+                                <tbody>
+                                <tr v-for="service in services">
+                                    <td valign="top">
                                         {{ service.titleText }} am {{ moment(service.day.date).format('DD.MM.YYYY') }},
-                                        {{ service.timeText }} Uhr, {{ service.locationText }}</a>
-                                </li>
+                                        {{ service.timeText }}, {{ service.locationText }}
+                                    </td>
+                                    <td valign="top" class="text-right">
+                                        <a class="btn btn-sm btn-secondary" :href="route('services.edit', {service: service.id})" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span></a>
+                                        <inertia-link class="btn btn-sm btn-secondary" :href="route('services.liturgy.editor', {service: service.id})" title="Liturgie bearbeiten">
+                                            <span class="fa fa-th-list"></span>
+                                        </inertia-link>
+                                        <button v-if="services.length > 1" class="btn btn-sm btn-secondary" @click.prevent.stop="uncoupleService(service)" title="Gottesdienst entkoppeln">
+                                            <span class="fa fa-unlink"></span>
+                                        </button>
+                                        <button v-else class="btn btn-sm btn-danger" @click.prevent.stop="uncoupleService(service)" title="Predigt entfernen">
+                                            <span class="fa fa-trash"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+
+                                </tbody>
+                            </table>
+                            <ul>
                             </ul>
                             <hr/>
                         </div>
@@ -265,6 +284,11 @@ export default {
             }
             return hours + ':' + minutes + ':' + seconds;
         },
+        uncoupleService(service) {
+            if ((this.services.length > 1) || confirm('Diese Predigt ist nur mit einem Gottesdienst verbunden. Wenn du diese Verbindung trennst, wird die Predigt gelöscht. Willst du das wirklich?')) {
+                this.$inertia.delete(route('services.sermon.uncouple', {service: service.id}), { preserveState: false });
+            }
+        }
     }
 }
 </script>
