@@ -168,8 +168,8 @@ class DefaultWordDocument
         $this->phpWord->addParagraphStyle(self::BLOCKQUOTE, [
             'alignment' => Jc::BOTH,
             'indentation' => [
-                'left' => Converter::cmToTwip(1.52),
-                'right' => Converter::cmToTwip(1.52),
+                'left' => Converter::cmToTwip(1),
+                'right' => Converter::cmToTwip(1),
                 'firstLine' => 0,
                 'hanging' => 0,
             ],
@@ -263,15 +263,27 @@ class DefaultWordDocument
 
     /**
      * Render some text with default formatting
-     * @param $t Text
+     * @param $text Text
      * @param array $fontOption Font options
      * @param false $breakAfter Text break at the end?
      */
-    public function renderNormalText($t, $fontOption = [], $breakAfter = false)
+    public function renderNormalText($text, $fontOption = [], $breakAfter = false)
     {
-        if (trim($t) == '') return;
-        $paragraphs = explode("\n", trim($t));
-        $textRun = $this->section->addTextRun(self::NORMAL);
+        return $this->renderText($text, self::NORMAL, $fontOption, $breakAfter);
+    }
+
+    /**
+     * Render some text with specific paragraph style
+     * @param $text Text
+     * @param array|string $paragraphOption Font options
+     * @param array $fontOption Font options
+     * @param false $breakAfter Text break at the end?
+     */
+    public function renderText($text, $paragraphOption = [], $fontOption = [], $breakAfter = false)
+    {
+        if (trim($text) == '') return;
+        $paragraphs = explode("\n", trim($text));
+        $textRun = $this->section->addTextRun($paragraphOption);
         $ct = 0;
         foreach ($paragraphs as $paragraph) {
             $ct++;

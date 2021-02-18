@@ -41,6 +41,7 @@ use App\Liturgy\ItemHelpers\PsalmItemHelper;
 use App\Liturgy\ItemHelpers\SongItemHelper;
 use App\Liturgy\Replacement\Replacement;
 use App\Service;
+use PhpOffice\PhpWord\Shared\Html;
 
 class FullTextLiturgySheet extends AbstractLiturgySheet
 {
@@ -93,7 +94,26 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderSermonItem(DefaultWordDocument $doc, Item $item)
     {
-        $doc->renderNormalText('Hier kommt die Predigt hin.', ['italic' => true]);
+        if (null === $this->service->sermon) {
+            $doc->renderNormalText('Für diesen Gottesdienst wurde noch keine Predigt angelegt.', ['italic' => true]);
+        } else {
+            $text = utf8_decode(strtr($this->service->sermon->text, [
+                '<h1>' => '<h3>', '</h1>' => '</h3>',
+                '<h2>' => '<h4>', '</h2>' => '</h4>',
+            ]));
+            $dom = new \DOMDocument();
+            $dom->loadHTML($text);
+            $nodes = [];
+            /** @var \DOMNode $node */
+            foreach ($dom->documentElement->firstChild->childNodes as $node) {
+                if ($node->nodeName == 'blockquote') {
+                    $doc->renderText($node->nodeValue, $doc::BLOCKQUOTE, ['size' => 10]);
+                } else {
+                    Html::addHtml($doc->getSection(), $dom->saveHTML($node));
+                }
+                $nodes[] = $node->nodeName.' -> '.$node->nodeValue;
+            }
+        }
     }
 
     protected function renderPsalmItem(DefaultWordDocument $doc, Item $item)
