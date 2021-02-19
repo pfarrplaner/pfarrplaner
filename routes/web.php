@@ -315,3 +315,6 @@ Route::post('/services/{service}/sermon', 'SermonController@store')->name('servi
 Route::delete('/services/{service}/sermon', 'SermonController@uncouple')->name('services.sermon.uncouple');
 Route::get('/sermons/{sermon}', 'SermonController@editor')->name('sermon.editor');
 Route::patch('/sermons/{sermon}', 'SermonController@update')->name('sermon.update');
+
+// patch
+Route::get('/patch/{patch}', 'PatchController@patch');
