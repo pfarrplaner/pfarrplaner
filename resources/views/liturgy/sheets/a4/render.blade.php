@@ -272,7 +272,11 @@
                 @elseif($item->data_type == 'reading')
                     <td valign="top">{{ $item->data['reference'] }}</td>
                 @elseif($item->data_type == 'sermon')
-                    <td valign="top">@if($service->sermon_title){{ $service->sermon_title }} @if($service->sermon_reference)({{ $service->sermon_reference }})@endif @else {{ $service->sermon_reference }} @endif</td>
+                    @if($service->sermon)
+                    <td valign="top">@if($service->sermon->title){{ $service->sermon->fullTitle }} @if($service->sermon->reference)({{ $service->sermon->reference }})@endif @else {{ $service->sermon->reference }} @endif</td>
+                    @else
+                        <td></td>
+                    @endif
                 @endif
                 <td width="25% "valign="top">{{ join(', ', $item->recipients()) }}</td>
             </tr>
@@ -330,7 +334,11 @@
                     @elseif($item->data_type == 'reading')
                         <td valign="top">{{ $item->data['reference'] }}</td>
                     @elseif($item->data_type == 'sermon')
-                        <td valign="top">@if($service->sermon_title){{ $service->sermon_title }} @if($service->sermon_reference)({{ $service->sermon_reference }})@endif @else {{ $service->sermon_reference }} @endif</td>
+                        @if($service->sermon)
+                            <td valign="top">@if($service->sermon->title){{ $service->sermon->fullTitle }} @if($service->sermon->reference)({{ $service->sermon->reference }})@endif @else {{ $service->sermon->reference }} @endif</td>
+                        @else
+                            <td></td>
+                        @endif
                     @endif
                     <td width="25% "valign="top">{{ join(', ', $item->recipients()) }}</td>
                 </tr>

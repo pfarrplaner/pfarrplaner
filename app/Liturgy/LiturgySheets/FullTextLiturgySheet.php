@@ -75,9 +75,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     public function getFileTitle(): string
     {
-        return 'Gottesdienst' . ((!is_null(
-                    $this->service
-                ) && ($this->service->sermon_titel != '')) ? ' - ' . $this->service->sermon_title : '');
+        return 'Gottesdienst' . (($this->service) && ($this->service->sermon) ? ' - ' . $this->service->sermon->fullTitle : '');
     }
 
     protected function renderFreetextItem(DefaultWordDocument $doc, Item $item)

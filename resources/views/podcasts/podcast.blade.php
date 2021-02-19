@@ -31,19 +31,20 @@
         <atom:link href="{{ strtolower(route('podcast', $city->name)) }}" rel="self" type="application/rss+xml" />
 
         @foreach($services as $service)
-        <item>
-            <title>@if($service->sermon_title) {{ $service->sermon_title }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt') }} @else {{ $service->participantsText('P') }} @endif @endif</title>
-            <itunes:image href="{{ asset($service->sermon_image ?: $service->city->sermon_default_image) }}" />
-            <itunes:summary><![CDATA[ @if($service->sermon_description){{ $service->sermon_description }}
-
-                (Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif)@else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></itunes:summary>
-            <link>{{ $city->homepage.(substr($city->homepage, -1) == '/' ? '' : '/') }}?podcast_id={{ md5( $service->id) }}</link>
-            <guid>{{ $city->homepage.(substr($city->homepage, -1) == '/' ? '' : '/') }}?podcast_id={{ md5( $service->id) }}</guid>
-            <description><![CDATA[ @if($service->sermon_description){{ $service->sermon_description }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></description>
-            <content:encoded><![CDATA[ @if($service->sermon_description){{ $service->sermon_description }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></content:encoded>
-            <enclosure url="{{ $service->recording_url }}" length="{{ \App\Helpers\PodcastHelper::getFileSize($service->recording_url) }}" type="audio/mpeg"></enclosure>
-            <pubDate>{{ $service->day->date->format('D, d M Y H:i:s O') }}</pubDate>
-        </item>
+            @if($service->sermon)
+                <item>
+                    <title>{{ $service->sermon->fullTitle }}</title>
+                    @if($service->sermon->image)<itunes:image href="{{ route('image', $service->sermon->image) }}" />@else<itunes:image href="{{ route('image', $service->city->sermon_default_image) }}" />@endif
+                    <itunes:summary><![CDATA[ @if($service->sermon->summary){{ $service->sermon->summary }}
+                        (Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif)@else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></itunes:summary>
+                    <link>{{ $city->homepage.(substr($city->homepage, -1) == '/' ? '' : '/') }}?podcast_id={{ md5( $service->id) }}</link>
+                    <guid>{{ $city->homepage.(substr($city->homepage, -1) == '/' ? '' : '/') }}?podcast_id={{ md5( $service->id) }}</guid>
+                    <description><![CDATA[ @if($service->sermon->summary){{ $service->sermon->summary }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></description>
+                    <content:encoded><![CDATA[ @if($service->sermon->summary){{ $service->sermon->summary }} @else Predigt vom {{ $service->day->date->format('d.m.Y') }}, @if($service->participantsText('Predigt')){{ $service->participantsText('Predigt', true) }} @else {{ $service->participantsText('P', true) }} @endif @endif ]]></content:encoded>
+                    <enclosure url="{{ $service->recording_url }}" length="{{ \App\Helpers\PodcastHelper::getFileSize($service->recording_url) }}" type="audio/mpeg"></enclosure>
+                    <pubDate>{{ $service->day->date->format('D, d M Y H:i:s O') }}</pubDate>
+                </item>
+            @endif
         @endforeach
 
 

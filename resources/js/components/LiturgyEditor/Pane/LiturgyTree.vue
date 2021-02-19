@@ -420,12 +420,7 @@ export default {
                     }
                     return title;
                 case 'sermon':
-                    var title = this.service.sermon_title != '' ? this.service.sermon_title : '';
-                    if (this.service.sermon_reference) {
-                        if (title) title = title + ' (' + this.service.sermon_reference + ')';
-                        else title = this.service.sermon_reference;
-                    }
-                    return title;
+                    return;
                 case 'reading':
                     return item.data.reference;
                 case 'song':

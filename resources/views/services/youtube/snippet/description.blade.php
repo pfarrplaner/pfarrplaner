@@ -14,12 +14,12 @@ Sing mit! Ein Liedblatt zu diesem Gottesdienst gibt es hier zum Download:
 Zu diesem Gottesdienst bitten wir um Spenden für folgenden Zweck: {!! $service->offering_goal !!}@if($service->offerings_url)
 
 Spenden kannst du ganz einfach online hier:
-{!! $service->offerings_url !!} @endif @endif @if($service->sermon_title)
+{!! $service->offerings_url !!} @endif @endif @if($service->sermon)
 
 
-Predigt: "{!! $service->sermon_title !!}" ({!! $service->sermon_reference !!})
+Predigt: "{!! $service->sermon->fullTitle !!}" ({!! $service->sermon->reference !!})
 
-{!! $service->sermon_description !!}@if($service->external_url)
+{!! $service->sermon->summary !!}@if($service->external_url)
 
 
 Zu dieser Predigt gibt es noch mehr Infos auf folgender Seite:
