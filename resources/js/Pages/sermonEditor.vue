@@ -102,6 +102,10 @@
                             </div>
                         </div>
                         <div class="form-group">
+                            <label>Zusammenfassung</label>
+                            <textarea class="form-control" v-model="editedSermon.summary"/>
+                        </div>
+                        <div class="form-group">
                             <label>Text der Predigt</label>
                             <!-- HERE --->
 
@@ -116,10 +120,6 @@
                                     Voraussichtliche Redezeit: {{ calculatedSpeechTime() }}</small>
                             </div>
 
-                        </div>
-                        <div class="form-group">
-                            <label>Zusammenfassung</label>
-                            <textarea class="form-control" v-model="editedSermon.summary"/>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -139,6 +139,17 @@
                                     <textarea class="form-control" v-model="editedSermon.questions" rows="6"
                                               aria-describedby="helpQuestions"/>
                                     <small id="helpQuestions" class="form-text text-muted">Eine Frage pro Zeile</small>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="inputCCLicense"
+                                           v-model="editedSermon.cc_license" value="1"/>
+                                    <label class="form-check-label" for="inputCCLicense">Predigt und Materialien unter
+                                        der CC-BY-SA 4.0 Lizenz freigeben</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="inputPermitHandouts"
+                                           v-model="editedSermon.permit_handouts" value="1"/>
+                                    <label class="form-check-label" for="inputPermitHandouts">Handouts freigeben</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -161,37 +172,6 @@
                                           :options="editorOptionListOnly" @focus="literatureEditorActive = true"
                                           @blur="literatureEditorActive = false"/>
                         </div>
-                        <h2>Links und Dateien</h2>
-                        <div class="form-group">
-                            <label>URL der Audioaufzeichnung</label>
-                            <input class="form-control" type="text" v-model="editedSermon.audio_recording"/>
-                        </div>
-                        <div class="form-group">
-                            <label>URL zum Video</label>
-                            <input class="form-control" type="text" v-model="editedSermon.video_url"/>
-                        </div>
-                        <div class="form-group">
-                            <label>URL zum einer externen Predigtseite</label>
-                            <input class="form-control" type="text" v-model="editedSermon.external_url"/>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="inputCCLicense"
-                                           v-model="editedSermon.cc_license" value="1"/>
-                                    <label class="form-check-label" for="inputCCLicense">Predigt und Materialien unter
-                                        der CC-BY-SA 4.0 Lizenz freigeben</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="inputPermitHandouts"
-                                           v-model="editedSermon.permit_handouts" value="1"/>
-                                    <label class="form-check-label" for="inputPermitHandouts">Handouts freigeben</label>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                     <div class="card-footer">
                         <input type="submit" class="btn btn-primary" value="Speichern" />
