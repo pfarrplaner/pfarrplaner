@@ -92,6 +92,7 @@ Vue.mixin({
         moment: moment
     }
 });
+Vue.mixin(require('./mixins/Asset.js'));
 
 
 // Register a global custom directive called `v-focus`

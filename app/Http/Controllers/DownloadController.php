@@ -129,6 +129,7 @@ class DownloadController extends Controller
      */
     public function image($path, $prettyName = '')
     {
+        if (substr($path, 0, 12) == 'attachments/') $path = substr($path, 12);
         if ((pathinfo($path, PATHINFO_EXTENSION) == '') && (pathinfo($prettyName, PATHINFO_EXTENSION) != '')) {
             $path .= '.' . pathinfo($prettyName, PATHINFO_EXTENSION);
         }

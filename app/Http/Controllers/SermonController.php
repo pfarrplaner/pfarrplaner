@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Sermon;
 use App\Service;
+use App\Traits\HandlesAttachmentsTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SermonController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -35,6 +39,7 @@ class SermonController extends Controller
     {
         $data = $this->validateRequest($request);
         $sermon = Sermon::create($data);
+        $this->handleIndividualAttachment($request, $sermon, 'image');
         if (null !== $sermon) {
             $service->update(['sermon_id' => $sermon->id]);
             return redirect()->route('sermon.editor', $sermon->id);
@@ -46,7 +51,8 @@ class SermonController extends Controller
     {
         $data = $this->validateRequest($request);
         $sermon->update($data);
-        return redirect()->back();
+        $this->handleIndividualAttachment($request, $sermon, 'image');
+        return redirect()->route('sermon.editor', $sermon);
     }
 
     public function uncouple(Request $request, Service $service)

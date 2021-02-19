@@ -30,7 +30,7 @@
 <template>
     <div class="sermon-editor">
         <admin-layout title="Predigt bearbeiten">
-            <form @submit.prevent="saveSermon">
+            <form @submit.prevent="saveSermon" id="formSermon">
                 <div class="card">
                     <div class="card-header">Predigt bearbeiten</div>
                     <div class="card-body">
@@ -134,13 +134,23 @@
                                     <small id="helpKeyPoints" class="form-text text-muted">Ein Hauptpunkt pro Zeile,
                                         Lücken für Lückentext mit [ ] markieren</small>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Fragen für die Zuhörer</label>
                                     <textarea class="form-control" v-model="editedSermon.questions" rows="6"
                                               aria-describedby="helpQuestions"/>
                                     <small id="helpQuestions" class="form-text text-muted">Eine Frage pro Zeile</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Bild zur Predigt</label><br />
+                                    <img v-if="editedSermon.image" class="img-fluid" :src="uploadedImage(editedSermon.image)" style="margin-bottom: 10px;"/>
+                                    <input class="form-control-file" type="file" @change="setImage" />
+                                </div>
+                                <div class="form-check" v-if="editedSermon.image">
+                                    <input class="form-check-input" type="checkbox" value="" id="inputRemoveImage"
+                                           v-model="removeImage" value="1"/>
+                                    <label class="form-check-label" for="inputRemoveImage">Bestehendes Bild entfernen</label>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +194,7 @@
 
                     </div>
                     <div class="card-footer">
-                        <button class="btn btn-primary">Speichern</button>
+                        <input type="submit" class="btn btn-primary" value="Speichern" />
                     </div>
                 </div>
             </form>
@@ -262,15 +272,39 @@ export default {
                         ['clean']                                         // remove formatting button
                     ],
                 }
-            }
+            },
+            fileUpload : null,
+            removeImage: false,
         }
     },
     methods: {
         saveSermon() {
+            let formData = new FormData(document.getElementById('formSermon'));
+            for (const [key, value] of Object.entries(this.editedSermon)) {
+                if (key != 'image') formData.append(key, value || '');
+            }
+            if (!formData.has('cc_license')) formData.append('cc_license', 0);
+            if (!formData.has('permit_handouts')) formData.append('permit_handouts', 0);
+            console.log(this.removeImage);
+            if (this.removeImage) formData.append('remove_image', 1);
+            if (this.fileUpload) {
+                formData.append('image', this.fileUpload);
+            }
             if (undefined === this.editedSermon.id) {
-                this.$inertia.post(route('services.sermon.store', {service: this.service.id}), this.editedSermon);
+                this.$inertia.post(route('services.sermon.store', {service: this.service.id}), formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    preserveState: false,
+                });
             } else {
-                this.$inertia.patch(route('sermon.update', {sermon: this.editedSermon.id}), this.editedSermon);
+                formData.append('_method', 'PATCH');
+                this.$inertia.post(route('sermon.update', {sermon: this.editedSermon.id}), formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    preserveState: false,
+                });
             }
         },
         wordCount() {
@@ -298,6 +332,10 @@ export default {
             if ((this.services.length > 1) || confirm('Diese Predigt ist nur mit einem Gottesdienst verbunden. Wenn du diese Verbindung trennst, wird die Predigt gelöscht. Willst du das wirklich?')) {
                 this.$inertia.delete(route('services.sermon.uncouple', {service: service.id}), {preserveState: false});
             }
+        },
+        setImage(event) {
+            this.fileUpload = event.target.files[0];
+            console.log(this.fileUpload);
         }
     }
 }
