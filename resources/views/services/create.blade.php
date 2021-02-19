@@ -76,11 +76,8 @@
                     @textarea(['name' => 'youtube_postfix_description', 'label' => 'Ergänzender Text für die Beschreibung auf YouTube', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'sermon'])
-                        @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])
-                        @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        <p>Um eine neue Predigt anzulegen, musst du den Gottesdienst erst speichern. Hier kannst du dem Gottesdienst stattdessen eine bereits bestehende Predigt zuordnen:</p>
+                        @select(['name' => 'sermon_id', 'label' => 'Predigt zuordnen', 'items' => \App\Sermon::getList($city), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'empty' => true])
                     @endtab
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
                         @tab(['id' => 'konfiapp'])

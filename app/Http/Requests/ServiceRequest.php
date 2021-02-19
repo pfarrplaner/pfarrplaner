@@ -112,6 +112,7 @@ class ServiceRequest extends FormRequest
             'reserved_places' => 'nullable|string',
             'youtube_prefix_description' => 'nullable|string',
             'youtube_postfix_description' => 'nullable|string',
+            'sermon_id' => 'nullable|int|exists:sermons,id',
         ];
     }
 

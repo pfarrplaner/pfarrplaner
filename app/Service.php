@@ -365,7 +365,11 @@ class Service extends Model
         if ($this->getAttribute('description') != '') {
             $desc['description'] = $this->getAttribute('description');
         }
-        foreach ($exclude as $key) if (isset($desc[$key])) unset($desc[$key]);
+        foreach ($exclude as $key) {
+            if (isset($desc[$key])) {
+                unset($desc[$key]);
+            }
+        }
         return join('; ', $desc);
     }
 
@@ -614,24 +618,58 @@ class Service extends Model
         return (join('; ', $funerals));
     }
 
-    public function getIsMineAttribute() {
+    public function getIsMineAttribute()
+    {
         return $this->participants->contains(Auth::user());
     }
 
     public function getLiveDashboardUrlAttribute()
     {
-        if (null === $this->city) return '';
-        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
+        if (null === $this->city) {
+            return '';
+        }
+        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl(
+            $this->city,
+            $this->youtube_url
+        ) : '';
     }
 
-    public function getCreditsAttribute() {
-        $credits = ['Liturgie' => 'Liturgie: '.$this->participantsText('P', true), 'Orgel' => 'Orgel: '.$this->participantsText('O', true)];
+    public function getCreditsAttribute()
+    {
+        $credits = [
+            'Liturgie' => 'Liturgie: ' . $this->participantsText('P', true),
+            'Orgel' => 'Orgel: ' . $this->participantsText('O', true)
+        ];
         foreach ($this->ministries() as $ministry => $people) {
-            $credits[$ministry] = $ministry.': '.$this->participantsText($ministry, true, true);
+            $credits[$ministry] = $ministry . ': ' . $this->participantsText($ministry, true, true);
         }
-        $credits['Mesner*in'] = 'Mesnerdienst: '.$this->participantsText('M', true, true);
-        $separator = utf8_encode(' '.chr(183).' ');
-        return join ($separator, $credits);
+        $credits['Mesner*in'] = 'Mesnerdienst: ' . $this->participantsText('M', true, true);
+        $separator = utf8_encode(' ' . chr(183) . ' ');
+        return join($separator, $credits);
+    }
+
+    /**
+     * Get all preachers for this service
+     * @return Collection
+     */
+    public function getPreachersAttribute()
+    {
+        $sermonItem = null;
+        foreach ($this->liturgyBlocks as $block) {
+            foreach ($block->items as $item) {
+                if ($item->data_type == 'sermon') {
+                    $sermonItem = $item;
+                    continue;
+                }
+            }
+            if (null !== $sermonItem) {
+                continue;
+            }
+        }
+        if (null === $sermonItem) {
+            return collect();
+        }
+        return $sermonItem->recipients();
     }
 // END ACCESSORS
 
@@ -645,6 +683,7 @@ class Service extends Model
     }
 
 // SCOPES
+
     /**
      * @param Builder $query
      * @param $ministries
@@ -715,7 +754,8 @@ class Service extends Model
      * @param int $month Month
      * @return Builder
      */
-    public function scopeInMonth(Builder $query, $year, $month) {
+    public function scopeInMonth(Builder $query, $year, $month)
+    {
         $monthStart = Carbon::createFromFormat('Y-m-d H:i:s', $year . '-' . $month . '-01 0:00:00');
         $monthEnd = (clone $monthStart)->addMonth(1)->subSecond(1);
         return $query->between($monthStart, $monthEnd);
@@ -747,7 +787,8 @@ class Service extends Model
      * @param Builder $query
      * @return Builder
      */
-    public function scopeWritable(Builder $query) {
+    public function scopeWritable(Builder $query)
+    {
         return $query->whereIn('city_id', Auth::user()->writableCities);
     }
 
@@ -810,15 +851,21 @@ class Service extends Model
         return $query->where('hidden', 0);
     }
 
-    public function scopeInMonthByDate(Builder $query, Carbon $date) {
-        return $query->whereHas('day', function($query2) use ($date) {
-            return $query2->inMonth($date);
-        });
+    public function scopeInMonthByDate(Builder $query, Carbon $date)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query2) use ($date) {
+                return $query2->inMonth($date);
+            }
+        );
     }
 
     public function scopeInCities(Builder $query, $cities)
     {
-        if ((!is_array($cities)) && (is_object($cities->first()))) $cities = $cities->pluck('id');
+        if ((!is_array($cities)) && (is_object($cities->first()))) {
+            $cities = $cities->pluck('id');
+        }
         return $query->whereIn('city_id', $cities);
     }
 
@@ -827,8 +874,14 @@ class Service extends Model
      * @param Builder $query
      * @return Builder
      */
-    public function scopeIsAgenda(Builder $query) {
-        return $query->whereHas('day', function ($query2) { $query2->where('date', '1978-03-05'); });
+    public function scopeIsAgenda(Builder $query)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query2) {
+                $query2->where('date', '1978-03-05');
+            }
+        );
     }
 
     /**
@@ -836,10 +889,16 @@ class Service extends Model
      * @param Builder $query
      * @return Builder
      */
-    public function scopeIsNotAgenda(Builder $query) {
-        return $query->whereHas('day', function ($query2) { $query2->where('date', '!=', '1978-03-05'); });
+    public function scopeIsNotAgenda(Builder $query)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query2) {
+                $query2->where('date', '!=', '1978-03-05');
+            }
+        );
     }
-
+// SETTERS
 // SETTERS
 // SETTERS
 // SETTERS
@@ -1215,7 +1274,9 @@ class Service extends Model
 
     public function setDefaultOfferingValues()
     {
-        if (null === $this->city) return;
+        if (null === $this->city) {
+            return;
+        }
         if ($this->offering_goal == '') {
             if ((count($this->funerals) > 0) && $this->city->default_funeral_offering_goal != '') {
                 $this->offering_goal = $this->city->default_funeral_offering_goal;
@@ -1342,15 +1403,24 @@ class Service extends Model
     /**
      * Get total number of participants + bookings
      */
-    public function estimatePeoplePresent() {
+    public function estimatePeoplePresent()
+    {
         $number = $this->participants->count();
-        foreach ($this->bookings as $booking) $number += $booking->number;
+        foreach ($this->bookings as $booking) {
+            $number += $booking->number;
+        }
         return $number;
     }
-
 
     public function sermon()
     {
         return $this->belongsTo(Sermon::class);
+    }
+
+    public function oneLiner($title = false)
+    {
+        return ($title ? $this->titleText(false) . ', ' : '') . $this->day->date->format(
+                'd.m.Y'
+            ) . ', ' . $this->timeText() . ', ' . $this->locationText();
     }
 }

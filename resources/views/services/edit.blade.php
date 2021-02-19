@@ -142,11 +142,20 @@
                     @textarea(['name' => 'youtube_postfix_description', 'label' => 'Ergänzender Text für die Beschreibung auf YouTube', 'value' => $service->youtube_postfix_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'sermon', 'active' => ($tab=='sermon')])
-                    @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'value' => $service->sermon_title, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'value' => $service->sermon_reference, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'value' => $service->sermon_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'value' => $service->sermon_image, 'prettyName' => $service->day->date->format('Ymd').'-Predigtbild', 'accept' => '.jpg,.jpeg'])
-                    @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'value' => $service->external_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @if (null === $service->sermon)
+                        <p>Diesem Gottesdienst ist noch keine Predigt zugeordnet.</p>
+                        <a class="btn btn-secondary" href="{{ route('services.sermon.editor', $service->id) }}" title="Neue Predigt anlegen">Neue Predigt anlegen</a>
+                        <hr />
+                        <p>Alternativ dazu kannst du dem Gottesdienst eine bereits bestehende Predigt zuordnen:</p>
+                        @select(['name' => 'sermon_id', 'label' => 'Predigt zuordnen', 'value' => $service->sermon_id, 'items' => \App\Sermon::getList($service->city), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'empty' => true])
+                    @else
+                        @select(['name' => 'sermon_id', 'label' => 'Zugeordnete Predigt', 'value' => $service->sermon_id, 'items' => \App\Sermon::getList($service->city), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'empty' => true])
+                            <a class="btn btn-secondary" href="{{ route('sermon.editor', $service->sermon_id) }}" title="Predigt bearbeiten">Predigt bearbeiten</a>
+                        <hr />
+                        <p><b>{{ $service->sermon->fullTitle }}</b><br />
+                            {{ $service->sermon->reference }}</p>
+                        <p>{{ $service->sermon->summary }}</p>
+                    @endif
                     @endtab
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
                         @tab(['id' => 'konfiapp', 'active' => ($tab=='konfiapp')])
