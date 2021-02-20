@@ -70,9 +70,16 @@ class SermonController extends Controller
         }
     }
 
+    protected function handleCheckBoxes($data, $keys) {
+        foreach ($keys as $key) {
+            if (null !== $data[$key]) $data[$key] = (bool)$data[$key];
+        }
+        return $data;
+    }
+
     protected function validateRequest(Request $request)
     {
-        return $request->validate(
+        $data = $request->validate(
             [
                 'title' => 'nullable|string',
                 'subtitle' => 'nullable|string',
@@ -87,9 +94,11 @@ class SermonController extends Controller
                 'audio_recording' => 'nullable|string',
                 'video_url' => 'nullable|string',
                 'external_url' => 'nullable|string',
-                'cc_license' => 'nullable|boolean',
-                'permit_handouts' => 'nullable|boolean',
+                'cc_license' => 'nullable',
+                'permit_handouts' => 'nullable',
             ]
         );
+        $data = $this->handleCheckBoxes($data, ['cc_license', 'permit_handouts']);
+        return $data;
     }
 }
