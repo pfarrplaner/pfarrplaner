@@ -115,8 +115,8 @@
                                           @blur="textEditorActive = false"/>
 
                             <div v-if="editedSermon.text.length > 0">
-                                <small class="form-text text-muted">{{ editedSermon.text.length }} Zeichen &middot;
-                                    {{ wordCount() }} Wörter &middot;
+                                <small class="form-text text-muted">{{ editedSermon.text.length.toLocaleString('de-DE') }} Zeichen &middot;
+                                    {{ wordCount().toLocaleString('de-DE') }} Wörter &middot;
                                     Voraussichtliche Redezeit: {{ calculatedSpeechTime() }}</small>
                             </div>
 
@@ -241,6 +241,9 @@ export default {
 
                         ['clean']                                         // remove formatting button
                     ],
+                    clipboard: {
+                        matchVisual: false,
+                    },
                 }
             },
             editorOptionListOnly: {
@@ -251,6 +254,9 @@ export default {
                         [{'list': 'ordered'}, {'list': 'bullet'}],
                         ['clean']                                         // remove formatting button
                     ],
+                    clipboard: {
+                        matchVisual: false,
+                    },
                 }
             },
             fileUpload : null,
