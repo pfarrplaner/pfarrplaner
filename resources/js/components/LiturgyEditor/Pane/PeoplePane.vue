@@ -32,7 +32,7 @@
         <form @submit.prevent="save">
             <div class="form-group">
                 <label>Verantwortliche*r</label>
-                <selectize name="responsible[]" class="form-control" v-model="selected" multiple>
+                <selectize name="responsible[]" class="form-control" v-model="selected" multiple ref="peopleSelect">
                     <optgroup
                         v-for="ministry,ministryIndex in { pastors: 'Pfarrer*in', organists: 'Organist*in', sacristans: 'Mesner*in'}"
                         :label="ministry">
@@ -97,6 +97,9 @@ export default {
             editedElement: e,
             selected: e.data.responsible,
         }
+    },
+    mounted() {
+        this.$refs.peopleSelect.$el.nextSibling.firstChild.click();
     },
     methods: {
         save() {
