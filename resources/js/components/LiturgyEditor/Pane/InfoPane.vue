@@ -35,7 +35,7 @@
                     <div v-if="liturgy['title']">
                         <b>{{ liturgy['title'] }}</b>
                         <span v-if="liturgy['litColor']" class="litColor"
-                              style="{ backgroundColor: liturgy['litColor'] }"
+                              :style="{ backgroundColor: liturgy['litColor'] }"
                               :title="'Liturgische Farbe: '+liturgy['litColorName']"></span>
                     </div>
                     <div v-if="liturgy['feastCircleName']">
