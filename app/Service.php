@@ -185,7 +185,9 @@ class Service extends Model
         'reserved_places',
         'youtube_prefix_description',
         'youtube_postfix_description',
-        'sermon_id'
+        'sermon_id',
+        'announcements',
+        'offering_text'
     ];
 
     /**

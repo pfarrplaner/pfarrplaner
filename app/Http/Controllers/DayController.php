@@ -252,4 +252,12 @@ class DayController extends Controller
             compact('year', 'month', 'cities', 'days', 'existing', 'start', 'end', 'existingCities')
         );
     }
+
+    public function list(City $city)
+    {
+        $days = Day::visibleForCities(collect($city))
+            ->orderByDesc('date')->get();
+        return response()->json($days);
+    }
+
 }

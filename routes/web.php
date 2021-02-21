@@ -44,6 +44,7 @@ use Inertia\Inertia;
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
+Route::get('days/list/{city}', 'DayController@list')->name('days.list');
 
 
 Route::resource('users', 'UserController')->middleware('auth');
@@ -57,11 +58,13 @@ Route::get('user/switch/{user}', ['as' => 'user.switch', 'uses' => 'UserControll
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
 
+Route::patch('/services/{service}', 'ServiceController@update2')->name('services.update');
 Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
 Route::get('/service/{service}/songsheet', 'ServiceController@songsheet')->name('service.songsheet');
 Route::get('/services/{city}/streaming/next', 'PublicController@nextStream')->name('service.nextstream');
+Route::get('services/{service}/{tab?}', 'ServiceController@editor')->name('services.editor');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);

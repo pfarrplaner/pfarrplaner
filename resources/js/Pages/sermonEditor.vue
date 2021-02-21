@@ -30,49 +30,47 @@
 <template>
     <div class="sermon-editor">
         <admin-layout title="Predigt bearbeiten">
+            <template slot="navbar-left">
+                <button class="btn btn-primary" @click.prevent="saveSermon">Speichern</button>&nbsp;
+            </template>
+            <div v-if="services.length > 0">
+                <table class="table table-hover table-striped">
+                    <tbody>
+                    <tr v-for="service in services">
+                        <td valign="top">
+                            {{ service.titleText }} am {{ moment(service.day.date).format('DD.MM.YYYY') }},
+                            {{ service.timeText }}, {{ service.locationText }}
+                        </td>
+                        <td valign="top" class="text-right">
+                            <a class="btn btn-sm btn-light"
+                               :href="route('services.edit', {service: service.id})"
+                               title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</a>
+                            <inertia-link class="btn btn-sm btn-light"
+                                          :href="route('services.liturgy.editor', {service: service.id})"
+                                          title="Liturgie bearbeiten">
+                                <span class="fa fa-th-list"></span> Liturgie
+                            </inertia-link>
+                            <span v-if="undefined != editedSermon.id">
+                                <button v-if="services.length > 1" class="btn btn-sm btn-secondary"
+                                        @click.prevent.stop="uncoupleService(service)"
+                                        title="Gottesdienst entkoppeln">
+                                    <span class="fa fa-unlink"></span>
+                                </button>
+                                <button v-else class="btn btn-sm btn-danger"
+                                        @click.prevent.stop="uncoupleService(service)"
+                                        title="Predigt entfernen">
+                                    <span class="fa fa-trash"></span>
+                                </button>
+                            </span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
             <form @submit.prevent="saveSermon" id="formSermon">
                 <div class="card">
                     <div class="card-header">Predigt bearbeiten</div>
                     <div class="card-body">
-                        <div v-if="services.length > 0">
-                            <label>{{ services.length > 1 ? 'Gottesdienste' : 'Gottesdienst' }}</label>
-                            <table class="table table-hover table-striped">
-                                <tbody>
-                                <tr v-for="service in services">
-                                    <td valign="top">
-                                        {{ service.titleText }} am {{ moment(service.day.date).format('DD.MM.YYYY') }},
-                                        {{ service.timeText }}, {{ service.locationText }}
-                                    </td>
-                                    <td valign="top" class="text-right">
-                                        <a class="btn btn-sm btn-secondary"
-                                           :href="route('services.edit', {service: service.id})"
-                                           title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span></a>
-                                        <inertia-link class="btn btn-sm btn-secondary"
-                                                      :href="route('services.liturgy.editor', {service: service.id})"
-                                                      title="Liturgie bearbeiten">
-                                            <span class="fa fa-th-list"></span>
-                                        </inertia-link>
-                                        <span v-if="undefined != editedSermon.id">
-                                            <button v-if="services.length > 1" class="btn btn-sm btn-secondary"
-                                                    @click.prevent.stop="uncoupleService(service)"
-                                                    title="Gottesdienst entkoppeln">
-                                                <span class="fa fa-unlink"></span>
-                                            </button>
-                                            <button v-else class="btn btn-sm btn-danger"
-                                                    @click.prevent.stop="uncoupleService(service)"
-                                                    title="Predigt entfernen">
-                                                <span class="fa fa-trash"></span>
-                                            </button>
-                                        </span>
-                                    </td>
-                                </tr>
-
-                                </tbody>
-                            </table>
-                            <ul>
-                            </ul>
-                            <hr/>
-                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -115,7 +113,9 @@
                                           @blur="textEditorActive = false"/>
 
                             <div v-if="editedSermon.text.length > 0">
-                                <small class="form-text text-muted">{{ editedSermon.text.length.toLocaleString('de-DE') }} Zeichen &middot;
+                                <small class="form-text text-muted">{{
+                                        editedSermon.text.length.toLocaleString('de-DE')
+                                    }} Zeichen &middot;
                                     {{ wordCount().toLocaleString('de-DE') }} Wörter &middot;
                                     Voraussichtliche Redezeit: {{ calculatedSpeechTime() }}</small>
                             </div>
@@ -154,14 +154,16 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Bild zur Predigt</label><br />
-                                    <img v-if="editedSermon.image" class="img-fluid" :src="uploadedImage(editedSermon.image)" style="margin-bottom: 10px;"/>
-                                    <input class="form-control-file" type="file" @change="setImage" />
+                                    <label>Bild zur Predigt</label><br/>
+                                    <img v-if="editedSermon.image" class="img-fluid"
+                                         :src="uploadedImage(editedSermon.image)" style="margin-bottom: 10px;"/>
+                                    <input class="form-control-file" type="file" @change="setImage"/>
                                 </div>
                                 <div class="form-check" v-if="editedSermon.image">
                                     <input class="form-check-input" type="checkbox" value="" id="inputRemoveImage"
                                            v-model="removeImage" value="1"/>
-                                    <label class="form-check-label" for="inputRemoveImage">Bestehendes Bild entfernen</label>
+                                    <label class="form-check-label" for="inputRemoveImage">Bestehendes Bild
+                                        entfernen</label>
                                 </div>
                             </div>
                         </div>
@@ -172,9 +174,6 @@
                                           :options="editorOptionListOnly" @focus="literatureEditorActive = true"
                                           @blur="literatureEditorActive = false"/>
                         </div>
-                    </div>
-                    <div class="card-footer">
-                        <input type="submit" class="btn btn-primary" value="Speichern" />
                     </div>
                 </div>
             </form>
@@ -259,7 +258,7 @@ export default {
                     },
                 }
             },
-            fileUpload : null,
+            fileUpload: null,
             removeImage: false,
         }
     },

@@ -123,6 +123,15 @@ class User extends Authenticatable
     /** @var string[] cached user settings  */
     protected $settings = [];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope('order', function (Builder $builder) {
+            $builder->orderBy('name', 'asc');
+        });
+    }
+
 // ACCESSORS
     /**
      * @return array

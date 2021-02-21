@@ -455,6 +455,8 @@ export default {
         },
         displayResponsible(record) {
             var title = '';
+            console.log(typeof record);
+            if (typeof record != 'string') return;
             var tmp = record.split(':');
             if (tmp[0] == 'user') {
                 this.service.participants.forEach(function (person) {

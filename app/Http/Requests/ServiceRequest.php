@@ -113,6 +113,8 @@ class ServiceRequest extends FormRequest
             'youtube_prefix_description' => 'nullable|string',
             'youtube_postfix_description' => 'nullable|string',
             'sermon_id' => 'nullable|int|exists:sermons,id',
+            'announcements' => 'nullable|string',
+            'offering_text' => 'nullable|string',
         ];
     }
 

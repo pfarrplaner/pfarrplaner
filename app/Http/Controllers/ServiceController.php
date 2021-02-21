@@ -53,7 +53,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 /**
  * Class ServiceController
@@ -140,6 +142,44 @@ class ServiceController extends Controller
         return redirect()->route('services.edit', $service);
     }
 
+
+    public function update2(ServiceRequest $request, Service $service)
+    {
+        $data = $request->validated();
+        return redirect()->back();
+    }
+
+    public function editor(Service $service, $tab = 'home') {
+
+//        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
+
+        $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
+            ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
+
+        $ministries = DB::table('service_user')->select('category')->distinct()->get();
+        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
+
+        $users = User::all();
+
+        $tags = Tag::all();
+        $serviceGroups = ServiceGroup::all();
+        return Inertia::render(
+            'serviceEditor',
+            compact(
+                'service',
+                'locations',
+                'users',
+                'tab',
+                'tags',
+                'serviceGroups',
+                'ministries',
+                'days'
+            )
+        );
+
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -152,14 +192,9 @@ class ServiceController extends Controller
     {
         $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
-        $ministries = Participant::all()
-            ->pluck('category')
-            ->unique()
-            ->reject(
-                function ($value, $key) {
-                    return in_array($value, ['P', 'O', 'M', 'A']);
-                }
-            );
+        $ministries = Participant::all()->pluck('category')->unique()->reject(function ($item){
+            return in_array($item, ['P', 'O', 'M', 'A']);
+        });
 
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
