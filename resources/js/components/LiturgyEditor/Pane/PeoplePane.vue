@@ -30,37 +30,40 @@
 <template>
     <div class="liturgy-editor-people-pane">
         <form @submit.prevent="save">
-            <div class="form-group">
-                <label>Verantwortliche*r</label>
-                <selectize name="responsible[]" class="form-control" v-model="selected" multiple ref="peopleSelect">
-                    <optgroup
-                        v-for="ministry,ministryIndex in { pastors: 'Pfarrer*in', organists: 'Organist*in', sacristans: 'Mesner*in'}"
-                        :label="ministry">
-                        <option :value="'ministry:'+ministryIndex">{{ ministry }} (Alle Eingeteilten)</option>
-                        <option v-for="person,personIndex in service[ministryIndex]"
-                                :value="'user:'+person.id">{{ person.name }}
-                        </option>
-                    </optgroup>
-                    <optgroup v-for="ministry,ministryIndex in service.ministriesByCategory" :label="ministryIndex">
-                        <option :value="'ministry:'+ministryIndex">{{ ministryIndex }} (Alle Eingeteilten)
-                        </option>
-                        <option v-for="person,personIndex in service.ministriesByCategory[ministryIndex]"
-                                :value="'user:'+person.id">{{ person.name }}
-                        </option>
-                    </optgroup>
-                    <optgroup v-if="Object.keys(ministries).length > 0" v-for="ministry,ministryIndex in ministries" label="Alle bekannten Dienste">
-                        <option :value="'ministry:'+ministryIndex">{{ ministryIndex }} (Alle Eingeteilten)
-                        </option>
-                        <option v-for="person,personIndex in service.ministriesByCategory[ministryIndex]"
-                                :value="'user:'+person.id">{{ person.name }}
-                        </option>
-                    </optgroup>
-                </selectize>
-            </div>
-            <hr/>
-            <div class="form-group">
-                <button class="btn btn-primary">Speichern</button>
-                <a class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)">Abbrechen</a>
+            <div class="row">
+                <div class="col-sm-9 form-group">
+                    <label>Verantwortliche*r</label>
+                    <selectize name="responsible[]" class="form-control" v-model="selected" multiple ref="peopleSelect">
+                        <optgroup
+                            v-for="ministry,ministryIndex in { pastors: 'Pfarrer*in', organists: 'Organist*in', sacristans: 'Mesner*in'}"
+                            :label="ministry">
+                            <option :value="'ministry:'+ministryIndex">{{ ministry }} (Alle Eingeteilten)</option>
+                            <option v-for="person,personIndex in service[ministryIndex]"
+                                    :value="'user:'+person.id">{{ person.name }}
+                            </option>
+                        </optgroup>
+                        <optgroup v-for="ministry,ministryIndex in service.ministriesByCategory" :label="ministryIndex">
+                            <option :value="'ministry:'+ministryIndex">{{ ministryIndex }} (Alle Eingeteilten)
+                            </option>
+                            <option v-for="person,personIndex in service.ministriesByCategory[ministryIndex]"
+                                    :value="'user:'+person.id">{{ person.name }}
+                            </option>
+                        </optgroup>
+                        <optgroup v-if="Object.keys(ministries).length > 0" v-for="ministry,ministryIndex in ministries" label="Alle bekannten Dienste">
+                            <option :value="'ministry:'+ministryIndex">{{ ministryIndex }} (Alle Eingeteilten)
+                            </option>
+                            <option v-for="person,personIndex in service.ministriesByCategory[ministryIndex]"
+                                    :value="'user:'+person.id">{{ person.name }}
+                            </option>
+                        </optgroup>
+                    </selectize>
+
+                </div>
+                <div class="col-sm-3 text-right" style="padding-top: 2rem;">
+                    <button class="btn btn-primary" title="Eintrag speichern"><span class="fa fa-save"></span></button>
+                    <a class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)" title="Abbrechen"><span class="fa fa-times"></span></a>
+
+                </div>
             </div>
         </form>
     </div>
