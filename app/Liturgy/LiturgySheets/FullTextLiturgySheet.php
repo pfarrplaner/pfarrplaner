@@ -69,7 +69,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
                 }
             }
         }
-        $filename = $service->dateTime()->format('Ymd-Hi') . ' ' . $this->getFileTitle() . '.docx';
+        $filename = $service->dateTime()->format('Ymd-Hi') . ' ' . $this->getFileTitle();
         $doc->sendToBrowser($filename);
     }
 
