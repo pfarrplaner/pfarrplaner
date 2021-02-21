@@ -65,7 +65,7 @@ class LiturgyItemController extends Controller
             $item->checkMarkerReplacementSettings();
             $item->save();
         }
-        return redirect()->route('services.liturgy.editor', ['service' => $service->id, 'autoFocusBlock' => $block->sortable-1, 'autoFocusItem' => $block->items->count()]);
+        return redirect()->route('services.liturgy.editor', ['service' => $service->id, 'autoFocusBlock' => $block->sortable, 'autoFocusItem' => $block->items->count()]);
     }
 
     /**
