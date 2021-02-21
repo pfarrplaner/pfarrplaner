@@ -29,17 +29,26 @@
 
 <template>
     <form-group :id="myId" :name="name" :label="label" :help="help" pre-label="fa fa-user">
-        <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
-                   v-model="myValue" multiple @input="changed">
-            <option v-for="person in people" :value="person.id">{{ person.name }}</option>
-        </selectize>
-        <small class="form-text text-muted">Eine oder mehrere Personen (keine Anmerkungen, Notizen, usw.)</small>
+        <div ref="container">
+            <div class="peopleselect-placeholder" v-if="!editing" @click="activate">
+                <span v-for="person in getPeople(myValue)" class="badge badge-light people-badge">{{ person.name }}</span>
+            </div>
+            <div v-else>
+                <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
+                           v-model="myValue" multiple @input="changed" @blur="editing = false">
+                    <option v-for="person in people" :value="person.id">{{ person.name }}</option>
+                </selectize>
+                <small class="form-text text-muted">Eine oder mehrere Personen (keine Anmerkungen, Notizen,
+                    usw.)</small>
+            </div>
+        </div>
     </form-group>
 </template>
 
 <script>
 import FormGroup from "../forms/FormGroup";
 import Selectize from "vue2-selectize";
+
 export default {
     name: "PeopleSelect",
     components: {FormGroup, Selectize},
@@ -62,29 +71,64 @@ export default {
     },
     data() {
         var myValue = [];
-        this.value.forEach(function (person){
+        this.value.forEach(function (person) {
             myValue.push(person.id);
         });
         return {
             myId: this.id || '',
             myValue: myValue,
             myPeople: this.value,
+            editing: false,
+            clicked: false,
         }
+    },
+    updated() {
+        this.$nextTick(function () {
+            if (this.editing && this.clicked)  {
+                console.log('hi');
+                this.clicked = false;
+                console.log(this.$refs.container.firstChild.firstChild.nextSibling);
+                this.$refs.container.firstChild.firstChild.nextSibling.firstChild.click()
+            }
+        })
     },
     methods: {
         changed(newVal) {
             var allFound = [];
-            this.people.forEach(function(person){
+            this.people.forEach(function (person) {
                 if (newVal.includes(person.id.toString())) allFound.push(person);
             });
             this.myPeople = allFound;
             this.$emit('input', allFound);
         },
+        getPeople(value) {
+            var people = [];
+            this.people.forEach(function (person) {
+                if (value.includes(person.id)) people.push(person);
+            });
+            return people;
+        },
+        activate() {
+            this.editing = true;
+            this.clicked = true;
+        }
     }
 
 }
 </script>
 
 <style scoped>
+.peopleselect-placeholder {
+    width: 100%;
+    min-height: 2.2rem;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    padding: .2rem .75rem;
+}
 
+.people-badge {
+    background-color: #efefef;
+    font-size: inherit;
+    font-weight: normal;
+}
 </style>
