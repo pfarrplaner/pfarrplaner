@@ -114,6 +114,25 @@ Vue.directive('scrollTo', {
     }
 })
 
+const bindCustomEvent = {
+    getName: function(binding) {
+        return binding.arg + '.' +
+            Object.keys(binding.modifiers).map(key => key).join('.');
+    },
+    bind: function(el, binding, vnode) {
+        const eventName = bindCustomEvent.getName(binding);
+        document.addEventListener(eventName, binding.value);
+    },
+    unbind: function(el, binding) {
+        const eventName = bindCustomEvent.getName(binding);
+        document.removeEventListener(eventName, binding.value);
+    }
+};
+
+// register a global custom directive called v-bind-custom-event
+Vue.directive('bindCustomEvent', bindCustomEvent);
+
+
 
 Vue.use(InertiaApp)
 

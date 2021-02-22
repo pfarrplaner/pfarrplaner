@@ -549,10 +549,18 @@ class UserController extends Controller
         $data = $request->validate($rules);
 
         // api token
-        if (($user === null) || ($user->api_token == '')) {
-            $data['api_token'] = $data['password'] == '' ? '' : Str::random(60);
+        $data['password'] = $data['password'] ?? '';
+        if ((($user === null) || ($user->api_token == '')) && ($data['password'] != '')) {
+            $data['api_token'] = Str::random(60);
         }
 
         return $data;
+    }
+
+    public function add(Request $request)
+    {
+        $data = $this->validateRequest($request);
+        $user = User::create($data);
+        return response()->json($user);
     }
 }

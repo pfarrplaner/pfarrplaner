@@ -54,6 +54,7 @@ Route::post('user/{user}/join', ['as' => 'user.join', 'uses' => 'UserController@
 Route::post('users/join', ['as' => 'users.join', 'uses' => 'UserController@doJoin'])->middleware('auth');
 Route::get('user/{user}/services', ['as' => 'user.services', 'uses' => 'UserController@services'])->middleware('auth');
 Route::get('user/switch/{user}', ['as' => 'user.switch', 'uses' => 'UserController@switch'])->middleware('auth');
+Route::post('users/add', 'UserController@add')->middleware('auth')->name('users.add');
 
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
@@ -64,7 +65,7 @@ Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' =>
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
 Route::get('/service/{service}/songsheet', 'ServiceController@songsheet')->name('service.songsheet');
 Route::get('/services/{city}/streaming/next', 'PublicController@nextStream')->name('service.nextstream');
-Route::get('services/{service}/{tab?}', 'ServiceController@editor')->name('services.editor');
+Route::get('services/{service}', 'ServiceController@editor')->name('services.editor');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);

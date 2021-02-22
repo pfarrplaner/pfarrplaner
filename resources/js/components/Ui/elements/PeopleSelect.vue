@@ -28,30 +28,48 @@
   -->
 
 <template>
-    <form-group :id="myId" :name="name" :label="label" :help="help" pre-label="fa fa-user">
-        <div ref="container">
-            <div class="peopleselect-placeholder" v-if="!editing" @click="activate">
-                <span v-for="person in getPeople(myValue)" class="badge badge-light people-badge">{{ person.name }}</span>
+    <div class="peopleselect">
+        <form-group :id="myId" :name="name" :label="label" :help="help" pre-label="fa fa-user">
+            <div ref="container">
+                <div class="peopleselect-placeholder" v-if="!editing" @click="activate">
+                <span v-for="person in getPeople(myValue)" class="badge badge-light people-badge">{{
+                        person.name
+                    }}</span>
+                </div>
+                <div v-else>
+                    <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
+                               :value="myValue" multiple @input="changed" @blur="editing = false" :settings="settings">
+                        <option v-for="person in allPeople" :value="person.id">{{ person.name }}</option>
+                    </selectize>
+                    <small class="form-text text-muted">Eine oder mehrere Personen (keine Anmerkungen, Notizen,
+                        usw.)</small>
+                </div>
             </div>
-            <div v-else>
-                <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
-                           v-model="myValue" multiple @input="changed" @blur="editing = false">
-                    <option v-for="person in people" :value="person.id">{{ person.name }}</option>
-                </selectize>
-                <small class="form-text text-muted">Eine oder mehrere Personen (keine Anmerkungen, Notizen,
-                    usw.)</small>
-            </div>
-        </div>
-    </form-group>
+        </form-group>
+        <modal title="Neue Person anlegen" v-if="showModal" @close="closeModal" @cancel="cancelModal"
+               @shown="modalShown">
+            <template slot="modal-body">
+                <form-input name="name" label="Name" v-model="newPerson.name" ref="newPersonName"
+                            :autofocus="true"/>
+                <hr/>
+                <form-input name="title" label="Titel" v-model="newPerson.title"
+                            placeholder="z.B. Pfr."/>
+                <form-input name="first_name" label="Vorname" v-model="newPerson.first_name"/>
+                <form-input name="last_name" label="Nachname" v-model="newPerson.last_name"/>
+            </template>
+        </modal>
+    </div>
 </template>
 
 <script>
 import FormGroup from "../forms/FormGroup";
 import Selectize from "vue2-selectize";
+import FormInput from "../forms/FormInput";
+import Modal from "../modals/Modal";
 
 export default {
     name: "PeopleSelect",
-    components: {FormGroup, Selectize},
+    components: {Modal, FormInput, FormGroup, Selectize},
     props: {
         label: String,
         id: String,
@@ -78,39 +96,111 @@ export default {
             myId: this.id || '',
             myValue: myValue,
             myPeople: this.value,
+            allPeople: this.people,
             editing: false,
             clicked: false,
+            personCreated: false,
+            showModal: false,
+            newPerson: {
+                name: '',
+                first_name: '',
+                last_name: '',
+                title: '',
+            },
+            settings: {
+                create: true,
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Neue Person anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            }
         }
     },
     updated() {
         this.$nextTick(function () {
-            if (this.editing && this.clicked)  {
-                console.log('hi');
+            if (this.editing && this.clicked) {
                 this.clicked = false;
-                console.log(this.$refs.container.firstChild.firstChild.nextSibling);
                 this.$refs.container.firstChild.firstChild.nextSibling.firstChild.click()
+            }
+            if (this.personCreated) {
+                console.log('hey');
+                this.personCreated = false;
+                var foundPeople = this.getPeople(this.myValue);
+                console.log('foundPeople', foundPeople);
+                this.$emit('input', foundPeople);
             }
         })
     },
     methods: {
         changed(newVal) {
+            var newList = [];
             var allFound = [];
+            var foundString = false;
+            const container = this;
+            newVal.forEach(function (item) {
+                if (isNaN(item)) {
+                    foundString = item; //container.addPerson(item);
+                } else {
+                    newList.push(item);
+                }
+            });
             this.people.forEach(function (person) {
-                if (newVal.includes(person.id.toString())) allFound.push(person);
+                if (newList.includes(person.id.toString())) allFound.push(person);
             });
             this.myPeople = allFound;
             this.$emit('input', allFound);
+
+            // new Person added?
+            if (foundString) this.addPerson(foundString);
         },
         getPeople(value) {
-            var people = [];
+            var foundPeople = [];
             this.people.forEach(function (person) {
-                if (value.includes(person.id)) people.push(person);
+                if (value.includes(person.id) || value.includes(person.id.toString())) foundPeople.push(person);
             });
-            return people;
+            return foundPeople;
         },
         activate() {
             this.editing = true;
             this.clicked = true;
+        },
+        closeModal() {
+            var component = this;
+            this.showModal = false;
+            axios.post(route('users.add'), this.newPerson)
+            .then(response => { return response.data; })
+            .then(data => {
+                console.log(data);
+                var allFound = component.getPeople(component.myValue);
+                allFound.push(data);
+                console.log(allFound);
+                this.$emit('input', allFound);
+                component.myValue.push(data.id);
+                component.allPeople.push(data);
+                component.personCreated = true;
+            });
+        },
+        cancelModal() {
+            this.showModal = false;
+        },
+        modalShown(ref) {
+            console.log(ref.firstChild.firstChild.nextSibling.nextSibling);
+            ref.firstChild.firstChild.nextSibling.nextSibling.focus();
+            ref.firstChild.firstChild.nextSibling.nextSibling.select();
+        },
+        addPerson(item) {
+            var tmp, firstName, lastName;
+            tmp = item.split(' ');
+            firstName = tmp[0];
+            lastName = tmp[1];
+            this.newPerson = {
+                name: item,
+                first_name: firstName.trim(),
+                last_name: lastName.trim(),
+                title: '',
+            };
+            this.showModal = true;
         }
     }
 
@@ -130,5 +220,7 @@ export default {
     background-color: #efefef;
     font-size: inherit;
     font-weight: normal;
+    margin: 0 3px 3px 0;
 }
+
 </style>

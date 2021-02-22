@@ -30,7 +30,7 @@
 <template>
     <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
         <input class="form-control" :class="{'is-invalid': error}" :type="type" v-model="myValue" :id="myId+'Input'"
-               :placeholder="placeholder" :aria-placeholder="placeholder"
+               :placeholder="placeholder" :aria-placeholder="placeholder" :autofocus="autofocus"
                @input="$emit('input', $event.target.value)" />
     </form-group>
 </template>
@@ -53,6 +53,7 @@ export default {
         placeholder: String,
         error: String,
         preLabel: String,
+        autofocus: Boolean,
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
