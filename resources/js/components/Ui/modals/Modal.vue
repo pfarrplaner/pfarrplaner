@@ -41,7 +41,7 @@
                             </button>
                         </div>
                         <div class="modal-body" ref="body">
-                            <slot name="modal-body"/>
+                            <slot />
                         </div>
                         <div class="modal-footer">
                             <button v-if="allowCancel" type="button" class="btn btn-primary"

@@ -48,15 +48,13 @@
         </form-group>
         <modal title="Neue Person anlegen" v-if="showModal" @close="closeModal" @cancel="cancelModal"
                @shown="modalShown">
-            <template slot="modal-body">
-                <form-input name="name" label="Name" v-model="newPerson.name" ref="newPersonName"
-                            :autofocus="true"/>
-                <hr/>
-                <form-input name="title" label="Titel" v-model="newPerson.title"
-                            placeholder="z.B. Pfr."/>
-                <form-input name="first_name" label="Vorname" v-model="newPerson.first_name"/>
-                <form-input name="last_name" label="Nachname" v-model="newPerson.last_name"/>
-            </template>
+            <form-input name="name" label="Name" v-model="newPerson.name" ref="newPersonName"
+                        :autofocus="true"/>
+            <hr/>
+            <form-input name="title" label="Titel" v-model="newPerson.title"
+                        placeholder="z.B. Pfr."/>
+            <form-input name="first_name" label="Vorname" v-model="newPerson.first_name"/>
+            <form-input name="last_name" label="Nachname" v-model="newPerson.last_name"/>
         </modal>
     </div>
 </template>
@@ -169,17 +167,19 @@ export default {
             var component = this;
             this.showModal = false;
             axios.post(route('users.add'), this.newPerson)
-            .then(response => { return response.data; })
-            .then(data => {
-                console.log(data);
-                var allFound = component.getPeople(component.myValue);
-                allFound.push(data);
-                console.log(allFound);
-                this.$emit('input', allFound);
-                component.myValue.push(data.id);
-                component.allPeople.push(data);
-                component.personCreated = true;
-            });
+                .then(response => {
+                    return response.data;
+                })
+                .then(data => {
+                    console.log(data);
+                    var allFound = component.getPeople(component.myValue);
+                    allFound.push(data);
+                    console.log(allFound);
+                    this.$emit('input', allFound);
+                    component.myValue.push(data.id);
+                    component.allPeople.push(data);
+                    component.personCreated = true;
+                });
         },
         cancelModal() {
             this.showModal = false;
