@@ -66,13 +66,29 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
     public $description = 'QR Codes für Gottesdienste, die von den Konfis mit der KonfiApp gescannt werden können.';
 
     /**
+     * Only active if at least one of the user's cities has KonfiApp integration
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        $isActive = false;
+        foreach (Auth::user()->cities as $city) {
+            $isActive = $isActive || ($city->konfiapp_apikey != '');
+        }
+        return $isActive;
+    }
+
+
+    /**
      * @return Application|Factory|View
      */
     public function setup()
     {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $users = User::all();
-        $cities = Auth::user()->writableCities;
+        $cities = Auth::user()->writableCities->reject(function ($item) {
+            return $item->konfiapp_apikey == '';
+        });
         return $this->renderSetupView(compact('maxDate', 'users', 'cities'));
     }
 
