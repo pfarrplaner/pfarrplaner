@@ -99,6 +99,7 @@ class EmbedServiceTableReport extends AbstractEmbedReport
 
         $limit = $request->get('limit') ?: 5;
         $corsOrigin = $request->get('cors-origin');
+        $withStreaming = $request->get('withStreaming', false);
 
         $url = route('embed.' . $listType, compact('ids', 'limit'));
         if ($corsOrigin) {
