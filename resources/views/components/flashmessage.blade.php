@@ -1,5 +1,6 @@
 @foreach(['success', 'error', 'warning', 'info'] as $class)
     <?php
+        $alertClass=['success' => 'success', 'error' => 'danger', 'warning' => 'warning', 'info' => 'info'];
     if (Session::get($class)) {
         $messages = Session::get($class);
         Session::remove($class);
@@ -10,7 +11,7 @@
     ?>
     @if ($messages)
         @foreach($messages as $message)
-            <div class="alert alert-{{ $class }} alert-block">
+            <div class="alert alert-{{ $alertClass[$class] }} alert-block">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                 {!! $message !!}
             </div>
