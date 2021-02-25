@@ -47,7 +47,7 @@
                     @input(['name' => 'description', 'label' => 'Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags,  'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @selectize(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @select(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'id' => 'selectServiceGroups'])
                     @endtab
                     @tab(['id' => 'offerings'])
                     @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
@@ -126,6 +126,15 @@
                 render: {
                     option_create: function (data, escape) {
                         return '<div class="create">Neue Person anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            });
+
+            $('#selectServiceGroups_input').selectize({
+                create: true,
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Neue Gruppe anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                     }
                 },
             });

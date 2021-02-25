@@ -105,7 +105,7 @@
                     @input(['name' => 'description', 'label' => 'Anmerkungen', 'value' => $service->description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'value' => $service->internal_remarks, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags, 'value' => $service->tags, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @selectize(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'value' => $service->serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @select(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'value' => $service->serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'id' => 'selectServiceGroups'])
                     @endtab
                     @tab(['id' => 'offerings', 'active' => ($tab=='offerings')])
                     @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'value' => $service->offerings_counter1, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
@@ -350,6 +350,16 @@
 
         $(document).ready(function () {
             enableMinistryRows();
+
+            $('#selectServiceGroups_input').selectize({
+                create: true,
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Neue Gruppe anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            });
+
 
             $('#btnAddMinistryRow').click(function (e) {
                 e.preventDefault();
