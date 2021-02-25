@@ -63,6 +63,11 @@ class NewsletterReport extends AbstractWordDocumentReport
      * @var string
      */
     public $description = 'Gottesdienstliste für den Newsletter';
+    /**
+     * @var string
+     */
+    public $icon = 'fa fa-file-code';
+
 
     /**
      * @return Application|Factory|View
