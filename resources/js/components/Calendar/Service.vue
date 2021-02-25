@@ -94,7 +94,8 @@ export default {
     methods: {
         isSpecialTime: function(service) {
             if (null == service.location) return true;
-            console.log('isSpecialTime', this.isSpecialLocation(service), service.time, service.location.default_time.substr(0,5));
+            if (null == service.location.default_time) return true;
+            if ('' == service.location.default_time) return true;
             return service.time != service.location.default_time.substr(0,5);
         },
         isSpecialLocation: function(service) {
