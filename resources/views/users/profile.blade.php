@@ -28,12 +28,12 @@
 
                     @tabs
                         @tab(['id' => 'profile', 'active' => $tab == ''])
-                            @input(['label' => 'Name', 'name' => 'email', 'id' => 'email', 'value' => $user->email])
+                            @input(['label' => 'Name', 'name' => 'name', 'id' => 'email', 'value' => $user->name])
+                            @input(['label' => 'E-Mailadresse', 'name' => 'email', 'id' => 'email', 'value' => $user->email])
                             <hr/>
                             @input(['label' => 'Pfarramt/Büro', 'name' => 'office', 'value' => $user->office])
                             @textarea(['label' => 'Adresse', 'name' => 'address', 'value' => $user->address])
                             @input(['label' => 'Telefon', 'name' => 'phone', 'value' => $user->phone])
-                            @input(['name' => 'api_token', 'label' => 'API-Token', 'value' => $user->api_token])
                         @endtab
                         @tab(['id' => 'notifications', 'active' => $tab == 'notifications'])
                             <div class="form-group">
