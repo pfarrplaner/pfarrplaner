@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'HTML-Code für eine Veranstaltungstabelle erstellen')
+@section('title', 'HTML-Code für Ansprechpartnerformular erstellen')
 
 @section('content')
     <form method="post" action="{{ route('reports.render', $report) }}">

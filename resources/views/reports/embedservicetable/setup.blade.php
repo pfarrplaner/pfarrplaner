@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Programm für die Kinderkirche erstellen')
+@section('title', 'Liste von Gottesdiensten erstellen')
 
 @section('content')
     <form method="post" action="{{ route('reports.render', $report) }}">
