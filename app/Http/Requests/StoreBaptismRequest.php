@@ -93,7 +93,7 @@ class StoreBaptismRequest extends FormRequest
         $data['registered'] ??= 0;
 
         $data['first_contact_on'] ? $data['first_contact_on'] = Carbon::createFromFormat('d.m.Y', $data['first_contact_on']) : $data['first_contact_on'] = null;
-        $data['appointment'] ? $data['appointment'] = Carbon::createFromFormat('d.m.Y', $data['appointment']) : $data['appointment'] = null;
+        $data['appointment'] ? $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment']) : $data['appointment'] = null;
 
         return $data;
     }
