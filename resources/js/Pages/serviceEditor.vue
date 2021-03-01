@@ -42,12 +42,13 @@
                             <tab-header id="home" title="Allgemeines" :active-tab="activeTab" />
                             <tab-header id="special" title="Besonderheiten" :active-tab="activeTab" />
                             <tab-header id="offerings" title="Opfer" :active-tab="activeTab" />
-                            <tab-header id="rites" title="Kasualien" :active-tab="activeTab" />
+                            <tab-header id="rites" title="Kasualien" :active-tab="activeTab" :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
                             <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab" />
                             <tab-header id="streaming" title="Streaming" :active-tab="activeTab" />
                             <tab-header id="konfiapp" title="KonfiApp" :active-tab="activeTab" />
-                            <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab" />
-                            <tab-header id="comments" title="Kommentare" :active-tab="activeTab" />
+                            <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"  :count="service.bookings.length"/>
+                            <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="service.attachments.length"/>
+                            <tab-header id="comments" title="Kommentare" :active-tab="activeTab" :count="service.comments.length"/>
                         </tab-headers>
                     </card-header>
                     <card-body>
@@ -61,6 +62,9 @@
                             </tab>
                             <tab id="offerings" :active-tab="activeTab">
                                 <offerings-tab :service="service" />
+                            </tab>
+                            <tab id="cc" :active-tab="activeTab">
+                                <c-c-tab :service="service" />
                             </tab>
                         </tabs>
                     </card-body>
@@ -81,9 +85,10 @@ import OfferingsTab from "../components/ServiceEditor/tabs/OfferingsTab";
 import Card from "../components/Ui/cards/card";
 import CardHeader from "../components/Ui/cards/cardHeader";
 import CardBody from "../components/Ui/cards/cardBody";
+import CCTab from "../components/ServiceEditor/tabs/CCTab";
 export default {
 name: "serviceEditor",
-    components: {CardBody, CardHeader, Card, OfferingsTab, SpecialTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
+    components: {CCTab, CardBody, CardHeader, Card, OfferingsTab, SpecialTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
     props: {
         service: Object,
         tab: String,
