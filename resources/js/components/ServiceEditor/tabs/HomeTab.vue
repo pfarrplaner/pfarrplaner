@@ -68,7 +68,7 @@
             <div class="col-md-6"><label>Eingeteilte Personen</label></div>
         </div>
         <ministry-row v-for="(members,title,index) in myService.ministriesByCategory"
-                      :title="title" :members="members" :index="index" :people="people"
+                      :title="title" :members="members" :index="index" :people="people" :key="index"
                       :ministries="ministries" v-model="myService.ministriesByCategory"/>
         <button class="btn btn-light btn-sm" @click.prevent.stop="addRow">Reihe hinzufügen</button>
     </div>
