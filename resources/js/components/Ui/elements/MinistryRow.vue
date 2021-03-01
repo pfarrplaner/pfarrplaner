@@ -30,13 +30,16 @@
 <template>
     <div class="row">
         <div class="col-md-6">
-            <selectize class="form-group" :name="'ministries['+index+']'+'[description]'" v-model="myDescription">
+            <selectize class="form-group" :name="'ministries['+index+']'+'[description]'" v-model="myDescription" :settings="settings">
                 <option v-for="ministry in myMinistries" :value="ministry.category">{{ ministry.category }}</option>
             </selectize>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-5">
             <people-select :name="'ministries['+index+']'+'[people][]'" v-model="myMembers"
                            :people="people" @input="changed"/>
+        </div>
+        <div class="col-md-1 text-right">
+            <button class="btn btn-danger btn-sm" @click.prevent="deleteRow()" title="Reihe entfernen"><span class="fa fa-trash"></span></button>
         </div>
     </div>
 </template>
@@ -68,6 +71,14 @@ export default {
             myMinistries: myMinistries,
             myMembers: this.members,
             store: this.value,
+            settings: {
+                create: true,
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Neuen Dienst anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            }
         }
     },
     watch: {
@@ -92,6 +103,10 @@ export default {
         changed(newVal) {
             this.store[this.myDescription] = newVal;
             this.$emit('input', this.store);
+        },
+        deleteRow(index) {
+            delete this.store[this.myDescription];
+            this.$emit('delete', this.store);
         }
     }
 }

@@ -69,7 +69,8 @@
         </div>
         <ministry-row v-for="(members,title,index) in myService.ministriesByCategory"
                       :title="title" :members="members" :index="index" :people="people" :key="index"
-                      :ministries="ministries" v-model="myService.ministriesByCategory"/>
+                      :ministries="ministries" v-model="myService.ministriesByCategory" @delete="deleteRow"
+        />
         <button class="btn btn-light btn-sm" @click.prevent.stop="addRow">Reihe hinzufügen</button>
     </div>
 </template>
@@ -106,8 +107,13 @@ export default {
     },
     methods: {
         addRow() {
-            this.myService.ministriesByCategory['Liturgie'] = [];
+            this.myService.ministriesByCategory[''] = [];
+            this.$forceUpdate();
         },
+        deleteRow(store) {
+            this.myService.ministriesByCategory = store;
+            this.$forceUpdate();
+        }
     }
 }
 </script>
