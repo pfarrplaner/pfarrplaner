@@ -29,11 +29,11 @@ export default {
         service: Object,
         liturgySheets: Object,
         autoFocusBlock: {
-            type: Number,
+            type: String,
             default: null,
         },
         autoFocusItem: {
-            type: Number,
+            type: String,
             default: null,
         },
         ministries: {

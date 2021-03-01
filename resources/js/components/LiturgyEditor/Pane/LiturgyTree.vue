@@ -95,7 +95,8 @@
                                :disabled="!editable">
                         <div v-for="item,itemIndex in block.items" class="liturgy-item"
                              @click.stop="focusItem(blockIndex, itemIndex)"
-                             :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}">
+                             :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}"
+                             :data-block-index="blockIndex" :data-item-index="itemIndex">
                             <div class="row"
                                  title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
                                 <div class="col-sm-3 item-title"><span class="fa fa-chevron-circle-right"
@@ -204,11 +205,11 @@ export default {
             default: false,
         },
         autoFocusBlock: {
-            type: Number,
+            type: String,
             default: null,
         },
         autoFocusItem: {
-            type: Number,
+            type: String,
             default: null,
         },
         ministries: {
@@ -231,10 +232,27 @@ export default {
     },
     mounted() {
         if (this.autoFocusItem && this.autoFocusBlock) {
-            this.focusItem(this.autoFocusBlock, this.autoFocusItem);
+            var autoFocusBlock = parseInt(this.autoFocusBlock);
+            var autoFocusItem = parseInt(this.autoFocusItem);
+            var foundBlock = false;
+            var foundItem = false;
+            this.blocks.forEach(function (block, blockIndex) {
+                block.items.forEach(function (item, itemIndex) {
+                    if ((block.id == autoFocusBlock) && (item.id == autoFocusItem)) {
+                        foundBlock = blockIndex;
+                        foundItem = itemIndex;
+                    }
+                }, this);
+            }, this);
+            if ((foundBlock !== false)  && (foundItem !== false)) this.focusItem(foundBlock, foundItem);
         } else {
             if (this.autoFocusBlock) {
-                this.focusBlock(this.autoFocusBlock);
+                var autoFocusBlock = parseInt(this.autoFocusBlock);
+                var foundBlock = false;
+                this.blocks.forEach(function (block, blockIndex) {
+                    if (block.id == autoFocusBlock) foundBlock = blockIndex;
+                }, this);
+                if (foundBlock !== false) this.focusBlock(foundBlock);
             }
         }
     },

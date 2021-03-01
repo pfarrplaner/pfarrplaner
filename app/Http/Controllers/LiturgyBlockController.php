@@ -60,8 +60,8 @@ class LiturgyBlockController extends Controller
         $data = $this->validateRequest($request);
         $data['service_id'] = $service->id;
         $data['sortable'] = count($service->liturgyBlocks);
-        Block::create($data);
-        return Redirect::route('services.liturgy.editor', ['service' => $service, 'autoFocusBlock' => count($service->liturgyBlocks)]);
+        $block = Block::create($data);
+        return Redirect::route('services.liturgy.editor', ['service' => $service, 'autoFocusBlock' => $block->id]);
     }
 
     /**
