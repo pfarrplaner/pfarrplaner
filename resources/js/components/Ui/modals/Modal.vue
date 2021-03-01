@@ -44,10 +44,10 @@
                             <slot />
                         </div>
                         <div class="modal-footer">
-                            <button v-if="allowCancel" type="button" class="btn btn-primary"
+                            <button type="button" class="btn btn-primary"
                                     @click.prevent="closeModal">{{ closeButtonLabel }}
                             </button>
-                            <button type="button" class="btn btn-secondary" @click.prevent="cancelModal">
+                            <button v-if="allowCancel" type="button" class="btn btn-secondary" @click.prevent="cancelModal">
                                 {{ cancelButtonLabel }}
                             </button>
                         </div>
