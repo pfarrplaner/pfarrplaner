@@ -31,7 +31,7 @@
     <form @submit.prevent="closeModal">
         <div class="modal-mask">
             <div class="modal-wrapper">
-                <div class="modal-dialog" role="document" tabindex="-1">
+                <div class="modal-dialog" role="document" tabindex="-1" :style="{maxWidth: maxWidth+'px'}">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">{{ title }}</h5>
@@ -78,6 +78,10 @@ export default {
         cancelButtonLabel: {
             type: String,
             default: 'Abbrechen',
+        },
+        maxWidth: {
+            type: String,
+            default: '500',
         }
     },
     data() {
@@ -86,13 +90,16 @@ export default {
         }
     },
     mounted() {
+        document.body.classList.add("modal-open");
         this.$emit('shown', this.$refs.body);
     },
     methods: {
         closeModal() {
+            document.body.classList.remove("modal-open");
             this.$emit('close');
         },
         cancelModal() {
+            document.body.classList.remove("modal-open");
             this.$emit('cancel');
         },
     }
@@ -117,5 +124,9 @@ export default {
     vertical-align: middle;
 }
 
+.modal-dialog {
+    max-height: 90vh;
+    overflow-y: auto;
+}
 
 </style>

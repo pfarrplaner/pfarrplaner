@@ -28,94 +28,43 @@
   -->
 
 <template>
-    <form @submit.prevent="save">
-        <div class="liturgy-item-psalm-editor">
-            <div class="form-group">
-                <label for="title">Titel im Ablaufplan</label>
-                <input class="form-control" v-model="editedElement.title" v-focus/>
-            </div>
-            <div v-if="this.songs === null">
-                Bitte warten, Liederliste wird geladen...
-            </div>
-            <div v-else>
-                <div class="form-group">
-                    <label for="existing_text">Lied</label>
-                    <selectize class="form-control" name="existing_text" v-model="selectedSong">
-                        <option v-for="song in songs" :value="song.id">{{ displayTitle(song) }}</option>
-                    </selectize>
-                </div>
-                <div class="form-group">
-                    <label for="verses">Zu singende Strophen</label>
-                    <input class="form-control" v-model="editedElement.data.verses"
-                           placeholder="Gültiges Format z.B. 1-2+4"/>
-                    <small>Strophen: {{ getVersesToDisplay(editedElement.data.verses) }}</small>
-                </div>
-                <div v-if="(editedElement.data.song.id == -1) || editSong">
+    <div class="liturgy-item-psalm-editor">
+        <form @submit.prevent="save">
+            <div class="row">
+                <div class="col-md-6">
                     <div class="form-group">
-                        <label for="title">Titel des Lieds</label>
-                        <input class="form-control" v-model="editedElement.data.song.title"/>
+                        <label for="title">Titel im Ablaufplan</label>
+                        <input class="form-control" v-model="editedElement.title" v-focus/>
                     </div>
-                    <div class="form-group">
-                        <label>Kehrvers</label>
-                        <textarea class="form-control" v-model="editedElement.data.song.refrain"
-                                  placeholder="Leer lassen, wenn es keinen Kehrvers gibt"></textarea>
+                    <div v-if="this.songs === null">
+                        Bitte warten, Liederliste wird geladen...
                     </div>
-                    <div class="row" v-for="verse in editedElement.data.song.verses">
-                        <div class="col-1 form-group">
-                            <label>Strophe</label>
-                            <input type="text" class="form-control" v-model="verse.number"/>
+                    <div v-else>
+                        <div class="form-group">
+                            <label for="existing_text">Lied</label>
+                            <selectize class="form-control" name="existing_text" v-model="selectedSong">
+                                <option v-for="song in songs" :value="song.id">{{ displayTitle(song) }}</option>
+                            </selectize>
                         </div>
-                        <div class="col-10">
-                            <div class="form-group">
-                                <label>Text der Strophe</label>
-                                <textarea class="form-control" v-model="verse.text"></textarea>
-                            </div>
-                            <div class="form-check-inline">
-                                <input type="checkbox" v-model="verse.refrain_before"/> &nbsp;Kehrvers vor dieser
-                                Strophe
-                            </div>
-                            <div class="form-check-inline">
-                                <input type="checkbox" v-model="verse.refrain_after"/> &nbsp;Kehrvers nach dieser
-                                Strophe
-                            </div>
+                        <div class="form-group">
+                            <label for="verses">Zu singende Strophen</label>
+                            <input class="form-control" :value="editedElement.data.verses"
+                                   placeholder="Gültiges Format z.B. 1-2+4; leer lassen = alle Strophen" @input="updateQuote($event)"/>
+                            <small>Strophen: {{ getVersesToDisplay(editedElement.data.verses) }}</small>
                         </div>
-                        <div class="col-1 text-right" style="margin-top: 2em;">
-                            <button class="btn btn-sm btn-danger" @click.prevent="deleteVerse(verseIndex)">
-                                <span class="fa fa-trash"></span>
+                        <div class="form-group">
+                            <button class="btn btn-sm btn-light" title="Neues Lied anlegen" @click.prevent="newSong">
+                                Neues Lied
+                            </button>
+                            <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
+                                    title="Lied bearbeiten" @click.prevent="editSong">Lied bearbeiten
                             </button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label>Copyrights</label>
-                        <textarea class="form-control" v-model="editedElement.data.song.copyrights"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Liederbuch</label>
-                        <selectize v-model="songbook" :settings="selectizeSettings">
-                            <option v-for="songbook in songbooks" :value="songbook">
-                                {{ songbookTitle(songbook) }}
-                            </option>
-                        </selectize>
-                    </div>
-                    <div class="form-group">
-                        <label for="reference">Liednummer</label>
-                        <input class="form-control" v-model="editedElement.data.song.reference"/>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-sm btn-light" @click.prevent="addVerse">Strophe hinzufügen</button>
-                        <button class="btn btn-sm btn-light" @click.prevent="saveText" v-if="!editSong">Als neues Lied
-                            speichern
-                        </button>
-                        <button class="btn btn-sm btn-light" @click.prevent="updateText" v-if="editSong"
-                                :title="songIsDirty ? 'Es existieren ungespeicherte Änderungen am Lied.' : ''">
-                            <span v-if="songIsDirty" class="fa fa-exclamation-triangle" style="color:red;"></span>
-                            Änderungen am Lied speichern
-                        </button>
-                    </div>
+
                 </div>
-                <div v-else>
-                    <button class="btn btn-sm btn-light" @click.prevent="editSong = true">Lied bearbeiten</button>
-                    <div class="liturgical-text-quote" v-html="quotableText()"/>
+                <div class="col-md-6">
+                    <div class="liturgical-text-quote" v-html="quote"/>
                 </div>
             </div>
             <div class="form-group">
@@ -126,19 +75,92 @@
                     Abbrechen
                 </inertia-link>
             </div>
-        </div>
-    </form>
+        </form>
+        <modal :title="(editedElement.data.song.id == -1) ? 'Neues Lied' : 'Lied bearbeiten'" v-if="modalOpen"
+               @close="(editedElement.data.song.id == -1) ? saveText() : updateText()" @cancel="modalOpen = false;"
+               close-button-label="Lied speichern" cancel-button-label="Abbrechen" max-width="800"
+        >
+
+
+            <div class="form-group">
+                <label for="title">Titel des Lieds</label>
+                <input class="form-control" v-model="modalSong.title"/>
+            </div>
+            <div class="form-group">
+                <label>Kehrvers</label>
+                <textarea class="form-control" v-model="modalSong.refrain"
+                          placeholder="Leer lassen, wenn es keinen Kehrvers gibt"></textarea>
+            </div>
+            <div class="row">
+                <div class="col-1 form-group">
+                    <label>Strophe</label>
+                </div>
+                <div class="col-10 form-group">
+                    <label>Text der Strophe</label>
+                </div>
+            </div>
+            <div v-for="verse in modalSong.verses">
+                <div class="row">
+                    <div class="col-1 form-group">
+                        <input type="text" class="form-control" v-model="verse.number"/>
+                    </div>
+                    <div class="col-10">
+                        <div class="form-group">
+                            <textarea class="form-control" v-model="verse.text"></textarea>
+                        </div>
+                        <div class="form-check-inline">
+                            <input type="checkbox" v-model="verse.refrain_before"/> &nbsp;Kehrvers vor
+                            dieser
+                            Strophe
+                        </div>
+                        <div class="form-check-inline">
+                            <input type="checkbox" v-model="verse.refrain_after"/> &nbsp;Kehrvers nach
+                            dieser
+                            Strophe
+                        </div>
+                    </div>
+                    <div class="col-1 text-right" style="margin-top: 2em;">
+                        <button class="btn btn-sm btn-danger" @click.prevent="deleteVerse(verseIndex)">
+                            <span class="fa fa-trash"></span>
+                        </button>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-sm btn-light" @click.prevent="addVerse">Strophe hinzufügen</button>
+            </div>
+            <div class="form-group">
+                <label>Copyrights</label>
+                <textarea class="form-control" v-model="modalSong.copyrights"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Liederbuch</label>
+                <selectize v-model="songbook" :settings="selectizeSettings">
+                    <option v-for="songbook in songbooks" :value="songbook">
+                        {{ songbookTitle(songbook) }}
+                    </option>
+                </selectize>
+            </div>
+            <div class="form-group">
+                <label for="reference">Liednummer</label>
+                <input class="form-control" v-model="modalSong.reference"/>
+            </div>
+        </modal>
+    </div>
 </template>
 
 <script>
 import Nl2br from 'vue-nl2br';
 import Selectize from 'vue2-selectize';
+import Modal from "../../Ui/modals/Modal";
 
 export default {
     name: "SongEditor",
     components: {
         Nl2br,
         Selectize,
+        Modal,
     },
     props: {
         element: Object,
@@ -163,11 +185,13 @@ export default {
             var e = this.editedElement.data;
             Object.entries(songbooks.data).forEach(function (book) {
                 book = book[1];
-                console.log(book);
                 mySongbooks.push(book.title + '||' + book.abbreviation);
             });
             this.songbooks = mySongbooks;
         }
+    },
+    mounted() {
+        this.quote = this.quotableText();
     },
     data() {
         var e = this.element;
@@ -189,9 +213,8 @@ export default {
         return {
             editedElement: e,
             emptySong: emptySong,
-            editSong: false,
             songs: null,
-            songbook: e.data.song.songbook+'||'+e.data.song.songbook_abbreviation,
+            songbook: e.data.song.songbook + '||' + e.data.song.songbook_abbreviation,
             songbooks: null,
             songIsDirty: false,
             selectedSong: e.data.song.id,
@@ -207,25 +230,35 @@ export default {
                         return '<div class="create">Neues Liederbuch anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                     }
                 },
-            }
+            },
+            modalSong: {},
+            modalOpen: false,
+            quote: '',
         };
     },
     watch: {
+        'editedElement.data.verses': {
+            handler: function (newVal) {
+                this.quote = this.quotableText();
+            }
+        },
         'editedElement.data.song': {
             handler: function (oldVal, newVal) {
                 this.songIsDirty = this.editSong;
+                this.quote = this.quotableText();
             },
             deep: true,
         },
         selectedSong: {
-            handler: function(newVal, oldVal) {
-                console.log('watch handler for selectedSong called', this.selectedSong, newVal, oldVal);
+            handler: function (newVal, oldVal) {
                 var found = false;
-                this.songs.forEach(function (song){
+                this.songs.forEach(function (song) {
                     if (song.id == newVal) found = song;
                 });
-                if (found) this.editedElement.data.song = found;
-                if (found) console.log('found: ', found, this.editedElement.data.song);
+                if (found) {
+                    this.editedElement.data.song = found;
+                }
+                this.quote = this.quotableText();
             }
         },
         songbook: {
@@ -237,10 +270,29 @@ export default {
         }
     },
     methods: {
-        addVerse() {
-            this.editedElement.data.song.verses.push({
+        newSong() {
+            this.modalSong = {
                 id: -1,
-                number: this.editedElement.data.song.verses.length + 1,
+                title: '',
+                verses: [
+                    {id: -1, number: '1', text: '', refrain_before: false, refrain_after: false}
+                ],
+                refrain: '',
+                copyrights: '',
+                songbook: '',
+                songbook_abbreviation: '',
+                reference: '',
+            };
+            this.modalOpen = true;
+        },
+        editSong() {
+            this.modalSong = this.editedElement.data.song;
+            this.modalOpen = true;
+        },
+        addVerse() {
+            this.modalSong.verses.push({
+                id: -1,
+                number: this.modalSong.verses.length + 1,
                 text: '',
                 refrain_before: false,
                 refrain_after: false
@@ -250,33 +302,50 @@ export default {
             this.editedElement.data.song.verses = this.editedElement.data.song.verses.splice(verseIndex, 1);
         },
         save: function () {
+            var data = {
+                ...this.editedElement,
+                data: {
+                    responsible: this.editedElement.data.responsible,
+                    song: this.editedElement.data.song,
+                    verses: this.editedElement.data.verses,
+                }
+            };
             this.$inertia.patch(route('liturgy.item.update', {
                 service: this.service.id,
                 block: this.element.liturgy_block_id,
                 item: this.element.id,
-            }), this.editedElement, {preserveState: false});
+            }), data, {preserveState: false});
+            this.quote = this.quotableText();
         },
         saveText() {
-            axios.post(route('liturgy.song.store'), this.editedElement.data.song).then(response => {
+            this.songs = [];
+            var component = this;
+            axios.post(route('liturgy.song.store'), this.modalSong).then(response => {
                 return response.data;
             }).then(data => {
-                this.editSong = false;
-                this.songs = data.songs;
-                this.editedElement.data.song = data.song;
-                this.songIsDirty = false;
+                component.songs = data.songs;
+                component.editedElement.data.song = data.song;
+                component.songIsDirty = false;
+                component.selectedSong = data.song.id;
             });
+            this.modalOpen = false;
             this.songIsDirty = false;
+            this.quote = this.quotableText();
         },
         updateText() {
-            axios.patch(route('liturgy.song.update', this.editedElement.data.song.id), this.editedElement.data.song).then(response => {
+            this.songs = [];
+            var component = this;
+            axios.patch(route('liturgy.song.update', this.editedElement.data.song.id), this.modalSong).then(response => {
                 return response.data;
             }).then(data => {
-                this.editSong = false;
-                this.songs = data.songs;
-                this.editedElement.data.song = data.song;
-                this.songIsDirty = false;
+                component.songs = data.songs;
+                component.editedElement.data.song = data.song;
+                component.songIsDirty = false;
+                component.selectedSong = data.song.id;
             });
+            this.modalOpen = false;
             this.songIsDirty = false;
+            this.quote = this.quotableText();
         },
         displayTitle(song) {
             var title = song.title;
@@ -289,30 +358,6 @@ export default {
                 title = song.songbook + ' ' + title;
             }
             return title;
-        },
-        quotableText() {
-            var text = '';
-            var title = this.displayTitle(this.editedElement.data.song);
-            if (title.trim().length > 0) {
-                text = '<b>' + title + "</b>\n\n";
-            }
-
-            var e = this.editedElement;
-            this.getVersesToDisplay(e.data.verses).forEach(function (verseNumber) {
-                e.data.song.verses.forEach(function (verse) {
-                    if (verse.number == verseNumber) {
-                        if (verse.refrain_before) {
-                            text = text + "<p>" + e.data.song.refrain + "</p>";
-                        }
-                        text = text + "<p>" + (verse.number != '' ? verse.number + '. ' : '') + verse.text + "</p>";
-                        if (verse.refrain_after) {
-                            text = text + "<p>" + e.data.song.refrain + "</p>";
-                        }
-                    }
-                });
-            });
-
-            return text;
         },
         getVersesToDisplay(range) {
             var verses = [];
@@ -341,9 +386,38 @@ export default {
             });
             return verses;
         },
+        quotableText() {
+            var e = this.editedElement;
+
+            var text = '';
+            var title = this.displayTitle(this.editedElement.data.song);
+            if (title.trim().length > 0) {
+                text = '<b>' + title + "</b>\n\n";
+            }
+
+            this.getVersesToDisplay(e.data.verses).forEach(function (verseNumber) {
+                e.data.song.verses.forEach(function (verse) {
+                    if (verse.number == verseNumber) {
+                        if (verse.refrain_before) {
+                            text = text + "<p>" + e.data.song.refrain + "</p>";
+                        }
+                        text = text + "<p>" + (verse.number != '' ? verse.number + '. ' : '') + verse.text + "</p>";
+                        if (verse.refrain_after) {
+                            text = text + "<p>" + e.data.song.refrain + "</p>";
+                        }
+                    }
+                });
+            });
+
+            return text;
+        },
         songbookTitle(songbook) {
             var tmp = songbook.split('||');
-            return tmp[0]+' ('+tmp[1]+')';
+            return tmp[0] + ' (' + tmp[1] + ')';
+        },
+        updateQuote(event) {
+            this.editedElement.data.verses = event.target.value;
+            this.quote = this.quotableText();
         }
     }
 }
