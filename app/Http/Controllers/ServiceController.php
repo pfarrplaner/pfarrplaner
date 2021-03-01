@@ -153,6 +153,8 @@ class ServiceController extends Controller
 
 //        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
+        $service->load('attachments');
+
         $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
             ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
 
