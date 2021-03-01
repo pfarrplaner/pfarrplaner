@@ -32,20 +32,20 @@
         <div class="row">
             <div class="col-md-6">
                 <form-input name="offerings_counter1" label="Opferzähler*in 1"
-                            v-model="service.offerings_counter1"/>
+                            v-model="myService.offerings_counter1"/>
             </div>
             <div class="col-md-6">
                 <form-input name="offerings_counter2" label="Opferzähler*in 2"
-                            v-model="service.offerings_counter2"/>
+                            v-model="myService.offerings_counter2"/>
             </div>
         </div>
         <hr/>
         <div class="row">
             <div class="col-md-6">
-                <form-input name="offering_goal" label="Opferzweck" v-model="service.offering_goal"/>
+                <form-input name="offering_goal" label="Opferzweck" v-model="myService.offering_goal"/>
                 <form-input name="offering_description" label="Anmerkungen zum Opfer"
-                            v-model="service.offering_description" help="Anmerkungen für den Opferplan"/>
-                <form-radio-group name="offering_type" label="Opfertyp" v-model="service.offering_type" :items="{
+                            v-model="myService.offering_description" help="Anmerkungen für den Opferplan"/>
+                <form-radio-group name="offering_type" label="Opfertyp" v-model="myService.offering_type" :items="{
                             '': 'eigener Beschluss',
                             'eO': 'empfohlenes Opfer',
                             'PO': 'Pflichtopfer',
@@ -53,11 +53,11 @@
             </div>
             <div class="col-md-6">
                 <form-textarea name="offering_text" label="Text zum Opfer"
-                               placeholder="z.B. Brief des Landesbischofs" v-model="offering_text"/>
+                               placeholder="z.B. Brief des Landesbischofs" v-model="myService.offering_text"/>
             </div>
         </div>
         <hr/>
-        <form-input name="offering_amount" label="Eingegangene Summe" v-model="service.offering_amount"/>
+        <form-input name="offering_amount" label="Eingegangene Summe" v-model="myService.offering_amount"/>
     </div>
 </template>
 
