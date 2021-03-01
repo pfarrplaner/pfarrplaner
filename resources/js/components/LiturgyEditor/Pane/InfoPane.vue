@@ -28,9 +28,9 @@
   -->
 
 <template>
-    <div class="card liturgy-editor-info-pane">
+    <div class="card liturgy-editor-info-pane" v-if="liturgy['title']">
         <div class="card-body">
-            <div class="row">
+            <div class="row" v-if="liturgy['title']">
                 <div class="col-2">
                     <div v-if="liturgy['title']">
                         <b>{{ liturgy['title'] }}</b>
