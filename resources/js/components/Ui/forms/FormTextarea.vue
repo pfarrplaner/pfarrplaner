@@ -30,7 +30,7 @@
 <template>
     <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
         <textarea class="form-control" :class="{'is-invalid': error}" :rows="rows" v-model="myValue" :id="myId+'Input'"
-               :placeholder="placeholder" :aria-placeholder="placeholder"
+               :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled"
                @input="$emit('input', $event.target.value)" />
     </form-group>
 </template>
@@ -53,6 +53,10 @@ export default {
         placeholder: String,
         error: String,
         preLabel: String,
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;

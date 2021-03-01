@@ -33,7 +33,7 @@
         <div>
             <div class="form-check form-check-inline" v-for="(subLabel,value,index) in items" :key="value">
                 <input class="form-check-input" type="radio" :name="name" :id="'radio'+myId+index" :value="value"
-                       v-model="myValue"
+                       v-model="myValue" :disabled="disabled"
                        @input="changed($event)">
                 <label class="form-check-label" :for="'radio'+myId+index">{{ subLabel }}</label>
             </div>
@@ -52,6 +52,10 @@ export default {
         help: String,
         items: Object,
         preLabel: String,
+        disabled: {
+            type: Boolean,
+            default: false,
+        },
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
