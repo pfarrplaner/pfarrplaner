@@ -30,7 +30,7 @@
 <template>
     <div class="cc-tab">
         <div class="form-group">
-            <form-check name="baptism" label="Parallel findet ein Kindergottesdienst statt." v-model="service.cc"/>
+            <form-check name="cc" label="Parallel findet ein Kindergottesdienst statt." v-model="service.cc"/>
         </div>
         <div class="row">
             <div class="col-md-6">
