@@ -59,6 +59,7 @@ class ErPronounSet extends AbstractPronounSet
         'Sohn' => 'Sohn',
         'Bruder' => 'Bruder',
         'Mann' => 'Mann',
+        'deinem Ehemann' => 'deinem Ehemann',
         'Ehemann' => 'Ehemann',
         'Ehegatte' => 'Ehegatte',
         'Verstorbener' => 'Verstorbene',

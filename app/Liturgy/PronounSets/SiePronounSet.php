@@ -59,6 +59,7 @@ class SiePronounSet extends AbstractPronounSet
         'Sohn' => 'Tochter',
         'Bruder' => 'Schwester',
         'Mann' => 'Frau',
+        'deinem Ehemann' => 'deiner Ehefrau',
         'Ehemann' => 'Ehefrau',
         'Ehegatte' => 'Ehegattin',
         'Verstorbener' => 'Verstorbene',
