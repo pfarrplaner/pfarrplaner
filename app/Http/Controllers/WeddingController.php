@@ -155,9 +155,6 @@ class WeddingController extends Controller
         $data = $this->validateRequest($request);
         $serviceId = $data['service_id'] = $data['service'];
         $wedding->update($data);
-        if ($request->get('appointment')) {
-            $wedding->update(['appointment' => Carbon::createFromFormat('d.m.Y', $request->get('appointment'))]);
-        }
         if ($request->hasFile('registration_document') || ($request->get('removeAttachment') == 1)) {
             if ($wedding->registration_document != '') {
                 Storage::delete($wedding->registration_document);
@@ -345,12 +342,12 @@ class WeddingController extends Controller
                 'spouse2_phone' => 'nullable|phone_number',
                 'spouse2_email' => 'nullable|email',
                 'pronoun_set2' => 'nullable|string',
-                'appointment' => 'nullable|date_format:d.m.Y',
                 'text' => 'nullable|string',
                 'registered' => 'nullable|bool',
                 'signed' => 'nullable|bool',
                 'docs_ready' => 'nullable|bool',
                 'docs_where' => 'nullable|string',
+                'appointment' => 'nullable|date_format:"d.m.Y H:i"',
             ]
         );
         if (!isset($data['text'])) $data['text'] = '';
@@ -359,6 +356,7 @@ class WeddingController extends Controller
         if (!isset($data['registered'])) $data['registered'] = 0;
         if (!isset($data['signed'])) $data['signed'] = 0;
         if (!isset($data['docs_ready'])) $data['docs_ready'] = 0;
+        if (isset($data['appointment'])) $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment']);
         return $data;
     }
 }

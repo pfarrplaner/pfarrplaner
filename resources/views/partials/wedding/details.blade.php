@@ -22,7 +22,7 @@
         @else
             <span class="fa fa-times-circle"></span>
         @endif
-        &nbsp;{{$wedding->appointment->format('d.m.Y')}}
+        &nbsp;{{$wedding->appointment->format('d.m.Y, H:i')}} Uhr
     @else
         <span class="fa fa-times-circle"></span>&nbsp;noch nicht vereinbart
     @endif
@@ -35,12 +35,10 @@
     @hasrole('Pfarrer*in')
         @if(count($wedding->attachments))
             @foreach($wedding->attachments as $attachment)
-                @if(Storage::exists($attachment))
                 <a href="{{ route('attachment', $attachment->id) }}" class="btn-secondary btn-sm"
                    title="{{ $attachment->title }}, {{ \App\Helpers\FileHelper::bytesToHuman(Storage::size($attachment->file)) }}, {{ Storage::mimeType($attachment->file) }}">
                     <span class="fa {{ \App\Helpers\FileHelper::icon($attachment->file) }}"></span>
                 </a>
-                @endif
             @endforeach
         @endif
         <br />
