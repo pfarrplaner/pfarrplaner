@@ -66,6 +66,9 @@
                             <tab id="cc" :active-tab="activeTab">
                                 <c-c-tab :service="service" />
                             </tab>
+                            <tab id="streaming" :active-tab="activeTab">
+                                <streaming-tab :service="service" />
+                            </tab>
                         </tabs>
                     </card-body>
                 </card>
@@ -86,9 +89,12 @@ import Card from "../components/Ui/cards/card";
 import CardHeader from "../components/Ui/cards/cardHeader";
 import CardBody from "../components/Ui/cards/cardBody";
 import CCTab from "../components/ServiceEditor/tabs/CCTab";
+import StreamingTab from "../components/ServiceEditor/tabs/StreamingTab";
 export default {
 name: "serviceEditor",
-    components: {CCTab, CardBody, CardHeader, Card, OfferingsTab, SpecialTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
+    components: {
+        StreamingTab,
+        CCTab, CardBody, CardHeader, Card, OfferingsTab, SpecialTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
     props: {
         service: Object,
         tab: String,
