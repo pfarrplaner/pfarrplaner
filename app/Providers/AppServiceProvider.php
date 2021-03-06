@@ -126,6 +126,7 @@ class AppServiceProvider extends ServiceProvider
         QueryLog::register();
 
         Inertia::setRootView('inertia-app');
+        Inertia::share(['dev' => config('app.dev') ? true:  false]);
         Inertia::share(
             [
                 'errors' => function () {

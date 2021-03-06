@@ -57,7 +57,7 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" :class="{dev: dev}">
             <!-- Brand Logo -->
             <a :href="route('home')" class="brand-link" style="margin-left: 5px;">
                 <img src="/img/logo/pfarrplaner.png" width="22" height="22" class="brand-image"
@@ -175,6 +175,7 @@ export default {
     },
     data() {
         return {
+            dev: vm.$root.$children[0].$page.props.dev,
             layout: vm.$root.$children[0].$page.props,
         };
     },
@@ -188,6 +189,11 @@ export default {
 </script>
 
 <style scoped>
+.main-sidebar.dev {
+    background-color: orangered;
+}
+
+
 .nprogress-busy .admin-layout {
     margin-top: 2px;
 }
