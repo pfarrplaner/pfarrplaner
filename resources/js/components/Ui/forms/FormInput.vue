@@ -28,15 +28,18 @@
   -->
 
 <template>
-    <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
+    <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel" :required="required"
+                :value="value">
         <input class="form-control" :class="{'is-invalid': error}" :type="type" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :autofocus="autofocus"
-               @input="$emit('input', $event.target.value)" :disabled="disabled"/>
+               @input="$emit('input', $event.target.value);" :disabled="disabled"
+               :required="required" :aria-required="required"/>
     </form-group>
 </template>
 
 <script>
 import FormGroup from "./FormGroup";
+
 export default {
     name: "FormInput",
     components: {FormGroup},
@@ -47,27 +50,43 @@ export default {
             type: String,
             default: 'text',
         },
+        required: {
+            type: Boolean,
+            default: false,
+        },
         name: String,
         value: String,
         help: String,
         placeholder: String,
-        error: String,
         preLabel: String,
         autofocus: Boolean,
         disabled: {
             type: Boolean,
             default: false,
-        }
+        },
+        handleInput: Object,
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
         return {
+            errors: this.$page.props.errors,
+            error: this.$page.props.errors[this.name] || false,
             myId: this.id || '',
             myValue: this.value,
         }
-    }
+    },
+    watch: {
+        value: {
+            handler: function (newVal) {
+                if (this.required) {
+                    this.error = this.$page.props.errors[this.name] = newVal ? '' : 'Dieses Feld darf nicht leer bleiben.';
+                    this.$forceUpdate();
+                }
+            }
+        }
+    },
 }
 </script>
 

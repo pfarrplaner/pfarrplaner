@@ -28,9 +28,9 @@
   -->
 
 <template>
-    <div class="form-group">
-        <label v-if="label" :for="id+'Input'"><span v-if="preLabel" :class="['fa', 'fa-'+preLabel]"></span> {{ label }}</label>
-        <slot @input="$emit('input', $event.target.value)" :error="error"/>
+    <div class="form-group" :class="{'form-group-required' : required}">
+        <label v-if="label" :for="id+'Input'" class="control-label"><span v-if="preLabel" :class="['fa', 'fa-'+preLabel]"></span> {{ label }}</label>
+        <slot error="error"/>
         <small v-if="error" class="invalid-feedback">{{ error }}</small>
         <div v-else><small v-if="help" class="form-text text-muted">{{ help }}</small></div>
     </div>
@@ -39,16 +39,33 @@
 <script>
 export default {
     name: "FormGroup",
-    props: ['id', 'name', 'label', 'help', 'preLabel'],
+    props: ['id', 'name', 'label', 'help', 'preLabel', 'required', 'value'],
     data() {
         const errors = this.$page.props.errors;
         return {
+            errors: errors,
             error: errors[this.name] || false,
         }
     },
+    watch: {
+        value: {
+            handler: function(newVal) {
+                if (this.required) {
+                    this.error = this.$page.props.errors[this.name] = newVal ? '' : 'Dieses Feld darf nicht leer bleiben.';
+                    this.$forceUpdate();
+                }
+            }
+        }
+    }
 }
 </script>
 
 <style scoped>
+.form-group.form-group-required .control-label:after {
+    color: #d00;
+    content: "*";
+    position: absolute;
+    margin-left: 3px;
+}
 
 </style>
