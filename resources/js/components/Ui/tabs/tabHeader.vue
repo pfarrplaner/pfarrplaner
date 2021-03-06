@@ -30,7 +30,7 @@
 <template>
     <li :id="id+'Tab'" class="nav-item">
         <a class="nav-link" :class="{active: active || (activeTab == id)}" :href="'#'+id" role="tab" data-toggle="tab">{{ title }} <span v-if="count && (count > 0)"
-            class="badge" :class="badgeClass()">{{ $count }}</span></a>
+            class="badge" :class="badgeClass()">{{ count }}</span></a>
     </li>
 
 </template>
