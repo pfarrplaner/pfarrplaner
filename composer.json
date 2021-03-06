@@ -27,7 +27,7 @@
         "league/flysystem-sftp": "~1.0",
         "mpdf/qrcode": "^1.0",
         "nesbot/carbon": "^2.44",
-        "niklasravnsborg/laravel-pdf": "^3.0",
+        "niklasravnsborg/laravel-pdf": "^4.0",
         "paragonie/random_compat": "9.99.99 as 2.0.18",
         "php-ews/php-ews": "^1.0",
         "phpoffice/phppresentation": "dev-master",
