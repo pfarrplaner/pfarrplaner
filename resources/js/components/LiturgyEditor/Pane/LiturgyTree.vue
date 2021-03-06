@@ -104,22 +104,28 @@
                                 </div>
                                 <div class="col-sm-4" v-if="item.data_type == 'sermon'">
                                     <div v-if="service.sermon === null">
-                                        <small>Für diesen Gottesdienst wurde noch keine Predigt angelegt.</small><br />
+                                        <small>Für diesen Gottesdienst wurde noch keine Predigt angelegt.</small><br/>
                                         <inertia-link :href="route('services.sermon.editor', {service: service.id})"
-                                                      @click.stop="" title="Hier klicken, um die Predigt jetzt anzulegen"
-                                        >Jetzt anlegen</inertia-link>
+                                                      @click.stop=""
+                                                      title="Hier klicken, um die Predigt jetzt anzulegen"
+                                        >Jetzt anlegen
+                                        </inertia-link>
                                     </div>
                                     <div v-else>
-                                        <inertia-link :href="route('sermon.editor', {sermon: service.sermon.id})" @click.stop="" title="Hier klicken, um die Predigt zu bearbeiten">
-                                            {{ service.sermon.title }}<span v-if="service.sermon.subtitle">: {{ service.sermon.subtitle}}</span>
-                                        </inertia-link><br />
-                                        <small>{{ service.sermon.reference}}</small>
+                                        <inertia-link :href="route('sermon.editor', {sermon: service.sermon.id})"
+                                                      @click.stop="" title="Hier klicken, um die Predigt zu bearbeiten">
+                                            {{ service.sermon.title }}<span
+                                            v-if="service.sermon.subtitle">: {{ service.sermon.subtitle }}</span>
+                                        </inertia-link>
+                                        <br/>
+                                        <small>{{ service.sermon.reference }}</small>
                                     </div>
                                 </div>
                                 <div class="col-sm-4" v-else>{{ itemDescription(item) }}</div>
                                 <div class="col-sm-3 responsible-list"
                                      @click="editResponsibles(blockIndex, itemIndex, item)">
-                                    <people-pane v-if="item.editResponsibles==true" :service="service" :element="item" :ministries="ministries"/>
+                                    <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
+                                                 :ministries="ministries"/>
                                     <div v-else>
                                         <div v-if="item.data.responsible.length > 0">
                                             <span class="badge badge-light" v-for="record in item.data.responsible"
@@ -148,36 +154,35 @@
             </draggable>
         </div>
         <div class="card-footer">
-            <div class="row">
-                <div class="col-sm-3">
-                    <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt
-                        hinzufügen
-                    </button>
-                </div>
-                <div class="col-sm-9">
-                    <div v-if="importFrom != null">
-                        <selectize class="form-control source-select" @input="importElements" v-model="importFrom" :settings="{
-                            placeholder: sourceWait,
-                        }">
-                            <optgroup label="Vorlagen">
-                                <option v-for="agenda in agendas" :value="agenda.id">
-                                    {{ agenda.title }}{{ (agenda.source ? ' (' + agenda.source + ')' : '') }}
-                                </option>
-                            </optgroup>
-                            <optgroup label="Gottesdienste">
-                                <option v-for="service in services" :value="service.id">
-                                    {{ moment(service.day.date).format('DD.MM.YYYY') }}, {{ service.timeText }} -
-                                    {{ service.titleText }} ({{ service.locationText }})
-                                </option>
-                            </optgroup>
-                        </selectize>
-                    </div>
-                    <div v-else class="text-align: right; width: 100%; color: darkgray;">
-                        Importmöglichquellen werden geladen... <span class="fa fa-spin fa-spinner"></span>
-                    </div>
-                </div>
-            </div>
+            <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt
+                hinzufügen...
+            </button>
+            <button class="btn btn-secondary" @click.prevent="modalOpen = true">Ablaufelemente importieren...</button>
         </div>
+        <modal title="Elemente importieren" v-if="modalOpen" min-height="50vh"
+               @close="importElements" @cancel="modalOpen = false;"
+               close-button-label="Importieren" cancel-button-label="Abbrechen" max-width="800">
+            <div v-if="importFrom != null">
+                <selectize class="form-control source-select" v-model="importFrom" :settings="{
+                                placeholder: sourceWait,
+                            }">
+                    <optgroup label="Vorlagen">
+                        <option v-for="agenda in agendas" :value="agenda.id">
+                            {{ agenda.title }}{{ (agenda.source ? ' (' + agenda.source + ')' : '') }}
+                        </option>
+                    </optgroup>
+                    <optgroup label="Gottesdienste">
+                        <option v-for="service in services" :value="service.id">
+                            {{ moment(service.day.date).format('DD.MM.YYYY') }}, {{ service.timeText }} -
+                            {{ service.titleText }} ({{ service.locationText }})
+                        </option>
+                    </optgroup>
+                </selectize>
+            </div>
+            <div v-else class="text-align: right; width: 100%; color: darkgray;">
+                Importmöglichquellen werden geladen... <span class="fa fa-spin fa-spinner"></span>
+            </div>
+        </modal>
     </div>
 </template>
 
@@ -187,10 +192,12 @@ import LiturgyBlock from "../Elements/LiturgyBlock";
 import DetailsPane from "./DetailsPane";
 import PeoplePane from "./PeoplePane";
 import Selectize from "vue2-selectize";
+import Modal from "../../Ui/modals/Modal";
 
 export default {
     name: "LiturgyTree",
     components: {
+        Modal,
         LiturgyBlock,
         DetailsPane,
         PeoplePane,
@@ -244,7 +251,7 @@ export default {
                     }
                 }, this);
             }, this);
-            if ((foundBlock !== false)  && (foundItem !== false)) this.focusItem(foundBlock, foundItem);
+            if ((foundBlock !== false) && (foundItem !== false)) this.focusItem(foundBlock, foundItem);
         } else {
             if (this.autoFocusBlock) {
                 var autoFocusBlock = parseInt(this.autoFocusBlock);
@@ -286,6 +293,7 @@ export default {
             agendas: [],
             hasDownload: (myBlocks.length > 0) && (Object.keys(this.sheets).length > 0),
             sourceWait: 'Bitte warten, Quellen werden geladen...',
+            modalOpen: false,
         }
     },
     methods: {
