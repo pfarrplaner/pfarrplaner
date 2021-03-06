@@ -39,7 +39,7 @@
                                  :locations="locations" @input="myService.location_id = myService.location.id"/>
             </div>
             <div class="col-md-4">
-                <form-input name="time" label="Uhrzeit" v-model="myService.time" placeholder="HH:MM"/>
+                <form-input name="time" label="Uhrzeit" v-model="myService.time" placeholder="HH:MM" required/>
             </div>
         </div>
         <hr/>
