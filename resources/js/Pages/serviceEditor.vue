@@ -44,8 +44,8 @@
                             <tab-header id="offerings" title="Opfer" :active-tab="activeTab" />
                             <tab-header id="rites" title="Kasualien" :active-tab="activeTab" :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
                             <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab" />
-                            <tab-header id="streaming" title="Streaming" :active-tab="activeTab" />
-                            <tab-header id="konfiapp" title="KonfiApp" :active-tab="activeTab" />
+                            <tab-header id="streaming" title="Streaming" :active-tab="activeTab"  v-if="hasStreaming" />
+                            <tab-header id="konfiapp" title="KonfiApp" :active-tab="activeTab" v-if="hasKonfiApp"/>
                             <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"  :count="service.bookings.length"/>
                             <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="service.attachments.length"/>
                             <tab-header id="comments" title="Kommentare" :active-tab="activeTab" :count="service.comments.length"/>
@@ -66,7 +66,7 @@
                             <tab id="cc" :active-tab="activeTab">
                                 <c-c-tab :service="service" />
                             </tab>
-                            <tab id="streaming" :active-tab="activeTab">
+                            <tab id="streaming" :active-tab="activeTab" v-if="hasStreaming">
                                 <streaming-tab :service="service" />
                             </tab>
                         </tabs>
@@ -114,6 +114,12 @@ name: "serviceEditor",
     methods: {
         saveService() {
             this.$inertia.patch(route('services.update', this.service.id), this.editedService, { preserveState: false });
+        },
+        hasKonfiApp() {
+            return (undefined != this.service.id) && (this.service.city.konfiapp_apikey != '');
+        },
+        hasStreaming() {
+            return (undefined != this.service.id) && (this.service.city.google_access_token != '');
         },
     },
 }

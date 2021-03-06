@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 6.20.8.
+ * Generated for Laravel 6.20.17.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -9198,7 +9198,7 @@
                         return $instance->getAcceptableContentTypes();
         }
                     /**
-         * Returns true if the request is a XMLHttpRequest.
+         * Returns true if the request is an XMLHttpRequest.
          * 
          * It works if your JavaScript library sets an X-Requested-With HTTP header.
          * It is known to work with common JavaScript frameworks:
@@ -16027,6 +16027,27 @@
         {
                         /** @var \UKFast\HealthCheck\AppHealth $instance */
                         return $instance->all();
+        }
+         
+    }
+     
+}
+
+    namespace Illuminate\Support { 
+            /**
+     * 
+     *
+     */ 
+        class Collection {
+                    /**
+         * 
+         *
+         * @see \Barryvdh\Debugbar\ServiceProvider::register()
+         * @static 
+         */ 
+        public static function debug()
+        {
+                        return \Illuminate\Support\Collection::debug();
         }
          
     }

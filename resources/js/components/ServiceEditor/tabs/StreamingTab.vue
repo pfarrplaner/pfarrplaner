@@ -29,29 +29,40 @@
 
 <template>
     <div class="streaming-tab">
-        <div class="row">
-            <div class="col-md-6">
-                 <form-input name="youtube_url" label="YouTube-URL" v-model="myService.youtube_url" />
-                 <form-input name="cc_streaming_url" label="URL zu einem parallel gestreamten Kindergottesdienst" v-model="myService.cc_streaming_url" />
-                 <form-input name="offering_url" label="URL zu einer Seite für Onlinespenden" v-model="myService.offeringUrl" />
-                 <form-input name="meeting_url" label="URL zu einer Seite für ein 'virtuelles Kirchencafé'" v-model="myService.offeringUrl" />
-            </div>
-            <div class="col-md-6">
-                <div class="form-group" v-if="service.youtube_url">
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/tE4Jh2Fqwbc" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br />
-                    <small>Diesem Gottesdienst ist bereits ein Livestream zugeordnet.</small>
-                    <form-group>
-                        <a class="btn btn-light" href="#" title="Zum Video auf YouTube" target="_blank"><span class="fab fa-youtube" style="color:red;"></span> Zum Video</a>
-                    </form-group>
-                </div>
+        <div v-if="(!(myService.youtube_url)) && (!creatingStream)" class="alert alert-info">
+            Diesem Gottesdienst ist noch kein Livestream zugeordnet.
+            <div class="form-class">
+                <button class="btn btn-light" @click.prevent="createLivestream"><span class="fab fa-youtube"></span> Jetzt auf YouTube anlegen</button>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <form-textarea name="youtube_prefix_description" label="Einleitender Text für die Beschreibung auf YouTube" v-model="myService.youtube_prefix_description" />
+        <div v-if="creatingStream">
+            <div class="alert alert-info"><span class="fa fa-spinner fa-spin"></span> Ein Livestream wird angelegt. Bitte warten...</div>
+        </div>
+        <div v-if="myService.youtube_url">
+            <div class="row">
+                <div class="col-md-6">
+                    <form-input name="youtube_url" label="YouTube-URL" v-model="myService.youtube_url" />
+                    <form-input name="cc_streaming_url" label="URL zu einem parallel gestreamten Kindergottesdienst" v-model="myService.cc_streaming_url" />
+                    <form-input name="offering_url" label="URL zu einer Seite für Onlinespenden" v-model="myService.offering_url" />
+                    <form-input name="meeting_url" label="URL zu einer Seite für ein 'virtuelles Kirchencafé'" v-model="myService.meeting_url" />
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group" v-if="service.youtube_url">
+                        <iframe width="560" height="315" :src="embedUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br />
+                        <form-group>
+                            <a class="btn btn-light" :href="myService.youtube_url" title="Öffnet das YouTube-Video in einem neuen Fenster" target="_blank"><span class="fab fa-youtube"></span> Zum Video</a>
+                            <a class="btn btn-light" :href="dashboardUrl" title="Öffnet das  Live-Dashboard zum Stream in einem neuen Fenster" target="_blank"><span class="fa fa-video"></span> Zum Live-Dashboard</a>
+                        </form-group>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
-                <form-textarea name="youtube_postfix_description" label="Ergänzender Text für die Beschreibung auf YouTube" v-model="myService.youtube_postfix_description" />
+            <div class="row">
+                <div class="col-md-6">
+                    <form-textarea name="youtube_prefix_description" label="Einleitender Text für die Beschreibung auf YouTube" v-model="myService.youtube_prefix_description" />
+                </div>
+                <div class="col-md-6">
+                    <form-textarea name="youtube_postfix_description" label="Ergänzender Text für die Beschreibung auf YouTube" v-model="myService.youtube_postfix_description" />
+                </div>
             </div>
         </div>
         <hr />
@@ -86,19 +97,47 @@ export default {
         service: Object,
     },
     computed: {
-        disabled() {
-            return (this.myService.cc == false) || (this.myService.cc == 0);
+        videoId() {
+            var url = this.myService.youtube_url;
+            if (!url) return '';
+            if (url.substr(-1) == '/') url = url.substr(0, -1);
+            var tmp = url.split('/');
+            console.log('id', tmp[tmp.length-1]);
+            return tmp[tmp.length-1];
+        },
+        embedUrl() {
+            if (!this.videoId) return '';
+            return 'https://www.youtube.com/embed/'+this.videoId;
+        },
+        dashboardUrl() {
+            if (!this.videoId) return '';
+            return 'https://studio.youtube.com/video/'+this.videoId+'/livestreaming';
         }
     },
     data() {
+        var myService = this.service;
+        if (!(myService.offering_url)) myService.offering_url = this.service.city.default_offering_url;
         return {
-            myService: this.service,
+            myService: myService,
+            creatingStream: false,
         }
     },
-    methods: {}
+    methods: {
+        createLivestream() {
+            this.creatingStream = true;
+            axios.get(route('broadcast.create', {service: this.service.id, json: 1}))
+            .then(response => { return response.data })
+            .then(data => {
+                this.creatingStream = false;
+                this.myService.youtube_url = data.url;
+            });
+        }
+    }
 }
 </script>
 
 <style scoped>
-
+    span.fab.fa-youtube {
+        color: red;
+    }
 </style>
