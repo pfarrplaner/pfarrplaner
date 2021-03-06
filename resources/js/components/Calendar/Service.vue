@@ -51,7 +51,7 @@
             <a :href="service.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span class="fab fa-youtube"></span></a>
             <a v-if="service.city.youtube_channel_url" :href="service.liveDashboardUrl" target="_blank" class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="fa fa-video"></span></a>
         </span>
-        <div v-if="service.titleText != 'GD'" class="service-description">{{ service.titleText }}</div>
+        <div v-if="(service.titleText != 'GD') && (service.funerals.length == 0)" class="service-description">{{ service.titleText }}</div>
 
         <div class="service-description" v-if="service.weddings.length > 0">
             <span class="fa fa-ring"></span>
