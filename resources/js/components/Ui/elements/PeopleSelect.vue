@@ -47,7 +47,7 @@
             </div>
         </form-group>
         <modal title="Neue Person anlegen" v-if="showModal" @close="closeModal" @cancel="cancelModal"
-               @shown="modalShown">
+               @shown="modalShown" close-button-label="Person speichern">
             <form-input name="name" label="Name" v-model="newPerson.name" ref="newPersonName"
                         :autofocus="true"/>
             <hr/>
@@ -55,6 +55,7 @@
                         placeholder="z.B. Pfr."/>
             <form-input name="first_name" label="Vorname" v-model="newPerson.first_name"/>
             <form-input name="last_name" label="Nachname" v-model="newPerson.last_name"/>
+            <form-input name="email" label="E-Mailadresse" v-model="newPerson.email" type="email" help="(falls bekannt)"/>
         </modal>
     </div>
 </template>
@@ -199,6 +200,7 @@ export default {
                 first_name: firstName.trim(),
                 last_name: lastName.trim(),
                 title: '',
+                email: '',
             };
             this.showModal = true;
         }
