@@ -64,7 +64,8 @@
             <attachment v-for="(attachment,key,index) in baptism.attachments" :key="key" :attachment="attachment" />
         </div>
         <div class="col-md-1 text-right">
-            <button class="btn btn-sm btn-danger" title="Taufe löschen"><span class="fa fa-trash"></span></button>
+            <button class="btn btn-sm btn-danger" title="Taufe löschen"
+                    @click.prevent="deleteBaptism"><span class="fa fa-trash"></span></button>
         </div>
     </div>
 
@@ -81,6 +82,11 @@ export default {
         CheckedProcessItem,
     },
     props: ['baptism'],
+    methods: {
+        deleteBaptism() {
+            this.$inertia.delete('baptisms.destroy', {baptism: this.baptism.id});
+        }
+    }
 
 }
 </script>
