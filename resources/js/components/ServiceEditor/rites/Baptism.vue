@@ -64,6 +64,8 @@
             <attachment v-for="(attachment,key,index) in baptism.attachments" :key="key" :attachment="attachment" />
         </div>
         <div class="col-md-1 text-right">
+            <a class="btn btn-sm btn-light" title="Taufe bearbeiten"
+               :href="route('baptisms.edit', {baptism: baptism.id})"><span class="fa fa-edit"></span></a>
             <button class="btn btn-sm btn-danger" title="Taufe löschen"
                     @click.prevent="deleteBaptism"><span class="fa fa-trash"></span></button>
         </div>

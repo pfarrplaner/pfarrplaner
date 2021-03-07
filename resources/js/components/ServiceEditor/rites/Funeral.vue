@@ -60,9 +60,9 @@
             <attachment v-for="(attachment,key,index) in funeral.attachments" :key="key" :attachment="attachment" />
         </div>
         <div class="col-md-1 text-right">
-            <a class="btn btn-sm btn-light" title="Trauung bearbeiten"
+            <a class="btn btn-sm btn-light" title="Bestattung bearbeiten"
                :href="route('funerals.edit', {funeral: funeral.id})"><span class="fa fa-edit"></span></a>
-            <button class="btn btn-sm btn-danger" title="Trauung löschen"
+            <button class="btn btn-sm btn-danger" title="Bestattung löschen"
                     @click.prevent="deleteFuneral"><span class="fa fa-trash"></span></button>
         </div>
     </div>
