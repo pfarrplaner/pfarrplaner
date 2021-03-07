@@ -89,6 +89,8 @@ class Wedding extends Model
         'spouse2_phone',
     ];
 
+    protected $with = ['attachments'];
+
     /**
      * @return BelongsTo
      */

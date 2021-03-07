@@ -96,6 +96,9 @@ class Funeral extends Model
         'relative_contact_data',
     ];
 
+    protected $appends = ['age'];
+    protected $with = ['attachments'];
+
     /**
      * @return BelongsTo
      */
@@ -163,5 +166,10 @@ class Funeral extends Model
         if (!is_null($date)) {
             $this->attributes['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $date);
         }
+    }
+
+    public function getAgeAttribute()
+    {
+        return $this->age();
     }
 }

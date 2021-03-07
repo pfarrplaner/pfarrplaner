@@ -86,6 +86,8 @@ class Baptism extends Model
         'candidate_phone',
     ];
 
+    protected $with = ['attachments'];
+
     /**
      * @return BelongsTo
      */
@@ -93,5 +95,6 @@ class Baptism extends Model
     {
         return $this->belongsTo(Service::class);
     }
+
 
 }

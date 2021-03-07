@@ -32,6 +32,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class Attachment
@@ -44,6 +45,8 @@ class Attachment extends Model
      */
     protected $fillable = ['title', 'file', 'attachable'];
 
+    protected $appends = ['size', 'mimeType', 'icon', 'extension'];
+
     /**
      * @return MorphTo
      */
@@ -51,4 +54,59 @@ class Attachment extends Model
     {
         return $this->morphTo();
     }
+
+    public function getSizeAttribute()
+    {
+        return Storage::size($this->file);
+    }
+
+    public function getMimeTypeAttribute()
+    {
+        return Storage::mimeType($this->file);
+    }
+
+    /**
+     * Get correct file icon by mime type
+     * @return string
+     * @source https://gist.github.com/colemanw/9c9a12aae16a4bfe2678de86b661d922
+     */
+    public function getIconAttribute()
+    {
+        $icon_classes = [
+            // Media
+            'image' => 'fa-file-image',
+            'audio' => 'fa-file-audio',
+            'video' => 'fa-file-video',
+            // Documents
+            'application/pdf' => 'fa-file-pdf',
+            'application/msword' => 'fa-file-word',
+            'application/vnd.ms-word' => 'fa-file-word',
+            'application/vnd.oasis.opendocument.text' => 'fa-file-word',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml' => 'fa-file-word',
+            'application/vnd.ms-excel' => 'fa-file-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml' => 'fa-file-excel',
+            'application/vnd.oasis.opendocument.spreadsheet' => 'fa-file-excel',
+            'application/vnd.ms-powerpoint' => 'fa-file-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml' => 'fa-file-powerpoint',
+            'application/vnd.oasis.opendocument.presentation' => 'fa-file-powerpoint',
+            'text/plain' => 'fa-file-text',
+            'text/html' => 'fa-file-code',
+            'application/json' => 'fa-file-code',
+            // Archives
+            'application/gzip' => 'fa-file-archive',
+            'application/zip' => 'fa-file-archive',
+        ];
+        foreach ($icon_classes as $text => $icon) {
+            if (strpos($this->mimeType, $text) === 0) {
+                return $icon;
+            }
+        }
+        return 'fa-file';
+    }
+
+    public function getExtensionAttribute()
+    {
+        return pathinfo($this->file, PATHINFO_EXTENSION);
+    }
+
 }
