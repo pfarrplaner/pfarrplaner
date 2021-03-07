@@ -29,8 +29,9 @@
 
 <template>
     <form-group :id="myId" :name="name" :label="label" :help="help">
-        <selectize :id="id+'Input'" class="form-control" :class="{'is-invalid': error}"
-                   :name="name" v-model="myLocation" @input="changed">
+        <selectize :id="id+'Input'" class="form-control" :class="{'is-invalid': error}" :settings="settings"
+                   :name="name" :value="myLocation" @input="locationChanged($event)" @input.native="$event.stopPropagation()">
+            <option v-if="(typeof myValue != 'object')" :value="myValue">{{ myValue }}</option>
             <option v-for="location in locations" :value="location.id">{{ location.name }}</option>
         </selectize>
     </form-group>
@@ -51,7 +52,7 @@ export default {
             default: 'text',
         },
         name: String,
-        value: Object,
+        value: {},
         help: String,
         placeholder: String,
         locations: Array,
@@ -64,19 +65,34 @@ export default {
         return {
             myId: this.id || '',
             myValue: this.value,
-            myLocation: this.value.id,
+            myLocation: typeof this.value == 'object' ? this.value.id : this.value,
+            isSpecialLocation: (typeof value != 'object'),
+            settings: {
+                create: true,
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Freie Ortsangabe: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            },
         }
     },
     methods: {
-        changed(newVal) {
-            var found = false;
-            this.locations.forEach(function (location){
-                if (location.id == newVal) found = location;
-            });
-            if (found) {
-                this.myValue = found;
-                this.$emit('input', found);
+        locationChanged(newVal) {
+            console.log(newVal);
+            if (!isNaN(newVal)) {
+                var found = false;
+                this.locations.forEach(function (location){
+                    if (location.id == newVal) found = location;
+                });
+                if (found) {
+                    this.$emit('set-location', found);
+                    this.myValue = found;
+                }
+                return;
             }
+            this.$emit('set-location', newVal);
+            this.myValue = newVal;
         },
     }
 }

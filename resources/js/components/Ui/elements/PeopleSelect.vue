@@ -123,10 +123,8 @@ export default {
                 this.$refs.container.firstChild.firstChild.nextSibling.firstChild.click()
             }
             if (this.personCreated) {
-                console.log('hey');
                 this.personCreated = false;
                 var foundPeople = this.getPeople(this.myValue);
-                console.log('foundPeople', foundPeople);
                 this.$emit('input', foundPeople);
             }
         })
