@@ -42,7 +42,9 @@ class AbstractLiturgySheet
 
     protected $icon = 'fa fa-file';
     protected $layout = ['format' => 'A4'];
-    protected $fileTitle= 'Liturgie';
+    protected $fileTitle = 'Liturgie';
+    protected $extension = 'pdf';
+    protected $isNotAFile = false;
 
 
     protected function getData(Service $service)
@@ -152,6 +154,38 @@ class AbstractLiturgySheet
     public function setFileTitle(string $fileTitle): void
     {
         $this->fileTitle = $fileTitle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension(): string
+    {
+        return $this->extension;
+    }
+
+    /**
+     * @param string $extension
+     */
+    public function setExtension(string $extension): void
+    {
+        $this->extension = $extension;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotAFile(): bool
+    {
+        return $this->isNotAFile;
+    }
+
+    /**
+     * @param bool $isNotAFile
+     */
+    public function setIsNotAFile(bool $isNotAFile): void
+    {
+        $this->isNotAFile = $isNotAFile;
     }
 
 

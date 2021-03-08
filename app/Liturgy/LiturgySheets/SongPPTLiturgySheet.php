@@ -47,6 +47,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
 {
     protected $title = 'Powerpoint mit Liedern';
     protected $icon = 'fa fa-file-powerpoint';
+    protected $extension = 'pptx';
 
     /** @var PhpPresentation */
     protected $ppt;

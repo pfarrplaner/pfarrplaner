@@ -48,6 +48,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
     protected $title = 'Volltext';
     protected $icon = 'fa fa-file-word';
     protected $service = null;
+    protected $extension = 'docx';
 
 
     public function render(Service $service)
