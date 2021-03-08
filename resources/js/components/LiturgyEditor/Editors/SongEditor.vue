@@ -68,8 +68,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <button class="btn btn-primary" @click="save" :disabled="songIsDirty"
-                        :title="songIsDirty ? 'Du musst zuerst die Änderungen am Lied speichern.' : ''">Speichern
+                <button class="btn btn-primary" @click="save">Speichern
                 </button>
                 <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)">
                     Abbrechen
