@@ -39,6 +39,7 @@ use App\Events\ServiceBeforeUpdate;
 use App\Events\ServiceCreated;
 use App\Events\ServiceUpdated;
 use App\Http\Requests\ServiceRequest;
+use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Location;
 use App\Participant;
 use App\Service;
@@ -153,13 +154,14 @@ class ServiceController extends Controller
 
 //        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
-        $service->load(['attachments', 'comments', 'bookings']);
+        $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks']);
 
         $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
             ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
 
         $ministries = DB::table('service_user')->select('category')->distinct()->get();
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
+        $liturgySheets = LiturgySheets::all();
 
         $users = User::all();
 
@@ -175,7 +177,8 @@ class ServiceController extends Controller
                 'tags',
                 'serviceGroups',
                 'ministries',
-                'days'
+                'days',
+                'liturgySheets',
             )
         );
 

@@ -47,7 +47,7 @@
                             <tab-header id="streaming" title="Streaming" :active-tab="activeTab"  v-if="hasStreaming" />
                             <tab-header id="konfiapp" title="KonfiApp" :active-tab="activeTab" v-if="hasKonfiApp"/>
                             <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"  :count="service.bookings.length"/>
-                            <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="service.attachments.length"/>
+                            <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="countAttachments()"/>
                             <tab-header id="comments" title="Kommentare" :active-tab="activeTab" :count="service.comments.length"/>
                         </tab-headers>
                     </card-header>
@@ -72,6 +72,9 @@
                             <tab id="streaming" :active-tab="activeTab" v-if="hasStreaming">
                                 <streaming-tab :service="service" />
                             </tab>
+                            <tab id="attachments" :active-tab="activeTab">
+                                <attachments-tab :service="service" :liturgy-sheets="liturgySheets" />
+                            </tab>
                         </tabs>
                     </card-body>
                 </card>
@@ -94,9 +97,11 @@ import CardBody from "../components/Ui/cards/cardBody";
 import CCTab from "../components/ServiceEditor/tabs/CCTab";
 import StreamingTab from "../components/ServiceEditor/tabs/StreamingTab";
 import RitesTab from "../components/ServiceEditor/tabs/RitesTab";
+import AttachmentsTab from "../components/ServiceEditor/tabs/AttachmentsTab";
 export default {
 name: "serviceEditor",
     components: {
+        AttachmentsTab,
         RitesTab,
         StreamingTab,
         CCTab, CardBody, CardHeader, Card, OfferingsTab, SpecialTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
@@ -109,6 +114,7 @@ name: "serviceEditor",
         tags: Array,
         serviceGroups: Array,
         days: Array,
+        liturgySheets: Object,
     },
     data() {
         return {
@@ -126,6 +132,15 @@ name: "serviceEditor",
         hasStreaming() {
             return (undefined != this.service.id) && (this.service.city.google_access_token != '');
         },
+        countAttachments() {
+            var ctr = this.editedService.attachments.length;
+            if (this.editedService.liturgy_blocks.length) {
+                for (var sheet in this.liturgySheets) {
+                    if (!this.liturgySheets[sheet].isNotAFile) ctr++;
+                }
+            }
+            return ctr;
+        }
     },
 }
 </script>
