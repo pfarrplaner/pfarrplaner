@@ -61,6 +61,7 @@ export default {
     .attachment {
         width: 100%;
         text-align: left;
+        margin-bottom: .25rem;
     }
     small {
         padding-left: 15px;
