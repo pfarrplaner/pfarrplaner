@@ -108,13 +108,13 @@
             <div class="input-label">Zeit</div>
             <div class="clear"></div>
             <div class="input">
-                {{ $funeral->service->pastor }}
+                {{ $funeral->service->participantsText('P', true) }}
             </div>
             <div class="input">
-                {{ $funeral->service->organist }}
+                {{ $funeral->service->participantsText('O', true) }}
             </div>
-            <div class="input-label">Pfarrer/in</div>
-            <div class="input-label">Organist/in</div>
+            <div class="input-label">Pfarrer:in</div>
+            <div class="input-label">Organist:in</div>
             <div class="clear"></div>
             <div class="input">
                 {{ $funeral->text }}
