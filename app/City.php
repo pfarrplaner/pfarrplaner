@@ -71,6 +71,7 @@ class City extends Model
         'youtube_auto_startstop',
         'youtube_cutoff_days',
         'default_offering_url',
+        'youtube_self_declared_for_children',
     ];
 
     /**

@@ -51,6 +51,9 @@ module.exports = {
  |
  */
 
+// this plugin strips out unnecessary locales from moment.js
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
+
 //mix.js('resources/js/app.js', 'public/js-old')
 //   .sass('resources/sass/app.scss', 'public/css-old');
 
@@ -64,6 +67,9 @@ mix.js('resources/js/inertia-app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .webpackConfig({
         output: { chunkFilename: 'js/[name].js?id=[chunkhash]' },
+        plugins: [
+            new MomentLocalesPlugin({ localesToKeep: ['de-de']}),
+        ],
         resolve: {
             alias: {
                 vue$: 'vue/dist/vue.runtime.esm.js',

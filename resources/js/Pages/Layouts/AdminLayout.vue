@@ -57,7 +57,7 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" :class="{dev: dev}">
             <!-- Brand Logo -->
             <a :href="route('home')" class="brand-link" style="margin-left: 5px;">
                 <img src="/img/logo/pfarrplaner.png" width="22" height="22" class="brand-image"
@@ -81,15 +81,20 @@
                             </a>
                         </li>
                         <li v-for="item in layout.menu" :class="{
-                            'nav-header': item.text == undefined ,
-                            'nav-item': item.text != undefined,
-                            'has-treeview': item.submenu != undefined,
+                            'nav-header': (item.text == undefined) ,
+                            'nav-item': (item.text != undefined),
+                            'has-treeview': (item.submenu != undefined),
                         }">
                             <span v-if="item.text == undefined">{{ item }}</span>
-                            <inertia-link v-else class="nav-link" :class="{ active: item.active }" :href="item.url">
-                                <i v-if="item.icon" class="nav-icon" :class="item.icon"></i> <p>{{ item.text }}
-                                <i v-if="item.submenu != undefined" class="right fas fa-angle-left"></i></p>
+                            <inertia-link v-if="(item.text != undefined) && (item.inertia == true)" class="nav-link" :class="{ active: item.active }" :href="item.url">
+                                <i v-if="item.icon" class="nav-icon" :class="item.icon"  :style="{ color: item.icon_color || 'inherit'}"></i>
+                                <p>{{ item.text }}
+                                    <i v-if="item.submenu" class="right fas fa-angle-left"></i></p>
                             </inertia-link>
+                            <a v-if="(item.text != undefined) && (item.inertia == false)" class="nav-link" :class="{ active: item.active }" @click="clickUrl(item.url)">
+                                <i v-if="item.icon" class="nav-icon" :class="item.icon"  :style="{ color: item.icon_color || 'inherit'}"></i>
+                                <p>{{ item.text }}
+                                    <i v-if="item.submenu" class="right fas fa-angle-left"></i></p></a>
                             <ul class="nav nav-treeview" style="display: none;" v-if="item.submenu != undefined">
                                 <li class="nav-item" v-for="subitem in item.submenu">
                                     <a class="nav-link" :class="{active: subitem.active}"
@@ -97,7 +102,8 @@
                                         <i v-if="subitem.icon" class="nav-icon" :class="subitem.icon"
                                            :style="subitem.icon_color ? 'color: '+subitem.icon_color+';' : ''"></i>
                                         <p>{{ subitem.text }}
-                                            <span v-if="subitem.counter != undefined" class="badge right" :class="subitem.counter_class ? 'badge-'+subitem.counter_class : 'badge-info'">{{ subitem.counter}}</span>
+                                            <span v-if="subitem.counter != undefined" class="badge right"
+                                                  :class="subitem.counter_class ? 'badge-'+subitem.counter_class : 'badge-info'">{{ subitem.counter }}</span>
                                         </p>
                                     </a>
                                 </li>
@@ -165,18 +171,34 @@ export default {
         }
     },
     mounted() {
-        if (this.title != '') document.title = this.title+' :: '+this.layout.appName;
+        if (this.title != '') document.title = this.title + ' :: ' + this.layout.appName;
     },
     data() {
         return {
+            dev: vm.$root.$children[0].$page.props.dev,
             layout: vm.$root.$children[0].$page.props,
         };
+    },
+    methods: {
+        clickUrl(url) {
+            if (url=='#') return;
+            window.location.href = url;
+        }
     }
 }
 </script>
 
 <style scoped>
-    .nprogress-busy .admin-layout {
-        margin-top: 2px;
-    }
+.main-sidebar.dev {
+    background-color: orangered;
+}
+
+
+.nprogress-busy .admin-layout {
+    margin-top: 2px;
+}
+
+.nav-item {
+    cursor: pointer;
+}
 </style>

@@ -1,7 +1,7 @@
 <div id="otherParticipantsWithText">
     <div class="template" style="display:none;">
-        @select(['name' => '', 'label' => '', 'items' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'id' => 'peopleTemplate'])
-        @select(['name' => '', 'label' => '', 'items' => $ministries, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'strings' => true, 'empty' => true, 'id' => 'ministryTitleTemplate'])
+        @select(['name' => '', 'label' => '', 'items' => $users, 'enabled' => Auth::user()->canAny(['gd-allgemein-bearbeiten', 'gd-freie-dienste-bearbeiten']), 'id' => 'peopleTemplate'])
+        @select(['name' => '', 'label' => '', 'items' => $ministries, 'enabled' => Auth::user()->canAny(['gd-allgemein-bearbeiten', 'gd-freie-dienste-bearbeiten']), 'strings' => true, 'empty' => true, 'id' => 'ministryTitleTemplate'])
     </div>
     <label><span class="fa fa-users"></span> Weitere Dienste</label>
     <div class="row form-group">
@@ -20,10 +20,10 @@
         @foreach ($service->ministries() as $ministryTitle => $ministry)
             <div class="row">
                 <div class="col-5">
-                    @select(['name' => 'ministries['.$loop->index.'][description]', 'label' => '', 'class' => 'ministryTitleSelect', 'value' => $ministryTitle, 'items' => $ministries, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'strings' => true, 'empty' => true])
+                    @select(['name' => 'ministries['.$loop->index.'][description]', 'label' => '', 'class' => 'ministryTitleSelect', 'value' => $ministryTitle, 'items' => $ministries, 'enabled' => Auth::user()->canAny(['gd-allgemein-bearbeiten', 'gd-freie-dienste-bearbeiten']), 'strings' => true, 'empty' => true])
                 </div>
                 <div class="col-6">
-                    @peopleselect(['name' => 'ministries['.$loop->index.'][people][]', 'label' => '', 'people' => $users, 'value' => $ministry, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'useItemId' => true])
+                    @peopleselect(['name' => 'ministries['.$loop->index.'][people][]', 'label' => '', 'people' => $users, 'value' => $ministry, 'enabled' => Auth::user()->canAny(['gd-allgemein-bearbeiten', 'gd-freie-dienste-bearbeiten']), 'useItemId' => true])
                 </div>
                 <div class="col-1">
                     <button class="btnDeleteMinistryRow btn btn-danger" title="Zeile löschen"><span class="fa fa-trash"></span></button>
@@ -33,10 +33,10 @@
     @endif
     <div class="row form-group">
         <div class="col-5">
-            @select(['name' => 'ministries['.(isset($service) ? count($service->ministries())+1 : 0).'][description]', 'label' => '', 'class' => 'ministryTitleSelect', 'items' => $ministries, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'strings' => true, 'empty' => true])
+            @select(['name' => 'ministries['.(isset($service) ? count($service->ministries())+1 : 0).'][description]', 'label' => '', 'class' => 'ministryTitleSelect', 'items' => $ministries, 'enabled' => Auth::user()->canAny(['gd-allgemein-bearbeiten', 'gd-freie-dienste-bearbeiten']), 'strings' => true, 'empty' => true])
         </div>
         <div class="col-6">
-            @peopleselect(['name' => 'ministries['.(isset($service) ? count($service->ministries())+1 : 0).'][people][]', 'label' => '', 'people' => $users, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+            @peopleselect(['name' => 'ministries['.(isset($service) ? count($service->ministries())+1 : 0).'][people][]', 'label' => '', 'people' => $users, 'enabled' => Auth::user()->canAny(['gd-allgemein-bearbeiten', 'gd-freie-dienste-bearbeiten'])])
         </div>
         <div class="col-1">
             <button class="btnDeleteMinistryRow btn btn-danger" title="Zeile löschen"><span class="fa fa-trash"></span></button>

@@ -31,6 +31,7 @@
 namespace App;
 
 use App\Helpers\YoutubeHelper;
+use App\Liturgy\Block;
 use App\Seating\AbstractSeatFinder;
 use App\Seating\MaximumBasedSeatFinder;
 use App\Seating\RowBasedSeatFinder;
@@ -84,7 +85,8 @@ class Service extends Model
         'participantsWithMinistry',
         'funerals',
         'baptisms',
-        'weddings'
+        'weddings',
+        'sermon',
     ];
 
     /**
@@ -181,6 +183,11 @@ class Service extends Model
         'registration_online_end',
         'registration_max',
         'reserved_places',
+        'youtube_prefix_description',
+        'youtube_postfix_description',
+        'sermon_id',
+        'announcements',
+        'offering_text'
     ];
 
     /**
@@ -343,22 +350,27 @@ class Service extends Model
     /**
      * @return string
      */
-    public function descriptionText()
+    public function descriptionText($exclude = [])
     {
         $desc = [];
         if ($this->needs_reservations) {
-            $desc[] = ($this->registration_online_end ? 'Anmeldung nötig bis ' . $this->registration_online_end->format(
+            $desc['needs_reservations'] = ($this->registration_online_end ? 'Anmeldung nötig bis ' . $this->registration_online_end->format(
                     'd.m.Y, H:i'
                 ) . ' Uhr' : 'Anmeldung nötig');
         }
         if ($this->baptism) {
-            $desc[] = 'mit Taufen';
+            $desc['baptism'] = 'mit Taufen';
         }
         if ($this->eucharist) {
-            $desc[] = 'mit Abendmahl';
+            $desc['eucharist'] = 'mit Abendmahl';
         }
         if ($this->getAttribute('description') != '') {
-            $desc[] = $this->getAttribute('description');
+            $desc['description'] = $this->getAttribute('description');
+        }
+        foreach ($exclude as $key) {
+            if (isset($desc[$key])) {
+                unset($desc[$key]);
+            }
         }
         return join('; ', $desc);
     }
@@ -544,7 +556,122 @@ class Service extends Model
      */
     public function getOfferingsUrlAttribute()
     {
-        return $this->attributes['offerings_url'] ?: $this->city->default_offering_url;
+        return $this->attributes['offerings_url'] ?: ($this->city ? $this->city->default_offering_url : '');
+    }
+
+    public function getTitleTextAttribute()
+    {
+        return $this->titleText(false, false);
+    }
+
+    /**
+     * @param bool $short
+     * @param bool $skipRites
+     * @return string
+     */
+    public function titleText($short = true, $skipRites = false)
+    {
+        $elements = [];
+        if ($this->title != '') {
+            $elements[] = $x = $this->title;
+        }
+        if (!$skipRites) {
+            if ($this->weddingsText() != '') {
+                $elements[] = $x = $this->weddingsText();
+            }
+            if ($this->funeralsText() != '') {
+                $elements[] = $x = $this->funeralsText();
+            }
+            if ($this->baptismsText() != '') {
+                $elements[] = $x = 'Taufe(n)';
+            }
+        }
+        if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {
+            $elements[0] = ($short ? 'GD' : 'Gottesdienst') . ' mit ' . $elements[0];
+        }
+        return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
+    }
+
+    /**
+     * @return string
+     */
+    public function weddingsText()
+    {
+        $weddings = [];
+        /** @var Wedding $wedding */
+        foreach ($this->weddings as $wedding) {
+            $weddings[] = 'Trauung von ' . $wedding->spouse1_name
+                . ($wedding->spouse1_birth_name ? ' (' . $wedding->spouse1_birth_name . ')' : '')
+                . ' und ' . $wedding->spouse2_name
+                . ($wedding->spouse2_birth_name ? ' (' . $wedding->spouse2_birth_name . ')' : '');
+        }
+        return (join('; ', $weddings));
+    }
+
+    /**
+     * @return string
+     */
+    public function funeralsText()
+    {
+        $funerals = [];
+        foreach ($this->funerals as $funeral) {
+            $funerals[] = $funeral->type . ' von ' . $funeral->buried_name;
+        }
+        return (join('; ', $funerals));
+    }
+
+    public function getIsMineAttribute()
+    {
+        return $this->participants->contains(Auth::user());
+    }
+
+    public function getLiveDashboardUrlAttribute()
+    {
+        if (null === $this->city) {
+            return '';
+        }
+        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl(
+            $this->city,
+            $this->youtube_url
+        ) : '';
+    }
+
+    public function getCreditsAttribute()
+    {
+        $credits = [
+            'Liturgie' => 'Liturgie: ' . $this->participantsText('P', true),
+            'Orgel' => 'Orgel: ' . $this->participantsText('O', true)
+        ];
+        foreach ($this->ministries() as $ministry => $people) {
+            $credits[$ministry] = $ministry . ': ' . $this->participantsText($ministry, true, true);
+        }
+        $credits['Mesner*in'] = 'Mesnerdienst: ' . $this->participantsText('M', true, true);
+        $separator = utf8_encode(' ' . chr(183) . ' ');
+        return join($separator, $credits);
+    }
+
+    /**
+     * Get all preachers for this service
+     * @return Collection
+     */
+    public function getPreachersAttribute()
+    {
+        $sermonItem = null;
+        foreach ($this->liturgyBlocks as $block) {
+            foreach ($block->items as $item) {
+                if ($item->data_type == 'sermon') {
+                    $sermonItem = $item;
+                    continue;
+                }
+            }
+            if (null !== $sermonItem) {
+                continue;
+            }
+        }
+        if (null === $sermonItem) {
+            return collect();
+        }
+        return $sermonItem->recipients();
     }
 // END ACCESSORS
 
@@ -629,7 +756,8 @@ class Service extends Model
      * @param int $month Month
      * @return Builder
      */
-    public function scopeInMonth(Builder $query, $year, $month) {
+    public function scopeInMonth(Builder $query, $year, $month)
+    {
         $monthStart = Carbon::createFromFormat('Y-m-d H:i:s', $year . '-' . $month . '-01 0:00:00');
         $monthEnd = (clone $monthStart)->addMonth(1)->subSecond(1);
         return $query->between($monthStart, $monthEnd);
@@ -655,6 +783,15 @@ class Service extends Model
     public function scopeInCity(Builder $query, $city)
     {
         return $query->where('city_id', $city->id);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeWritable(Builder $query)
+    {
+        return $query->whereIn('city_id', Auth::user()->writableCities);
     }
 
     /**
@@ -690,6 +827,18 @@ class Service extends Model
      * @param Builder $query
      * @return Builder
      */
+    public function scopeOrderedDesc(Builder $query)
+    {
+        return $query->select('services.*')
+            ->join('days', 'services.day_id', 'days.id')
+            ->orderByDesc('days.date')
+            ->orderByDesc('time');
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
     public function scopeHidden(Builder $query)
     {
         return $query->where('hidden', 1);
@@ -704,8 +853,57 @@ class Service extends Model
         return $query->where('hidden', 0);
     }
 
-// SETTERS
+    public function scopeInMonthByDate(Builder $query, Carbon $date)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query2) use ($date) {
+                return $query2->inMonth($date);
+            }
+        );
+    }
 
+    public function scopeInCities(Builder $query, $cities)
+    {
+        if ((!is_array($cities)) && (is_object($cities->first()))) {
+            $cities = $cities->pluck('id');
+        }
+        return $query->whereIn('city_id', $cities);
+    }
+
+    /**
+     * Get services used as agenda
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeIsAgenda(Builder $query)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query2) {
+                $query2->where('date', '1978-03-05');
+            }
+        );
+    }
+
+    /**
+     * Get services not used as agenda
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeIsNotAgenda(Builder $query)
+    {
+        return $query->whereHas(
+            'day',
+            function ($query2) {
+                $query2->where('date', '!=', '1978-03-05');
+            }
+        );
+    }
+// SETTERS
+// SETTERS
+// SETTERS
+// SETTERS
     /**
      * Mix a collection of services into an array of events
      * @param $events
@@ -925,67 +1123,6 @@ class Service extends Model
     }
 
     /**
-     * @param bool $short
-     * @param bool $skipRites
-     * @return string
-     */
-    public function titleText($short = true, $skipRites = false)
-    {
-        $elements = [];
-        if ($this->title != '') {
-            $elements[] = $x = $this->title;
-        }
-        if (!$skipRites) {
-            if ($this->weddingsText() != '') {
-                $elements[] = $x = $this->weddingsText();
-            }
-            if ($this->funeralsText() != '') {
-                $elements[] = $x = $this->funeralsText();
-            }
-            if ($this->baptismsText() != '') {
-                $elements[] = $x = 'Taufe(n)';
-            }
-        }
-        if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {
-            $elements[0] = ($short ? 'GD' : 'Gottesdienst') . ' mit ' . $elements[0];
-        }
-        return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
-    }
-
-    public function getTitleTextAttribute()
-    {
-        return $this->titleText(true, true);
-    }
-
-    /**
-     * @return string
-     */
-    public function weddingsText()
-    {
-        $weddings = [];
-        /** @var Wedding $wedding */
-        foreach ($this->weddings as $wedding) {
-            $weddings[] = 'Trauung von ' . $wedding->spouse1_name
-                . ($wedding->spouse1_birth_name ? ' (' . $wedding->spouse1_birth_name . ')' : '')
-                . ' und ' . $wedding->spouse2_name
-                . ($wedding->spouse2_birth_name ? ' (' . $wedding->spouse2_birth_name . ')' : '');
-        }
-        return (join('; ', $weddings));
-    }
-
-    /**
-     * @return string
-     */
-    public function funeralsText()
-    {
-        $funerals = [];
-        foreach ($this->funerals as $funeral) {
-            $funerals[] = $funeral->type . ' von ' . $funeral->buried_name;
-        }
-        return (join('; ', $funerals));
-    }
-
-    /**
      * @param bool $emptyIfNotSet
      * @param bool $uhr
      * @param string $separator
@@ -1139,6 +1276,9 @@ class Service extends Model
 
     public function setDefaultOfferingValues()
     {
+        if (null === $this->city) {
+            return;
+        }
         if ($this->offering_goal == '') {
             if ((count($this->funerals) > 0) && $this->city->default_funeral_offering_goal != '') {
                 $this->offering_goal = $this->city->default_funeral_offering_goal;
@@ -1257,27 +1397,32 @@ class Service extends Model
         return $videoSnippet;
     }
 
-
-
-    public function scopeInMonthByDate(Builder $query, Carbon $date) {
-        return $query->whereHas('day', function($query2) use ($date) {
-            return $query2->inMonth($date);
-        });
-    }
-
-    public function scopeInCities(Builder $query, $cities)
+    public function liturgyBlocks()
     {
-        if ((!is_array($cities)) && (is_object($cities->first()))) $cities = $cities->pluck('id');
-        return $query->whereIn('city_id', $cities);
+        return $this->hasMany(Block::class);
     }
 
-
-    public function getIsMineAttribute() {
-        return $this->participants->contains(Auth::user());
-    }
-
-    public function getLiveDashboardUrlAttribute()
+    /**
+     * Get total number of participants + bookings
+     */
+    public function estimatePeoplePresent()
     {
-        return $this->city->youtube_channel_url ? YoutubeHelper::getLiveDashboardUrl($this->city, $this->youtube_url) : '';
+        $number = $this->participants->count();
+        foreach ($this->bookings as $booking) {
+            $number += $booking->number;
+        }
+        return $number;
+    }
+
+    public function sermon()
+    {
+        return $this->belongsTo(Sermon::class);
+    }
+
+    public function oneLiner($title = false)
+    {
+        return ($title ? $this->titleText(false) . ', ' : '') . $this->day->date->format(
+                'd.m.Y'
+            ) . ', ' . $this->timeText() . ', ' . $this->locationText();
     }
 }

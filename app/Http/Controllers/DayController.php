@@ -107,7 +107,7 @@ class DayController extends Controller
         if (($data['day_type'] == Day::DAY_TYPE_LIMITED) && (count($day->cities) == 0)) {
             $day->delete();
         }
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month]);
+        return redirect()->route('calendar', $day->date->format('Y-m'));
     }
 
     /**
@@ -178,7 +178,7 @@ class DayController extends Controller
             $day->delete();
         }
 
-        return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month])
+        return redirect()->route('calendar', $day->date->format('Y-m'))
             ->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
@@ -207,7 +207,7 @@ class DayController extends Controller
         }
 
 
-        return redirect()->route('calendar', ['year' => $date->year, 'month' => $date->month])
+        return redirect()->route('calendar', $date->format('Y-m'))
             ->with('success', 'Der ' . $date->format('d.m.Y') . ' wurde aus der Liste entfernt');
     }
 
@@ -219,7 +219,7 @@ class DayController extends Controller
     public function add($year, $month)
     {
         if ((!$year) || (!$month) || (!is_numeric($month)) || (!is_numeric($year)) || (!checkdate($month, 1, $year))) {
-            return redirect()->route('calendar', ['year' => date('Y'), 'month' => date('m')]);
+            return redirect()->route('calendar',date('Y-m'));
         }
         $start = Carbon::create($year, $month, 1);
         $end = $start->copy()->addMonth(1)->subSecond(1);
@@ -252,4 +252,12 @@ class DayController extends Controller
             compact('year', 'month', 'cities', 'days', 'existing', 'start', 'end', 'existingCities')
         );
     }
+
+    public function list(City $city)
+    {
+        $days = Day::visibleForCities(collect($city))
+            ->orderByDesc('date')->get();
+        return response()->json($days);
+    }
+
 }

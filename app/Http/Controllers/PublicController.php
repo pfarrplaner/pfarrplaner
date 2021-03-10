@@ -226,7 +226,7 @@ class PublicController extends Controller
             ->whereHas(
                 'day',
                 function ($query) {
-                    $query->where('date', '>=', Carbon::now());
+                    $query->where('date', '>=', Carbon::now()->setTime(0,0,0));
                 }
             )
             ->whereIn('city_id', $cityIds)
@@ -235,7 +235,23 @@ class PublicController extends Controller
             ->orderBy('time')
             ->first();
         if (!$service) {
-            abort(404);
+            // get the last available service with a stream
+            $service = Service::select('services.*')
+                ->join('days', 'days.id', 'services.day_id')
+                ->whereHas(
+                    'day',
+                    function ($query) {
+                        $query->where('date', '<=', Carbon::now()->setTime(0,0,0));
+                    }
+                )
+                ->whereIn('city_id', $cityIds)
+                ->where('youtube_url', '!=', '')
+                ->orderByDesc('days.date')
+                ->orderByDesc('time')
+                ->first();
+            if (!$service) {
+                abort(404);
+            }
         }
 
         return redirect($service->youtube_url);

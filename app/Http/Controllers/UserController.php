@@ -255,18 +255,8 @@ class UserController extends Controller
     public function profileSave(Request $request)
     {
         $user = Auth::user();
-        $user->email = $request->get('email');
-        $user->office = $request->get('office') ?: '';
-        $user->address = $request->get('address') ?: '';
-        $user->phone = $request->get('phone') ?: '';
-        $user->preference_cities = join(',', $request->get('preference_cities') ?: []);
-
-        // api_token
-        if ($request->get('api_token') != '') {
-            $user->api_token = $request->get('api_token');
-        }
-
-        $user->save();
+        $data = $this->validateRequest($request);
+        $user->save($data);
 
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
@@ -549,10 +539,18 @@ class UserController extends Controller
         $data = $request->validate($rules);
 
         // api token
-        if (($user === null) || ($user->api_token == '')) {
-            $data['api_token'] = $data['password'] == '' ? '' : Str::random(60);
+        $data['password'] = $data['password'] ?? '';
+        if ((($user === null) || ($user->api_token == '')) && ($data['password'] != '')) {
+            $data['api_token'] = Str::random(60);
         }
 
         return $data;
+    }
+
+    public function add(Request $request)
+    {
+        $data = $this->validateRequest($request);
+        $user = User::create($data);
+        return response()->json($user);
     }
 }

@@ -110,6 +110,11 @@ class ServiceRequest extends FormRequest
             'registration_online_end' => 'nullable',
             'registration_max' => 'nullable|int',
             'reserved_places' => 'nullable|string',
+            'youtube_prefix_description' => 'nullable|string',
+            'youtube_postfix_description' => 'nullable|string',
+            'sermon_id' => 'nullable|int|exists:sermons,id',
+            'announcements' => 'nullable|string',
+            'offering_text' => 'nullable|string',
         ];
     }
 

@@ -57,6 +57,7 @@
                         @selectize(['name' => 'city_id', 'label' => 'Kirchengemeinde', 'items' => $cities, 'id' => 'citySelect'])
                     @endif
                     @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1, 'placeholder' => 'Nachname, Vorname'])
+                    @radiogroup(['name' => 'pronoun_set', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items()])
                     @input(['name' => 'candidate_address', 'label' => 'Adresse'])
                     @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$'])
                     @input(['name' => 'candidate_city', 'label' => 'Ort'])

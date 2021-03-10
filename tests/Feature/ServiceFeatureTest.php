@@ -35,6 +35,7 @@ use App\Http\Middleware\Authenticate;
 use App\Service;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
@@ -147,10 +148,13 @@ class ServiceFeatureTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        Storage::fake('fake');
+
         $this->withoutMiddleware(Authenticate::class);
         $this->app->make(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
 
         Permission::create(['name' => 'gd-bearbeiten']);
+        Permission::create(['name' => 'gd-allgemein-bearbeiten']);
 
         $this->city = factory(City::class)->create();
 

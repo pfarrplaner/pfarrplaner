@@ -5,7 +5,7 @@
 @section('navbar-left')
     <li class="nav-item">
         <a id="btnBack" class="btn btn-navbar" @if ($backRoute)href="{{ $backRoute }}"
-           @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}"
+           @else href="{{ route('calendar', $service->day->date->format('Y-m')) }}"
            @endif title="Schließen ohne Änderungen">
             <span class="fa fa-times"></span>
         </a>
@@ -63,7 +63,7 @@
                             </button>
                         @else
                             <a class="btn btn-primary" @if ($backRoute)href="{{ $backRoute }}"
-                               @else href="{{ route('calendar',['year' => $service->day->date->year, 'month' => $service->day->date->month]) }}" @endif>Zurück</a>
+                               @else href="{{ route('calendar', $service->day->date->format('Y-m')) }}" @endif>Zurück</a>
                         @endcan
                     @endslot
 
@@ -105,7 +105,7 @@
                     @input(['name' => 'description', 'label' => 'Anmerkungen', 'value' => $service->description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'value' => $service->internal_remarks, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags, 'value' => $service->tags, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @selectize(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'value' => $service->serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @select(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'value' => $service->serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'id' => 'selectServiceGroups'])
                     @endtab
                     @tab(['id' => 'offerings', 'active' => ($tab=='offerings')])
                     @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'value' => $service->offerings_counter1, 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
@@ -137,14 +137,25 @@
                     @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'value' => $service->offerings_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite für ein "virtuelles Kirchencafé"', 'value' => $service->meeting_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'value' => $service->recording_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt', 'accept' => '.pdf'])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'value' => $service->songsheet, 'prettyName' => $service->day->date->format('Ymd').'-Liedblatt', 'accept' => '.pdf', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_prefix_description', 'label' => 'Einleitender Text für die Beschreibung auf YouTube', 'value' => $service->youtube_prefix_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_postfix_description', 'label' => 'Ergänzender Text für die Beschreibung auf YouTube', 'value' => $service->youtube_postfix_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'sermon', 'active' => ($tab=='sermon')])
-                    @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'value' => $service->sermon_title, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'value' => $service->sermon_reference, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'value' => $service->sermon_description, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'value' => $service->sermon_image, 'prettyName' => $service->day->date->format('Ymd').'-Predigtbild', 'accept' => '.jpg,.jpeg'])
-                    @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'value' => $service->external_url, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @if (null === $service->sermon)
+                        <p>Diesem Gottesdienst ist noch keine Predigt zugeordnet.</p>
+                        <a class="btn btn-secondary" href="{{ route('services.sermon.editor', $service->id) }}" title="Neue Predigt anlegen">Neue Predigt anlegen</a>
+                        <hr />
+                        <p>Alternativ dazu kannst du dem Gottesdienst eine bereits bestehende Predigt zuordnen:</p>
+                        @select(['name' => 'sermon_id', 'label' => 'Predigt zuordnen', 'value' => $service->sermon_id, 'items' => \App\Sermon::getList($service->city), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'empty' => true])
+                    @else
+                        @select(['name' => 'sermon_id', 'label' => 'Zugeordnete Predigt', 'value' => $service->sermon_id, 'items' => \App\Sermon::getList($service->city), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'empty' => true])
+                            <a class="btn btn-secondary" href="{{ route('sermon.editor', $service->sermon_id) }}" title="Predigt bearbeiten">Predigt bearbeiten</a>
+                        <hr />
+                        <p><b>{{ $service->sermon->fullTitle }}</b><br />
+                            {{ $service->sermon->reference }}</p>
+                        <p>{{ $service->sermon->summary }}</p>
+                    @endif
                     @endtab
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city))
                         @tab(['id' => 'konfiapp', 'active' => ($tab=='konfiapp')])
@@ -339,6 +350,16 @@
 
         $(document).ready(function () {
             enableMinistryRows();
+
+            $('#selectServiceGroups_input').selectize({
+                create: true,
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Neue Gruppe anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            });
+
 
             $('#btnAddMinistryRow').click(function (e) {
                 e.preventDefault();

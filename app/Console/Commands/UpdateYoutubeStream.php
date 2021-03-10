@@ -8,6 +8,7 @@ use App\Integrations\Youtube\YoutubeIntegration;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpdateYoutubeStream extends Command
 {
@@ -35,6 +36,11 @@ class UpdateYoutubeStream extends Command
         parent::__construct();
     }
 
+    protected function output($s) {
+        $this->line($s);
+        Log::info($s);
+    }
+
     /**
      * Execute the console command.
      *
@@ -42,19 +48,21 @@ class UpdateYoutubeStream extends Command
      */
     public function handle()
     {
+        Log::info('Running youtube:update command');
         $cities = City::where('google_access_token', '!=', '')->get();
         foreach ($cities as $city) {
-            $this->line('Checking livestreams for "' . $city->name . '"');
+            $this->output('Checking livestreams for "' . $city->name . '"');
 
             if ($city->youtube_active_stream_id == '') {
-                $this->line('No active stream key defined.');
+                $this->output('No active stream key defined for "' . $city->name . '".');
                 continue;
             }
 
             if ($city->youtube_passive_stream_id == '') {
-                $this->line('No passive stream key defined.');
+                $this->output('No passive stream key defined for "' . $city->name . '".');
                 continue;
             }
+            $this->output('Keys: '.$city->youtube_active_stream_id.' (active) / '.$city->youtube_passive_stream_id.' (passive)');
 
             $services = Service::where('city_id', $city->id)
                 ->select('services.*')
@@ -78,14 +86,14 @@ class UpdateYoutubeStream extends Command
                         /** @var \Google_Service_YouTube_Video $video */
                         $lastVideo = $youtube->getVideo(YoutubeHelper::getCode($last->youtube_url));
                         if ($this->videoHasEnded($lastVideo)) {
-                            $this->line('Last service #' . $last->id . ' (' . $last->formatTime('Y-m-d H:i') . ') has ended.');
+                            $this->output('Last service #' . $last->id . ' (' . $last->formatTime('Y-m-d H:i') . ') has ended.');
                         }
 
-                        $this->line('Next Service #' . $service->id . ' (' . $service->formatTime('Y-m-d H:i') . ')...');
+                        $this->output('Next Service #' . $service->id . ' (' . $service->formatTime('Y-m-d H:i') . ')...');
                         $this->setBroadcastOptions($service, true);
 
                     } else {
-                        $this->line('Future Service #' . $service->id . ' (' . $service->formatTime('Y-m-d H:i') . ')...');
+                        $this->output('Future Service #' . $service->id . ' (' . $service->formatTime('Y-m-d H:i') . ')...');
                         $this->setBroadcastOptions($service, false);
                     }
                 }
@@ -121,12 +129,12 @@ class UpdateYoutubeStream extends Command
             $contentDetails = $broadcast->getContentDetails();
 
             if ($contentDetails->getBoundStreamId() == ($active ? $service->city->youtube_passive_stream_id : $service->city_youtube_active_stream_id)) {
-                $this->line('Setting stream key');
+                $this->output('Setting '.($active ? 'active' : 'passive').' stream key for service #'.$service->id);
                 $youtube->getYoutube()->liveBroadcasts->bind($broadcast->getId(), 'id,snippet,status', ['streamId' => ($active ? $service->city->youtube_active_stream_id : $service->city_youtube_passive_stream_id)]);
             }
             if ($service->city->youtube_auto_startstop) {
                 if (($contentDetails->getEnableAutoStart() != $autoStartStop) || ($contentDetails->getEnableAutoStop() != $autoStartStop)) {
-                    $this->line('Setting auto start/stop');
+                    $this->output('Enabling auto start/stop for service #'.$service->id);
                     $contentDetails->setEnableAutoStart($autoStartStop ? 'true' : 'false');
                     $contentDetails->setEnableAutoStop($autoStartStop ? 'true' : 'false');
                     $broadcast->setContentDetails($contentDetails);

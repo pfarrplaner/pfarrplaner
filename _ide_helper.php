@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 6.20.8.
+ * Generated for Laravel 6.20.17.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -9198,7 +9198,7 @@
                         return $instance->getAcceptableContentTypes();
         }
                     /**
-         * Returns true if the request is a XMLHttpRequest.
+         * Returns true if the request is an XMLHttpRequest.
          * 
          * It works if your JavaScript library sets an X-Requested-With HTTP header.
          * It is known to work with common JavaScript frameworks:
@@ -14339,6 +14339,62 @@
      
 }
 
+    namespace App\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class Settings {
+                    /**
+         * 
+         *
+         * @param string $key
+         * @param null $default
+         * @param bool $returnObject
+         * @param bool $unserialize
+         * @return \App\Services\UserSetting|mixed 
+         * @static 
+         */ 
+        public static function get($user, $key, $default = null, $returnObject = false, $unserialize = true)
+        {
+                        /** @var \App\Services\SettingsService $instance */
+                        return $instance->get($user, $key, $default, $returnObject, $unserialize);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function has($user, $key)
+        {
+                        /** @var \App\Services\SettingsService $instance */
+                        return $instance->has($user, $key);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function set($user, $key, $value)
+        {
+                        /** @var \App\Services\SettingsService $instance */
+                        return $instance->set($user, $key, $value);
+        }
+                    /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function all($user)
+        {
+                        /** @var \App\Services\SettingsService $instance */
+                        return $instance->all($user);
+        }
+         
+    }
+     
+}
+
     namespace Barryvdh\Debugbar { 
             /**
      * 
@@ -15971,6 +16027,27 @@
         {
                         /** @var \UKFast\HealthCheck\AppHealth $instance */
                         return $instance->all();
+        }
+         
+    }
+     
+}
+
+    namespace Illuminate\Support { 
+            /**
+     * 
+     *
+     */ 
+        class Collection {
+                    /**
+         * 
+         *
+         * @see \Barryvdh\Debugbar\ServiceProvider::register()
+         * @static 
+         */ 
+        public static function debug()
+        {
+                        return \Illuminate\Support\Collection::debug();
         }
          
     }
@@ -18959,6 +19036,7 @@ namespace  {
             class PDF extends \niklasravnsborg\LaravelPdf\Facades\Pdf {}
             class DatabaseEncryption extends \AustinHeap\Database\Encryption\EncryptionFacade {}
             class Visitor extends \Shetabit\Visitor\Facade\Visitor {}
+            class Settings extends \App\Facades\Settings {}
             class Debugbar extends \Barryvdh\Debugbar\Facade {}
             class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}

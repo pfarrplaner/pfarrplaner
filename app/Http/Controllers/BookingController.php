@@ -133,9 +133,16 @@ class BookingController extends Controller
         $result = $service->getSeatFinder()->finalList();
         $viewName = $service->getSeatFinder()->viewName;
 
+        $participants = [];
+        foreach ($service->participants as $participant) {
+            $participants[] = $participant->first_name ? $participant->last_name.', '.$participant->first_name : $participant->fullName();
+        }
+        $participants = array_unique($participants);
+        sort($participants);
+
         $pdf = PDF::loadView(
             'bookings.pdf.list.'.$viewName,
-            array_merge($result, compact('service')),
+            array_merge($result, compact('service', 'participants')),
             [],
             [
                 'format' => 'A4',

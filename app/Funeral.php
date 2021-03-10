@@ -56,6 +56,7 @@ class Funeral extends Model
         'buried_address',
         'buried_zip',
         'buried_city',
+        'pronoun_set',
         'text',
         'announcement',
         'type',

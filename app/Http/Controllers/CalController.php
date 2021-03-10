@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Absence;
 use App\Day;
 use App\Service;
+use App\Services\CalendarService;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,30 +19,45 @@ class CalController extends Controller
         $this->middleware('auth');
     }
 
-    public function index(Request $request, $date = null, $month=null)
+    public function index(Request $request, $date = null, $month = null)
     {
-        if ($month) $date.='-'.$month;
-        $date = ($date ? new Carbon ($date.'-01') : Carbon::now())->setTime(0,0,0);
+        if ($month) {
+            $date .= '-' . $month;
+        }
+        $date = ($date ? new Carbon ($date . '-01') : Carbon::now())->setTime(0, 0, 0);
+        if ($date->format('Ym') < 201801) abort(404);
         $monthEnd = $date->copy()->addMonth(1)->subSecond(1);
         $days = Day::with('cities')->inMonth($date)->orderBy('date')->get();
+        if (count($days) == 0) {
+            $days = CalendarService::initializeMonth($date->year, $date->month);
+        }
         $user = Auth::user();
         $cities = $user->cities;
 
-        $years = Day::select(DB::raw('YEAR(days.date) as year'))->orderBy('date')->get()->pluck('year')->unique()->sort();
+        $years = Day::select(DB::raw('YEAR(days.date) as year'))
+            ->where('days.date', '>=', '2018-01-01')
+            ->orderBy('date')
+            ->get()
+            ->pluck('year')
+            ->unique()
+            ->sort();
 
         $services = Service::with(['baptisms', 'funerals', 'weddings', 'participants'])
             ->inMonthByDate($date)
             ->inCities($cities->pluck('id'))
-            ->notHidden()
+            ->orderBy('time')
             ->get()
             ->groupBy(['city_id', 'day_id']);
 
         $cities = array_values($user->getSortedCities()->all());
 
         // absences
-        $absences = Absence::getByDays(Absence::with('user')->byPeriod($date, $monthEnd)
-            ->visibleForUser(\Illuminate\Support\Facades\Auth::user())
-            ->get(), $days);
+        $absences = Absence::getByDays(
+            Absence::with('user')->byPeriod($date, $monthEnd)
+                ->visibleForUser(\Illuminate\Support\Facades\Auth::user())
+                ->get(),
+            $days
+        );
 
         $canCreate = $user->can('create', Service::class);
 
@@ -55,6 +71,9 @@ class CalController extends Controller
             'canCreate' => fn() => $canCreate,
         ];
 
-        return Inertia::render('calendar', compact('date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate'));
+        return Inertia::render(
+            'calendar',
+            compact('date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate')
+        );
     }
 }

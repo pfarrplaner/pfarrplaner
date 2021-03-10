@@ -92,35 +92,10 @@ class WeddingController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
-            [
-                'spouse1_name' => 'required',
-                'spouse2_name' => 'required',
-                'service' => 'required|integer',
-            ]
-        );
 
-        $serviceId = $request->get('service');
-
-        $wedding = new Wedding(
-            [
-                'service_id' => $serviceId,
-                'spouse1_name' => $request->get('spouse1_name') ?: '',
-                'spouse1_birth_name' => $request->get('spouse1_birth_name') ?: '',
-                'spouse1_phone' => $request->get('spouse1_phone') ?: '',
-                'spouse1_email' => $request->get('spouse1_email') ?: '',
-                'spouse2_name' => $request->get('spouse2_name') ?: '',
-                'spouse2_birth_name' => $request->get('spouse2_birth_name') ?: '',
-                'spouse2_phone' => $request->get('spouse2_phone') ?: '',
-                'spouse2_email' => $request->get('spouse2_email') ?: '',
-                'text' => $request->get('text') ?: '',
-                'registered' => $request->get('registered') ? 1 : 0,
-                'registration_document' => $request->get('candidate_email') ?: '',
-                'signed' => $request->get('signed') ? 1 : 0,
-                'docs_ready' => $request->get('docs_ready') ? 1 : 0,
-                'docs_where' => $request->get('docs_where') ?: '',
-            ]
-        );
+        $data = $this->validateRequest($request);
+        $serviceId = $data['service_id'] = $data['service'];
+        $wedding = new Wedding($data);
         if ($request->get('appointment')) {
             $wedding->appointment = Carbon::createFromFormat('d.m.Y', $request->get('appointment'));
         }
@@ -177,31 +152,9 @@ class WeddingController extends Controller
      */
     public function update(Request $request, Wedding $wedding)
     {
-        $request->validate(
-            [
-                'spouse1_name' => 'required',
-                'spouse2_name' => 'required',
-                'service' => 'required|integer',
-            ]
-        );
-
-        $serviceId = $request->get('service');
-        $wedding->spouse1_name = $request->get('spouse1_name') ?: '';
-        $wedding->spouse1_birth_name = $request->get('spouse1_birth_name') ?: '';
-        $wedding->spouse1_phone = $request->get('spouse1_phone') ?: '';
-        $wedding->spouse1_email = $request->get('spouse1_email') ?: '';
-        $wedding->spouse2_name = $request->get('spouse2_name') ?: '';
-        $wedding->spouse2_birth_name = $request->get('spouse2_birth_name') ?: '';
-        $wedding->spouse2_phone = $request->get('spouse2_phone') ?: '';
-        $wedding->spouse2_email = $request->get('spouse2_email') ?: '';
-        if ($request->get('appointment')) {
-            $wedding->appointment = Carbon::createFromFormat('d.m.Y', $request->get('appointment'));
-        }
-        $wedding->registered = $request->get('registered') ? 1 : 0;
-        $wedding->signed = $request->get('signed') ? 1 : 0;
-        $wedding->docs_ready = $request->get('docs_ready') ? 1 : 0;
-        $wedding->docs_where = $request->get('docs_where') ?: '';
-
+        $data = $this->validateRequest($request);
+        $serviceId = $data['service_id'] = $data['service'];
+        $wedding->update($data);
         if ($request->hasFile('registration_document') || ($request->get('removeAttachment') == 1)) {
             if ($wedding->registration_document != '') {
                 Storage::delete($wedding->registration_document);
@@ -211,7 +164,6 @@ class WeddingController extends Controller
         if ($request->hasFile('registration_document')) {
             $wedding->registration_document = $request->file('registration_document')->store('baptism', 'public');
         }
-
         $wedding->save();
 
         $wedding->service->setDefaultOfferingValues();
@@ -220,7 +172,6 @@ class WeddingController extends Controller
 
 
         return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
-        //
     }
 
     /**
@@ -375,4 +326,37 @@ class WeddingController extends Controller
         return json_encode(true);
     }
 
+
+    protected function validateRequest(Request $request)
+    {
+        $data = $request->validate(
+            [
+                'service' => 'int|exists:services,id',
+                'spouse1_name' => 'required|string',
+                'spouse1_birth_name' => 'nullable|string',
+                'pronoun_set1' => 'nullable|string',
+                'spouse1_phone' => 'nullable|phone_number',
+                'spouse1_email' => 'nullable|email',
+                'spouse2_name' => 'required|string',
+                'spouse2_birth_name' => 'nullable|string',
+                'spouse2_phone' => 'nullable|phone_number',
+                'spouse2_email' => 'nullable|email',
+                'pronoun_set2' => 'nullable|string',
+                'text' => 'nullable|string',
+                'registered' => 'nullable|bool',
+                'signed' => 'nullable|bool',
+                'docs_ready' => 'nullable|bool',
+                'docs_where' => 'nullable|string',
+                'appointment' => 'nullable|date_format:"d.m.Y H:i"',
+            ]
+        );
+        if (!isset($data['text'])) $data['text'] = '';
+        if (!isset($data['docs_where'])) $data['docs_where'] = '';
+        if (!isset($data['registration_document'])) $data['registration_document'] = '';
+        if (!isset($data['registered'])) $data['registered'] = 0;
+        if (!isset($data['signed'])) $data['signed'] = 0;
+        if (!isset($data['docs_ready'])) $data['docs_ready'] = 0;
+        if (isset($data['appointment'])) $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment']);
+        return $data;
+    }
 }

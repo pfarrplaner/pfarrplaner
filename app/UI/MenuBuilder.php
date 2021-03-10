@@ -79,7 +79,8 @@ class MenuBuilder
             'icon' => 'fa fa-calendar',
             'url' => route('calendar'),
             'icon_color' => 'blue',
-            'active' => $request->is(['calendar*', 'service*', 'cal*'])
+            'active' => $request->is(['calendar*', 'service*', 'cal*']),
+            'inertia' => true,
         ];
 
         $absenceMenu = [
@@ -87,7 +88,8 @@ class MenuBuilder
             'icon' => 'fa fa-globe-europe',
             'url' => route('absences.index'),
             'icon_color' => 'orange',
-            'active' => $request->is(['absences*', 'approvals*'])
+            'active' => $request->is(['absences*', 'approvals*']),
+            'inertia' => false,
         ];
         if (count(Auth::user()->approvableUsers()) > 0) {
             $absenceMenu['url'] = '';
@@ -97,6 +99,7 @@ class MenuBuilder
                     'icon' => 'fa fa-globe-europe',
                     'url' => route('absences.index'),
                     'active' => Route::currentRouteName() == 'absences.index',
+                    'inertia' => false,
                 ],
                 [
                     'text' => 'Urlaubsanträge',
@@ -105,6 +108,7 @@ class MenuBuilder
                     'counter' => count(Auth::user()->absencesToBeApproved()),
                     'counter_class' => 'info',
                     'active' => $route == 'approvals.index',
+                    'inertia' => false,
                 ],
             ];
         }
@@ -119,6 +123,7 @@ class MenuBuilder
                 'text' => $input->title,
                 'icon' => 'fa fa-keyboard',
                 'url' => route('inputs.setup', $input->getKey()),
+                'inertia' => false,
             ];
         }
 
@@ -130,6 +135,7 @@ class MenuBuilder
                 'url' => '#',
                 'submenu' => $inputMenu,
                 'active' => $request->is(['input*']),
+                'inertia' => false,
             ];
         }
 
@@ -139,12 +145,14 @@ class MenuBuilder
             'icon' => 'fa fa-print',
             'url' => route('reports.list'),
             'active' => $request->is(['report*']),
+            'inertia' => false,
         ];
         $menu[] = [
             'text' => 'Outlook-Export',
             'icon' => 'fa fa-calendar-alt',
             'url' => route('ical.connect'),
             'active' => $request->is(['ical*']),
+            'inertia' => false,
         ];
 
 
@@ -157,6 +165,7 @@ class MenuBuilder
                 'icon' => 'fa fa-users',
                 'url' => route('users.index'),
                 'active' => $route == 'users.index',
+                'inertia' => false,
             ];
             $adminActive |= ($route == 'users.index');
         }
@@ -166,6 +175,7 @@ class MenuBuilder
                 'icon' => 'fa fa-user-tag',
                 'url' => route('roles.index'),
                 'active' => $route == 'roles.index',
+                'inertia' => false,
             ];
             $adminActive |= ($route == 'roles.index');
         }
@@ -175,6 +185,7 @@ class MenuBuilder
                 'icon' => 'fa fa-church',
                 'url' => route('cities.index'),
                 'active' => $route == 'cities.index',
+                'inertia' => false,
             ];
             $adminActive |= ($route == 'cities.index');
         }
@@ -184,6 +195,7 @@ class MenuBuilder
                 'icon' => 'fa fa-map-marker',
                 'url' => route('locations.index'),
                 'active' => $route == 'locations.index',
+                'inertia' => false,
             ];
             $adminActive |= ($route == 'locations.index');
         }
@@ -193,6 +205,7 @@ class MenuBuilder
                 'icon' => 'fa fa-tag',
                 'url' => route('tags.index'),
                 'active' => $route == 'tags.index',
+                'inertia' => false,
             ];
             $adminActive |= ($route == 'tags.index');
         }
@@ -202,6 +215,7 @@ class MenuBuilder
                 'icon' => 'fa fa-building',
                 'url' => route('parishes.index'),
                 'active' => $route == 'parishes.index',
+                'inertia' => false,
             ];
             $adminActive |= ($route == 'parishes.index');
         }
@@ -213,6 +227,7 @@ class MenuBuilder
                 'url' => '#',
                 'submenu' => $adminMenu,
                 'active' => $adminActive,
+                'inertia' => false,
             ];
         }
 
@@ -222,6 +237,7 @@ class MenuBuilder
             'icon' => 'fa fa-info',
             'url' => route('about'),
             'active' => ($route == 'about'),
+            'inertia' => false,
         ];
 
 

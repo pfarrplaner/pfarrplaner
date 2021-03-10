@@ -1,6 +1,6 @@
 @if(isset($service))
     @if(null !== $service)
-        <a class="btn btn-sm btn-secondary" href="{{ route('calendar', ['month' => $service->day->date->format('m'), 'year' => $service->day->date->format('Y')]) }}" title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
+        <a class="btn btn-sm btn-secondary" href="{{ route('calendar', $service->day->date->format('Y-m')) }}" title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
         @can('update', $service)
             <a class="btn btn-sm btn-primary" href="{{route('services.edit', ['service' => $service->id, 'tab' => 'rites'])}}?back=/home" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span></a>
         @endcan
@@ -19,6 +19,10 @@
                 </a>
             </div>
         @endif
+        <div class="mt-1">
+            <a class="btn btn-secondary" title="Meldung an das Ordnungsamt nach §1g Abs. 3 CoronaVO" href="{{ route('reports.setup', ['report' => 'regulatory', 'service' => $service->id]) }}">
+                <span class="fa fa-envelope"></span> Ordnungsamt <span class="badge badge-info">{{ $service->estimatePeoplePresent() }}</span></a>
+        </div>
         @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($service->city) && ($service->konfiapp_event_qr != ''))
             <div style="margin-top: 2px;">
                 <a class="btn btn-sm btn-secondary" href="{{ route('report.step', ['report' => 'KonfiAppQR', 'step' => 'single', 'service' => $service->id]) }}" title="QR-Code drucken">

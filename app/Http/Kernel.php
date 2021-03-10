@@ -90,7 +90,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             SubstituteBindings::class,
-            LogVisits::class,
+//            LogVisits::class,
             HandleInertiaRequests::class,
         ],
 

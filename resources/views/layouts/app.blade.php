@@ -222,8 +222,9 @@
     @guest
         window.Laravel = {};
     @endguest
+    window._asset = '{{ asset('') }}';
 
-        window.Laravel.loggedIn = {{ json_encode(!Auth::guest()) }};
+    window.Laravel.loggedIn = {{ json_encode(!Auth::guest()) }};
     window.Laravel.timeout = {{ (config('session.lifetime')*60000)-30000 }};
     window.Laravel.expires = new Date('{!! \Carbon\Carbon::now()->addMinutes(config('session.lifetime'))->toIso8601String() !!}');
 

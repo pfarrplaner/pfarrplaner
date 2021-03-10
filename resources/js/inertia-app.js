@@ -50,6 +50,7 @@ import CalendarServiceBaptism from './components/Calendar/Service/Baptism.vue';
 import CalendarControlCitySort from './components/Calendar/Control/CitySort';
 
 
+
 Vue.component('admin-layout', AdminLayout)
 
 Vue.component('calendar-pane-horizontal', CalendarPaneHorizontal);
@@ -79,7 +80,7 @@ Vue.use(InertiaProgress);
 Vue.use(LaravelPermission);
 
 
-Vue.use(EventBus)
+Vue.use(EventBus);
 
 
 Vue.config.productionTip = false
@@ -91,6 +92,46 @@ Vue.mixin({
         moment: moment
     }
 });
+Vue.mixin(require('./mixins/Asset.js'));
+
+
+// Register a global custom directive called `v-focus`
+Vue.directive('focus', {
+    // When the bound element is inserted into the DOM...
+    inserted: function (el) {
+        // Focus the element
+        el.focus()
+        el.select();
+    }
+})
+
+// Register a global custom directive called `v-scrollTo`
+Vue.directive('scrollTo', {
+    // When the bound element is inserted into the DOM...
+    inserted: function (el) {
+        // Focus the element
+        el.scrollTo()
+    }
+})
+
+const bindCustomEvent = {
+    getName: function(binding) {
+        return binding.arg + '.' +
+            Object.keys(binding.modifiers).map(key => key).join('.');
+    },
+    bind: function(el, binding, vnode) {
+        const eventName = bindCustomEvent.getName(binding);
+        document.addEventListener(eventName, binding.value);
+    },
+    unbind: function(el, binding) {
+        const eventName = bindCustomEvent.getName(binding);
+        document.removeEventListener(eventName, binding.value);
+    }
+};
+
+// register a global custom directive called v-bind-custom-event
+Vue.directive('bindCustomEvent', bindCustomEvent);
+
 
 
 Vue.use(InertiaApp)

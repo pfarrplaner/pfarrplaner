@@ -115,6 +115,26 @@
     </tbody>
 </table>
 @endif
+@if(count($participants))
+    <h2>Mitwirkende</h2>
+    <p>Die Kontaktdaten der folgenden Mitwirkenden sind bekannt und können vom Gemeindebüro gegebenenfalls nachgetragen werden:</p>
+    <table width="100%">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Kontakt</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach($participants as $participant)
+            <tr @if ($loop->index % 2 == 0)class="even" @endif>
+                <td style="width: 8cm; height: 2em;">{{ $participant }}</td>
+                <td></td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+@endif
 
 
 <htmlpagefooter name="page-footer">

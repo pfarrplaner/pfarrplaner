@@ -47,7 +47,7 @@
                     @input(['name' => 'description', 'label' => 'Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @textarea(['name' => 'internal_remarks', 'label' => 'Interne Anmerkungen', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-anmerkungen-bearbeiten')])
                     @selectize(['name' => 'tags[]', 'label' => 'Kennzeichnungen', 'items' => $tags,  'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @selectize(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @select(['name' => 'serviceGroups[]', 'label' => 'Dieser Gottesdienst gehört zu folgenden Gruppen', 'items' => $serviceGroups, 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'id' => 'selectServiceGroups'])
                     @endtab
                     @tab(['id' => 'offerings'])
                     @input(['name' => 'offerings_counter1', 'label' => 'Opferzähler*in 1', 'enabled' => Auth::user()->can('gd-opfer-bearbeiten')])
@@ -71,14 +71,13 @@
                     @input(['name' => 'offerings_url', 'label' => 'URL zu einer Seite für Onlinespenden', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'meeting_url', 'label' => 'URL zu einer Seite für ein "virtuelles Kirchencafé"', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @input(['name' => 'recording_url', 'label' => 'URL zu einer Audioaufzeichnung des Gottesdiensts', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'accept' => '.pdf'])
+                    @upload(['name' => 'songsheet', 'label' => 'Liedblatt zum Gottesdienst', 'accept' => '.pdf', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_prefix_description', 'label' => 'Einleitender Text für die Beschreibung auf YouTube', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                    @textarea(['name' => 'youtube_postfix_description', 'label' => 'Ergänzender Text für die Beschreibung auf YouTube', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
                     @endtab
                     @tab(['id' => 'sermon'])
-                        @input(['name' => 'sermon_title', 'label' => 'Titel der Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @input(['name' => 'sermon_reference', 'label' => 'Predigttext', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @textarea(['name' => 'sermon_description', 'label' => 'Kurzer Anreißer zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
-                        @upload(['name' => 'sermon_image', 'label' => 'Titelbild zur Predigt', 'accept' => '.jpg,.jpeg'])
-                        @input(['name' => 'external_url', 'label' => 'Externe Seite zur Predigt', 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten')])
+                        <p>Um eine neue Predigt anzulegen, musst du den Gottesdienst erst speichern. Hier kannst du dem Gottesdienst stattdessen eine bereits bestehende Predigt zuordnen:</p>
+                        @select(['name' => 'sermon_id', 'label' => 'Predigt zuordnen', 'items' => \App\Sermon::getList($city), 'enabled' => Auth::user()->can('gd-allgemein-bearbeiten'), 'empty' => true])
                     @endtab
                     @if(\App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city))
                         @tab(['id' => 'konfiapp'])
@@ -127,6 +126,15 @@
                 render: {
                     option_create: function (data, escape) {
                         return '<div class="create">Neue Person anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    }
+                },
+            });
+
+            $('#selectServiceGroups_input').selectize({
+                create: true,
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Neue Gruppe anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                     }
                 },
             });

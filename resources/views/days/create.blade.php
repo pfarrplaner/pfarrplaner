@@ -8,7 +8,7 @@
         @component('components.ui.card')
             @slot('cardFooter')
                 <button type="submit" class="btn btn-primary" id="submit" disabled="disabled">Ansicht ändern</button>
-                <a class="btn btn-secondary" href="{{ route('calendar', compact('year', 'month')) }}">Zurück</a>
+                <a class="btn btn-secondary" href="{{ route('calendar', $year.'-'.$month) }}">Zurück</a>
             @endslot
             <input type="hidden" name="date"/>
             <label>{{ $start->formatLocalized ('%B %Y') }}</label>

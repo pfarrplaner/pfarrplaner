@@ -53,7 +53,9 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 /**
  * Class ServiceController
@@ -112,10 +114,7 @@ class ServiceController extends Controller
         // emit event so that integrations may react
         event(new ServiceCreated($service));
 
-        return redirect()->route(
-            'calendar',
-            ['year' => $service->day->date->year, 'month' => $service->day->date->month]
-        )
+        return redirect()->route('calendar', $service->day->date->format('Y-m'))
             ->with('success', 'Der Gottesdienst wurde hinzugefügt');
     }
 
@@ -143,6 +142,46 @@ class ServiceController extends Controller
         return redirect()->route('services.edit', $service);
     }
 
+
+    public function update2(ServiceRequest $request, Service $service)
+    {
+        $data = $request->validated();
+        return redirect()->back();
+    }
+
+    public function editor(Service $service, $tab = 'home') {
+
+//        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
+
+        $service->load(['attachments', 'comments', 'bookings']);
+
+        $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
+            ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
+
+        $ministries = DB::table('service_user')->select('category')->distinct()->get();
+        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
+
+        $users = User::all();
+
+        $tags = Tag::all();
+        $serviceGroups = ServiceGroup::all();
+        return Inertia::render(
+            'serviceEditor',
+            compact(
+                'service',
+                'locations',
+                'users',
+                'tab',
+                'tags',
+                'serviceGroups',
+                'ministries',
+                'days'
+            )
+        );
+
+
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -155,14 +194,9 @@ class ServiceController extends Controller
     {
         $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
 
-        $ministries = Participant::all()
-            ->pluck('category')
-            ->unique()
-            ->reject(
-                function ($value, $key) {
-                    return in_array($value, ['P', 'O', 'M', 'A']);
-                }
-            );
+        $ministries = Participant::all()->pluck('category')->unique()->reject(function ($item){
+            return in_array($item, ['P', 'O', 'M', 'A']);
+        });
 
         $days = Day::orderBy('date', 'ASC')->get();
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
@@ -219,8 +253,8 @@ class ServiceController extends Controller
             event(new ServiceUpdated($service, $originalParticipants));
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
 
-            // update YouTube as well
-            if ($service->youtube_url) {
+            // update YouTube as well (but only if there's a connected account for this city
+            if (($service->youtube_url != '') && ($service->city->google_access_token != '')) {
                 Broadcast::get($service)->update();
                 $success .= ' Diese wurden automatisch auch auf YouTube aktualisiert.';
             }
@@ -231,10 +265,7 @@ class ServiceController extends Controller
             return redirect($route)->with('success', $success);
         } else {
             // default: redirect to calendar
-            return redirect()->route(
-                'calendar',
-                ['year' => $service->day->date->year, 'month' => $service->day->date->month]
-            )
+            return redirect()->route('calendar', $service->day->date->format('Y-m'))
                 ->with('success', $success);
         }
     }
@@ -253,7 +284,7 @@ class ServiceController extends Controller
         event(new ServiceBeforeDelete($service));
 
         $service->delete();
-        return redirect()->route('calendar', ['year' => $day->date->year, 'month' => $day->date->month])
+        return redirect()->route('calendar', $day->date->format('Y-m'))
             ->with('success', 'Der Gottesdiensteintrag wurde gelöscht.');
     }
 

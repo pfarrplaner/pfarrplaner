@@ -44,6 +44,7 @@ use Inertia\Inertia;
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
+Route::get('days/list/{city}', 'DayController@list')->name('days.list');
 
 
 Route::resource('users', 'UserController')->middleware('auth');
@@ -53,15 +54,18 @@ Route::post('user/{user}/join', ['as' => 'user.join', 'uses' => 'UserController@
 Route::post('users/join', ['as' => 'users.join', 'uses' => 'UserController@doJoin'])->middleware('auth');
 Route::get('user/{user}/services', ['as' => 'user.services', 'uses' => 'UserController@services'])->middleware('auth');
 Route::get('user/switch/{user}', ['as' => 'user.switch', 'uses' => 'UserController@switch'])->middleware('auth');
+Route::post('users/add', 'UserController@add')->middleware('auth')->name('users.add');
 
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
 
+Route::patch('/services/{service}', 'ServiceController@update2')->name('services.update');
 Route::resource('services', 'ServiceController')->middleware('auth');
 Route::get('services/{service}/edit/{tab?}', ['as' => 'services.edit', 'uses' => 'ServiceController@edit']);
 Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'ServiceController@ical']);
 Route::get('/service/{service}/songsheet', 'ServiceController@songsheet')->name('service.songsheet');
 Route::get('/services/{city}/streaming/next', 'PublicController@nextStream')->name('service.nextstream');
+Route::get('services/{service}', 'ServiceController@editor')->name('services.editor');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
@@ -259,6 +263,46 @@ Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr')
 // inertia testing
 Route::get('/calendar/{date?}/{month?}', 'CalController@index')->name('calendar');
 
+// liturgy editor
+Route::get('/services/{service}/liturgy', 'LiturgyEditorController@editor')->name('services.liturgy.editor');
+Route::get('/services/{service}/liturgy/download/{key}', 'LiturgyEditorController@download')->name('services.liturgy.download');
+Route::post('/services/{service}/liturgy', 'LiturgyEditorController@save')->name('services.liturgy.save');
+Route::get('/services/{service}/liturgy/sources', 'LiturgyEditorController@sources')->name('services.liturgy.sources');
+Route::post('/services/{service}/liturgy/import/{source}', 'LiturgyEditorController@import')->name('services.liturgy.import');
+
+// liturgy blocks
+Route::post('/liturgy/{service}/block', 'LiturgyBlockController@store')->name('liturgy.block.store');
+Route::post('/liturgy/{service}/block/{block}', 'LiturgyBlockController@sync')->name('liturgy.block.sync');
+Route::patch('/liturgy/{service}/block/{block}', 'LiturgyBlockController@update')->name('liturgy.block.update');
+Route::delete('/liturgy/{service}/block/{block}', 'LiturgyBlockController@destroy')->name('liturgy.block.destroy');
+
+// liturgy items
+Route::post('/liturgy/{service}/block/{block}/item', 'LiturgyItemController@store')->name('liturgy.item.store');
+Route::patch('/liturgy/{service}/block/{block}/item/{item}', 'LiturgyItemController@update')->name('liturgy.item.update');
+Route::delete('/liturgy/{service}/block/{block}/item/{item}', 'LiturgyItemController@destroy')->name('liturgy.item.destroy');
+Route::post('/liturgy/{service}/block/{block}/item/{item}/roster', 'LiturgyItemController@roster')->name('liturgy.item.roster');
+
+// liturgical texts
+Route::get('/liturgy/texts', 'LiturgicalTextsController@index')->name('liturgy.text.index');
+Route::get('/liturgy/texts/list', 'LiturgicalTextsController@list')->name('liturgy.text.list');
+Route::post('/liturgy/texts', 'LiturgicalTextsController@store')->name('liturgy.text.store');
+Route::post('/liturgy/texts/import', 'LiturgicalTextsController@import')->name('liturgy.text.import');
+Route::patch('/liturgy/texts/{text}', 'LiturgicalTextsController@update')->name('liturgy.text.update');
+
+// songs
+Route::get('/liturgy/songs', 'SongController@index')->name('liturgy.song.index');
+Route::get('/liturgy/songs/songbooks', 'SongController@songbooks')->name('liturgy.song.songbooks');
+Route::post('/liturgy/songs', 'SongController@store')->name('liturgy.song.store');
+Route::patch('/liturgy/songs/{song}', 'SongController@update')->name('liturgy.song.update');
+
+// psalms
+Route::get('/liturgy/psalms', 'PsalmController@index')->name('liturgy.psalm.index');
+Route::post('/liturgy/psalms', 'PsalmController@store')->name('liturgy.psalm.store');
+Route::patch('/liturgy/psalms/{psalm}', 'PsalmController@update')->name('liturgy.psalm.update');
+
+// agenda
+\App\Http\Controllers\AgendaController::defaultRoutes('liturgy');
+
 
 // ministry request
 Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@ministryRequest')
@@ -268,3 +312,13 @@ Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRe
 
 // settings
 Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.set');
+
+// sermons
+Route::get('/services/{service}/sermon', 'SermonController@editorByService')->name('services.sermon.editor');
+Route::post('/services/{service}/sermon', 'SermonController@store')->name('services.sermon.store');
+Route::delete('/services/{service}/sermon', 'SermonController@uncouple')->name('services.sermon.uncouple');
+Route::get('/sermons/{sermon}', 'SermonController@editor')->name('sermon.editor');
+Route::patch('/sermons/{sermon}', 'SermonController@update')->name('sermon.update');
+
+// patch
+Route::get('/patch/{patch}', 'PatchController@patch');

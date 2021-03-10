@@ -153,7 +153,11 @@ class AbsenceController extends Controller
      */
     private function getHolidays(Carbon $start, Carbon $end)
     {
-        $raw = json_decode(file_get_contents('https://ferien-api.de/api/v1/holidays/BW'), true);
+        try {
+            $raw = json_decode(file_get_contents('https://ferien-api.de/api/v1/holidays/BW'), true);
+        } catch (Exception $e) {
+            return [];
+        }
         $holidays = [];
         foreach ($raw as $holiday) {
             $holiday['start'] = new Carbon($holiday['start']);

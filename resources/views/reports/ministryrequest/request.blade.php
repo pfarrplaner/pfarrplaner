@@ -29,7 +29,7 @@
                     <tr>
                         <td>@checkbox(['name' => 'services['.$service->id.']', 'label' => ''])</td>
                         <td><b>{{$service->day->date->formatLocalized('%A, %d.%m.%Y')}} {{$service->timeText()}}</b><br /> {{$service->locationText()}}</td>
-                        <td>{{ $service->participantsText($ministry) }}</td>
+                        <td>{{ $service->participantsText($ministry, true) }}</td>
                     </tr>
                 @endforeach
 

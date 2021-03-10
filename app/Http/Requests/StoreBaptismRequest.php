@@ -31,6 +31,7 @@
 namespace App\Http\Requests;
 
 use App\Baptism;
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -63,6 +64,7 @@ class StoreBaptismRequest extends FormRequest
             'candidate_email' => 'nullable|email',
             'candidate_zip' => 'nullable|zip',
             'candidate_phone' => 'nullable|phone_number',
+            'pronoun_set' => 'nullable|string',
             'city_id' => 'required|integer|exists:cities,id|in:' . $this->user()->writableCities->pluck('id')->implode(
                     ','
                 ),
@@ -72,5 +74,27 @@ class StoreBaptismRequest extends FormRequest
             'signed' => 'nullable|integer|between:0,1',
             'registration_document' => 'nullable|mimetypes:application/pdf',
         ];
+    }
+
+    public function validated()
+    {
+        $data = parent::validated();
+
+        $data['candidate_address'] ??= '';
+        $data['candidate_zip'] ??= '';
+        $data['candidate_city'] ??= '';
+        $data['candidate_phone'] ??= '';
+        $data['candidate_email'] ??= '';
+        $data['first_contact_with'] ??= '';
+        $data['docs_where'] ??= '';
+        $data['registration_document'] ??= '';
+        $data['docs_ready'] ??= 0;
+        $data['signed'] ??= 0;
+        $data['registered'] ??= 0;
+
+        $data['first_contact_on'] ? $data['first_contact_on'] = Carbon::createFromFormat('d.m.Y', $data['first_contact_on']) : $data['first_contact_on'] = null;
+        $data['appointment'] ? $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment']) : $data['appointment'] = null;
+
+        return $data;
     }
 }

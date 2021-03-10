@@ -197,10 +197,6 @@ class MultipleServicesInput extends AbstractInput
             }
         }
 
-        $data = [
-            'month' => $firstDay->date->format('m'),
-            'year' => $firstDay->date->format('Y'),
-        ];
 
         foreach ($serviceRecords as $key => $record) {
             $serviceRecords[$key] = $record->load(['day', 'location']);
@@ -211,7 +207,7 @@ class MultipleServicesInput extends AbstractInput
         Subscription::send($service, ServiceCreatedMultiple::class, ['services' => $serviceRecords]);
 
         if ($ctrExisting) {
-            return redirect()->route('calendar', $data)->with(
+            return redirect()->route('calendar', $firstDay->date->format('Y-m'))->with(
                 'warning',
                 sprintf(
                     '%d Gottesdienste wurden hinzugefügt. %d Gottesdienste waren bereits vorhanden.',
@@ -220,7 +216,7 @@ class MultipleServicesInput extends AbstractInput
                 )
             );
         } else {
-            return redirect()->route('calendar', $data)->with(
+            return redirect()->route('calendar', $firstDay->date->format('Y-m'))->with(
                 'success',
                 sprintf('%d Gottesdienste wurden hinzugefügt.', $ctrAdded)
             );

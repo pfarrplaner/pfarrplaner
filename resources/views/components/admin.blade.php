@@ -68,7 +68,7 @@
                 @canany(['benutzerliste-lokal-sehen', 'benutzer-bearbeiten', 'rollen-bearbeiten', 'ort-bearbeiten', 'kirche-bearbeiten', 'tags-bearbeiten'])
                     <div class="dropdown-divider"></div>
                 @endcanany
-                    <a class="dropdown-item" href="{{ route('calendar', ['year' => null, 'month' => null, 'slave' => 1]) }}" target="_blank">
+                    <a class="dropdown-item" href="{{ route('calendar', ['date' => null, 'month' => null, 'slave' => 1]) }}" target="_blank">
                         Automatische Kalenderansicht öffnen
                     </a>
             </div>

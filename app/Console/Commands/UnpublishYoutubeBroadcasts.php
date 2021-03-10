@@ -7,6 +7,7 @@ use App\Helpers\YoutubeHelper;
 use App\Integrations\Youtube\YoutubeIntegration;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UnpublishYoutubeBroadcasts extends Command
 {
@@ -34,6 +35,11 @@ class UnpublishYoutubeBroadcasts extends Command
         parent::__construct();
     }
 
+    protected function output($s) {
+        $this->line($s);
+        Log::info($s);
+    }
+
     /**
      * Execute the console command.
      *
@@ -44,19 +50,19 @@ class UnpublishYoutubeBroadcasts extends Command
         $cities = City::where('youtube_channel_url', '!=', '')->where('youtube_cutoff_days', '>', 0)->get();
         foreach ($cities as $city) {
 
-            $this->line('Checking videos for "' . $city->name . '"');
+            $this->output('Checking videos for "' . $city->name . '"');
             $youtube = YoutubeIntegration::get($city);
             $channelId = YoutubeHelper::getChannelId($city->youtube_channel_url);
-            $this->line('Checking channel ' . $channelId);
+            $this->output('Checking channel ' . $channelId);
             /** @var \Google_Service_YouTube_Channel $channel */
             $channel = $youtube->getYoutube()->channels->listChannels(
                 'id,snippet,contentDetails',
                 ['id' => $channelId]
             )->getItems()[0];
 
-            $this->line('Configured cut-off after '.$city->youtube_cutoff_days.' days');
+            $this->output('Configured cut-off after '.$city->youtube_cutoff_days.' days');
             $cutoffDate = Carbon::now()->subDays($city->youtube_cutoff_days);
-            $this->line('Cut-off date: '.$cutoffDate->format('Y-m-d H:i:s'));
+            $this->output('Cut-off date: '.$cutoffDate->format('Y-m-d H:i:s'));
 
             $allBroadcasts = [];
             $broadcasts = $youtube->getYoutube()->liveBroadcasts->listLiveBroadcasts(
@@ -88,7 +94,7 @@ class UnpublishYoutubeBroadcasts extends Command
                 $pubDate = new Carbon($broadcast->getSnippet()->getScheduledStartTime());
                 if ($pubDate < $cutoffDate) {
                     if ($broadcast->getStatus()->getPrivacyStatus() == 'public') {
-                        $this->line('Unpublishing broadcast id ' . $broadcast->getId()
+                        $this->output('Unpublishing broadcast id ' . $broadcast->getId()
                                     . ' (' . $pubDate->format('Y-m-d H:i:s').')'
                         );
 
@@ -99,7 +105,7 @@ class UnpublishYoutubeBroadcasts extends Command
                         $youtube->getYoutube()->liveBroadcasts->update('snippet,status', $broadcast);
                     }
                 } else {
-                    $this->line('Leaving broadcast id ' . $broadcast->getId()
+                    $this->output('Leaving broadcast id ' . $broadcast->getId()
                                 . ' (' . $pubDate->format('Y-m-d H:i:s').') online.'
                     );
                 }

@@ -31,6 +31,7 @@
     <div class="button-row no-print btn-toolbar" role="toolbar">
         <div class="btn-group mr-2" role="group">
             <inertia-link class="btn btn-default"
+                          v-if="numericDate > 201801"
                           :href="route('calendar', { date: moment(date).subtract(1, 'months').format('YYYY-MM') })"
                           title="Einen Monat zurück">
                 <span class="fa fa-backward"></span>
@@ -38,7 +39,7 @@
             <inertia-link class="btn btn-default"
                           :href="route('calendar', { date: moment().format('YYYY-MM') })"
                           title="Gehe zum aktuellen Monat">
-                <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute</span>
+                <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute </span>
             </inertia-link>
 
             <!-- TODO month / year dropdown -->
@@ -48,18 +49,18 @@
                     {{ moment(date).locale('de-DE').format('MMMM') }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <inertia-link class="dropdown-item" :href="monthLink(1)" >Januar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(2)" >Februar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(3)" >März</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(4)" >April</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(5)" >Mai</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(6)" >Juni</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(7)" >Juli</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(8)" >August</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(9)" >September</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(10)" >Oktober</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(11)" >November</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(12)" >Dezember</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(1)">Januar</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(2)">Februar</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(3)">März</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(4)">April</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(5)">Mai</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(6)">Juni</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(7)">Juli</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(8)">August</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(9)">September</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(10)">Oktober</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(11)">November</inertia-link>
+                    <inertia-link class="dropdown-item" :href="monthLink(12)">Dezember</inertia-link>
                 </div>
             </div>
             <div class="btn-group" role="group">
@@ -69,7 +70,8 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
                     <inertia-link v-for="year in years" class="dropdown-item"
-                                  :key="year" :year="year" :href="yearLink(year)">{{ year }}</inertia-link>
+                                  :key="year" :year="year" :href="yearLink(year)">{{ year }}
+                    </inertia-link>
                 </div>
             </div>
 
@@ -96,7 +98,8 @@
                title="Angezeigte Tage ändern"><span
                 class="fa fa-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
         </div>
-        <a class="btn btn-default" :href="route('reports.setup', {report: 'ministryRequest'})" title="Dienstanfrage per E-Mail senden"><span class="fa fa-envelope"></span> Anfrage senden...</a>
+        <a class="btn btn-default" :href="route('reports.setup', {report: 'ministryRequest'})"
+           title="Dienstanfrage per E-Mail senden"><span class="fa fa-envelope"></span> Anfrage senden...</a>
 
     </div>
 
@@ -111,20 +114,21 @@ export default {
         return {
             slave: false,
             allColumnsOpen: false,
+            numericDate: parseInt(moment(this.date).format('YYYYMM')),
         }
     },
     props: {
-        'date': { type: Date}, 'years': { type: Object }
+        'date': {type: Date}, 'years': {type: Object}
     },
     methods: {
         monthLink: function (month) {
             return route('calendar', {
-                date: this.date.getFullYear()+'-'+month
+                date: this.date.getFullYear() + '-' + month
             });
         },
         yearLink: function (year) {
             return route('calendar', {
-                date: year+'-'+(this.date.getUTCMonth()+1)
+                date: year + '-' + (this.date.getUTCMonth() + 1)
             });
         },
         toggleColumns() {

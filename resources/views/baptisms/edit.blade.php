@@ -52,6 +52,7 @@
                     @endif
                     @hidden(['name' => 'city_id', 'id' => 'cityHidden', 'value' => $baptism->city_id])
                     @input(['name' => 'candidate_name', 'label' => 'Name des Täuflings', 'required' => 1, 'placeholder' => 'Nachname, Vorname', 'value' => $baptism->candidate_name])
+                    @radiogroup(['name' => 'pronoun_set', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items(), 'value' => $baptism->pronoun_set])
                     @input(['name' => 'candidate_address', 'label' => 'Adresse', 'value' => $baptism->candidate_address])
                     @input(['name' => 'candidate_zip', 'label' => 'PLZ', 'pattern' => '^([0]{1}[1-9]{1}|[1-9]{1}[0-9]{1})[0-9]{3}$', 'value' => $baptism->candidate_zip])
                     @input(['name' => 'candidate_city', 'label' => 'Ort', 'value' => $baptism->candidate_city])

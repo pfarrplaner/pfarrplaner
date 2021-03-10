@@ -110,8 +110,12 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
             }
         }
 
-        $minDate = min($dates);
-        $maxDate = max($dates);
+        if (count($dates)) {
+            $minDate = min($dates);
+            $maxDate = max($dates);
+        } else {
+            return redirect()->back()->with('error', 'In der gewählten Zeit findet kein Kindergottesdienst statt.');
+        }
 
         return $this->sendToBrowser(
             date('Ymd') . ' Kinderkirche ' . $city->name . '.pdf',

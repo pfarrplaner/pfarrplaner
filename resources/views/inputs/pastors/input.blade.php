@@ -33,7 +33,7 @@
                         <thead>
                         <tr>
                             <th>Gottesdienst</th>
-                            <th>Organist*in</th>
+                            <th>Pfarrer*in</th>
                             <th>Besonderheiten</th>
                         </tr>
                         </thead>

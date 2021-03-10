@@ -35,6 +35,7 @@ use App\Seating\SeatingValidators;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
@@ -125,6 +126,26 @@ class AppServiceProvider extends ServiceProvider
         QueryLog::register();
 
         Inertia::setRootView('inertia-app');
+        Inertia::share(['dev' => config('app.dev') ? true:  false]);
+        Inertia::share(
+            [
+                'errors' => function () {
+                    return Session::get('errors')
+                        ? Session::get('errors')->getBag('default')->getMessages()
+                        : (object)[];
+                }
+            ]
+        );
+        Inertia::share(
+            [
+                'flash' => function () {
+                    return [
+                        'success' => Session::get('success'),
+                        'info'  => Session::get('info'),
+                    ];
+                }
+            ]
+        );
     }
 
     /**

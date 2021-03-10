@@ -57,6 +57,7 @@ class Baptism extends Model
         'candidate_city',
         'candidate_email',
         'candidate_phone',
+        'pronoun_set',
         'first_contact_with',
         'first_contact_on',
         'registered',

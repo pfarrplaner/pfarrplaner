@@ -21,6 +21,7 @@
                                        placeholder="Nachname, Vorname"
                                        value="{{ $wedding->spouse1_name }}"/>
                             </div>
+                            @radiogroup(['name' => 'pronoun_set1', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items(), 'value' => $wedding->pronoun_set1])
                             <div class="form-group">
                                 <label for="spouse1_birth_name">evtl. Geburtsname</label>
                                 <input type="text" class="form-control" name="spouse1_birth_name"
@@ -46,6 +47,7 @@
                                        placeholder="Nachname, Vorname"
                                        value="{{ $wedding->spouse2_name }}"/>
                             </div>
+                            @radiogroup(['name' => 'pronoun_set2', 'label' => 'Zu verwendendes Pronomen', 'items' => \App\Liturgy\PronounSets\PronounSets::items(), 'value' => $wedding->pronoun_set2])
                             <div class="form-group">
                                 <label for="spouse2_birth_name">evtl. Geburtsname</label>
                                 <input type="text" class="form-control" name="spouse2_birth_name"
@@ -70,12 +72,7 @@
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Vorbereitung @endslot
-                    <div class="form-group">
-                        <label for="appointment">Traugespräch</label>
-                        <input type="text" class="form-control datepicker" name="appointment"
-                               placeholder="tt.mm.jjjj"
-                               value="{{ $wedding->appointment ? $wedding->appointment->format('d.m.Y') : ''}}"/>
-                    </div>
+                    @datetimepicker(['name' =>'appointment', 'label' => 'Traugespräch', 'placeholder' => 'TT.MM.JJJJ HH:MM', 'value' => $wedding->appointment ? $wedding->appointment->format('d.m.Y H:i') : ''])
                     <div class="form-group">
                         <label for="text">Trautext</label>
                         <input type="text" class="form-control" name="text" value="{{ $wedding->text }}"/>
