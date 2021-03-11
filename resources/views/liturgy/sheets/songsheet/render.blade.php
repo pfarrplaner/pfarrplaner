@@ -272,7 +272,7 @@
     @endforeach
 @endforeach
 <p style="margin-top: 0.5cm;"><small>
-        Stand: {{ \Carbon\Carbon::now()->format('d.m.Y, H:i') }} Uhr
+        Stand: {{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->format('d.m.Y, H:i') }} Uhr
     </small></p>
 </body>
 </html>
