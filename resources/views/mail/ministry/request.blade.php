@@ -13,20 +13,22 @@ Hallo {{ $user->name }},
 - {{ $service->day->date->formatLocalized('%A, %d. %B %Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}
 @endforeach
 
+@if($text)
+
+    Dazu hat {{ $sender->name }} noch Folgendes geschrieben:
+
+
+    {{ $text }}
+
+
+@endif
+
+
 Bist du dabei? Dann kannst du hier mit nur ein paar Klicks die entsprechenden Gottesdienste auswählen und direkt zusagen:
 @component('mail::button', ['url' => $url])
     Zur Anfrage
 @endcomponent
 
-@if($text)
-
-Dazu hat {{ $sender->name }} noch Folgendes geschrieben:
-
-
-{{ $text }}
-
-
-@endif
 
 
 Du hast noch Fragen? Dann wende dich am Besten direkt an {{ $sender->name }} ({{ $sender->email }}).
