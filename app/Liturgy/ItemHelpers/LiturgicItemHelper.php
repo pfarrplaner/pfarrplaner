@@ -67,7 +67,7 @@ class LiturgicItemHelper extends AbstractItemHelper
                             ) : 'bestattung:todesdatum',
                             'bestattung:todesdatum:relativ' =>
                                 $funeral->dod ? $this->relativeDateString(
-                                    $service->date,
+                                    $service->day->date,
                                     $funeral->dod
                                 ) : 'bestattung:todesdatum:relativ',
                             'bestattung:geburtsdatum' => $funeral->dob ? $funeral->dob->format(
@@ -87,7 +87,7 @@ class LiturgicItemHelper extends AbstractItemHelper
                 $baptismId = $this->item->data['replacement'] ?? $service->baptisms->first()->id;
                 if ($service->baptisms->pluck('id')->contains($baptismId)) {
                     $baptism = Baptism::find($baptismId);
-                    list($lastName, $firstName) = explode(',', $baptismId->candidate_name);
+                    list($lastName, $firstName) = explode(',', $baptism->candidate_name);
                     foreach (
                         [
                             'taufe:vorname' => trim($firstName),
