@@ -92,6 +92,7 @@ class User extends Authenticatable
         'canEditCC',
         'new_features',
         'manage_absences',
+        'api_token'
     ];
 
     /**
