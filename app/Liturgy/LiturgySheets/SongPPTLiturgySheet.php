@@ -157,7 +157,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
     protected function sendToBrowser($filename)
     {
         header("Content-Description: File Transfer");
-        header('Content-Disposition: attachment; filename="' . $filename . '.pptx"');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
         header('Content-Type: application/vnd.openxmlformats-officedocument.presentationml.presentation');
         header('Content-Transfer-Encoding: binary');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
