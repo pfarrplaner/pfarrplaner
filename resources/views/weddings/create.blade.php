@@ -58,7 +58,7 @@
             <div class="col-md-6">
                 @component('components.ui.card')
                     @slot('cardHeader')Vorbereitung @endslot
-                    @datetimepicker(['name' =>'appointment', 'label' => 'Traugespräch', 'placeholder' => 'TT.MM.JJJJ HH:MM', 'value' => $wedding->appointment ? $wedding->appointment->format('d.m.Y H:i') : ''])
+                    @datetimepicker(['name' =>'appointment', 'label' => 'Traugespräch', 'placeholder' => 'TT.MM.JJJJ HH:MM'])
                     <div class="form-group">
                         <label for="text">Trautext</label>
                         <input type="text" class="form-control" name="text"/>
