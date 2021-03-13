@@ -81,8 +81,8 @@
                         <div v-if="editedElement.data.needs_replacement == 'baptism'" class="form-group">
                             <label>Platzhalter ersetzen für Taufe</label>
                             <select class="form-control" v-model="editedElement.data.replacement">
-                                <option v-for="funeral in service.baptisms" :value="baptism.id">{{
-                                        funeral.candidate_name
+                                <option v-for="baptism in service.baptisms" :value="baptism.id">{{
+                                        baptism.candidate_name
                                     }}
                                 </option>
                             </select>
@@ -90,10 +90,10 @@
                         <div v-if="editedElement.data.needs_replacement == 'wedding'" class="form-group">
                             <label>Platzhalter ersetzen für Trauung</label>
                             <select class="form-control" v-model="editedElement.data.replacement">
-                                <option v-for="funeral in service.wedding" :value="wedding.id">{{
-                                        funeral.spouse1_name
+                                <option v-for="wedding in service.wedding" :value="wedding.id">{{
+                                        wedding.spouse1_name
                                     }}
-                                    &amp; {{ funeral.spouse2_name }}
+                                    &amp; {{ wedding.spouse2_name }}
                                 </option>
                             </select>
                         </div>
