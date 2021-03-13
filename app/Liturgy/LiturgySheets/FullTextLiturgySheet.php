@@ -103,14 +103,14 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
                 '<h2>' => '<h4>', '</h2>' => '</h4>',
             ]));
             $dom = new \DOMDocument();
-            $dom->loadHTML($text);
+            $dom->loadHTML($text, LIBXML_NOWARNING);
             $nodes = [];
             /** @var \DOMNode $node */
             foreach ($dom->documentElement->firstChild->childNodes as $node) {
                 if ($node->nodeName == 'blockquote') {
                     $doc->renderText($node->nodeValue, $doc::BLOCKQUOTE, ['size' => 10]);
                 } else {
-                    Html::addHtml($doc->getSection(), $dom->saveHTML($node));
+                    Html::addHtml($doc->getSection(), '<body>'.str_replace('<br>', '<br />', $dom->saveHTML($node)).'</body>');
                 }
                 $nodes[] = $node->nodeName.' -> '.$node->nodeValue;
             }
