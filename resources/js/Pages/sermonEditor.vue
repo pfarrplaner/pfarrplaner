@@ -235,7 +235,7 @@ export default {
                         ['bold', 'italic', 'underline'],        // toggled buttons
                         ['blockquote'],
 
-                        [{'header': 1}, {'header': 2}],               // custom button values
+                        [{'header': 1}],               // custom button values
                         [{'list': 'ordered'}, {'list': 'bullet'}],
 
                         ['clean']                                         // remove formatting button
