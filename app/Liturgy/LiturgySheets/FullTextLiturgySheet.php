@@ -81,6 +81,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderFreetextItem(DefaultWordDocument $doc, Item $item)
     {
+        if (!$item->data['description']) return;
         $doc->renderNormalText(Replacement::replaceAll($item->data['description'], $this->service));
     }
 
@@ -96,6 +97,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         if (null === $this->service->sermon) {
             $doc->renderNormalText('Für diesen Gottesdienst wurde noch keine Predigt angelegt.', ['italic' => true]);
         } else {
+            if (!$this->service->sermon->text) return;
             $text = utf8_decode(strtr($this->service->sermon->text, [
                 '<h1>' => '<h3>', '</h1>' => '</h3>',
                 '<h2>' => '<h4>', '</h2>' => '</h4>',
@@ -117,6 +119,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderPsalmItem(DefaultWordDocument $doc, Item $item)
     {
+        if (!$item->data['psalm']['text']) return;
         /** @var PsalmItemHelper $helper */
         $helper = $item->getHelper();
         $doc->getSection()->addTitle($helper->getTitleText(),3);
@@ -125,6 +128,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderSongItem(DefaultWordDocument $doc, Item $item)
     {
+        if (null === $item->data['song']) return;
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
         $doc->getSection()->addTitle($helper->getTitleText(),3);
@@ -142,6 +146,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderReadingItem(DefaultWordDocument $doc, Item $item)
     {
+        if (!$item->data['reference']) return;
         $doc->getSection()->addTitle($item->data['reference'], 3);
 
         $ref = ReferenceParser::getInstance()->parse($item->data['reference']);
