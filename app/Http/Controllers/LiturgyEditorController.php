@@ -61,7 +61,7 @@ class LiturgyEditorController extends Controller
 
     public function sources(Service $service)
     {
-        $services = Service::isNotAgenda()->writable()->orderedDesc()->limit(50)->get();
+        $services = Service::isNotAgenda()->writable()->orderedDesc()->whereHas('liturgyBlocks')->limit(50)->get();
         $agendas = Service::isAgenda()->get();
         return response()->json(compact('services', 'agendas'));
     }
