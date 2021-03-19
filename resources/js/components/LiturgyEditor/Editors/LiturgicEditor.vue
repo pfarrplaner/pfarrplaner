@@ -90,7 +90,7 @@
                         <div v-if="editedElement.data.needs_replacement == 'wedding'" class="form-group">
                             <label>Platzhalter ersetzen für Trauung</label>
                             <select class="form-control" v-model="editedElement.data.replacement">
-                                <option v-for="wedding in service.wedding" :value="wedding.id">{{
+                                <option v-for="wedding in service.weddings" :value="wedding.id">{{
                                         wedding.spouse1_name
                                     }}
                                     &amp; {{ wedding.spouse2_name }}

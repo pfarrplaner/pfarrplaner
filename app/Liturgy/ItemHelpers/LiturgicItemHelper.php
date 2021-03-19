@@ -125,9 +125,9 @@ class LiturgicItemHelper extends AbstractItemHelper
                     }
                     /** @var AbstractPronounSet $pronounSet */
                     $pronounSet1 = PronounSets::get($wedding->pronoun_set1);
-                    $text = $pronounSet->replacePronouns($text, 'trauung:person1');
+                    $text = $pronounSet1->replacePronouns($text, 'trauung:person1');
                     $pronounSet2 = PronounSets::get($wedding->pronoun_set2);
-                    $text = $pronounSet->replacePronouns($text, 'trauung:person2');
+                    $text = $pronounSet2->replacePronouns($text, 'trauung:person2');
                 }
                 break;
         }
