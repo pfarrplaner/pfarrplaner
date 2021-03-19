@@ -81,7 +81,13 @@ class Item extends Model
         $list = (isset($this->data['responsible']) ? $this->data['responsible'] : []);
         $p = [];
         foreach ($list as $participant) {
-            list($type, $id) = explode(':', $participant);
+            if (is_array($participant)) {
+                $type = $participant['type'];
+                $id = $participant['name'];
+            } else {
+                list($type, $id) = explode(':', $participant);
+            }
+            if ((!$type) || (!$id)) continue;
             if ($type == 'ministry') {
                 $id = isset(self::replacement[$id]) ? self::replacement[$id] : $id;
                 $p[] = $this->block->service->participantsText($id, true, false);
