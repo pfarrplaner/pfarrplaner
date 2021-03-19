@@ -66,10 +66,11 @@ class LiturgicItemHelper extends AbstractItemHelper
                                 'd.m.Y'
                             ) : 'bestattung:todesdatum',
                             'bestattung:todesdatum:relativ' =>
-                                $funeral->dod ? $this->relativeDateString(
-                                    $service->day->date,
-                                    $funeral->dod
-                                ) : 'bestattung:todesdatum:relativ',
+                                $funeral->dod ? '' //$this->relativeDateString(
+                                    //$service->day->date,
+                                    //$funeral->dod
+                                //)
+                                    : 'bestattung:todesdatum:relativ',
                             'bestattung:geburtsdatum' => $funeral->dob ? $funeral->dob->format(
                                 'd.m.Y'
                             ) : 'bestattung:geburtsdatum',
@@ -150,7 +151,8 @@ class LiturgicItemHelper extends AbstractItemHelper
         }
         $weeks = sprintf('%d', floor($diff / 7));
         $d2 = $relativeToday->copy()->subDays($diff % 7);
-        return relativeDateString($relativeToday, $d2) . ' vor ' . $weeks . ' Woche' . ($weeks > 1 ? 'n' : '');
+        dump('hi');
+        return $this->relativeDateString($relativeToday, $d2) . ' vor ' . $weeks . ' Woche' . ($weeks > 1 ? 'n' : '');
     }
 
 
