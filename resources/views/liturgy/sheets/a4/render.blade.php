@@ -223,7 +223,7 @@
 <htmlpagefooter name="PageFooter">
     <table class="footer" style="">
         <tr>
-            <td valign="top">Stand: {{ \Carbon\Carbon::now()->format('d.m.Y, H:i') }} Uhr</td>
+            <td valign="top">Stand: {{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->format('d.m.Y, H:i') }} Uhr</td>
             <td style="text-align: center;">{{ Auth::user()->fullName(false) }}</td>
             <td valign="top" style="text-align: right">Seite {PAGENO} / {nbpg}</td>
         </tr>
@@ -286,9 +286,6 @@
     @endforeach
     </tbody>
 </table>
-<p style="margin-top: 0.5cm;"><small>
-    Stand: {{ \Carbon\Carbon::now()->format('d.m.Y, H:i') }} Uhr
-</small></p>
 
 @foreach ($recipients as $recipient)
     <pagebreak resetpagenum="1" />
@@ -350,9 +347,6 @@
         @endforeach
         </tbody>
     </table>
-    <p style="margin-top: 0.5cm;"><small>
-            Stand: {{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->format('d.m.Y, H:i') }} Uhr
-        </small></p>
 
 @endforeach
 
