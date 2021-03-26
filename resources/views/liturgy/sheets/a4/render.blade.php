@@ -224,7 +224,7 @@
     <table class="footer" style="">
         <tr>
             <td valign="top">Stand: {{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->format('d.m.Y, H:i') }} Uhr</td>
-            <td style="text-align: center;">{{ Auth::user()->fullName(false) }}</td>
+            <td style="text-align: center;">@auth{{ Auth::user()->fullName(false) }}@endauth</td>
             <td valign="top" style="text-align: right">Seite {PAGENO} / {nbpg}</td>
         </tr>
     </table>

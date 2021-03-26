@@ -57,14 +57,21 @@ class AbstractLiturgySheet
      */
     public function render(Service $service)
     {
+        if (Auth::guest()) {
+            $authorData = ['author' => config('app.name')];
+
+        } else {
+            $authorData =                 [
+                'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
+            ];
+        }
+
         $pdf = PDF::loadView(
             $this->getRenderViewName(),
             array_merge(compact('service'), $this->getData($service)),
             [],
             array_merge(
-                [
-                    'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
-                ],
+                $authorData,
                 $this->layout,
             ),
             $this->layout
