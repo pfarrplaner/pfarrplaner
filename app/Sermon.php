@@ -38,7 +38,7 @@ class Sermon extends Model
             foreach ($value->services as $service) {
                 $user = Auth::user();
                 if ($service->city->id == $city->id) return true;
-                if (collect($service->preachers)->contains(Auth::user())) return true;
+                if (collect($service->pastors->pluck('id'))->contains(Auth::user()->id)) return true;
             }
         });
         $list = [];
