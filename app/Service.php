@@ -212,6 +212,7 @@ class Service extends Model
         'isMine',
         'titleText',
         'liveDashboardUrl',
+        'datetime'
     ];
 
     /**
@@ -1375,6 +1376,7 @@ class Service extends Model
      */
     public function dateTime()
     {
+        if (false === strpos($this->time, ':')) return new Carbon();
         list ($hour, $minute) = explode(':', $this->time);
         return $this->day->date->copy()->setTime($hour, $minute, 0);
     }
@@ -1424,5 +1426,10 @@ class Service extends Model
         return ($title ? $this->titleText(false) . ', ' : '') . $this->day->date->format(
                 'd.m.Y'
             ) . ', ' . $this->timeText() . ', ' . $this->locationText();
+    }
+
+    public function getDatetimeAttribute()
+    {
+        return $this->dateTime()->setTimezone('UTC');
     }
 }

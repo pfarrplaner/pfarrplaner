@@ -322,3 +322,14 @@ Route::patch('/sermons/{sermon}', 'SermonController@update')->name('sermon.updat
 
 // patch
 Route::get('/patch/{patch}', 'PatchController@patch');
+
+// api tokens (Sanctum)
+Route::get('/user/tokens', 'TokenController@index')->name('tokens.index');
+Route::post('/user/tokens/create', 'TokenController@create')->name('tokens.create');
+Route::delete('/user/tokens/{token}', 'TokenController@destroy')->name('tokens.destroy');
+
+// streaming troubleshooter
+Route::get('/streaming/{city}', 'StreamingTroubleshooterController@index')->name('streaming.troubleshooter');
+Route::post('/streaming/activateService/{service}', 'StreamingTroubleshooterController@activateService')->name('streaming.troubleshooter.activateService');
+Route::post('/streaming/resetService/{service}', 'StreamingTroubleshooterController@resetService')->name('streaming.troubleshooter.resetService');
+Route::post('/streaming/{city}/activateBroadcast/{broadcast}', 'StreamingTroubleshooterController@activateBroadcast')->name('streaming.troubleshooter.activateBroadcast');

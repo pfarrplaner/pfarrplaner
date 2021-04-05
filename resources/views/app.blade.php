@@ -65,7 +65,13 @@
         window.Laravel.loggedIn = {{ json_encode(!Auth::guest()) }};
     window.Laravel.timeout = {{ (config('session.lifetime')*60000)-30000 }};
     window.Laravel.expires = new Date('{!! \Carbon\Carbon::now()->addMinutes(config('session.lifetime'))->toIso8601String() !!}');
+    @auth
     window.Laravel.permissions = {!!  json_encode(Auth::user()->getAllPermissions()->pluck('name')) !!};
+    @endauth
+    @guest
+        window.Laravel.permissions = [];
+    @endguest
+
     window.Laravel.assetUrl = '{{ asset('') }}';
 
     window.setTimeout(function () {

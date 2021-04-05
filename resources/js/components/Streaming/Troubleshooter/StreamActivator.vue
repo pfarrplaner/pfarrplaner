@@ -28,44 +28,46 @@
   -->
 
 <template>
-    <div>
-        <span :class="checkClass(check)" :style="{color: check ? colorPositive : colorNegative}"></span>
-        <span v-if="check"><slot name="positive">{{ positive }}</slot></span>
-        <span v-else><slot name="negative">{{ negative }}</slot></span>
+    <div class="stream-activator">
+        <h3>{{ title }}</h3>
+        <div v-if="broadcasts.length == 0" class="alert alert-warning">
+            Diese Liste enthält aktuell keine Livestreams.
+        </div>
+        <table class="table table-striped table-hover">
+            <thead></thead>
+            <tbody>
+            <tr v-for="(broadcast,key,index) in broadcasts" title="Klicken, um auszuwählen" v-if="!broadcast.service"
+                @click="activateBroadcast(broadcast)">
+                <td>
+                    {{ moment (broadcast.snippet.scheduledStartTime).locale('de-DE').format('LLL') }}<br />
+                    {{ broadcast.snippet.title }}
+                </td>
+                <td>
+                    <button class="btn btn-success" @click="activateBroadcast(broadcast)" title="Diesen Livestream aktivieren">
+                        <span class="fa fa-check"></span> Aktivieren
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
 <script>
 export default {
-    name: "CheckedProcessItem",
-    props: {
-        check: Boolean,
-        positive: String,
-        negative: String,
-        iconPositive: {
-            type: String,
-            default: 'fa fa-check-circle',
-        },
-        iconNegative: {
-            type: String,
-            default: 'fa fa-times-circle',
-        },
-        colorPositive: {
-            type: String,
-            default: 'green',
-        },
-        colorNegative: {
-            type: String,
-            default: 'red',
-        }
-    },
+    name: "StreamActivator",
+    props: ['broadcasts', 'title', 'city'],
     methods: {
-        checkClass(criterion) {
-            return criterion ? this.iconPositive : this.iconNegative;
+        activateBroadcast(broadcast) {
+            this.$emit('close');
+            this.$inertia.post(route('streaming.troubleshooter.activateBroadcast', {city: this.city.name.toLowerCase(), broadcast: broadcast.id}), { preserveState: false});
         },
+
     }
+
 }
 </script>
 
 <style scoped>
+
 </style>

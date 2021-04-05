@@ -37,15 +37,18 @@ trait IncludesPermissionAttributes
 {
 
     public function getIsShowableAttribute() {
+        if (Auth::guest()) return false;
         return Auth::user()->can('show', $this);
     }
 
     public function getIsEditableAttribute()
     {
+        if (Auth::guest()) return false;
         return Auth::user()->can('update', $this);
     }
 
     public function getIsDeletableAttribute() {
+        if (Auth::guest()) return false;
         return Auth::user()->can('delete', $this);
     }
 

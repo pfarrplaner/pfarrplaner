@@ -1,5 +1,13 @@
 @tab(['id' => $tab->getKey(), 'active' => ($index == 0)])
 <h2>{{ $tab->getTitle() }}</h2>
+<div>
+    @foreach (Auth::user()->cities as $city)
+        @if($city->google_access_token)
+            <a class="btn btn-light" href="{{ \Illuminate\Support\Facades\URL::signedRoute('streaming.troubleshooter', strtolower($city->name)) }}" target="_blank">
+                Zum Streaming-Troubleshooter für {{ $city->name }}</a><br />
+        @endif
+    @endforeach
+</div>
 <p>Angezeigt werden die Gottesdienste der nächsten 2 Monate</p>
 <div class="table-responsive">
     <table class="table table-striped" width="100%">

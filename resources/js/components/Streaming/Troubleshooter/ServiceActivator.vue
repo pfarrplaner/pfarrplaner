@@ -28,44 +28,44 @@
   -->
 
 <template>
-    <div>
-        <span :class="checkClass(check)" :style="{color: check ? colorPositive : colorNegative}"></span>
-        <span v-if="check"><slot name="positive">{{ positive }}</slot></span>
-        <span v-else><slot name="negative">{{ negative }}</slot></span>
+    <div class="service-activator">
+        <h3>{{ title }}</h3>
+        <div v-if="services.length == 0" class="alert alert-warning">
+            Diese Liste enthält aktuell keine Gottesdienste.
+        </div>
+        <table class="table table-striped table-hover">
+            <thead></thead>
+            <tbody>
+            <tr v-for="(service,key,index) in services" title="Klicken, um auszuwählen"
+                @click="activateServiceStream(service)">
+                <td>{{ moment(service.day.date).locale('de-DE').format('LL') }}, {{ service.timeText}}<br />
+                    {{ service.locationText }}</td>
+                <td>
+                    <button class="btn btn-success" @click="activateServiceStream(service)" title="Diesen Gottesdienst aktivieren">
+                        <span class="fa fa-check"></span> Aktivieren
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </template>
 
 <script>
 export default {
-    name: "CheckedProcessItem",
-    props: {
-        check: Boolean,
-        positive: String,
-        negative: String,
-        iconPositive: {
-            type: String,
-            default: 'fa fa-check-circle',
-        },
-        iconNegative: {
-            type: String,
-            default: 'fa fa-times-circle',
-        },
-        colorPositive: {
-            type: String,
-            default: 'green',
-        },
-        colorNegative: {
-            type: String,
-            default: 'red',
-        }
-    },
+    name: "ServiceActivator",
+    props: ['services', 'title'],
     methods: {
-        checkClass(criterion) {
-            return criterion ? this.iconPositive : this.iconNegative;
+        activateServiceStream(service) {
+            this.$emit('close');
+            this.$inertia.post(route('streaming.troubleshooter.activateService', {service: service.id}));
         },
+
     }
+
 }
 </script>
 
 <style scoped>
+
 </style>
