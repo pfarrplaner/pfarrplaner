@@ -674,6 +674,11 @@ class Service extends Model
         }
         return $sermonItem->recipients();
     }
+
+    public function getDatetimeAttribute()
+    {
+        return $this->dateTime()->setTimezone('UTC');
+    }
 // END ACCESSORS
 
 // MUTATORS
@@ -686,7 +691,6 @@ class Service extends Model
     }
 
 // SCOPES
-
     /**
      * @param Builder $query
      * @param $ministries
@@ -901,6 +905,7 @@ class Service extends Model
             }
         );
     }
+// SETTERS
 // SETTERS
 // SETTERS
 // SETTERS
@@ -1426,10 +1431,5 @@ class Service extends Model
         return ($title ? $this->titleText(false) . ', ' : '') . $this->day->date->format(
                 'd.m.Y'
             ) . ', ' . $this->timeText() . ', ' . $this->locationText();
-    }
-
-    public function getDatetimeAttribute()
-    {
-        return $this->dateTime()->setTimezone('UTC');
     }
 }

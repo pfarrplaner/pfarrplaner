@@ -53,6 +53,7 @@ use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 use Shetabit\Visitor\Middlewares\LogVisits;
 
 /**
@@ -97,6 +98,13 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             'bindings',
+        ],
+
+        'extranet' => [
+            EnsureFrontendRequestsAreStateful::class,
+            'throttle:60,1',
+            'bindings',
+            'auth:sanctum',
         ],
     ];
 

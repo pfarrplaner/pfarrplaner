@@ -43,6 +43,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 use Shetabit\Visitor\Traits\Visitable;
 use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;
@@ -55,7 +56,7 @@ use App\Facades\Settings;
  */
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles, Visitable, Visitor;
+    use Notifiable, HasRoles, Visitable, Visitor, HasApiTokens;
 
     /**
      *

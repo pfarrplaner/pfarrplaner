@@ -67,6 +67,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
+        $this->mapExtranetRoutes();
         $this->mapApiRoutes();
 
         $this->mapWebRoutes();
@@ -100,5 +101,13 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
             ->namespace($this->namespace)
             ->group(base_path('routes/web.php'));
+    }
+
+    protected function mapExtranetRoutes()
+    {
+        Route::prefix('extranet')
+            ->middleware('extranet')
+            ->namespace('App\\Http\\Controllers\\Extranet')
+            ->group(base_path('routes/extranet.php'));
     }
 }
