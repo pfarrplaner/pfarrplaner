@@ -88,8 +88,13 @@ class SermonController extends Controller
         return response()->json(compact('user', 'sermons'));
     }
 
-    public function details(Sermon $sermon)
+    public function details($sermonId)
     {
+        if (is_numeric($sermonId)) {
+            $sermon = Sermon::findOrFail($sermonId);
+        } else {
+            $sermon = Sermon::where('slug', $sermonId)->first() or abort(404);
+        }
         return response()->json($this->transformSermon($sermon));
     }
 

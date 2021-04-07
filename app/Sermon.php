@@ -5,6 +5,7 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class Sermon extends Model
 {
@@ -71,6 +72,21 @@ class Sermon extends Model
             return ((new Carbon($a)) < (new Carbon($b))) ? 1 : -1;
         });
         return (string)$dates[0];
+    }
+
+    public function setTitleAttribute($title)
+    {
+        $this->attributes['title'] = $title;
+
+        $title = strtr($title, ['Ä' => 'Ae', 'Ö' => 'Oe', 'Ü' => 'Ue', 'ä' => 'ae', 'ö' => 'oe', 'ü' => 'ue', 'ß' => 'ss'  ]);
+
+        $slug = $originalSlug = Str::slug($title);
+        $index = 1;
+        while (null !== Sermon::where('slug', $slug)->where('id', '!=', $this->id)->first()) {
+            $slug = $originalSlug.'-'.$index;
+            $index++;
+        }
+        $this->attributes['slug'] = $slug;
     }
 
 }
