@@ -730,7 +730,7 @@ class Service extends Model
      * @param Carbon $date
      * @return Builder
      */
-    public function scopeEndingAtFrom(Builder $query, Carbon $date)
+    public function scopeEndingAt(Builder $query, Carbon $date)
     {
         return $query->whereHas(
             'day',
@@ -889,6 +889,21 @@ class Service extends Model
                 $query2->where('date', '1978-03-05');
             }
         );
+    }
+
+    /**
+     * Get services where a specific user is a participant
+     * @param Builder $query
+     * @param User $user
+     * @param string $category
+     * @return Builder
+     */
+    public function scopeUserParticipates(Builder $query, User $user, $category)
+    {
+        return $query->whereHas('participants', function($query2) use ($user, $category) {
+            $query2->where('user_id', $user->id);
+            if ($category) $query2->where('category', $category);
+        });
     }
 
     /**

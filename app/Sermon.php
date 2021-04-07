@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
@@ -58,6 +59,18 @@ class Sermon extends Model
     public function getFullTitleAttribute()
     {
         return $this->title.($this->subtitle ? ': '.$this->subtitle : '');
+    }
+
+    public function latestService()
+    {
+        $dates = $this->services->pluck('dateTime');
+        $dates = $dates->reject(function ($item) {
+            return (new Carbon($item)) > Carbon::now();
+        })->all();
+        usort($dates, function($a, $b) {
+            return ((new Carbon($a)) < (new Carbon($b))) ? 1 : -1;
+        });
+        return (string)$dates[0];
     }
 
 }

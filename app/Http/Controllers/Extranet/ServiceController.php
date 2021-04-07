@@ -62,7 +62,7 @@ class ServiceController extends Controller
             })
             ->notHidden()
             ->whereHas('sermon');
-        $services = $query->get();
+        $services = $query->get()->groupBy('sermon_id');
         return response()->json(compact('user', 'services', 'query'));
     }
 
