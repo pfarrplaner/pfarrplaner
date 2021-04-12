@@ -29,6 +29,7 @@
  */
 
 Route::get('/user/services/next', 'ServiceController@next');
+Route::get('/user/services/past', 'ServiceController@past');
 Route::get('/user/services/lastWithSermon', 'ServiceController@lastWithSermon');
 Route::get('/user/sermons/latest', 'SermonController@latest');
 Route::get('/sermon/{sermonId}', [\App\Http\Controllers\Extranet\SermonController::class, 'details']);

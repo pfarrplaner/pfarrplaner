@@ -43,11 +43,20 @@ class ServiceController extends Controller
     {
         $user = Auth::user();
         $services = Service::startingFrom(Carbon::now())
-        ->whereHas('participants', function($query) use ($user) {
-             $query->where('user_id', $user->id);
-        })
+            ->userParticipates($user, 'P')
             ->notHidden()
             ->ordered()
+            ->get();
+
+        return response()->json(compact('user', 'services'));
+    }
+
+    public function past()
+    {
+        $user = Auth::user();
+        $services = Service::endingAt(Carbon::now())
+            ->userParticipates($user, 'P')
+            ->orderedDesc()
             ->get();
 
         return response()->json(compact('user', 'services'));

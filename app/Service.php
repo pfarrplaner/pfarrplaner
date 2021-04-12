@@ -1398,7 +1398,7 @@ class Service extends Model
     {
         if (false === strpos($this->time, ':')) return new Carbon();
         list ($hour, $minute) = explode(':', $this->time);
-        return $this->day->date->copy()->setTime($hour, $minute, 0);
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->day->date->format('Y-m-d').' '.$this->time.':00', 'Europe/Berlin');
     }
 
     public function getBroadcastSnippet(): Google_Service_YouTube_LiveBroadcastSnippet

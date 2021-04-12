@@ -35,18 +35,20 @@ use App\Http\Controllers\Controller;
 use App\Sermon;
 use App\Service;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SermonController extends Controller
 {
 
-    protected function transformSermon(Sermon $sermon) {
+    protected function transformSermon(Sermon $sermon, $includePreview = false) {
         $services = [];
         $isPrivate = false;
         foreach ($sermon->services as $service) {
             $isPrivate = $isPrivate || (count($service->funerals) || count($service->weddings));
-            if ($service->day->date <= Carbon::now()) {
+            if (($service->day->date <= Carbon::now()) || ($includePreview)) {
                 $services[] = [
+                    /** @var \App\Service $service */
                     'date' => $service->dateTime,
                     'time' => $service->timeText(),
                     'title' => $service->titleText(false),
@@ -61,10 +63,11 @@ class SermonController extends Controller
         return $sermon;
     }
 
-    public function latest()
+    public function latest(Request $request)
     {
         $user = Auth::user();
         $events = [];
+        $includeText = $request->get('includeText', false);
 
         $tmpSermons = Sermon::with('services')
             ->whereHas(
@@ -78,8 +81,8 @@ class SermonController extends Controller
         $sermons = [];
         foreach ($tmpSermons as $sermon) {
             $key = $sermon->latestService();
-            $sermon = $this->transformSermon($sermon);
-            $sermon->text = '';
+            $sermon = $this->transformSermon($sermon, false);
+            if (!$includeText) $sermon->text = '';
             if (count($sermon->services)) $sermons[$key] = $sermon;
             unset($sermon->services);
         }
@@ -95,7 +98,7 @@ class SermonController extends Controller
         } else {
             $sermon = Sermon::where('slug', $sermonId)->first() or abort(404);
         }
-        return response()->json($this->transformSermon($sermon));
+        return response()->json($this->transformSermon($sermon, true));
     }
 
 }
