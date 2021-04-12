@@ -62,16 +62,21 @@ class StoreBaptismRequest extends FormRequest
             'service' => 'nullable|exists:services,id',
             'candidate_name' => 'required',
             'candidate_email' => 'nullable|email',
+            'candidate_address' => 'nullable|string',
             'candidate_zip' => 'nullable|zip',
+            'candidate_city' => 'nullable|string',
             'candidate_phone' => 'nullable|phone_number',
             'pronoun_set' => 'nullable|string',
             'city_id' => 'required|integer|exists:cities,id|in:' . $this->user()->writableCities->pluck('id')->implode(
                     ','
                 ),
             'first_contact_on' => 'nullable|date_format:d.m.Y',
+            'first_contact_with' => 'nullable|string',
             'appointment' => 'nullable|date_format:d.m.Y H:i',
             'registered' => 'nullable|integer|between:0,1',
             'signed' => 'nullable|integer|between:0,1',
+            'docs_ready' => 'nullable|integer|between:0,1',
+            'docs_where' => 'nullable|string',
             'registration_document' => 'nullable|mimetypes:application/pdf',
         ];
     }
