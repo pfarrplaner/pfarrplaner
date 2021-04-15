@@ -138,7 +138,10 @@ class FuneralController extends Controller
             $day->cities()->sync([$cityId]);
         }
 
-        $locations = Location::where('city_id', $cityId)->get();
+        $locations[$city->name] = Location::where('city_id', $cityId)->get();
+        $locations['Andere Orte']= Location::whereIn('city_id', Auth::user()->cities->pluck('id'))
+            ->where('city_id', '!=', $cityId)
+            ->get();
 
         return view('funerals.wizard.step2', compact('day', 'city', 'locations'));
     }

@@ -12,7 +12,7 @@
 
             @hidden(['name' => 'city', 'value'=> $city->id])
             @hidden(['name' => 'day', 'value'=> $day->id])
-            @locationselect(['name' => 'location_id', 'label' => 'Kirche', 'locations' => $locations])
+            @locationselect(['name' => 'location_id', 'label' => 'Kirche', 'locations' => $locations, 'grouped' => 'true'])
             @hidden(['name' => 'city_id', 'value' => $city->id])
             @input(['name' => 'time', 'label' => 'Uhrzeit (leer lassen für Standarduhrzeit)', 'placeholder' => 'HH:MM'])
         @endcomponent
@@ -22,7 +22,9 @@
 @section('scripts')
     <script>
         var defaultTime = {};
-        @foreach($locations as $location)defaultTime['{{ $location->id }}'] = '{{ substr($location->default_time,0, 5) }}';@endforeach
+        @foreach($locations as $theseLocations)
+        @foreach($theseLocations as $location)defaultTime['{{ $location->id }}'] = '{{ substr($location->default_time,0, 5) }}';@endforeach
+        @endforeach
 
         function setDefaultTime() {
             var loc = $('select[name=location_id] option:selected').first().val();
