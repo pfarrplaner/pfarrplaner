@@ -9,7 +9,9 @@ use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Liturgy\Resources\BlockResourceCollection;
 use App\Participant;
 use App\Service;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class LiturgyEditorController extends Controller
@@ -61,7 +63,20 @@ class LiturgyEditorController extends Controller
 
     public function sources(Service $service)
     {
-        $services = Service::isNotAgenda()->writable()->orderedDesc()->whereHas('liturgyBlocks')->limit(50)->get();
+        $services1 = Service::isNotAgenda()
+            ->writable()
+            ->whereHas('liturgyBlocks')
+            ->limit(50)->get();
+        $services2 = Service::isNotAgenda()
+            ->userParticipates(Auth::user(), 'P')
+            ->whereHas('liturgyBlocks')
+            ->get();
+        $services3 = $services1->merge($services2)->unique();
+        $services = [];
+        foreach ($services3 as $service) {
+            $services[$service->dateTime->timestamp.$service->id] = $service;
+        }
+        krsort($services);
         $agendas = Service::isAgenda()->get();
         return response()->json(compact('services', 'agendas'));
     }
