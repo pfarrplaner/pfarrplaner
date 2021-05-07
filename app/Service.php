@@ -187,7 +187,8 @@ class Service extends Model
         'youtube_postfix_description',
         'sermon_id',
         'announcements',
-        'offering_text'
+        'offering_text',
+        'communiapp_id',
     ];
 
     /**
