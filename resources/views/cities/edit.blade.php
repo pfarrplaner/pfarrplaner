@@ -63,10 +63,10 @@
                 @endtab
                 @tab(['id' => 'integrations'])
                     <div class="row">
-                        <div class="col-sm-2">
-                            <img class="img-fluid" src="{{ asset('img/external/konfiapp.png') }}" />
+                        <div class="col-sm-1">
+                            <img class="img-fluid img-responsive" src="{{ asset('img/external/konfiapp.png') }}" />
                         </div>
-                        <div class="col-sm-10">
+                        <div class="col-sm-11">
                             <h4>KonfiApp</h4
                             <p>Die <a href="https://konfiapp.de" target="_blank">KonfiApp</a> von Philipp Dormann bietet viele Möglichkeiten, mit Konfis in Kontakt zu bleiben.</p>
                             <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
@@ -83,9 +83,30 @@
                                 <span class="badge badge-secondary">qr_create</span>
                                 <span class="badge badge-secondary">qr_delete</span>
                             </p>
+                            @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
                         </div>
                     </div>
-                    @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'value' => $city->konfiapp_apikey, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    <hr />
+                <div class="row">
+                    <div class="col-sm-1">
+                        <img class="img-fluid img-responsive" src="{{ asset('img/external/communiapp.png') }}" />
+                    </div>
+                    <div class="col-sm-11">
+                        <h4>CommuniApp</h4>
+                        <p>Die <a href="https://www.communiapp.de" target="_blank">CommuniApp</a> bietet viele Möglichkeiten, als Gemeinde in Kontakt zu bleiben.</p>
+                        <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
+                        <ul>
+                            <li>Im Pfarrplaner angelegte Gottesdienste können automatisch in der CommuniApp angelegt werden. Bei dieser Integration können auch weitere Termine aus Outlook bzw. aus dem OnlinePlaner verwendet werden. </li>
+                        </ul>
+                        <p>Für die Integration der CommuniApp ist ein API-Schlüssel erforderlich. Dieser kann im Verwaltungsbereich der CommuniApp unter Admin > Integrationen > Rest-Api angelegt werden.
+                            Der dort erstellte Schlüssel muss in das untenstehende Eingabefeld kopiert werden. </p>
+                        @textarea(['name' => 'communiapp_token', 'label' => 'Zugangstoken für die CommuniApp', 'value' => $city->communiapp_token, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @input(['name' => 'communiapp_default_group_id', 'label' => 'Gruppen-ID der Hauptgruppe', 'value' => $city->communiapp_default_group_id, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @input(['name' => 'communiapp_url', 'label' => 'URL zur App', 'value' => $city->communiapp_url, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @checkbox(['name' => 'communiapp_use_outlook', 'label' => 'Termine aus Outlook mit einbeziehen', 'value' => $city->communiapp_use_outlook, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @checkbox(['name' => 'communiapp_use_op', 'label' => 'Termine aus dem Online-Planer mit einbeziehen', 'value' => $city->communiapp_use_op, 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    </div>
+                </div>
                 @endtab
             @endtabs
     @endcomponent

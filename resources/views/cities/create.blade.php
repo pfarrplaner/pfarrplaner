@@ -53,7 +53,51 @@
                 @input(['name' => 'homepage', 'label' => 'Homepage der Kirchengemeinde', 'enabled' => Auth::user()->can('ort-bearbeiten')])
             @endtab
             @tab(['id' => 'integrations'])
-                @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                <div class="row">
+                    <div class="col-sm-1">
+                        <img class="img-fluid img-responsive" src="{{ asset('img/external/konfiapp.png') }}" />
+                    </div>
+                    <div class="col-sm-11">
+                        <h4>KonfiApp</h4
+                        <p>Die <a href="https://konfiapp.de" target="_blank">KonfiApp</a> von Philipp Dormann bietet viele Möglichkeiten, mit Konfis in Kontakt zu bleiben.</p>
+                        <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
+                        <ul>
+                            <li>Im Pfarrplaner angelegte Gottesdienste können einem Veranstaltungstyp in der KonfiApp zugewiesen werden. Beim Speichern wird dann automatisch ein passender QR-Code in der KonfiApp angelegt. </li>
+                        </ul>
+                        <p>Für die Integration der KonfiApp ist ein API-Schlüssel erforderlich. Dieser kann im Verwaltungsbereich der KonfiApp über folgenden Link angelegt werden:
+                            <a href="https://verwaltung.konfiapp.de/administration/api-tokens/" target="_blank">https://verwaltung.konfiapp.de/administration/api-tokens/</a>.
+                            Der dort erstellte Schlüssel muss in das untenstehende Eingabefeld kopiert werden. In der anschließenden Übersicht in der KonfiApp können für den Schlüssel
+                            sogenannte "Scopes" aktiviert werden. Folgende Scopes sind für das Funktionieren der Integration erforderlich:</p>
+                        <p>
+                            <span class="badge badge-secondary">veranstaltungen_list</span>
+                            <span class="badge badge-secondary">qr_list</span>
+                            <span class="badge badge-secondary">qr_create</span>
+                            <span class="badge badge-secondary">qr_delete</span>
+                        </p>
+                        @input(['name' => 'konfiapp_apikey', 'label' => 'API-Schlüssel für die KonfiApp', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-1">
+                        <img class="img-fluid img-responsive" src="{{ asset('img/external/communiapp.png') }}" />
+                    </div>
+                    <div class="col-sm-11">
+                        <h4>CommuniApp</h4>
+                        <p>Die <a href="https://www.communiapp.de" target="_blank">CommuniApp</a> bietet viele Möglichkeiten, als Gemeinde in Kontakt zu bleiben.</p>
+                        <h5>Der Pfarrplaner bietet aktuell folgende Integrationsmöglichkeiten:</h5>
+                        <ul>
+                            <li>Im Pfarrplaner angelegte Gottesdienste können automatisch in der CommuniApp angelegt werden. Bei dieser Integration können auch weitere Termine aus Outlook bzw. aus dem OnlinePlaner verwendet werden. </li>
+                        </ul>
+                        <p>Für die Integration der CommuniApp ist ein API-Schlüssel erforderlich. Dieser kann im Verwaltungsbereich der CommuniApp unter Admin > Integrationen > Rest-Api angelegt werden.
+                            Der dort erstellte Schlüssel muss in das untenstehende Eingabefeld kopiert werden. </p>
+                        @textarea(['name' => 'communiapp_token', 'label' => 'Zugangstoken für die CommuniApp', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @input(['name' => 'communiapp_default_group_id', 'label' => 'Gruppen-ID der Hauptgruppe', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @input(['name' => 'communiapp_url', 'label' => 'URL zur App', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @checkbox(['name' => 'communiapp_use_outlook', 'label' => 'Termine aus Outlook mit einbeziehen', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                        @checkbox(['name' => 'communiapp_use_op', 'label' => 'Termine aus dem Online-Planer mit einbeziehen', 'enabled' => Auth::user()->can('ort-bearbeiten')])
+                    </div>
+                </div>
             @endtab
         @endtabs
         @endcomponent

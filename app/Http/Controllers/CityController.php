@@ -126,6 +126,11 @@ class CityController extends Controller
                 'youtube_cutoff_days' => 'nullable|int',
                 'default_offering_url' => 'nullable|string',
                 'youtube_self_declared_for_children' => 'nullable|int',
+                'communiapp_url' => 'nullable|string',
+                'communiapp_token' => 'nullable|string',
+                'communiapp_default_group_id' => 'nullable|int',
+                'communiapp_use_outlook' => 'nullable|checkbox',
+                'communiapp_use_op' => 'nullable|checkbox',
             ]
         );
     }
