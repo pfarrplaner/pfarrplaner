@@ -19,7 +19,7 @@ class SettingsController extends Controller
         if ($user->id != \Auth::user()->id) {
             abort(403);
         }
-        $data = $request->validate(['value' => 'required']);
+        $data = $request->validate(['value' => 'nullable|string']);
         $userSetting = Settings::set($user, $key, $data['value']);
 
         return response()->json($userSetting->only(['key', 'value']), 200);
