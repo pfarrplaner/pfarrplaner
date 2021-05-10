@@ -42,36 +42,49 @@
                 <form-input name="time" label="Uhrzeit" v-model="myService.time" placeholder="HH:MM"/>
             </div>
         </div>
-        <hr/>
-        <h3>Beteiligte Personen</h3>
         <div class="row">
             <div class="col-md-4">
-                <people-select name="participants[P][]" label="Pfarrer*in" :people="people"
-                               v-model="myService.pastors"/>
-                <form-check name="need_predicant"
-                            label="Für diesen Gottesdienst wird ein*e Prädikant*in benötigt."
-                            v-model="myService.need_predicant"/>
+                <form-check name="baptism" label="Dies ist ein Taufgottesdienst." v-model="service.baptism"/>
+                <form-check name="eucharist" label="Dies ist ein Abendmahlsgottesdienst." v-model="service.eucharist"/>
             </div>
-            <div class="col-md-4">
-                <people-select name="participants[O][]" label="Organist*in" :people="people"
-                               v-model="myService.organists"/>
+            <div v-if="myService.city.konfiapp_apikey" class="col-md-4">
+                <konfi-app-event-type-select name="konfiapp_event_type" label="Veranstaltungsart in der KonfiApp"
+                    :city="myService.city" v-model="service.konfiapp_event_type" />
             </div>
-            <div class="col-md-4">
-                <people-select name="participants[M][]" label="Mesner*in" :people="people"
-                               v-model="myService.sacristans"/>
+            <div v-if="myService.city.communiapp_token" class="col-md-4">
+                <form-group label="In der CommuniApp anzeigen ab" help="Leer lassen für den Standard (8 Tage vor Beginn)">
+                    <date-picker v-model="myService.communiapp_listing_start" :config="myDatePickerConfig" />
+                </form-group>
             </div>
         </div>
         <hr/>
-        <div><label><span class="fa fa-users"></span> Weitere Dienste</label></div>
         <div class="row">
-            <div class="col-md-6"><label>Dienstbeschreibung</label></div>
-            <div class="col-md-6"><label>Eingeteilte Personen</label></div>
+            <div class="col-md-6">
+                <form-input name="title" label="Abweichender Titel" v-model="service.title"
+                            help="z.B. für öffentliche Listen"/>
+            </div>
+            <div class="col-md-6">
+                <form-input name="description" label="Kurzbeschreibung" v-model="service.description"
+                            help="Wird als Beschreibung in öffentlichen Listen angezeigt"/>
+            </div>
         </div>
-        <ministry-row v-for="(members,title,index) in myService.ministriesByCategory"
-                      :title="title" :members="members" :index="index" :people="people" :key="index"
-                      :ministries="ministries" v-model="myService.ministriesByCategory" @delete="deleteRow"
-        />
-        <button class="btn btn-light btn-sm" @click.prevent.stop="addRow">Reihe hinzufügen</button>
+        <form-textarea name="internal_remarks" label="Interne Anmerkungen" v-model="service.internal_remarks"
+                       help="Diese Anmerkungen werden nirgends veröffentlicht, sondern sind nur hier zu sehen."
+                       pre-label="eye-slash"/>
+        <div class="row">
+            <div class="col-md-6">
+                <form-selectize name="tags" label="Kennzeichnungen" v-model="service.tags"
+                                help="Kennzeichnungen z.B. für den Gemeindebrief" :items="tags" multiple/>
+            </div>
+            <div class="col-md-6">
+                <form-selectize name="service_groups" label="Dieser Gottesdienst gehört zu folgenden Gruppen"
+                                v-model="service.service_groups" help="Gruppen z.B. für den Gemeindebrief"
+                                :items="serviceGroups" multiple/>
+            </div>
+        </div>
+        <hr/>
+        <form-textarea name="announcements" label="Zusätzliche Bekanntgaben" v-model="service.announcements"
+                       help="Bekanntgaben, die über die automatisch erstellte Terminliste hinausgehen."/>
     </div>
 </template>
 
@@ -82,40 +95,42 @@ import DaySelect from "../../Ui/elements/DaySelect";
 import PeopleSelect from "../../Ui/elements/PeopleSelect";
 import FormCheck from "../../Ui/forms/FormCheck";
 import MinistryRow from "../../Ui/elements/MinistryRow";
+import FormTextarea from "../../Ui/forms/FormTextarea";
+import FormSelectize from "../../Ui/forms/FormSelectize";
+import KonfiAppEventTypeSelect from "../../Ui/elements/KonfiAppEventTypeSelect";
+import FormGroup from "../../Ui/forms/FormGroup";
+import DatePickerConfig from "../../Ui/config/DatePickerConfig.js";
 
 export default {
     name: "HomeTab",
     components: {
+        FormGroup,
+        KonfiAppEventTypeSelect,
         MinistryRow,
-        FormCheck,
         PeopleSelect,
         DaySelect,
         LocationSelect,
         FormInput,
+        FormCheck,
+        FormSelectize,
+        FormTextarea,
     },
     props: {
         service: Object,
         locations: Array,
         days: Array,
-        people: Array,
-        ministries: Array,
+        tags: Array,
+        serviceGroups: Array,
     },
     data() {
         return {
             myService: this.service,
             myLocation: this.service.location || this.service.special_location,
+            myDatePickerConfig: DatePickerConfig,
             locationUpdating: false,
         }
     },
     methods: {
-        addRow() {
-            this.myService.ministriesByCategory[''] = [];
-            this.$forceUpdate();
-        },
-        deleteRow(store) {
-            this.myService.ministriesByCategory = store;
-            this.$forceUpdate();
-        },
         setLocation(location) {
             this.locationUpdating = true;
             console.log(location, typeof location);

@@ -58,6 +58,11 @@ Route::namespace('Api')->group(
             ['as' => 'services.byDayAndCity', 'uses' => 'ServiceController@byDayAndCity']
         );
         Route::get('user/{user}/services', ['as' => 'api.user.services', 'uses' => 'ServiceController@byUser']);
+        Route::get('city/{city}/konfiapp-types', function(\App\City $city) {
+            $types = \App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city) ?
+                \App\Integrations\KonfiApp\KonfiAppIntegration::get($city)->listEventTypes() : [];
+            return response()->json($types);
+        });
 
         Route::middleware('auth:api')->group(
             function () {

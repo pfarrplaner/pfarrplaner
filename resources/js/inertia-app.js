@@ -49,6 +49,10 @@ import CalendarServiceFuneral from './components/Calendar/Service/Funeral.vue';
 import CalendarServiceBaptism from './components/Calendar/Service/Baptism.vue';
 import CalendarControlCitySort from './components/Calendar/Control/CitySort';
 
+import datePicker from 'vue-bootstrap-datetimepicker';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+Vue.use(datePicker);
 
 
 Vue.component('admin-layout', AdminLayout)
@@ -135,6 +139,20 @@ Vue.directive('bindCustomEvent', bindCustomEvent);
 
 
 Vue.use(InertiaApp)
+
+jQuery.extend(true, jQuery.fn.datetimepicker.defaults, {
+    icons: {
+        time: 'far fa-clock',
+        date: 'far fa-calendar',
+        up: 'fas fa-arrow-up',
+        down: 'fas fa-arrow-down',
+        previous: 'fas fa-chevron-left',
+        next: 'fas fa-chevron-right',
+        today: 'fas fa-calendar-check',
+        clear: 'far fa-trash-alt',
+        close: 'far fa-times-circle'
+    }
+});
 
 
 const app = document.getElementById('app')

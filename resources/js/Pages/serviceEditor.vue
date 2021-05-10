@@ -32,6 +32,7 @@
         <admin-layout title="Gottesdienst bearbeiten">
             <template slot="navbar-left">
                 <button class="btn btn-primary" @click.prevent="saveService"><span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span></button>&nbsp;
+                <button class="btn btn-danger" @click.prevent="deleteService"><span class="fa fa-trash d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
                 <a class="btn btn-light" target="_blank" :href="route('services.liturgy.editor', service.id)" title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
                 <a class="btn btn-light" target="_blank" :href="route('services.sermon.editor', service.id)"  title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span class="d-none d-md-inline"> Predigt</span></a>&nbsp;
             </template>
@@ -40,12 +41,11 @@
                     <card-header>
                         <tab-headers>
                             <tab-header id="home" title="Allgemeines" :active-tab="activeTab" />
-                            <tab-header id="special" title="Besonderheiten" :active-tab="activeTab" />
+                            <tab-header id="people" title="Mitwirkende" :active-tab="activeTab" />
                             <tab-header id="offerings" title="Opfer" :active-tab="activeTab" />
                             <tab-header id="rites" title="Kasualien" :active-tab="activeTab" :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
                             <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab" />
                             <tab-header id="streaming" title="Streaming" :active-tab="activeTab"  v-if="hasStreaming" />
-                            <tab-header id="konfiapp" title="KonfiApp" :active-tab="activeTab" v-if="hasKonfiApp"/>
                             <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"  :count="service.bookings.length"/>
                             <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="countAttachments()"/>
                             <tab-header id="comments" title="Kommentare" :active-tab="activeTab" :count="service.comments.length"/>
@@ -55,10 +55,12 @@
                         <tabs>
                             <tab id="home" :active-tab="activeTab">
                                 <home-tab :service="editedService" :locations="locations"
-                                          :days="days" :people="users" :ministries="ministries"/>
+                                          :days="days"
+                                          :tags="tags" :service-groups="serviceGroups"/>
                             </tab>
-                            <tab id="special" :active-tab="activeTab">
-                                <special-tab :service="service" :tags="tags" :service-groups="serviceGroups"/>
+                            <tab id="people" :active-tab="activeTab">
+                                <people-tab :service="service"
+                                            :people="users" :ministries="ministries" />
                             </tab>
                             <tab id="offerings" :active-tab="activeTab">
                                 <offerings-tab :service="service" />
@@ -72,8 +74,14 @@
                             <tab id="streaming" :active-tab="activeTab" v-if="hasStreaming">
                                 <streaming-tab :service="service" />
                             </tab>
+                            <tab id="registrations" :active-tab="activeTab">
+                                Anmeldungen
+                            </tab>
                             <tab id="attachments" :active-tab="activeTab">
                                 <attachments-tab :service="service" :liturgy-sheets="liturgySheets" />
+                            </tab>
+                            <tab id="comments" :active-tab="activeTab">
+                                Kommentare
                             </tab>
                         </tabs>
                     </card-body>
@@ -89,7 +97,6 @@ import TabHeader from "../components/Ui/tabs/tabHeader";
 import Tabs from "../components/Ui/tabs/tabs";
 import Tab from "../components/Ui/tabs/tab";
 import HomeTab from "../components/ServiceEditor/tabs/HomeTab";
-import SpecialTab from "../components/ServiceEditor/tabs/SpecialTab";
 import OfferingsTab from "../components/ServiceEditor/tabs/OfferingsTab";
 import Card from "../components/Ui/cards/card";
 import CardHeader from "../components/Ui/cards/cardHeader";
@@ -98,13 +105,15 @@ import CCTab from "../components/ServiceEditor/tabs/CCTab";
 import StreamingTab from "../components/ServiceEditor/tabs/StreamingTab";
 import RitesTab from "../components/ServiceEditor/tabs/RitesTab";
 import AttachmentsTab from "../components/ServiceEditor/tabs/AttachmentsTab";
+import PeopleTab from "../components/ServiceEditor/tabs/PeopleTab";
 export default {
 name: "serviceEditor",
     components: {
+        PeopleTab,
         AttachmentsTab,
         RitesTab,
         StreamingTab,
-        CCTab, CardBody, CardHeader, Card, OfferingsTab, SpecialTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
+        CCTab, CardBody, CardHeader, Card, OfferingsTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
     props: {
         service: Object,
         tab: String,

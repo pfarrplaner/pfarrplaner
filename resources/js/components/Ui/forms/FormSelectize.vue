@@ -31,7 +31,7 @@
     <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
         <selectize class="form-control" :class="{'is-invalid': error}" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled"
-               @input="changed" :settings="settings" multiple>
+               @input="changed" :settings="settings" :multiple="multiple">
             <option v-for="item in items" :value="item[idKey]">{{ item[titleKey] }}</option>
         </selectize>
     </form-group>
@@ -66,6 +66,10 @@ export default {
         error: String,
         settings: {},
         preLabel: String,
+        multiple: {
+            type: Boolean,
+            default: false,
+        },
         disabled: {
             type: Boolean,
             default: false,

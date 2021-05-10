@@ -37,6 +37,7 @@
         "moment-timezone": "^0.5.33",
         "selectize": "^0.12.6",
         "tempusdominus-bootstrap-4": "^5.1.2",
+        "vue-bootstrap-datetimepicker": "^5.0.1",
         "vue-nl2br": "^0.1.2",
         "vue-quill-editor": "^3.0.6",
         "vue2-selectize": "^1.1.7",
