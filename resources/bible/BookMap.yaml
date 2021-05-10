@@ -123,3 +123,32 @@ Jud: Judas
 Rev:
     - Offenbarung
     - Offb
+Jdt:
+    - Judith
+    - Judit
+Weish:
+    - Weisheit
+Tob:
+    - Tobit
+Sir:
+    - Sirach
+    - Jesus Sirach
+    - Ben Sirach
+Bar:
+    - Baruch
+1Ma:
+    - 1.Makkabäer
+    - 1Makkabäer
+2Ma:
+    - 2.Makkabäer
+    - 2Makkabäer
+StZuDan:
+    - Stücke zu Daniel
+    - 2.Daniel
+StZuEst:
+    - Stücke zu Ester
+    - Stücke zu Esther
+    - 2.Esther
+    - 2.Ester
+GebMan:
+    - Gebet des Manasse
