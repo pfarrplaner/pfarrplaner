@@ -82,8 +82,15 @@ class CommentController extends Controller
                         'user_id' => Auth::user()->id
                     ]
                 );
+                if ($request->header('Accept', '') == 'application/json') {
+                    $comment->load('user');
+                    return response()->json($comment);
+                }
                 return view('partials.comments.single', compact('comment'));
             } else {
+                if ($request->header('Accept', '') == 'application/json') {
+                    return response()->json(['message' => 'Leider hast du keine Berechtigung zum Kommentieren dieses Objekts.'], 401);
+                }
                 return '<div class="alert alert-danger">Leider hast du keine Berechtigung zum Kommentieren dieses Objekts.</div>';
             }
         }

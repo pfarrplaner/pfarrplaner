@@ -81,7 +81,7 @@
                                 <attachments-tab :service="service" :liturgy-sheets="liturgySheets" />
                             </tab>
                             <tab id="comments" :active-tab="activeTab">
-                                Kommentare
+                                <comments-tab :service="service" />
                             </tab>
                         </tabs>
                     </card-body>
@@ -106,9 +106,11 @@ import StreamingTab from "../components/ServiceEditor/tabs/StreamingTab";
 import RitesTab from "../components/ServiceEditor/tabs/RitesTab";
 import AttachmentsTab from "../components/ServiceEditor/tabs/AttachmentsTab";
 import PeopleTab from "../components/ServiceEditor/tabs/PeopleTab";
+import CommentsTab from "../components/ServiceEditor/tabs/CommentsTab";
 export default {
 name: "serviceEditor",
     components: {
+        CommentsTab,
         PeopleTab,
         AttachmentsTab,
         RitesTab,

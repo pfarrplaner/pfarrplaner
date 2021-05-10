@@ -61,6 +61,8 @@ class Comment extends Model
         'body',
     ];
 
+    protected $with = ['user'];
+
     /**
      * Get all of the owning commentable models.
      */
