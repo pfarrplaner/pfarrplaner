@@ -64,6 +64,11 @@ Route::namespace('Api')->group(
             return response()->json($types);
         });
 
+        Route::delete('booking/{booking}', function(\App\Booking $booking) {
+            $booking->delete();
+            return response();
+        })->middleware('auth')->name('api.booking.destroy');
+
         Route::middleware('auth:api')->group(
             function () {
                 // Services

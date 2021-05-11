@@ -213,7 +213,12 @@ class Service extends Model
         'isMine',
         'titleText',
         'liveDashboardUrl',
-        'datetime'
+        'datetime',
+        'seating',
+        'remainingCapacity',
+        'maximumCapacity',
+        'freeSeatsText',
+        'hasSeats',
     ];
 
     /**
@@ -1447,5 +1452,39 @@ class Service extends Model
         return ($title ? $this->titleText(false) . ', ' : '') . $this->day->date->format(
                 'd.m.Y'
             ) . ', ' . $this->timeText() . ', ' . $this->locationText();
+    }
+
+    /**
+     * Get seating for this service
+     * @return array
+     */
+    public function getSeatingAttribute()
+    {
+        return $this->getSeatFinder()->getSeatingTable();
+    }
+
+    /**
+     * @return int|mixed|void
+     */
+    public function getRemainingCapacityAttribute()
+    {
+        return $this->getSeatFinder()->remainingCapacity();
+    }
+
+    /**
+     * @return bool
+     */
+    public function getHasSeatsAttribute() {
+        return $this->getSeatFinder()->hasSeats;
+    }
+
+    public function getMaximumCapacityAttribute()
+    {
+        return $this->getSeatFinder()->maximumCapacity();
+    }
+
+    public function getFreeSeatsTextAttribute()
+    {
+        return $this->getSeatFinder()->freeSeatsText();
     }
 }

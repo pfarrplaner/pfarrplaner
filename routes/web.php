@@ -79,6 +79,7 @@ Route::resource('parishes', 'ParishController')->middleware('auth');
 Route::resource('seatingSection', 'SeatingSectionController');
 Route::resource('seatingRow', 'SeatingRowController');
 Route::resource('booking', 'BookingController');
+Route::post('booking/{booking}/pin', 'BookingController@pin')->name('booking.pin');
 Route::get('services/{service}/bookings', 'BookingController@index')->name('service.bookings');
 Route::get('seatfinder/{service}/{number?}', 'BookingController@findSeat')->name('seatfinder');
 Route::get('services/{service}/bookingList', 'BookingController@finalize')->name('booking.finalize');

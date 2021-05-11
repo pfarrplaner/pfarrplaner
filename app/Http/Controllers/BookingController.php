@@ -120,7 +120,7 @@ class BookingController extends Controller
     {
         $serviceId = $booking->service_id;
         $booking->delete();
-        return redirect()->route('service.bookings', $serviceId);
+        return response()->json();
     }
 
     /**
@@ -158,6 +158,18 @@ class BookingController extends Controller
                 true
             ) . ' Sitzplan.pdf'
         );
+    }
+
+    /**
+     * Pin a booking to a fixed seatde
+     * @param Request $request
+     * @param Booking $booking
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function pin(Request $request, Booking $booking) {
+        $data = $request->validate(['fixed_seat' => 'required|string|seatable_fixed:booking_id']);
+        $booking->update($data);
+        return response()->json($booking);
     }
 
     /**

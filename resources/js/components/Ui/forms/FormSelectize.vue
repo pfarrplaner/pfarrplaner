@@ -31,8 +31,12 @@
     <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
         <selectize class="form-control" :class="{'is-invalid': error}" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled"
-               @input="changed" :settings="settings" :multiple="multiple">
-            <option v-for="item in items" :value="item[idKey]">{{ item[titleKey] }}</option>
+               @input="changed" :settings="mySettings" :multiple="multiple" v-if="options.length == 0">
+            <option v-for="item in items" :value="item[idKey]">{{ titleKey ? item[titleKey] : item }}</option>
+        </selectize>
+        <selectize class="form-control" :class="{'is-invalid': error}" v-model="myValue" :id="myId+'Input'"
+               :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled"
+               @input="changed" :settings="mySettings" :multiple="multiple" v-else>
         </selectize>
     </form-group>
 </template>
@@ -51,7 +55,9 @@ export default {
             default: 'text',
         },
         name: String,
-        value: Object,
+        value: {
+            type: null,
+        },
         items: Array,
         idKey: {
             type: String,
@@ -74,22 +80,54 @@ export default {
             type: Boolean,
             default: false,
         },
+        options: {
+            type: Array,
+            default() { return []; }
+        },
+        itemRenderer: {
+            type: null,
+        },
+        optionRenderer: {
+            type: null,
+        }
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
+        var mySettings = (this.settings == undefined ? {} : this.settings);
+        if (this.options.length > 0) {
+            mySettings['options'] = this.options;
+            if (this.idKey) mySettings['valueField'] = this.idKey;
+            if (this.titleKey) mySettings['labelField'] = this.titleKey;
+            if (undefined != this.itemRenderer) {
+                if (undefined == mySettings['render']) mySettings['render'] = {};
+                mySettings['render']['item'] = this.itemRenderer;
+            }
+            if (undefined != this.optionRenderer) {
+                if (undefined == mySettings['render']) mySettings['render'] = {};
+                mySettings['render']['option'] = this.optionRenderer;
+            }
+        }
+
         return {
             myId: this.id || '',
             myValue: this.value,
+            mySettings: mySettings,
         }
     },
     methods: {
         changed(newVal) {
             var allFound = [];
-            this.items.forEach(function(item){
-                if (newVal.includes(item[idKey].toString())) allFound.push(item);
-            });
+            if (this.items) {
+                this.items.forEach(item => {
+                    if (newVal.includes(item[this.idKey].toString())) allFound.push(item);
+                });
+            } else {
+                this.options.forEach(option => {
+                    if (newVal.includes[option[this.idKey]].toString()) allFound.push(option);
+                })
+            }
             this.$emit('input', allFound);
         }
     }

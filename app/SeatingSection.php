@@ -11,6 +11,8 @@ class SeatingSection extends Model
 {
     protected $fillable = ['location_id', 'title', 'seating_model', 'sorting', 'priority', 'color'];
 
+    protected $with = ['seatingRows'];
+
     protected static function boot() {
         parent::boot();
         static::addGlobalScope('order', function (Builder $builder) {

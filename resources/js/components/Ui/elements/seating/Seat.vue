@@ -28,45 +28,34 @@
   -->
 
 <template>
-    <div>
-        <form-selectize :name="name" :items="items" v-model="myValue" @input="handleInput"
-                        :label="label" :help="help" id-key="id" title-key="name"/>
+    <div class="seat" :style="{
+        backgroundColor: seat.color,
+        padding: (icon == 'fa-couch') ? '1px 30px 1px 30px' : '1px 3px',
+        fontWeight: booking.fixed_seat ? 'bold' : 'normal',
+        fontStyle: booking.fixed_seat ? 'normal' : 'italic',
+    }">
+        <span class="fa" :class="[icon]"></span> {{ seat.title }}
     </div>
 </template>
 
 <script>
-import FormSelectize from "../forms/FormSelectize";
-
 export default {
-    name: "KonfiAppEventTypeSelect",
-    props: {
-        city: Object,
-        name: String,
-        value: Number,
-        label: String,
-        help: String,
-    },
-    components: {FormSelectize},
-    created() {
-        axios.get('/api/city/'+this.city.id+'/konfiapp-types')
-        .then(response => {
-            return response.data
-        }).then(data => {
-            this.items = data;
-        })
-    },
-    data() {
-        return {
-            items: [],
-            myValue: this.value,
-        };
-    },
-    methods: {
-        handleInput() {},
+    name: "Seat",
+    props: ['seat', 'booking'],
+    computed: {
+        icon() {
+            return (!isNaN(this.seat.title)) && (this.seat.seats > 1) ? 'fa-couch' : 'fa-chair';
+        }
     }
 }
 </script>
 
 <style scoped>
-
+    div.seat {
+        display: inline-block;
+        border: solid 1px darkgray; border-radius: 3px;
+        box-shadow: darkgray 0px 0px 1px 1px;
+        margin-right: 3px;
+        margin-bottom: 3px;
+    }
 </style>

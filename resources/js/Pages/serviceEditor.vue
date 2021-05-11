@@ -46,7 +46,7 @@
                             <tab-header id="rites" title="Kasualien" :active-tab="activeTab" :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
                             <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab" />
                             <tab-header id="streaming" title="Streaming" :active-tab="activeTab"  v-if="hasStreaming" />
-                            <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"  :count="service.bookings.length"/>
+                            <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"  :count="service.seating.count"/>
                             <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="countAttachments()"/>
                             <tab-header id="comments" title="Kommentare" :active-tab="activeTab" :count="service.comments.length"/>
                         </tab-headers>
@@ -75,7 +75,7 @@
                                 <streaming-tab :service="service" />
                             </tab>
                             <tab id="registrations" :active-tab="activeTab">
-                                Anmeldungen
+                                <registrations-tab :service="service" />
                             </tab>
                             <tab id="attachments" :active-tab="activeTab">
                                 <attachments-tab :service="service" :liturgy-sheets="liturgySheets" />
@@ -107,9 +107,11 @@ import RitesTab from "../components/ServiceEditor/tabs/RitesTab";
 import AttachmentsTab from "../components/ServiceEditor/tabs/AttachmentsTab";
 import PeopleTab from "../components/ServiceEditor/tabs/PeopleTab";
 import CommentsTab from "../components/ServiceEditor/tabs/CommentsTab";
+import RegistrationsTab from "../components/ServiceEditor/tabs/RegistrationsTab";
 export default {
 name: "serviceEditor",
     components: {
+        RegistrationsTab,
         CommentsTab,
         PeopleTab,
         AttachmentsTab,
