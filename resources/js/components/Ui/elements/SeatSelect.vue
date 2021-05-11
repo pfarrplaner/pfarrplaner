@@ -71,7 +71,7 @@ export default {
         }
     },
     data() {
-        var myValue = this.value.split(',');
+        var myValue = this.value ? this.value.split(',') : [];
         myValue.forEach((value,key) => {
             if ((isNaN(value) && (value.length==2))  || ((!isNaN(value)) && (value.length == 1))) {
                 myValue[key] = '0' + value;
