@@ -78,7 +78,7 @@
                                 <registrations-tab :service="service" />
                             </tab>
                             <tab id="attachments" :active-tab="activeTab">
-                                <attachments-tab :service="service" :liturgy-sheets="liturgySheets" />
+                                <attachments-tab :service="service" :liturgy-sheets="liturgySheets" :files="files"/>
                             </tab>
                             <tab id="comments" :active-tab="activeTab">
                                 <comments-tab :service="service" />
@@ -146,6 +146,7 @@ name: "serviceEditor",
         return {
             activeTab: this.tab,
             editedService: this.service,
+            files: { attachments: [null], attachment_text: [''] },
         };
     },
     methods: {
@@ -161,6 +162,7 @@ name: "serviceEditor",
                 ministries: {},
                 tags: [],
                 serviceGroups: [],
+                ...this.files,
             };
             var ct = 0;
             Object.keys(this.editedService.ministriesByCategory).forEach(key => {
@@ -171,8 +173,15 @@ name: "serviceEditor",
             this.editedService.tags.forEach(tag => {record.tags.push(tag.id); });
             this.editedService.service_groups.forEach(group => {record.serviceGroups.push(group.id); });
 
+            // convert to FormData
+            let fd = new FormData();
+            for (const [key, value] of Object.entries(record)) {
+                fd.append(key, value || '');
+            }
             // send the request
-            this.$inertia.patch(route('services.update', this.service.id), record, { preserveState: false });
+            this.$inertia.patch(route('services.update', this.service.id), record, {
+                preserveState: false
+            });
         },
         extractParticipants(e) {
             var items = [];

@@ -66,6 +66,8 @@ Route::get('services/{service}/ical', ['as' => 'services.ical', 'uses' => 'Servi
 Route::get('/service/{service}/songsheet', 'ServiceController@songsheet')->name('service.songsheet');
 Route::get('/services/{city}/streaming/next', 'PublicController@nextStream')->name('service.nextstream');
 Route::get('services/{service}', 'ServiceController@editor')->name('services.editor');
+Route::post('services/{service}/attachment', 'ServiceController@attach')->name('service.attach');
+Route::delete('services/{service}/attachment/{attachment}', 'ServiceController@detach')->name('service.detach');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);

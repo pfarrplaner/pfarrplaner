@@ -34,7 +34,7 @@
             <attachment v-for="(attachment,key,index) in service.attachments" :key="key" :attachment="attachment"
             @delete-attachment="deleteAttachment(attachment, key)" allow-delete />
         </div>
-        <div v-else>Zu diesem Gottesdienst gehören keine Dateianhänge.</div>
+        <div v-else class="alert alert-info">Zu diesem Gottesdienst gibt es keine Dateianhänge.</div>
         <hr/>
         <h3>Automatisch bereitgestellte Dateien</h3>
         <div v-if="myService.liturgy_blocks.length > 0">
@@ -53,21 +53,8 @@
         </div>
         <hr/>
         <h3>Dateien hinzufügen</h3>
-        <div :key="myService.newAttachments.length">
-            <div class="row" v-for="(attachment,key,index) in myService.newAttachments" :key="key">
-                <div class="col-md-6">
-                    <form-input :name="'attachment_text['+key+']'" label="" placeholder="Beschreibung der Datei"
-                                v-model="attachment.text"/>
-                </div>
-                <div class="col-md-6">
-                    <form-input :name="'attachment_text['+key+']'" label="" placeholder="Beschreibung der Datei"
-                                v-model="attachment.file" type="file"/>
-                </div>
-            </div>
-        </div>
-        <form-group>
-            <button class="btn btn-sm btn-light" @click.prevent="newRow">Reihe hinzufügen</button>
-        </form-group>
+        <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
+        <input v-else class="uploader" type="file" @change="upload" />
     </div>
 </template>
 
@@ -75,10 +62,12 @@
 import Attachment from "../../Ui/elements/Attachment";
 import FormInput from "../../Ui/forms/FormInput";
 import FormGroup from "../../Ui/forms/FormGroup";
+import FormFileUpload from "../../Ui/forms/FormFileUpload";
 
 export default {
     name: "AttachmentsTab",
     components: {
+        FormFileUpload,
         FormGroup,
         FormInput,
         Attachment
@@ -86,17 +75,14 @@ export default {
     props: {
         service: Object,
         liturgySheets: Object,
+        files: Object,
     },
     data() {
         var myService = this.service;
-        if (undefined == myService.newAttachments) myService.newAttachments = [{
-            text: '',
-            file: '',
-        }];
-        if (undefined == myService.removeAttachments) myService.removeAttachments = [];
 
         return {
             myService: myService,
+            uploading: false,
         }
     },
     methods: {
@@ -104,13 +90,36 @@ export default {
             window.location.href = route('services.liturgy.download', {service: this.service.id, key: sheet.key});
         },
         newRow() {
-            this.myService.newAttachments.push({text: '', file: ''});
+            this.files.attachment_text.push('');
+            this.files.attachments.push(null);
             this.$forceUpdate();
         },
         deleteAttachment(attachment, key) {
-            this.myService.removeAttachments.push(attachment.id);
-            this.myService.attachments.splice(key, 1);
+            axios.delete(route('service.detach', {service: this.myService.id, attachment: attachment.id}))
+            .then(response => {
+                this.myService.attachments = response.data;
+            });
         },
+        upload(event) {
+            let title = '';
+            while (title == '') title = window.prompt('Bitte gib eine Beschreibung zu dieser Datei an.');
+
+            let fd = new FormData();
+            fd.append('attachment_text[0]', title);
+            fd.append('attachments[0]', event.target.files[0]);
+            console.log(event.target.files[0], fd);
+
+            this.uploading = true;
+            axios.post(route('service.attach', this.service.id), fd, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(response => {
+                this.myService.attachments = response.data;
+                this.uploading = false;
+            });
+
+        }
     }
 }
 </script>
@@ -128,5 +137,10 @@ export default {
 
 .fa-download {
     color: gray;
+}
+
+.uploader {
+    width: 100%;
+    min-height: 50px;
 }
 </style>

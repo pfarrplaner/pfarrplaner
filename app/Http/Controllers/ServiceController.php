@@ -30,6 +30,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Attachment;
 use App\Broadcast;
 use App\City;
 use App\Day;
@@ -55,6 +56,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
 
@@ -410,5 +412,30 @@ class ServiceController extends Controller
         $update = $timestamp->setTimeZone('UTC')->format('Ymd\THis\Z');
 
         return response()->json(compact('route', 'update', 'service'));
+    }
+
+    /**
+     * @param Request $request
+     * @param Service $service
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attach(Request $request, Service $service)
+    {
+        $this->handleAttachments($request, $service);
+        return response()->json($service->attachments);
+    }
+
+    /**
+     * @param Request $request
+     * @param Service $service
+     * @param Attachment $attachment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function detach(Request $request, Service $service, Attachment $attachment) {
+        Storage::delete($attachment->file);
+        $service->attachments()->where('id', $attachment->id)->delete();
+        $attachment->delete();
+        return response()->json($service->attachments);
     }
 }
