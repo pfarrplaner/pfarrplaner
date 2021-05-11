@@ -46,10 +46,10 @@
                 <span class="float-right fa fa-download"></span>
             </div>
         </div>
-        <div v-else>
+        <div v-else class="alert alert-info">
             Zu diesem Gottesdienst gibt es noch keine automatisch bereitgestellten Dateien, weil noch keine
-            <inertia-link :href="route('services.liturgy.editor', {service: service.id})">Liturgie</inertia-link>
-            angelegt wurde.
+            Liturgie angelegt wurde. <br />
+            <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', {service: service.id})">Liturgie anlegen</inertia-link>
         </div>
         <hr/>
         <h3>Dateien hinzufügen</h3>
@@ -101,8 +101,12 @@ export default {
             });
         },
         upload(event) {
-            let title = '';
-            while (title == '') title = window.prompt('Bitte gib eine Beschreibung zu dieser Datei an.');
+            let title = event.target.files[0].name;
+            console.log(title);
+            title = title.substr(0, title.lastIndexOf('.'));
+            title = title.charAt(0).toUpperCase() + title.slice(1);
+            title = window.prompt('Bitte gib eine Beschreibung zu dieser Datei an.', title);
+            if (null == title) return;
 
             let fd = new FormData();
             fd.append('attachment_text[0]', title);
@@ -142,5 +146,9 @@ export default {
 .uploader {
     width: 100%;
     min-height: 50px;
+}
+
+.alert a.btn {
+    text-decoration: none;
 }
 </style>
