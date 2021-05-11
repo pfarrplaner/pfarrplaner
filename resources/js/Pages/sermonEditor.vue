@@ -320,7 +320,6 @@ export default {
         },
         setImage(event) {
             this.fileUpload = event.target.files[0];
-            console.log(this.fileUpload);
         }
     }
 }
