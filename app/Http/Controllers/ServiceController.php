@@ -159,6 +159,18 @@ class ServiceController extends Controller
      * @return \Inertia\Response
      */
     public function editor(Request $request, Service $service) {
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param Request $request
+     * @param Service $service
+     * @param string $tab optional tab name
+     * @return Response
+     */
+    public function edit(Request $request, Service $service, $tab = 'home')
+    {
         $tab = $request->get('tab', 'home');
         $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups']);
 
@@ -185,46 +197,6 @@ class ServiceController extends Controller
                 'ministries',
                 'days',
                 'liturgySheets',
-            )
-        );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Request $request
-     * @param Service $service
-     * @param string $tab optional tab name
-     * @return Response
-     */
-    public function edit(Request $request, Service $service, $tab = 'home')
-    {
-        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
-
-        $ministries = Participant::all()->pluck('category')->unique()->reject(function ($item){
-            return in_array($item, ['P', 'O', 'M', 'A']);
-        });
-
-        $days = Day::orderBy('date', 'ASC')->get();
-        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
-        $users = User::all()->sortBy('name');
-        $tags = Tag::all();
-        $serviceGroups = ServiceGroup::all();
-
-        $backRoute = $request->get('back') ?: '';
-
-        return view(
-            'services.edit',
-            compact(
-                'service',
-                'days',
-                'locations',
-                'users',
-                'tab',
-                'backRoute',
-                'tags',
-                'serviceGroups',
-                'ministries'
             )
         );
     }
@@ -271,7 +243,7 @@ class ServiceController extends Controller
         if ($route) {
             return redirect($route)->with('success', $success);
         } else {
-            return redirect()->route('services.editor', $service);
+            return redirect()->route('services.edit', $service);
         }
     }
 

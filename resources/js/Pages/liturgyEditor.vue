@@ -1,7 +1,7 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(service)">
         <template slot="navbar-left">
-            <a class="btn btn-light" target="_blank" :href="route('services.editor', service.id)" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</a>&nbsp;
+            <a class="btn btn-light" target="_blank" :href="route('services.edit', service.id)" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</a>&nbsp;
             <a class="btn btn-light" target="_blank" :href="route('services.sermon.editor', service.id)" title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span> Predigt</a>&nbsp;
         </template>
         <info-pane v-if="!agendaMode" :service="service"/>
