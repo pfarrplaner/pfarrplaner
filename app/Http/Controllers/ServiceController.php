@@ -150,11 +150,15 @@ class ServiceController extends Controller
         return redirect()->back();
     }
 
-    public function editor(Service $service, $tab = 'home') {
-
-//        $service->load(['day', 'location', 'comments', 'baptisms', 'funerals', 'weddings']);
-
-        $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks']);
+    /**
+     * Show the (new-style) editing form for the service
+     * @param Request $request
+     * @param Service $service
+     * @return \Inertia\Response
+     */
+    public function editor(Request $request, Service $service) {
+        $tab = $request->get('tab', 'home');
+        $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups']);
 
         $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
             ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
@@ -181,8 +185,6 @@ class ServiceController extends Controller
                 'liturgySheets',
             )
         );
-
-
     }
 
     /**
@@ -267,9 +269,7 @@ class ServiceController extends Controller
         if ($route) {
             return redirect($route)->with('success', $success);
         } else {
-            // default: redirect to calendar
-            return redirect()->route('calendar', $service->day->date->format('Y-m'))
-                ->with('success', $success);
+            return redirect()->route('services.editor', $service);
         }
     }
 

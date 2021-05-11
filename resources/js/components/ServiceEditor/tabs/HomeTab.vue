@@ -73,13 +73,13 @@
                        pre-label="eye-slash"/>
         <div class="row">
             <div class="col-md-6">
-                <form-selectize name="tags" label="Kennzeichnungen" v-model="service.tags"
-                                help="Kennzeichnungen z.B. für den Gemeindebrief" :items="tags" multiple/>
+                <tag-select name="tags" label="Kennzeichnungen" v-model="service.tags"
+                                help="Kennzeichnungen z.B. für den Gemeindebrief" :tags="tags" />
             </div>
             <div class="col-md-6">
-                <form-selectize name="service_groups" label="Dieser Gottesdienst gehört zu folgenden Gruppen"
+                <service-group-select name="service_groups" label="Dieser Gottesdienst gehört zu folgenden Gruppen"
                                 v-model="service.service_groups" help="Gruppen z.B. für den Gemeindebrief"
-                                :items="serviceGroups" multiple/>
+                                :service-groups="serviceGroups" />
             </div>
         </div>
         <hr/>
@@ -100,10 +100,14 @@ import FormSelectize from "../../Ui/forms/FormSelectize";
 import KonfiAppEventTypeSelect from "../../Ui/elements/KonfiAppEventTypeSelect";
 import FormGroup from "../../Ui/forms/FormGroup";
 import DatePickerConfig from "../../Ui/config/DatePickerConfig.js";
+import TagSelect from "../../Ui/elements/TagSelect";
+import ServiceGroupSelect from "../../Ui/elements/ServiceGroupSelect";
 
 export default {
     name: "HomeTab",
     components: {
+        ServiceGroupSelect,
+        TagSelect,
         FormGroup,
         KonfiAppEventTypeSelect,
         MinistryRow,

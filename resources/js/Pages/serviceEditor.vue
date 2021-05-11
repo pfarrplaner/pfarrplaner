@@ -150,7 +150,36 @@ name: "serviceEditor",
     },
     methods: {
         saveService() {
-            this.$inertia.patch(route('services.update', this.service.id), this.editedService, { preserveState: false });
+            // build a request record:
+            var record = {
+                ...this.editedService,
+                participants: {
+                    P:  this.extractParticipants(this.editedService.pastors),
+                    O:  this.extractParticipants(this.editedService.organists),
+                    M:  this.extractParticipants(this.editedService.sacristans),
+                },
+                ministries: {},
+                tags: [],
+                serviceGroups: [],
+            };
+            var ct = 0;
+            Object.keys(this.editedService.ministriesByCategory).forEach(key => {
+                record.ministries[ct] = { description: key, people: [] };
+                this.editedService.ministriesByCategory[key].forEach(person => { record.ministries[ct].people.push(person.id) });
+                ct++;
+            });
+            this.editedService.tags.forEach(tag => {record.tags.push(tag.id); });
+            this.editedService.service_groups.forEach(group => {record.serviceGroups.push(group.id); });
+
+            // send the request
+            this.$inertia.patch(route('services.update', this.service.id), record, { preserveState: false });
+        },
+        extractParticipants(e) {
+            var items = [];
+            e.forEach(person => {
+                items.push(person.id)
+            });
+            return items;
         },
         hasKonfiApp() {
             return (undefined != this.service.id) && (this.service.city.konfiapp_apikey != '');
@@ -166,7 +195,7 @@ name: "serviceEditor",
                 }
             }
             return ctr;
-        }
+        },
     },
 }
 </script>
