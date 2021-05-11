@@ -52,10 +52,10 @@ trait HandlesAttachmentsTrait
             $files = $request->file('attachments');
             foreach ($files as $key => $file) {
                 $path = $file->store('attachments');
-                $description = $request->get('attachment_text')[$key] ?: pathinfo(
+                $description = $request->get('attachment_text')[$key] ?: ucfirst(pathinfo(
                     $file->getClientOriginalName(),
                     PATHINFO_FILENAME
-                );
+                ));
                 $object->attachments()->create(['title' => $description, 'file' => $path]);
             }
         }
