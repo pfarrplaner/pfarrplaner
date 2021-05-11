@@ -63,10 +63,8 @@
                     help="Leer lassen, um die Anmeldungen nicht zu begrenzen"/>
         <div class="row" v-if="myService.location">
             <div class="col-md-4">
-                <form-selectize name="exclude_sections" v-model="myService.exclude_sections"
-                                :items="myService.location.seating_sections"
-                                id-key="title" title-key="title" multiple
-                                label="Folgende Bereiche sperren"/>
+                <section-select name="exclude_sections" v-model="myService.exclude_sections"
+                                multiple :location="myService.location" label="Folgende Bereiche sperren" />
             </div>
             <div class="col-md-4">
                 <seat-select name="exclude_places" v-model="myService.exclude_places"
@@ -149,10 +147,11 @@ import DatePickerConfig from "../../Ui/config/DatePickerConfig.js";
 import FormSelectize from "../../Ui/forms/FormSelectize";
 import SeatSelect from "../../Ui/elements/SeatSelect";
 import Seat from "../../Ui/elements/seating/Seat";
+import SectionSelect from "../../Ui/elements/SectionSelect";
 
 export default {
     name: "RegistrationsTab",
-    components: {Seat, SeatSelect, FormSelectize, FormGroup, FormInput, FormCheck},
+    components: {SectionSelect, Seat, SeatSelect, FormSelectize, FormGroup, FormInput, FormCheck},
     props: ['service'],
     data() {
         DatePickerConfig['format'] = 'DD.MM.YYYY HH:mm';
@@ -180,6 +179,13 @@ export default {
                         this.myService.bookings.splice(bookingKey, 1);
                     })
             }
+        },
+        handleExcludedSectionsInput(e) {
+            var items = [];
+            e.forEach(item => {
+                items.push(item.title);
+            })
+            this.myService.excluded_sections = items.join(',');
         }
     }
 }

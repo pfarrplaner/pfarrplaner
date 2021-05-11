@@ -32,7 +32,9 @@
         <form-selectize :label="label" :help="help" :multiple="multiple" :name="name"
                         title-key="title"
                         :options="myItems"  :settings="mySelectizeSettings" :item-renderer="renderItem"
-                        :option-renderer="renderItem"/>
+                        :option-renderer="renderItem" :value="myValue"
+                        @input="handleInput"
+        />
     </div>
 </template>
 
@@ -41,7 +43,7 @@ import FormSelectize from "../forms/FormSelectize";
 export default {
     name: "SeatSelect",
     components: {FormSelectize},
-    props: ['location', 'label', 'help', 'multiple', 'name', 'excludeSections'],
+    props: ['location', 'label', 'help', 'multiple', 'name', 'excludeSections', 'value'],
     computed: {
         myItems() {
             var items = [];
@@ -69,14 +71,21 @@ export default {
         }
     },
     data() {
+        var myValue = this.value.split(',');
+        myValue.forEach((value,key) => {
+            if ((isNaN(value) && (value.length==2))  || ((!isNaN(value)) && (value.length == 1))) {
+                myValue[key] = '0' + value;
+            }
+        });
         return {
             myLocation: this.location,
             mySelectizeSettings: {
                 labelField: 'title',
                 valueField: 'title',
                 searchField: ['title', 'section'],
-                excludedSections: this.excludeSections,
-            }
+            },
+            excludedSections: this.excludeSections,
+            myValue: myValue,
         }
     },
     methods: {
@@ -93,6 +102,9 @@ export default {
                 +icon+' '+escape(item.title)+'</div><span style="font-size: .7em;">'
                 +escape(item.section)+' &middot; '+escape(item.seats.toString())
                 +(item.seats >1 ? ' Plätze' : ' Platz')+'</span></div>';
+        },
+        handleInput(e) {
+            this.$emit('input', e.join(','));
         }
     }
 }

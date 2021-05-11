@@ -123,12 +123,10 @@ export default {
                 this.items.forEach(item => {
                     if (newVal.includes(item[this.idKey].toString())) allFound.push(item);
                 });
+                this.$emit('input', allFound);
             } else {
-                this.options.forEach(option => {
-                    if (newVal.includes[option[this.idKey]].toString()) allFound.push(option);
-                })
+                this.$emit('input', newVal);
             }
-            this.$emit('input', allFound);
         }
     }
 }
