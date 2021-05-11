@@ -41,7 +41,7 @@
                     <card-header>
                         <tab-headers>
                             <tab-header id="home" title="Allgemeines" :active-tab="activeTab" />
-                            <tab-header id="people" title="Mitwirkende" :active-tab="activeTab" />
+                            <tab-header id="people" title="Mitwirkende" :active-tab="activeTab" :count="peopleCount" />
                             <tab-header id="offerings" title="Opfer" :active-tab="activeTab" />
                             <tab-header id="rites" title="Kasualien" :active-tab="activeTab" :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
                             <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab" />
@@ -128,6 +128,19 @@ name: "serviceEditor",
         serviceGroups: Array,
         days: Array,
         liturgySheets: Object,
+    },
+    computed: {
+        peopleCount() {
+            var count = this.editedService.pastors.length
+                + this.editedService.organists.length
+                + this.editedService.sacristans.length;
+
+            Object.entries(this.editedService.ministriesByCategory).forEach(ministry => {
+                    console.log(ministry, ministry[1].length);
+                    count += ministry[1].length;
+                });
+            return count;
+        }
     },
     data() {
         return {
