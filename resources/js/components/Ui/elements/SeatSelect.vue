@@ -45,8 +45,9 @@ export default {
     computed: {
         myItems() {
             var items = [];
+            if (!this.excludedSections) this.excludedSections = [];
             this.location.seating_sections.forEach(section => {
-                if (!this.excludeSections.includes(section)) {
+                if (!this.excludedSections.includes(section)) {
                     var sectionColor = (section.color ? section.color : '#efefef');
                     section.seating_rows.forEach(row => {
                         var icon = row.seats > 1 ? 'couch' : 'chair';
@@ -74,6 +75,7 @@ export default {
                 labelField: 'title',
                 valueField: 'title',
                 searchField: ['title', 'section'],
+                excludedSections: this.excludeSections,
             }
         }
     },
