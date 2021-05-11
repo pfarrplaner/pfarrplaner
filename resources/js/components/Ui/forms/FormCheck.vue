@@ -46,7 +46,9 @@ export default {
         label: String,
         id: String,
         name: String,
-        value: Boolean,
+        value: {
+            type: null,
+        },
         help: String,
         preLabel: String,
         disabled: {
