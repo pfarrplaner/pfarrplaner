@@ -54,15 +54,15 @@ export default {
         formatName(person) {
             switch(parseInt(this.nameFormat)) {
                 case 1:
-                    if (person.last_name=='') return person.name;
+                    if (!person.last_name) return person.name;
                     return [person.title, person.last_name].join(' ').trim();
                 case 2:
-                    if (person.last_name=='') return person.name;
-                    if (person.first_name=='') return person.name;
+                    if (!person.last_name) return person.name;
+                    if (!person.first_name) return person.name;
                     return [person.title, person.first_name.substr(0,1)+'.', person.last_name].join(' ').trim();
                 case 3:
-                    if (person.last_name=='') return person.name;
-                    if (person.first_name=='') return person.name;
+                    if (!person.last_name) return person.name;
+                    if (!person.first_name) return person.name;
                     return [person.title, person.first_name, person.last_name].join(' ').trim();
                 default:
                     return '[['+this.nameFormat+']]';
