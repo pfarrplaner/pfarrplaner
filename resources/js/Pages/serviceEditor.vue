@@ -183,6 +183,9 @@ name: "serviceEditor",
                 preserveState: false
             });
         },
+        deleteService() {
+            this.$inertia.delete(route('services.destroy', this.editedService.id), {}, { preserveState: false});
+        },
         extractParticipants(e) {
             var items = [];
             e.forEach(person => {
