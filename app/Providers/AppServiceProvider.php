@@ -32,6 +32,9 @@ namespace App\Providers;
 
 use App\QueryLog;
 use App\Seating\SeatingValidators;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Hash;
@@ -146,6 +149,23 @@ class AppServiceProvider extends ServiceProvider
                 }
             ]
         );
+
+        /**
+         * Pass array or string of key column names to remove
+         */
+        Collection::macro('removeCols', function ($except) {
+            if (!is_array($except)) $except = (array)$except;
+
+            // Single Dimensional arrays
+            if (!is_array($this->first()) && !is_object($this->first())) return $this->except($except);
+
+            // Multi Dimensional arrays
+            $out = $this->map(function ($item) use ($except) {
+                return Arr::except($item, $except);
+            });
+
+            return collect($out);
+        });
     }
 
     /**

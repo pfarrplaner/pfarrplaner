@@ -23,7 +23,7 @@ class LiturgyEditorController extends Controller
 
     public function editor(Request $request, Service $service)
     {
-        $service->load('day', 'liturgyBlocks');
+        $service->load('day', 'liturgyBlocks', 'sermon');
         $liturgySheets = LiturgySheets::all();
         $services = [];
         $autoFocusBlock = $request->get('autoFocusBlock', null);

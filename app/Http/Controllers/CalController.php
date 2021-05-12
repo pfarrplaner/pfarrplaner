@@ -42,7 +42,8 @@ class CalController extends Controller
             ->unique()
             ->sort();
 
-        $services = Service::with(['baptisms', 'funerals', 'weddings', 'participants'])
+        $services = Service::setEagerLoads([])
+            ->with(['day', 'baptisms', 'funerals', 'weddings', 'participants'])
             ->inMonthByDate($date)
             ->inCities($cities->pluck('id'))
             ->orderBy('time')

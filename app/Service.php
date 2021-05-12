@@ -86,7 +86,6 @@ class Service extends Model
         'funerals',
         'baptisms',
         'weddings',
-        'sermon',
     ];
 
     /**
@@ -214,11 +213,6 @@ class Service extends Model
         'titleText',
         'liveDashboardUrl',
         'datetime',
-        'seating',
-        'remainingCapacity',
-        'maximumCapacity',
-        'freeSeatsText',
-        'hasSeats',
     ];
 
     /**
@@ -1486,5 +1480,9 @@ class Service extends Model
     public function getFreeSeatsTextAttribute()
     {
         return $this->getSeatFinder()->freeSeatsText();
+    }
+
+    public function unsetAdditionalFields() {
+        $this->appends = [];
     }
 }

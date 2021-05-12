@@ -173,6 +173,33 @@ class ServiceController extends Controller
     {
         $tab = $request->get('tab', 'home');
         $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups']);
+        $service->setAppends([
+                                 'pastors',
+                                 'organists',
+                                 'sacristans',
+                                 'otherParticipants',
+                                 'descriptionText',
+                                 'locationText',
+                                 'dateText',
+                                 'timeText',
+                                 'baptismsText',
+                                 'descriptionText',
+                                 'liturgy',
+                                 'ministriesByCategory',
+                                 'isShowable',
+                                 'isEditable',
+                                 'isDeletable',
+                                 'isMine',
+                                 'titleText',
+                                 'liveDashboardUrl',
+                                 'datetime',
+                                 'seating',
+                                 'remainingCapacity',
+                                 'maximumCapacity',
+                                 'freeSeatsText',
+                                 'hasSeats',
+
+                             ]);
 
         $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
             ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
