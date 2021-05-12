@@ -166,4 +166,12 @@ class AbstractHomeScreenTab
         return 'settings[homeScreenTabsConfig]['.$this->getKey().']'.($name ? '['.$name.']' : '').($isArray ? '[]' : '');
     }
 
+    public function toArray($data = [])
+    {
+        $data['title'] = $this->getTitle();
+        $data['description'] = $this->getDescription();
+        $data['key'] = $this->getKey();
+        return $data;
+    }
+
 }

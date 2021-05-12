@@ -32,7 +32,10 @@ export default {
     install (Vue, options) {
         Vue.prototype.hasPermission = function(p) {
             return window.Laravel.permissions.includes(p);
-        }
+        };
+        Vue.prototype.$can = function(p) {
+            return window.Laravel.permissions.includes(p);
+        };
     },
 
 }

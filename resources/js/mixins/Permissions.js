@@ -33,4 +33,9 @@ export default {
             return window.currentUser.data;
         },
     },
+    methods: {
+        $can(permission) {
+            return window.Laravel.permissions.indexOf(permission) != -1;
+        }
+    }
 };

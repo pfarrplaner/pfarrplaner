@@ -31,11 +31,14 @@
 namespace App\Http\Controllers;
 
 use App\City;
+use App\Facades\Settings;
+use App\HomeScreen\Tabs\HomeScreenTabFactory;
 use App\Location;
 use App\Misc\VersionInfo;
 use App\Service;
 use App\Services\RedirectorService;
 use App\User;
+use App\UserSetting;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
@@ -46,6 +49,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class HomeController
@@ -82,9 +86,16 @@ class HomeController extends Controller
     public function index()
     {
         RedirectorService::saveCurrentRoute();
-
         // check if the user still has a temp password
         if (Hash::check('testtest', Auth::user()->password)) return redirect()->route('password.edit', ['from' => 'home']);
+
+        $user = Auth::user()->load(['userSettings', 'roles', 'permissions']);
+        $settings = Settings::all($user);
+
+        return Inertia::render('HomeScreen', compact('user', 'settings'));
+
+        ///////////////////////////////////////////////////////////////
+
 
         $homeScreen = Auth::user()->getSetting('homeScreen', 'route:calendar');
         if (strpos($homeScreen, ':') !== false) {
@@ -234,4 +245,13 @@ class HomeController extends Controller
         return view('about', compact('history'));
     }
 
+
+    public function tab($tab)
+    {
+        $user = Auth::user();
+        $config = $user->getSetting('homeScreenTabsConfig') ?? [];
+        $tabs = HomeScreenTabFactory::get($config, [$tab]);
+        $tab = array_pop($tabs)->toArray();
+        return response()->json($tab);
+    }
 }

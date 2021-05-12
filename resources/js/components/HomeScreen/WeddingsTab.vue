@@ -28,23 +28,12 @@
   -->
 
 <template>
-    <li :id="id+'Tab'" class="nav-item">
-        <span v-if="title == ''" class="nav-link fa fa-spin fa-spinner"></span>
-        <a v-else class="nav-link" :class="{active: active || (activeTab == id)}" :href="'#'+id" role="tab" data-toggle="tab">{{ title }} <span v-if="count && (count > 0)"
-            class="badge" :class="badgeClass()">{{ count }}</span></a>
-    </li>
 
 </template>
 
 <script>
 export default {
-    name: "tabHeader",
-    props: ['id', 'active', 'activeTab', 'title', 'count', 'badge_type'],
-    methods: {
-        badgeClass() {
-            return this.badge_type ? 'badge-'+this.badge_type : 'badge-primary';
-        }
-    }
+name: "WeddingsTab"
 }
 </script>
 
