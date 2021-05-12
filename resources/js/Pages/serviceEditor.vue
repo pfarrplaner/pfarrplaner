@@ -33,8 +33,8 @@
             <template slot="navbar-left">
                 <button class="btn btn-primary" @click.prevent="saveService"><span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span></button>&nbsp;
                 <button class="btn btn-danger" @click.prevent="deleteService"><span class="fa fa-trash d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
-                <a class="btn btn-light" target="_blank" :href="route('services.liturgy.editor', service.id)" title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
-                <a class="btn btn-light" target="_blank" :href="route('services.sermon.editor', service.id)"  title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span class="d-none d-md-inline"> Predigt</span></a>&nbsp;
+                <a class="btn btn-light" :href="route('services.liturgy.editor', service.id)" title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
+                <a class="btn btn-light" :href="route('services.sermon.editor', service.id)"  title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span class="d-none d-md-inline"> Predigt</span></a>&nbsp;
             </template>
             <form @submit.prevent="saveService" id="formSermon">
                 <card>
