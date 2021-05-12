@@ -42,7 +42,6 @@ use App\Events\ServiceUpdated;
 use App\Http\Requests\ServiceRequest;
 use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Location;
-use App\Participant;
 use App\Service;
 use App\ServiceGroup;
 use App\Tag;
@@ -158,7 +157,8 @@ class ServiceController extends Controller
      * @param Service $service
      * @return \Inertia\Response
      */
-    public function editor(Request $request, Service $service) {
+    public function editor(Request $request, Service $service)
+    {
     }
 
     /**
@@ -173,33 +173,35 @@ class ServiceController extends Controller
     {
         $tab = $request->get('tab', 'home');
         $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups']);
-        $service->setAppends([
-                                 'pastors',
-                                 'organists',
-                                 'sacristans',
-                                 'otherParticipants',
-                                 'descriptionText',
-                                 'locationText',
-                                 'dateText',
-                                 'timeText',
-                                 'baptismsText',
-                                 'descriptionText',
-                                 'liturgy',
-                                 'ministriesByCategory',
-                                 'isShowable',
-                                 'isEditable',
-                                 'isDeletable',
-                                 'isMine',
-                                 'titleText',
-                                 'liveDashboardUrl',
-                                 'datetime',
-                                 'seating',
-                                 'remainingCapacity',
-                                 'maximumCapacity',
-                                 'freeSeatsText',
-                                 'hasSeats',
+        $service->setAppends(
+            [
+                'pastors',
+                'organists',
+                'sacristans',
+                'otherParticipants',
+                'descriptionText',
+                'locationText',
+                'dateText',
+                'timeText',
+                'baptismsText',
+                'descriptionText',
+                'liturgy',
+                'ministriesByCategory',
+                'isShowable',
+                'isEditable',
+                'isDeletable',
+                'isMine',
+                'titleText',
+                'liveDashboardUrl',
+                'datetime',
+                'seating',
+                'remainingCapacity',
+                'maximumCapacity',
+                'freeSeatsText',
+                'hasSeats',
 
-                             ]);
+            ]
+        );
 
         $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
             ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
@@ -297,32 +299,17 @@ class ServiceController extends Controller
      * @param $city
      * @return Application|Factory|\Illuminate\View\View
      */
-    public function add($date, $city)
+    public function add($date, City $city)
     {
         $day = Day::find($date);
-        $city = City::find($city);
-
-        $days = Day::orderBy('date', 'ASC')->get();
-
-        $ministries = Participant::all()
-            ->pluck('category')
-            ->unique()
-            ->reject(
-                function ($value, $key) {
-                    return in_array($value, ['P', 'O', 'M', 'A']);
-                }
-            );
-
-
-        $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
-        $users = User::all()->sortBy('name');
-        $tags = Tag::all();
-        $serviceGroups = ServiceGroup::all();
-
-        return view(
-            'services.create',
-            compact('day', 'city', 'days', 'locations', 'users', 'tags', 'serviceGroups', 'ministries')
+        $service = Service::create(
+            [
+                'city_id' => $city->id,
+                'day_id' => $day->id,
+                'location_id' => $city->locations->first()->id,
+            ]
         );
+        return redirect()->route('services.edit', $service);
     }
 
     /**
@@ -431,7 +418,8 @@ class ServiceController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \Exception
      */
-    public function detach(Request $request, Service $service, Attachment $attachment) {
+    public function detach(Request $request, Service $service, Attachment $attachment)
+    {
         Storage::delete($attachment->file);
         $service->attachments()->where('id', $attachment->id)->delete();
         $attachment->delete();
