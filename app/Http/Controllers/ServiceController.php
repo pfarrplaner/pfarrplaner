@@ -44,6 +44,7 @@ use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Location;
 use App\Service;
 use App\ServiceGroup;
+use App\Services\RedirectorService;
 use App\Tag;
 use App\Traits\HandlesAttachmentsTrait;
 use App\User;
@@ -272,7 +273,7 @@ class ServiceController extends Controller
         if ($route) {
             return redirect($route)->with('success', $success);
         } else {
-            return redirect()->route('services.edit', $service);
+            return RedirectorService::back();
         }
     }
 

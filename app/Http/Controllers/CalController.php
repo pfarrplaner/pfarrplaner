@@ -6,6 +6,7 @@ use App\Absence;
 use App\Day;
 use App\Service;
 use App\Services\CalendarService;
+use App\Services\RedirectorService;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class CalController extends Controller
 
     public function index(Request $request, $date = null, $month = null)
     {
+        RedirectorService::saveCurrentRoute();
         if ($month) {
             $date .= '-' . $month;
         }

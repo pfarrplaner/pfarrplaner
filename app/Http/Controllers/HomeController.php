@@ -34,6 +34,7 @@ use App\City;
 use App\Location;
 use App\Misc\VersionInfo;
 use App\Service;
+use App\Services\RedirectorService;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -80,6 +81,8 @@ class HomeController extends Controller
      */
     public function index()
     {
+        RedirectorService::saveCurrentRoute();
+
         // check if the user still has a temp password
         if (Hash::check('testtest', Auth::user()->password)) return redirect()->route('password.edit', ['from' => 'home']);
 
