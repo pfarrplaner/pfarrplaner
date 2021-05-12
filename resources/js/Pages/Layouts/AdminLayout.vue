@@ -59,11 +59,11 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" :class="{dev: dev}">
             <!-- Brand Logo -->
-            <a :href="route('home')" class="brand-link" style="margin-left: 5px;">
+            <inertia-link :href="route('home')" class="brand-link" style="margin-left: 5px;">
                 <img src="/img/logo/pfarrplaner.png" width="22" height="22" class="brand-image"
                      style="opacity: .8; margin-top: 7px;"/>
                 <span class="brand-text font-weight-light">Pfarrplaner</span>
-            </a>
+            </inertia-link>
 
             <div class="sidebar" v-if="!noNavBar">
                 <!-- Sidebar user panel (optional) -->
