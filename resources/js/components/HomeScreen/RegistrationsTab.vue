@@ -28,12 +28,48 @@
   -->
 
 <template>
-
+    <div v-if="count == 0" class="alert alert-info">Zur Zeit gibt es keine Gottesdienste mit Anmeldungen.</div>
+    <fake-table v-else :columns="[2,4,2,4]" :headers="['Gottesdienst', 'Informationen zum Gottesdienst', 'Plätze', '']"
+                collapsed-header="Gottesdienste">
+        <div v-for="(service,serviceIndex) in services" :key="serviceIndex" class="row mb-3 p-1"
+             :class="{'stripe-odd': (serviceIndex%2==0)}">
+            <div class="col-md-2">
+                <div>{{ moment(service.day.date).locale('de-DE').format('LL') }}</div>
+                <div>{{ service.timeText }}</div>
+                <div>{{ service.locationText }}</div>
+            </div>
+            <div class="col-md-4">
+                <details-info :service="service" />
+            </div>
+            <div class="col-md-2">{{ service.freeSeatsText}}</div>
+            <div class="col-md-4 text-right">
+                <a :href="route('seatfinder', service.id)" title="Anmeldung hinzufügen"
+                   class="btn btn-success"><span class="fa fa-ticket-alt"></span>
+                    <span class="d-none d-md-inline">Neue Anmeldung</span>
+                </a>
+                <a :href="route('service.bookings', service.id)" title="Anmeldungen anzeigen"
+                   class="btn btn-light"><span class="fa fa-ticket-alt"></span>
+                    <span class="d-none d-md-inline">Anmeldungen</span>
+                    <span v-if="service.bookings.length > 0" class="badge badge-info">{{ service.bookings.length }}</span>
+                </a>
+                <a :href="route('booking.finalize', service.id)" title="Anmeldeliste ausgeben"
+                   class="btn btn-light"><span class="fa fa-clipboard-check"></span>
+                    <span class="d-none d-md-inline">Anmeldeliste</span>
+                </a>
+            </div>
+        </div>
+    </fake-table>
 </template>
 
 <script>
+import FakeTable from "../Ui/FakeTable";
+import DetailsInfo from "../Service/DetailsInfo";
 export default {
-name: "RegistrationsTab"
+    name: "RegistrationsTab",
+    components: {DetailsInfo, FakeTable},
+    props: {
+        title: String, description: String, user: Object, settings: Object, services: Array, count: Number,
+    },
 }
 </script>
 
