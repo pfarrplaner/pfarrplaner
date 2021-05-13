@@ -83,7 +83,7 @@ class HomeController extends Controller
      *
      * @return Renderable
      */
-    public function index()
+    public function index($activeTab = '')
     {
         RedirectorService::saveCurrentRoute();
         // check if the user still has a temp password
@@ -92,33 +92,7 @@ class HomeController extends Controller
         $user = Auth::user()->load(['userSettings', 'roles', 'permissions']);
         $settings = Settings::all($user);
 
-        return Inertia::render('HomeScreen', compact('user', 'settings'));
-
-        ///////////////////////////////////////////////////////////////
-
-
-        $homeScreen = Auth::user()->getSetting('homeScreen', 'route:calendar');
-        if (strpos($homeScreen, ':') !== false) {
-            list($action, $data) = explode(':', $homeScreen);
-            switch ($action) {
-                case 'redirect':
-                    return redirect($data);
-                    break;
-                case 'route':
-                    return redirect(route($data));
-                    break;
-                case 'view':
-                    return view($data);
-                    break;
-                case 'homescreen':
-                    $homeScreenObj = Auth::user()->getHomeScreen();
-                    if (null !== $homeScreenObj) {
-                        return $homeScreenObj->render();
-                    }
-            }
-        } else {
-            return view($homeScreen);
-        }
+        return Inertia::render('HomeScreen', compact('user', 'settings', 'activeTab'));
     }
 
     /**

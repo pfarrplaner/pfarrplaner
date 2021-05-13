@@ -29,8 +29,10 @@
 
 <template>
     <li :id="id+'Tab'" class="nav-item">
-        <span v-if="title == ''" class="nav-link fa fa-spin fa-spinner"></span>
-        <a v-else class="nav-link" :class="{active: active || (activeTab == id)}" :href="'#'+id" role="tab" data-toggle="tab">{{ title }} <span v-if="count && (count > 0)"
+        <span v-if="(title == '') && (icon == '')" class="nav-link fa fa-spin fa-spinner"></span>
+        <a v-else class="nav-link" :class="{active: active || (activeTab == id)}" :href="href || ('#'+id)" role="tab" data-toggle="tab">
+            <span v-if="icon" :class="icon"></span>
+            {{ title }} <span v-if="count && (count > 0)"
             class="badge" :class="badgeClass()">{{ count }}</span></a>
     </li>
 
@@ -39,7 +41,7 @@
 <script>
 export default {
     name: "tabHeader",
-    props: ['id', 'active', 'activeTab', 'title', 'count', 'badge_type'],
+    props: ['id', 'active', 'activeTab', 'title', 'count', 'badge_type', 'icon', 'href'],
     methods: {
         badgeClass() {
             return this.badge_type ? 'badge-'+this.badge_type : 'badge-primary';

@@ -41,12 +41,18 @@
         <card>
             <card-header>
                 <tab-headers>
-                    <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key" :active-tab="activeTab" :count="tab.count" />
+                    <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key" :active-tab="myActiveTab" :count="tab.count" />
+                    <div class="ml-auto d-inline tab-setup">
+                        <a :href="route('user.profile')" class="p-2 pl-3 tab-setup ml-auto"
+                           title="Angezeigte Reiter konfigurieren"><span class="fa fa-cog"></span>
+                            <span class="d-none d-md-inline">Anzeige</span>
+                        </a>
+                    </div>
                 </tab-headers>
             </card-header>
             <card-body>
                 <tabs>
-                    <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key"  :active-tab="activeTab" >
+                    <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key"  :active-tab="myActiveTab" >
                         <component v-if="tab.filled" :is="tabComponent(tab)" v-bind="tab"
                                    :user="user" :settings="settings" />
                     </tab>
@@ -80,7 +86,7 @@ export default {
         AbsencesTab, BaptismsTab, CasesTab, FuneralsTab, MissingEntriesTab, NextOfferingsTab, NextServicesTab,
         RegistrationsTab, StreamingTab, WeddingsTab
     },
-    props: ['user', 'settings'],
+    props: ['user', 'settings', 'activeTab'],
     beforeMount() {
         this.myTabNames.forEach(tab => {
             this.myTabs[tab] = { title: '', key: tab, description: '', count: 0}
@@ -98,7 +104,7 @@ export default {
             config: this.settings.homeScreenConfig || {},
             myTabNames: myTabNames,
             myTabs: {},
-            activeTab: myTabNames[0],
+            myActiveTab: this.activeTab || myTabNames[0],
         }
     },
     methods: {
@@ -119,4 +125,16 @@ ul.nav.nav-tabs {
     margin-bottom: 0;
     border-bottom-width: 0;
 }
+
+.tab-setup a{
+    font-size: .7em;
+    color: #c3c3c3 !important;
+}
+
+.tab-setup a:hover {
+    color: darkgray !important;
+    text-decoration: none;
+}
+
+
 </style>
