@@ -31,43 +31,34 @@
     <div class="next-services-tab">
         <h2>{{ title }}</h2>
         <p>Angezeigt werden die Gottesdienste der nächsten 2 Monate.</p>
-        <div class="table-responsive">
-            <table class="table table-striped" width="100%">
-                <thead>
-                <tr>
-                    <th>Datum</th>
-                    <th>Zeit</th>
-                    <th>Ort</th>
-                    <th>Liturgische Infos</th>
-                    <th>Details</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(service,serviceIndex) in services" :key="serviceIndex">
-                    <td>{{ moment(service.day.date).locale('de-DE').format('LL') }}</td>
-                    <td>{{ service.timeText }}</td>
-                    <td>{{ service.locationText }}</td>
-                    <td>
-                        <liturgical-info :service="service"/>
-                    </td>
-                    <td>
-                        <details-info :service="service" />
-                    </td>
-                    <td>
-                        <inertia-link class="btn btn-light" title="Im Kalender ansehen"
-                                      :href="route('calendar', moment(service.day.date).format('YYYY-MM'))">
-                            <span class="fa fa-calendar"></span>
-                        </inertia-link>
-                        <inertia-link class="btn btn-primary" title="Gottesdienst bearbeiten"
-                                      :href="route('services.edit', service.id)">
-                            <span class="fa fa-edit"></span>
-                        </inertia-link>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        <fake-table :columns="[2,4,4,2]" :headers="['Gottesdienst', 'Liturgie', 'Infos zum Gottesdienst', '']"
+                    :collapsed-header="Gottesdienste">
+            <div v-for="(service,serviceIndex) in services" :key="serviceIndex"
+                 :class="{'stripe-odd': (serviceIndex %2 ==0)}" class="row mb-3 p-1">
+                <div class="col-md-2">
+                    <div>{{ moment(service.day.date).locale('de-DE').format('LL') }}</div>
+                    <div>{{ service.timeText }}</div>
+                    <div>{{ service.locationText }}</div>
+                </div>
+                <div class="col-md-4">
+                    <liturgical-info :service="service"/>
+                </div>
+                <div class="col-md-4">
+                    <details-info :service="service" />
+                </div>
+                <div class="col-md-2 text-right">
+                    <inertia-link class="btn btn-light" title="Im Kalender ansehen"
+                                  :href="route('calendar', moment(service.day.date).format('YYYY-MM'))">
+                        <span class="fa fa-calendar"></span>
+                    </inertia-link>
+                    <inertia-link class="btn btn-primary" title="Gottesdienst bearbeiten"
+                                  :href="route('services.edit', service.id)">
+                        <span class="fa fa-edit"></span>
+                    </inertia-link>
+                </div>
+            </div>
+
+        </fake-table>
 
     </div>
 </template>
@@ -75,9 +66,10 @@
 <script>
 import LiturgicalInfo from "../Service/LiturgicalInfo";
 import DetailsInfo from "../Service/DetailsInfo";
+import FakeTable from "../Ui/FakeTable";
 export default {
     name: "NextServicesTab",
-    components: {DetailsInfo, LiturgicalInfo},
+    components: {FakeTable, DetailsInfo, LiturgicalInfo},
     props: ['title', 'description', 'user', 'settings', 'services']
 }
 </script>
