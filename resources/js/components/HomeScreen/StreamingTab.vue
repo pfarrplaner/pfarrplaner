@@ -28,15 +28,64 @@
   -->
 
 <template>
-
+    <div class="streaming-tab">
+        <div v-if="count == 0" class="alert alert-info">Zur Zeit gibt es keine Gottesdienste, die gestreamt werden
+            könnten.
+        </div>
+        <fake-table v-else :headers="[2,4,6]" :columns="['Gottesdienst', 'Informationen zum Gottesdienst', '']"
+                    collapsed-header="Gottesdienste">
+            <div v-for="(service,serviceIndex) in services" :key="serviceIndex" class="row mt-3 p-1"
+                 :class="{'stripe-odd': (serviceIndex % 2 == 0)}">
+                <div class="col-md-2">
+                    <div>{{ moment(service.day.date).locale('de-DE').format('LL') }}</div>
+                    <div>{{ service.timeText }}</div>
+                    <div>{{ service.locationText }}</div>
+                </div>
+                <div class="col-md-4">
+                    <details-info :service="service"/>
+                </div>
+                <div class="col-md-6">
+                    <a v-if="!service.youtube_url" class="btn btn-primary" title="Neuen Livestream für diesen Gottesdienst anlegen"
+                       :href="route('broadcast.create', service.id)">
+                        Livestream anlegen
+                    </a>
+                    <div v-else>
+                        <a class="btn btn-light" :href="service.youtube_url" target="_blank"
+                           title="Gehe zum Livestream auf YouTube"><span class="fab fa-youtube"></span>
+                            <span class="d-none d-md-inline">Video</span>
+                        </a>
+                        <a class="btn btn-light" :href="route('broadcast.refresh', service.id)"
+                           title="Beschreibung auf YouTube erneuern"><span class="fa fa-sync"></span>
+                        </a>
+                        <button class="btn btn-danger" @click.prevent="deleteBroadcast(service)"
+                                title="Livestream löschen"><span class="fa fa-trash"></span></button>
+                    </div>
+                </div>
+            </div>
+        </fake-table>
+    </div>
 </template>
 
 <script>
+import FakeTable from "../Ui/FakeTable";
+import DetailsInfo from "../Service/DetailsInfo";
+
 export default {
-name: "StreamingTab"
+    name: "StreamingTab",
+    components: {DetailsInfo, FakeTable},
+    props: {
+        title: String, description: String, user: Object, settings: Object, services: Array, count: Number,
+    },
+    methods: {
+        deleteBroadcast(service) {
+            this.$inertia.delete(route('broadcast.delete', service.id), {preserveState: false});
+        }
+    }
 }
 </script>
 
 <style scoped>
-
+    .fab.fa-youtube {
+        color: red;
+    }
 </style>
