@@ -62,7 +62,8 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment v-for="(attachment,key,index) in wedding.attachments" :key="key" :attachment="attachment" />
+            <attachment v-if="!showPastor" v-for="(attachment,key,index) in wedding.attachments" :key="key" :attachment="attachment" />
+            <details-info v-else :service="wedding.service" />
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Trauung bearbeiten"
@@ -77,14 +78,16 @@
 <script>
 import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
+import DetailsInfo from "../../Service/DetailsInfo";
 
 export default {
     name: "Wedding",
     components: {
+        DetailsInfo,
         Attachment,
         CheckedProcessItem,
     },
-    props: ['wedding', 'showService'],
+    props: ['wedding', 'showService', 'showPastor'],
     methods: {
         deleteWedding() {
             this.$inertia.delete('weddings.destroy', {wedding: this.wedding.id});

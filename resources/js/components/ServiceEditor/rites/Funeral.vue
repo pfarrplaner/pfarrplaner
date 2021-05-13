@@ -64,7 +64,8 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment v-for="(attachment,key,index) in funeral.attachments" :key="key" :attachment="attachment" />
+            <attachment v-if="!showPastor" v-for="(attachment,key,index) in funeral.attachments" :key="key" :attachment="attachment" />
+            <details-info v-else :service="funeral.service" />
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Bestattung bearbeiten"
@@ -79,14 +80,16 @@
 <script>
 import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
+import DetailsInfo from "../../Service/DetailsInfo";
 
 export default {
     name: "Funeral",
     components: {
+        DetailsInfo,
         Attachment,
         CheckedProcessItem,
     },
-    props: ['funeral', 'showService'],
+    props: ['funeral', 'showService', 'showPastor'],
     methods: {
         deleteFuneral() {
             this.$inertia.delete('funerals.destroy', {funeral: this.funeral.id});

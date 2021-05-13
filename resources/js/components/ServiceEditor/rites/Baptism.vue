@@ -66,7 +66,8 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment v-for="(attachment,key,index) in baptism.attachments" :key="key" :attachment="attachment" />
+            <attachment v-if="!showPastor" v-for="(attachment,key,index) in baptism.attachments" :key="key" :attachment="attachment" />
+            <details-info v-else :service="baptism.service" />
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Taufe bearbeiten"
@@ -81,10 +82,12 @@
 <script>
 import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
+import DetailsInfo from "../../Service/DetailsInfo";
 
 export default {
     name: "Baptism",
     components: {
+        DetailsInfo,
         Attachment,
         CheckedProcessItem,
     },
@@ -93,7 +96,11 @@ export default {
         showService: {
             type: Boolean,
             default: false,
-        }
+        },
+        showPastor: {
+            type: Boolean,
+            default: false,
+        },
     },
     methods: {
         deleteBaptism() {
