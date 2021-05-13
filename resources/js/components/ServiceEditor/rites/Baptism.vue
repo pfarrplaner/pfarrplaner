@@ -29,11 +29,16 @@
 
 <template>
     <div class="baptism row">
+        <div class="col-md-2" v-if="showService">
+            {{ moment(baptism.service.day.date).format('DD.MM.YYYY') }}<br />
+            {{ baptism.service.timeText }}<br />
+            {{ baptism.service.locationText }}
+        </div>
         <div class="col-md-2">
             {{ baptism.candidate_name}}<br />
             <small>Fon {{ baptism.candidate_phone }}<br />E-Mail {{ baptism.candidate_email}}</small>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
             <checked-process-item :check="(baptism.first_contact_on) && (baptism.first_contact_with)"
                                   negative="Erstkontakt nicht dokumentiert">
                 <template slot="positive">
@@ -60,7 +65,7 @@
                 </checked-process-item>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
             <attachment v-for="(attachment,key,index) in baptism.attachments" :key="key" :attachment="attachment" />
         </div>
         <div class="col-md-1 text-right">
@@ -83,7 +88,13 @@ export default {
         Attachment,
         CheckedProcessItem,
     },
-    props: ['baptism'],
+    props: {
+        baptism: Object,
+        showService: {
+            type: Boolean,
+            default: false,
+        }
+    },
     methods: {
         deleteBaptism() {
             this.$inertia.delete('baptisms.destroy', {baptism: this.baptism.id});

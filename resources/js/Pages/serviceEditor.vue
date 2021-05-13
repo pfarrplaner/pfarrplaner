@@ -33,6 +33,16 @@
             <template slot="navbar-left">
                 <button class="btn btn-primary" @click.prevent="saveService"><span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span></button>&nbsp;
                 <button class="btn btn-danger" @click.prevent="deleteService"><span class="fa fa-trash d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
+                <div class="dropdown show">
+                    <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Weitere Aktionen
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" :href="route('services.ical', {service: service.id})">In Outlook übernehmen</a>
+                        <a class="dropdown-item" :href="route('reports.setup', {report: 'regulatory', service: service.id})">Meldung an das Ordnungsamt</a>
+                    </div>
+                </div>
                 <a class="btn btn-light" :href="route('services.liturgy.editor', service.id)" title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
                 <a class="btn btn-light" :href="route('services.sermon.editor', service.id)"  title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span class="d-none d-md-inline"> Predigt</span></a>&nbsp;
             </template>

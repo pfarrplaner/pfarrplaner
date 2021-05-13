@@ -28,15 +28,37 @@
   -->
 
 <template>
+    <div class="baptisms-tab">
+        <h2>{{ title }}</h2>
+        <div v-if="baptisms.length == 0" class="alert alert-info">
+            <span v-if="(settings.homeScreenTabsConfig.baptisms.mine || false)">Zur Zeit hast du keine Taufen geplant.</span>
+            <span v-else>Zur Zeit sind keine Taufen geplant.</span>
+        </div>
+        <div v-else>
+            <baptism v-for="baptism in baptisms" class="mb-3" :baptism="baptism" :key="baptism.id" :show-service="true"/>
+        </div>
 
+        <hr />
+
+        <h2>Taufanfragen</h2>
+        <div v-if="baptismRequests.length == 0" class="alert alert-info">Zur Zeit gibt es keine offenen Taufanfragen.</div>
+        <baptism v-else v-for="baptism in baptismRequests" :baptism="baptism" :key="baptism.id" />
+    </div>
 </template>
 
 <script>
+import Baptism from "../ServiceEditor/rites/Baptism";
+import DetailsInfo from "../Service/DetailsInfo";
+import CheckedProcessItem from "../Ui/elements/CheckedProcessItem";
+
 export default {
-name: "BaptismsTab"
+    name: "BaptismsTab",
+    components: {CheckedProcessItem, DetailsInfo, Baptism},
+    props: {
+        title: String, description: String, user: Object, settings: Object, baptisms: Array, baptismRequests: Array,
+    },
 }
 </script>
 
 <style scoped>
-
 </style>

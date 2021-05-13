@@ -47,7 +47,8 @@
             <card-body>
                 <tabs>
                     <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key"  :active-tab="activeTab" >
-                        <component :is="tabComponent(tab)" v-bind="tab" :user="user" :settings="settings" />
+                        <component v-if="tab.filled" :is="tabComponent(tab)" v-bind="tab"
+                                   :user="user" :settings="settings" />
                     </tab>
                 </tabs>
             </card-body>

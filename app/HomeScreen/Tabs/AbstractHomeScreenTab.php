@@ -171,6 +171,7 @@ class AbstractHomeScreenTab
         $data['title'] = $this->getTitle();
         $data['description'] = $this->getDescription();
         $data['key'] = $this->getKey();
+        $data['filled'] = true;
         return $data;
     }
 

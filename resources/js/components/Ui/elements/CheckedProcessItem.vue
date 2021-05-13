@@ -39,7 +39,9 @@
 export default {
     name: "CheckedProcessItem",
     props: {
-        check: Boolean,
+        check: {
+            type: null,
+        },
         positive: String,
         negative: String,
         iconPositive: {
