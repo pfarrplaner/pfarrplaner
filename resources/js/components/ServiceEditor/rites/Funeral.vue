@@ -29,15 +29,22 @@
 
 <template>
     <div class="funeral row">
+        <div class="col-md-2" v-if="showService">
+            {{ moment(funeral.service.day.date).format('DD.MM.YYYY') }}<br />
+            {{ funeral.service.timeText }}<br />
+            {{ funeral.service.locationText }}
+        </div>
         <div class="col-md-2">
             <b>{{ funeral.buried_name }}</b><br />
-            <small>{{ moment(funeral.dob).format('DD.MM.YYYY') }} - {{ moment(funeral.dod).format('DD.MM.YYYY') }}
+            <div v-if="funeral.dob && funeral.dod" style="font-size: .8em;">
+                {{ moment(funeral.dob).format('DD.MM.YYYY') }} - {{ moment(funeral.dod).format('DD.MM.YYYY') }}
                 ({{ funeral.age }})
-                <br />
-                {{ funeral.type }}
-            </small>
+            </div>
+            <div style="font-size: .8em;">
+            {{ funeral.type }}
+            </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div>
                 <checked-process-item :check="(funeral.appointment)" negative="Trauergespräch noch nicht vereinbart">
                     <template slot="positive">
@@ -79,7 +86,7 @@ export default {
         Attachment,
         CheckedProcessItem,
     },
-    props: ['funeral'],
+    props: ['funeral', 'showService'],
     methods: {
         deleteFuneral() {
             this.$inertia.delete('funerals.destroy', {funeral: this.funeral.id});

@@ -31,29 +31,48 @@
     <div class="baptisms-tab">
         <h2>{{ title }}</h2>
         <div v-if="baptisms.length == 0" class="alert alert-info">
-            <span v-if="(settings.homeScreenTabsConfig.baptisms.mine || false)">Zur Zeit hast du keine Taufen geplant.</span>
+            <span
+                v-if="(settings.homeScreenTabsConfig.baptisms.mine || false)">Zur Zeit hast du keine Taufen geplant.</span>
             <span v-else>Zur Zeit sind keine Taufen geplant.</span>
         </div>
         <div v-else>
-            <baptism v-for="baptism in baptisms" class="mb-3" :baptism="baptism" :key="baptism.id" :show-service="true"/>
+            <fake-table :columns="[2,2,4,3,1]" collapsed-header="Taufen"
+                        :headers="['Gottesdienst', 'Täufling', 'Informationen zur Taufe', 'Dokumente', '']">
+                <baptism v-for="(baptism, baptismIndex) in baptisms" :baptism="baptism" :key="baptism.id" :show-service="true"
+                         class="mb-3 p-1" :class="{'stripe-odd': (baptismIndex % 2 == 0)}"/>
+
+            </fake-table>
         </div>
 
-        <hr />
+        <hr/>
 
         <h2>Taufanfragen</h2>
         <div v-if="baptismRequests.length == 0" class="alert alert-info">Zur Zeit gibt es keine offenen Taufanfragen.</div>
-        <baptism v-else v-for="baptism in baptismRequests" :baptism="baptism" :key="baptism.id" />
+        <div v-else>
+            <fake-table :columns="[2,4,3,1]" collapsed-header="Taufanfragen"
+                        :headers="['Täufling', 'Informationen zur Taufe', 'Dokumente', '']">
+                <baptism  v-for="(baptism, baptismIndex) in baptismRequests" :baptism="baptism" :key="baptism.id"
+                          class="mb-3 p-1" :class="{'stripe-odd': (baptismIndex % 2 == 0)}"/>
+            </fake-table>
+            <div class="d-none d-md-block fluid-blocks-header py-2">
+                <div class="row">
+                    <div class="col-md-2">Täufling</div>
+                    <div class="col-md-4">Informationen zur Taufe</div>
+                    <div class="col-md-3">Dokumente</div>
+                    <div class="col-md-1"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import Baptism from "../ServiceEditor/rites/Baptism";
-import DetailsInfo from "../Service/DetailsInfo";
-import CheckedProcessItem from "../Ui/elements/CheckedProcessItem";
+import FakeTable from "../Ui/FakeTable";
 
 export default {
     name: "BaptismsTab",
-    components: {CheckedProcessItem, DetailsInfo, Baptism},
+    components: {FakeTable, Baptism},
     props: {
         title: String, description: String, user: Object, settings: Object, baptisms: Array, baptismRequests: Array,
     },

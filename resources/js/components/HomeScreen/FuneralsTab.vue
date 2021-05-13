@@ -28,12 +28,31 @@
   -->
 
 <template>
-
+    <div class="funerals-tab">
+        <h2>{{ title }}</h2>
+        <div v-if="!count" class="alert alert-info">
+            <span v-if="(settings.homeScreenTabsConfig.funerals.mine || false)">Zur Zeit hast du keine Beerdigungen geplant.</span>
+            <span v-else>Zur Zeit sind keine Beerdigungen geplant.</span>
+        </div>
+        <div v-else>
+            <fake-table :columns="[2,2,4,3,1]" collapsed-header="Beerdigungen"
+                        :headers="['Gottesdienst', 'Verstorbene:r', 'Informationen zur Bestattung', 'Dokumente', '']">
+                <funeral v-for="(funeral,funeralIndex) in funerals"  :funeral="funeral" :key="funeral.id" :show-service="true"
+                         class="mb-3 p-1" :class="{'stripe-odd': (funeralIndex % 2 == 0)}"/>
+            </fake-table>
+        </div>
+    </div>
 </template>
 
 <script>
+import Funeral from "../ServiceEditor/rites/Funeral";
+import FakeTable from "../Ui/FakeTable";
 export default {
-name: "FuneralsTab"
+    name: "FuneralsTab",
+    components: {FakeTable, Funeral},
+    props: {
+        title: String, description: String, user: Object, settings: Object, funerals: Array, count: null,
+    },
 }
 </script>
 

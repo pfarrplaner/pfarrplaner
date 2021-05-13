@@ -32,6 +32,7 @@ namespace App\HomeScreen\Tabs;
 
 
 use App\Service;
+use App\Wedding;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -65,6 +66,14 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
         return parent::getContent($data);
     }
 
+    public function toArray($data = [])
+    {
+        $data['weddings'] = $this->query->get();
+        $data['count'] = count($data['weddings']);
+        return parent::toArray($data);
+    }
+
+
     /**
      * Build the query
      * @return \Illuminate\Database\Eloquent\Builder
@@ -73,28 +82,19 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
-        $query = Service::with(['weddings', 'location', 'day'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
-            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
-            ->whereHas('weddings')
-            ->whereHas(
-                'day',
-                function ($query) use ($start, $end) {
-                    $query->where('date', '>=', $start)
-                        ->where('date', '<=', $end);
+        $query = Wedding::with(['service', 'service.day'])
+            ->whereHas('service', function($service){
+                $service->startingFrom(Carbon::now()->subWeeks(2))
+                    ->whereIn('city_id', Auth::user()->cities->pluck('id'));
+                if ($this->config['mine']) {
+                    $service->whereHas(
+                        'participants',
+                        function ($query) {
+                            $query->where('user_id', Auth::user()->id);
+                        }
+                    );
                 }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC');
-        if ($this->config['mine']) {
-            $query->whereHas(
-                'participants',
-                function ($query) {
-                    $query->where('user_id', Auth::user()->id);
-                }
-            );
-        }
+            });
         return $query;
     }
 

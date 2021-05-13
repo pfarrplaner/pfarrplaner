@@ -29,11 +29,15 @@
 
 <template>
     <div class="wedding row">
+        <div class="col-md-2" v-if="showService">
+            {{ moment(wedding.service.day.date).format('DD.MM.YYYY') }}<br />
+            {{ wedding.service.timeText }}<br />
+            {{ wedding.service.locationText }}
+        </div>
         <div class="col-md-2">
             <b>{{ wedding.spouse1_name }}</b><br />
             <small>{{ wedding.spouse1_phone }}<br />{{ wedding.spouse1_email}}</small>
-        </div>
-        <div class="col-md-2">
+            <br />
             <b>{{ wedding.spouse2_name }}</b><br />
             <small>{{ wedding.spouse2_phone }}<br />{{ wedding.spouse2_email}}</small>
         </div>
@@ -80,7 +84,7 @@ export default {
         Attachment,
         CheckedProcessItem,
     },
-    props: ['wedding'],
+    props: ['wedding', 'showService'],
     methods: {
         deleteWedding() {
             this.$inertia.delete('weddings.destroy', {wedding: this.wedding.id});
