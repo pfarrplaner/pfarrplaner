@@ -127,10 +127,17 @@ export default {
         serviceGroups: Array,
     },
     data() {
+        let myDatePickerConfig =  {
+            format: 'DD.MM.YYYY',
+            locale: 'de',
+            showClear: true,
+        }
+        let myService = this.service;
+        myService.communiapp_listing_start = moment(this.service.communiapp_listing_start).format('DD.MM.YYYY');
         return {
             myService: this.service,
             myLocation: this.service.location || this.service.special_location,
-            myDatePickerConfig: DatePickerConfig,
+            myDatePickerConfig: myDatePickerConfig,
             locationUpdating: false,
         }
     },
@@ -151,6 +158,9 @@ export default {
             }
             console.log(this.myLocation, this.myService.location, this.myService.special_location);
             this.locationUpdating = false;
+        },
+        setCommuniappListingStart(e) {
+            this.service.communiapp_listing_start = e;
         }
     }
 }

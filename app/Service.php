@@ -188,6 +188,7 @@ class Service extends Model
         'announcements',
         'offering_text',
         'communiapp_id',
+        'communiapp_listing_start',
     ];
 
     /**
@@ -232,6 +233,7 @@ class Service extends Model
     protected $dates = [
         'registration_online_start',
         'registration_online_end',
+        'communiapp_listing_start',
     ];
     /** @var AbstractSeatFinder */
     protected $seatFinder = null;

@@ -115,6 +115,8 @@ class ServiceRequest extends FormRequest
             'sermon_id' => 'nullable|int|exists:sermons,id',
             'announcements' => 'nullable|string',
             'offering_text' => 'nullable|string',
+            'communiapp_id' => 'nullable|int',
+            'communiapp_listing_start' => 'nullable|date_format:d.m.Y',
         ];
     }
 
@@ -172,6 +174,9 @@ class ServiceRequest extends FormRequest
         }
         if (isset($data['registration_online_end'])) {
             $data['registration_online_end'] = Carbon::createFromFormat('d.m.Y H:i', $data['registration_online_end']);
+        }
+        if (isset($data['communiapp_listing_start'])) {
+            $data['communiapp_listing_start'] = Carbon::createFromFormat('d.m.Y', $data['communiapp_listing_start']);
         }
 
         return $data;
