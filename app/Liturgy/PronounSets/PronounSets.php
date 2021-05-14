@@ -61,4 +61,16 @@ class PronounSets
         return new $class();
     }
 
+    /**
+     * @return array
+     */
+    public static function toArray() {
+        $pronounSets = [];
+        /** @var AbstractPronounSet $pronounSet */
+        foreach (self::all() as $pronounSet) {
+            $pronounSets[] = ['key' => $pronounSet->getKey(), 'label' => $pronounSet->getLabel()];
+        };
+        return $pronounSets;
+    }
+
 }

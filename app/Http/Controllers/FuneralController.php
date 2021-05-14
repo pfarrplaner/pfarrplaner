@@ -30,10 +30,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Attachment;
 use App\City;
 use App\Day;
 use App\Funeral;
 use App\Http\Requests\FuneralStoreRequest;
+use App\Liturgy\PronounSets\AbstractPronounSet;
+use App\Liturgy\PronounSets\PronounSets;
 use App\Location;
 use App\Mail\ServiceCreated;
 use App\Service;
@@ -49,7 +52,9 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 use PDF;
 
 /**
@@ -255,8 +260,9 @@ class FuneralController extends Controller
      */
     public function edit(Funeral $funeral)
     {
-        $service = Service::find($funeral->service_id);
-        return view('funerals.edit', compact('service', 'funeral'));
+        $funeral->load('service');
+        $pronounSets = PronounSets::toArray();
+        return Inertia::render('Rites/FuneralEditor', compact('funeral', 'pronounSets'));
     }
 
     /**
@@ -345,5 +351,34 @@ class FuneralController extends Controller
             ->header('Content-Disposition', 'inline; filename=Trauergespraech-' . $funeral->id . '.ics');
     }
 
+
+    /**
+     * @param Request $request
+     * @param Funeral $funeral
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attach(Request $request, Funeral $funeral)
+    {
+        $this->handleAttachments($request, $funeral);
+        $funeral->refresh();
+        return response()->json($funeral->attachments);
+    }
+
+    /**
+     * @param Request $request
+     * @param Funeral $funeral
+     * @param Attachment $attachment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function detach(Request $request, Funeral $funeral, Attachment $attachment)
+    {
+        $file = $attachment->file;
+        $funeral->attachments()->where('id', $attachment->id)->delete();
+        Storage::delete($file);
+        $attachment->delete();
+        $funeral->refresh();
+        return response()->json($funeral->attachments);
+    }
 
 }

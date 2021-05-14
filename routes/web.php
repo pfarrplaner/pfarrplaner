@@ -156,6 +156,8 @@ Route::post('/baptism/done/{baptism}', ['as' => 'baptism.done', 'uses' => 'Bapti
 
 
 Route::resource('funerals', 'FuneralController')->middleware('auth');
+Route::post('funerals/{funeral}/attachment', 'FuneralController@attach')->name('funeral.attach');
+Route::delete('funerals/{funeral}/attachment/{attachment}', 'FuneralController@detach')->name('funeral.detach');
 Route::get('/funeral/add/{service}', ['as' => 'funeral.add', 'uses' => 'FuneralController@create'])->middleware('auth');
 Route::get('/funeral/destroy/{funeral}', ['as' => 'funeral.destroy', 'uses' => 'FuneralController@destroy']);
 Route::get('/funeral/{funeral}/Formular KRA.pdf', ['as' => 'funeral.form', 'uses' => 'FuneralController@pdfForm']);
