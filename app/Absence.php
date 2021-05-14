@@ -68,6 +68,10 @@ class Absence extends Model
         'durationText', 'replacementText'
     ];
 
+    protected $with = [
+        'user'
+    ];
+
 // ACCESSORS
     public function getReplacementTextAttribute()
     {

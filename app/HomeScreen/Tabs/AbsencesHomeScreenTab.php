@@ -62,6 +62,14 @@ class AbsencesHomeScreenTab extends AbstractHomeScreenTab
         return parent::getContent($data);
     }
 
+    public function toArray($data = [])
+    {
+        $data['absences'] = $this->absenceQuery->get();
+        $data['replacements'] = $this->replacementQuery->get();
+        $data['count'] = count($data['absences']) + count($data['replacements']);
+        return parent::toArray($data);
+    }
+
     /**
      * Build the queries
      * @return \Illuminate\Database\Eloquent\Builder
