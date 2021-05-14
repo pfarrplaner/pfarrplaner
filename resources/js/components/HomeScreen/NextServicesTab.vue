@@ -36,9 +36,7 @@
             <div v-for="(service,serviceIndex) in services" :key="serviceIndex"
                  :class="{'stripe-odd': (serviceIndex %2 ==0)}" class="row mb-3 p-1">
                 <div class="col-md-2">
-                    <div>{{ moment(service.day.date).locale('de-DE').format('LL') }}</div>
-                    <div>{{ service.timeText }}</div>
-                    <div>{{ service.locationText }}</div>
+                    <basic-info :service="service" />
                 </div>
                 <div class="col-md-4">
                     <liturgical-info :service="service"/>
@@ -67,9 +65,10 @@
 import LiturgicalInfo from "../Service/LiturgicalInfo";
 import DetailsInfo from "../Service/DetailsInfo";
 import FakeTable from "../Ui/FakeTable";
+import BasicInfo from "../Service/BasicInfo";
 export default {
     name: "NextServicesTab",
-    components: {FakeTable, DetailsInfo, LiturgicalInfo},
+    components: {BasicInfo, FakeTable, DetailsInfo, LiturgicalInfo},
     props: ['title', 'description', 'user', 'settings', 'services']
 }
 </script>

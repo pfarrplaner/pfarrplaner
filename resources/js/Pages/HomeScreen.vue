@@ -41,7 +41,8 @@
         <card>
             <card-header>
                 <tab-headers>
-                    <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key" :active-tab="myActiveTab" :count="tab.count" />
+                    <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key" :active-tab="myActiveTab"
+                                :count="tab.count" :badge-type="tab.badgeType"/>
                     <div class="ml-auto d-inline tab-setup">
                         <a :href="route('user.profile')" class="p-2 pl-3 tab-setup ml-auto"
                            title="Angezeigte Reiter konfigurieren"><span class="fa fa-cog"></span>
@@ -54,7 +55,7 @@
                 <tabs>
                     <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key"  :active-tab="myActiveTab" >
                         <component v-if="tab.filled" :is="tabComponent(tab)" v-bind="tab"
-                                   :user="user" :settings="settings" />
+                                   :user="user" :settings="settings" :config="settings.homeScreenTabsConfig[tab.key]"/>
                     </tab>
                 </tabs>
             </card-body>

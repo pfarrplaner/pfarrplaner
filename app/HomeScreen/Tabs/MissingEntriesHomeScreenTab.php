@@ -62,6 +62,14 @@ class MissingEntriesHomeScreenTab extends AbstractHomeScreenTab
         return parent::getContent($data);
     }
 
+    public function toArray($data = [])
+    {
+        $data['missing'] = $this->missing;
+        $data['count'] = count($data['missing']);
+        $data['badgeType'] = 'danger';
+        return parent::toArray($data);
+    }
+
     public function view($viewName, $data = [])
     {
         if ($viewName == 'config') {

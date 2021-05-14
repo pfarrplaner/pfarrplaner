@@ -28,12 +28,63 @@
   -->
 
 <template>
-
+    <div class="missing-entries-tab">
+        <div v-if="count == 0" class="alert alert-info">Zur Zeit gibt es keine fehlenden Einträge.</div>
+        <fake-table v-else :columns="[2,4,4,2]" :headers="['Gottesdienst', 'Details', 'Fehlende Daten', '']"
+                    collapsed-header="Fehlende Daten">
+            <div v-for="(service,serviceIndex) in missing" class="row mb-3 p-1" :class="{'stripe-odd': (serviceIndex % 2 == 0)}"
+                :key="serviceIndex">
+                <div class="col-md-2">
+                    <basic-info :service="service" />
+                </div>
+                <div class="col-md-4">
+                    <details-info :service="service" />
+                </div>
+                <div class="col-md-4">
+                    <span v-for="(ministry,ministryIndex) in missingMinistries(service)" :key="serviceIndex+'_missing_'+ministryIndex"
+                          class="badge badge-danger">{{ ministry }}</span>
+                </div>
+                <div class="col-md-2 text-right">
+                    <a class="btn btn-primary" :href="route('services.edit', service.id)"
+                       title="Eintrag bearbeiten"><span class="fa fa-edit"></span></a>
+                </div>
+            </div>
+        </fake-table>
+    </div>
 </template>
 
 <script>
+import FakeTable from "../Ui/FakeTable";
+import DetailsInfo from "../Service/DetailsInfo";
+import BasicInfo from "../Service/BasicInfo";
 export default {
-name: "MissingEntriesTab"
+    methods: {
+        missingMinistries(service) {
+            let missingMinistryItems = [];
+            this.config.ministries.forEach(ministry => {
+                let examine = null;
+                switch (ministry) {
+                    case 'Pfarrer*in':
+                        examine = service.pastors;
+                        break;
+                    case 'Organist*in':
+                        examine = service.organists;
+                        break;
+                    case 'Mesner*in':
+                        examine = service.sacristans;
+                        break;
+                    default:
+                        examine = service.ministriesByCategory[ministry];
+                }
+                if (!examine) missingMinistryItems.push(ministry);
+            });
+            return missingMinistryItems;
+        }
+    },
+    name: "MissingEntriesTab",
+    components: {BasicInfo, DetailsInfo, FakeTable},
+    props: ['title', 'description', 'user', 'settings', 'missing', 'count', 'config']
+
 }
 </script>
 

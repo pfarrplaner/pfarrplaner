@@ -28,25 +28,17 @@
   -->
 
 <template>
-    <li :id="id+'Tab'" class="nav-item">
-        <span v-if="(!title) && (!icon)" class="nav-link fa fa-spin fa-spinner"></span>
-        <a v-else class="nav-link" :class="{active: active || (activeTab == id)}" :href="href || ('#'+id)" role="tab" data-toggle="tab">
-            <span v-if="icon" :class="icon"></span>
-            {{ title }} <span v-if="count && (count > 0)"
-            class="badge" :class="badgeClass()">{{ count }}</span></a>
-    </li>
-
+    <div class="basic-info">
+        <div>{{ moment(service.day.date).locale('de-DE').format('LL') }}</div>
+        <div>{{ service.timeText }}</div>
+        <div>{{ service.locationText }}</div>
+    </div>
 </template>
 
 <script>
 export default {
-    name: "tabHeader",
-    props: ['id', 'active', 'activeTab', 'title', 'count', 'badgeType', 'icon', 'href'],
-    methods: {
-        badgeClass() {
-            return this.badgeType ? 'badge-'+this.badgeType : 'badge-primary';
-        }
-    }
+    name: "BasicInfo",
+    props: ['service']
 }
 </script>
 
