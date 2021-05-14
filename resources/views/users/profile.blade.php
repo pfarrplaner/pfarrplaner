@@ -16,7 +16,7 @@
 
 
                     @tabheaders
-                        @tabheader(['id' => 'profile', 'title' => 'Profile', 'active' => $tab == '']) @endtabheader
+                        @tabheader(['id' => 'profile', 'title' => 'Profil', 'active' => $tab == '']) @endtabheader
                         @tabheader(['id' => 'notifications', 'title' => 'Benachrichtigungen', 'active' => $tab == 'notifications']) @endtabheader
                         @if(null !== $homeScreen)
                             @tabheader(['id' => 'homescreen', 'title' => 'Startbildschirm', 'active' => $tab == 'homescreen']) @endtabheader
