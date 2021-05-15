@@ -30,7 +30,7 @@
 <template>
     <form-selectize :id="myId" :name="name" :label="label" :help="help"
                     :value="myValue"
-                    :options="locations" :id-key="id" :title-key="name" :multiple="multiple"
+                    :options="locations" id-key="id" title-key="name" :multiple="multiple"
                     :settings="settings" @input="locationChanged" />
 </template>
 
@@ -78,6 +78,7 @@ export default {
             myId: this.id || '',
             myValue: myValue,
             settings: {
+                labelField: 'name',
                 create: function(input, callback){
                     return callback({id: input, name: input});
                 },
