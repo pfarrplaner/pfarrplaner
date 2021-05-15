@@ -113,7 +113,7 @@ body.calendar .content-header {
 
 .calendar-horizontal th.limited.collapsed,
 .calendar-horizontal td.limited.for-city.collapsed {
-    background: linear-gradient(90deg, #DCD0FF 80%, #f4f6f9 100%);
+    background: #DCD0FF;
 }
 
 .calendar-vertical th.limited.collapsed,
