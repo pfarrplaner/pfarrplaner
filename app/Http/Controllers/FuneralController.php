@@ -35,7 +35,6 @@ use App\City;
 use App\Day;
 use App\Funeral;
 use App\Http\Requests\FuneralStoreRequest;
-use App\Liturgy\PronounSets\AbstractPronounSet;
 use App\Liturgy\PronounSets\PronounSets;
 use App\Location;
 use App\Mail\ServiceCreated;
@@ -87,8 +86,13 @@ class FuneralController extends Controller
      */
     public function create(Service $service)
     {
-        $wizard = Session::get('wizard', 0);
-        return view('funerals.create', compact('service', 'wizard'));
+        $funeral = Funeral::create(
+            [
+                'service_id' => $service->id,
+                'buried_name' => '',
+            ]
+        );
+        return redirect()->route('funerals.edit', $funeral->id);
     }
 
 
@@ -144,7 +148,7 @@ class FuneralController extends Controller
         }
 
         $locations[$city->name] = Location::where('city_id', $cityId)->get();
-        $locations['Andere Orte']= Location::whereIn('city_id', Auth::user()->cities->pluck('id'))
+        $locations['Andere Orte'] = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))
             ->where('city_id', '!=', $cityId)
             ->get();
 
