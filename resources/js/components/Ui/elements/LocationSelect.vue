@@ -30,7 +30,7 @@
 <template>
     <form-selectize :id="myId" :name="name" :label="label" :help="help"
                     :value="myValue"
-                    :options="locations" id-key="id" title-key="name" :multiple="multiple"
+                    :options="myOptions" id-key="id" title-key="name" :multiple="multiple"
                     :settings="settings" @input="locationChanged" />
 </template>
 
@@ -62,7 +62,20 @@ export default {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
-        var myValue;
+        let myValue;
+        var myOptions = [];
+        var myCities = {};
+        var myCityOptions = [];
+
+        this.locations.forEach(item => {
+            item['cityName'] = item.city.name;
+            if (undefined == myCities[item.city.name]) myCities[item.city.name] = item.city.name;
+            myOptions.push(item);
+        });
+
+        Object.keys(myCities).forEach(cityItem => {
+            myCityOptions.push({groupName: cityItem});
+        });
 
         if (this.value) {
             if (typeof this.value == 'object') {
@@ -70,22 +83,30 @@ export default {
             } else {
                 myValue = this.value;
                 if (isNaN(myValue)) {
-                    this.locations.push({id: myValue, name: myValue});
+                    this.myOptions.push({id: myValue, name: myValue});
                 }
             }
         }
         return {
             myId: this.id || '',
             myValue: myValue,
+            myOptions: myOptions,
             settings: {
                 labelField: 'name',
-                searchField: ['name'],
+                searchField: ['name', 'cityName'],
+                optgroupField: 'cityName',
+                optgroupLabelField: 'groupName',
+                optgroupValueField: 'groupName',
+                optgroups: myCityOptions,
                 create: function(input, callback){
                     return callback({id: input, name: input});
                 },
                 render: {
                     option_create: function (data, escape) {
                         return '<div class="create">Freie Ortsangabe: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    },
+                    optgroup_header: function (data, escape) {
+                        return '<div class="optgroup-header">' + escape(data.groupName) +'</div>';
                     }
                 },
             },
