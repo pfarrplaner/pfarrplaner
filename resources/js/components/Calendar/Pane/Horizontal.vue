@@ -38,3 +38,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+    table.table thead th {
+        vertical-align: top;
+    }
+</style>

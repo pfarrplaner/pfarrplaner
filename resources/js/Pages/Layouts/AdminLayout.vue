@@ -121,7 +121,7 @@
 
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <div class="content-header" v-if="title">
+            <div class="content-header" v-if="(title) && (!noContentHeader)">
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
@@ -168,7 +168,8 @@ export default {
         },
         'title': {
             default: '',
-        }
+        },
+        noContentHeader: Boolean,
     },
     mounted() {
         if (this.title != '') document.title = this.title + ' :: ' + this.layout.appName;

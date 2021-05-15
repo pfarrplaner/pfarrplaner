@@ -264,8 +264,11 @@ Route::post('/checkin/{service}', 'CheckInController@store')->name('checkin.stor
 Route::get('/checkin/{location}/qr', 'CheckInController@qr')->name('checkin.qr');
 
 
-// inertia testing
+// inertia calendar
 Route::get('/calendar/{date?}/{month?}', 'CalController@index')->name('calendar');
+Route::get('/cal/city/{date}/{city}', 'CalController@city')->name('cal.city');
+Route::get('/cal/day/{day}/{city}', 'CalController@day')->name('cal.day');
+Route::get('/calendar-day/{day}/{city}', 'CalController@singleDay')->name('calendar.day');
 
 // liturgy editor
 Route::get('/services/{service}/liturgy', 'LiturgyEditorController@editor')->name('services.liturgy.editor');

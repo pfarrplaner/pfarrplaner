@@ -82,7 +82,7 @@
                 <span class="fa fa-forward"></span>
             </inertia-link>
         </div>
-        <div class="btn-group mr-2" role="group" v-if="!slave">
+        <div class="btn-group mr-2 d-none d-md-block" role="group" v-if="!slave">
             <a class="btn btn-default btn-toggle-limited-days"
                @click.prevent="toggleColumns"
                title="Alle ausgeblendeten Tage einblenden"><span
@@ -99,7 +99,7 @@
                 class="fa fa-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
         </div>
         <a class="btn btn-default" :href="route('reports.setup', {report: 'ministryRequest'})"
-           title="Dienstanfrage per E-Mail senden"><span class="fa fa-envelope"></span> Anfrage senden...</a>
+           title="Dienstanfrage per E-Mail senden"><span class="fa fa-envelope"></span> <span class="d-none d-md-inline">Anfrage senden...</span></a>
 
     </div>
 
