@@ -123,9 +123,17 @@ export default {
                 this.items.forEach(item => {
                     if (newVal.includes(item[this.idKey].toString())) allFound.push(item);
                 });
-                this.$emit('input', allFound);
+                if (this.multiple) {
+                    this.$emit('input', allFound);
+                } else {
+                    this.$emit('input', allFound[0]);
+                }
             } else {
-                this.$emit('input', newVal);
+                if (this.multiple) {
+                    this.$emit('input', newVal);
+                } else {
+                    this.$emit('input', typeof newVal == 'Array' ? newVal[0] : newVal);
+                }
             }
         }
     }

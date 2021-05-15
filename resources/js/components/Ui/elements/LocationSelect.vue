@@ -28,22 +28,20 @@
   -->
 
 <template>
-    <form-group :id="myId" :name="name" :label="label" :help="help">
-        <selectize :id="id+'Input'" class="form-control" :class="{'is-invalid': error}" :settings="settings"
-                   :name="name" :value="myLocation" @input="locationChanged($event)" @input.native="$event.stopPropagation()">
-            <option v-if="(typeof myValue != 'object')" :value="myValue">{{ myValue }}</option>
-            <option v-for="location in locations" :value="location.id">{{ location.name }}</option>
-        </selectize>
-    </form-group>
+    <form-selectize :id="myId" :name="name" :label="label" :help="help"
+                    :value="myValue"
+                    :options="locations" :id-key="id" :title-key="name" :multiple="multiple"
+                    :settings="settings" @input="locationChanged" />
 </template>
 
 <script>
 import FormGroup from "../forms/FormGroup";
 import Selectize from "vue2-selectize";
+import FormSelectize from "../forms/FormSelectize";
 
 export default {
     name: "LocationSelect",
-    components: {FormGroup, Selectize},
+    components: {FormSelectize, FormGroup, Selectize},
     props: {
         label: String,
         id: String,
@@ -57,18 +55,32 @@ export default {
         placeholder: String,
         locations: Array,
         error: String,
+        useInput: Boolean,
+        multiple: Boolean,
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
+        var myValue;
+
+        if (this.value) {
+            if (typeof this.value == 'object') {
+                myValue = this.value.id
+            } else {
+                myValue = this.value;
+                if (isNaN(myValue)) {
+                    this.locations.push({id: myValue, name: myValue});
+                }
+            }
+        }
         return {
             myId: this.id || '',
-            myValue: this.value,
-            myLocation: typeof this.value == 'object' ? this.value.id : this.value,
-            isSpecialLocation: (typeof value != 'object'),
+            myValue: myValue,
             settings: {
-                create: true,
+                create: function(input, callback){
+                    return callback({id: input, name: input});
+                },
                 render: {
                     option_create: function (data, escape) {
                         return '<div class="create">Freie Ortsangabe: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
@@ -79,21 +91,16 @@ export default {
     },
     methods: {
         locationChanged(newVal) {
-            console.log(newVal);
-            if (!isNaN(newVal)) {
-                var found = false;
-                this.locations.forEach(function (location){
-                    if (location.id == newVal) found = location;
-                });
-                if (found) {
-                    this.$emit('set-location', found);
-                    this.myValue = found;
-                }
-                return;
-            }
-            this.$emit('set-location', newVal);
-            this.myValue = newVal;
+            this.sendEvent(newVal);
         },
+        sendEvent(found) {
+            if (this.useInput) {
+                this.$emit('input', found)
+            } else {
+                console.log('send set-location', found);
+                this.$emit('set-location', found);
+            }
+        }
     }
 }
 </script>

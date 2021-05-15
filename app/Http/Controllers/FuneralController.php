@@ -98,12 +98,109 @@ class FuneralController extends Controller
 
     /**
      * @param Request $request
-     * @return Application|Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
-    public function wizardStep1(Request $request)
+    public function wizard(Request $request)
     {
         $cities = Auth::user()->writableCities;
-        return view('funerals.wizard.step1', compact('cities'));
+        $locations = Location::whereIn('city_id', $cities->pluck('id'))->get()->groupBy('city_id');
+        return Inertia::render('Rites/FuneralWizard', compact('cities', 'locations'));
+    }
+
+    public function wizardSave(Request $request)
+    {
+        $data = $request->validate(
+            [
+                'date' => 'required|date_format:d.m.Y H:i',
+                'city' => 'required|exists:cities,id',
+                'location' => 'required',
+                'name' => 'required|string',
+            ]
+        );
+        if (is_numeric($data['location'])) {
+            $request->validate(['location' => 'exists:locations,id']);
+        }
+        $data['date'] = Carbon::createFromFormat('d.m.Y H:i', $data['date']);
+
+        $city = City::find($data['city']);
+
+        // check if day exists
+        $day = Day::where('date', $data['date'])->first();
+        if ($day) {
+            // check if it visible for this city
+            if ($day->day_type == Day::DAY_TYPE_LIMITED) {
+                if (!$day->cities->contains($data['city'])) {
+                    $day->cities()->attach($city);
+                }
+            }
+        } else {
+            // create day
+            $day = new Day(
+                [
+                    'date' => $data['date'],
+                    'name' => '',
+                    'description' => '',
+                    'day_type' => Day::DAY_TYPE_LIMITED,
+                ]
+            );
+            $day->save();
+            $day->cities()->sync([$data['city']]);
+        }
+
+        $location = $specialLocation = null;
+        if ((!is_numeric($data['location'])) || (null === Location::find($data['location']))) {
+            $specialLocation = $data['location'];
+            $data['location'] = 0;
+            $time = $data['date']->format('H:i');
+            $ccLocation = $request->get('cc_location') ?: '';
+        } else {
+            if ($data['location']) {
+                $location = Location::find($data['location']);
+                $time = $data['date']->format('H:i');
+                $ccLocation = $request->get('cc_location') ?: ($request->get(
+                    'cc'
+                ) ? $location->cc_default_location : '');
+            } else {
+                $time = $data['date']->format('H:i');
+                $ccLocation = $request->get('cc_location') ?: '';
+            }
+        }
+
+        $service = Service::create(
+            [
+                'day_id' => $day->id,
+                'location_id' => ($location ? $location->id : null),
+                'time' => $time,
+                'special_location' => $specialLocation ?? null,
+                'city_id' => $city->id,
+                'others' => '',
+                'description' => '',
+                'need_predicant' => 0,
+                'baptism' => 0,
+                'eucharist' => 0,
+                'offerings_counter1' => '',
+                'offerings_counter2' => '',
+                'offering_goal' => '',
+                'offering_description' => '',
+                'offering_type' => '',
+                'cc' => 0,
+                'cc_location' => '',
+                'cc_lesson' => '',
+                'cc_staff' => '',
+            ]
+        );
+        if (Auth::user()->hasRole('Pfarrer*in')) {
+            $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+        }
+
+        $funeral = Funeral::create(
+            [
+                'service_id' => $service->id,
+                'buried_name' => $data['name']
+            ]
+        );
+
+        return redirect()->route('funerals.edit', $funeral->id);
     }
 
     /**
