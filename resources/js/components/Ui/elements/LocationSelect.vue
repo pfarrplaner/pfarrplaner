@@ -79,6 +79,7 @@ export default {
             myValue: myValue,
             settings: {
                 labelField: 'name',
+                searchField: ['name'],
                 create: function(input, callback){
                     return callback({id: input, name: input});
                 },
