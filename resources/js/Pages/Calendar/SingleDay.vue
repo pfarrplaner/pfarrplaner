@@ -60,7 +60,14 @@
                 </th>
             </tr>
             <tr>
-                <th class="text-center">{{ city.name }}</th>
+                <th class="text-center">
+                    {{ city.name }}
+                    <div v-if="(absences.length) && $can('urlaub-lesen')" class="my-1">
+                        <div class="vacation mr-1" v-for="absence in absences" :absence="absence"
+                             :title="absence.user.name+': '+absence.reason+' ('+absence.durationText+') '+replacementText(absence)">
+                            <span class="fa fa-globe-europe"></span> {{ absence.user.last_name }}</div>
+                    </div>
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -84,7 +91,10 @@ export default {
     methods: {
         back() {
             window.history.back();
-        }
+        },
+        replacementText: function (absence) {
+            return absence.replacementText ? '[V: '+absence.replacementText+']' : '';
+        },
     }
 }
 </script>
