@@ -41,8 +41,12 @@
             <card-header>
                 <tab-headers>
                     <tab-header title="Allgemeines" id="home" :active-tab="activeTab"/>
-                    <tab-header title="Bestattung" id="funeral" :active-tab="activeTab"/>
-                    <tab-header title="Angehörige" id="family" :active-tab="activeTab"/>
+                    <tab-header title="Bestattung" id="funeral" :active-tab="activeTab"
+                                :is-checked-item="true"
+                                :check-value="myFuneral.text && myFuneral.announcement"/>
+                    <tab-header title="Angehörige" id="family" :active-tab="activeTab"
+                                :is-checked-item="true"
+                                :check-value="myFuneral.appointment"/>
                     <tab-header title="Dateien" id="attachments" :active-tab="activeTab"
                                 :count="myFuneral.attachments.length"/>
                 </tab-headers>
@@ -58,10 +62,12 @@
                             <div class="col-md-6">
                                 <form-group label="Zu verwendendes Pronomen">
                                     <div>
-                                        <div class="form-check-inline" v-for="(pronounSet, pronounSetIndex) in pronounSets"
+                                        <div class="form-check-inline"
+                                             v-for="(pronounSet, pronounSetIndex) in pronounSets"
                                              :key="'pronouns_'+pronounSet">
                                             <label class="form-check-label">
-                                                <input type="radio" class="form-check-input" v-model="myFuneral.pronoun_set"
+                                                <input type="radio" class="form-check-input"
+                                                       v-model="myFuneral.pronoun_set"
                                                        :value="pronounSet.key">{{ pronounSet.label }}
                                             </label>
                                         </div>
@@ -96,7 +102,7 @@
                         </div>
                     </tab>
                     <tab id="funeral" :active-tab="activeTab">
-                        <fake-table :columns="[2,2,6,2]" :headers="['Datum', 'Uhrzeit', 'Ort', '']"
+                        <fake-table :columns="[2,2,4,4]" :headers="['Datum', 'Uhrzeit', 'Ort', '']"
                                     collapsed-header="Bestattung">
                             <div class="row p-1">
                                 <div class="col-md-2">{{
@@ -104,18 +110,31 @@
                                     }}
                                 </div>
                                 <div class="col-md-2">{{ myFuneral.service.timeText }}</div>
-                                <div class="col-md-6">{{ myFuneral.service.locationText }}</div>
-                                <div class="col-md-2 text-right">
+                                <div class="col-md-4">{{ myFuneral.service.locationText }}</div>
+                                <div class="col-md-4 text-right">
                                     <inertia-link :href="route('services.edit', funeral.service.id)"
                                                   title="Gottesdienst bearbeiten"
                                                   class="btn btn-light">
                                         <span class="fa fa-edit"></span> <span
                                         class="d-none d-md-inline">Gottesdienst</span>
                                     </inertia-link>
+                                    <inertia-link :href="route('services.liturgy.editor', funeral.service.id)"
+                                                  title="Liturgie bearbeiten"
+                                                  class="btn btn-light">
+                                        <span class="fa fa-th-list"></span> <span
+                                        class="d-none d-md-inline">Liturgie</span>
+                                    </inertia-link>
+                                    <inertia-link :href="route('services.sermon.editor', funeral.service.id)"
+                                                  title="Predigt bearbeiten"
+                                                  class="btn btn-light">
+                                        <span class="fa fa-microphone"></span> <span
+                                        class="d-none d-md-inline">Predigt</span>
+                                    </inertia-link>
                                 </div>
                             </div>
                         </fake-table>
-                        <form-input label="Predigttext" v-model="myFuneral.text"/>
+                        <hr />
+                        <form-input label="Predigttext" v-model="myFuneral.text" :is-checked-item="true"/>
                         <form-group label="Bestattungsart">
                             <select v-model="myFuneral.type" class="form-control">
                                 <option>Erdbestattung</option>
@@ -131,7 +150,7 @@
                             <form-input label="Ort der vorhergehenden Trauerfeier"
                                         v-model="myFuneral.wake_location" name="wake_location"/>
                         </div>
-                        <form-group label="Abkündigen am">
+                        <form-group label="Abkündigen am" :is-checked-item="true" :value="myFuneral.announcement">
                             <date-picker :config="myDatePickerConfig" v-model="myFuneral.announcement"/>
                         </form-group>
                     </tab>
@@ -156,7 +175,7 @@
                             </div>
                         </div>
                         <form-textarea label="Weitere Kontaktdaten" v-model="myFuneral.relative_contact_data"/>
-                        <form-group label="Trauergespräch">
+                        <form-group label="Trauergespräch" :is-checked-item="true" :value="myFuneral.appointment">
                             <date-picker v-model="myFuneral.appointment" :config="myDateTimePickerConfig"/>
                         </form-group>
                     </tab>
@@ -193,11 +212,13 @@ import FormTextarea from "../../components/Ui/forms/FormTextarea";
 import FormFileUploader from "../../components/Ui/forms/FormFileUploader";
 import Attachment from "../../components/Ui/elements/Attachment";
 import AttachmentList from "../../components/Ui/elements/AttachmentList";
+import ValueCheck from "../../components/Ui/elements/ValueCheck";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        ValueCheck,
         AttachmentList,
         Attachment,
         FormFileUploader,
