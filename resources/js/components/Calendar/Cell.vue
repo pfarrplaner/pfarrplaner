@@ -51,10 +51,9 @@ import EventBus from "../../plugins/EventBus";
 import { CalendarToggleDayColumnEvent} from "../../events/CalendarToggleDayColumnEvent";
 
 export default {
-    props: ['city', 'day', 'services', 'canCreate'],
+    props: ['city', 'day', 'services', 'canCreate', 'uncollapsed'],
     data: function() {
         return {
-            collapsed: this.hasMine ? false : (this.day.day_type == 1),
             user: window.vm.$children[0].page.props.currentUser.data,
             limited: this.day.day_type == 1,
         }
@@ -66,6 +65,10 @@ export default {
         }
     },
     computed: {
+        collapsed() {
+            if (this.uncollapsed) return false;
+            return (this.hasMine ? false : (this.day.day_type == 1));
+        },
         isForCity() {
             var found = false;
             var city = this.city;

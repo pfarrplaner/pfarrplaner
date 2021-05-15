@@ -72,7 +72,7 @@
             </thead>
             <tbody>
             <tr>
-                <calendar-cell :day="day" :services="services" :city="city" :can-create="canCreate"/>
+                <calendar-cell :day="day" :services="services" :city="city" :can-create="canCreate" :uncollapsed="true"/>
             </tr>
             </tbody>
         </table>
