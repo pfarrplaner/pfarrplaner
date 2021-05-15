@@ -29,8 +29,8 @@
 
 <template>
     <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel" :required="required"
-                :value="value">
-        <input class="form-control" :class="{'is-invalid': error}" :type="type" v-model="myValue" :id="myId+'Input'"
+                :value="value" :is-checked-item="isCheckedItem">
+        <input class="form-control" :class="{'is-invalid': error, 'checked-input': isCheckedItem}" :type="type" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :autofocus="autofocus"
                @input="$emit('input', $event.target.value);" :disabled="disabled"
                :required="required" :aria-required="required"/>
@@ -39,10 +39,11 @@
 
 <script>
 import FormGroup from "./FormGroup";
+import ValueCheck from "../elements/ValueCheck";
 
 export default {
     name: "FormInput",
-    components: {FormGroup},
+    components: {ValueCheck, FormGroup},
     props: {
         label: String,
         id: String,
@@ -65,6 +66,10 @@ export default {
             default: false,
         },
         handleInput: Object,
+        isCheckedItem: {
+            type: null,
+            default: false,
+        },
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
@@ -91,5 +96,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

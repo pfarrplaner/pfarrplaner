@@ -29,6 +29,7 @@
 
 <template>
     <div class="form-group" :class="{'form-group-required' : required}">
+        <value-check v-if="isCheckedItem" :value="value" />
         <label v-if="label" :for="id+'Input'" class="control-label"><span v-if="preLabel" :class="['fa', 'fa-'+preLabel]"></span> {{ label }}</label>
         <slot error="error"/>
         <small v-if="error" class="invalid-feedback">{{ error }}</small>
@@ -37,9 +38,11 @@
 </template>
 
 <script>
+import ValueCheck from "../elements/ValueCheck";
 export default {
     name: "FormGroup",
-    props: ['id', 'name', 'label', 'help', 'preLabel', 'required', 'value'],
+    components: {ValueCheck},
+    props: ['id', 'name', 'label', 'help', 'preLabel', 'required', 'value', 'isCheckedItem'],
     data() {
         const errors = this.$page.props.errors;
         return {

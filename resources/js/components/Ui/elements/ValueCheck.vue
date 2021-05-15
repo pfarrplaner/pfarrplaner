@@ -28,32 +28,21 @@
   -->
 
 <template>
-    <li :id="id+'Tab'" class="nav-item">
-        <span v-if="(!title) && (!icon)" class="nav-link fa fa-spin fa-spinner"></span>
-        <a v-else class="nav-link" :class="{active: active || (activeTab == id)}" :href="href || ('#'+id)" role="tab" data-toggle="tab">
-            <span v-if="icon" :class="icon"></span>
-            {{ title }}
-            <span v-if="count && (count > 0)" class="badge" :class="badgeClass()">{{ count }}</span>
-            <value-check v-if="isCheckedItem" :value="checkValue" />
-        </a>
-    </li>
-
+    <span class="fa" :class="'fa-'+(value ? 'check-circle' : 'times-circle')"></span>
 </template>
 
 <script>
-import ValueCheck from "../elements/ValueCheck";
 export default {
-    name: "tabHeader",
-    components: {ValueCheck},
-    props: ['id', 'active', 'activeTab', 'title', 'count', 'badgeType', 'icon', 'href', 'isCheckedItem', 'checkValue'],
-    methods: {
-        badgeClass() {
-            return this.badgeType ? 'badge-'+this.badgeType : 'badge-primary';
-        }
-    }
+    name: "ValueCheck",
+    props: ['value']
 }
 </script>
 
 <style scoped>
-
+    .fa.fa-check-circle {
+        color: green;
+    }
+    .fa.fa-times-circle {
+        color: red;
+    }
 </style>
