@@ -55,7 +55,7 @@ class Location extends Model
         'instructions'
     ];
 
-    protected $with = ['seatingSections'];
+    protected $with = ['seatingSections', 'city'];
 
     /**
      * @return BelongsTo

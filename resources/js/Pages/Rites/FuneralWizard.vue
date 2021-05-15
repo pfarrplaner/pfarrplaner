@@ -41,7 +41,7 @@
                 <form-selectize v-model="funeral.city" :options="cities"
                                 id-key="id" title-key="name"
                                 label="Kirchengemeinde" />
-                <location-select v-if="funeral.city" v-model="funeral.location" :locations="locations[funeral.city]"
+                <location-select v-model="funeral.location" :locations="locations"
                                 label="Ort" @set-location="setLocation" />
                 <form-input label="Verstorbene:r" placeholder="Nachname, Vorname"
                             v-model="funeral.name" />
