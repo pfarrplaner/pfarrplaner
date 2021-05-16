@@ -113,5 +113,6 @@
 @section('scripts')
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js"></script>
     <script src="{{ asset('js/pfarrplaner/profile-homescreen.js') }}"></script>
 @endsection
