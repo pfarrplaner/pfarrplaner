@@ -69,6 +69,11 @@ mix.js('resources/scripts/bundle.js', 'public/js')
 
 
 mix.js('resources/js/inertia-app.js', 'public/js')
+    .autoload({
+        'jquery': ['$', 'window.jQuery', 'jQuery'],
+        'vue': ['Vue','window.Vue'],
+        'moment': ['moment','window.moment'],
+    })
     .sourceMaps()
     .sass('resources/sass/app.scss', 'public/css')
     .webpackConfig({

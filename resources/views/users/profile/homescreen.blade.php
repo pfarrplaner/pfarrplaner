@@ -1,4 +1,3 @@
-@if(null !== $homeScreen)
     @tab(['id' => 'homescreen', 'active' => $tab == 'homescreen'])
     <h3>Inhalte des Startbildschirms</h3>
     @checkbox(['label' => 'Schaltflächen für das schnelle Erstellen von Kasualien anzeigen', 'name' => 'settings[homeScreenConfig][wizardButtons]', 'value' => \Illuminate\Support\Facades\Auth::user()->getSetting('homeScreenConfig', ['wizardButtons' => 0])['wizardButtons']])
@@ -48,4 +47,3 @@
     </div>
 
     @endtab
-@endif

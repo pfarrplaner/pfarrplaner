@@ -18,9 +18,7 @@
                     @tabheaders
                         @tabheader(['id' => 'profile', 'title' => 'Profil', 'active' => $tab == '']) @endtabheader
                         @tabheader(['id' => 'notifications', 'title' => 'Benachrichtigungen', 'active' => $tab == 'notifications']) @endtabheader
-                        @if(null !== $homeScreen)
-                            @tabheader(['id' => 'homescreen', 'title' => 'Startbildschirm', 'active' => $tab == 'homescreen']) @endtabheader
-                        @endif
+                        @tabheader(['id' => 'homescreen', 'title' => 'Startbildschirm', 'active' => $tab == 'homescreen']) @endtabheader
                         @if (strpos($user->email, '@elkw.de') !== false)
                             @tabheader(['id' => 'calendars', 'title' => 'Verbundene Kalender', 'active' => $tab == 'calendars']) @endtabheader
                         @endif
@@ -113,6 +111,7 @@
 @endsection
 
 @section('scripts')
-    <script src="https://code.jquery.com/ui/jquery-ui-git.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{{ asset('js/pfarrplaner/profile-homescreen.js') }}"></script>
 @endsection
