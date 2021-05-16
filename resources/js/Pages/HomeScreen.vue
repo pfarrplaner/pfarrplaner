@@ -31,11 +31,11 @@
     <admin-layout :title="'Willkommen, '+(user.first_name ? user.first_name : user.name)+'!'">
         <template slot="navbar-left">
             <a class="btn btn-primary" :href="route('calendar')"><span class="fa fa-calendar"></span> <span class="d-none d-md-inline">Zum Kalender</span></a>&nbsp;
-            <a v-if="config.wizardButtons" class="btn btn-light" :href="route('baptisms.create')"><span class="fa fa-water"></span>
+            <a v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('baptisms.create')"><span class="fa fa-water"></span>
                 <span class="d-none d-md-inline">Taufe anlegen...</span></a>&nbsp;
-            <a v-if="config.wizardButtons" class="btn btn-light" :href="route('funerals.wizard')"><span class="fa fa-cross"></span>
+            <a v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('funerals.wizard')"><span class="fa fa-cross"></span>
                 <span class="d-none d-md-inline">Beerdigung anlegen...</span></a>&nbsp;
-            <a v-if="config.wizardButtons" class="btn btn-light" :href="route('weddings.wizard')"><span class="fa fa-ring"></span>
+            <a v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('weddings.wizard')"><span class="fa fa-ring"></span>
                 <span class="d-none d-md-inline">Trauung anlegen...</span></a>&nbsp;
         </template>
         <card>
