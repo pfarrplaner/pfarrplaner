@@ -64,7 +64,7 @@
                                     <div>
                                         <div class="form-check-inline"
                                              v-for="(pronounSet, pronounSetIndex) in pronounSets"
-                                             :key="'pronouns_'+pronounSet">
+                                             :key="'pronouns_'+pronounSet.key">
                                             <label class="form-check-label">
                                                 <input type="radio" class="form-check-input"
                                                        v-model="myFuneral.pronoun_set"
