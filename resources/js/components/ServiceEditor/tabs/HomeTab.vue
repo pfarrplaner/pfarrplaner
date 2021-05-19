@@ -58,6 +58,8 @@
             </div>
         </div>
         <hr/>
+        <form-check name="hidden" label="Diesen Gottesdienst in öffentlichen Listen nicht anzeigen."
+                    v-model="service.hidden" />
         <div class="row">
             <div class="col-md-6">
                 <form-input name="title" label="Abweichender Titel" v-model="service.title"
