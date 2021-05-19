@@ -62,8 +62,12 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment v-if="!showPastor" v-for="(attachment,key,index) in wedding.attachments" :key="key" :attachment="attachment" />
-            <details-info v-else :service="wedding.service" />
+            <div v-if="!showPastor">
+                <attachment  v-for="(attachment,key,index) in wedding.attachments" :key="'attachment'+key" :attachment="attachment" />
+            </div>
+            <div v-else>
+                <calendar-service-participants :participants="wedding.service.pastors" category="P" :predicant="wedding.service.need_predicant" />
+            </div>
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Trauung bearbeiten"

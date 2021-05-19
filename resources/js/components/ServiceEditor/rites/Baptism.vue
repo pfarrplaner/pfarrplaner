@@ -66,8 +66,12 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment v-if="!showPastor" v-for="(attachment,key,index) in baptism.attachments" :key="key" :attachment="attachment" />
-            <details-info v-else :service="baptism.service" />
+            <div v-if="!showPastor">
+            <attachment  v-for="(attachment,key,index) in baptism.attachments" :key="'attachment'+key" :attachment="attachment" />
+            </div>
+            <div v-else>
+                <calendar-service-participants :participants="baptism.service.pastors" category="P" :predicant="baptism.service.need_predicant" />
+            </div>
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Taufe bearbeiten"
