@@ -67,7 +67,11 @@ class CalController extends Controller
             ->sort();
 
         $services = [];
-        foreach ($cities as $city) foreach ($days as $day) $services[$city->id][$day->id] = [];
+        foreach ($cities as $city) {
+            foreach ($days as $day) {
+                $services[$city->id][$day->id] = [];
+            }
+        }
 
         $cities = array_values($user->getSortedCities()->all());
 
