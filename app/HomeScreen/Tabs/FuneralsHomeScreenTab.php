@@ -82,8 +82,11 @@ class FuneralsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
-        $query = Funeral::with(['service', 'service.day'])
-            ->whereHas('service', function($service){
+        $query =  Funeral::with(['service', 'service.day'])
+            ->select(['funerals.*'])
+            ->join('services', 'services.id', 'funerals.service_id')
+            ->join('days', 'days.id', 'services.day_id')
+            ->whereHas('service', function($service) {
                 $service->startingFrom(Carbon::now()->subWeeks(2))
                     ->whereIn('city_id', Auth::user()->cities->pluck('id'));
                 if ($this->config['mine']) {
@@ -94,7 +97,9 @@ class FuneralsHomeScreenTab extends AbstractHomeScreenTab
                         }
                     );
                 }
-            });
+            })->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+
         return $query;
     }
 

@@ -82,8 +82,12 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
-        $query = Wedding::with(['service', 'service.day'])
-            ->whereHas('service', function($service){
+
+        $query =  Wedding::with(['service', 'service.day'])
+            ->select(['weddings.*'])
+            ->join('services', 'services.id', 'weddings.service_id')
+            ->join('days', 'days.id', 'services.day_id')
+            ->whereHas('service', function($service) {
                 $service->startingFrom(Carbon::now()->subWeeks(2))
                     ->whereIn('city_id', Auth::user()->cities->pluck('id'));
                 if ($this->config['mine']) {
@@ -94,7 +98,9 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
                         }
                     );
                 }
-            });
+            })->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
+
         return $query;
     }
 

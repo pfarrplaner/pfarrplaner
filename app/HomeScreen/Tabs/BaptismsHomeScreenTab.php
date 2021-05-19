@@ -92,19 +92,23 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
-        $this->baptismQuery = Baptism::with(['service', 'service.day'])
-            ->whereHas('service', function($service){
-            $service->startingFrom(Carbon::now())
-                ->whereIn('city_id', Auth::user()->cities->pluck('id'));
-            if ($this->config['mine']) {
-                $service->whereHas(
-                    'participants',
-                    function ($query) {
-                        $query->where('user_id', Auth::user()->id);
-                    }
-                );
-            }
-        });
+        $query =  Baptism::with(['service', 'service.day'])
+            ->select(['funerals.*'])
+            ->join('services', 'services.id', 'funerals.service_id')
+            ->join('days', 'days.id', 'services.day_id')
+            ->whereHas('service', function($service) {
+                $service->startingFrom(Carbon::now()->subWeeks(2))
+                    ->whereIn('city_id', Auth::user()->cities->pluck('id'));
+                if ($this->config['mine']) {
+                    $service->whereHas(
+                        'participants',
+                        function ($query) {
+                            $query->where('user_id', Auth::user()->id);
+                        }
+                    );
+                }
+            })->orderBy('days.date', 'ASC')
+            ->orderBy('time', 'ASC');
 
         $this->baptismRequestQuery = Baptism::whereNull('service_id')
             ->whereIn('city_id', Auth::user()->cities->pluck('id'));
