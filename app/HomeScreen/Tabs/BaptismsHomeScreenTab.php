@@ -92,9 +92,9 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
-        $query =  Baptism::with(['service', 'service.day'])
-            ->select(['funerals.*'])
-            ->join('services', 'services.id', 'funerals.service_id')
+        $this->baptismQuery = Baptism::with(['service', 'service.day'])
+            ->select(['baptisms.*'])
+            ->join('services', 'services.id', 'baptisms.service_id')
             ->join('days', 'days.id', 'services.day_id')
             ->whereHas('service', function($service) {
                 $service->startingFrom(Carbon::now()->subWeeks(2))
