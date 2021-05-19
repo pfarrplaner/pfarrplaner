@@ -125,7 +125,7 @@ class FuneralController extends Controller
         $city = City::find($data['city']);
 
         // check if day exists
-        $day = Day::where('date', $data['date'])->first();
+        $day = Day::where('date', $data['date']->format('Y-m-d'))->first();
         if ($day) {
             // check if it visible for this city
             if ($day->day_type == Day::DAY_TYPE_LIMITED) {
