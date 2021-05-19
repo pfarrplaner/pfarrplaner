@@ -129,15 +129,16 @@ class ServiceRequest extends FormRequest
     {
         $data = parent::validated();
 
+
+
         // set location
-        if (!is_numeric($data['location_id'])) {
-            $data['special_location'] = $data['location_id'];
-            $data['location_id'] = 0;
+        if ($data['special_location']) {
+            $data['location_id'] = null;
         } else {
             $location = Location::find($data['location_id']);
             if (null === $location) {
                 $data['special_location'] = $data['location_id'];
-                $data['location_id'] = 0;
+                $data['location_id'] = null;
             }
         }
 
@@ -158,6 +159,7 @@ class ServiceRequest extends FormRequest
                 $data['cc_location'] = $data['cc_location'] ?: '';
             }
         }
+
 
         $data['hidden'] = $data['hidden'] ?? 0;
         $data['needs_reservations'] = $data['needs_reservations'] ?? 0;

@@ -36,7 +36,9 @@
             </div>
             <div class="col-md-4">
                 <location-select name="location_id" label="Ort" :value="myLocation" v-if="!locationUpdating"
-                                 :locations="locations" @set-location="setLocation" :key="typeof myLocation == 'object' ? myLocation.id : myLocation"/>
+                                 :locations="locations" @set-location="setLocation" return-object
+                                 :key="typeof myLocation == 'object' ? myLocation.id : myLocation   "
+                />
             </div>
             <div class="col-md-4">
                 <form-input name="time" label="Uhrzeit" v-model="myService.time" placeholder="HH:MM"/>
@@ -146,7 +148,6 @@ export default {
     methods: {
         setLocation(location) {
             this.locationUpdating = true;
-            console.log(location, typeof location);
             if(typeof location == 'object') {
                 this.myLocation = location;
                 this.myService.location_id = location.id;
@@ -158,7 +159,6 @@ export default {
                 this.myService.location_id = 0;
                 this.myService.location = null;
             }
-            console.log(this.myLocation, this.myService.location, this.myService.special_location);
             this.locationUpdating = false;
         },
         setCommuniappListingStart(e) {

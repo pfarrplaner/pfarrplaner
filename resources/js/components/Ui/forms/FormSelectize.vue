@@ -49,7 +49,9 @@ export default {
     components: {FormGroup, Selectize},
     props: {
         label: String,
-        id: String,
+        id: {
+            type: null,
+        },
         type: {
             type: String,
             default: 'text',

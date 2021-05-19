@@ -50,19 +50,22 @@ export default {
             default: 'text',
         },
         name: String,
-        value: {},
+        value: {
+            type: null,
+        },
         help: String,
         placeholder: String,
         locations: Array,
         error: String,
         useInput: Boolean,
+        returnObject: Boolean,
         multiple: Boolean,
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
-        let myValue;
+        var myValue;
         var myOptions = [];
         var myCities = {};
         var myCityOptions = [];
@@ -76,6 +79,7 @@ export default {
         Object.keys(myCities).forEach(cityItem => {
             myCityOptions.push({groupName: cityItem});
         });
+        myCityOptions.push('Freie Ortsangabe');
 
         if (this.value) {
             if (typeof this.value == 'object') {
@@ -83,7 +87,7 @@ export default {
             } else {
                 myValue = this.value;
                 if (isNaN(myValue)) {
-                    this.myOptions.push({id: myValue, name: myValue});
+                    myOptions.push({id: myValue, name: myValue, cityName: 'Freie Ortsangabe'});
                 }
             }
         }
@@ -99,7 +103,7 @@ export default {
                 optgroupValueField: 'groupName',
                 optgroups: myCityOptions,
                 create: function(input, callback){
-                    return callback({id: input, name: input});
+                    return callback({id: input, name: input, cityName: 'Freie Ortsangabe'});
                 },
                 render: {
                     option_create: function (data, escape) {
@@ -114,13 +118,21 @@ export default {
     },
     methods: {
         locationChanged(newVal) {
+            if (this.returnObject) {
+                if (!isNaN(newVal)) {
+                    var found = false;
+                    this.locations.forEach((thisLocation) => {
+                        if (thisLocation.id == newVal) found = thisLocation;
+                    })
+                    if (found) newVal = found;
+                }
+            }
             this.sendEvent(newVal);
         },
         sendEvent(found) {
             if (this.useInput) {
                 this.$emit('input', found)
             } else {
-                console.log('send set-location', found);
                 this.$emit('set-location', found);
             }
         }
