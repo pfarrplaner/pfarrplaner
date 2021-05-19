@@ -53,7 +53,8 @@
             <div class="col-md-6"><label>Eingeteilte Personen</label></div>
         </div>
         <ministry-row v-for="(members,title,index) in myService.ministriesByCategory"
-                      :title="title" :members="members" :index="index" :people="people" :key="index"
+                      :title="title" :members="members" :index="index" :people="people"
+                      :key="'ministry_rows'+Object.entries(myService.ministriesByCategory).length+'_'+index"
                       :ministries="ministries" v-model="myService.ministriesByCategory" @delete="deleteRow"
         />
         <button class="btn btn-light btn-sm" @click.prevent.stop="addRow">Reihe hinzufügen</button>
@@ -86,6 +87,9 @@ export default {
         ministries: Array,
     },
     data() {
+        if (!this.service.ministriesByCategory) this.service.ministriesByCategory = {};
+        if (this.service.ministriesByCategory.length == 0) this.service.ministriesByCategory = {};
+
         return {
             myService: this.service,
             myLocation: this.service.location || this.service.special_location,
@@ -94,7 +98,7 @@ export default {
     },
     methods: {
         addRow() {
-            this.myService.ministriesByCategory[''] = [];
+            this.myService.ministriesByCategory['Neuer Dienst'] = [];
             this.$forceUpdate();
         },
         deleteRow(store) {
