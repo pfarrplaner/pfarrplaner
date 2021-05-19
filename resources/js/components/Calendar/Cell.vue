@@ -31,7 +31,7 @@
     <td valign="top" v-bind:class="{
             now: false, // TODO: next day
             limited: limited, // DAY_TYPE_LIMITED
-            collapsed: collapsed,
+            collapsed: this.day.collapsed,
             'for-city': isForCity,
         }"
         @click="clickHandler()"
@@ -54,15 +54,8 @@ export default {
     props: ['city', 'day', 'services', 'canCreate', 'uncollapsed'],
     data: function() {
         return {
-            collapsed: (!this.uncollapsed) || (this.hasMine ? false : (this.day.day_type == 1)),
             user: window.vm.$children[0].page.props.currentUser.data,
             limited: this.day.day_type == 1,
-        }
-    },
-    mounted() {
-        EventBus.listen(CalendarToggleDayColumnEvent, this.toggleHandler);
-        if ((this.hasMine) && (this.day.day_type == 1)) {
-            EventBus.publish(new CalendarToggleDayColumnEvent(this.day, false));
         }
     },
     computed: {
@@ -74,22 +67,15 @@ export default {
             });
             return found;
         },
-        hasMine() {
-            if (undefined == this.services) return undefined;
-            var found = false;
-            this.services.forEach(function(service){
-                found = found || service.isMine;
-            });
-            return found;
-        }
     },
     methods: {
         clickHandler: function() {
-            if (this.limited) EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
+            if (this.limited) {
+                console.log('toggle collapse');
+                this.$emit('collapse', {day: this.day, state: !this.day.collapsed});
+                this.$forceUpdate();
+            }
         },
-        toggleHandler: function(e) {
-            if ((null === e.day) || (e.day.id == this.day.id)) this.collapsed = e.state;
-        }
     }
 }
 </script>

@@ -133,7 +133,7 @@ export default {
         },
         toggleColumns() {
             this.allColumnsOpen = !this.allColumnsOpen;
-            EventBus.publish(new CalendarToggleDayColumnEvent(null, !this.allColumnsOpen));
+            this.$emit('collapseall', this.allColumnsOpen);
         }
     }
 }

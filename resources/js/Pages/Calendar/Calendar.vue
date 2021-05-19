@@ -1,7 +1,7 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(date)">
         <template #navbar-left>
-            <calendar-nav-top :date="new Date(date)" :years="years"></calendar-nav-top>
+            <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse"></calendar-nav-top>
         </template>
         <template #control-sidebar>
             <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities"/>
@@ -9,10 +9,12 @@
         <div class="alert alert-info" v-if="loading > 0"><span class="fa fa-spin fa-spinner"></span> Daten für {{ loading }} Orte werden geladen ...</div>
         <div class="d-none d-md-inline">
             <calendar-pane-horizontal v-if="orientation == 'horizontal'"
-                                      :date="date" :days="days" :cities="cityList" :services="services" :years="years"
+                                      :date="date" :days="myDays" :cities="cityList" :services="services" :years="years"
+                                      :key="collapseKey"  :collapseState="collapseState"
                                       :absences="absences" :can-create="canCreate"/>
             <calendar-pane-vertical v-else
-                                    :date="date" :days="days" :cities="cityList" :services="services" :years="years"
+                                    :date="date" :days="myDays" :cities="cityList" :services="services" :years="years"
+                                    :key="collapseKey" :collapseState="collapseState"
                                     :absences="absences" :can-create="canCreate "/>
         </div>
         <div class="d-inline d-md-none">
@@ -34,7 +36,18 @@ export default {
     components: {CalendarPaneMobile},
     props: ['date', 'days', 'cities',  'years', 'absences', 'canCreate', 'services'],
     data() {
+        var myDays = this.days;
+
+        myDays.forEach((day,dayIndex) => {
+            myDays[dayIndex].collapsed = false;
+            myDays[dayIndex].initialized = false;
+            myDays[dayIndex].hasMine = false;
+        });
+
         return {
+            myDays: myDays,
+            collapseState: null,
+            collapseKey: Math.random()*9999999,
             cityList: this.cities,
             orientation: vm.$children[0].page.props.settings.calendar_view,
             myServices: this.services,
@@ -60,9 +73,6 @@ export default {
         title: function (d) {
             return moment(d).locale('de-DE').format('MMMM YYYY');
         },
-        toggleDayColumn: function () {
-            alert('hi');
-        },
         sortHandler: function (e) {
             this.cityList = e.list;
         },
@@ -71,6 +81,15 @@ export default {
             this.orientation = e.orientation;
             console.log('new orientation: ' + this.orientation);
         },
+        toggleCollapse(e) {
+            console.log('toggle all collapsed', e);
+            this.myDays.forEach((day,dayIndex) => {
+                this.myDays[dayIndex].collapsed = e;
+                console.log('day', dayIndex, e, this.myDays[dayIndex].collapsed);
+            });
+            this.collapseState = e;
+            this.collapseKey = Math.random()*9999999;
+        }
     },
     computed: {
         storedDays() {

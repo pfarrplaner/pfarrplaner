@@ -3,7 +3,7 @@
         v-bind:class="{
             now: false, // TODO: next day
             limited: day.day_type == 1, // DAY_TYPE_LIMITED
-            collapsed: collapsed,
+            collapsed: this.day.collapsed,
         }"
         @click="clickHandler()"
         :title="day.day_type == 1 ? today().format('DD.MM.YYYY')+' (Klicken, um Ansicht umzuschalten)' : ''"
@@ -45,12 +45,8 @@ export default {
     props: ['day', 'index', 'absences'],
     data: function() {
         return {
-            collapsed: this.hasMine ? false : (this.day.day_type == 1),
             limited: this.day.day_type == 1,
         }
-    },
-    mounted() {
-        EventBus.listen(CalendarToggleDayColumnEvent, this.toggleHandler);
     },
     methods: {
         moment: function (d) {
@@ -60,17 +56,14 @@ export default {
             return moment(this.day.date).locale('de-DE');
         },
         clickHandler: function() {
-            if (this.limited) EventBus.publish(new CalendarToggleDayColumnEvent(this.day, !this.collapsed));
-        },
-        toggleHandler: function(e) {
-            if ((null === e.day) || (e.day.id == this.day.id)) this.collapsed = e.state;
+            console.log('toggle collapse');
+            this.$emit('collapse', {day: this.day, state: !(this.day.collapsed)});
+            this.$forceUpdate();
         },
         replacementText: function (absence) {
             return absence.replacementText ? '[V: '+absence.replacementText+']' : '';
         },
     },
-    computed: {
-    }
 }
 </script>
 
