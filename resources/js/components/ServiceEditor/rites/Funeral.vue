@@ -48,7 +48,9 @@
             <div>
                 <checked-process-item :check="(funeral.appointment)" negative="Trauergespräch noch nicht vereinbart">
                     <template slot="positive">
-                        Trauergespräch am {{ moment(funeral.appointment).locale('de-DE').format('LLLL') }} Uhr
+                        <a :href="route('funeral.appointment.ical', funeral)" title="In den Kalender übernehmen">
+                            <span class="fa fa-calendar"></span> Trauergespräch am {{ moment(funeral.appointment).locale('de-DE').format('LLLL') }} Uhr
+                        </a>
                     </template>
                 </checked-process-item>
                 <checked-process-item :check="(funeral.text)" negative="Predigttext noch nicht eingetragen">
