@@ -62,7 +62,9 @@ export default {
         };
     },
     methods: {
-        handleInput() {},
+        handleInput(e) {
+            this.$emit('input', e.id);
+        },
     }
 }
 </script>
