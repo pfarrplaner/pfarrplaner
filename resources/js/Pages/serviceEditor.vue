@@ -146,7 +146,6 @@ name: "serviceEditor",
                 + this.editedService.sacristans.length;
 
             Object.entries(this.editedService.ministriesByCategory).forEach(ministry => {
-                    console.log(ministry, ministry[1].length);
                     count += ministry[1].length;
                 });
             return count;
