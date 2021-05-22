@@ -31,9 +31,12 @@
     <div class="streaming-tab">
         <div v-if="(!(myService.youtube_url)) && (!creatingStream)" class="alert alert-info">
             Diesem Gottesdienst ist noch kein Livestream zugeordnet.
-            <div class="form-class">
+            <div v-if="myService.city.google_access_token" class="form-class">
                 <button class="btn btn-light" @click.prevent="createLivestream"><span class="fab fa-youtube"></span> Jetzt auf YouTube anlegen</button>
             </div>
+            <hr />
+            <form-input label="YouTube-Adresse" help="Möglichkeit zur manuellen Eingabe eines YouTube-Links"
+                        v-model="myService.youtube_url" />
         </div>
         <div v-if="creatingStream">
             <div class="alert alert-info"><span class="fa fa-spinner fa-spin"></span> Ein Livestream wird angelegt. Bitte warten...</div>
@@ -42,21 +45,23 @@
             <div class="row">
                 <div class="col-md-6">
                     <form-input name="youtube_url" label="YouTube-URL" v-model="myService.youtube_url" />
-                    <form-input name="cc_streaming_url" label="URL zu einem parallel gestreamten Kindergottesdienst" v-model="myService.cc_streaming_url" />
-                    <form-input name="offering_url" label="URL zu einer Seite für Onlinespenden" v-model="myService.offering_url" />
-                    <form-input name="meeting_url" label="URL zu einer Seite für ein 'virtuelles Kirchencafé'" v-model="myService.meeting_url" />
+                    <div v-if="myService.city.google_access_token">
+                        <form-input name="cc_streaming_url" label="URL zu einem parallel gestreamten Kindergottesdienst" v-model="myService.cc_streaming_url" />
+                        <form-input name="offering_url" label="URL zu einer Seite für Onlinespenden" v-model="myService.offering_url" />
+                        <form-input name="meeting_url" label="URL zu einer Seite für ein 'virtuelles Kirchencafé'" v-model="myService.meeting_url" />
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group" v-if="service.youtube_url">
                         <iframe width="560" height="315" :src="embedUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br />
                         <form-group>
                             <a class="btn btn-light" :href="myService.youtube_url" title="Öffnet das YouTube-Video in einem neuen Fenster" target="_blank"><span class="fab fa-youtube"></span> Zum Video</a>
-                            <a class="btn btn-light" :href="dashboardUrl" title="Öffnet das  Live-Dashboard zum Stream in einem neuen Fenster" target="_blank"><span class="fa fa-video"></span> Zum Live-Dashboard</a>
+                            <a v-if="myService.city.google_access_token" class="btn btn-light" :href="dashboardUrl" title="Öffnet das  Live-Dashboard zum Stream in einem neuen Fenster" target="_blank"><span class="fa fa-video"></span> Zum Live-Dashboard</a>
                         </form-group>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" v-if="myService.city.google_access_token">
                 <div class="col-md-6">
                     <form-textarea name="youtube_prefix_description" label="Einleitender Text für die Beschreibung auf YouTube" v-model="myService.youtube_prefix_description" />
                 </div>
