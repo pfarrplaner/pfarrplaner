@@ -58,6 +58,16 @@
                       :ministries="ministries" v-model="myService.ministriesByCategory" @delete="deleteRow"
         />
         <button class="btn btn-light btn-sm" @click.prevent.stop="addRow">Reihe hinzufügen</button>
+        <hr>
+        <div>
+            <button class="btn btn-light" title="Liste der Beteiligten ('Credits') kopieren" @click.prevent="copyCredits">
+                <span class="fa fa-copy"></span> <span class="d-none d-md-inline">Liste der Beteiligten ("Credits") kopieren</span></button>
+            <div v-if="creditsCopied" class="alert alert-info alert-dismissible fade show mt-2">Die Liste der Beteiligten wurde in die Zwischenablage kopiert.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -94,6 +104,7 @@ export default {
             myService: this.service,
             myLocation: this.service.location || this.service.special_location,
             locationUpdating: false,
+            creditsCopied: false,
         }
     },
     methods: {
@@ -105,6 +116,33 @@ export default {
             this.myService.ministriesByCategory = store;
             this.$forceUpdate();
         },
+        copyCredits() {
+            var credits = { Liturgie: [], Orgel: [], Mesnerdienst: []};
+            this.myService.pastors.forEach(person => {
+                credits.Liturgie.push(person.name);
+            });
+            this.myService.organists.forEach(person => {
+                credits.Orgel.push(person.name);
+            });
+            Object.entries(this.myService.ministriesByCategory).forEach(item => {
+                item[1].forEach(person => {
+                    if (!credits[item[0]]) credits[item[0]] = [];
+                    credits[item[0]].push(person.name);
+                });
+            })
+            this.myService.sacristans.forEach(person => {
+                credits.Mesnerdienst.push(person.name);
+            });
+
+            var creditsText = [];
+            Object.entries(credits).forEach(item => {
+                creditsText.push(item[0]+': '+item[1].join(', '));
+            });
+            const cb = navigator.clipboard;
+            cb.writeText(creditsText.join(' · ')).then(result => {
+                this.creditsCopied = true;
+            });
+        }
     }
 }
 </script>
