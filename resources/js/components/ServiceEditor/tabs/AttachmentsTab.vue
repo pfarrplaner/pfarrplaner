@@ -30,27 +30,29 @@
 <template>
     <div class="attachments-tab">
         <h3>Angehängte Dateien</h3>
-        <div v-if="service.attachments.length > 0">
-            <attachment v-for="(attachment,key,index) in service.attachments" :key="key" :attachment="attachment"
-            @delete-attachment="deleteAttachment(attachment, key)" allow-delete />
-        </div>
-        <div v-else class="alert alert-info">Zu diesem Gottesdienst gibt es keine Dateianhänge.</div>
-        <hr/>
-        <h3>Automatisch bereitgestellte Dateien</h3>
-        <div v-if="myService.liturgy_blocks.length > 0">
-            <div class="liturgy-sheet btn btn-light" v-for="(sheet,key,index) in liturgySheets" :key="key"
-                 @click.prevent="downloadSheet(sheet)"
-                 v-if="!sheet.isNotAFile">
-                <b><span :class="sheet.icon"></span> {{ sheet.title }}</b><br/>
-                <small>.{{ sheet.extension }}, Größe unbekannt</small>
-                <span class="float-right fa fa-download"></span>
+        <div v-if="hasAutoAttachments || (service.attachments.length > 0)">
+            <div v-if="myService.liturgy_blocks.length > 0">
+                <div class="liturgy-sheet btn btn-light" v-for="(sheet,key,index) in liturgySheets" :key="key"
+                     @click.prevent="downloadSheet(sheet)"
+                     v-if="!sheet.isNotAFile">
+                    <b><span :class="sheet.icon"></span> {{ sheet.title }}</b><br/>
+                    <small>.{{ sheet.extension }}, Größe unbekannt</small>
+                    <span class="float-right fa fa-download"></span>
+                </div>
+            </div>
+            <div v-if="myService.konfiapp_event_qr">
+                <div class="liturgy-sheet btn btn-light" @click.prevent="downloadQR">
+                    <b><span class="fa fa-file-pdf"></span> QR-Code für Konfis</b><br/>
+                    <small>.pdf, ca. 50 kB</small>
+                    <span class="float-right fa fa-download"></span>
+                </div>
+            </div>
+            <div v-if="service.attachments.length > 0">
+                <attachment v-for="(attachment,key,index) in service.attachments" :key="key" :attachment="attachment"
+                            @delete-attachment="deleteAttachment(attachment, key)" allow-delete />
             </div>
         </div>
-        <div v-else class="alert alert-info">
-            Zu diesem Gottesdienst gibt es noch keine automatisch bereitgestellten Dateien, weil noch keine
-            Liturgie angelegt wurde. <br />
-            <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', {service: service.id})">Liturgie anlegen</inertia-link>
-        </div>
+        <div v-else class="alert alert-info">Zu diesem Gottesdienst gibt es keine Dateianhänge.</div>
         <hr/>
         <h3>Dateien hinzufügen</h3>
         <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
@@ -77,6 +79,11 @@ export default {
         liturgySheets: Object,
         files: Object,
     },
+    computed: {
+        hasAutoAttachments() {
+            return (this.myService.liturgy_blocks.length > 0) || (this.myService.konfiapp_event_qr);
+        }
+    },
     data() {
         var myService = this.service;
 
@@ -88,6 +95,9 @@ export default {
     methods: {
         downloadSheet(sheet) {
             window.location.href = route('services.liturgy.download', {service: this.service.id, key: sheet.key});
+        },
+        downloadQR() {
+            window.location.href = route('report.step', {report: 'KonfiAppQR', step: 'single', service: this.myService.id});
         },
         newRow() {
             this.files.attachment_text.push('');

@@ -51,7 +51,9 @@
             </div>
             <div v-if="myService.city.konfiapp_apikey" class="col-md-4">
                 <konfi-app-event-type-select name="konfiapp_event_type" label="Veranstaltungsart in der KonfiApp"
-                    :city="myService.city" v-model="service.konfiapp_event_type" />
+                    :city="myService.city" v-model="service.konfiapp_event_type"
+                                             :help="service.konfiapp_event_qr ? 'Ein QR-Code mit der ID '+service.konfiapp_event_qr+' wurde angelegt.' : 'Es wurde noch kein QR-Code angelegt.'"
+                />
             </div>
             <div v-if="myService.city.communiapp_token" class="col-md-4">
                 <form-group label="In der CommuniApp anzeigen ab" help="Leer lassen für den Standard (8 Tage vor Beginn)">

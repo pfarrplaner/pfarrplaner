@@ -215,6 +215,7 @@ name: "serviceEditor",
                     if (!this.liturgySheets[sheet].isNotAFile) ctr++;
                 }
             }
+            if (this.editedService.konfiapp_event_qr) ctr++;
             return ctr;
         },
     },
