@@ -114,11 +114,13 @@
                         </td>
                         <td>{{ moment(booking.created_at).locale('de-DE').format('LLL') }}</td>
                         <td>
+                            <div v-if="service.seating.list">
                             <seat :seat="service.seating.grid[service.seating.list[booking.code]]" :booking="booking"/>
                             <button v-if="!booking.fixed_seat" class="btn btn-sm btn-light" title="Platz festlegen"
                                     @click.prevent="pinToSeat(booking)">
                                 <span class="fa fa-thumbtack"></span>
                             </button>
+                            </div>
                         </td>
                         <td>
                             <a class="btn btn-sm btn-light" title="Buchung bearbeiten"
@@ -154,9 +156,10 @@ export default {
     components: {SectionSelect, Seat, SeatSelect, FormSelectize, FormGroup, FormInput, FormCheck},
     props: ['service'],
     data() {
+        var myService = this.service;
         DatePickerConfig['format'] = 'DD.MM.YYYY HH:mm';
         return {
-            myService: this.service,
+            myService: myService,
             myDatePickerConfig: DatePickerConfig,
         }
     },
