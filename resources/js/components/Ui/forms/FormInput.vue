@@ -56,7 +56,9 @@ export default {
             default: false,
         },
         name: String,
-        value: String,
+        value: {
+            type: null,
+        },
         help: String,
         placeholder: String,
         preLabel: String,
