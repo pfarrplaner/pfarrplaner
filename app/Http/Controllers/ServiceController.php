@@ -213,6 +213,8 @@ class ServiceController extends Controller
 
         $users = User::all();
 
+        $backRoute = RedirectorService::backRoute();
+
         $tags = Tag::all();
         $serviceGroups = ServiceGroup::all();
         return Inertia::render(
@@ -227,6 +229,7 @@ class ServiceController extends Controller
                 'ministries',
                 'days',
                 'liturgySheets',
+                'backRoute',
             )
         );
     }
@@ -269,11 +272,16 @@ class ServiceController extends Controller
             }
         }
 
-        $route = $request->get('routeBack') ?: '';
-        if ($route) {
-            return redirect($route)->with('success', $success);
+        $closeAfterSaving = $request->get('closeAfterSaving', 1);
+        if ($closeAfterSaving) {
+            $route = $request->get('routeBack') ?: '';
+            if ($route) {
+                return redirect($route)->with('success', $success);
+            } else {
+                return RedirectorService::back();
+            }
         } else {
-            return RedirectorService::back();
+            return redirect()->route('services.edit', $service->id);
         }
     }
 

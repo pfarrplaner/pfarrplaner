@@ -44,7 +44,11 @@ class RedirectorService
     }
 
     public static function back() {
-        return redirect(Session::get('returnRoute', route('home')));
+        return self::backRoute();
+    }
+
+    public static function backRoute() {
+        return Session::get('returnRoute', route('home'));
     }
 
 }

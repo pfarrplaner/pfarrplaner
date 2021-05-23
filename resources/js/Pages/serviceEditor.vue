@@ -31,7 +31,21 @@
     <div class="service-editor">
         <admin-layout title="Gottesdienst bearbeiten">
             <template slot="navbar-left">
-                <button class="btn btn-primary" @click.prevent="saveService"><span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span></button>&nbsp;
+                <div class="btn-group mr-1">
+                    <button type="button" class="btn btn-primary" @click.prevent="saveService(true)" title="Speichern und schließen">
+                        <span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span></button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="sr-only">Weitere Optionen aufklappen</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" @click.prevent="saveService(false)">
+                            <span class="fa fa-save "></span> Speichern, ohne zu schließen
+                        </a>
+                        <inertia-link class="dropdown-item" @click.prevent="cancelEdit">
+                            <span class="fa fa-times"></span> Schließen, ohne zu speichern
+                        </inertia-link>
+                    </div>
+                </div>
                 <button class="btn btn-danger" @click.prevent="deleteService"><span class="fa fa-trash d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
                 <div class="dropdown show">
                     <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -138,6 +152,7 @@ name: "serviceEditor",
         serviceGroups: Array,
         days: Array,
         liturgySheets: Object,
+        backRoute: String,
     },
     computed: {
         peopleCount() {
@@ -159,7 +174,7 @@ name: "serviceEditor",
         };
     },
     methods: {
-        saveService() {
+        saveService(closeAfterSaving) {
             // build a request record:
             var record = {
                 ...this.editedService,
@@ -181,6 +196,8 @@ name: "serviceEditor",
             });
             this.editedService.tags.forEach(tag => {record.tags.push(tag.id); });
             this.editedService.service_groups.forEach(group => {record.serviceGroups.push(group.id); });
+
+            record.closeAfterSaving = closeAfterSaving ? 1 : 0;
 
             // convert to FormData
             let fd = new FormData();
@@ -218,6 +235,11 @@ name: "serviceEditor",
             if (this.editedService.konfiapp_event_qr) ctr++;
             return ctr;
         },
+        cancelEdit() {
+            if (confirm('Willst du dieses Formular wirklich schließen, ohne zu speichern? Alle deine Änderungen gehen dann verloren!')) {
+                window.location.href = this.backRoute;
+            }
+        }
     },
 }
 </script>
