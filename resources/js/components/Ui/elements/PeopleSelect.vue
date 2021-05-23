@@ -48,7 +48,7 @@
         </form-group>
         <modal title="Neue Person anlegen" v-if="showModal" @close="closeModal" @cancel="cancelModal"
                @shown="modalShown" close-button-label="Person speichern">
-            <form-input name="name" label="Name" v-model="newPerson.name" ref="newPersonName"
+            <form-input name="name" label="Name" v-model="newPerson.name" ref="newPersonName" id="newPersonName"
                         :autofocus="true"/>
             <hr/>
             <form-input name="title" label="Titel" v-model="newPerson.title"
@@ -170,10 +170,8 @@ export default {
                     return response.data;
                 })
                 .then(data => {
-                    console.log(data);
                     var allFound = component.getPeople(component.myValue);
                     allFound.push(data);
-                    console.log(allFound);
                     this.$emit('input', allFound);
                     component.myValue.push(data.id);
                     component.allPeople.push(data);
@@ -184,9 +182,9 @@ export default {
             this.showModal = false;
         },
         modalShown(ref) {
-            console.log(ref.firstChild.firstChild.nextSibling.nextSibling);
-            ref.firstChild.firstChild.nextSibling.nextSibling.focus();
-            ref.firstChild.firstChild.nextSibling.nextSibling.select();
+            var el = this.$refs['newPersonName'].$el.firstChild.nextSibling.nextSibling.nextSibling.nextSibling;
+            el.focus();
+            el.select();
         },
         addPerson(item) {
             var tmp, firstName, lastName;
