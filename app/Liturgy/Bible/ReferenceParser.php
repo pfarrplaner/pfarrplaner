@@ -219,6 +219,7 @@ class ReferenceParser
 
     public function getBookTitle($bookCode)
     {
+        if (!isset($this->map[$bookCode])) return '';
         $title = is_array($this->map[$bookCode]) ? $this->map[$bookCode][0] : $this->map[$bookCode];
         if (substr($title, 1, 1) == '.') {
             $title = substr($title, 0, 1) . '. ' . substr($title, 2);
