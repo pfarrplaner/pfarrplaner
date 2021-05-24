@@ -1,8 +1,8 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(service)">
         <template slot="navbar-left">
-            <a class="btn btn-light" :href="route('services.edit', service.id)" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</a>&nbsp;
-            <a class="btn btn-light" :href="route('services.sermon.editor', service.id)" title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span> Predigt</a>&nbsp;
+            <inertia-link class="btn btn-light" :href="route('services.edit', service.id)" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>&nbsp;
+            <inertia-link class="btn btn-light" :href="route('services.sermon.editor', service.id)" title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span> Predigt</inertia-link>&nbsp;
         </template>
         <info-pane v-if="!agendaMode" :service="service"/>
         <agenda-info-pane v-if="agendaMode" :agenda="service"/>

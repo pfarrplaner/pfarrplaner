@@ -45,8 +45,8 @@
                           class="badge badge-danger">{{ ministry }}</span>
                 </div>
                 <div class="col-md-2 text-right">
-                    <a class="btn btn-primary" :href="route('services.edit', service.id)"
-                       title="Eintrag bearbeiten"><span class="fa fa-edit"></span></a>
+                    <inertia-link class="btn btn-primary" :href="route('services.edit', service.id)"
+                       title="Eintrag bearbeiten"><span class="fa fa-edit"></span></inertia-link>
                 </div>
             </div>
         </fake-table>

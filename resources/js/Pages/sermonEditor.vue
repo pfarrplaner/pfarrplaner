@@ -42,9 +42,9 @@
                             {{ service.timeText }}, {{ service.locationText }}
                         </td>
                         <td valign="top" class="text-right">
-                            <a class="btn btn-sm btn-light"
+                            <inertia-link class="btn btn-sm btn-light"
                                :href="route('services.edit', {service: service.id})"
-                               title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</a>
+                               title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>
                             <inertia-link class="btn btn-sm btn-light"
                                           :href="route('services.liturgy.editor', {service: service.id})"
                                           title="Liturgie bearbeiten">

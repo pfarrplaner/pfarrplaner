@@ -111,7 +111,7 @@ export default {
             window.location.href=url;
         },
         edit: function(service) {
-            window.location.href = route('services.edit', service.id);
+            this.$inertia.visit(route('services.edit', service.id));
         },
     }
 }
