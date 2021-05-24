@@ -44,7 +44,7 @@ class RedirectorService
     }
 
     public static function back() {
-        return self::backRoute();
+        return redirect(self::backRoute());
     }
 
     public static function backRoute() {
