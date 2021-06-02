@@ -91,6 +91,10 @@ class Funeral extends Model
         'life',
         'attending',
         'quotes',
+        'spoken_name',
+        'professional_life',
+        'birth_place',
+        'death_place',
     ];
 
     /**
@@ -135,6 +139,10 @@ class Funeral extends Model
         'life',
         'attending',
         'quotes',
+        'spoken_name',
+        'professional_life',
+        'birth_place',
+        'death_place',
     ];
 
     protected $appends = ['age'];

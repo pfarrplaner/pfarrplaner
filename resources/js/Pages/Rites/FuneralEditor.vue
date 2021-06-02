@@ -77,6 +77,15 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
+                                <form-input label="Rufname" v-model="myFuneral.spoken_name"
+                                            placeholder="falls abweichend vom kompletten Vornamen" />
+                            </div>
+                            <div class="col-md-6">
+                                <form-input label="Beruf" v-model="myFuneral.profession" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
                                 <form-group name="dob" label="Geburtsdatum">
                                     <date-picker :config="myDatePickerConfig" v-model="myFuneral.dob"/>
                                 </form-group>
@@ -85,6 +94,14 @@
                                 <form-group name="dod" label="Sterbedatum" :help="age ? 'Sterbealter: '+age : ''">
                                     <date-picker :config="myDatePickerConfig" v-model="myFuneral.dod"/>
                                 </form-group>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form-input label="Geburtsort" v-model="myFuneral.birth_place" />
+                            </div>
+                            <div class="col-md-6">
+                                <form-input label="Sterbeort" v-model="myFuneral.death_place" />
                             </div>
                         </div>
                         <hr/>
@@ -187,16 +204,19 @@
                         <form-textarea label="Anwesende" v-model="myFuneral.attending"/>
                         <hr/>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents"/>
                                 <form-textarea label="Ehepartner" v-model="funeral.spouse"/>
                                 <form-textarea label="Kinder" v-model="funeral.children"/>
                                 <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family"/>
                                 <hr />
                                 <form-textarea label="Taufe" v-model="funeral.baptism"/>
                                 <form-textarea label="Konfirmation" v-model="funeral.confirmation"/>
-                                <hr />
+                            </div>
+                            <div class="col-md-4">
                                 <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood"/>
-                                <form-textarea label="Ausbildung, Beruf" v-model="funeral.profession"/>
+                                <form-input label="Beruf" v-model="myFuneral.profession" />
+                                <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life"/>
                                 <form-textarea label="Heirat, Familie" v-model="funeral.family"/>
                                 <form-textarea label="Weiterer Lebenslauf" v-model="funeral.further_life"/>
                                 <form-textarea label="Lebensende" v-model="funeral.death"/>
@@ -207,7 +227,7 @@
                                 <hr />
                                 <form-textarea label="Zitate" v-model="funeral.quotes"/>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Lebenslauf</label>
                                     <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
