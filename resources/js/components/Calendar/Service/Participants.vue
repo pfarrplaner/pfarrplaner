@@ -29,7 +29,7 @@
 
 <template>
     <div class="service-team">
-        <span class="designation">{{ category }}: </span>
+        <span v-if="category" class="designation">{{ category }}: </span>
         <span v-if="predicant" class="need-predicant">Prädikant benötigt</span>
         <span v-for="person,index in participants"><span :class="{me: person.id == user.id}">{{ formatName(person) }}</span><span v-if="index<participants.length-1"> | </span></span>
     </div>
