@@ -173,8 +173,8 @@ class AbsenceController extends Controller
      */
     protected function redirectIfMissingParameters(Request $request, $route, $year, $month)
     {
-        $defaultMonth = Auth::user()->getSetting('display-month', date('m'));
-        $defaultYear = Auth::user()->getSetting('display-year', date('Y'));
+        $defaultMonth = Carbon::now()->month;
+        $defaultYear = Carbon::now()->year;
 
         $initialYear = $year;
         $initialMonth = $month;
@@ -249,33 +249,6 @@ class AbsenceController extends Controller
             ]
         );
         return redirect()->route('absences.edit', $absence->id);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
-     */
-    public function store(Request $request)
-    {
-        $absence = Absence::create($this->validateRequest($request));
-
-        $absence->status = 'approved';
-        $user = User::find($request->get('user_id'));
-        if (count($user->approvers) > 0) {
-            $absence->status = 'pending';
-            event(new AbsenceDemanded($absence));
-        }
-
-        $absence->save();
-
-        $this->setupReplacements($absence, $request->get('replacement') ?: []);
-
-        return redirect()->route(
-            'absences.index',
-            ['month' => $absence->from->format('m'), 'year' => $absence->from->format('Y')]
-        );
     }
 
     /**
