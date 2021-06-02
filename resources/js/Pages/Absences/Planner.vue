@@ -29,6 +29,9 @@
 
 <template>
     <admin-layout :title="'Urlaubsplaner '+moment(start).locale('de').format('MMMM YYYY')">
+        <template #navbar-left>
+            <absence-nav :year="year" :month="month" :years="years" />
+        </template>
         <div v-if="loadingUsers" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade anzuzeigende Benutzer...</div>
         <div v-if="loadingDates" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade Einträge für {{ loadingDates }} Benutzer...</div>
         <div class="table-responsive tbl-absences">
@@ -71,8 +74,10 @@
 </template>
 
 <script>
+import AbsenceNav from "./AbsenceNav";
 export default {
     name: "Planner",
+    components: {AbsenceNav},
     props: ['start', 'end', 'year', 'month', 'months', 'years', 'now', 'holidays', 'days'],
     mounted() {
         axios.get(route('planner.users')).then(response => {

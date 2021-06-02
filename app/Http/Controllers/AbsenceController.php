@@ -44,6 +44,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 /**
@@ -95,7 +96,9 @@ class AbsenceController extends Controller
         $start = $this->getStart($year, $month);
         $days = $this->getDays($start->copy());
 
-        return Inertia::render('Absences/Planner', compact('start', 'days', 'year', 'month'));
+        $years = Absence::select(DB::raw('YEAR(absences.from) as year'))->distinct()->get()->pluck('year')->sort();
+
+        return Inertia::render('Absences/Planner', compact('start', 'days', 'year', 'month', 'years'));
     }
 
     public function users()
