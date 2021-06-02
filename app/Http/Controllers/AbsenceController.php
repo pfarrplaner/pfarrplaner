@@ -275,9 +275,9 @@ class AbsenceController extends Controller
                 ]
             );
             $replacement->save();
-            if (isset($replacementData['user'])) {
-                foreach ($replacementData['user'] as $id => $userId) {
-                    $replacementData['user'][$id] = User::createIfNotExists($userId);
+            if (isset($replacementData['users'])) {
+                foreach ($replacementData['users'] as $id => $userId) {
+                    $replacementData['users'][$id] = User::createIfNotExists($userId);
                 }
                 $replacement->users()->sync($replacementData['user']);
             }
@@ -331,7 +331,7 @@ class AbsenceController extends Controller
     {
         $absence->update($this->validateRequest($request));
 
-        $this->setupReplacements($absence, $request->get('replacement') ?: []);
+        $this->setupReplacements($absence, $request->get('replacements') ?: []);
         return redirect()->route(
             'absences.index',
             ['month' => $absence->from->format('m'), 'year' => $absence->from->format('Y')]
