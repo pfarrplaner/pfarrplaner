@@ -48,7 +48,7 @@
                     <tab-header title="Trauergespräch" id="interview" :active-tab="activeTab" :is-checked-item="true"
                                 :check-value="myFuneral.appointment"/>
                     <tab-header title="Dateien" id="attachments" :active-tab="activeTab"
-                                :count="myFuneral.attachments.length"/>
+                                :count="myFuneral.attachments.length +1"/>
                 </tab-headers>
             </card-header>
             <card-body>
@@ -78,10 +78,10 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <form-input label="Rufname" v-model="myFuneral.spoken_name"
-                                            placeholder="falls abweichend vom kompletten Vornamen" />
+                                            placeholder="falls abweichend vom kompletten Vornamen"/>
                             </div>
                             <div class="col-md-6">
-                                <form-input label="Beruf" v-model="myFuneral.profession" />
+                                <form-input label="Beruf" v-model="myFuneral.profession"/>
                             </div>
                         </div>
                         <div class="row">
@@ -98,10 +98,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <form-input label="Geburtsort" v-model="myFuneral.birth_place" />
+                                <form-input label="Geburtsort" v-model="myFuneral.birth_place"/>
                             </div>
                             <div class="col-md-6">
-                                <form-input label="Sterbeort" v-model="myFuneral.death_place" />
+                                <form-input label="Sterbeort" v-model="myFuneral.death_place"/>
                             </div>
                         </div>
                         <hr/>
@@ -209,22 +209,23 @@
                                 <form-textarea label="Ehepartner" v-model="funeral.spouse"/>
                                 <form-textarea label="Kinder" v-model="funeral.children"/>
                                 <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family"/>
-                                <hr />
+                                <hr/>
                                 <form-textarea label="Taufe" v-model="funeral.baptism"/>
                                 <form-textarea label="Konfirmation" v-model="funeral.confirmation"/>
                             </div>
                             <div class="col-md-4">
                                 <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood"/>
-                                <form-input label="Beruf" v-model="myFuneral.profession" />
+                                <form-input label="Beruf" v-model="myFuneral.profession"/>
                                 <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life"/>
                                 <form-textarea label="Heirat, Familie" v-model="funeral.family"/>
                                 <form-textarea label="Weiterer Lebenslauf" v-model="funeral.further_life"/>
                                 <form-textarea label="Lebensende" v-model="funeral.death"/>
-                                <hr />
-                                <form-textarea label="Prägende Erlebnisse, Hobbies, Interessen" v-model="funeral.events"/>
+                                <hr/>
+                                <form-textarea label="Prägende Erlebnisse, Hobbies, Interessen"
+                                               v-model="funeral.events"/>
                                 <form-textarea label="Charakter" v-model="funeral.character"/>
                                 <form-textarea label="Glaube, Frömmigkeit, Kirche" v-model="funeral.faith"/>
-                                <hr />
+                                <hr/>
                                 <form-textarea label="Zitate" v-model="funeral.quotes"/>
                             </div>
                             <div class="col-md-4">
@@ -244,6 +245,15 @@
                         <attachment-list v-model="myFuneral.attachments" delete-route-name="funeral.detach"
                                          :parent-object="myFuneral" parent-type="funeral"
                                          :key="myFuneral.attachments.length"/>
+                        <div>
+                            <div class="attachment btn btn-light" @click.prevent="downloadForm"
+                                 title="Formular für Kirchenregisteramt herunterladen">
+                                <b><span class="fa fa-file-pdf"></span> Formular für Kirchenregisteramt</b><br/>
+                                <small>.pdf, ca. 135 kB</small>
+                                <span class="float-right fa fa-download"></span>
+                            </div>
+                        </div>
+
                         <hr/>
                         <h3>Dateien hinzufügen.</h3>
                         <form-file-uploader :parent="myFuneral"
@@ -362,6 +372,9 @@ export default {
             this.$inertia.delete(route('funerals.destroy', this.myFuneral.id), {
                 preserveState: false,
             })
+        },
+        downloadForm() {
+            window.location.href = route('funeral.form', {funeral: this.myFuneral.id});
         }
     }
 }
@@ -376,6 +389,17 @@ export default {
 ul.nav.nav-tabs {
     margin-bottom: 0;
     border-bottom-width: 0;
+}
+
+.attachment {
+    width: 100%;
+    text-align: left;
+    margin-bottom: .25rem;
+    vertical-align: middle;
+}
+.fa-download {
+    margin-right: 20px;
+    color: gray;
 }
 
 </style>
