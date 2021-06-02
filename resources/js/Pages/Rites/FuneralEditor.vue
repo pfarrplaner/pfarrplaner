@@ -119,7 +119,7 @@
                         </div>
                     </tab>
                     <tab id="funeral" :active-tab="activeTab">
-                        <fake-table :columns="[2,2,4,4]" :headers="['Datum', 'Uhrzeit', 'Ort', '']"
+                        <fake-table :columns="[2,2,2,3,3]" :headers="['Datum', 'Uhrzeit', 'Ort', 'Pfarrer:in', '']"
                                     collapsed-header="Bestattung">
                             <div class="row p-1">
                                 <div class="col-md-2">{{
@@ -127,8 +127,9 @@
                                     }}
                                 </div>
                                 <div class="col-md-2">{{ myFuneral.service.timeText }}</div>
-                                <div class="col-md-4">{{ myFuneral.service.locationText }}</div>
-                                <div class="col-md-4 text-right">
+                                <div class="col-md-2">{{ myFuneral.service.locationText }}</div>
+                                <div class="col-md-3"><participants :participants="myFuneral.service.pastors"></participants></div>
+                                <div class="col-md-3 text-right">
                                     <inertia-link :href="route('services.edit', funeral.service.id)"
                                                   title="Gottesdienst bearbeiten"
                                                   class="btn btn-light">
@@ -290,11 +291,13 @@ import FormFileUploader from "../../components/Ui/forms/FormFileUploader";
 import Attachment from "../../components/Ui/elements/Attachment";
 import AttachmentList from "../../components/Ui/elements/AttachmentList";
 import ValueCheck from "../../components/Ui/elements/ValueCheck";
+import Participants from "../../components/Calendar/Service/Participants";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        Participants,
         quillEditor,
         ValueCheck,
         AttachmentList,
