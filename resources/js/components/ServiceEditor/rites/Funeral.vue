@@ -33,6 +33,7 @@
             {{ moment(funeral.service.day.date).format('DD.MM.YYYY') }}<br />
             {{ funeral.service.timeText }}<br />
             {{ funeral.service.locationText }}
+            <div v-if="showPastor"><participants :participants="funeral.service.pastors"/> </div>
         </div>
         <div class="col-md-2">
             <b>{{ funeral.buried_name }}</b><br />
@@ -66,11 +67,14 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div v-if="!showPastor">
-                <attachment v-for="(attachment,key,index) in funeral.attachments" :key="'attachment_'+key" :attachment="attachment" />
-            </div>
-            <div v-else>
-                <calendar-service-participants :participants="funeral.service.pastors" category="P" :predicant="funeral.service.need_predicant" />
+            <attachment v-for="(attachment,key,index) in funeral.attachments" :key="'attachment_'+key" :attachment="attachment" />
+            <div>
+                <div class="attachment btn btn-light" @click.prevent="downloadForm"
+                     title="Formular für Kirchenregisteramt herunterladen">
+                    <b><span class="fa fa-file-pdf"></span> Formular für Kirchenregisteramt</b><br/>
+                    <small>.pdf, ca. 135 kB</small>
+                    <span class="float-right fa fa-download"></span>
+                </div>
             </div>
         </div>
         <div class="col-md-1 text-right">
@@ -87,10 +91,12 @@
 import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
+import Participants from "../../Calendar/Service/Participants";
 
 export default {
     name: "Funeral",
     components: {
+        Participants,
         DetailsInfo,
         Attachment,
         CheckedProcessItem,
@@ -99,6 +105,9 @@ export default {
     methods: {
         deleteFuneral() {
             this.$inertia.delete('funerals.destroy', {funeral: this.funeral.id});
+        },
+        downloadForm() {
+            window.location.href = route('funeral.form', {funeral: this.funeral.id});
         }
     }
 
@@ -106,4 +115,14 @@ export default {
 </script>
 
 <style scoped>
+.attachment {
+    width: 100%;
+    text-align: left;
+    margin-bottom: .25rem;
+    vertical-align: middle;
+}
+.fa-download {
+    margin-right: 20px;
+    color: gray;
+}
 </style>

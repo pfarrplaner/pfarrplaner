@@ -37,7 +37,8 @@
         <div v-else>
             <fake-table :columns="[2,2,4,3,1]" collapsed-header="Beerdigungen"
                         :headers="['Gottesdienst', 'Verstorbene:r', 'Informationen zur Bestattung', 'Dokumente', '']">
-                <funeral v-for="(funeral,funeralIndex) in funerals"  :funeral="funeral" :key="funeral.id" :show-service="true"
+                <funeral v-for="(funeral,funeralIndex) in funerals"  :funeral="funeral" :key="funeral.id"
+                         show-service="1" show-pastor="1"
                          class="mb-3 p-1" :class="{'stripe-odd': (funeralIndex % 2 == 0)}"/>
             </fake-table>
         </div>
