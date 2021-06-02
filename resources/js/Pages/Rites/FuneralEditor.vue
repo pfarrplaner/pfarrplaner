@@ -128,7 +128,9 @@
                                 </div>
                                 <div class="col-md-2">{{ myFuneral.service.timeText }}</div>
                                 <div class="col-md-2">{{ myFuneral.service.locationText }}</div>
-                                <div class="col-md-3"><participants :participants="myFuneral.service.pastors"></participants></div>
+                                <div class="col-md-3">
+                                    <participants :participants="myFuneral.service.pastors"></participants>
+                                </div>
                                 <div class="col-md-3 text-right">
                                     <inertia-link :href="route('services.edit', funeral.service.id)"
                                                   title="Gottesdienst bearbeiten"
@@ -246,14 +248,9 @@
                         <attachment-list v-model="myFuneral.attachments" delete-route-name="funeral.detach"
                                          :parent-object="myFuneral" parent-type="funeral"
                                          :key="myFuneral.attachments.length"/>
-                        <div>
-                            <div class="attachment btn btn-light" @click.prevent="downloadForm"
-                                 title="Formular für Kirchenregisteramt herunterladen">
-                                <b><span class="fa fa-file-pdf"></span> Formular für Kirchenregisteramt</b><br/>
-                                <small>.pdf, ca. 135 kB</small>
-                                <span class="float-right fa fa-download"></span>
-                            </div>
-                        </div>
+                        <fake-attachment :href="route('funeral.form', {funeral: this.myFuneral.id})"
+                                         title="Formular für Kirchenregisteramt" extension="pdf"
+                                         icon="fa-file-pdf" size="ca. 135 kB" />
 
                         <hr/>
                         <h3>Dateien hinzufügen.</h3>
@@ -292,11 +289,13 @@ import Attachment from "../../components/Ui/elements/Attachment";
 import AttachmentList from "../../components/Ui/elements/AttachmentList";
 import ValueCheck from "../../components/Ui/elements/ValueCheck";
 import Participants from "../../components/Calendar/Service/Participants";
+import FakeAttachment from "../../components/Ui/elements/FakeAttachment";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        FakeAttachment,
         Participants,
         quillEditor,
         ValueCheck,
@@ -400,9 +399,10 @@ ul.nav.nav-tabs {
     margin-bottom: .25rem;
     vertical-align: middle;
 }
+
 .fa-download {
     margin-right: 20px;
-    color: gray;
+    color: gray !important;
 }
 
 </style>

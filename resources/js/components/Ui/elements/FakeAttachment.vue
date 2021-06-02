@@ -28,26 +28,20 @@
   -->
 
 <template>
-    <div class="attachment btn btn-light" @click.prevent="download" :title="attachment.title + ' herunterladen'">
-        <b><span class="fa" :class="attachment.icon"></span> {{ attachment.title }}</b><br/>
-        <small>.{{ attachment.extension }}, {{ fileSize(attachment.size) }}</small>
-        <button v-if="allowDelete" class="float-right btn btn-xs btn-danger" title="Anhang löschen" @click.prevent.stop="deleteAttachment($event)">
-            <span class="fa fa-trash"></span>
-        </button>
-        <span class="float-right fa fa-download" :class="allowDelete ? 'mr-3 mt-1' : ''"></span>
+    <div class="attachment btn btn-light" @click.prevent="download" :title="title + ' herunterladen'">
+        <b><span class="fa" :class="icon"></span> {{ title }}</b><br/>
+        <small>.{{ extension }}, {{ size }}</small>
+        <span class="float-right fa fa-download"></span>
     </div>
 </template>
 
 <script>
 export default {
-    name: "Attachment",
-    props: {
-        attachment: Object,
-        allowDelete: Boolean,
-    },
+    name: "FakeAttachment",
+    props: ['title', 'icon', 'extension', 'size', 'href'],
     methods: {
         download() {
-            window.location.href = route('attachment', {attachment: this.attachment.id});
+            window.location.href = this.href;
         },
         /**
          * Get human-readable file size
@@ -80,6 +74,6 @@ export default {
         margin-top: -.3rem;
     }
     .fa-download {
-        color: gray !important;
+        color: gray;
     }
 </style>

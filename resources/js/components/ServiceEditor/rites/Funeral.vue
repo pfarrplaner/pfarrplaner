@@ -30,19 +30,21 @@
 <template>
     <div class="funeral row">
         <div class="col-md-2" v-if="showService">
-            {{ moment(funeral.service.day.date).format('DD.MM.YYYY') }}<br />
-            {{ funeral.service.timeText }}<br />
+            {{ moment(funeral.service.day.date).format('DD.MM.YYYY') }}<br/>
+            {{ funeral.service.timeText }}<br/>
             {{ funeral.service.locationText }}
-            <div v-if="showPastor"><participants :participants="funeral.service.pastors"/> </div>
+            <div v-if="showPastor">
+                <participants :participants="funeral.service.pastors"/>
+            </div>
         </div>
         <div class="col-md-2">
-            <b>{{ funeral.buried_name }}</b><br />
+            <b>{{ funeral.buried_name }}</b><br/>
             <div v-if="funeral.dob && funeral.dod" style="font-size: .8em;">
                 {{ moment(funeral.dob).format('DD.MM.YYYY') }} - {{ moment(funeral.dod).format('DD.MM.YYYY') }}
                 ({{ funeral.age }})
             </div>
             <div style="font-size: .8em;">
-            {{ funeral.type }}
+                {{ funeral.type }}
             </div>
         </div>
         <div class="col-md-4">
@@ -50,7 +52,8 @@
                 <checked-process-item :check="(funeral.appointment)" negative="Trauergespräch noch nicht vereinbart">
                     <template slot="positive">
                         <a :href="route('funeral.appointment.ical', funeral)" title="In den Kalender übernehmen">
-                            <span class="fa fa-calendar"></span> Trauergespräch am {{ moment(funeral.appointment).locale('de-DE').format('LLLL') }} Uhr
+                            <span class="fa fa-calendar"></span> Trauergespräch am
+                            {{ moment(funeral.appointment).locale('de-DE').format('LLLL') }} Uhr
                         </a>
                     </template>
                 </checked-process-item>
@@ -59,7 +62,8 @@
                         Predigttext: {{ funeral.text }}
                     </template>
                 </checked-process-item>
-                <checked-process-item :check="(funeral.announcement)" negative="Abkündigungstermin noch nicht festgelegt">
+                <checked-process-item :check="(funeral.announcement)"
+                                      negative="Abkündigungstermin noch nicht festgelegt">
                     <template slot="positive">
                         Abkündigung im GD am {{ moment(funeral.announcement).locale('de-DE').format('LL') }}
                     </template>
@@ -67,15 +71,11 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment v-for="(attachment,key,index) in funeral.attachments" :key="'attachment_'+key" :attachment="attachment" />
-            <div>
-                <div class="attachment btn btn-light" @click.prevent="downloadForm"
-                     title="Formular für Kirchenregisteramt herunterladen">
-                    <b><span class="fa fa-file-pdf"></span> Formular für Kirchenregisteramt</b><br/>
-                    <small>.pdf, ca. 135 kB</small>
-                    <span class="float-right fa fa-download"></span>
-                </div>
-            </div>
+            <attachment v-for="(attachment,key,index) in funeral.attachments" :key="'attachment_'+key"
+                        :attachment="attachment"/>
+            <fake-attachment :href="route('funeral.form', {funeral: funeral.id})"
+                             title="Formular für Kirchenregisteramt" extension="pdf"
+                             icon="fa-file-pdf" size="ca. 135 kB" />
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Bestattung bearbeiten"
@@ -92,10 +92,12 @@ import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
 import Participants from "../../Calendar/Service/Participants";
+import FakeAttachment from "../../Ui/elements/FakeAttachment";
 
 export default {
     name: "Funeral",
     components: {
+        FakeAttachment,
         Participants,
         DetailsInfo,
         Attachment,
@@ -121,6 +123,7 @@ export default {
     margin-bottom: .25rem;
     vertical-align: middle;
 }
+
 .fa-download {
     margin-right: 20px;
     color: gray;
