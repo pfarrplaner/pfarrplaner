@@ -52,6 +52,14 @@ import CalendarControlCitySort from './components/Calendar/Control/CitySort';
 import datePicker from 'vue-bootstrap-datetimepicker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+//import $ from 'jquery';
+
+
+window._ = require('lodash');
+//window.$ = window.jQuery = $;
+//import(/* webpackIgnore: true */ 'https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.20.0/jquery.daterangepicker.min.js');
+
+
 Vue.use(datePicker);
 
 

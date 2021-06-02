@@ -759,6 +759,17 @@ class Service extends Model
 
     /**
      * @param Builder $query
+     * @param $date
+     * @return Builder
+     */
+    public function scopeAtDate(Builder $query, $date) {
+        return $query->whereHas('day', function ($query) use ($date) {
+            $query->where('date', $date);
+        });
+    }
+
+    /**
+     * @param Builder $query
      * @param int $year Year
      * @param int $month Month
      * @return Builder
@@ -900,7 +911,7 @@ class Service extends Model
      * @param string $category
      * @return Builder
      */
-    public function scopeUserParticipates(Builder $query, User $user, $category)
+    public function scopeUserParticipates(Builder $query, User $user, $category = null)
     {
         return $query->whereHas('participants', function($query2) use ($user, $category) {
             $query2->where('user_id', $user->id);

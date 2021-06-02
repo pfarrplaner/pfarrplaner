@@ -69,7 +69,7 @@ class Absence extends Model
     ];
 
     protected $with = [
-        'user'
+        'user', 'replacements'
     ];
 
 // ACCESSORS

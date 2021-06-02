@@ -70,8 +70,10 @@ Route::post('services/{service}/attachment', 'ServiceController@attach')->name('
 Route::delete('services/{service}/attachment/{attachment}', 'ServiceController@detach')->name('service.detach');
 
 Route::resource('absences', 'AbsenceController')->middleware('auth');
+Route::get('planner/users', 'AbsenceController@users')->name('planner.users');
+Route::get('planner/days/{date}/{user}', 'AbsenceController@days')->name('planner.days');
 Route::get('absences/{year?}/{month?}', ['as' => 'absences.index', 'uses' => 'AbsenceController@index']);
-Route::get('absences/create/{year}/{month}/{user}', ['as' => 'absences.create', 'uses' => 'AbsenceController@create']);
+Route::get('absences/create/{year}/{month}/{user}/{day?}', ['as' => 'absences.create', 'uses' => 'AbsenceController@create']);
 Route::get('absence/{absence}/approve', 'AbsenceController@approve')->name('absence.approve');
 Route::get('absence/{absence}/reject', 'AbsenceController@approve')->name('absence.reject');
 

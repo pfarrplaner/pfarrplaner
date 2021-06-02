@@ -32,11 +32,11 @@ namespace App\Http\Controllers;
 
 use App\Absence;
 use App\Approval;
-use App\Day;
 use App\Events\AbsenceApproved;
 use App\Events\AbsenceDemanded;
 use App\Events\AbsenceRejected;
 use App\Replacement;
+use App\Service;
 use App\User;
 use Carbon\Carbon;
 use Exception;
@@ -44,6 +44,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 /**
  * Class AbsenceController
@@ -54,6 +55,30 @@ class AbsenceController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    private function getDays($start)
+    {
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+        $holidays = $this->getHolidays($start, $end);
+        $days = [];
+        while ($start <= $end) {
+            $day = ['day' => $start->day, 'holiday' => false, 'date' => $start->copy()];
+            foreach ($holidays as $holiday) {
+                $day['holiday'] = $day['holiday'] || (($start >= $holiday['start']) && ($start <= $holiday['end']));
+            }
+            $days[$start->day] = $day;
+            $start->addDay(1);
+        }
+        return $days;
+    }
+
+    private function getStart($year, $month = null)
+    {
+        if (!$month) {
+            list($year, $month) = explode('-', $year);
+        }
+        return new Carbon($year . '-' . $month . '-01 0:00:00');
     }
 
     /**
@@ -67,39 +92,76 @@ class AbsenceController extends Controller
             return $r;
         }
 
-        /**
-         * $users = User::where('manage_absences', 1)
-         * ->whereHas('cities', function ($query) {
-         * $query->whereIn('cities.id', Auth::user()->cities);
-         * })
-         * ->get();
-         */
+        $start = $this->getStart($year, $month);
+        $days = $this->getDays($start->copy());
 
+        return Inertia::render('Absences/Planner', compact('start', 'days', 'year', 'month'));
+    }
+
+    public function users()
+    {
         $users = Auth::user()->getViewableAbsenceUsers();
-
-        $now = new Carbon($year . '-' . $month . '-01 0:00:00');
-        $start = $now->copy();
-        $end = $now->copy()->addMonth(1)->subDay(1);
-
-        $holidays = $this->getHolidays($start, $end);
-
-        $allDays = Day::orderBy('date', 'ASC')->get();
-        for ($i = $allDays->first()->date->year; $i <= $allDays->last()->date->year; $i++) {
-            $years[] = $i;
+        foreach ($users as $key => $user) {
+            $user->canEdit = false;
+            if (($user->id == Auth::user()->id) || (Auth::user()->hasPermissionTo(
+                        'fremden-urlaub-bearbeiten'
+                    ) && (count(Auth::user()->writableCities->intersect($user->homeCities))))) {
+                $user->canEdit = true;
+            }
         }
-        for ($i = 1; $i <= 12; $i++) {
-            $months[$i] = strftime('%B', mktime(0, 0, 0, $i, 1, date('Y')));
-        }
+        return response()->json($users);
+    }
 
-        $absences = Absence::whereIn('user_id', $users->pluck('id'))
+    public function days($start, User $user)
+    {
+        $start = $this->getStart($start);
+        $end = $start->copy()->addMonth(1)->subDay(1);
+        $days = $this->getDays($start->copy());
+
+        $absences = Absence::where('user_id', $user->id)
             ->where('to', '>=', $start)
             ->where('from', '<=', $end)
             ->get();
 
-        return view(
-            'absences.index',
-            compact('users', 'start', 'end', 'year', 'month', 'months', 'years', 'now', 'holidays')
-        );
+        // Find out whether current user is a replacement for this absence
+        if ($user->id != Auth::user()->id) {
+            foreach ($absences as $absence) {
+                $absence->replacing = false;
+                /** @var Replacement $replacement */
+                foreach ($absence->replacements as $replacement) {
+                    if ($replacement->users->pluck('id')->contains(Auth::user()->id)) {
+                        $absence->replacing = true;
+                    }
+                }
+            }
+        }
+
+        foreach ($days as $index => $day) {
+            $days[$index]['services'] = Service::atDate($days[$index]['date'])
+                ->userParticipates($user)
+                ->count();
+            $days[$index]['busy'] = ($days[$index]['services'] > 0);
+            $days[$index]['absent'] = false;
+            $days[$index]['absence'] = null;
+            $days[$index]['duration'] = 0;
+            $days[$index]['show'] = true;
+        }
+
+
+        foreach ($absences as $absence) {
+            $index = ($absence->from < $start ? 1 : $absence->from->day);
+            $days[$index]['absence'] = $absence;
+            $days[$index]['duration'] = $absence->to->diff($days[$index]['date'])->days + 1;
+            $endIndex = ($absence->to > $end ? $end->day : $absence->to->day);
+            for ($i = $index; $i <= $endIndex; $i++) {
+                $days[$i]['absent'] = true;
+                if ($i > $index) {
+                    $days[$i]['show'] = false;
+                }
+            }
+        }
+
+        return response()->json($days);
     }
 
     /**
@@ -175,10 +237,18 @@ class AbsenceController extends Controller
      *
      * @return Response
      */
-    public function create($year, $month, User $user)
+    public function create($year, $month, User $user, $day = 1)
     {
         $users = User::all();
-        return view('absences.create', compact('month', 'year', 'users', 'user'));
+        $absence = Absence::create(
+            [
+                'user_id' => $user->id,
+                'reason' => 'Urlaub',
+                'from' => Carbon::create($year, $month, $day, 0, 0, 0),
+                'to' => Carbon::create($year, $month, $day, 0, 0, 0),
+            ]
+        );
+        return redirect()->route('absences.edit', $absence->id);
     }
 
     /**
@@ -270,7 +340,8 @@ class AbsenceController extends Controller
             $year = date('m');
         }
         $users = User::all();
-        return view('absences.edit', compact('absence', 'month', 'year', 'users'));
+        return Inertia::render('Absences/AbsenceEditor', compact('absence', 'month', 'year', 'users'));
+        //return view('absences.edit', compact('absence', 'month', 'year', 'users'));
     }
 
     /**
@@ -283,6 +354,7 @@ class AbsenceController extends Controller
     public function update(Request $request, Absence $absence)
     {
         $absence->update($this->validateRequest($request));
+
         $this->setupReplacements($absence, $request->get('replacement') ?: []);
         return redirect()->route(
             'absences.index',
@@ -358,7 +430,8 @@ class AbsenceController extends Controller
      * @param Request $request
      * @return array
      */
-    protected function validateRequest(Request $request) {
+    protected function validateRequest(Request $request)
+    {
         $rules = [
             'from' => 'required|date_format:d.m.Y',
             'to' => 'required|date_format:d.m.Y',
@@ -369,8 +442,8 @@ class AbsenceController extends Controller
             $rules['user_id'] = 'required|exists:users,id';
         }
         $data = $request->validate($rules);
-        $data['from'] = Carbon::createFromFormat('d.m.Y', $data['from'])->setTime(0,0,0);
-        $data['to'] = Carbon::createFromFormat('d.m.Y', $data['to'])->setTime(23,59,59);
+        $data['from'] = Carbon::createFromFormat('d.m.Y', $data['from'])->setTime(0, 0, 0);
+        $data['to'] = Carbon::createFromFormat('d.m.Y', $data['to'])->setTime(23, 59, 59);
         return $data;
     }
 }

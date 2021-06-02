@@ -42,6 +42,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Shetabit\Visitor\Traits\Visitable;
@@ -735,7 +736,13 @@ class User extends Authenticatable
             if (!$this->isAdmin) {
                 return new Collection();
             } else {
-                return User::where('manage_absences', 1)->orderBy('last_name')->orderBy('first_name')->get();
+                if (Cache::has('viewAbleAbsenceUsers__'.$this->id)) {
+                    return Cache::get('viewAbleAbsenceUsers__'.$this->id);
+                } else {
+                    $users = User::where('manage_absences', 1)->orderBy('last_name')->orderBy('first_name')->get();
+                    Cache::put('viewAbleAbsenceUsers__'.$this->id, $users);
+                    return $users;
+                }
             }
         }
         $ids = [];

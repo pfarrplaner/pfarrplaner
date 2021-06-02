@@ -89,7 +89,7 @@ class MenuBuilder
             'url' => route('absences.index'),
             'icon_color' => 'orange',
             'active' => $request->is(['absences*', 'approvals*']),
-            'inertia' => false,
+            'inertia' => true,
         ];
         if (count(Auth::user()->approvableUsers()) > 0) {
             $absenceMenu['url'] = '';

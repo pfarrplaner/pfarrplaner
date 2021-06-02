@@ -112,7 +112,9 @@
         @endsection
 
         @section('scripts')
-            <script>
+            <!-- bla -->
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.20.0/jquery.daterangepicker.min.js"></script>
+                <script>
                 var replacementCtr = {{ count($absence->replacements) }};
 
                 function initDeleteButtons() {

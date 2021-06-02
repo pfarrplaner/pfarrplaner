@@ -29,6 +29,8 @@
 
 const mix = require('laravel-mix');
 
+const webpack = require('webpack');
+
 module.exports = {
     module: {
         rules: [
@@ -38,6 +40,19 @@ module.exports = {
             },
         ],
     },
+    resolve: {
+        alias: {
+            // fix every jQuery to our direct jQuery dependency. Shariff 1.24.1 brings its own jQuery and it would be included twice without this alias.
+            'jquery': __dirname + '/node_modules/jquery/',
+        },
+    },
+    plugins:  [
+        new webpack.ProvidePlugin({
+            jQuery: 'jquery',
+            $: 'jquery',
+            jquery: 'jquery'
+        })
+    ],
 };
 
 /*

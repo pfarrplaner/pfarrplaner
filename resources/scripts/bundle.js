@@ -35,11 +35,14 @@ window._ = require('lodash');
  * code may be modified to fit the specific needs of your application.
  */
 
+window.$ = window.jQuery = require('jquery');
 try {
     window.Popper = require('popper.js').default;
-    window.$ = window.jQuery = require('jquery');
     require('bootstrap');
 } catch (e) {}
+
+window.$ = $.noConflict();
+window.moment = require('moment');
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -70,8 +73,7 @@ window.moment = require('moment');
 require('bootstrap-datepicker');
 require('tempusdominus-bootstrap-4');
 require('selectize');
-
-import(/* webpackIgnore: true */ 'https://cdnjs.cloudflare.com/ajax/libs/jquery-date-range-picker/0.20.0/jquery.daterangepicker.min.js');
+//require('daterangepicker');
 
 $(document).ready(function () {
 
