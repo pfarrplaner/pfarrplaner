@@ -345,11 +345,3 @@ Route::post('/streaming/activateService/{service}', 'StreamingTroubleshooterCont
 Route::post('/streaming/resetService/{service}', 'StreamingTroubleshooterController@resetService')->name('streaming.troubleshooter.resetService');
 Route::post('/streaming/{city}/activateBroadcast/{broadcast}', 'StreamingTroubleshooterController@activateBroadcast')->name('streaming.troubleshooter.activateBroadcast');
 
-Route::get('/migrate', function() {
-    $sermons = json_decode(file_get_contents(base_path('create-sermons.json')), true);
-    foreach ($sermons as $sermonKey => $sermonData) {
-        $sermon = \App\Sermon::find($sermonKey);
-        $sermon->update($sermonData);
-        dump($sermon);
-    }
-});
