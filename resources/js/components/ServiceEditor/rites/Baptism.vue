@@ -42,7 +42,8 @@
             <checked-process-item :check="(baptism.first_contact_on) && (baptism.first_contact_with)"
                                   negative="Erstkontakt nicht dokumentiert">
                 <template slot="positive">
-                    <div v-if="baptism.first_contact_on">{{ moment(baptism.first_contact_on).format('DD.MM.YYYY') }}</div>
+                    Erstkontakt dokumentiert:
+                    <span v-if="baptism.first_contact_on">{{ moment(baptism.first_contact_on).format('DD.MM.YYYY') }}, </span>
                     {{ baptism.first_contact_with }}
                 </template>
             </checked-process-item>
@@ -54,7 +55,7 @@
                 </checked-process-item>
             </div>
             <div>
-                <checked-process-item :check="baptism.registered" positive="Anmeldeformular erstellt" negative="Anmeldeformular noch nicht erstellt" />
+                <checked-process-item :check="baptism.hasRegistrationForm" positive="Anmeldung aufgenommen und Anmeldeformular erstellt" negative="Anmeldeformular noch nicht erstellt" />
                 <checked-process-item :check="baptism.signed" positive="Anmeldung unterschrieben" negative="Anmeldung noch nicht unterschrieben" />
             </div>
             <div>
@@ -74,8 +75,8 @@
             </div>
         </div>
         <div class="col-md-1 text-right">
-            <a class="btn btn-sm btn-light" title="Taufe bearbeiten"
-               :href="route('baptisms.edit', {baptism: baptism.id})"><span class="fa fa-edit"></span></a>
+            <inertia-link class="btn btn-sm btn-light" title="Taufe bearbeiten"
+               :href="route('baptisms.edit', {baptism: baptism.id})"><span class="fa fa-edit"></span></inertia-link>
             <button class="btn btn-sm btn-danger" title="Taufe löschen"
                     @click.prevent="deleteBaptism"><span class="fa fa-trash"></span></button>
         </div>

@@ -88,6 +88,8 @@ class Baptism extends Model
 
     protected $with = ['attachments'];
 
+    protected $appends = ['hasRegistrationForm'];
+
     /**
      * @return BelongsTo
      */
@@ -96,5 +98,12 @@ class Baptism extends Model
         return $this->belongsTo(Service::class);
     }
 
-
+    public function getHasRegistrationFormAttribute()
+    {
+        $found = false;
+        foreach ($this->attachments as $attachment) {
+            $found = $found || ($attachment->title == 'Anmeldeformular');
+        }
+        return $found;
+    }
 }

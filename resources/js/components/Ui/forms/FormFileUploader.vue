@@ -37,7 +37,7 @@
 <script>
 export default {
     name: "FormFileUploader",
-    props: ['parent', 'uploadRoute'],
+    props: ['parent', 'uploadRoute', 'title'],
     data() {
         return {
             uploading: false,
@@ -45,11 +45,15 @@ export default {
     },
     methods: {
         upload(event) {
-            let title = event.target.files[0].name;
-            title = title.substr(0, title.lastIndexOf('.'));
-            title = title.charAt(0).toUpperCase() + title.slice(1);
-            title = window.prompt('Bitte gib eine Beschreibung zu dieser Datei an.', title);
+            let title = this.title;
+            if (!title) {
+                title = event.target.files[0].name;
+                title = title.substr(0, title.lastIndexOf('.'));
+                title = title.charAt(0).toUpperCase() + title.slice(1);
+                title = window.prompt('Bitte gib eine Beschreibung zu dieser Datei an.', title);
+            }
             if (null == title) return;
+
 
             let fd = new FormData();
             fd.append('attachment_text[0]', title);

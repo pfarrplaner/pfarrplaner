@@ -30,17 +30,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Attachment;
 use App\Baptism;
 use App\Http\Requests\StoreBaptismRequest;
+use App\Liturgy\PronounSets\PronounSets;
 use App\Service;
 use App\Traits\HandlesAttachmentsTrait;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 /**
  * Class BaptismController
@@ -77,15 +81,26 @@ class BaptismController extends Controller
     {
         $service = null;
         if ($serviceId) {
-            $service = Service::find($serviceId);
+            $service = Service::findOrFail($serviceId);
         }
-
-        $baptismalServices = $this->getBaptismalServices();
-        $otherServices = $this->getBaptismalServices(0);
-
-        $cities = Auth::user()->writableCities;
-
-        return view('baptisms.create', compact('service', 'baptismalServices', 'otherServices', 'cities'));
+        $baptism = Baptism::create(
+            [
+                'candidate_name' => '',
+                'candidate_address' => '',
+                'candidate_zip' => '',
+                'candidate_city' => '',
+                'candidate_email' => '',
+                'candidate_phone' => '',
+                'first_contact_with' => '',
+                'registered' => false,
+                'signed' => false,
+                'docs_ready' => false,
+                'docs_where' => '',
+                'registration_document' => '',
+                'service_id' => $serviceId
+            ]
+        );
+        return redirect()->route('baptisms.edit', $baptism->id);
     }
 
     /**
@@ -94,57 +109,14 @@ class BaptismController extends Controller
      */
     protected function getBaptismalServices($baptismFlag = 1)
     {
-        return Service::where('baptism', '=', $baptismFlag)
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
-            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now());
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time')
+        return Service::setEagerLoads([])
+            ->with(['day', 'baptisms', 'participants'])
+            ->where('baptism', '=', $baptismFlag)
+            ->whereDoesntHave('funerals')
+            ->inCities(Auth::user()->cities)
+            ->startingFrom(Carbon::now())
+            ->ordered()
             ->get();
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param StoreBaptismRequest $request
-     * @return Response
-     */
-    public function store(StoreBaptismRequest $request)
-    {
-        $data = $request->validated();
-        $serviceId = $data['service_id'] = $request->get('service') ?: null;
-        $baptism = new Baptism($data);
-
-        if ($request->hasFile('registration_document')) {
-            $baptism->registration_document = $request->file('registration_document')->store('baptism', 'public');
-        }
-
-        $baptism->save();
-        $this->handleAttachments($request, $baptism);
-
-
-        if ($serviceId) {
-            return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
-        } else {
-            return redirect(route('home'));
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param Baptism $baptism
-     * @return Response
-     */
-    public function show(Baptism $baptism)
-    {
-        //
     }
 
     /**
@@ -155,27 +127,45 @@ class BaptismController extends Controller
      */
     public function edit(Baptism $baptism)
     {
-        $baptismalServicesQuery = Service::where('baptism', '=', 1)
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
-            ->whereIn('city_id', Auth::user()->cities->pluck('id'))
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now());
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time');
+        $baptismalServicesQuery = Service::setEagerLoads([])
+            ->with(['day', 'baptisms', 'participants'])
+            ->where('baptism', '=', 1)
+            ->inCities(Auth::user()->cities)
+            ->startingFrom(Carbon::now())
+            ->ordered();
         if ($baptism->service_id) {
             $baptismalServicesQuery->orWhere('services.id', (int)$baptism->service_id);
         }
         $baptismalServices = $baptismalServicesQuery->get();
 
         $cities = Auth::user()->writableCities;
+        $pronounSets = PronounSets::toArray();
 
         $otherServices = $this->getBaptismalServices(0);
-        return view('baptisms.edit', compact('baptism', 'baptismalServices', 'otherServices', 'cities'));
+
+        $services = [];
+        foreach (
+            [
+                'Taufgottesdienste' => $baptismalServices,
+                'Andere Gottesdienste' => $otherServices
+            ] as $category => $theseServices
+        ) {
+            foreach ($theseServices as $service) {
+                $services[] = [
+                    'id' => $service->id,
+                    'name' => $service->dateTime->setTimeZone('Europe/Berlin')->format(
+                            'd.m.Y, H:i'
+                        ) . ' Uhr (' . $service->locationText() . '), '
+                        . ($service->titleText() == 'GD' ? '' : $service->titleText(false) . ', ')
+                        . $service->participantsText('P')
+                        . (count($service->baptisms) ? ' [bisherige Taufen: ' . count($service->baptisms) . ']' : ''),
+                    'category' => $category,
+                ];
+            }
+        }
+
+        return Inertia::render('Rites/BaptismEditor', compact('baptism', 'services', 'cities', 'pronounSets'));
+        //return view('baptisms.edit', compact('baptism', 'baptismalServices', 'otherServices', 'cities'));
     }
 
     /**
@@ -188,30 +178,10 @@ class BaptismController extends Controller
     public function update(StoreBaptismRequest $request, Baptism $baptism)
     {
         $data = $request->validated();
-        $serviceId = $data['service_id'] = $request->get('service') ?? null;
-        if ($serviceId) {
-            $baptism->service_id = $serviceId;
-        } else {
-            $baptism->service_id = null;
-        }
         $baptism->update($data);
 
-        if ($request->hasFile('registration_document') || ($request->get('removeAttachment') == 1)) {
-            if ($baptism->registration_document != '') {
-                Storage::delete($baptism->registration_document);
-            }
-            $baptism->registration_document = '';
-        }
-        if ($request->hasFile('registration_document')) {
-            $baptism->registration_document = $request->file('registration_document')->store('baptism', 'public');
-        }
-
-        $baptism->save();
-        $this->handleAttachments($request, $baptism);
-
-
-        if ($serviceId) {
-            return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        if ($baptism->service_id) {
+            return redirect(route('services.edit', ['service' => $baptism->service_id, 'tab' => 'rites']));
         } else {
             return redirect(route('home'));
         }
@@ -223,8 +193,10 @@ class BaptismController extends Controller
      * @param Baptism $baptism
      * @return Response
      */
-    public function destroy(Baptism $baptism)
-    {
+    public
+    function destroy(
+        Baptism $baptism
+    ) {
         $serviceId = $baptism->service_id;
         $baptism->delete();
         if ($serviceId) {
@@ -238,8 +210,10 @@ class BaptismController extends Controller
      * @param Baptism $baptism
      * @return Application|ResponseFactory|Response
      */
-    public function appointmentIcal(Baptism $baptism)
-    {
+    public
+    function appointmentIcal(
+        Baptism $baptism
+    ) {
         $service = Service::find($baptism->service_id);
         $raw = View::make('baptisms.appointment.ical', compact('baptism', 'service'));
         $raw = str_replace(
@@ -258,10 +232,46 @@ class BaptismController extends Controller
      * @param Baptism $baptism
      * @return false|string
      */
-    public function done(Baptism $baptism)
-    {
+    public
+    function done(
+        Baptism $baptism
+    ) {
         $baptism->done = true;
         $baptism->save();
         return json_encode(true);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param Baptism $baptism
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attach(Request $request, Baptism $baptism)
+    {
+        $this->handleAttachments($request, $baptism);
+        $baptism->refresh();
+        return response()->json($baptism->attachments);
+    }
+
+    /**
+     * @param Request $request
+     * @param Baptism $baptism
+     * @param Attachment $attachment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public
+    function detach(
+        Request $request,
+        Baptism $baptism,
+        Attachment $attachment
+    ) {
+        $file = $attachment->file;
+        $baptism->attachments()->where('id', $attachment->id)->delete();
+        Storage::delete($file);
+        $attachment->delete();
+        $baptism->refresh();
+        return response()->json($baptism->attachments);
     }
 }

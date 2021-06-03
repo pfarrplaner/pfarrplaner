@@ -155,6 +155,8 @@ Route::get(
     ['as' => 'baptism.appointment.ical', 'uses' => 'BaptismController@appointmentIcal']
 );
 Route::post('/baptism/done/{baptism}', ['as' => 'baptism.done', 'uses' => 'BaptismController@done']);
+Route::post('baptisms/{baptism}/attachment', 'BaptismController@attach')->name('baptism.attach');
+Route::delete('baptisms/{baptism}/attachment/{attachment}', 'BaptismController@detach')->name('baptism.detach');
 
 
 Route::resource('funerals', 'FuneralController')->middleware('auth');
