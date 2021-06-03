@@ -132,8 +132,6 @@
                             </div>
                             <div v-else>
                                 <checked-process-item check="1" positive="Anmeldedaten aufgenommen und Anmeldeformular erstellt" />
-                                <form-check label="Anmeldedaten aufgenommen und Formular erstellt"
-                                            v-model="myBaptism.registered" is-checked-item="1"/>
                                 <form-check label="Anmeldung unterschrieben" v-model="myBaptism.signed"
                                             is-checked-item="1"/>
                                 <form-check label="Urkunden erstellt" v-model="myBaptism.docs_ready"
@@ -158,6 +156,7 @@
                             <form-file-uploader :parent="myBaptism"
                                                 :upload-route="route('baptism.attach', this.myBaptism.id)"
                                                 v-model="myBaptism.attachments"/>
+                            <div class="mt-2"><small>Das Anmeldeformular zur Taufe bitte nicht hier, sondern im Register "Vorbereitung" hochladen.</small></div>
                         </fieldset>
                     </tab>
                 </tabs>
