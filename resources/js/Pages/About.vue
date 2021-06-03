@@ -32,10 +32,10 @@
         <card>
             <card-header>Informationen zur App</card-header>
             <card-body>
-                <p>
+                <div>
                 <h3>Pfarrplaner</h3><br />
-                v.{{ version }} vom {{ moment(date).locale('DE').format('LLLL')}}
-                </p>
+                v.{{ version }}-{{ env }} vom {{ moment(date).locale('DE').format('LLLL')}}
+                </div>
                 <p>Gehostet auf einem Server des <a href="https://wwww.kirchenbezirk-balingen.de/" target="_blank">Evangelischen Kirchenbezirks Balingen</a>.</p>
                 <p>Der Quellcode von Pfarrplaner ist als Open Source auf <a href="https://github.com/potofcoffee/pfarrplaner" target="_blank">GitHub</a> verfügbar und steht unter
                     der <a href="https://github.com/potofcoffee/pfarrplaner/blob/master/LICENSE" target="_blank">GNU General Public License (GPL) 3.0</a> oder höher.
@@ -61,7 +61,7 @@ export default {
     name: "About",
     components: {Card, CardBody, CardHeader, VueMarkdown},
 
-    props: ['version', 'date', 'changelog']
+    props: ['version', 'date', 'changelog', 'env']
 }
 </script>
 

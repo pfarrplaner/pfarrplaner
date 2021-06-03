@@ -46,6 +46,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
@@ -189,8 +190,9 @@ class HomeController extends Controller
         $version = $packageConfig['version'];
         $date = (new Carbon(filemtime(base_path('package.json'))))->setTimeZone('Europe/Berlin');
         $changelog = file_get_contents(base_path('CHANGELOG.md'));
+        $env = App::environment();
 
-        return Inertia::render('About', compact('version', 'date', 'changelog'));
+        return Inertia::render('About', compact('version', 'date', 'changelog', 'env'));
     }
 
 
