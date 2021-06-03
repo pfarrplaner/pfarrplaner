@@ -63,6 +63,7 @@ window._ = require('lodash');
 Vue.use(datePicker);
 
 
+
 Vue.component('admin-layout', AdminLayout)
 
 Vue.component('calendar-pane-horizontal', CalendarPaneHorizontal);
