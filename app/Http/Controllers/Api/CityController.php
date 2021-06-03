@@ -150,5 +150,12 @@ class CityController extends Controller
         return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde gelöscht.');
     }
 
+    public function konfiAppTypes(City $city)
+    {
+        $types = \App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city) ?
+            \App\Integrations\KonfiApp\KonfiAppIntegration::get($city)->listEventTypes() : [];
+        return response()->json($types);
+    }
+
 
 }

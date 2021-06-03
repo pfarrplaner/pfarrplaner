@@ -58,16 +58,9 @@ Route::namespace('Api')->group(
             ['as' => 'services.byDayAndCity', 'uses' => 'ServiceController@byDayAndCity']
         );
         Route::get('user/{user}/services', ['as' => 'api.user.services', 'uses' => 'ServiceController@byUser']);
-        Route::get('city/{city}/konfiapp-types', function(\App\City $city) {
-            $types = \App\Integrations\KonfiApp\KonfiAppIntegration::isActive($city) ?
-                \App\Integrations\KonfiApp\KonfiAppIntegration::get($city)->listEventTypes() : [];
-            return response()->json($types);
-        });
+        Route::get('city/{city}/konfiapp-types', 'CityController@konfiAppTypes');
 
-        Route::delete('booking/{booking}', function(\App\Booking $booking) {
-            $booking->delete();
-            return response();
-        })->middleware('auth')->name('api.booking.destroy');
+        Route::delete('booking/{booking}', 'BookingController@destroy')->name('api.booking.destroy');
 
         Route::middleware('auth:api')->group(
             function () {
