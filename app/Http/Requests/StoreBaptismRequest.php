@@ -77,7 +77,6 @@ class StoreBaptismRequest extends FormRequest
             'signed' => 'nullable|integer|between:0,1',
             'docs_ready' => 'nullable|integer|between:0,1',
             'docs_where' => 'nullable|string',
-            'registration_document' => 'nullable|mimetypes:application/pdf',
         ];
     }
 
@@ -92,7 +91,6 @@ class StoreBaptismRequest extends FormRequest
         $data['candidate_email'] ??= '';
         $data['first_contact_with'] ??= '';
         $data['docs_where'] ??= '';
-        $data['registration_document'] ??= '';
         $data['docs_ready'] ??= 0;
         $data['signed'] ??= 0;
         $data['registered'] ??= 0;

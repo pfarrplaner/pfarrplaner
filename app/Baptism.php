@@ -61,7 +61,6 @@ class Baptism extends Model
         'first_contact_with',
         'first_contact_on',
         'registered',
-        'registration_document',
         'signed',
         'appointment',
         'docs_ready',

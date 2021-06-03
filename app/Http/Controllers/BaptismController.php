@@ -96,7 +96,6 @@ class BaptismController extends Controller
                 'signed' => false,
                 'docs_ready' => false,
                 'docs_where' => '',
-                'registration_document' => '',
                 'service_id' => $serviceId
             ]
         );
