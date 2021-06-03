@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.55.1](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.0...v1.55.1) (2021-06-03)
+
+
+### Features
+
+* Show environment type in version info ([ac4c581](https://github.com/potofcoffee/pfarrplaner/commits/ac4c5811c056b4c056473290c1f8b6c967ad7f0d))
+
+
+### Bug Fixes
+
+* Check for registration document is shown twice in BaptismEditor ([8a020c2](https://github.com/potofcoffee/pfarrplaner/commits/8a020c2f895ea093fd6064d652e15cd8c0955aa8))
+
 ## [1.55.0](https://github.com/mokkapps/changelog-generator-demo/compare/v1.54.0...v1.55.0) (2021-06-03)
 
 
