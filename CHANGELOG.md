@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.55.3](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.2...v1.55.3) (2021-06-03)
+
+
+### Features
+
+* Automatically create CREDITS.md file ([9d438a7](https://github.com/potofcoffee/pfarrplaner/commits/9d438a7a13a846916ab446b85dc36d4236bed435))
+* Show depencency links in CREDITS.md ([74eca03](https://github.com/potofcoffee/pfarrplaner/commits/74eca03fc732c4e6c6424870a7507f266602afb5))
+
 ### [1.55.2](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.1...v1.55.2) (2021-06-03)
 
 ### [1.55.1](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.0...v1.55.1) (2021-06-03)
