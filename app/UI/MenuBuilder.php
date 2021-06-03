@@ -237,7 +237,7 @@ class MenuBuilder
             'icon' => 'fa fa-info',
             'url' => route('about'),
             'active' => ($route == 'about'),
-            'inertia' => false,
+            'inertia' => true,
         ];
 
 
