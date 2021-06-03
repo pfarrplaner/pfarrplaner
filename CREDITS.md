@@ -5,951 +5,951 @@ Pfarrplaner uses the following open-source libraries:
 
 ## Composer packages
 
- - almasaeed2010/adminlte v3.0.5
+ - [almasaeed2010/adminlte](https://packagist.org/packages/almasaeed2010/adminlte) v3.0.5
     under the MIT license
 
- - austinheap/laravel-database-encryption dev-laravel8 da21b5e
+ - [austinheap/laravel-database-encryption](https://packagist.org/packages/austinheap/laravel-database-encryption) dev-laravel8 da21b5e
     under the MIT license
 
- - aws/aws-sdk-php 3.173.23
+ - [aws/aws-sdk-php](https://packagist.org/packages/aws/aws-sdk-php) 3.173.23
     under the Apache-2.0 license
 
- - bacon/bacon-qr-code 2.0.3
+ - [bacon/bacon-qr-code](https://packagist.org/packages/bacon/bacon-qr-code) 2.0.3
     under the BSD-2-Clause license
 
- - barryvdh/laravel-debugbar v3.5.2
+ - [barryvdh/laravel-debugbar](https://packagist.org/packages/barryvdh/laravel-debugbar) v3.5.2
     under the MIT license
 
- - barryvdh/laravel-ide-helper v2.8.2
+ - [barryvdh/laravel-ide-helper](https://packagist.org/packages/barryvdh/laravel-ide-helper) v2.8.2
     under the MIT license
 
- - barryvdh/reflection-docblock v2.0.6
+ - [barryvdh/reflection-docblock](https://packagist.org/packages/barryvdh/reflection-docblock) v2.0.6
     under the MIT license
 
- - beyondcode/laravel-dump-server 1.3.0
+ - [beyondcode/laravel-dump-server](https://packagist.org/packages/beyondcode/laravel-dump-server) 1.3.0
     under the MIT license
 
- - caouecs/laravel-lang 4.0.11
+ - [caouecs/laravel-lang](https://packagist.org/packages/caouecs/laravel-lang) 4.0.11
     under the MIT license
 
- - composer/ca-bundle 1.2.9
+ - [composer/ca-bundle](https://packagist.org/packages/composer/ca-bundle) 1.2.9
     under the MIT license
 
- - composer/composer 2.0.11
+ - [composer/composer](https://packagist.org/packages/composer/composer) 2.0.11
     under the MIT license
 
- - composer/semver 3.2.4
+ - [composer/semver](https://packagist.org/packages/composer/semver) 3.2.4
     under the MIT license
 
- - composer/spdx-licenses 1.5.5
+ - [composer/spdx-licenses](https://packagist.org/packages/composer/spdx-licenses) 1.5.5
     under the MIT license
 
- - composer/xdebug-handler 1.4.5
+ - [composer/xdebug-handler](https://packagist.org/packages/composer/xdebug-handler) 1.4.5
     under the MIT license
 
- - dasprid/enum 1.0.3
+ - [dasprid/enum](https://packagist.org/packages/dasprid/enum) 1.0.3
     under the BSD-2-Clause license
 
- - davejamesmiller/laravel-breadcrumbs 5.3.2
+ - [davejamesmiller/laravel-breadcrumbs](https://packagist.org/packages/davejamesmiller/laravel-breadcrumbs) 5.3.2
     under the MIT license
 
- - dnoegel/php-xdg-base-dir v0.1.1
+ - [dnoegel/php-xdg-base-dir](https://packagist.org/packages/dnoegel/php-xdg-base-dir) v0.1.1
     under the MIT license
 
- - doctrine/cache 1.10.2
+ - [doctrine/cache](https://packagist.org/packages/doctrine/cache) 1.10.2
     under the MIT license
 
- - doctrine/dbal 2.12.1
+ - [doctrine/dbal](https://packagist.org/packages/doctrine/dbal) 2.12.1
     under the MIT license
 
- - doctrine/event-manager 1.1.1
+ - [doctrine/event-manager](https://packagist.org/packages/doctrine/event-manager) 1.1.1
     under the MIT license
 
- - doctrine/inflector 2.0.3
+ - [doctrine/inflector](https://packagist.org/packages/doctrine/inflector) 2.0.3
     under the MIT license
 
- - doctrine/instantiator 1.4.0
+ - [doctrine/instantiator](https://packagist.org/packages/doctrine/instantiator) 1.4.0
     under the MIT license
 
- - doctrine/lexer 1.2.1
+ - [doctrine/lexer](https://packagist.org/packages/doctrine/lexer) 1.2.1
     under the MIT license
 
- - dragonmantank/cron-expression v2.3.1
+ - [dragonmantank/cron-expression](https://packagist.org/packages/dragonmantank/cron-expression) v2.3.1
     under the MIT license
 
- - egulias/email-validator 2.1.25
+ - [egulias/email-validator](https://packagist.org/packages/egulias/email-validator) 2.1.25
     under the MIT license
 
- - ezyang/htmlpurifier v4.13.0
+ - [ezyang/htmlpurifier](https://packagist.org/packages/ezyang/htmlpurifier) v4.13.0
     under the LGPL-2.1-or-later license
 
- - facade/ignition-contracts 1.0.2
+ - [facade/ignition-contracts](https://packagist.org/packages/facade/ignition-contracts) 1.0.2
     under the MIT license
 
- - fideloper/proxy 4.4.1
+ - [fideloper/proxy](https://packagist.org/packages/fideloper/proxy) 4.4.1
     under the MIT license
 
- - filp/whoops 2.9.2
+ - [filp/whoops](https://packagist.org/packages/filp/whoops) 2.9.2
     under the MIT license
 
- - firebase/php-jwt v5.2.1
+ - [firebase/php-jwt](https://packagist.org/packages/firebase/php-jwt) v5.2.1
     under the BSD-3-Clause license
 
- - fzaninotto/faker v1.9.2
+ - [fzaninotto/faker](https://packagist.org/packages/fzaninotto/faker) v1.9.2
     under the MIT license
 
- - google/apiclient v2.9.1
+ - [google/apiclient](https://packagist.org/packages/google/apiclient) v2.9.1
     under the Apache-2.0 license
 
- - google/apiclient-services v0.162.0
+ - [google/apiclient-services](https://packagist.org/packages/google/apiclient-services) v0.162.0
     under the Apache-2.0 license
 
- - google/auth v1.15.0
+ - [google/auth](https://packagist.org/packages/google/auth) v1.15.0
     under the Apache-2.0 license
 
- - guzzlehttp/guzzle 7.2.0
+ - [guzzlehttp/guzzle](https://packagist.org/packages/guzzlehttp/guzzle) 7.2.0
     under the MIT license
 
- - guzzlehttp/promises 1.4.0
+ - [guzzlehttp/promises](https://packagist.org/packages/guzzlehttp/promises) 1.4.0
     under the MIT license
 
- - guzzlehttp/psr7 1.7.0
+ - [guzzlehttp/psr7](https://packagist.org/packages/guzzlehttp/psr7) 1.7.0
     under the MIT license
 
- - hamcrest/hamcrest-php v2.0.1
+ - [hamcrest/hamcrest-php](https://packagist.org/packages/hamcrest/hamcrest-php) v2.0.1
     under the BSD-3-Clause license
 
- - inertiajs/inertia-laravel v0.3.6
+ - [inertiajs/inertia-laravel](https://packagist.org/packages/inertiajs/inertia-laravel) v0.3.6
     under the MIT license
 
- - jakub-onderka/php-console-color v0.2
+ - [jakub-onderka/php-console-color](https://packagist.org/packages/jakub-onderka/php-console-color) v0.2
     under the BSD-2-Clause license
 
- - jakub-onderka/php-console-highlighter v0.4
+ - [jakub-onderka/php-console-highlighter](https://packagist.org/packages/jakub-onderka/php-console-highlighter) v0.4
     under the MIT license
 
- - jamesiarmes/php-ntlm 1.0.0
+ - [jamesiarmes/php-ntlm](https://packagist.org/packages/jamesiarmes/php-ntlm) 1.0.0
     under the MIT license
 
- - jaybizzle/crawler-detect v1.2.105
+ - [jaybizzle/crawler-detect](https://packagist.org/packages/jaybizzle/crawler-detect) v1.2.105
     under the MIT license
 
- - jenssegers/agent v2.6.4
+ - [jenssegers/agent](https://packagist.org/packages/jenssegers/agent) v2.6.4
     under the MIT license
 
- - justinrainbow/json-schema 5.2.10
+ - [justinrainbow/json-schema](https://packagist.org/packages/justinrainbow/json-schema) 5.2.10
     under the MIT license
 
- - laravel/framework v6.20.17
+ - [laravel/framework](https://packagist.org/packages/laravel/framework) v6.20.17
     under the MIT license
 
- - laravel/sanctum v2.9.1
+ - [laravel/sanctum](https://packagist.org/packages/laravel/sanctum) v2.9.1
     under the MIT license
 
- - laravel/tinker v1.0.10
+ - [laravel/tinker](https://packagist.org/packages/laravel/tinker) v1.0.10
     under the MIT license
 
- - league/commonmark 1.5.7
+ - [league/commonmark](https://packagist.org/packages/league/commonmark) 1.5.7
     under the BSD-3-Clause license
 
- - league/flysystem 1.1.3
+ - [league/flysystem](https://packagist.org/packages/league/flysystem) 1.1.3
     under the MIT license
 
- - league/flysystem-aws-s3-v3 1.0.29
+ - [league/flysystem-aws-s3-v3](https://packagist.org/packages/league/flysystem-aws-s3-v3) 1.0.29
     under the MIT license
 
- - league/flysystem-sftp 1.0.22
+ - [league/flysystem-sftp](https://packagist.org/packages/league/flysystem-sftp) 1.0.22
     under the MIT license
 
- - league/mime-type-detection 1.7.0
+ - [league/mime-type-detection](https://packagist.org/packages/league/mime-type-detection) 1.7.0
     under the MIT license
 
- - maennchen/zipstream-php 2.1.0
+ - [maennchen/zipstream-php](https://packagist.org/packages/maennchen/zipstream-php) 2.1.0
     under the MIT license
 
- - markbaker/complex 2.0.0
+ - [markbaker/complex](https://packagist.org/packages/markbaker/complex) 2.0.0
     under the MIT license
 
- - markbaker/matrix 2.1.2
+ - [markbaker/matrix](https://packagist.org/packages/markbaker/matrix) 2.1.2
     under the MIT license
 
- - maximebf/debugbar v1.16.5
+ - [maximebf/debugbar](https://packagist.org/packages/maximebf/debugbar) v1.16.5
     under the MIT license
 
- - mobiledetect/mobiledetectlib 2.8.37
+ - [mobiledetect/mobiledetectlib](https://packagist.org/packages/mobiledetect/mobiledetectlib) 2.8.37
     under the MIT license
 
- - mockery/mockery 1.3.4
+ - [mockery/mockery](https://packagist.org/packages/mockery/mockery) 1.3.4
     under the BSD-3-Clause license
 
- - monolog/monolog 2.2.0
+ - [monolog/monolog](https://packagist.org/packages/monolog/monolog) 2.2.0
     under the MIT license
 
- - mpdf/mpdf v8.0.10
+ - [mpdf/mpdf](https://packagist.org/packages/mpdf/mpdf) v8.0.10
     under the GPL-2.0-only license
 
- - mpdf/qrcode v1.1.1
+ - [mpdf/qrcode](https://packagist.org/packages/mpdf/qrcode) v1.1.1
     under the LGPL-2.1-or-later license
 
- - mtdowling/jmespath.php 2.6.0
+ - [mtdowling/jmespath.php](https://packagist.org/packages/mtdowling/jmespath.php) 2.6.0
     under the MIT license
 
- - myclabs/deep-copy 1.10.2
+ - [myclabs/deep-copy](https://packagist.org/packages/myclabs/deep-copy) 1.10.2
     under the MIT license
 
- - myclabs/php-enum 1.8.0
+ - [myclabs/php-enum](https://packagist.org/packages/myclabs/php-enum) 1.8.0
     under the MIT license
 
- - nesbot/carbon 2.45.1
+ - [nesbot/carbon](https://packagist.org/packages/nesbot/carbon) 2.45.1
     under the MIT license
 
- - nikic/php-parser v4.10.4
+ - [nikic/php-parser](https://packagist.org/packages/nikic/php-parser) v4.10.4
     under the BSD-3-Clause license
 
- - niklasravnsborg/laravel-pdf v4.0.0
+ - [niklasravnsborg/laravel-pdf](https://packagist.org/packages/niklasravnsborg/laravel-pdf) v4.0.0
     under the MIT license
 
- - nunomaduro/collision v2.1.1
+ - [nunomaduro/collision](https://packagist.org/packages/nunomaduro/collision) v2.1.1
     under the MIT license
 
- - opis/closure 3.6.1
+ - [opis/closure](https://packagist.org/packages/opis/closure) 3.6.1
     under the MIT license
 
- - paragonie/random_compat v9.99.99
+ - [paragonie/random_compat](https://packagist.org/packages/paragonie/random_compat) v9.99.99
     under the MIT license
 
- - pclzip/pclzip 2.8.2
+ - [pclzip/pclzip](https://packagist.org/packages/pclzip/pclzip) 2.8.2
     under the LGPL-2.1 license
 
- - phar-io/manifest 1.0.3
+ - [phar-io/manifest](https://packagist.org/packages/phar-io/manifest) 1.0.3
     under the BSD-3-Clause license
 
- - phar-io/version 2.0.1
+ - [phar-io/version](https://packagist.org/packages/phar-io/version) 2.0.1
     under the BSD-3-Clause license
 
- - php-ews/php-ews 1.0.0
+ - [php-ews/php-ews](https://packagist.org/packages/php-ews/php-ews) 1.0.0
     under the MIT license
 
- - phpdocumentor/reflection-common 2.2.0
+ - [phpdocumentor/reflection-common](https://packagist.org/packages/phpdocumentor/reflection-common) 2.2.0
     under the MIT license
 
- - phpdocumentor/reflection-docblock 5.2.2
+ - [phpdocumentor/reflection-docblock](https://packagist.org/packages/phpdocumentor/reflection-docblock) 5.2.2
     under the MIT license
 
- - phpdocumentor/type-resolver 1.4.0
+ - [phpdocumentor/type-resolver](https://packagist.org/packages/phpdocumentor/type-resolver) 1.4.0
     under the MIT license
 
- - phpoffice/common 0.2.9
+ - [phpoffice/common](https://packagist.org/packages/phpoffice/common) 0.2.9
     under the LGPL license
 
- - phpoffice/phppresentation dev-master 3deaa89
+ - [phpoffice/phppresentation](https://packagist.org/packages/phpoffice/phppresentation) dev-master 3deaa89
     under the LGPL license
 
- - phpoffice/phpspreadsheet 1.17.1
+ - [phpoffice/phpspreadsheet](https://packagist.org/packages/phpoffice/phpspreadsheet) 1.17.1
     under the MIT license
 
- - phpoffice/phpword 0.16.0
+ - [phpoffice/phpword](https://packagist.org/packages/phpoffice/phpword) 0.16.0
     under the LGPL-3.0 license
 
- - phpoption/phpoption 1.7.5
+ - [phpoption/phpoption](https://packagist.org/packages/phpoption/phpoption) 1.7.5
     under the Apache-2.0 license
 
- - phpseclib/phpseclib 2.0.30
+ - [phpseclib/phpseclib](https://packagist.org/packages/phpseclib/phpseclib) 2.0.30
     under the MIT license
 
- - phpspec/prophecy 1.12.2
+ - [phpspec/prophecy](https://packagist.org/packages/phpspec/prophecy) 1.12.2
     under the MIT license
 
- - phpunit/php-code-coverage 6.1.4
+ - [phpunit/php-code-coverage](https://packagist.org/packages/phpunit/php-code-coverage) 6.1.4
     under the BSD-3-Clause license
 
- - phpunit/php-file-iterator 2.0.3
+ - [phpunit/php-file-iterator](https://packagist.org/packages/phpunit/php-file-iterator) 2.0.3
     under the BSD-3-Clause license
 
- - phpunit/php-text-template 1.2.1
+ - [phpunit/php-text-template](https://packagist.org/packages/phpunit/php-text-template) 1.2.1
     under the BSD-3-Clause license
 
- - phpunit/php-timer 2.1.3
+ - [phpunit/php-timer](https://packagist.org/packages/phpunit/php-timer) 2.1.3
     under the BSD-3-Clause license
 
- - phpunit/php-token-stream 3.1.2
+ - [phpunit/php-token-stream](https://packagist.org/packages/phpunit/php-token-stream) 3.1.2
     under the BSD-3-Clause license
 
- - phpunit/phpunit 7.5.20
+ - [phpunit/phpunit](https://packagist.org/packages/phpunit/phpunit) 7.5.20
     under the BSD-3-Clause license
 
- - predis/predis v1.1.6
+ - [predis/predis](https://packagist.org/packages/predis/predis) v1.1.6
     under the MIT license
 
- - psr/cache 1.0.1
+ - [psr/cache](https://packagist.org/packages/psr/cache) 1.0.1
     under the MIT license
 
- - psr/container 1.1.1
+ - [psr/container](https://packagist.org/packages/psr/container) 1.1.1
     under the MIT license
 
- - psr/http-client 1.0.1
+ - [psr/http-client](https://packagist.org/packages/psr/http-client) 1.0.1
     under the MIT license
 
- - psr/http-factory 1.0.1
+ - [psr/http-factory](https://packagist.org/packages/psr/http-factory) 1.0.1
     under the MIT license
 
- - psr/http-message 1.0.1
+ - [psr/http-message](https://packagist.org/packages/psr/http-message) 1.0.1
     under the MIT license
 
- - psr/log 1.1.3
+ - [psr/log](https://packagist.org/packages/psr/log) 1.1.3
     under the MIT license
 
- - psr/simple-cache 1.0.1
+ - [psr/simple-cache](https://packagist.org/packages/psr/simple-cache) 1.0.1
     under the MIT license
 
- - psy/psysh v0.9.12
+ - [psy/psysh](https://packagist.org/packages/psy/psysh) v0.9.12
     under the MIT license
 
- - ralouphie/getallheaders 3.0.3
+ - [ralouphie/getallheaders](https://packagist.org/packages/ralouphie/getallheaders) 3.0.3
     under the MIT license
 
- - ramsey/uuid 3.9.3
+ - [ramsey/uuid](https://packagist.org/packages/ramsey/uuid) 3.9.3
     under the MIT license
 
- - rap2hpoutre/laravel-log-viewer v1.7.0
+ - [rap2hpoutre/laravel-log-viewer](https://packagist.org/packages/rap2hpoutre/laravel-log-viewer) v1.7.0
     under the MIT license
 
- - react/promise v2.8.0
+ - [react/promise](https://packagist.org/packages/react/promise) v2.8.0
     under the MIT license
 
- - sebastian/code-unit-reverse-lookup 1.0.2
+ - [sebastian/code-unit-reverse-lookup](https://packagist.org/packages/sebastian/code-unit-reverse-lookup) 1.0.2
     under the BSD-3-Clause license
 
- - sebastian/comparator 3.0.3
+ - [sebastian/comparator](https://packagist.org/packages/sebastian/comparator) 3.0.3
     under the BSD-3-Clause license
 
- - sebastian/diff 3.0.3
+ - [sebastian/diff](https://packagist.org/packages/sebastian/diff) 3.0.3
     under the BSD-3-Clause license
 
- - sebastian/environment 4.2.4
+ - [sebastian/environment](https://packagist.org/packages/sebastian/environment) 4.2.4
     under the BSD-3-Clause license
 
- - sebastian/exporter 3.1.3
+ - [sebastian/exporter](https://packagist.org/packages/sebastian/exporter) 3.1.3
     under the BSD-3-Clause license
 
- - sebastian/global-state 2.0.0
+ - [sebastian/global-state](https://packagist.org/packages/sebastian/global-state) 2.0.0
     under the BSD-3-Clause license
 
- - sebastian/object-enumerator 3.0.4
+ - [sebastian/object-enumerator](https://packagist.org/packages/sebastian/object-enumerator) 3.0.4
     under the BSD-3-Clause license
 
- - sebastian/object-reflector 1.1.2
+ - [sebastian/object-reflector](https://packagist.org/packages/sebastian/object-reflector) 1.1.2
     under the BSD-3-Clause license
 
- - sebastian/recursion-context 3.0.1
+ - [sebastian/recursion-context](https://packagist.org/packages/sebastian/recursion-context) 3.0.1
     under the BSD-3-Clause license
 
- - sebastian/resource-operations 2.0.2
+ - [sebastian/resource-operations](https://packagist.org/packages/sebastian/resource-operations) 2.0.2
     under the BSD-3-Clause license
 
- - sebastian/version 2.0.1
+ - [sebastian/version](https://packagist.org/packages/sebastian/version) 2.0.1
     under the BSD-3-Clause license
 
- - seld/jsonlint 1.8.3
+ - [seld/jsonlint](https://packagist.org/packages/seld/jsonlint) 1.8.3
     under the MIT license
 
- - seld/phar-utils 1.1.1
+ - [seld/phar-utils](https://packagist.org/packages/seld/phar-utils) 1.1.1
     under the MIT license
 
- - setasign/fpdi v2.3.6
+ - [setasign/fpdi](https://packagist.org/packages/setasign/fpdi) v2.3.6
     under the MIT license
 
- - shetabit/visitor 2.2.0
+ - [shetabit/visitor](https://packagist.org/packages/shetabit/visitor) 2.2.0
     under the MIT license
 
- - simplesoftwareio/simple-qrcode 4.2.0
+ - [simplesoftwareio/simple-qrcode](https://packagist.org/packages/simplesoftwareio/simple-qrcode) 4.2.0
     under the MIT license
 
- - spatie/db-dumper 2.21.1
+ - [spatie/db-dumper](https://packagist.org/packages/spatie/db-dumper) 2.21.1
     under the MIT license
 
- - spatie/laravel-backup 6.15.0
+ - [spatie/laravel-backup](https://packagist.org/packages/spatie/laravel-backup) 6.15.0
     under the MIT license
 
- - spatie/laravel-permission 3.18.0
+ - [spatie/laravel-permission](https://packagist.org/packages/spatie/laravel-permission) 3.18.0
     under the MIT license
 
- - spatie/temporary-directory 1.3.0
+ - [spatie/temporary-directory](https://packagist.org/packages/spatie/temporary-directory) 1.3.0
     under the MIT license
 
- - squareboat/sneaker v5.0.3
+ - [squareboat/sneaker](https://packagist.org/packages/squareboat/sneaker) v5.0.3
     under the MIT license
 
- - staudenmeir/belongs-to-through v2.9.1
+ - [staudenmeir/belongs-to-through](https://packagist.org/packages/staudenmeir/belongs-to-through) v2.9.1
     under the MIT license
 
- - swiftmailer/swiftmailer v6.2.6
+ - [swiftmailer/swiftmailer](https://packagist.org/packages/swiftmailer/swiftmailer) v6.2.6
     under the MIT license
 
- - symfony/console v4.4.20
+ - [symfony/console](https://packagist.org/packages/symfony/console) v4.4.20
     under the MIT license
 
- - symfony/css-selector v5.2.4
+ - [symfony/css-selector](https://packagist.org/packages/symfony/css-selector) v5.2.4
     under the MIT license
 
- - symfony/debug v4.4.20
+ - [symfony/debug](https://packagist.org/packages/symfony/debug) v4.4.20
     under the MIT license
 
- - symfony/deprecation-contracts v2.2.0
+ - [symfony/deprecation-contracts](https://packagist.org/packages/symfony/deprecation-contracts) v2.2.0
     under the MIT license
 
- - symfony/error-handler v4.4.20
+ - [symfony/error-handler](https://packagist.org/packages/symfony/error-handler) v4.4.20
     under the MIT license
 
- - symfony/event-dispatcher v4.4.20
+ - [symfony/event-dispatcher](https://packagist.org/packages/symfony/event-dispatcher) v4.4.20
     under the MIT license
 
- - symfony/event-dispatcher-contracts v1.1.9
+ - [symfony/event-dispatcher-contracts](https://packagist.org/packages/symfony/event-dispatcher-contracts) v1.1.9
     under the MIT license
 
- - symfony/filesystem v5.2.4
+ - [symfony/filesystem](https://packagist.org/packages/symfony/filesystem) v5.2.4
     under the MIT license
 
- - symfony/finder v4.4.20
+ - [symfony/finder](https://packagist.org/packages/symfony/finder) v4.4.20
     under the MIT license
 
- - symfony/http-client-contracts v2.3.1
+ - [symfony/http-client-contracts](https://packagist.org/packages/symfony/http-client-contracts) v2.3.1
     under the MIT license
 
- - symfony/http-foundation v4.4.20
+ - [symfony/http-foundation](https://packagist.org/packages/symfony/http-foundation) v4.4.20
     under the MIT license
 
- - symfony/http-kernel v4.4.20
+ - [symfony/http-kernel](https://packagist.org/packages/symfony/http-kernel) v4.4.20
     under the MIT license
 
- - symfony/mime v5.2.4
+ - [symfony/mime](https://packagist.org/packages/symfony/mime) v5.2.4
     under the MIT license
 
- - symfony/polyfill-ctype v1.22.1
+ - [symfony/polyfill-ctype](https://packagist.org/packages/symfony/polyfill-ctype) v1.22.1
     under the MIT license
 
- - symfony/polyfill-iconv v1.22.1
+ - [symfony/polyfill-iconv](https://packagist.org/packages/symfony/polyfill-iconv) v1.22.1
     under the MIT license
 
- - symfony/polyfill-intl-idn v1.22.1
+ - [symfony/polyfill-intl-idn](https://packagist.org/packages/symfony/polyfill-intl-idn) v1.22.1
     under the MIT license
 
- - symfony/polyfill-intl-normalizer v1.22.1
+ - [symfony/polyfill-intl-normalizer](https://packagist.org/packages/symfony/polyfill-intl-normalizer) v1.22.1
     under the MIT license
 
- - symfony/polyfill-mbstring v1.22.1
+ - [symfony/polyfill-mbstring](https://packagist.org/packages/symfony/polyfill-mbstring) v1.22.1
     under the MIT license
 
- - symfony/polyfill-php72 v1.22.1
+ - [symfony/polyfill-php72](https://packagist.org/packages/symfony/polyfill-php72) v1.22.1
     under the MIT license
 
- - symfony/polyfill-php73 v1.22.1
+ - [symfony/polyfill-php73](https://packagist.org/packages/symfony/polyfill-php73) v1.22.1
     under the MIT license
 
- - symfony/polyfill-php80 v1.22.1
+ - [symfony/polyfill-php80](https://packagist.org/packages/symfony/polyfill-php80) v1.22.1
     under the MIT license
 
- - symfony/process v4.4.20
+ - [symfony/process](https://packagist.org/packages/symfony/process) v4.4.20
     under the MIT license
 
- - symfony/routing v4.4.20
+ - [symfony/routing](https://packagist.org/packages/symfony/routing) v4.4.20
     under the MIT license
 
- - symfony/service-contracts v2.2.0
+ - [symfony/service-contracts](https://packagist.org/packages/symfony/service-contracts) v2.2.0
     under the MIT license
 
- - symfony/translation v4.4.20
+ - [symfony/translation](https://packagist.org/packages/symfony/translation) v4.4.20
     under the MIT license
 
- - symfony/translation-contracts v2.3.0
+ - [symfony/translation-contracts](https://packagist.org/packages/symfony/translation-contracts) v2.3.0
     under the MIT license
 
- - symfony/var-dumper v4.4.20
+ - [symfony/var-dumper](https://packagist.org/packages/symfony/var-dumper) v4.4.20
     under the MIT license
 
- - theseer/tokenizer 1.2.0
+ - [theseer/tokenizer](https://packagist.org/packages/theseer/tokenizer) 1.2.0
     under the BSD-3-Clause license
 
- - thybag/php-sharepoint-lists-api dev-master 7b0d6dc
+ - [thybag/php-sharepoint-lists-api](https://packagist.org/packages/thybag/php-sharepoint-lists-api) dev-master 7b0d6dc
     under the MIT license
 
- - tightenco/ziggy v1.0.5
+ - [tightenco/ziggy](https://packagist.org/packages/tightenco/ziggy) v1.0.5
     under the MIT license
 
- - tijsverkoyen/css-to-inline-styles 2.2.3
+ - [tijsverkoyen/css-to-inline-styles](https://packagist.org/packages/tijsverkoyen/css-to-inline-styles) 2.2.3
     under the BSD-3-Clause license
 
- - ua-parser/uap-php v3.9.14
+ - [ua-parser/uap-php](https://packagist.org/packages/ua-parser/uap-php) v3.9.14
     under the MIT license
 
- - ukfast/laravel-health-check v1.10.0
+ - [ukfast/laravel-health-check](https://packagist.org/packages/ukfast/laravel-health-check) v1.10.0
     under the MIT license
 
- - venturecraft/revisionable 1.37.0
+ - [venturecraft/revisionable](https://packagist.org/packages/venturecraft/revisionable) 1.37.0
     under the MIT license
 
- - vlucas/phpdotenv v3.6.8
+ - [vlucas/phpdotenv](https://packagist.org/packages/vlucas/phpdotenv) v3.6.8
     under the BSD-3-Clause license
 
- - webmozart/assert 1.9.1
+ - [webmozart/assert](https://packagist.org/packages/webmozart/assert) 1.9.1
     under the MIT license
 
- - zendframework/zend-escaper 2.6.1
+ - [zendframework/zend-escaper](https://packagist.org/packages/zendframework/zend-escaper) 2.6.1
     under the BSD-3-Clause license
 
 
 
 ## Node packages
 
- -  babel/code-frame
+ - [](https://github.com/babel/babel) babel/code-frame
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/compat-data
+ - [](https://github.com/babel/babel) babel/compat-data
     by The Babel Team
     under the MIT license
 
- -  babel/core
+ - [](https://github.com/babel/babel) babel/core
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/generator
+ - [](https://github.com/babel/babel) babel/generator
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/helper-annotate-as-pure
+ - [](https://github.com/babel/babel) babel/helper-annotate-as-pure
     under the MIT license
 
- -  babel/helper-builder-binary-assignment-operator-visitor
+ - [](https://github.com/babel/babel) babel/helper-builder-binary-assignment-operator-visitor
     under the MIT license
 
- -  babel/helper-compilation-targets
+ - [](https://github.com/babel/babel) babel/helper-compilation-targets
     by The Babel Team
     under the MIT license
 
- -  babel/helper-create-class-features-plugin
+ - [](https://github.com/babel/babel) babel/helper-create-class-features-plugin
     by The Babel Team
     under the MIT license
 
- -  babel/helper-create-regexp-features-plugin
+ - [](https://github.com/babel/babel) babel/helper-create-regexp-features-plugin
     by The Babel Team
     under the MIT license
 
- -  babel/helper-define-polyfill-provider
+ - [](https://github.com/babel/babel-polyfills) babel/helper-define-polyfill-provider
     under the MIT license
 
- -  babel/helper-explode-assignable-expression
+ - [](https://github.com/babel/babel) babel/helper-explode-assignable-expression
     under the MIT license
 
- -  babel/helper-function-name
+ - [](https://github.com/babel/babel) babel/helper-function-name
     under the MIT license
 
- -  babel/helper-get-function-arity
+ - [](https://github.com/babel/babel) babel/helper-get-function-arity
     under the MIT license
 
- -  babel/helper-hoist-variables
+ - [](https://github.com/babel/babel) babel/helper-hoist-variables
     under the MIT license
 
- -  babel/helper-member-expression-to-functions
+ - [](https://github.com/babel/babel) babel/helper-member-expression-to-functions
     by Justin Ridgewell (justin@ridgewell.name)
     under the MIT license
 
- -  babel/helper-module-imports
+ - [](https://github.com/babel/babel) babel/helper-module-imports
     by Logan Smyth (loganfsmyth@gmail.com)
     under the MIT license
 
- -  babel/helper-module-transforms
+ - [](https://github.com/babel/babel) babel/helper-module-transforms
     by Logan Smyth (loganfsmyth@gmail.com)
     under the MIT license
 
- -  babel/helper-optimise-call-expression
+ - [](https://github.com/babel/babel) babel/helper-optimise-call-expression
     under the MIT license
 
- -  babel/helper-plugin-utils
+ - [](https://github.com/babel/babel) babel/helper-plugin-utils
     by Logan Smyth (loganfsmyth@gmail.com)
     under the MIT license
 
- -  babel/helper-remap-async-to-generator
+ - [](https://github.com/babel/babel) babel/helper-remap-async-to-generator
     under the MIT license
 
- -  babel/helper-replace-supers
+ - [](https://github.com/babel/babel) babel/helper-replace-supers
     under the MIT license
 
- -  babel/helper-simple-access
+ - [](https://github.com/babel/babel) babel/helper-simple-access
     by Logan Smyth (loganfsmyth@gmail.com)
     under the MIT license
 
- -  babel/helper-skip-transparent-expression-wrappers
+ - [](https://github.com/babel/babel) babel/helper-skip-transparent-expression-wrappers
     under the MIT license
 
- -  babel/helper-split-export-declaration
+ - [](https://github.com/babel/babel) babel/helper-split-export-declaration
     under the MIT license
 
- -  babel/helper-validator-identifier
+ - [](https://github.com/babel/babel) babel/helper-validator-identifier
     under the MIT license
 
- -  babel/helper-validator-option
+ - [](https://github.com/babel/babel) babel/helper-validator-option
     under the MIT license
 
- -  babel/helper-wrap-function
+ - [](https://github.com/babel/babel) babel/helper-wrap-function
     under the MIT license
 
- -  babel/helpers
+ - [](https://github.com/babel/babel) babel/helpers
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/highlight
+ - [](https://github.com/babel/babel) babel/highlight
     by suchipi (me@suchipi.com)
     under the MIT license
 
- -  babel/parser
+ - [](https://github.com/babel/babel) babel/parser
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining
+ - [](https://github.com/babel/babel) babel/plugin-bugfix-v8-spread-parameters-in-optional-chaining
     under the MIT license
 
- -  babel/plugin-proposal-async-generator-functions
+ - [](https://github.com/babel/babel) babel/plugin-proposal-async-generator-functions
     under the MIT license
 
- -  babel/plugin-proposal-class-properties
+ - [](https://github.com/babel/babel) babel/plugin-proposal-class-properties
     under the MIT license
 
- -  babel/plugin-proposal-class-static-block
+ - [](https://github.com/babel/babel) babel/plugin-proposal-class-static-block
     under the MIT license
 
- -  babel/plugin-proposal-dynamic-import
+ - [](https://github.com/babel/babel) babel/plugin-proposal-dynamic-import
     under the MIT license
 
- -  babel/plugin-proposal-export-namespace-from
+ - [](https://github.com/babel/babel) babel/plugin-proposal-export-namespace-from
     under the MIT license
 
- -  babel/plugin-proposal-json-strings
+ - [](https://github.com/babel/babel) babel/plugin-proposal-json-strings
     under the MIT license
 
- -  babel/plugin-proposal-logical-assignment-operators
+ - [](https://github.com/babel/babel) babel/plugin-proposal-logical-assignment-operators
     under the MIT license
 
- -  babel/plugin-proposal-nullish-coalescing-operator
+ - [](https://github.com/babel/babel) babel/plugin-proposal-nullish-coalescing-operator
     under the MIT license
 
- -  babel/plugin-proposal-numeric-separator
+ - [](https://github.com/babel/babel) babel/plugin-proposal-numeric-separator
     under the MIT license
 
- -  babel/plugin-proposal-object-rest-spread
+ - [](https://github.com/babel/babel) babel/plugin-proposal-object-rest-spread
     under the MIT license
 
- -  babel/plugin-proposal-optional-catch-binding
+ - [](https://github.com/babel/babel) babel/plugin-proposal-optional-catch-binding
     under the MIT license
 
- -  babel/plugin-proposal-optional-chaining
+ - [](https://github.com/babel/babel) babel/plugin-proposal-optional-chaining
     under the MIT license
 
- -  babel/plugin-proposal-private-methods
+ - [](https://github.com/babel/babel) babel/plugin-proposal-private-methods
     under the MIT license
 
- -  babel/plugin-proposal-private-property-in-object
+ - [](https://github.com/babel/babel) babel/plugin-proposal-private-property-in-object
     under the MIT license
 
- -  babel/plugin-proposal-unicode-property-regex
+ - [](https://github.com/babel/babel) babel/plugin-proposal-unicode-property-regex
     under the MIT license
 
- -  babel/plugin-syntax-async-generators
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-async-generators) babel/plugin-syntax-async-generators
     under the MIT license
 
- -  babel/plugin-syntax-class-properties
+ - [](https://github.com/babel/babel) babel/plugin-syntax-class-properties
     under the MIT license
 
- -  babel/plugin-syntax-class-static-block
+ - [](https://github.com/babel/babel) babel/plugin-syntax-class-static-block
     under the MIT license
 
- -  babel/plugin-syntax-dynamic-import
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-dynamic-import) babel/plugin-syntax-dynamic-import
     under the MIT license
 
- -  babel/plugin-syntax-export-namespace-from
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-export-namespace-from) babel/plugin-syntax-export-namespace-from
     under the MIT license
 
- -  babel/plugin-syntax-json-strings
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-json-strings) babel/plugin-syntax-json-strings
     under the MIT license
 
- -  babel/plugin-syntax-logical-assignment-operators
+ - [](https://github.com/babel/babel) babel/plugin-syntax-logical-assignment-operators
     under the MIT license
 
- -  babel/plugin-syntax-nullish-coalescing-operator
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-nullish-coalescing-operator) babel/plugin-syntax-nullish-coalescing-operator
     under the MIT license
 
- -  babel/plugin-syntax-numeric-separator
+ - [](https://github.com/babel/babel) babel/plugin-syntax-numeric-separator
     under the MIT license
 
- -  babel/plugin-syntax-object-rest-spread
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-object-rest-spread) babel/plugin-syntax-object-rest-spread
     under the MIT license
 
- -  babel/plugin-syntax-optional-catch-binding
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-optional-catch-binding) babel/plugin-syntax-optional-catch-binding
     under the MIT license
 
- -  babel/plugin-syntax-optional-chaining
+ - [](https://github.com/babel/babel/tree/master/packages/babel-plugin-syntax-optional-chaining) babel/plugin-syntax-optional-chaining
     under the MIT license
 
- -  babel/plugin-syntax-private-property-in-object
+ - [](https://github.com/babel/babel) babel/plugin-syntax-private-property-in-object
     under the MIT license
 
- -  babel/plugin-syntax-top-level-await
+ - [](https://github.com/babel/babel) babel/plugin-syntax-top-level-await
     under the MIT license
 
- -  babel/plugin-transform-arrow-functions
+ - [](https://github.com/babel/babel) babel/plugin-transform-arrow-functions
     under the MIT license
 
- -  babel/plugin-transform-async-to-generator
+ - [](https://github.com/babel/babel) babel/plugin-transform-async-to-generator
     under the MIT license
 
- -  babel/plugin-transform-block-scoped-functions
+ - [](https://github.com/babel/babel) babel/plugin-transform-block-scoped-functions
     under the MIT license
 
- -  babel/plugin-transform-block-scoping
+ - [](https://github.com/babel/babel) babel/plugin-transform-block-scoping
     under the MIT license
 
- -  babel/plugin-transform-classes
+ - [](https://github.com/babel/babel) babel/plugin-transform-classes
     under the MIT license
 
- -  babel/plugin-transform-computed-properties
+ - [](https://github.com/babel/babel) babel/plugin-transform-computed-properties
     under the MIT license
 
- -  babel/plugin-transform-destructuring
+ - [](https://github.com/babel/babel) babel/plugin-transform-destructuring
     under the MIT license
 
- -  babel/plugin-transform-dotall-regex
+ - [](https://github.com/babel/babel) babel/plugin-transform-dotall-regex
     under the MIT license
 
- -  babel/plugin-transform-duplicate-keys
+ - [](https://github.com/babel/babel) babel/plugin-transform-duplicate-keys
     under the MIT license
 
- -  babel/plugin-transform-exponentiation-operator
+ - [](https://github.com/babel/babel) babel/plugin-transform-exponentiation-operator
     under the MIT license
 
- -  babel/plugin-transform-for-of
+ - [](https://github.com/babel/babel) babel/plugin-transform-for-of
     under the MIT license
 
- -  babel/plugin-transform-function-name
+ - [](https://github.com/babel/babel) babel/plugin-transform-function-name
     under the MIT license
 
- -  babel/plugin-transform-literals
+ - [](https://github.com/babel/babel) babel/plugin-transform-literals
     under the MIT license
 
- -  babel/plugin-transform-member-expression-literals
+ - [](https://github.com/babel/babel) babel/plugin-transform-member-expression-literals
     under the MIT license
 
- -  babel/plugin-transform-modules-amd
+ - [](https://github.com/babel/babel) babel/plugin-transform-modules-amd
     under the MIT license
 
- -  babel/plugin-transform-modules-commonjs
+ - [](https://github.com/babel/babel) babel/plugin-transform-modules-commonjs
     under the MIT license
 
- -  babel/plugin-transform-modules-systemjs
+ - [](https://github.com/babel/babel) babel/plugin-transform-modules-systemjs
     under the MIT license
 
- -  babel/plugin-transform-modules-umd
+ - [](https://github.com/babel/babel) babel/plugin-transform-modules-umd
     under the MIT license
 
- -  babel/plugin-transform-named-capturing-groups-regex
+ - [](https://github.com/babel/babel) babel/plugin-transform-named-capturing-groups-regex
     under the MIT license
 
- -  babel/plugin-transform-new-target
+ - [](https://github.com/babel/babel) babel/plugin-transform-new-target
     under the MIT license
 
- -  babel/plugin-transform-object-super
+ - [](https://github.com/babel/babel) babel/plugin-transform-object-super
     under the MIT license
 
- -  babel/plugin-transform-parameters
+ - [](https://github.com/babel/babel) babel/plugin-transform-parameters
     under the MIT license
 
- -  babel/plugin-transform-property-literals
+ - [](https://github.com/babel/babel) babel/plugin-transform-property-literals
     under the MIT license
 
- -  babel/plugin-transform-regenerator
+ - [](https://github.com/babel/babel) babel/plugin-transform-regenerator
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- -  babel/plugin-transform-reserved-words
+ - [](https://github.com/babel/babel) babel/plugin-transform-reserved-words
     under the MIT license
 
- -  babel/plugin-transform-runtime
+ - [](https://github.com/babel/babel) babel/plugin-transform-runtime
     under the MIT license
 
- -  babel/plugin-transform-shorthand-properties
+ - [](https://github.com/babel/babel) babel/plugin-transform-shorthand-properties
     under the MIT license
 
- -  babel/plugin-transform-spread
+ - [](https://github.com/babel/babel) babel/plugin-transform-spread
     under the MIT license
 
- -  babel/plugin-transform-sticky-regex
+ - [](https://github.com/babel/babel) babel/plugin-transform-sticky-regex
     under the MIT license
 
- -  babel/plugin-transform-template-literals
+ - [](https://github.com/babel/babel) babel/plugin-transform-template-literals
     under the MIT license
 
- -  babel/plugin-transform-typeof-symbol
+ - [](https://github.com/babel/babel) babel/plugin-transform-typeof-symbol
     under the MIT license
 
- -  babel/plugin-transform-unicode-escapes
+ - [](https://github.com/babel/babel) babel/plugin-transform-unicode-escapes
     under the MIT license
 
- -  babel/plugin-transform-unicode-regex
+ - [](https://github.com/babel/babel) babel/plugin-transform-unicode-regex
     under the MIT license
 
- -  babel/preset-env
+ - [](https://github.com/babel/babel) babel/preset-env
     by Henry Zhu (hi@henryzoo.com)
     under the MIT license
 
  -  babel/preset-modules
     under the MIT license
 
- -  babel/runtime
+ - [](https://github.com/babel/babel) babel/runtime
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/template
+ - [](https://github.com/babel/babel) babel/template
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/traverse
+ - [](https://github.com/babel/babel) babel/traverse
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  babel/types
+ - [](https://github.com/babel/babel) babel/types
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- -  commitlint/cli
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/cli
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/config-conventional
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/config-conventional
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/ensure
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/ensure
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/execute-rule
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/execute-rule
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/format
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/format
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/is-ignored
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/is-ignored
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/lint
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/lint
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/load
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/load
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/message
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/message
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/parse
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/parse
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/read
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/read
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/resolve-extends
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/resolve-extends
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/rules
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/rules
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/to-lines
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/to-lines
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/top-level
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/top-level
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  commitlint/types
+ - [](https://github.com/conventional-changelog/commitlint) commitlint/types
     by Mario Nebl (hello@herebecode.com)
     under the MIT license
 
- -  fortawesome/fontawesome-free
+ - [](https://github.com/FortAwesome/Font-Awesome) fortawesome/fontawesome-free
     by Dave Gandy (dave@fontawesome.com)
     under the (CC-BY-4.0 AND OFL-1.1 AND MIT) license
 
- -  inertiajs/inertia-vue
+ - [](https://github.com/inertiajs/inertia) inertiajs/inertia-vue
     under the MIT license
 
- -  inertiajs/inertia
+ - [](https://github.com/inertiajs/inertia) inertiajs/inertia
     under the MIT license
 
  -  inertiajs/progress
     under the MIT license
 
- -  isneezy/vue-selectize
+ - [](https://github.com/isneezy/vue-selectize) isneezy/vue-selectize
     by Ivan Vilanculo (vilanculoivan@gmail.com)
     under the MIT license
 
- -  lgaitan/pace-progress
+ - [](https://github.com/lgaitan/pace) lgaitan/pace-progress
     under the MIT license
 
- -  mrmlnc/readdir-enhanced
+ - [](https://github.com/bigstickcarpet/readdir-enhanced) mrmlnc/readdir-enhanced
     by James Messinger
     under the MIT license
 
- -  nodelib/fs.stat
+ - [](https://github.com/nodelib/nodelib/tree/master/packages/fs/fs.stat) nodelib/fs.stat
     under the MIT license
 
- -  sweetalert2/theme-bootstrap-4
+ - [](https://github.com/sweetalert2/sweetalert2-themes) sweetalert2/theme-bootstrap-4
     under the MIT license
 
- -  ttskch/select2-bootstrap4-theme
+ - [](https://github.com/ttskch/select2-bootstrap4-theme) ttskch/select2-bootstrap4-theme
     by Takashi Kanemoto (ttskch@gmail.com)
     under the MIT license
 
- -  types/glob
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/glob
     under the MIT license
 
- -  types/json-schema
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/json-schema
     under the MIT license
 
- -  types/minimatch
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/minimatch
     under the MIT license
 
- -  types/minimist
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/minimist
     under the MIT license
 
- -  types/node
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/node
     under the MIT license
 
- -  types/normalize-package-data
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/normalize-package-data
     under the MIT license
 
- -  types/parse-json
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/parse-json
     under the MIT license
 
- -  types/q
+ - [](https://github.com/DefinitelyTyped/DefinitelyTyped) types/q
     under the MIT license
 
- -  vue/component-compiler-utils
+ - [](https://github.com/vuejs/component-compiler-utils) vue/component-compiler-utils
     by Evan You
     under the MIT license
 
- -  webassemblyjs/ast
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/ast
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/floating-point-hex-parser
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/floating-point-hex-parser
     by Mauro Bringolf
     under the MIT license
 
@@ -957,11 +957,11 @@ Pfarrplaner uses the following open-source libraries:
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/helper-buffer
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/helper-buffer
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/helper-code-frame
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/helper-code-frame
     by Sven Sauleau
     under the MIT license
 
@@ -969,15 +969,15 @@ Pfarrplaner uses the following open-source libraries:
     by Mauro Bringolf
     under the ISC license
 
- -  webassemblyjs/helper-module-context
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/helper-module-context
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/helper-wasm-bytecode
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/helper-wasm-bytecode
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/helper-wasm-section
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/helper-wasm-section
     by Sven Sauleau
     under the MIT license
 
@@ -987,960 +987,960 @@ Pfarrplaner uses the following open-source libraries:
  -  webassemblyjs/leb128
     under the MIT license
 
- -  webassemblyjs/utf8
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/utf8
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/wasm-edit
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/wasm-edit
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/wasm-gen
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/wasm-gen
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/wasm-opt
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/wasm-opt
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/wasm-parser
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/wasm-parser
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/wast-parser
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/wast-parser
     by Sven Sauleau
     under the MIT license
 
- -  webassemblyjs/wast-printer
+ - [](https://github.com/xtuc/webassemblyjs) webassemblyjs/wast-printer
     by Sven Sauleau
     under the MIT license
 
- -  xtuc/ieee754
+ - [](https://github.com/feross/ieee754) xtuc/ieee754
     by Feross Aboukhadijeh (feross@feross.org)
     under the BSD-3-Clause license
 
- -  xtuc/long
+ - [](https://github.com/dcodeIO/long.js) xtuc/long
     by Daniel Wirtz (dcode@dcode.io)
     under the Apache-2.0 license
 
- - JSONStream 1.3.5
+ - [JSONStream](https://github.com/dominictarr/JSONStream) 1.3.5
     by Dominic Tarr (dominic.tarr@gmail.com)
     under the (MIT OR Apache-2.0) license
 
- - accepts 1.3.7
+ - [accepts](https://github.com/jshttp/accepts) 1.3.7
     under the MIT license
 
- - acorn-node 1.8.2
+ - [acorn-node](https://github.com/browserify/acorn-node) 1.8.2
     by Renée Kooi (renee@kooi.me)
     under the Apache-2.0 license
 
- - acorn-walk 7.2.0
+ - [acorn-walk](https://github.com/acornjs/acorn) 7.2.0
     under the MIT license
 
- - acorn 6.4.2
+ - [acorn](https://github.com/acornjs/acorn) 6.4.2
     under the MIT license
 
- - acorn 7.4.1
+ - [acorn](https://github.com/acornjs/acorn) 7.4.1
     under the MIT license
 
- - add-stream 1.0.0
+ - [add-stream](https://github.com/wilsonjackson/add-stream) 1.0.0
     by Majid Burney (moocow@euphoricsoup.com)
     under the MIT license
 
- - adjust-sourcemap-loader 1.2.0
+ - [adjust-sourcemap-loader](https://github.com/bholloway/adjust-sourcemap-loader) 1.2.0
     by bholloway
     under the MIT license
 
- - admin-lte 3.1.0
+ - [admin-lte](https://github.com/ColorlibHQ/AdminLTE) 3.1.0
     by Colorlib (https://colorlib.com)
     under the MIT license
 
- - ajv-errors 1.0.1
+ - [ajv-errors](https://github.com/epoberezkin/ajv-errors) 1.0.1
     under the MIT license
 
- - ajv-keywords 3.5.2
+ - [ajv-keywords](https://github.com/epoberezkin/ajv-keywords) 3.5.2
     by Evgeny Poberezkin
     under the MIT license
 
- - ajv 6.12.6
+ - [ajv](https://github.com/ajv-validator/ajv) 6.12.6
     by Evgeny Poberezkin
     under the MIT license
 
- - alphanum-sort 1.0.2
+ - [alphanum-sort](https://github.com/TrySound/alphanum-sort) 1.0.2
     by Bogdan Chadkin (trysound@yandex.ru)
     under the MIT license
 
- - amdefine 1.0.1
+ - [amdefine](https://github.com/jrburke/amdefine) 1.0.1
     by James Burke (jrburke@gmail.com)
     under the BSD-3-Clause OR MIT license
 
- - ansi-colors 3.2.4
+ - [ansi-colors](https://github.com/doowb/ansi-colors) 3.2.4
     by Brian Woodward
     under the MIT license
 
- - ansi-html 0.0.7
+ - [ansi-html](https://github.com/Tjatse/ansi-html) 0.0.7
     by Tjatse
     under the Apache-2.0 license
 
- - ansi-regex 2.1.1
+ - [ansi-regex](https://github.com/chalk/ansi-regex) 2.1.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ansi-regex 3.0.0
+ - [ansi-regex](https://github.com/chalk/ansi-regex) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ansi-regex 4.1.0
+ - [ansi-regex](https://github.com/chalk/ansi-regex) 4.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ansi-regex 5.0.0
+ - [ansi-regex](https://github.com/chalk/ansi-regex) 5.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ansi-styles 2.2.1
+ - [ansi-styles](https://github.com/chalk/ansi-styles) 2.2.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ansi-styles 3.2.1
+ - [ansi-styles](https://github.com/chalk/ansi-styles) 3.2.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ansi-styles 4.3.0
+ - [ansi-styles](https://github.com/chalk/ansi-styles) 4.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ansicolors 0.2.1
+ - [ansicolors](https://github.com/thlorenz/ansicolors) 0.2.1
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - anymatch 2.0.0
+ - [anymatch](https://github.com/micromatch/anymatch) 2.0.0
     by Elan Shanker
     under the ISC license
 
- - anymatch 3.1.2
+ - [anymatch](https://github.com/micromatch/anymatch) 3.1.2
     by Elan Shanker
     under the ISC license
 
- - aproba 1.2.0
+ - [aproba](https://github.com/iarna/aproba) 1.2.0
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - argparse 1.0.10
+ - [argparse](https://github.com/nodeca/argparse) 1.0.10
     under the MIT license
 
- - arr-diff 4.0.0
+ - [arr-diff](https://github.com/jonschlinkert/arr-diff) 4.0.0
     by Jon Schlinkert
     under the MIT license
 
- - arr-flatten 1.1.0
+ - [arr-flatten](https://github.com/jonschlinkert/arr-flatten) 1.1.0
     by Jon Schlinkert
     under the MIT license
 
- - arr-union 3.1.0
+ - [arr-union](https://github.com/jonschlinkert/arr-union) 3.1.0
     by Jon Schlinkert
     under the MIT license
 
- - array-find-index 1.0.2
+ - [array-find-index](https://github.com/sindresorhus/array-find-index) 1.0.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - array-flatten 1.1.1
+ - [array-flatten](https://github.com/blakeembrey/array-flatten) 1.1.1
     by Blake Embrey (hello@blakeembrey.com)
     under the MIT license
 
- - array-flatten 2.1.2
+ - [array-flatten](https://github.com/blakeembrey/array-flatten) 2.1.2
     by Blake Embrey (hello@blakeembrey.com)
     under the MIT license
 
- - array-from 2.1.1
+ - [array-from](https://github.com/studio-b12/array-from) 2.1.1
     under the MIT license
 
- - array-ify 1.0.0
+ - [array-ify](https://github.com/stevemao/array-ify) 1.0.0
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - array-union 1.0.2
+ - [array-union](https://github.com/sindresorhus/array-union) 1.0.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - array-uniq 1.0.3
+ - [array-uniq](https://github.com/sindresorhus/array-uniq) 1.0.3
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - array-unique 0.3.2
+ - [array-unique](https://github.com/jonschlinkert/array-unique) 0.3.2
     by Jon Schlinkert
     under the MIT license
 
- - arrify 1.0.1
+ - [arrify](https://github.com/sindresorhus/arrify) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - asn1.js 5.4.1
+ - [asn1.js](https://github.com/indutny/asn1.js) 5.4.1
     by Fedor Indutny
     under the MIT license
 
- - assert 1.5.0
+ - [assert](https://github.com/browserify/commonjs-assert) 1.5.0
     under the MIT license
 
- - assign-symbols 1.0.0
+ - [assign-symbols](https://github.com/jonschlinkert/assign-symbols) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - ast-transform 0.0.0
+ - [ast-transform](https://github.com/hughsk/ast-transform) 0.0.0
     by Hugh Kennedy (hughskennedy@gmail.com)
     under the MIT license
 
- - ast-types 0.7.8
+ - [ast-types](https://github.com/benjamn/ast-types) 0.7.8
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- - ast-types 0.9.6
+ - [ast-types](https://github.com/benjamn/ast-types) 0.9.6
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- - async-each 1.0.3
+ - [async-each](https://github.com/paulmillr/async-each) 1.0.3
     by Paul Miller
     under the MIT license
 
- - async-limiter 1.0.1
+ - [async-limiter](https://github.com/strml/async-limiter) 1.0.1
     by Samuel Reed
     under the MIT license
 
- - async 2.6.3
+ - [async](https://github.com/caolan/async) 2.6.3
     by Caolan McMahon
     under the MIT license
 
- - at-least-node 1.0.0
+ - [at-least-node](https://github.com/RyanZim/at-least-node) 1.0.0
     by Ryan Zimmerman (opensrc@ryanzim.com)
     under the ISC license
 
- - atob 2.1.2
+ - [atob](git://git.coolaj86.com/coolaj86/atob.js) 2.1.2
     by AJ ONeal (coolaj86@gmail.com)
     under the (MIT OR Apache-2.0) license
 
- - autoprefixer 9.8.6
+ - [autoprefixer](https://github.com/postcss/autoprefixer) 9.8.6
     by Andrey Sitnik (andrey@sitnik.ru)
     under the MIT license
 
- - axios 0.20.0
+ - [axios](https://github.com/axios/axios) 0.20.0
     by Matt Zabriskie
     under the MIT license
 
- - axios 0.21.1
+ - [axios](https://github.com/axios/axios) 0.21.1
     by Matt Zabriskie
     under the MIT license
 
- - babel-code-frame 6.26.0
+ - [babel-code-frame](https://github.com/babel/babel/tree/master/packages/babel-code-frame) 6.26.0
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- - babel-loader 8.2.2
+ - [babel-loader](https://github.com/babel/babel-loader) 8.2.2
     by Luis Couto (hello@luiscouto.pt)
     under the MIT license
 
- - babel-merge 2.0.1
+ - [babel-merge](https://github.com/eliperelman/babel-merge) 2.0.1
     by Eli Perelman (eli@eliperelman.com)
     under the MIT license
 
- - babel-plugin-dynamic-import-node 2.3.3
+ - [babel-plugin-dynamic-import-node](https://github.com/airbnb/babel-plugin-dynamic-import-node) 2.3.3
     by Jordan Gensler (jordan.gensler@airbnb.com)
     under the MIT license
 
- - babel-plugin-polyfill-corejs2 0.2.2
+ - [babel-plugin-polyfill-corejs2](https://github.com/babel/babel-polyfills) 0.2.2
     under the MIT license
 
- - babel-plugin-polyfill-corejs3 0.2.2
+ - [babel-plugin-polyfill-corejs3](https://github.com/babel/babel-polyfills) 0.2.2
     under the MIT license
 
- - babel-plugin-polyfill-regenerator 0.2.2
+ - [babel-plugin-polyfill-regenerator](https://github.com/babel/babel-polyfills) 0.2.2
     under the MIT license
 
- - babel-runtime 6.26.0
+ - [babel-runtime](https://github.com/babel/babel/tree/master/packages/babel-runtime) 6.26.0
     by Sebastian McKenzie (sebmck@gmail.com)
     under the MIT license
 
- - balanced-match 1.0.2
+ - [balanced-match](https://github.com/juliangruber/balanced-match) 1.0.2
     by Julian Gruber (mail@juliangruber.com)
     under the MIT license
 
- - base64-js 0.0.8
+ - [base64-js](https://github.com/beatgammit/base64-js) 0.0.8
     by T. Jameson Little (t.jameson.little@gmail.com)
     under the MIT license
 
- - base64-js 1.5.1
+ - [base64-js](https://github.com/beatgammit/base64-js) 1.5.1
     by T. Jameson Little (t.jameson.little@gmail.com)
     under the MIT license
 
- - base 0.11.2
+ - [base](https://github.com/node-base/base) 0.11.2
     by Jon Schlinkert
     under the MIT license
 
- - batch 0.6.1
+ - [batch](https://github.com/visionmedia/batch) 0.6.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - big.js 5.2.2
+ - [big.js](https://github.com/MikeMcl/big.js) 5.2.2
     by Michael Mclaughlin (M8ch88l@gmail.com)
     under the MIT license
 
- - binary-extensions 1.13.1
+ - [binary-extensions](https://github.com/sindresorhus/binary-extensions) 1.13.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - binary-extensions 2.2.0
+ - [binary-extensions](https://github.com/sindresorhus/binary-extensions) 2.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - bluebird 3.7.2
+ - [bluebird](https://github.com/petkaantonov/bluebird) 3.7.2
     by Petka Antonov (petka_antonov@hotmail.com)
     under the MIT license
 
- - bn.js 4.12.0
+ - [bn.js](https://github.com/indutny/bn.js) 4.12.0
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - bn.js 5.2.0
+ - [bn.js](https://github.com/indutny/bn.js) 5.2.0
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - body-parser 1.19.0
+ - [body-parser](https://github.com/expressjs/body-parser) 1.19.0
     under the MIT license
 
- - bonjour 3.5.0
+ - [bonjour](https://github.com/watson/bonjour) 3.5.0
     by Thomas Watson Steen (w@tson.dk)
     under the MIT license
 
- - boolbase 1.0.0
+ - [boolbase](https://github.com/fb55/boolbase) 1.0.0
     by Felix Boehm (me@feedic.com)
     under the ISC license
 
- - bootstrap-colorpicker 3.3.0
+ - [bootstrap-colorpicker](https://github.com/itsjavi/bootstrap-colorpicker) 3.3.0
     by Javi Aguilar
     under the MIT license
 
- - bootstrap-datepicker 1.9.0
+ - [bootstrap-datepicker](https://github.com/uxsolutions/bootstrap-datepicker) 1.9.0
     by Andrew Rowls (eternicode@gmail.com)
     under the Apache-2.0 license
 
- - bootstrap-slider 11.0.2
+ - [bootstrap-slider](https://github.com/seiyria/bootstrap-slider) 11.0.2
     by bootstrap-slider
     under the MIT license
 
- - bootstrap-switch 3.3.4
+ - [bootstrap-switch](https://github.com/Bttstrp/bootstrap-switch) 3.3.4
     by Mattia Larentis (mattia@larentis.eu)
     under the Apache-2.0 license
 
- - bootstrap4-duallistbox 4.0.2
+ - [bootstrap4-duallistbox](https://github.com/istvan-ujjmeszaros/bootstrap-duallistbox) 4.0.2
     by István Ujj-Mészáros
     under the Apache-2.0 license
 
- - bootstrap 4.6.0
+ - [bootstrap](https://github.com/twbs/bootstrap) 4.6.0
     by The Bootstrap Authors
     under the MIT license
 
- - brace-expansion 1.1.11
+ - [brace-expansion](https://github.com/juliangruber/brace-expansion) 1.1.11
     by Julian Gruber (mail@juliangruber.com)
     under the MIT license
 
- - braces 2.3.2
+ - [braces](https://github.com/micromatch/braces) 2.3.2
     by Jon Schlinkert
     under the MIT license
 
- - braces 3.0.2
+ - [braces](https://github.com/micromatch/braces) 3.0.2
     by Jon Schlinkert
     under the MIT license
 
- - brfs 2.0.2
+ - [brfs](https://github.com/substack/brfs) 2.0.2
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - brorand 1.1.0
+ - [brorand](https://github.com/indutny/brorand) 1.1.0
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - brotli 1.3.2
+ - [brotli](https://github.com/devongovett/brotli.js) 1.3.2
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - browser-resolve 1.11.3
+ - [browser-resolve](https://github.com/shtylman/node-browser-resolve) 1.11.3
     by Roman Shtylman (shtylman@gmail.com)
     under the MIT license
 
- - browserify-aes 1.2.0
+ - [browserify-aes](https://github.com/crypto-browserify/browserify-aes) 1.2.0
     under the MIT license
 
- - browserify-cipher 1.0.1
+ - [browserify-cipher](https://github.com/crypto-browserify/browserify-cipher) 1.0.1
     by Calvin Metcalf (calvin.metcalf@gmail.com)
     under the MIT license
 
- - browserify-des 1.0.2
+ - [browserify-des](https://github.com/crypto-browserify/browserify-des) 1.0.2
     by Calvin Metcalf (calvin.metcalf@gmail.com)
     under the MIT license
 
- - browserify-optional 1.0.1
+ - [browserify-optional](https://github.com/devongovett/browserify-optional) 1.0.1
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - browserify-rsa 4.1.0
+ - [browserify-rsa](https://github.com/crypto-browserify/browserify-rsa) 4.1.0
     under the MIT license
 
- - browserify-sign 4.2.1
+ - [browserify-sign](https://github.com/crypto-browserify/browserify-sign) 4.2.1
     under the ISC license
 
- - browserify-zlib 0.2.0
+ - [browserify-zlib](https://github.com/devongovett/browserify-zlib) 0.2.0
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - browserslist 4.16.6
+ - [browserslist](https://github.com/browserslist/browserslist) 4.16.6
     by Andrey Sitnik (andrey@sitnik.ru)
     under the MIT license
 
- - bs-custom-file-input 1.3.4
+ - [bs-custom-file-input](https://github.com/Johann-S/bs-custom-file-input) 1.3.4
     by Johann-S (johann.servoire@gmail.com)
     under the MIT license
 
- - bs-stepper 1.7.0
+ - [bs-stepper](https://github.com/Johann-S/bs-stepper) 1.7.0
     by Johann-S (johann.servoire@gmail.com)
     under the MIT license
 
- - buffer-equal 0.0.1
+ - [buffer-equal](https://github.com/substack/node-buffer-equal) 0.0.1
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - buffer-from 1.1.1
+ - [buffer-from](https://github.com/LinusU/buffer-from) 1.1.1
     under the MIT license
 
- - buffer-indexof 1.1.1
+ - [buffer-indexof](https://github.com/soldair/node-buffer-indexof) 1.1.1
     by Ryan Day
     under the MIT license
 
- - buffer-xor 1.0.3
+ - [buffer-xor](https://github.com/crypto-browserify/buffer-xor) 1.0.3
     by Daniel Cousens
     under the MIT license
 
- - buffer 4.9.2
+ - [buffer](https://github.com/feross/buffer) 4.9.2
     by Feross Aboukhadijeh (feross@feross.org)
     under the MIT license
 
- - builtin-status-codes 3.0.0
+ - [builtin-status-codes](https://github.com/bendrucker/builtin-status-codes) 3.0.0
     by Ben Drucker (bvdrucker@gmail.com)
     under the MIT license
 
- - bytes 3.0.0
+ - [bytes](https://github.com/visionmedia/bytes.js) 3.0.0
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - bytes 3.1.0
+ - [bytes](https://github.com/visionmedia/bytes.js) 3.1.0
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - cacache 12.0.4
+ - [cacache](https://github.com/npm/cacache) 12.0.4
     by Kat Marchán (kzm@sykosomatic.org)
     under the ISC license
 
- - cache-base 1.0.1
+ - [cache-base](https://github.com/jonschlinkert/cache-base) 1.0.1
     by Jon Schlinkert
     under the MIT license
 
- - call-bind 1.0.2
+ - [call-bind](https://github.com/ljharb/call-bind) 1.0.2
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - call-me-maybe 1.0.1
+ - [call-me-maybe](https://github.com/limulus/call-me-maybe) 1.0.1
     by Eric McCarthy (eric@limulus.net)
     under the MIT license
 
- - caller-callsite 2.0.0
+ - [caller-callsite](https://github.com/sindresorhus/caller-callsite) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - caller-path 2.0.0
+ - [caller-path](https://github.com/sindresorhus/caller-path) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - callsites 2.0.0
+ - [callsites](https://github.com/sindresorhus/callsites) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - callsites 3.1.0
+ - [callsites](https://github.com/sindresorhus/callsites) 3.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - camel-case 3.0.0
+ - [camel-case](https://github.com/blakeembrey/camel-case) 3.0.0
     by Blake Embrey (hello@blakeembrey.com)
     under the MIT license
 
- - camelcase-keys 2.1.0
+ - [camelcase-keys](https://github.com/sindresorhus/camelcase-keys) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - camelcase-keys 6.2.2
+ - [camelcase-keys](https://github.com/sindresorhus/camelcase-keys) 6.2.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - camelcase 1.2.1
+ - [camelcase](https://github.com/sindresorhus/camelcase) 1.2.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - camelcase 2.1.1
+ - [camelcase](https://github.com/sindresorhus/camelcase) 2.1.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - camelcase 4.1.0
+ - [camelcase](https://github.com/sindresorhus/camelcase) 4.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - camelcase 5.3.1
+ - [camelcase](https://github.com/sindresorhus/camelcase) 5.3.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - caniuse-api 3.0.0
+ - [caniuse-api](https://github.com/nyalab/caniuse-api) 3.0.0
     under the MIT license
 
- - caniuse-lite 1.0.30001233
+ - [caniuse-lite](https://github.com/browserslist/caniuse-lite) 1.0.30001233
     by Ben Briggs (beneb.info@gmail.com)
     under the CC-BY-4.0 license
 
- - cardinal 1.0.0
+ - [cardinal](https://github.com/thlorenz/cardinal) 1.0.0
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - chalk 1.1.3
+ - [chalk](https://github.com/chalk/chalk) 1.1.3
     under the MIT license
 
- - chalk 2.4.2
+ - [chalk](https://github.com/chalk/chalk) 2.4.2
     under the MIT license
 
- - chalk 4.1.1
+ - [chalk](https://github.com/chalk/chalk) 4.1.1
     under the MIT license
 
- - charenc 0.0.2
+ - [charenc](https://github.com/pvorb/node-charenc) 0.0.2
     by Paul Vorbach (paul@vorb.de)
     under the BSD-3-Clause license
 
- - chart.js 2.9.4
+ - [chart.js](https://github.com/chartjs/Chart.js) 2.9.4
     under the MIT license
 
- - chartjs-color-string 0.6.0
+ - [chartjs-color-string](https://github.com/chartjs/chartjs-color-string) 0.6.0
     by Heather Arthur (fayearthur@gmail.com)
     under the MIT license
 
- - chartjs-color 2.4.1
+ - [chartjs-color](https://github.com/chartjs/chartjs-color) 2.4.1
     under the MIT license
 
- - chokidar 2.1.8
+ - [chokidar](https://github.com/paulmillr/chokidar) 2.1.8
     by Paul Miller
     under the MIT license
 
- - chokidar 3.5.1
+ - [chokidar](https://github.com/paulmillr/chokidar) 3.5.1
     by Paul Miller
     under the MIT license
 
- - chownr 1.1.4
+ - [chownr](https://github.com/isaacs/chownr) 1.1.4
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - chrome-trace-event 1.0.3
+ - [chrome-trace-event](https://github.com/samccone/chrome-trace-event) 1.0.3
     by Trent Mick, Sam Saccone
     under the MIT license
 
- - cipher-base 1.0.4
+ - [cipher-base](https://github.com/crypto-browserify/cipher-base) 1.0.4
     by Calvin Metcalf (calvin.metcalf@gmail.com)
     under the MIT license
 
- - class-utils 0.3.6
+ - [class-utils](https://github.com/jonschlinkert/class-utils) 0.3.6
     by Jon Schlinkert
     under the MIT license
 
- - clean-css 4.2.3
+ - [clean-css](https://github.com/jakubpawlowicz/clean-css) 4.2.3
     by Jakub Pawlowicz (contact@jakubpawlowicz.com)
     under the MIT license
 
- - cliui 4.1.0
+ - [cliui](https://github.com/yargs/cliui) 4.1.0
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - cliui 5.0.0
+ - [cliui](https://github.com/yargs/cliui) 5.0.0
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - cliui 7.0.4
+ - [cliui](https://github.com/yargs/cliui) 7.0.4
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - clone-deep 4.0.1
+ - [clone-deep](https://github.com/jonschlinkert/clone-deep) 4.0.1
     by Jon Schlinkert
     under the MIT license
 
- - clone 1.0.4
+ - [clone](https://github.com/pvorb/node-clone) 1.0.4
     by Paul Vorbach (paul@vorba.ch)
     under the MIT license
 
- - clone 2.1.2
+ - [clone](https://github.com/pvorb/node-clone) 2.1.2
     by Paul Vorbach (paul@vorba.ch)
     under the MIT license
 
- - coa 2.0.2
+ - [coa](https://github.com/veged/coa) 2.0.2
     by Sergey Berezhnoy (veged@ya.ru)
     under the MIT license
 
- - code-point-at 1.1.0
+ - [code-point-at](https://github.com/sindresorhus/code-point-at) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - codemirror 5.61.1
+ - [codemirror](https://github.com/codemirror/CodeMirror) 5.61.1
     by Marijn Haverbeke (marijnh@gmail.com)
     under the MIT license
 
- - collect.js 4.28.6
+ - [collect.js](https://github.com/ecrmnn/collect.js) 4.28.6
     by Daniel Eckermann (danieleckermann@gmail.com)
     under the MIT license
 
- - collection-visit 1.0.0
+ - [collection-visit](https://github.com/jonschlinkert/collection-visit) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - color-convert 1.9.3
+ - [color-convert](https://github.com/Qix-/color-convert) 1.9.3
     by Heather Arthur (fayearthur@gmail.com)
     under the MIT license
 
- - color-convert 2.0.1
+ - [color-convert](https://github.com/Qix-/color-convert) 2.0.1
     by Heather Arthur (fayearthur@gmail.com)
     under the MIT license
 
- - color-name 1.1.3
+ - [color-name](https://github.com/dfcreative/color-name) 1.1.3
     by DY (dfcreative@gmail.com)
     under the MIT license
 
- - color-name 1.1.4
+ - [color-name](https://github.com/colorjs/color-name) 1.1.4
     by DY (dfcreative@gmail.com)
     under the MIT license
 
- - color-string 1.5.5
+ - [color-string](https://github.com/Qix-/color-string) 1.5.5
     by Heather Arthur (fayearthur@gmail.com)
     under the MIT license
 
- - color 3.1.3
+ - [color](https://github.com/Qix-/color) 3.1.3
     under the MIT license
 
- - colorette 1.2.2
+ - [colorette](https://github.com/jorgebucaran/colorette) 1.2.2
     by Jorge Bucaran
     under the MIT license
 
- - commander 2.17.1
+ - [commander](https://github.com/tj/commander.js) 2.17.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - commander 2.19.0
+ - [commander](https://github.com/tj/commander.js) 2.19.0
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - commander 2.20.3
+ - [commander](https://github.com/tj/commander.js) 2.20.3
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - commondir 1.0.1
+ - [commondir](https://github.com/substack/node-commondir) 1.0.1
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - compare-func 2.0.0
+ - [compare-func](https://github.com/stevemao/compare-func) 2.0.0
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - component-emitter 1.3.0
+ - [component-emitter](https://github.com/component/emitter) 1.3.0
     under the MIT license
 
- - compressible 2.0.18
+ - [compressible](https://github.com/jshttp/compressible) 2.0.18
     under the MIT license
 
- - compression 1.7.4
+ - [compression](https://github.com/expressjs/compression) 1.7.4
     under the MIT license
 
- - concat-map 0.0.1
+ - [concat-map](https://github.com/substack/node-concat-map) 0.0.1
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - concat-stream 1.6.2
+ - [concat-stream](https://github.com/maxogden/concat-stream) 1.6.2
     by Max Ogden (max@maxogden.com)
     under the MIT license
 
- - concat-stream 2.0.0
+ - [concat-stream](https://github.com/maxogden/concat-stream) 2.0.0
     by Max Ogden (max@maxogden.com)
     under the MIT license
 
- - concatenate 0.0.2
+ - [concatenate](https://github.com/stephenmathieson/node-concatenate) 0.0.2
     by Stephen Mathieson (me@stephenmathieson.com)
     under the MIT* license
 
- - connect-history-api-fallback 1.6.0
+ - [connect-history-api-fallback](https://github.com/bripkens/connect-history-api-fallback) 1.6.0
     by Ben Ripkens (bripkens.dev@gmail.com)
     under the MIT license
 
- - console-browserify 1.2.0
+ - [console-browserify](https://github.com/browserify/console-browserify) 1.2.0
     by Raynos (raynos2@gmail.com)
     under the MIT license
 
- - consolidate 0.15.1
+ - [consolidate](https://github.com/tj/consolidate.js) 0.15.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - constants-browserify 1.0.0
+ - [constants-browserify](https://github.com/juliangruber/constants-browserify) 1.0.0
     by Julian Gruber (julian@juliangruber.com)
     under the MIT license
 
- - content-disposition 0.5.3
+ - [content-disposition](https://github.com/jshttp/content-disposition) 0.5.3
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - content-type 1.0.4
+ - [content-type](https://github.com/jshttp/content-type) 1.0.4
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - conventional-changelog-angular 5.0.12
+ - [conventional-changelog-angular](https://github.com/conventional-changelog/conventional-changelog) 5.0.12
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-atom 2.0.8
+ - [conventional-changelog-atom](https://github.com/conventional-changelog/conventional-changelog) 2.0.8
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-codemirror 2.0.8
+ - [conventional-changelog-codemirror](https://github.com/conventional-changelog/conventional-changelog) 2.0.8
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-config-spec 2.1.0
+ - [conventional-changelog-config-spec](https://github.com/conventional-changelog/conventional-changelog-config-spec) 2.1.0
     under the MIT license
 
- - conventional-changelog-conventionalcommits 4.5.0
+ - [conventional-changelog-conventionalcommits](https://github.com/conventional-changelog/conventional-changelog) 4.5.0
     by Ben Coe
     under the ISC license
 
- - conventional-changelog-conventionalcommits 4.6.0
+ - [conventional-changelog-conventionalcommits](https://github.com/conventional-changelog/conventional-changelog) 4.6.0
     by Ben Coe
     under the ISC license
 
- - conventional-changelog-core 4.2.2
+ - [conventional-changelog-core](https://github.com/conventional-changelog/conventional-changelog) 4.2.2
     under the MIT license
 
- - conventional-changelog-ember 2.0.9
+ - [conventional-changelog-ember](https://github.com/conventional-changelog/conventional-changelog) 2.0.9
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-eslint 3.0.9
+ - [conventional-changelog-eslint](https://github.com/conventional-changelog/conventional-changelog) 3.0.9
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-express 2.0.6
+ - [conventional-changelog-express](https://github.com/conventional-changelog/conventional-changelog) 2.0.6
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-jquery 3.0.11
+ - [conventional-changelog-jquery](https://github.com/conventional-changelog/conventional-changelog) 3.0.11
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-jshint 2.0.9
+ - [conventional-changelog-jshint](https://github.com/conventional-changelog/conventional-changelog) 2.0.9
     by Steve Mao
     under the ISC license
 
- - conventional-changelog-preset-loader 2.3.4
+ - [conventional-changelog-preset-loader](https://github.com/conventional-changelog/conventional-changelog) 2.3.4
     under the MIT license
 
- - conventional-changelog-writer 4.1.0
+ - [conventional-changelog-writer](https://github.com/conventional-changelog/conventional-changelog) 4.1.0
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - conventional-changelog 3.1.24
+ - [conventional-changelog](https://github.com/conventional-changelog/conventional-changelog) 3.1.24
     under the MIT license
 
- - conventional-commits-filter 2.0.7
+ - [conventional-commits-filter](https://github.com/conventional-changelog/conventional-changelog) 2.0.7
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - conventional-commits-parser 3.2.1
+ - [conventional-commits-parser](https://github.com/conventional-changelog/conventional-changelog) 3.2.1
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - conventional-recommended-bump 6.1.0
+ - [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog) 6.1.0
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - convert-source-map 0.3.5
+ - [convert-source-map](https://github.com/thlorenz/convert-source-map) 0.3.5
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - convert-source-map 1.7.0
+ - [convert-source-map](https://github.com/thlorenz/convert-source-map) 1.7.0
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - cookie-signature 1.0.6
+ - [cookie-signature](https://github.com/visionmedia/node-cookie-signature) 1.0.6
     by TJ Holowaychuk (tj@learnboost.com)
     under the MIT license
 
- - cookie 0.4.0
+ - [cookie](https://github.com/jshttp/cookie) 0.4.0
     by Roman Shtylman (shtylman@gmail.com)
     under the MIT license
 
- - copy-concurrently 1.0.5
+ - [copy-concurrently](https://github.com/npm/copy-concurrently) 1.0.5
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - copy-descriptor 0.1.1
+ - [copy-descriptor](https://github.com/jonschlinkert/copy-descriptor) 0.1.1
     by Jon Schlinkert
     under the MIT license
 
- - core-js-compat 3.13.1
+ - [core-js-compat](https://github.com/zloirock/core-js) 3.13.1
     under the MIT license
 
- - core-js 2.6.12
+ - [core-js](https://github.com/zloirock/core-js) 2.6.12
     under the MIT license
 
- - core-js 3.13.1
+ - [core-js](https://github.com/zloirock/core-js) 3.13.1
     under the MIT license
 
- - core-util-is 1.0.2
+ - [core-util-is](https://github.com/isaacs/core-util-is) 1.0.2
     by Isaac Z. Schlueter (i@izs.me)
     under the MIT license
 
- - cosmiconfig 5.2.1
+ - [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) 5.2.1
     by David Clark (david.dave.clark@gmail.com)
     under the MIT license
 
- - cosmiconfig 7.0.0
+ - [cosmiconfig](https://github.com/davidtheclark/cosmiconfig) 7.0.0
     by David Clark (david.dave.clark@gmail.com)
     under the MIT license
 
- - create-ecdh 4.0.4
+ - [create-ecdh](https://github.com/crypto-browserify/createECDH) 4.0.4
     by Calvin Metcalf
     under the MIT license
 
- - create-hash 1.2.0
+ - [create-hash](https://github.com/crypto-browserify/createHash) 1.2.0
     under the MIT license
 
- - create-hmac 1.1.7
+ - [create-hmac](https://github.com/crypto-browserify/createHmac) 1.1.7
     under the MIT license
 
- - cross-env 5.2.1
+ - [cross-env](https://github.com/kentcdodds/cross-env) 5.2.1
     by Kent C. Dodds (kent@doddsfamily.us)
     under the MIT license
 
- - cross-spawn 6.0.5
+ - [cross-spawn](https://github.com/moxystudio/node-cross-spawn) 6.0.5
     by André Cruz (andre@moxy.studio)
     under the MIT license
 
- - crypt 0.0.2
+ - [crypt](https://github.com/pvorb/node-crypt) 0.0.2
     by Paul Vorbach (paul@vorb.de)
     under the BSD-3-Clause license
 
- - crypto-browserify 3.12.0
+ - [crypto-browserify](https://github.com/crypto-browserify/crypto-browserify) 3.12.0
     by Dominic Tarr (dominic.tarr@gmail.com)
     under the MIT license
 
- - crypto-js 3.3.0
+ - [crypto-js](https://github.com/brix/crypto-js) 3.3.0
     by Evan Vosberg
     under the MIT license
 
- - css-color-names 0.0.4
+ - [css-color-names](https://github.com/bahamas10/css-color-names) 0.0.4
     by Dave Eddy (dave@daveeddy.com)
     under the MIT license
 
- - css-declaration-sorter 4.0.1
+ - [css-declaration-sorter](https://github.com/Siilwyn/css-declaration-sorter) 4.0.1
     by Selwyn (talk@selwyn.cc)
     under the MIT license
 
- - css-loader 1.0.1
+ - [css-loader](https://github.com/webpack-contrib/css-loader) 1.0.1
     by Tobias Koppers @sokra
     under the MIT license
 
- - css-select-base-adapter 0.1.1
+ - [css-select-base-adapter](https://github.com/nrkn/css-select-base-adapter) 0.1.1
     by Nik Coughlin (nrkn.com@gmail.com)
     under the MIT license
 
- - css-select 2.1.0
+ - [css-select](https://github.com/fb55/css-select) 2.1.0
     by Felix Boehm (me@feedic.com)
     under the BSD-2-Clause license
 
- - css-selector-tokenizer 0.7.3
+ - [css-selector-tokenizer](https://github.com/css-modules/css-selector-tokenizer) 0.7.3
     by Tobias Koppers @sokra
     under the MIT license
 
- - css-tree 1.0.0-alpha.37
+ - [css-tree](https://github.com/csstree/csstree) 1.0.0-alpha.37
     by Roman Dvornov (rdvornov@gmail.com)
     under the MIT license
 
- - css-tree 1.1.3
+ - [css-tree](https://github.com/csstree/csstree) 1.1.3
     by Roman Dvornov (rdvornov@gmail.com)
     under the MIT license
 
- - css-what 3.4.2
+ - [css-what](https://github.com/fb55/css-what) 3.4.2
     by Felix Böhm (me@feedic.com)
     under the BSD-2-Clause license
 
- - css 2.2.4
+ - [css](https://github.com/reworkcss/css) 2.2.4
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - cssesc 3.0.0
+ - [cssesc](https://github.com/mathiasbynens/cssesc) 3.0.0
     by Mathias Bynens
     under the MIT license
 
- - cssnano-preset-default 4.0.8
+ - [cssnano-preset-default](https://github.com/cssnano/cssnano) 4.0.8
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - cssnano-util-get-arguments 4.0.0
+ - [cssnano-util-get-arguments](https://github.com/cssnano/cssnano) 4.0.0
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - cssnano-util-get-match 4.0.0
+ - [cssnano-util-get-match](https://github.com/cssnano/cssnano) 4.0.0
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - cssnano-util-raw-cache 4.0.1
+ - [cssnano-util-raw-cache](https://github.com/cssnano/cssnano) 4.0.1
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - cssnano-util-same-parent 4.0.1
+ - [cssnano-util-same-parent](https://github.com/cssnano/cssnano) 4.0.1
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - cssnano 4.1.11
+ - [cssnano](https://github.com/cssnano/cssnano) 4.1.11
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - csso 4.2.0
+ - [csso](https://github.com/css/csso) 4.2.0
     by Sergey Kryzhanovsky (skryzhanovsky@ya.ru)
     under the MIT license
 
- - csv-parse 4.15.4
+ - [csv-parse](https://github.com/wdavidw/node-csv-parse) 4.15.4
     by David Worms (david@adaltas.com)
     under the MIT license
 
- - currently-unhandled 0.4.1
+ - [currently-unhandled](https://github.com/jamestalmage/currently-unhandled) 0.4.1
     by James Talmage (james@talmage.io)
     under the MIT license
 
- - cyclist 1.0.1
+ - [cyclist](https://github.com/mafintosh/cyclist) 1.0.1
     by Mathias Buus Madsen (mathiasbuus@gmail.com)
     under the MIT license
 
- - d 1.0.1
+ - [d](https://github.com/medikoo/d) 1.0.1
     by Mariusz Nowak (medyk@medikoo.com)
     under the ISC license
 
- - dargs 7.0.0
+ - [dargs](https://github.com/sindresorhus/dargs) 7.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - dash-ast 1.0.0
+ - [dash-ast](https://github.com/goto-bus-stop/dash-ast) 1.0.0
     by Renée Kooi (renee@kooi.me)
     under the Apache-2.0 license
 
- - datatables.net-autofill-bs4 2.3.7
+ - [datatables.net-autofill-bs4](https://github.com/DataTables/Dist-DataTables-AutoFill-Bootstrap4) 2.3.7
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-autofill 2.3.7
+ - [datatables.net-autofill](https://github.com/DataTables/Dist-DataTables-AutoFill) 2.3.7
     by SpryMedia Ltd
     under the MIT license
 
@@ -1952,7 +1952,7 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-buttons 1.7.0
+ - [datatables.net-buttons](https://github.com/DataTables/Dist-DataTables-Buttons) 1.7.0
     by SpryMedia Ltd
     under the MIT license
 
@@ -1960,7 +1960,7 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-colreorder 1.5.3
+ - [datatables.net-colreorder](https://github.com/DataTables/Dist-DataTables-ColReorder) 1.5.3
     by SpryMedia Ltd
     under the MIT license
 
@@ -1968,7 +1968,7 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-fixedcolumns 3.3.2
+ - [datatables.net-fixedcolumns](https://github.com/DataTables/Dist-DataTables-FixedColumns) 3.3.2
     by SpryMedia Ltd
     under the MIT license
 
@@ -1976,7 +1976,7 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-fixedheader 3.1.8
+ - [datatables.net-fixedheader](https://github.com/DataTables/Dist-DataTables-FixedHeader) 3.1.8
     by SpryMedia Ltd
     under the MIT license
 
@@ -1984,7 +1984,7 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-keytable 2.6.1
+ - [datatables.net-keytable](https://github.com/DataTables/Dist-DataTables-KeyTable) 2.6.1
     by SpryMedia Ltd
     under the MIT license
 
@@ -1992,7 +1992,7 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-responsive 2.2.7
+ - [datatables.net-responsive](https://github.com/DataTables/Dist-DataTables-Responsive) 2.2.7
     by SpryMedia Ltd
     under the MIT license
 
@@ -2008,7 +2008,7 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-rowreorder 1.2.7
+ - [datatables.net-rowreorder](https://github.com/DataTables/Dist-DataTables-RowReorder) 1.2.7
     by SpryMedia Ltd
     under the MIT license
 
@@ -2016,23 +2016,23 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-scroller 2.0.3
+ - [datatables.net-scroller](https://github.com/DataTables/Dist-DataTables-Scroller) 2.0.3
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-searchbuilder-bs4 1.0.1
+ - [datatables.net-searchbuilder-bs4](https://github.com/DataTables/Dist-DataTables-SearchBuilder-Bootstrap4) 1.0.1
     by SpryMedia ltd
     under the MIT license
 
- - datatables.net-searchbuilder 1.0.1
+ - [datatables.net-searchbuilder](https://github.com/DataTables/Dist-DataTables-SearchBuilder) 1.0.1
     by SpryMedia ltd
     under the MIT license
 
- - datatables.net-searchpanes-bs4 1.2.2
+ - [datatables.net-searchpanes-bs4](https://github.com/DataTables/Dist-DataTables-SearchPanes-Bootstrap4) 1.2.2
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-searchpanes 1.2.2
+ - [datatables.net-searchpanes](https://github.com/DataTables/Dist-DataTables-SearchPanes) 1.2.2
     by SpryMedia Ltd
     under the MIT license
 
@@ -2040,162 +2040,162 @@ Pfarrplaner uses the following open-source libraries:
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net-select 1.3.3
+ - [datatables.net-select](https://github.com/DataTables/Dist-DataTables-Select) 1.3.3
     by SpryMedia Ltd
     under the MIT license
 
- - datatables.net 1.10.24
+ - [datatables.net](https://github.com/DataTables/Dist-DataTables) 1.10.24
     by SpryMedia Ltd
     under the MIT license
 
- - dateformat 3.0.3
+ - [dateformat](https://github.com/felixge/node-dateformat) 3.0.3
     by Steven Levithan
     under the MIT license
 
- - daterangepicker 3.1.0
+ - [daterangepicker](https://github.com/dangrossman/daterangepicker) 3.1.0
     by Dan Grossman (dan@dangrossman.info)
     under the MIT license
 
- - de-indent 1.0.2
+ - [de-indent](https://github.com/yyx990803/de-indent) 1.0.2
     by Evan You
     under the MIT license
 
- - debug 2.6.9
+ - [debug](https://github.com/visionmedia/debug) 2.6.9
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - debug 3.2.7
+ - [debug](https://github.com/visionmedia/debug) 3.2.7
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - debug 4.3.1
+ - [debug](https://github.com/visionmedia/debug) 4.3.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - decamelize-keys 1.1.0
+ - [decamelize-keys](https://github.com/dsblv/decamelize-keys) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - decamelize 1.2.0
+ - [decamelize](https://github.com/sindresorhus/decamelize) 1.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - decode-uri-component 0.2.0
+ - [decode-uri-component](https://github.com/SamVerschueren/decode-uri-component) 0.2.0
     by Sam Verschueren (sam.verschueren@gmail.com)
     under the MIT license
 
- - deep-equal 1.1.1
+ - [deep-equal](https://github.com/substack/node-deep-equal) 1.1.1
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - deep-is 0.1.3
+ - [deep-is](https://github.com/thlorenz/deep-is) 0.1.3
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - deepmerge 2.2.1
+ - [deepmerge](https://github.com/KyleAMathews/deepmerge) 2.2.1
     by Nick Fisher
     under the MIT license
 
- - deepmerge 4.2.2
+ - [deepmerge](https://github.com/TehShrike/deepmerge) 4.2.2
     under the MIT license
 
- - default-gateway 4.2.0
+ - [default-gateway](https://github.com/silverwind/default-gateway) 4.2.0
     by silverwind (me@silverwind.io)
     under the BSD-2-Clause license
 
- - define-properties 1.1.3
+ - [define-properties](https://github.com/ljharb/define-properties) 1.1.3
     by Jordan Harband
     under the MIT license
 
- - define-property 0.2.5
+ - [define-property](https://github.com/jonschlinkert/define-property) 0.2.5
     by Jon Schlinkert
     under the MIT license
 
- - define-property 1.0.0
+ - [define-property](https://github.com/jonschlinkert/define-property) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - define-property 2.0.2
+ - [define-property](https://github.com/jonschlinkert/define-property) 2.0.2
     by Jon Schlinkert
     under the MIT license
 
- - del 4.1.1
+ - [del](https://github.com/sindresorhus/del) 4.1.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - depd 1.1.2
+ - [depd](https://github.com/dougwilson/nodejs-depd) 1.1.2
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - des.js 1.0.1
+ - [des.js](https://github.com/indutny/des.js) 1.0.1
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - destroy 1.0.4
+ - [destroy](https://github.com/stream-utils/destroy) 1.0.4
     by Jonathan Ong (me@jongleberry.com)
     under the MIT license
 
- - detect-file 1.0.0
+ - [detect-file](https://github.com/doowb/detect-file) 1.0.0
     by Brian Woodward
     under the MIT license
 
- - detect-indent 6.1.0
+ - [detect-indent](https://github.com/sindresorhus/detect-indent) 6.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - detect-newline 3.1.0
+ - [detect-newline](https://github.com/sindresorhus/detect-newline) 3.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - detect-node 2.1.0
+ - [detect-node](https://github.com/iliakan/detect-node) 2.1.0
     by Ilya Kantor
     under the MIT license
 
- - dfa 1.2.0
+ - [dfa](https://github.com/devongovett/dfa) 1.2.0
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - diffie-hellman 5.0.3
+ - [diffie-hellman](https://github.com/crypto-browserify/diffie-hellman) 5.0.3
     by Calvin Metcalf
     under the MIT license
 
- - dir-glob 2.0.0
+ - [dir-glob](https://github.com/kevva/dir-glob) 2.0.0
     by Kevin Mårtensson (kevinmartensson@gmail.com)
     under the MIT license
 
- - dns-equal 1.0.0
+ - [dns-equal](https://github.com/watson/dns-equal) 1.0.0
     by Thomas Watson Steen (w@tson.dk)
     under the MIT license
 
- - dns-packet 1.3.4
+ - [dns-packet](https://github.com/mafintosh/dns-packet) 1.3.4
     by Mathias Buus
     under the MIT license
 
- - dns-txt 2.0.2
+ - [dns-txt](https://github.com/watson/dns-txt) 2.0.2
     by Thomas Watson Steen (w@tson.dk)
     under the MIT license
 
- - dom-serializer 0.2.2
+ - [dom-serializer](https://github.com/cheeriojs/dom-renderer) 0.2.2
     by Felix Boehm (me@feedic.com)
     under the MIT license
 
- - domain-browser 1.2.0
+ - [domain-browser](https://github.com/bevry/domain-browser) 1.2.0
     by 2013+ Bevry Pty Ltd (us@bevry.me)
     under the MIT license
 
- - domelementtype 1.3.1
+ - [domelementtype](https://github.com/fb55/domelementtype) 1.3.1
     by Felix Boehm (me@feedic.com)
     under the BSD-2-Clause license
 
- - domelementtype 2.2.0
+ - [domelementtype](https://github.com/fb55/domelementtype) 2.2.0
     by Felix Boehm (me@feedic.com)
     under the BSD-2-Clause license
 
- - domutils 1.7.0
+ - [domutils](https://github.com/FB55/domutils) 1.7.0
     by Felix Boehm (me@feedic.com)
     under the BSD-2-Clause license
 
- - dot-prop 5.3.0
+ - [dot-prop](https://github.com/sindresorhus/dot-prop) 5.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
@@ -2203,3401 +2203,3401 @@ Pfarrplaner uses the following open-source libraries:
     by motdotla
     under the BSD-2-Clause license
 
- - dotenv 6.2.0
+ - [dotenv](https://github.com/motdotla/dotenv) 6.2.0
     under the BSD-2-Clause license
 
- - dotgitignore 2.1.0
+ - [dotgitignore](https://github.com/bcoe/dotgitignore) 2.1.0
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - dropzone 5.9.2
+ - [dropzone](https://github.com/dropzone/dropzone) 5.9.2
     under the MIT license
 
- - duplexer2 0.1.4
+ - [duplexer2](https://github.com/deoxxa/duplexer2) 0.1.4
     by Conrad Pankoff (deoxxa@fknsrs.biz)
     under the BSD-3-Clause license
 
- - duplexify 3.7.1
+ - [duplexify](https://github.com/mafintosh/duplexify) 3.7.1
     by Mathias Buus
     under the MIT license
 
- - ee-first 1.1.1
+ - [ee-first](https://github.com/jonathanong/ee-first) 1.1.1
     by Jonathan Ong (me@jongleberry.com)
     under the MIT license
 
- - ekko-lightbox 5.3.0
+ - [ekko-lightbox](https://github.com/ashleydw/lightbox) 5.3.0
     by ashleydw (hello@ashleyd.ws)
     under the MIT license
 
- - electron-to-chromium 1.3.745
+ - [electron-to-chromium](https://github.com/kilian/electron-to-chromium) 1.3.745
     by Kilian Valkhof
     under the ISC license
 
- - elliptic 6.5.4
+ - [elliptic](https://github.com/indutny/elliptic) 6.5.4
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - emoji-regex 7.0.3
+ - [emoji-regex](https://github.com/mathiasbynens/emoji-regex) 7.0.3
     by Mathias Bynens
     under the MIT license
 
- - emoji-regex 8.0.0
+ - [emoji-regex](https://github.com/mathiasbynens/emoji-regex) 8.0.0
     by Mathias Bynens
     under the MIT license
 
- - emojis-list 3.0.0
+ - [emojis-list](https://github.com/kikobeats/emojis-list) 3.0.0
     by Kiko Beats (josefrancisco.verdu@gmail.com)
     under the MIT license
 
- - encodeurl 1.0.2
+ - [encodeurl](https://github.com/pillarjs/encodeurl) 1.0.2
     under the MIT license
 
- - end-of-stream 1.4.4
+ - [end-of-stream](https://github.com/mafintosh/end-of-stream) 1.4.4
     by Mathias Buus (mathiasbuus@gmail.com)
     under the MIT license
 
- - enhanced-resolve 4.5.0
+ - [enhanced-resolve](https://github.com/webpack/enhanced-resolve) 4.5.0
     by Tobias Koppers @sokra
     under the MIT license
 
- - entities 1.1.2
+ - [entities](https://github.com/fb55/entities) 1.1.2
     by Felix Boehm (me@feedic.com)
     under the BSD-2-Clause license
 
- - entities 2.2.0
+ - [entities](https://github.com/fb55/entities) 2.2.0
     by Felix Boehm (me@feedic.com)
     under the BSD-2-Clause license
 
- - errno 0.1.8
+ - [errno](https://github.com/rvagg/node-errno) 0.1.8
     under the MIT license
 
- - error-ex 1.3.2
+ - [error-ex](https://github.com/qix-/node-error-ex) 1.3.2
     under the MIT license
 
- - error-stack-parser 2.0.6
+ - [error-stack-parser](https://github.com/stacktracejs/error-stack-parser) 2.0.6
     under the MIT license
 
- - es-abstract 1.18.3
+ - [es-abstract](https://github.com/ljharb/es-abstract) 1.18.3
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - es-to-primitive 1.2.1
+ - [es-to-primitive](https://github.com/ljharb/es-to-primitive) 1.2.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - es5-ext 0.10.53
+ - [es5-ext](https://github.com/medikoo/es5-ext) 0.10.53
     by Mariusz Nowak (medyk@medikoo.com)
     under the ISC license
 
- - es6-iterator 2.0.3
+ - [es6-iterator](https://github.com/medikoo/es6-iterator) 2.0.3
     by Mariusz Nowak (medyk@medikoo.com)
     under the MIT license
 
- - es6-map 0.1.5
+ - [es6-map](https://github.com/medikoo/es6-map) 0.1.5
     by Mariusz Nowak (medyk@medikoo.com)
     under the MIT license
 
- - es6-set 0.1.5
+ - [es6-set](https://github.com/medikoo/es6-set) 0.1.5
     by Mariusz Nowak (medyk@medikoo.com)
     under the MIT license
 
- - es6-symbol 3.1.1
+ - [es6-symbol](https://github.com/medikoo/es6-symbol) 3.1.1
     by Mariusz Nowak (medyk@medikoo.com)
     under the MIT license
 
- - es6-symbol 3.1.3
+ - [es6-symbol](https://github.com/medikoo/es6-symbol) 3.1.3
     by Mariusz Nowak (medyk@medikoo.com)
     under the ISC license
 
- - es6-templates 0.2.3
+ - [es6-templates](https://github.com/esnext/es6-templates) 0.2.3
     by Square, Inc.
     under the Apache* license
 
- - escalade 3.1.1
+ - [escalade](https://github.com/lukeed/escalade) 3.1.1
     by Luke Edwards (luke.edwards05@gmail.com)
     under the MIT license
 
- - escape-html 1.0.3
+ - [escape-html](https://github.com/component/escape-html) 1.0.3
     under the MIT license
 
- - escape-string-regexp 1.0.5
+ - [escape-string-regexp](https://github.com/sindresorhus/escape-string-regexp) 1.0.5
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - escodegen 1.14.3
+ - [escodegen](https://github.com/estools/escodegen) 1.14.3
     under the BSD-2-Clause license
 
- - escodegen 1.2.0
+ - [escodegen](https://github.com/Constellation/escodegen) 1.2.0
     under the BSD license
 
- - eslint-scope 4.0.3
+ - [eslint-scope](https://github.com/eslint/eslint-scope) 4.0.3
     under the BSD-2-Clause license
 
- - esprima 1.0.4
+ - [esprima](https://github.com/ariya/esprima) 1.0.4
     under the BSD license
 
- - esprima 3.0.0
+ - [esprima](https://github.com/jquery/esprima) 3.0.0
     by Ariya Hidayat (ariya.hidayat@gmail.com)
     under the BSD-2-Clause license
 
- - esprima 3.1.3
+ - [esprima](https://github.com/jquery/esprima) 3.1.3
     by Ariya Hidayat (ariya.hidayat@gmail.com)
     under the BSD-2-Clause license
 
- - esprima 4.0.1
+ - [esprima](https://github.com/jquery/esprima) 4.0.1
     by Ariya Hidayat (ariya.hidayat@gmail.com)
     under the BSD-2-Clause license
 
- - esrecurse 4.3.0
+ - [esrecurse](https://github.com/estools/esrecurse) 4.3.0
     under the BSD-2-Clause license
 
- - estraverse 1.5.1
+ - [estraverse](https://github.com/Constellation/estraverse) 1.5.1
     under the BSD license
 
- - estraverse 4.3.0
+ - [estraverse](https://github.com/estools/estraverse) 4.3.0
     under the BSD-2-Clause license
 
- - estraverse 5.2.0
+ - [estraverse](https://github.com/estools/estraverse) 5.2.0
     under the BSD-2-Clause license
 
- - estree-is-function 1.0.0
+ - [estree-is-function](https://github.com/goto-bus-stop/estree-is-function) 1.0.0
     by Renée Kooi (renee@kooi.me)
     under the Apache-2.0 license
 
- - esutils 1.0.0
+ - [esutils](https://github.com/Constellation/esutils) 1.0.0
     under the BSD license
 
- - esutils 2.0.3
+ - [esutils](https://github.com/estools/esutils) 2.0.3
     under the BSD-2-Clause license
 
- - etag 1.8.1
+ - [etag](https://github.com/jshttp/etag) 1.8.1
     under the MIT license
 
- - ev-emitter 1.1.1
+ - [ev-emitter](https://github.com/metafizzy/ev-emitter) 1.1.1
     by David DeSandro
     under the MIT license
 
- - eve-raphael 0.5.0
+ - [eve-raphael](https://github.com/tomasAlabes/eve) 0.5.0
     by Dmitry Baranovskiy (dmitry@baranovskiy.com)
     under the Apache* license
 
- - event-emitter 0.3.5
+ - [event-emitter](https://github.com/medikoo/event-emitter) 0.3.5
     by Mariusz Nowak (medyk@medikoo.com)
     under the MIT license
 
- - eventemitter3 2.0.3
+ - [eventemitter3](https://github.com/primus/eventemitter3) 2.0.3
     by Arnout Kazemier
     under the MIT license
 
- - eventemitter3 4.0.7
+ - [eventemitter3](https://github.com/primus/eventemitter3) 4.0.7
     by Arnout Kazemier
     under the MIT license
 
- - events 3.3.0
+ - [events](https://github.com/Gozala/events) 3.3.0
     by Irakli Gozalishvili (rfobic@gmail.com)
     under the MIT license
 
- - eventsource 1.1.0
+ - [eventsource](https://github.com/EventSource/eventsource) 1.1.0
     by Aslak Hellesøy (aslak.hellesoy@gmail.com)
     under the MIT license
 
- - evp_bytestokey 1.0.3
+ - [evp_bytestokey](https://github.com/crypto-browserify/EVP_BytesToKey) 1.0.3
     by Calvin Metcalf (calvin.metcalf@gmail.com)
     under the MIT license
 
- - execa 1.0.0
+ - [execa](https://github.com/sindresorhus/execa) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - expand-brackets 2.1.4
+ - [expand-brackets](https://github.com/jonschlinkert/expand-brackets) 2.1.4
     by Jon Schlinkert
     under the MIT license
 
- - expand-tilde 2.0.2
+ - [expand-tilde](https://github.com/jonschlinkert/expand-tilde) 2.0.2
     by Jon Schlinkert
     under the MIT license
 
- - express 4.17.1
+ - [express](https://github.com/expressjs/express) 4.17.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - ext 1.4.0
+ - [ext](https://github.com/medikoo/es5-ext/tree/ext) 1.4.0
     by Mariusz Nowak (medyk@medikoo.com)
     under the ISC license
 
- - extend-shallow 2.0.1
+ - [extend-shallow](https://github.com/jonschlinkert/extend-shallow) 2.0.1
     by Jon Schlinkert
     under the MIT license
 
- - extend-shallow 3.0.2
+ - [extend-shallow](https://github.com/jonschlinkert/extend-shallow) 3.0.2
     by Jon Schlinkert
     under the MIT license
 
- - extend 3.0.2
+ - [extend](https://github.com/justmoon/node-extend) 3.0.2
     by Stefan Thomas (justmoon@members.fsf.org)
     under the MIT license
 
- - extglob 2.0.4
+ - [extglob](https://github.com/micromatch/extglob) 2.0.4
     by Jon Schlinkert
     under the MIT license
 
- - extract-text-webpack-plugin 4.0.0-beta.0
+ - [extract-text-webpack-plugin](https://github.com/webpack-contrib/extract-text-webpack-plugin) 4.0.0-beta.0
     by Tobias Koppers @sokra
     under the MIT license
 
- - fast-deep-equal 3.1.3
+ - [fast-deep-equal](https://github.com/epoberezkin/fast-deep-equal) 3.1.3
     by Evgeny Poberezkin
     under the MIT license
 
- - fast-diff 1.1.2
+ - [fast-diff](https://github.com/jhchen/fast-diff) 1.1.2
     by Jason Chen (jhchen7@gmail.com)
     under the Apache-2.0 license
 
- - fast-glob 2.2.7
+ - [fast-glob](https://github.com/mrmlnc/fast-glob) 2.2.7
     by Denis Malinochkin
     under the MIT license
 
- - fast-json-stable-stringify 2.1.0
+ - [fast-json-stable-stringify](https://github.com/epoberezkin/fast-json-stable-stringify) 2.1.0
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - fast-levenshtein 2.0.6
+ - [fast-levenshtein](https://github.com/hiddentao/fast-levenshtein) 2.0.6
     by Ramesh Nair (ram@hiddentao.com)
     under the MIT license
 
- - fast-memoize 2.5.2
+ - [fast-memoize](https://github.com/caiogondim/fast-memoize) 2.5.2
     by Caio Gondim (me@caiogondim.com)
     under the MIT license
 
- - fastclick 1.0.6
+ - [fastclick](https://github.com/ftlabs/fastclick) 1.0.6
     by Rowan Beentje (rowan.beentje@ft.com)
     under the MIT license
 
- - fastparse 1.1.2
+ - [fastparse](https://github.com/webpack/fastparse) 1.1.2
     by Tobias Koppers @sokra
     under the MIT license
 
- - faye-websocket 0.11.4
+ - [faye-websocket](https://github.com/faye/faye-websocket-node) 0.11.4
     by James Coglan (jcoglan@gmail.com)
     under the Apache-2.0 license
 
- - figgy-pudding 3.5.2
+ - [figgy-pudding](https://github.com/npm/figgy-pudding) 3.5.2
     by Kat Marchán (kzm@sykosomatic.org)
     under the ISC license
 
- - figures 3.2.0
+ - [figures](https://github.com/sindresorhus/figures) 3.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - file-loader 2.0.0
+ - [file-loader](https://github.com/webpack-contrib/file-loader) 2.0.0
     by Tobias Koppers @sokra
     under the MIT license
 
- - file-type 10.11.0
+ - [file-type](https://github.com/sindresorhus/file-type) 10.11.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - fill-range 4.0.0
+ - [fill-range](https://github.com/jonschlinkert/fill-range) 4.0.0
     by Jon Schlinkert
     under the MIT license
 
- - fill-range 7.0.1
+ - [fill-range](https://github.com/jonschlinkert/fill-range) 7.0.1
     by Jon Schlinkert
     under the MIT license
 
- - filterizr 2.2.4
+ - [filterizr](https://github.com/giotiskl/Filterizr) 2.2.4
     by Yiotis Kaltsikis (yiotiskal@gmail.com)
     under the MIT license
 
- - finalhandler 1.1.2
+ - [finalhandler](https://github.com/pillarjs/finalhandler) 1.1.2
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - find-cache-dir 2.1.0
+ - [find-cache-dir](https://github.com/avajs/find-cache-dir) 2.1.0
     under the MIT license
 
- - find-cache-dir 3.3.1
+ - [find-cache-dir](https://github.com/avajs/find-cache-dir) 3.3.1
     under the MIT license
 
- - find-up 1.1.2
+ - [find-up](https://github.com/sindresorhus/find-up) 1.1.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - find-up 2.1.0
+ - [find-up](https://github.com/sindresorhus/find-up) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - find-up 3.0.0
+ - [find-up](https://github.com/sindresorhus/find-up) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - find-up 4.1.0
+ - [find-up](https://github.com/sindresorhus/find-up) 4.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - find-up 5.0.0
+ - [find-up](https://github.com/sindresorhus/find-up) 5.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - findup-sync 3.0.0
+ - [findup-sync](https://github.com/gulpjs/findup-sync) 3.0.0
     by Gulp Team (team@gulpjs.com)
     under the MIT license
 
- - flag-icon-css 3.5.0
+ - [flag-icon-css](https://github.com/lipis/flag-icon-css) 3.5.0
     by Panayiotis Lipiridis (lipiridis@gmail.com)
     under the MIT license
 
- - flot 4.2.2
+ - [flot](https://github.com/flot/flot) 4.2.2
     under the MIT license
 
- - flush-write-stream 1.1.1
+ - [flush-write-stream](https://github.com/mafintosh/flush-write-stream) 1.1.1
     by Mathias Buus
     under the MIT license
 
- - follow-redirects 1.14.1
+ - [follow-redirects](https://github.com/follow-redirects/follow-redirects) 1.14.1
     by Ruben Verborgh (ruben@verborgh.org)
     under the MIT license
 
- - fontkit 1.8.1
+ - [fontkit](https://github.com/foliojs/fontkit) 1.8.1
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - for-in 1.0.2
+ - [for-in](https://github.com/jonschlinkert/for-in) 1.0.2
     by Jon Schlinkert
     under the MIT license
 
- - forwarded 0.2.0
+ - [forwarded](https://github.com/jshttp/forwarded) 0.2.0
     under the MIT license
 
- - fragment-cache 0.2.1
+ - [fragment-cache](https://github.com/jonschlinkert/fragment-cache) 0.2.1
     by Jon Schlinkert
     under the MIT license
 
- - fresh 0.5.2
+ - [fresh](https://github.com/jshttp/fresh) 0.5.2
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - friendly-errors-webpack-plugin 1.7.0
+ - [friendly-errors-webpack-plugin](https://github.com/geowarin/friendly-errors-webpack-plugin) 1.7.0
     by Geoffroy Warin
     under the MIT license
 
- - from2 2.3.0
+ - [from2](https://github.com/hughsk/from2) 2.3.0
     by Hugh Kennedy (hughskennedy@gmail.com)
     under the MIT license
 
- - fs-access 1.0.1
+ - [fs-access](https://github.com/sindresorhus/fs-access) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - fs-extra 7.0.1
+ - [fs-extra](https://github.com/jprichardson/node-fs-extra) 7.0.1
     by JP Richardson (jprichardson@gmail.com)
     under the MIT license
 
- - fs-extra 9.1.0
+ - [fs-extra](https://github.com/jprichardson/node-fs-extra) 9.1.0
     by JP Richardson (jprichardson@gmail.com)
     under the MIT license
 
- - fs-write-stream-atomic 1.0.10
+ - [fs-write-stream-atomic](https://github.com/npm/fs-write-stream-atomic) 1.0.10
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - fs.realpath 1.0.0
+ - [fs.realpath](https://github.com/isaacs/fs.realpath) 1.0.0
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - fullcalendar 5.7.0
+ - [fullcalendar](https://github.com/fullcalendar/fullcalendar) 5.7.0
     by Adam Shaw (arshaw@arshaw.com)
     under the MIT license
 
- - function-bind 1.1.1
+ - [function-bind](https://github.com/Raynos/function-bind) 1.1.1
     by Raynos (raynos2@gmail.com)
     under the MIT license
 
- - fuse.js 6.4.6
+ - [fuse.js](https://github.com/krisk/Fuse) 6.4.6
     by Kiro Risk (kirollos@gmail.com)
     under the Apache-2.0 license
 
- - gensync 1.0.0-beta.2
+ - [gensync](https://github.com/loganfsmyth/gensync) 1.0.0-beta.2
     by Logan Smyth (loganfsmyth@gmail.com)
     under the MIT license
 
- - get-assigned-identifiers 1.2.0
+ - [get-assigned-identifiers](https://github.com/goto-bus-stop/get-assigned-identifiers) 1.2.0
     by Renée Kooi (renee@kooi.me)
     under the Apache-2.0 license
 
- - get-caller-file 1.0.3
+ - [get-caller-file](https://github.com/stefanpenner/get-caller-file) 1.0.3
     by Stefan Penner
     under the ISC license
 
- - get-caller-file 2.0.5
+ - [get-caller-file](https://github.com/stefanpenner/get-caller-file) 2.0.5
     by Stefan Penner
     under the ISC license
 
- - get-intrinsic 1.1.1
+ - [get-intrinsic](https://github.com/ljharb/get-intrinsic) 1.1.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - get-pkg-repo 1.4.0
+ - [get-pkg-repo](https://github.com/stevemao/get-pkg-repo) 1.4.0
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - get-stdin 4.0.1
+ - [get-stdin](https://github.com/sindresorhus/get-stdin) 4.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - get-stream 4.1.0
+ - [get-stream](https://github.com/sindresorhus/get-stream) 4.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - get-value 2.0.6
+ - [get-value](https://github.com/jonschlinkert/get-value) 2.0.6
     by Jon Schlinkert
     under the MIT license
 
- - git-raw-commits 2.0.10
+ - [git-raw-commits](https://github.com/conventional-changelog/conventional-changelog) 2.0.10
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - git-remote-origin-url 2.0.0
+ - [git-remote-origin-url](https://github.com/sindresorhus/git-remote-origin-url) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - git-semver-tags 4.1.1
+ - [git-semver-tags](https://github.com/conventional-changelog/conventional-changelog) 4.1.1
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - gitconfiglocal 1.0.0
+ - [gitconfiglocal](https://github.com/soldair/node-gitconfiglocal) 1.0.0
     by Ryan Day
     under the BSD* license
 
- - glob-parent 3.1.0
+ - [glob-parent](https://github.com/es128/glob-parent) 3.1.0
     by Elan Shanker
     under the ISC license
 
- - glob-parent 5.1.2
+ - [glob-parent](https://github.com/gulpjs/glob-parent) 5.1.2
     by Gulp Team (team@gulpjs.com)
     under the ISC license
 
- - glob-to-regexp 0.3.0
+ - [glob-to-regexp](https://github.com/fitzgen/glob-to-regexp) 0.3.0
     by Nick Fitzgerald (fitzgen@gmail.com)
     under the BSD* license
 
- - glob 7.1.7
+ - [glob](https://github.com/isaacs/node-glob) 7.1.7
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - global-dirs 0.1.1
+ - [global-dirs](https://github.com/sindresorhus/global-dirs) 0.1.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - global-modules 1.0.0
+ - [global-modules](https://github.com/jonschlinkert/global-modules) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - global-modules 2.0.0
+ - [global-modules](https://github.com/jonschlinkert/global-modules) 2.0.0
     by Jon Schlinkert
     under the MIT license
 
- - global-prefix 1.0.2
+ - [global-prefix](https://github.com/jonschlinkert/global-prefix) 1.0.2
     by Jon Schlinkert
     under the MIT license
 
- - global-prefix 3.0.0
+ - [global-prefix](https://github.com/jonschlinkert/global-prefix) 3.0.0
     by Jon Schlinkert
     under the MIT license
 
- - globals 11.12.0
+ - [globals](https://github.com/sindresorhus/globals) 11.12.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - globby 6.1.0
+ - [globby](https://github.com/sindresorhus/globby) 6.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - globby 8.0.2
+ - [globby](https://github.com/sindresorhus/globby) 8.0.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - globs 0.1.4
+ - [globs](https://github.com/stephenmathieson/node-globs) 0.1.4
     by Stephen Mathieson (me@stephenmathieson.com)
     under the MIT license
 
- - graceful-fs 4.2.6
+ - [graceful-fs](https://github.com/isaacs/node-graceful-fs) 4.2.6
     under the ISC license
 
- - growly 1.3.0
+ - [growly](https://github.com/theabraham/growly) 1.3.0
     by Ibrahim Al-Rajhi (abrahamalrajhi@gmail.com)
     under the MIT license
 
- - handle-thing 2.0.1
+ - [handle-thing](https://github.com/indutny/handle-thing) 2.0.1
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - handlebars 4.7.7
+ - [handlebars](https://github.com/wycats/handlebars.js) 4.7.7
     by Yehuda Katz
     under the MIT license
 
- - hard-rejection 2.1.0
+ - [hard-rejection](https://github.com/sindresorhus/hard-rejection) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - has-ansi 2.0.0
+ - [has-ansi](https://github.com/sindresorhus/has-ansi) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - has-bigints 1.0.1
+ - [has-bigints](https://github.com/ljharb/has-bigints) 1.0.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - has-flag 3.0.0
+ - [has-flag](https://github.com/sindresorhus/has-flag) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - has-flag 4.0.0
+ - [has-flag](https://github.com/sindresorhus/has-flag) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - has-symbols 1.0.2
+ - [has-symbols](https://github.com/inspect-js/has-symbols) 1.0.2
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - has-value 0.3.1
+ - [has-value](https://github.com/jonschlinkert/has-value) 0.3.1
     by Jon Schlinkert
     under the MIT license
 
- - has-value 1.0.0
+ - [has-value](https://github.com/jonschlinkert/has-value) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - has-values 0.1.4
+ - [has-values](https://github.com/jonschlinkert/has-values) 0.1.4
     by Jon Schlinkert
     under the MIT license
 
- - has-values 1.0.0
+ - [has-values](https://github.com/jonschlinkert/has-values) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - has 1.0.3
+ - [has](https://github.com/tarruda/has) 1.0.3
     by Thiago de Arruda (tpadilha84@gmail.com)
     under the MIT license
 
- - hash-base 3.1.0
+ - [hash-base](https://github.com/crypto-browserify/hash-base) 3.1.0
     by Kirill Fomichev (fanatid@ya.ru)
     under the MIT license
 
- - hash-sum 1.0.2
+ - [hash-sum](https://github.com/bevacqua/hash-sum) 1.0.2
     under the MIT license
 
- - hash.js 1.1.7
+ - [hash.js](https://github.com/indutny/hash.js) 1.1.7
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - he 1.2.0
+ - [he](https://github.com/mathiasbynens/he) 1.2.0
     by Mathias Bynens
     under the MIT license
 
- - hex-color-regex 1.1.0
+ - [hex-color-regex](https://github.com/regexps/hex-color-regex) 1.1.0
     by Charlike Mike Reagent (@tunnckoCore)
     under the MIT license
 
- - highlight.js 9.18.5
+ - [highlight.js](https://github.com/highlightjs/highlight.js) 9.18.5
     by Ivan Sagalaev (maniac@softwaremaniacs.org)
     under the BSD-3-Clause license
 
- - hmac-drbg 1.0.1
+ - [hmac-drbg](https://github.com/indutny/hmac-drbg) 1.0.1
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - homedir-polyfill 1.0.3
+ - [homedir-polyfill](https://github.com/doowb/homedir-polyfill) 1.0.3
     by Brian Woodward
     under the MIT license
 
- - hosted-git-info 2.8.9
+ - [hosted-git-info](https://github.com/npm/hosted-git-info) 2.8.9
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - hosted-git-info 4.0.2
+ - [hosted-git-info](https://github.com/npm/hosted-git-info) 4.0.2
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - hpack.js 2.1.6
+ - [hpack.js](https://github.com/indutny/hpack.js) 2.1.6
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - hsl-regex 1.0.0
+ - [hsl-regex](https://github.com/regexps/hsl-regex) 1.0.0
     by John Otander
     under the MIT license
 
- - hsla-regex 1.0.0
+ - [hsla-regex](https://github.com/regexps/hsla-regex) 1.0.0
     by John Otander
     under the MIT license
 
- - html-entities 1.4.0
+ - [html-entities](https://github.com/mdevils/node-html-entities) 1.4.0
     by Marat Dulin (mdevils@yandex.ru)
     under the MIT license
 
- - html-loader 0.5.5
+ - [html-loader](https://github.com/webpack-contrib/html-loader) 0.5.5
     by Tobias Koppers @sokra
     under the MIT license
 
- - html-minifier 3.5.21
+ - [html-minifier](https://github.com/kangax/html-minifier) 3.5.21
     by Juriy "kangax" Zaytsev
     under the MIT license
 
- - http-deceiver 1.2.7
+ - [http-deceiver](https://github.com/indutny/http-deceiver) 1.2.7
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - http-errors 1.6.3
+ - [http-errors](https://github.com/jshttp/http-errors) 1.6.3
     by Jonathan Ong (me@jongleberry.com)
     under the MIT license
 
- - http-errors 1.7.2
+ - [http-errors](https://github.com/jshttp/http-errors) 1.7.2
     by Jonathan Ong (me@jongleberry.com)
     under the MIT license
 
- - http-parser-js 0.5.3
+ - [http-parser-js](https://github.com/creationix/http-parser-js) 0.5.3
     by Tim Caswell
     under the MIT license
 
- - http-proxy-middleware 0.19.1
+ - [http-proxy-middleware](https://github.com/chimurai/http-proxy-middleware) 0.19.1
     by Steven Chim
     under the MIT license
 
- - http-proxy 1.18.1
+ - [http-proxy](https://github.com/http-party/node-http-proxy) 1.18.1
     by Charlie Robbins (charlie.robbins@gmail.com)
     under the MIT license
 
- - https-browserify 1.0.0
+ - [https-browserify](https://github.com/substack/https-browserify) 1.0.0
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - humanize 0.0.9
+ - [humanize](https://github.com/taijinlee/humanize) 0.0.9
     by Tai-Jin Lee (taijin@gmail.com)
     under the MIT* license
 
- - husky 6.0.0
+ - [husky](https://github.com/typicode/husky) 6.0.0
     by Typicode (typicode@gmail.com)
     under the MIT license
 
- - icheck-bootstrap 3.0.1
+ - [icheck-bootstrap](https://github.com/bantikyan/icheck-bootstrap) 3.0.1
     by Hovhannes Bantikyan
     under the MIT license
 
- - iconv-lite 0.4.24
+ - [iconv-lite](https://github.com/ashtuchkin/iconv-lite) 0.4.24
     by Alexander Shtuchkin (ashtuchkin@gmail.com)
     under the MIT license
 
- - iconv-lite 0.6.3
+ - [iconv-lite](https://github.com/ashtuchkin/iconv-lite) 0.6.3
     by Alexander Shtuchkin (ashtuchkin@gmail.com)
     under the MIT license
 
- - icss-replace-symbols 1.1.0
+ - [icss-replace-symbols](https://github.com/css-modules/icss-replace-symbols) 1.1.0
     by Glen Maddern
     under the ISC license
 
- - icss-utils 2.1.0
+ - [icss-utils](https://github.com/css-modules/icss-utils) 2.1.0
     by Glen Maddern
     under the ISC license
 
- - ieee754 1.2.1
+ - [ieee754](https://github.com/feross/ieee754) 1.2.1
     by Feross Aboukhadijeh (feross@feross.org)
     under the BSD-3-Clause license
 
- - iferr 0.1.5
+ - [iferr](https://github.com/shesek/iferr) 0.1.5
     by Nadav Ivgi
     under the MIT license
 
- - ignore 3.3.10
+ - [ignore](https://github.com/kaelzhang/node-ignore) 3.3.10
     by kael
     under the MIT license
 
- - imagemin 6.1.0
+ - [imagemin](https://github.com/imagemin/imagemin) 6.1.0
     under the MIT license
 
- - imagesloaded 4.1.4
+ - [imagesloaded](https://github.com/desandro/imagesloaded) 4.1.4
     by David DeSandro
     under the MIT license
 
- - img-loader 3.0.2
+ - [img-loader](https://github.com/vanwagonet/img-loader) 3.0.2
     by Andy VanWagoner (andy@vanwago.net)
     under the MIT license
 
- - immediate 3.0.6
+ - [immediate](https://github.com/calvinmetcalf/immediate) 3.0.6
     under the MIT license
 
- - import-cwd 2.1.0
+ - [import-cwd](https://github.com/sindresorhus/import-cwd) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - import-fresh 2.0.0
+ - [import-fresh](https://github.com/sindresorhus/import-fresh) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - import-fresh 3.3.0
+ - [import-fresh](https://github.com/sindresorhus/import-fresh) 3.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - import-from 2.1.0
+ - [import-from](https://github.com/sindresorhus/import-from) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - import-local 2.0.0
+ - [import-local](https://github.com/sindresorhus/import-local) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - imurmurhash 0.1.4
+ - [imurmurhash](https://github.com/jensyt/imurmurhash-js) 0.1.4
     by Jens Taylor (jensyt@gmail.com)
     under the MIT license
 
- - indent-string 2.1.0
+ - [indent-string](https://github.com/sindresorhus/indent-string) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - indent-string 4.0.0
+ - [indent-string](https://github.com/sindresorhus/indent-string) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - indexes-of 1.0.1
+ - [indexes-of](https://github.com/dominictarr/indexes-of) 1.0.1
     by Dominic Tarr (dominic.tarr@gmail.com)
     under the MIT license
 
- - infer-owner 1.0.4
+ - [infer-owner](https://github.com/npm/infer-owner) 1.0.4
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - inflight 1.0.6
+ - [inflight](https://github.com/npm/inflight) 1.0.6
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - inherits 2.0.1
+ - [inherits](https://github.com/isaacs/inherits) 2.0.1
     under the ISC license
 
- - inherits 2.0.3
+ - [inherits](https://github.com/isaacs/inherits) 2.0.3
     under the ISC license
 
- - inherits 2.0.4
+ - [inherits](https://github.com/isaacs/inherits) 2.0.4
     under the ISC license
 
- - ini 1.3.8
+ - [ini](https://github.com/isaacs/ini) 1.3.8
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - inputmask 5.0.6
+ - [inputmask](https://github.com/RobinHerbots/Inputmask) 5.0.6
     by Robin Herbots
     under the MIT license
 
- - internal-ip 4.3.0
+ - [internal-ip](https://github.com/sindresorhus/internal-ip) 4.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - interpret 1.4.0
+ - [interpret](https://github.com/gulpjs/interpret) 1.4.0
     by Gulp Team (team@gulpjs.com)
     under the MIT license
 
- - invert-kv 2.0.0
+ - [invert-kv](https://github.com/sindresorhus/invert-kv) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ion-rangeslider 2.3.1
+ - [ion-rangeslider](https://github.com/IonDen/ion.rangeSlider) 2.3.1
     by Denis Ineshin (ionden.tech@gmail.com)
     under the MIT license
 
- - ip-regex 2.1.0
+ - [ip-regex](https://github.com/sindresorhus/ip-regex) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - ip 1.1.5
+ - [ip](https://github.com/indutny/node-ip) 1.1.5
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - ipaddr.js 1.9.1
+ - [ipaddr.js](https://github.com/whitequark/ipaddr.js) 1.9.1
     by whitequark (whitequark@whitequark.org)
     under the MIT license
 
- - is-absolute-url 2.1.0
+ - [is-absolute-url](https://github.com/sindresorhus/is-absolute-url) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-absolute-url 3.0.3
+ - [is-absolute-url](https://github.com/sindresorhus/is-absolute-url) 3.0.3
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-accessor-descriptor 0.1.6
+ - [is-accessor-descriptor](https://github.com/jonschlinkert/is-accessor-descriptor) 0.1.6
     by Jon Schlinkert
     under the MIT license
 
- - is-accessor-descriptor 1.0.0
+ - [is-accessor-descriptor](https://github.com/jonschlinkert/is-accessor-descriptor) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - is-arguments 1.1.0
+ - [is-arguments](https://github.com/inspect-js/is-arguments) 1.1.0
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-arrayish 0.2.1
+ - [is-arrayish](https://github.com/qix-/node-is-arrayish) 0.2.1
     by Qix
     under the MIT license
 
- - is-arrayish 0.3.2
+ - [is-arrayish](https://github.com/qix-/node-is-arrayish) 0.3.2
     by Qix
     under the MIT license
 
- - is-bigint 1.0.2
+ - [is-bigint](https://github.com/inspect-js/is-bigint) 1.0.2
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-binary-path 1.0.1
+ - [is-binary-path](https://github.com/sindresorhus/is-binary-path) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-binary-path 2.1.0
+ - [is-binary-path](https://github.com/sindresorhus/is-binary-path) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-boolean-object 1.1.1
+ - [is-boolean-object](https://github.com/inspect-js/is-boolean-object) 1.1.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-buffer 1.1.6
+ - [is-buffer](https://github.com/feross/is-buffer) 1.1.6
     by Feross Aboukhadijeh (feross@feross.org)
     under the MIT license
 
- - is-callable 1.2.3
+ - [is-callable](https://github.com/ljharb/is-callable) 1.2.3
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-color-stop 1.1.0
+ - [is-color-stop](https://github.com/pigcan/is-color-stop) 1.1.0
     by pigcan (jiangjay818@gmail.com)
     under the MIT license
 
- - is-core-module 2.4.0
+ - [is-core-module](https://github.com/inspect-js/is-core-module) 2.4.0
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-data-descriptor 0.1.4
+ - [is-data-descriptor](https://github.com/jonschlinkert/is-data-descriptor) 0.1.4
     by Jon Schlinkert
     under the MIT license
 
- - is-data-descriptor 1.0.0
+ - [is-data-descriptor](https://github.com/jonschlinkert/is-data-descriptor) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - is-date-object 1.0.4
+ - [is-date-object](https://github.com/inspect-js/is-date-object) 1.0.4
     by Jordan Harband
     under the MIT license
 
- - is-descriptor 0.1.6
+ - [is-descriptor](https://github.com/jonschlinkert/is-descriptor) 0.1.6
     by Jon Schlinkert
     under the MIT license
 
- - is-descriptor 1.0.2
+ - [is-descriptor](https://github.com/jonschlinkert/is-descriptor) 1.0.2
     by Jon Schlinkert
     under the MIT license
 
- - is-directory 0.3.1
+ - [is-directory](https://github.com/jonschlinkert/is-directory) 0.3.1
     by Jon Schlinkert
     under the MIT license
 
- - is-docker 2.2.1
+ - [is-docker](https://github.com/sindresorhus/is-docker) 2.2.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-extendable 0.1.1
+ - [is-extendable](https://github.com/jonschlinkert/is-extendable) 0.1.1
     by Jon Schlinkert
     under the MIT license
 
- - is-extendable 1.0.1
+ - [is-extendable](https://github.com/jonschlinkert/is-extendable) 1.0.1
     by Jon Schlinkert
     under the MIT license
 
- - is-extglob 2.1.1
+ - [is-extglob](https://github.com/jonschlinkert/is-extglob) 2.1.1
     by Jon Schlinkert
     under the MIT license
 
- - is-finite 1.1.0
+ - [is-finite](https://github.com/sindresorhus/is-finite) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-fullwidth-code-point 1.0.0
+ - [is-fullwidth-code-point](https://github.com/sindresorhus/is-fullwidth-code-point) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-fullwidth-code-point 2.0.0
+ - [is-fullwidth-code-point](https://github.com/sindresorhus/is-fullwidth-code-point) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-fullwidth-code-point 3.0.0
+ - [is-fullwidth-code-point](https://github.com/sindresorhus/is-fullwidth-code-point) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-glob 3.1.0
+ - [is-glob](https://github.com/jonschlinkert/is-glob) 3.1.0
     by Jon Schlinkert
     under the MIT license
 
- - is-glob 4.0.1
+ - [is-glob](https://github.com/micromatch/is-glob) 4.0.1
     by Jon Schlinkert
     under the MIT license
 
- - is-negative-zero 2.0.1
+ - [is-negative-zero](https://github.com/inspect-js/is-negative-zero) 2.0.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-number-object 1.0.5
+ - [is-number-object](https://github.com/inspect-js/is-number-object) 1.0.5
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-number 3.0.0
+ - [is-number](https://github.com/jonschlinkert/is-number) 3.0.0
     by Jon Schlinkert
     under the MIT license
 
- - is-number 7.0.0
+ - [is-number](https://github.com/jonschlinkert/is-number) 7.0.0
     by Jon Schlinkert
     under the MIT license
 
- - is-obj 2.0.0
+ - [is-obj](https://github.com/sindresorhus/is-obj) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-path-cwd 2.2.0
+ - [is-path-cwd](https://github.com/sindresorhus/is-path-cwd) 2.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-path-in-cwd 2.1.0
+ - [is-path-in-cwd](https://github.com/sindresorhus/is-path-in-cwd) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-path-inside 2.1.0
+ - [is-path-inside](https://github.com/sindresorhus/is-path-inside) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-plain-obj 1.1.0
+ - [is-plain-obj](https://github.com/sindresorhus/is-plain-obj) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-plain-object 2.0.4
+ - [is-plain-object](https://github.com/jonschlinkert/is-plain-object) 2.0.4
     by Jon Schlinkert
     under the MIT license
 
- - is-regex 1.1.3
+ - [is-regex](https://github.com/inspect-js/is-regex) 1.1.3
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-resolvable 1.1.0
+ - [is-resolvable](https://github.com/shinnn/is-resolvable) 1.1.0
     by Shinnosuke Watanabe
     under the ISC license
 
- - is-stream 1.1.0
+ - [is-stream](https://github.com/sindresorhus/is-stream) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-string 1.0.6
+ - [is-string](https://github.com/ljharb/is-string) 1.0.6
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-symbol 1.0.4
+ - [is-symbol](https://github.com/inspect-js/is-symbol) 1.0.4
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - is-text-path 1.0.1
+ - [is-text-path](https://github.com/sindresorhus/is-text-path) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-utf8 0.2.1
+ - [is-utf8](https://github.com/wayfind/is-utf8) 0.2.1
     by wayfind
     under the MIT license
 
- - is-windows 1.0.2
+ - [is-windows](https://github.com/jonschlinkert/is-windows) 1.0.2
     by Jon Schlinkert
     under the MIT license
 
- - is-wsl 1.1.0
+ - [is-wsl](https://github.com/sindresorhus/is-wsl) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - is-wsl 2.2.0
+ - [is-wsl](https://github.com/sindresorhus/is-wsl) 2.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - isarray 1.0.0
+ - [isarray](https://github.com/juliangruber/isarray) 1.0.0
     by Julian Gruber (mail@juliangruber.com)
     under the MIT license
 
- - isexe 2.0.0
+ - [isexe](https://github.com/isaacs/isexe) 2.0.0
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - isobject 2.1.0
+ - [isobject](https://github.com/jonschlinkert/isobject) 2.1.0
     by Jon Schlinkert
     under the MIT license
 
- - isobject 3.0.1
+ - [isobject](https://github.com/jonschlinkert/isobject) 3.0.1
     by Jon Schlinkert
     under the MIT license
 
- - jquery-knob-chif 1.2.13
+ - [jquery-knob-chif](https://github.com/aterrien/jQuery-Knob) 1.2.13
     by Anthony Terrien
     under the MIT license
 
- - jquery-mapael 2.2.0
+ - [jquery-mapael](https://github.com/neveldo/jQuery-Mapael) 2.2.0
     by Vincent Brouté (contact@vincentbroute.fr)
     under the MIT license
 
- - jquery-mousewheel 3.1.13
+ - [jquery-mousewheel](https://github.com/jquery/jquery-mousewheel) 3.1.13
     by jQuery Foundation and other contributors
     under the MIT license
 
- - jquery-ui-dist 1.12.1
+ - [jquery-ui-dist](https://github.com/jquery/jquery-ui) 1.12.1
     by jQuery Foundation and other contributors
     under the MIT license
 
- - jquery-ui 1.12.1
+ - [jquery-ui](https://github.com/jquery/jquery-ui) 1.12.1
     by jQuery Foundation and other contributors
     under the MIT license
 
- - jquery-validation 1.19.3
+ - [jquery-validation](https://github.com/jquery-validation/jquery-validation) 1.19.3
     by Jörn Zaefferer (joern.zaefferer@gmail.com)
     under the MIT license
 
- - jquery 3.5.0
+ - [jquery](https://github.com/jquery/jquery) 3.5.0
     by JS Foundation and other contributors
     under the MIT license
 
- - jquery 3.6.0
+ - [jquery](https://github.com/jquery/jquery) 3.6.0
     by OpenJS Foundation and other contributors
     under the MIT license
 
- - jqvmap-novulnerability 1.5.1
+ - [jqvmap-novulnerability](https://github.com/manifestinteractive/jqvmap) 1.5.1
     by JQVMap (me@peterschmalfeldt.com)
     under the (MIT OR GPL-3.0) license
 
- - js-tokens 3.0.2
+ - [js-tokens](https://github.com/lydell/js-tokens) 3.0.2
     by Simon Lydell
     under the MIT license
 
- - js-tokens 4.0.0
+ - [js-tokens](https://github.com/lydell/js-tokens) 4.0.0
     by Simon Lydell
     under the MIT license
 
- - js-yaml 3.14.1
+ - [js-yaml](https://github.com/nodeca/js-yaml) 3.14.1
     by Vladimir Zapparov (dervus.grim@gmail.com)
     under the MIT license
 
- - jsesc 0.5.0
+ - [jsesc](https://github.com/mathiasbynens/jsesc) 0.5.0
     by Mathias Bynens
     under the MIT license
 
- - jsesc 2.5.2
+ - [jsesc](https://github.com/mathiasbynens/jsesc) 2.5.2
     by Mathias Bynens
     under the MIT license
 
- - jsgrid 1.5.3
+ - [jsgrid](https://github.com/tabalinas/jsgrid) 1.5.3
     by Artem Tabalin
     under the MIT license
 
- - json-parse-better-errors 1.0.2
+ - [json-parse-better-errors](https://github.com/zkat/json-parse-better-errors) 1.0.2
     by Kat Marchán (kzm@zkat.tech)
     under the MIT license
 
- - json-parse-even-better-errors 2.3.1
+ - [json-parse-even-better-errors](https://github.com/npm/json-parse-even-better-errors) 2.3.1
     by Kat Marchán (kzm@zkat.tech)
     under the MIT license
 
- - json-schema-traverse 0.4.1
+ - [json-schema-traverse](https://github.com/epoberezkin/json-schema-traverse) 0.4.1
     by Evgeny Poberezkin
     under the MIT license
 
- - json-stringify-safe 5.0.1
+ - [json-stringify-safe](https://github.com/isaacs/json-stringify-safe) 5.0.1
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - json3 3.3.3
+ - [json3](https://github.com/bestiejs/json3) 3.3.3
     by Kit Cambridge (github@kitcambridge.be)
     under the MIT license
 
- - json5 1.0.1
+ - [json5](https://github.com/json5/json5) 1.0.1
     by Aseem Kishore (aseem.kishore@gmail.com)
     under the MIT license
 
- - json5 2.2.0
+ - [json5](https://github.com/json5/json5) 2.2.0
     by Aseem Kishore (aseem.kishore@gmail.com)
     under the MIT license
 
- - jsonfile 4.0.0
+ - [jsonfile](https://github.com/jprichardson/node-jsonfile) 4.0.0
     by JP Richardson (jprichardson@gmail.com)
     under the MIT license
 
- - jsonfile 6.1.0
+ - [jsonfile](https://github.com/jprichardson/node-jsonfile) 6.1.0
     by JP Richardson (jprichardson@gmail.com)
     under the MIT license
 
- - jsonparse 1.3.1
+ - [jsonparse](https://github.com/creationix/jsonparse) 1.3.1
     by Tim Caswell (tim@creationix.com)
     under the MIT license
 
- - jszip 3.6.0
+ - [jszip](https://github.com/Stuk/jszip) 3.6.0
     by Stuart Knightley (stuart@stuartk.com)
     under the (MIT OR GPL-3.0) license
 
- - katex 0.6.0
+ - [katex](https://github.com/Khan/KaTeX) 0.6.0
     under the MIT license
 
- - killable 1.0.1
+ - [killable](https://github.com/marten-de-vries/killable) 1.0.1
     by Marten de Vries
     under the ISC license
 
- - kind-of 3.2.2
+ - [kind-of](https://github.com/jonschlinkert/kind-of) 3.2.2
     by Jon Schlinkert
     under the MIT license
 
- - kind-of 4.0.0
+ - [kind-of](https://github.com/jonschlinkert/kind-of) 4.0.0
     by Jon Schlinkert
     under the MIT license
 
- - kind-of 5.1.0
+ - [kind-of](https://github.com/jonschlinkert/kind-of) 5.1.0
     by Jon Schlinkert
     under the MIT license
 
- - kind-of 6.0.3
+ - [kind-of](https://github.com/jonschlinkert/kind-of) 6.0.3
     by Jon Schlinkert
     under the MIT license
 
- - laravel-mix 4.1.4
+ - [laravel-mix](https://github.com/JeffreyWay/laravel-mix) 4.1.4
     by Jeffrey Way
     under the MIT license
 
- - last-call-webpack-plugin 3.0.0
+ - [last-call-webpack-plugin](https://github.com/NMFR/last-call-webpack-plugin) 3.0.0
     by Nuno Rodrigues
     under the MIT license
 
- - lcid 2.0.0
+ - [lcid](https://github.com/sindresorhus/lcid) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - levn 0.3.0
+ - [levn](https://github.com/gkz/levn) 0.3.0
     by George Zahariev (z@georgezahariev.com)
     under the MIT license
 
- - lie 3.3.0
+ - [lie](https://github.com/calvinmetcalf/lie) 3.3.0
     under the MIT license
 
- - linebreak 1.0.2
+ - [linebreak](https://github.com/devongovett/linebreaker) 1.0.2
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - lines-and-columns 1.1.6
+ - [lines-and-columns](https://github.com/eventualbuddha/lines-and-columns) 1.1.6
     by Brian Donovan (me@brian-donovan.com)
     under the MIT license
 
- - linkify-it 1.2.4
+ - [linkify-it](https://github.com/markdown-it/linkify-it) 1.2.4
     under the MIT license
 
- - load-json-file 1.1.0
+ - [load-json-file](https://github.com/sindresorhus/load-json-file) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - load-json-file 4.0.0
+ - [load-json-file](https://github.com/sindresorhus/load-json-file) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - loader-runner 2.4.0
+ - [loader-runner](https://github.com/webpack/loader-runner) 2.4.0
     by Tobias Koppers @sokra
     under the MIT license
 
- - loader-utils 1.4.0
+ - [loader-utils](https://github.com/webpack/loader-utils) 1.4.0
     by Tobias Koppers @sokra
     under the MIT license
 
- - locate-path 2.0.0
+ - [locate-path](https://github.com/sindresorhus/locate-path) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - locate-path 3.0.0
+ - [locate-path](https://github.com/sindresorhus/locate-path) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - locate-path 5.0.0
+ - [locate-path](https://github.com/sindresorhus/locate-path) 5.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - locate-path 6.0.0
+ - [locate-path](https://github.com/sindresorhus/locate-path) 6.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - lodash._baseassign 3.2.0
+ - [lodash._baseassign](https://github.com/lodash/lodash) 3.2.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash._basecopy 3.0.1
+ - [lodash._basecopy](https://github.com/lodash/lodash) 3.0.1
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash._bindcallback 3.0.1
+ - [lodash._bindcallback](https://github.com/lodash/lodash) 3.0.1
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash._createassigner 3.1.1
+ - [lodash._createassigner](https://github.com/lodash/lodash) 3.1.1
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash._getnative 3.9.1
+ - [lodash._getnative](https://github.com/lodash/lodash) 3.9.1
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash._isiterateecall 3.0.9
+ - [lodash._isiterateecall](https://github.com/lodash/lodash) 3.0.9
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.assign 3.2.0
+ - [lodash.assign](https://github.com/lodash/lodash) 3.2.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.assign 4.2.0
+ - [lodash.assign](https://github.com/lodash/lodash) 4.2.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.debounce 4.0.8
+ - [lodash.debounce](https://github.com/lodash/lodash) 4.0.8
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.defaults 3.1.2
+ - [lodash.defaults](https://github.com/lodash/lodash) 3.1.2
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.defaults 4.2.0
+ - [lodash.defaults](https://github.com/lodash/lodash) 4.2.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.difference 4.5.0
+ - [lodash.difference](https://github.com/lodash/lodash) 4.5.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.isarguments 3.1.0
+ - [lodash.isarguments](https://github.com/lodash/lodash) 3.1.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.isarray 3.0.4
+ - [lodash.isarray](https://github.com/lodash/lodash) 3.0.4
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.ismatch 4.4.0
+ - [lodash.ismatch](https://github.com/lodash/lodash) 4.4.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.keys 3.1.2
+ - [lodash.keys](https://github.com/lodash/lodash) 3.1.2
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.memoize 4.1.2
+ - [lodash.memoize](https://github.com/lodash/lodash) 4.1.2
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.restparam 3.6.1
+ - [lodash.restparam](https://github.com/lodash/lodash) 3.6.1
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash.uniq 4.5.0
+ - [lodash.uniq](https://github.com/lodash/lodash) 4.5.0
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - lodash 4.17.21
+ - [lodash](https://github.com/lodash/lodash) 4.17.21
     by John-David Dalton (john.david.dalton@gmail.com)
     under the MIT license
 
- - loglevel 1.7.1
+ - [loglevel](https://github.com/pimterry/loglevel) 1.7.1
     by Tim Perry (pimterry@gmail.com)
     under the MIT license
 
- - loud-rejection 1.6.0
+ - [loud-rejection](https://github.com/sindresorhus/loud-rejection) 1.6.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - lower-case 1.1.4
+ - [lower-case](https://github.com/blakeembrey/lower-case) 1.1.4
     by Blake Embrey (hello@blakeembrey.com)
     under the MIT license
 
- - lru-cache 4.1.5
+ - [lru-cache](https://github.com/isaacs/node-lru-cache) 4.1.5
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - lru-cache 5.1.1
+ - [lru-cache](https://github.com/isaacs/node-lru-cache) 5.1.1
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - lru-cache 6.0.0
+ - [lru-cache](https://github.com/isaacs/node-lru-cache) 6.0.0
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - magic-string 0.25.1
+ - [magic-string](https://github.com/rich-harris/magic-string) 0.25.1
     by Rich Harris
     under the MIT license
 
- - make-dir 1.3.0
+ - [make-dir](https://github.com/sindresorhus/make-dir) 1.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - make-dir 2.1.0
+ - [make-dir](https://github.com/sindresorhus/make-dir) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - make-dir 3.1.0
+ - [make-dir](https://github.com/sindresorhus/make-dir) 3.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - map-age-cleaner 0.1.3
+ - [map-age-cleaner](https://github.com/SamVerschueren/map-age-cleaner) 0.1.3
     by Sam Verschueren (sam.verschueren@gmail.com)
     under the MIT license
 
- - map-cache 0.2.2
+ - [map-cache](https://github.com/jonschlinkert/map-cache) 0.2.2
     by Jon Schlinkert
     under the MIT license
 
- - map-obj 1.0.1
+ - [map-obj](https://github.com/sindresorhus/map-obj) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - map-obj 4.2.1
+ - [map-obj](https://github.com/sindresorhus/map-obj) 4.2.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - map-visit 1.0.0
+ - [map-visit](https://github.com/jonschlinkert/map-visit) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - markdown-it-abbr 1.0.4
+ - [markdown-it-abbr](https://github.com/markdown-it/markdown-it-abbr) 1.0.4
     under the MIT license
 
- - markdown-it-deflist 2.1.0
+ - [markdown-it-deflist](https://github.com/markdown-it/markdown-it-deflist) 2.1.0
     under the MIT license
 
- - markdown-it-emoji 1.4.0
+ - [markdown-it-emoji](https://github.com/markdown-it/markdown-it-emoji) 1.4.0
     under the MIT license
 
- - markdown-it-footnote 2.0.0
+ - [markdown-it-footnote](https://github.com/markdown-it/markdown-it-footnote) 2.0.0
     under the MIT license
 
- - markdown-it-ins 2.0.0
+ - [markdown-it-ins](https://github.com/markdown-it/markdown-it-ins) 2.0.0
     under the MIT license
 
- - markdown-it-katex 2.0.3
+ - [markdown-it-katex](https://github.com/waylonflinn/markdown-it-katex) 2.0.3
     by waylonflinn@gmail.com
     under the MIT license
 
- - markdown-it-mark 2.0.0
+ - [markdown-it-mark](https://github.com/markdown-it/markdown-it-mark) 2.0.0
     under the MIT license
 
- - markdown-it-sub 1.0.0
+ - [markdown-it-sub](https://github.com/markdown-it/markdown-it-sub) 1.0.0
     under the MIT license
 
- - markdown-it-sup 1.0.0
+ - [markdown-it-sup](https://github.com/markdown-it/markdown-it-sup) 1.0.0
     under the MIT license
 
- - markdown-it-task-lists 2.1.1
+ - [markdown-it-task-lists](https://github.com/revin/markdown-it-task-lists) 2.1.1
     by Revin Guillen
     under the ISC license
 
- - markdown-it-toc-and-anchor 4.2.0
+ - [markdown-it-toc-and-anchor](https://github.com/medfreeman/markdown-it-toc-and-anchor) 4.2.0
     by Maxime Thirouin
     under the MIT license
 
- - markdown-it 6.1.1
+ - [markdown-it](https://github.com/markdown-it/markdown-it) 6.1.1
     under the MIT license
 
- - match-at 0.1.1
+ - [match-at](https://github.com/sophiebits/match-at) 0.1.1
     under the MIT* license
 
- - md5.js 1.3.5
+ - [md5.js](https://github.com/crypto-browserify/md5.js) 1.3.5
     by Kirill Fomichev (fanatid@ya.ru)
     under the MIT license
 
- - md5 2.3.0
+ - [md5](https://github.com/pvorb/node-md5) 2.3.0
     by Paul Vorbach (paul@vorba.ch)
     under the BSD-3-Clause license
 
- - mdn-data 2.0.14
+ - [mdn-data](https://github.com/mdn/data) 2.0.14
     by Mozilla Developer Network
     under the CC0-1.0 license
 
- - mdn-data 2.0.4
+ - [mdn-data](https://github.com/mdn/data) 2.0.4
     by Mozilla Developer Network
     under the CC0-1.0 license
 
- - mdurl 1.0.1
+ - [mdurl](https://github.com/markdown-it/mdurl) 1.0.1
     under the MIT license
 
- - media-typer 0.3.0
+ - [media-typer](https://github.com/jshttp/media-typer) 0.3.0
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - mem 4.3.0
+ - [mem](https://github.com/sindresorhus/mem) 4.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - memory-fs 0.4.1
+ - [memory-fs](https://github.com/webpack/memory-fs) 0.4.1
     by Tobias Koppers @sokra
     under the MIT license
 
- - memory-fs 0.5.0
+ - [memory-fs](https://github.com/webpack/memory-fs) 0.5.0
     by Tobias Koppers @sokra
     under the MIT license
 
- - meow 3.7.0
+ - [meow](https://github.com/sindresorhus/meow) 3.7.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - meow 8.1.2
+ - [meow](https://github.com/sindresorhus/meow) 8.1.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - merge-descriptors 1.0.1
+ - [merge-descriptors](https://github.com/component/merge-descriptors) 1.0.1
     by Jonathan Ong (me@jongleberry.com)
     under the MIT license
 
- - merge-source-map 1.0.4
+ - [merge-source-map](https://github.com/keik/merge-source-map) 1.0.4
     by keik (k4t0.kei@gmail.com)
     under the MIT license
 
- - merge-source-map 1.1.0
+ - [merge-source-map](https://github.com/keik/merge-source-map) 1.1.0
     by keik (k4t0.kei@gmail.com)
     under the MIT license
 
- - merge2 1.4.1
+ - [merge2](https://github.com/teambition/merge2) 1.4.1
     under the MIT license
 
- - methods 1.1.2
+ - [methods](https://github.com/jshttp/methods) 1.1.2
     under the MIT license
 
- - micromatch 3.1.10
+ - [micromatch](https://github.com/micromatch/micromatch) 3.1.10
     by Jon Schlinkert
     under the MIT license
 
- - microplugin 0.0.3
+ - [microplugin](https://github.com/brianreavis/microplugin.js) 0.0.3
     by Brian Reavis (brian@thirdroute.com)
     under the Apache* license
 
- - miller-rabin 4.0.1
+ - [miller-rabin](https://github.com/indutny/miller-rabin) 4.0.1
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - mime-db 1.48.0
+ - [mime-db](https://github.com/jshttp/mime-db) 1.48.0
     under the MIT license
 
- - mime-types 2.1.31
+ - [mime-types](https://github.com/jshttp/mime-types) 2.1.31
     under the MIT license
 
- - mime 1.6.0
+ - [mime](https://github.com/broofa/node-mime) 1.6.0
     by Robert Kieffer (robert@broofa.com)
     under the MIT license
 
- - mime 2.5.2
+ - [mime](https://github.com/broofa/mime) 2.5.2
     by Robert Kieffer (robert@broofa.com)
     under the MIT license
 
- - mimic-fn 2.1.0
+ - [mimic-fn](https://github.com/sindresorhus/mimic-fn) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - min-indent 1.0.1
+ - [min-indent](https://github.com/thejameskyle/min-indent) 1.0.1
     by James Kyle (me@thejameskyle.com)
     under the MIT license
 
- - minimalistic-assert 1.0.1
+ - [minimalistic-assert](https://github.com/calvinmetcalf/minimalistic-assert) 1.0.1
     under the ISC license
 
- - minimalistic-crypto-utils 1.0.1
+ - [minimalistic-crypto-utils](https://github.com/indutny/minimalistic-crypto-utils) 1.0.1
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - minimatch 3.0.4
+ - [minimatch](https://github.com/isaacs/minimatch) 3.0.4
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - minimist-options 4.1.0
+ - [minimist-options](https://github.com/vadimdemedes/minimist-options) 4.1.0
     by Vadim Demedes (vdemedes@gmail.com)
     under the MIT license
 
- - minimist 0.0.10
+ - [minimist](https://github.com/substack/minimist) 0.0.10
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - minimist 1.2.5
+ - [minimist](https://github.com/substack/minimist) 1.2.5
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - mississippi 3.0.0
+ - [mississippi](https://github.com/maxogden/mississippi) 3.0.0
     by max ogden
     under the BSD-2-Clause license
 
- - mixin-deep 1.3.2
+ - [mixin-deep](https://github.com/jonschlinkert/mixin-deep) 1.3.2
     by Jon Schlinkert
     under the MIT license
 
- - mkdirp 0.5.5
+ - [mkdirp](https://github.com/substack/node-mkdirp) 0.5.5
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - modify-values 1.0.1
+ - [modify-values](https://github.com/sindresorhus/modify-values) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - moment-locales-webpack-plugin 1.2.0
+ - [moment-locales-webpack-plugin](https://github.com/iamakulov/moment-locales-webpack-plugin) 1.2.0
     by Ivan Akulov (mail@iamakulov.com)
     under the MIT license
 
- - moment-timezone 0.4.1
+ - [moment-timezone](https://github.com/moment/moment-timezone) 0.4.1
     by Tim Wood (washwithcare@gmail.com)
     under the MIT license
 
- - moment-timezone 0.5.33
+ - [moment-timezone](https://github.com/moment/moment-timezone) 0.5.33
     by Tim Wood (washwithcare@gmail.com)
     under the MIT license
 
- - moment 2.24.0
+ - [moment](https://github.com/moment/moment) 2.24.0
     by Iskren Ivov Chernev (iskren.chernev@gmail.com)
     under the MIT license
 
- - moment 2.29.1
+ - [moment](https://github.com/moment/moment) 2.29.1
     by Iskren Ivov Chernev (iskren.chernev@gmail.com)
     under the MIT license
 
- - move-concurrently 1.0.1
+ - [move-concurrently](https://github.com/npm/move-concurrently) 1.0.1
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - ms 2.0.0
+ - [ms](https://github.com/zeit/ms) 2.0.0
     under the MIT license
 
- - ms 2.1.1
+ - [ms](https://github.com/zeit/ms) 2.1.1
     under the MIT license
 
- - ms 2.1.2
+ - [ms](https://github.com/zeit/ms) 2.1.2
     under the MIT license
 
- - multicast-dns-service-types 1.1.0
+ - [multicast-dns-service-types](https://github.com/mafintosh/multicast-dns-service-types) 1.1.0
     by Mathias Buus
     under the MIT license
 
- - multicast-dns 6.2.3
+ - [multicast-dns](https://github.com/mafintosh/multicast-dns) 6.2.3
     by Mathias Buus
     under the MIT license
 
- - nanomatch 1.2.13
+ - [nanomatch](https://github.com/micromatch/nanomatch) 1.2.13
     by Jon Schlinkert
     under the MIT license
 
- - negotiator 0.6.2
+ - [negotiator](https://github.com/jshttp/negotiator) 0.6.2
     under the MIT license
 
- - neo-async 2.6.2
+ - [neo-async](https://github.com/suguru03/neo-async) 2.6.2
     under the MIT license
 
- - next-tick 1.0.0
+ - [next-tick](https://github.com/medikoo/next-tick) 1.0.0
     by Mariusz Nowak (medyk@medikoo.com)
     under the MIT license
 
- - nice-try 1.0.5
+ - [nice-try](https://github.com/electerious/nice-try) 1.0.5
     under the MIT license
 
- - no-case 2.3.2
+ - [no-case](https://github.com/blakeembrey/no-case) 2.3.2
     by Blake Embrey (hello@blakeembrey.com)
     under the MIT license
 
- - node-forge 0.10.0
+ - [node-forge](https://github.com/digitalbazaar/forge) 0.10.0
     by Digital Bazaar, Inc. (support@digitalbazaar.com)
     under the (BSD-3-Clause OR GPL-2.0) license
 
- - node-libs-browser 2.2.1
+ - [node-libs-browser](https://github.com/webpack/node-libs-browser) 2.2.1
     by Tobias Koppers @sokra
     under the MIT license
 
- - node-notifier 9.0.1
+ - [node-notifier](https://github.com/mikaelbr/node-notifier) 9.0.1
     by Mikael Brevik
     under the MIT license
 
- - node-releases 1.1.72
+ - [node-releases](https://github.com/chicoxyzzy/node-releases) 1.1.72
     by Sergey Rubanov (chi187@gmail.com)
     under the MIT license
 
- - normalize-package-data 2.5.0
+ - [normalize-package-data](https://github.com/npm/normalize-package-data) 2.5.0
     by Meryn Stol (merynstol@gmail.com)
     under the BSD-2-Clause license
 
- - normalize-package-data 3.0.2
+ - [normalize-package-data](https://github.com/npm/normalize-package-data) 3.0.2
     by Meryn Stol (merynstol@gmail.com)
     under the BSD-2-Clause license
 
- - normalize-path 2.1.1
+ - [normalize-path](https://github.com/jonschlinkert/normalize-path) 2.1.1
     by Jon Schlinkert
     under the MIT license
 
- - normalize-path 3.0.0
+ - [normalize-path](https://github.com/jonschlinkert/normalize-path) 3.0.0
     by Jon Schlinkert
     under the MIT license
 
- - normalize-range 0.1.2
+ - [normalize-range](https://github.com/jamestalmage/normalize-range) 0.1.2
     by James Talmage (james@talmage.io)
     under the MIT license
 
- - normalize-url 3.3.0
+ - [normalize-url](https://github.com/sindresorhus/normalize-url) 3.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - npm-run-path 2.0.2
+ - [npm-run-path](https://github.com/sindresorhus/npm-run-path) 2.0.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - nprogress 0.2.0
+ - [nprogress](https://github.com/rstacruz/nprogress) 0.2.0
     by Rico Sta. Cruz (hi@ricostacruz.com)
     under the MIT license
 
- - nth-check 1.0.2
+ - [nth-check](https://github.com/fb55/nth-check) 1.0.2
     by Felix Boehm (me@feedic.com)
     under the BSD-2-Clause license
 
- - null-check 1.0.0
+ - [null-check](https://github.com/sindresorhus/null-check) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - num2fraction 1.2.2
+ - [num2fraction](https://github.com/yisibl/num2fraction) 1.2.2
     by yisi (yiorsi@gmail.com)
     under the MIT license
 
- - number-is-nan 1.0.1
+ - [number-is-nan](https://github.com/sindresorhus/number-is-nan) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - object-assign 4.1.1
+ - [object-assign](https://github.com/sindresorhus/object-assign) 4.1.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - object-copy 0.1.0
+ - [object-copy](https://github.com/jonschlinkert/object-copy) 0.1.0
     by Jon Schlinkert
     under the MIT license
 
- - object-inspect 1.10.3
+ - [object-inspect](https://github.com/inspect-js/object-inspect) 1.10.3
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - object-is 1.1.5
+ - [object-is](https://github.com/es-shims/object-is) 1.1.5
     by Jordan Harband
     under the MIT license
 
- - object-keys 1.1.1
+ - [object-keys](https://github.com/ljharb/object-keys) 1.1.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - object-path 0.9.2
+ - [object-path](https://github.com/mariocasciaro/object-path) 0.9.2
     by Mario Casciaro
     under the MIT license
 
- - object-visit 1.0.1
+ - [object-visit](https://github.com/jonschlinkert/object-visit) 1.0.1
     by Jon Schlinkert
     under the MIT license
 
- - object.assign 4.1.2
+ - [object.assign](https://github.com/ljharb/object.assign) 4.1.2
     by Jordan Harband
     under the MIT license
 
- - object.getownpropertydescriptors 2.1.2
+ - [object.getownpropertydescriptors](https://github.com/es-shims/object.getownpropertydescriptors) 2.1.2
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - object.omit 3.0.0
+ - [object.omit](https://github.com/jonschlinkert/object.omit) 3.0.0
     by Jon Schlinkert
     under the MIT license
 
- - object.pick 1.3.0
+ - [object.pick](https://github.com/jonschlinkert/object.pick) 1.3.0
     by Jon Schlinkert
     under the MIT license
 
- - object.values 1.1.4
+ - [object.values](https://github.com/es-shims/Object.values) 1.1.4
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - obuf 1.1.2
+ - [obuf](https://github.com/indutny/offset-buffer) 1.1.2
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - on-finished 2.3.0
+ - [on-finished](https://github.com/jshttp/on-finished) 2.3.0
     under the MIT license
 
- - on-headers 1.0.2
+ - [on-headers](https://github.com/jshttp/on-headers) 1.0.2
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - once 1.4.0
+ - [once](https://github.com/isaacs/once) 1.4.0
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - opn 5.5.0
+ - [opn](https://github.com/sindresorhus/opn) 5.5.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - optimist 0.6.1
+ - [optimist](https://github.com/substack/node-optimist) 0.6.1
     by James Halliday (mail@substack.net)
     under the MIT* license
 
- - optimize-css-assets-webpack-plugin 5.0.6
+ - [optimize-css-assets-webpack-plugin](https://github.com/NMFR/optimize-css-assets-webpack-plugin) 5.0.6
     by Nuno Rodrigues
     under the MIT license
 
- - optionator 0.8.3
+ - [optionator](https://github.com/gkz/optionator) 0.8.3
     by George Zahariev (z@georgezahariev.com)
     under the MIT license
 
- - original 1.0.2
+ - [original](https://github.com/unshiftio/original) 1.0.2
     by Arnout Kazemier
     under the MIT license
 
- - os-browserify 0.3.0
+ - [os-browserify](https://github.com/CoderPuppy/os-browserify) 0.3.0
     by CoderPuppy (coderpup@gmail.com)
     under the MIT license
 
- - os-locale 3.1.0
+ - [os-locale](https://github.com/sindresorhus/os-locale) 3.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - overlayscrollbars 1.13.1
+ - [overlayscrollbars](https://github.com/KingSora/OverlayScrollbars) 1.13.1
     by KingSora | Rene Haas
     under the MIT license
 
- - p-defer 1.0.0
+ - [p-defer](https://github.com/sindresorhus/p-defer) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-finally 1.0.0
+ - [p-finally](https://github.com/sindresorhus/p-finally) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-is-promise 2.1.0
+ - [p-is-promise](https://github.com/sindresorhus/p-is-promise) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-limit 1.3.0
+ - [p-limit](https://github.com/sindresorhus/p-limit) 1.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-limit 2.3.0
+ - [p-limit](https://github.com/sindresorhus/p-limit) 2.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-limit 3.1.0
+ - [p-limit](https://github.com/sindresorhus/p-limit) 3.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-locate 2.0.0
+ - [p-locate](https://github.com/sindresorhus/p-locate) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-locate 3.0.0
+ - [p-locate](https://github.com/sindresorhus/p-locate) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-locate 4.1.0
+ - [p-locate](https://github.com/sindresorhus/p-locate) 4.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-locate 5.0.0
+ - [p-locate](https://github.com/sindresorhus/p-locate) 5.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-map 2.1.0
+ - [p-map](https://github.com/sindresorhus/p-map) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-pipe 1.2.0
+ - [p-pipe](https://github.com/sindresorhus/p-pipe) 1.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-retry 3.0.1
+ - [p-retry](https://github.com/sindresorhus/p-retry) 3.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-try 1.0.0
+ - [p-try](https://github.com/sindresorhus/p-try) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - p-try 2.2.0
+ - [p-try](https://github.com/sindresorhus/p-try) 2.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - pako 0.2.9
+ - [pako](https://github.com/nodeca/pako) 0.2.9
     under the MIT license
 
- - pako 1.0.11
+ - [pako](https://github.com/nodeca/pako) 1.0.11
     under the (MIT AND Zlib) license
 
- - parallel-transform 1.2.0
+ - [parallel-transform](https://github.com/mafintosh/parallel-transform) 1.2.0
     by Mathias Buus Madsen (mathiasbuus@gmail.com)
     under the MIT license
 
- - param-case 2.1.1
+ - [param-case](https://github.com/blakeembrey/param-case) 2.1.1
     by Blake Embrey (hello@blakeembrey.com)
     under the MIT license
 
- - parchment 1.1.4
+ - [parchment](https://github.com/quilljs/parchment) 1.1.4
     by Jason Chen (jhchen7@gmail.com)
     under the BSD-3-Clause license
 
- - parent-module 1.0.1
+ - [parent-module](https://github.com/sindresorhus/parent-module) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - parse-asn1 5.1.6
+ - [parse-asn1](https://github.com/crypto-browserify/parse-asn1) 5.1.6
     under the ISC license
 
- - parse-github-repo-url 1.4.1
+ - [parse-github-repo-url](https://github.com/repo-utils/parse-github-repo-url) 1.4.1
     by Jonathan Ong (me@jongleberry.com)
     under the MIT license
 
- - parse-json 2.2.0
+ - [parse-json](https://github.com/sindresorhus/parse-json) 2.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - parse-json 4.0.0
+ - [parse-json](https://github.com/sindresorhus/parse-json) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - parse-json 5.2.0
+ - [parse-json](https://github.com/sindresorhus/parse-json) 5.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - parse-passwd 1.0.0
+ - [parse-passwd](https://github.com/doowb/parse-passwd) 1.0.0
     by Brian Woodward
     under the MIT license
 
- - parseurl 1.3.3
+ - [parseurl](https://github.com/pillarjs/parseurl) 1.3.3
     under the MIT license
 
- - pascalcase 0.1.1
+ - [pascalcase](https://github.com/jonschlinkert/pascalcase) 0.1.1
     by Jon Schlinkert
     under the MIT license
 
- - path-browserify 0.0.1
+ - [path-browserify](https://github.com/substack/path-browserify) 0.0.1
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - path-dirname 1.0.2
+ - [path-dirname](https://github.com/es128/path-dirname) 1.0.2
     by Elan Shanker
     under the MIT license
 
- - path-exists 2.1.0
+ - [path-exists](https://github.com/sindresorhus/path-exists) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - path-exists 3.0.0
+ - [path-exists](https://github.com/sindresorhus/path-exists) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - path-exists 4.0.0
+ - [path-exists](https://github.com/sindresorhus/path-exists) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - path-is-absolute 1.0.1
+ - [path-is-absolute](https://github.com/sindresorhus/path-is-absolute) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - path-is-inside 1.0.2
+ - [path-is-inside](https://github.com/domenic/path-is-inside) 1.0.2
     by Domenic Denicola (d@domenic.me)
     under the (WTFPL OR MIT) license
 
- - path-key 2.0.1
+ - [path-key](https://github.com/sindresorhus/path-key) 2.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - path-parse 1.0.7
+ - [path-parse](https://github.com/jbgutierrez/path-parse) 1.0.7
     by Javier Blanco (http://jbgutierrez.info)
     under the MIT license
 
- - path-to-regexp 0.1.7
+ - [path-to-regexp](https://github.com/component/path-to-regexp) 0.1.7
     under the MIT license
 
- - path-type 1.1.0
+ - [path-type](https://github.com/sindresorhus/path-type) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - path-type 3.0.0
+ - [path-type](https://github.com/sindresorhus/path-type) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - path-type 4.0.0
+ - [path-type](https://github.com/sindresorhus/path-type) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - pbkdf2 3.1.2
+ - [pbkdf2](https://github.com/crypto-browserify/pbkdf2) 3.1.2
     by Daniel Cousens
     under the MIT license
 
- - pc-bootstrap4-datetimepicker 4.17.51
+ - [pc-bootstrap4-datetimepicker](https://github.com/pingcheng/bootstrap4-datetimepicker) 4.17.51
     by Jonathan Peterson
     under the MIT license
 
- - pdfkit 0.12.1
+ - [pdfkit](https://github.com/foliojs/pdfkit) 0.12.1
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - pdfmake 0.1.71
+ - [pdfmake](https://github.com/bpampuch/pdfmake) 0.1.71
     by Bartek Pampuch (bartosz.pampuch@gmail.com)
     under the MIT license
 
- - picomatch 2.3.0
+ - [picomatch](https://github.com/micromatch/picomatch) 2.3.0
     by Jon Schlinkert
     under the MIT license
 
- - pify 2.3.0
+ - [pify](https://github.com/sindresorhus/pify) 2.3.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - pify 3.0.0
+ - [pify](https://github.com/sindresorhus/pify) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - pify 4.0.1
+ - [pify](https://github.com/sindresorhus/pify) 4.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - pinkie-promise 2.0.1
+ - [pinkie-promise](https://github.com/floatdrop/pinkie-promise) 2.0.1
     by Vsevolod Strukchinsky (floatdrop@gmail.com)
     under the MIT license
 
- - pinkie 2.0.4
+ - [pinkie](https://github.com/floatdrop/pinkie) 2.0.4
     by Vsevolod Strukchinsky (floatdrop@gmail.com)
     under the MIT license
 
- - pkg-dir 3.0.0
+ - [pkg-dir](https://github.com/sindresorhus/pkg-dir) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - pkg-dir 4.2.0
+ - [pkg-dir](https://github.com/sindresorhus/pkg-dir) 4.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - png-js 1.0.0
+ - [png-js](https://github.com/devongovett/png.js) 1.0.0
     by Devon Govett (devongovett@gmail.com)
     under the MIT* license
 
- - popper.js 1.16.1
+ - [popper.js](https://github.com/FezVrasta/popper.js) 1.16.1
     by Federico Zivolo (federico.zivolo@gmail.com)
     under the MIT license
 
- - portfinder 1.0.28
+ - [portfinder](https://github.com/http-party/node-portfinder) 1.0.28
     by Charlie Robbins (charlie.robbins@gmail.com)
     under the MIT license
 
- - posix-character-classes 0.1.1
+ - [posix-character-classes](https://github.com/jonschlinkert/posix-character-classes) 0.1.1
     by Jon Schlinkert
     under the MIT license
 
- - postcss-calc 7.0.5
+ - [postcss-calc](https://github.com/postcss/postcss-calc) 7.0.5
     by Andy Jansson
     under the MIT license
 
- - postcss-colormin 4.0.3
+ - [postcss-colormin](https://github.com/cssnano/cssnano) 4.0.3
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-convert-values 4.0.1
+ - [postcss-convert-values](https://github.com/cssnano/cssnano) 4.0.1
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-discard-comments 4.0.2
+ - [postcss-discard-comments](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-discard-duplicates 4.0.2
+ - [postcss-discard-duplicates](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-discard-empty 4.0.1
+ - [postcss-discard-empty](https://github.com/cssnano/cssnano) 4.0.1
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-discard-overridden 4.0.1
+ - [postcss-discard-overridden](https://github.com/cssnano/cssnano) 4.0.1
     by Justineo (justice360@gmail.com)
     under the MIT license
 
- - postcss-load-config 2.1.2
+ - [postcss-load-config](https://github.com/postcss/postcss-load-config) 2.1.2
     by Michael Ciniawky (michael.ciniawsky@gmail.com)
     under the MIT license
 
- - postcss-loader 3.0.0
+ - [postcss-loader](https://github.com/postcss/postcss-loader) 3.0.0
     by Andrey Sitnik (andrey@sitnik.ru)
     under the MIT license
 
- - postcss-merge-longhand 4.0.11
+ - [postcss-merge-longhand](https://github.com/cssnano/cssnano) 4.0.11
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-merge-rules 4.0.3
+ - [postcss-merge-rules](https://github.com/cssnano/cssnano) 4.0.3
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-minify-font-values 4.0.2
+ - [postcss-minify-font-values](https://github.com/cssnano/cssnano) 4.0.2
     by Bogdan Chadkin (trysound@yandex.ru)
     under the MIT license
 
- - postcss-minify-gradients 4.0.2
+ - [postcss-minify-gradients](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-minify-params 4.0.2
+ - [postcss-minify-params](https://github.com/cssnano/cssnano) 4.0.2
     by Bogdan Chadkin (trysound@yandex.ru)
     under the MIT license
 
- - postcss-minify-selectors 4.0.2
+ - [postcss-minify-selectors](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-modules-extract-imports 1.2.1
+ - [postcss-modules-extract-imports](https://github.com/css-modules/postcss-modules-extract-imports) 1.2.1
     by Glen Maddern
     under the ISC license
 
- - postcss-modules-local-by-default 1.2.0
+ - [postcss-modules-local-by-default](https://github.com/css-modules/postcss-modules-local-by-default) 1.2.0
     by Mark Dalgleish
     under the MIT license
 
- - postcss-modules-scope 1.1.0
+ - [postcss-modules-scope](https://github.com/css-modules/postcss-modules-scope) 1.1.0
     by Glen Maddern
     under the ISC license
 
- - postcss-modules-values 1.3.0
+ - [postcss-modules-values](https://github.com/css-modules/postcss-modules-values) 1.3.0
     by Glen Maddern
     under the ISC license
 
- - postcss-normalize-charset 4.0.1
+ - [postcss-normalize-charset](https://github.com/cssnano/cssnano) 4.0.1
     by Bogdan Chadkin (trysound@yandex.ru)
     under the MIT license
 
- - postcss-normalize-display-values 4.0.2
+ - [postcss-normalize-display-values](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-normalize-positions 4.0.2
+ - [postcss-normalize-positions](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-normalize-repeat-style 4.0.2
+ - [postcss-normalize-repeat-style](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-normalize-string 4.0.2
+ - [postcss-normalize-string](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-normalize-timing-functions 4.0.2
+ - [postcss-normalize-timing-functions](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-normalize-unicode 4.0.1
+ - [postcss-normalize-unicode](https://github.com/cssnano/cssnano) 4.0.1
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-normalize-url 4.0.1
+ - [postcss-normalize-url](https://github.com/cssnano/cssnano) 4.0.1
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-normalize-whitespace 4.0.2
+ - [postcss-normalize-whitespace](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-ordered-values 4.1.2
+ - [postcss-ordered-values](https://github.com/cssnano/cssnano) 4.1.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-reduce-initial 4.0.3
+ - [postcss-reduce-initial](https://github.com/cssnano/cssnano) 4.0.3
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-reduce-transforms 4.0.2
+ - [postcss-reduce-transforms](https://github.com/cssnano/cssnano) 4.0.2
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-selector-parser 3.1.2
+ - [postcss-selector-parser](https://github.com/postcss/postcss-selector-parser) 3.1.2
     under the MIT license
 
- - postcss-selector-parser 6.0.6
+ - [postcss-selector-parser](https://github.com/postcss/postcss-selector-parser) 6.0.6
     under the MIT license
 
- - postcss-svgo 4.0.3
+ - [postcss-svgo](https://github.com/cssnano/cssnano) 4.0.3
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-unique-selectors 4.0.1
+ - [postcss-unique-selectors](https://github.com/cssnano/cssnano) 4.0.1
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - postcss-value-parser 3.3.1
+ - [postcss-value-parser](https://github.com/TrySound/postcss-value-parser) 3.3.1
     by Bogdan Chadkin (trysound@yandex.ru)
     under the MIT license
 
- - postcss-value-parser 4.1.0
+ - [postcss-value-parser](https://github.com/TrySound/postcss-value-parser) 4.1.0
     by Bogdan Chadkin (trysound@yandex.ru)
     under the MIT license
 
- - postcss 6.0.23
+ - [postcss](https://github.com/postcss/postcss) 6.0.23
     by Andrey Sitnik (andrey@sitnik.ru)
     under the MIT license
 
- - postcss 7.0.35
+ - [postcss](https://github.com/postcss/postcss) 7.0.35
     by Andrey Sitnik (andrey@sitnik.ru)
     under the MIT license
 
- - prelude-ls 1.1.2
+ - [prelude-ls](https://github.com/gkz/prelude-ls) 1.1.2
     by George Zahariev (z@georgezahariev.com)
     under the MIT license
 
- - prettier 1.19.1
+ - [prettier](https://github.com/prettier/prettier) 1.19.1
     by James Long
     under the MIT license
 
- - private 0.1.8
+ - [private](https://github.com/benjamn/private) 0.1.8
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- - process-nextick-args 2.0.1
+ - [process-nextick-args](https://github.com/calvinmetcalf/process-nextick-args) 2.0.1
     under the MIT license
 
- - process 0.11.10
+ - [process](https://github.com/shtylman/node-process) 0.11.10
     by Roman Shtylman (shtylman@gmail.com)
     under the MIT license
 
- - promise-inflight 1.0.1
+ - [promise-inflight](https://github.com/iarna/promise-inflight) 1.0.1
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - proxy-addr 2.0.7
+ - [proxy-addr](https://github.com/jshttp/proxy-addr) 2.0.7
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - prr 1.0.1
+ - [prr](https://github.com/rvagg/prr) 1.0.1
     by Rod Vagg (rod@vagg.org)
     under the MIT license
 
- - pseudomap 1.0.2
+ - [pseudomap](https://github.com/isaacs/pseudomap) 1.0.2
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - public-encrypt 4.0.3
+ - [public-encrypt](https://github.com/crypto-browserify/publicEncrypt) 4.0.3
     by Calvin Metcalf
     under the MIT license
 
- - pump 2.0.1
+ - [pump](https://github.com/mafintosh/pump) 2.0.1
     by Mathias Buus Madsen (mathiasbuus@gmail.com)
     under the MIT license
 
- - pump 3.0.0
+ - [pump](https://github.com/mafintosh/pump) 3.0.0
     by Mathias Buus Madsen (mathiasbuus@gmail.com)
     under the MIT license
 
- - pumpify 1.5.1
+ - [pumpify](https://github.com/mafintosh/pumpify) 1.5.1
     by Mathias Buus
     under the MIT license
 
- - punycode 1.3.2
+ - [punycode](https://github.com/bestiejs/punycode.js) 1.3.2
     by Mathias Bynens
     under the MIT license
 
- - punycode 1.4.1
+ - [punycode](https://github.com/bestiejs/punycode.js) 1.4.1
     by Mathias Bynens
     under the MIT license
 
- - punycode 2.1.1
+ - [punycode](https://github.com/bestiejs/punycode.js) 2.1.1
     by Mathias Bynens
     under the MIT license
 
- - q 1.5.1
+ - [q](https://github.com/kriskowal/q) 1.5.1
     by Kris Kowal (kris@cixar.com)
     under the MIT license
 
- - qs 6.10.1
+ - [qs](https://github.com/ljharb/qs) 6.10.1
     under the BSD-3-Clause license
 
- - qs 6.7.0
+ - [qs](https://github.com/ljharb/qs) 6.7.0
     under the BSD-3-Clause license
 
- - querystring-es3 0.2.1
+ - [querystring-es3](https://github.com/mike-spainhower/querystring) 0.2.1
     by Irakli Gozalishvili (rfobic@gmail.com)
     under the MIT license
 
- - querystring 0.2.0
+ - [querystring](https://github.com/Gozala/querystring) 0.2.0
     by Irakli Gozalishvili (rfobic@gmail.com)
     under the MIT license
 
- - querystringify 2.2.0
+ - [querystringify](https://github.com/unshiftio/querystringify) 2.2.0
     by Arnout Kazemier
     under the MIT license
 
- - quick-lru 4.0.1
+ - [quick-lru](https://github.com/sindresorhus/quick-lru) 4.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - quill-delta 3.6.3
+ - [quill-delta](https://github.com/quilljs/delta) 3.6.3
     by Jason Chen (jhchen7@gmail.com)
     under the MIT license
 
- - quill 1.3.7
+ - [quill](https://github.com/quilljs/quill) 1.3.7
     by Jason Chen (jhchen7@gmail.com)
     under the BSD-3-Clause license
 
- - quote-stream 1.0.2
+ - [quote-stream](https://github.com/substack/quote-stream) 1.0.2
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - randombytes 2.1.0
+ - [randombytes](https://github.com/crypto-browserify/randombytes) 2.1.0
     under the MIT license
 
- - randomfill 1.0.4
+ - [randomfill](https://github.com/crypto-browserify/randomfill) 1.0.4
     under the MIT license
 
- - range-parser 1.2.1
+ - [range-parser](https://github.com/jshttp/range-parser) 1.2.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - raphael 2.3.0
+ - [raphael](https://github.com/DmitryBaranovskiy/raphael) 2.3.0
     by Dmitry Baranovskiy
     under the MIT license
 
- - raw-body 2.4.0
+ - [raw-body](https://github.com/stream-utils/raw-body) 2.4.0
     by Jonathan Ong (me@jongleberry.com)
     under the MIT license
 
- - read-pkg-up 1.0.1
+ - [read-pkg-up](https://github.com/sindresorhus/read-pkg-up) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - read-pkg-up 3.0.0
+ - [read-pkg-up](https://github.com/sindresorhus/read-pkg-up) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - read-pkg-up 7.0.1
+ - [read-pkg-up](https://github.com/sindresorhus/read-pkg-up) 7.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - read-pkg 1.1.0
+ - [read-pkg](https://github.com/sindresorhus/read-pkg) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - read-pkg 3.0.0
+ - [read-pkg](https://github.com/sindresorhus/read-pkg) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - read-pkg 5.2.0
+ - [read-pkg](https://github.com/sindresorhus/read-pkg) 5.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - readable-stream 2.3.7
+ - [readable-stream](https://github.com/nodejs/readable-stream) 2.3.7
     under the MIT license
 
- - readable-stream 3.6.0
+ - [readable-stream](https://github.com/nodejs/readable-stream) 3.6.0
     under the MIT license
 
- - readdirp 2.2.1
+ - [readdirp](https://github.com/paulmillr/readdirp) 2.2.1
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - readdirp 3.5.0
+ - [readdirp](https://github.com/paulmillr/readdirp) 3.5.0
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - recast 0.11.23
+ - [recast](https://github.com/benjamn/recast) 0.11.23
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- - rechoir 0.6.2
+ - [rechoir](https://github.com/tkellen/node-rechoir) 0.6.2
     by Tyler Kellen
     under the MIT license
 
- - redent 1.0.0
+ - [redent](https://github.com/sindresorhus/redent) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - redent 3.0.0
+ - [redent](https://github.com/sindresorhus/redent) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - redeyed 1.0.1
+ - [redeyed](https://github.com/thlorenz/redeyed) 1.0.1
     by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
- - regenerate-unicode-properties 8.2.0
+ - [regenerate-unicode-properties](https://github.com/mathiasbynens/regenerate-unicode-properties) 8.2.0
     by Mathias Bynens
     under the MIT license
 
- - regenerate 1.4.2
+ - [regenerate](https://github.com/mathiasbynens/regenerate) 1.4.2
     by Mathias Bynens
     under the MIT license
 
- - regenerator-runtime 0.11.1
+ - [regenerator-runtime](https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime) 0.11.1
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- - regenerator-runtime 0.13.7
+ - [regenerator-runtime](https://github.com/facebook/regenerator/tree/master/packages/regenerator-runtime) 0.13.7
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- - regenerator-transform 0.14.5
+ - [regenerator-transform](https://github.com/facebook/regenerator/tree/master/packages/regenerator-transform) 0.14.5
     by Ben Newman (bn@cs.stanford.edu)
     under the MIT license
 
- - regex-not 1.0.2
+ - [regex-not](https://github.com/jonschlinkert/regex-not) 1.0.2
     by Jon Schlinkert
     under the MIT license
 
- - regex-parser 2.2.11
+ - [regex-parser](https://github.com/IonicaBizau/regex-parser.js) 2.2.11
     by Ionică Bizău (bizauionica@gmail.com)
     under the MIT license
 
- - regexp.prototype.flags 1.3.1
+ - [regexp.prototype.flags](https://github.com/es-shims/RegExp.prototype.flags) 1.3.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - regexpu-core 4.7.1
+ - [regexpu-core](https://github.com/mathiasbynens/regexpu-core) 4.7.1
     by Mathias Bynens
     under the MIT license
 
- - regjsgen 0.5.2
+ - [regjsgen](https://github.com/bnjmnt4n/regjsgen) 0.5.2
     by Benjamin Tan
     under the MIT license
 
- - regjsparser 0.6.9
+ - [regjsparser](https://github.com/jviereck/regjsparser) 0.6.9
     by 'Julian Viereck' (julian.viereck@gmail.com)
     under the BSD-2-Clause license
 
- - relateurl 0.2.7
+ - [relateurl](https://github.com/stevenvachon/relateurl) 0.2.7
     by Steven Vachon (contact@svachon.com)
     under the MIT license
 
- - remove-trailing-separator 1.1.0
+ - [remove-trailing-separator](https://github.com/darsain/remove-trailing-separator) 1.1.0
     by darsain
     under the ISC license
 
- - repeat-element 1.1.4
+ - [repeat-element](https://github.com/jonschlinkert/repeat-element) 1.1.4
     by Jon Schlinkert
     under the MIT license
 
- - repeat-string 1.6.1
+ - [repeat-string](https://github.com/jonschlinkert/repeat-string) 1.6.1
     by Jon Schlinkert
     under the MIT license
 
- - repeating 2.0.1
+ - [repeating](https://github.com/sindresorhus/repeating) 2.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - replace-ext 1.0.1
+ - [replace-ext](https://github.com/gulpjs/replace-ext) 1.0.1
     by Gulp Team (team@gulpjs.com)
     under the MIT license
 
- - require-directory 2.1.1
+ - [require-directory](https://github.com/troygoode/node-require-directory) 2.1.1
     by Troy Goode (troygoode@gmail.com)
     under the MIT license
 
- - require-main-filename 1.0.1
+ - [require-main-filename](https://github.com/yargs/require-main-filename) 1.0.1
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - require-main-filename 2.0.0
+ - [require-main-filename](https://github.com/yargs/require-main-filename) 2.0.0
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - requires-port 1.0.0
+ - [requires-port](https://github.com/unshiftio/requires-port) 1.0.0
     by Arnout Kazemier
     under the MIT license
 
- - resolve-cwd 2.0.0
+ - [resolve-cwd](https://github.com/sindresorhus/resolve-cwd) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - resolve-dir 1.0.1
+ - [resolve-dir](https://github.com/jonschlinkert/resolve-dir) 1.0.1
     by Jon Schlinkert
     under the MIT license
 
- - resolve-from 3.0.0
+ - [resolve-from](https://github.com/sindresorhus/resolve-from) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - resolve-from 4.0.0
+ - [resolve-from](https://github.com/sindresorhus/resolve-from) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - resolve-from 5.0.0
+ - [resolve-from](https://github.com/sindresorhus/resolve-from) 5.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - resolve-global 1.0.0
+ - [resolve-global](https://github.com/sindresorhus/resolve-global) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - resolve-url-loader 2.3.2
+ - [resolve-url-loader](https://github.com/bholloway/resolve-url-loader) 2.3.2
     by bholloway
     under the MIT license
 
- - resolve-url 0.2.1
+ - [resolve-url](https://github.com/lydell/resolve-url) 0.2.1
     by Simon Lydell
     under the MIT license
 
- - resolve 1.1.7
+ - [resolve](https://github.com/substack/node-resolve) 1.1.7
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - resolve 1.20.0
+ - [resolve](https://github.com/browserify/resolve) 1.20.0
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - restructure 0.5.4
+ - [restructure](https://github.com/devongovett/restructure) 0.5.4
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - ret 0.1.15
+ - [ret](https://github.com/fent/ret.js) 0.1.15
     by Roly Fentanes
     under the MIT license
 
- - retry 0.12.0
+ - [retry](https://github.com/tim-kos/node-retry) 0.12.0
     by Tim Koschützki (tim@debuggable.com)
     under the MIT license
 
  - rework-visit 1.0.0
     under the MIT license
 
- - rework 1.0.1
+ - [rework](https://github.com/reworkcss/rework) 1.0.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT* license
 
- - rgb-regex 1.0.1
+ - [rgb-regex](https://github.com/regexps/rgb-regex) 1.0.1
     by John Otander
     under the MIT license
 
- - rgba-regex 1.0.0
+ - [rgba-regex](https://github.com/johnotander/rgba-regex) 1.0.0
     by John Otander
     under the MIT license
 
- - rimraf 2.7.1
+ - [rimraf](https://github.com/isaacs/rimraf) 2.7.1
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - ripemd160 2.0.2
+ - [ripemd160](https://github.com/crypto-browserify/ripemd160) 2.0.2
     under the MIT license
 
- - run-queue 1.0.3
+ - [run-queue](https://github.com/iarna/run-queue) 1.0.3
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - safe-buffer 5.1.2
+ - [safe-buffer](https://github.com/feross/safe-buffer) 5.1.2
     by Feross Aboukhadijeh (feross@feross.org)
     under the MIT license
 
- - safe-buffer 5.2.1
+ - [safe-buffer](https://github.com/feross/safe-buffer) 5.2.1
     by Feross Aboukhadijeh (feross@feross.org)
     under the MIT license
 
- - safe-regex 1.1.0
+ - [safe-regex](https://github.com/substack/safe-regex) 1.1.0
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - safer-buffer 2.1.2
+ - [safer-buffer](https://github.com/ChALkeR/safer-buffer) 2.1.2
     by Nikita Skovoroda (chalkerx@gmail.com)
     under the MIT license
 
- - sass-loader 7.3.1
+ - [sass-loader](https://github.com/webpack-contrib/sass-loader) 7.3.1
     by J. Tangelder
     under the MIT license
 
- - sass 1.34.1
+ - [sass](https://github.com/sass/dart-sass) 1.34.1
     by Natalie Weizenbaum (nweiz@google.com)
     under the MIT license
 
- - sax 1.2.4
+ - [sax](https://github.com/isaacs/sax-js) 1.2.4
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - schema-utils 0.4.7
+ - [schema-utils](https://github.com/webpack-contrib/schema-utils) 0.4.7
     by webpack Contrib
     under the MIT license
 
- - schema-utils 1.0.0
+ - [schema-utils](https://github.com/webpack-contrib/schema-utils) 1.0.0
     by webpack Contrib
     under the MIT license
 
- - schema-utils 2.7.1
+ - [schema-utils](https://github.com/webpack/schema-utils) 2.7.1
     by webpack Contrib
     under the MIT license
 
- - scope-analyzer 2.1.1
+ - [scope-analyzer](https://github.com/goto-bus-stop/scope-analyzer) 2.1.1
     by Renée Kooi (renee@kooi.me)
     under the Apache-2.0 license
 
- - select-hose 2.0.0
+ - [select-hose](https://github.com/indutny/select-hose) 2.0.0
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - select2 4.0.13
+ - [select2](https://github.com/select2/select2) 4.0.13
     by Kevin Brown
     under the MIT license
 
- - selectize 0.12.6
+ - [selectize](https://github.com/selectize/selectize.js) 0.12.6
     by Brian Reavis (brian@thirdroute.com)
     under the Apache-2.0 license
 
- - selfsigned 1.10.11
+ - [selfsigned](https://github.com/jfromaniello/selfsigned) 1.10.11
     by José F. Romaniello (jfromaniello@gmail.com)
     under the MIT license
 
- - semver 5.7.1
+ - [semver](https://github.com/npm/node-semver) 5.7.1
     under the ISC license
 
- - semver 6.3.0
+ - [semver](https://github.com/npm/node-semver) 6.3.0
     under the ISC license
 
- - semver 7.0.0
+ - [semver](https://github.com/npm/node-semver) 7.0.0
     under the ISC license
 
- - semver 7.3.5
+ - [semver](https://github.com/npm/node-semver) 7.3.5
     under the ISC license
 
- - send 0.17.1
+ - [send](https://github.com/pillarjs/send) 0.17.1
     by TJ Holowaychuk (tj@vision-media.ca)
     under the MIT license
 
- - serialize-javascript 4.0.0
+ - [serialize-javascript](https://github.com/yahoo/serialize-javascript) 4.0.0
     by Eric Ferraiuolo (edf@ericf.me)
     under the BSD-3-Clause license
 
- - serve-index 1.9.1
+ - [serve-index](https://github.com/expressjs/serve-index) 1.9.1
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - serve-static 1.14.1
+ - [serve-static](https://github.com/expressjs/serve-static) 1.14.1
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - set-blocking 2.0.0
+ - [set-blocking](https://github.com/yargs/set-blocking) 2.0.0
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - set-immediate-shim 1.0.1
+ - [set-immediate-shim](https://github.com/sindresorhus/set-immediate-shim) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - set-value 2.0.1
+ - [set-value](https://github.com/jonschlinkert/set-value) 2.0.1
     by Jon Schlinkert
     under the MIT license
 
- - setimmediate 1.0.5
+ - [setimmediate](https://github.com/YuzuJS/setImmediate) 1.0.5
     by YuzuJS
     under the MIT license
 
- - setprototypeof 1.1.0
+ - [setprototypeof](https://github.com/wesleytodd/setprototypeof) 1.1.0
     by Wes Todd
     under the ISC license
 
- - setprototypeof 1.1.1
+ - [setprototypeof](https://github.com/wesleytodd/setprototypeof) 1.1.1
     by Wes Todd
     under the ISC license
 
- - sha.js 2.4.11
+ - [sha.js](https://github.com/crypto-browserify/sha.js) 2.4.11
     by Dominic Tarr (dominic.tarr@gmail.com)
     under the (MIT AND BSD-3-Clause) license
 
- - shallow-clone 3.0.1
+ - [shallow-clone](https://github.com/jonschlinkert/shallow-clone) 3.0.1
     by Jon Schlinkert
     under the MIT license
 
- - shallow-copy 0.0.1
+ - [shallow-copy](https://github.com/substack/shallow-copy) 0.0.1
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - shebang-command 1.2.0
+ - [shebang-command](https://github.com/kevva/shebang-command) 1.2.0
     by Kevin Martensson (kevinmartensson@gmail.com)
     under the MIT license
 
- - shebang-regex 1.0.0
+ - [shebang-regex](https://github.com/sindresorhus/shebang-regex) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - shelljs 0.8.4
+ - [shelljs](https://github.com/shelljs/shelljs) 0.8.4
     under the BSD-3-Clause license
 
- - shellwords 0.1.1
+ - [shellwords](https://github.com/jimmycuadra/shellwords) 0.1.1
     by Jimmy Cuadra (jimmy@jimmycuadra.com)
     under the MIT license
 
- - side-channel 1.0.4
+ - [side-channel](https://github.com/ljharb/side-channel) 1.0.4
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - sifter 0.5.4
+ - [sifter](https://github.com/brianreavis/sifter.js) 0.5.4
     by Brian Reavis (brian@thirdroute.com)
     under the Apache-2.0 license
 
- - signal-exit 3.0.3
+ - [signal-exit](https://github.com/tapjs/signal-exit) 3.0.3
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - simple-swizzle 0.2.2
+ - [simple-swizzle](https://github.com/qix-/node-simple-swizzle) 0.2.2
     by Qix
     under the MIT license
 
- - slash 1.0.0
+ - [slash](https://github.com/sindresorhus/slash) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - snapdragon-node 2.1.1
+ - [snapdragon-node](https://github.com/jonschlinkert/snapdragon-node) 2.1.1
     by Jon Schlinkert
     under the MIT license
 
- - snapdragon-util 3.0.1
+ - [snapdragon-util](https://github.com/jonschlinkert/snapdragon-util) 3.0.1
     by Jon Schlinkert
     under the MIT license
 
- - snapdragon 0.8.2
+ - [snapdragon](https://github.com/jonschlinkert/snapdragon) 0.8.2
     by Jon Schlinkert
     under the MIT license
 
- - sockjs-client 1.5.1
+ - [sockjs-client](https://github.com/sockjs/sockjs-client) 1.5.1
     by Bryce Kahle
     under the MIT license
 
- - sockjs 0.3.21
+ - [sockjs](https://github.com/sockjs/sockjs-node) 0.3.21
     by Marek Majkowski
     under the MIT license
 
- - sortablejs 1.10.2
+ - [sortablejs](https://github.com/SortableJS/Sortable) 1.10.2
     under the MIT license
 
- - source-list-map 2.0.1
+ - [source-list-map](https://github.com/webpack/source-list-map) 2.0.1
     by Tobias Koppers @sokra
     under the MIT license
 
- - source-map-resolve 0.5.3
+ - [source-map-resolve](https://github.com/lydell/source-map-resolve) 0.5.3
     by Simon Lydell
     under the MIT license
 
- - source-map-support 0.5.19
+ - [source-map-support](https://github.com/evanw/node-source-map-support) 0.5.19
     under the MIT license
 
- - source-map-url 0.4.1
+ - [source-map-url](https://github.com/lydell/source-map-url) 0.4.1
     by Simon Lydell
     under the MIT license
 
- - source-map 0.1.43
+ - [source-map](https://github.com/mozilla/source-map) 0.1.43
     by Nick Fitzgerald (nfitzgerald@mozilla.com)
     under the BSD license
 
- - source-map 0.5.7
+ - [source-map](https://github.com/mozilla/source-map) 0.5.7
     by Nick Fitzgerald (nfitzgerald@mozilla.com)
     under the BSD-3-Clause license
 
- - source-map 0.6.1
+ - [source-map](https://github.com/mozilla/source-map) 0.6.1
     by Nick Fitzgerald (nfitzgerald@mozilla.com)
     under the BSD-3-Clause license
 
- - sourcemap-codec 1.4.8
+ - [sourcemap-codec](https://github.com/Rich-Harris/sourcemap-codec) 1.4.8
     by Rich Harris
     under the MIT license
 
- - sparklines 1.3.0
+ - [sparklines](https://github.com/mariusGundersen/sparkline) 1.3.0
     under the MIT license
 
- - spdx-correct 3.1.1
+ - [spdx-correct](https://github.com/jslicense/spdx-correct.js) 3.1.1
     by Kyle E. Mitchell (kyle@kemitchell.com)
     under the Apache-2.0 license
 
- - spdx-exceptions 2.3.0
+ - [spdx-exceptions](https://github.com/kemitchell/spdx-exceptions.json) 2.3.0
     by The Linux Foundation
     under the CC-BY-3.0 license
 
- - spdx-expression-parse 3.0.1
+ - [spdx-expression-parse](https://github.com/jslicense/spdx-expression-parse.js) 3.0.1
     by Kyle E. Mitchell (kyle@kemitchell.com)
     under the MIT license
 
- - spdx-license-ids 3.0.9
+ - [spdx-license-ids](https://github.com/jslicense/spdx-license-ids) 3.0.9
     by Shinnosuke Watanabe
     under the CC0-1.0 license
 
- - spdy-transport 3.0.0
+ - [spdy-transport](https://github.com/spdy-http2/spdy-transport) 3.0.0
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - spdy 4.0.2
+ - [spdy](https://github.com/indutny/node-spdy) 4.0.2
     by Fedor Indutny (fedor.indutny@gmail.com)
     under the MIT license
 
- - split-string 3.1.0
+ - [split-string](https://github.com/jonschlinkert/split-string) 3.1.0
     by Jon Schlinkert
     under the MIT license
 
- - split2 3.2.2
+ - [split2](https://github.com/mcollina/split2) 3.2.2
     by Matteo Collina (hello@matteocollina.com)
     under the ISC license
 
- - split 1.0.1
+ - [split](https://github.com/dominictarr/split) 1.0.1
     by Dominic Tarr (dominic.tarr@gmail.com)
     under the MIT license
 
- - sprintf-js 1.0.3
+ - [sprintf-js](https://github.com/alexei/sprintf.js) 1.0.3
     by Alexandru Marasteanu (hello@alexei.ro)
     under the BSD-3-Clause license
 
- - ssri 6.0.2
+ - [ssri](https://github.com/zkat/ssri) 6.0.2
     by Kat Marchán (kzm@sykosomatic.org)
     under the ISC license
 
- - stable 0.1.8
+ - [stable](https://github.com/Two-Screen/stable) 0.1.8
     by Angry Bytes (info@angrybytes.com)
     under the MIT license
 
- - stackframe 1.2.0
+ - [stackframe](https://github.com/stacktracejs/stackframe) 1.2.0
     under the MIT license
 
- - standard-version 9.3.0
+ - [standard-version](https://github.com/conventional-changelog/standard-version) 9.3.0
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - static-eval 2.1.0
+ - [static-eval](https://github.com/browserify/static-eval) 2.1.0
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - static-extend 0.1.2
+ - [static-extend](https://github.com/jonschlinkert/static-extend) 0.1.2
     by Jon Schlinkert
     under the MIT license
 
- - static-module 3.0.4
+ - [static-module](https://github.com/substack/static-module) 3.0.4
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - statuses 1.5.0
+ - [statuses](https://github.com/jshttp/statuses) 1.5.0
     under the MIT license
 
- - stream-browserify 2.0.2
+ - [stream-browserify](https://github.com/browserify/stream-browserify) 2.0.2
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - stream-each 1.2.3
+ - [stream-each](https://github.com/mafintosh/stream-each) 1.2.3
     by Mathias Buus
     under the MIT license
 
- - stream-http 2.8.3
+ - [stream-http](https://github.com/jhiesey/stream-http) 2.8.3
     by John Hiesey
     under the MIT license
 
- - stream-shift 1.0.1
+ - [stream-shift](https://github.com/mafintosh/stream-shift) 1.0.1
     by Mathias Buus
     under the MIT license
 
- - string-width 1.0.2
+ - [string-width](https://github.com/sindresorhus/string-width) 1.0.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - string-width 2.1.1
+ - [string-width](https://github.com/sindresorhus/string-width) 2.1.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - string-width 3.1.0
+ - [string-width](https://github.com/sindresorhus/string-width) 3.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - string-width 4.2.2
+ - [string-width](https://github.com/sindresorhus/string-width) 4.2.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - string.prototype.trimend 1.0.4
+ - [string.prototype.trimend](https://github.com/es-shims/String.prototype.trimEnd) 1.0.4
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - string.prototype.trimstart 1.0.4
+ - [string.prototype.trimstart](https://github.com/es-shims/String.prototype.trimStart) 1.0.4
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - string_decoder 1.1.1
+ - [string_decoder](https://github.com/nodejs/string_decoder) 1.1.1
     under the MIT license
 
- - stringify-package 1.0.1
+ - [stringify-package](https://github.com/npm/stringify-package) 1.0.1
     by Kat Marchán (kzm@zkat.tech)
     under the ISC license
 
- - strip-ansi 3.0.1
+ - [strip-ansi](https://github.com/chalk/strip-ansi) 3.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-ansi 4.0.0
+ - [strip-ansi](https://github.com/chalk/strip-ansi) 4.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-ansi 5.2.0
+ - [strip-ansi](https://github.com/chalk/strip-ansi) 5.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-ansi 6.0.0
+ - [strip-ansi](https://github.com/chalk/strip-ansi) 6.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-bom 2.0.0
+ - [strip-bom](https://github.com/sindresorhus/strip-bom) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-bom 3.0.0
+ - [strip-bom](https://github.com/sindresorhus/strip-bom) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-eof 1.0.0
+ - [strip-eof](https://github.com/sindresorhus/strip-eof) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-indent 1.0.1
+ - [strip-indent](https://github.com/sindresorhus/strip-indent) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - strip-indent 3.0.0
+ - [strip-indent](https://github.com/sindresorhus/strip-indent) 3.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - style-loader 0.23.1
+ - [style-loader](https://github.com/webpack-contrib/style-loader) 0.23.1
     by Tobias Koppers @sokra
     under the MIT license
 
- - stylehacks 4.0.3
+ - [stylehacks](https://github.com/cssnano/cssnano) 4.0.3
     by Ben Briggs (beneb.info@gmail.com)
     under the MIT license
 
- - summernote 0.8.18
+ - [summernote](https://github.com/summernote/summernote) 0.8.18
     by hackerwins (<susukang98@gmail.com)
     under the MIT license
 
- - supports-color 2.0.0
+ - [supports-color](https://github.com/chalk/supports-color) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - supports-color 5.5.0
+ - [supports-color](https://github.com/chalk/supports-color) 5.5.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - supports-color 6.1.0
+ - [supports-color](https://github.com/chalk/supports-color) 6.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - supports-color 7.2.0
+ - [supports-color](https://github.com/chalk/supports-color) 7.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - svg-to-pdfkit 0.1.8
+ - [svg-to-pdfkit](https://github.com/alafr/SVG-to-PDFKit) 0.1.8
     by alafr
     under the MIT license
 
- - svgo 1.3.2
+ - [svgo](https://github.com/svg/svgo) 1.3.2
     by Kir Belevich (kir@belevi.ch)
     under the MIT license
 
- - sweetalert2 10.16.9
+ - [sweetalert2](https://github.com/sweetalert2/sweetalert2) 10.16.9
     by Limon Monte (limon.monte@protonmail.com)
     under the MIT license
 
- - tapable 1.1.3
+ - [tapable](https://github.com/webpack/tapable) 1.1.3
     by Tobias Koppers @sokra
     under the MIT license
 
- - tempusdominus-bootstrap-4 5.39.0
+ - [tempusdominus-bootstrap-4](https://github.com/tempusdominus/bootstrap-4) 5.39.0
     by Jonathan Peterson
     under the MIT license
 
- - tempusdominus-core 5.19.0
+ - [tempusdominus-core](https://github.com/tempusdominus/core) 5.19.0
     by Jonathan Peterson
     under the MIT license
 
- - terser-webpack-plugin 1.4.5
+ - [terser-webpack-plugin](https://github.com/webpack-contrib/terser-webpack-plugin) 1.4.5
     by webpack Contrib Team
     under the MIT license
 
- - terser 3.17.0
+ - [terser](https://github.com/fabiosantoscode/terser) 3.17.0
     by Mihai Bazon (mihai.bazon@gmail.com)
     under the BSD-2-Clause license
 
- - terser 4.8.0
+ - [terser](https://github.com/terser/terser) 4.8.0
     by Mihai Bazon (mihai.bazon@gmail.com)
     under the BSD-2-Clause license
 
- - text-extensions 1.9.0
+ - [text-extensions](https://github.com/sindresorhus/text-extensions) 1.9.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - through2 2.0.5
+ - [through2](https://github.com/rvagg/through2) 2.0.5
     by Rod Vagg (r@va.gg)
     under the MIT license
 
- - through2 4.0.2
+ - [through2](https://github.com/rvagg/through2) 4.0.2
     by Rod Vagg (r@va.gg)
     under the MIT license
 
- - through 2.3.8
+ - [through](https://github.com/dominictarr/through) 2.3.8
     by Dominic Tarr (dominic.tarr@gmail.com)
     under the MIT license
 
- - thunky 1.1.0
+ - [thunky](https://github.com/mafintosh/thunky) 1.1.0
     by Mathias Buus Madsen (mathiasbuus@gmail.com)
     under the MIT license
 
- - timers-browserify 2.0.12
+ - [timers-browserify](https://github.com/jryans/timers-browserify) 2.0.12
     by J. Ryan Stinnett (jryans@gmail.com)
     under the MIT license
 
- - timsort 0.3.0
+ - [timsort](https://github.com/mziccard/node-timsort) 0.3.0
     by Marco Ziccardi
     under the MIT license
 
- - tiny-inflate 1.0.3
+ - [tiny-inflate](https://github.com/devongovett/tiny-inflate) 1.0.3
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - to-arraybuffer 1.0.1
+ - [to-arraybuffer](https://github.com/jhiesey/to-arraybuffer) 1.0.1
     by John Hiesey
     under the MIT license
 
- - to-fast-properties 2.0.0
+ - [to-fast-properties](https://github.com/sindresorhus/to-fast-properties) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - to-object-path 0.3.0
+ - [to-object-path](https://github.com/jonschlinkert/to-object-path) 0.3.0
     by Jon Schlinkert
     under the MIT license
 
- - to-regex-range 2.1.1
+ - [to-regex-range](https://github.com/micromatch/to-regex-range) 2.1.1
     by Jon Schlinkert
     under the MIT license
 
- - to-regex-range 5.0.1
+ - [to-regex-range](https://github.com/micromatch/to-regex-range) 5.0.1
     by Jon Schlinkert
     under the MIT license
 
- - to-regex 3.0.2
+ - [to-regex](https://github.com/jonschlinkert/to-regex) 3.0.2
     by Jon Schlinkert
     under the MIT license
 
- - toastr 2.1.4
+ - [toastr](https://github.com/CodeSeven/toastr) 2.1.4
     under the MIT license
 
- - toidentifier 1.0.0
+ - [toidentifier](https://github.com/component/toidentifier) 1.0.0
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - trim-newlines 1.0.0
+ - [trim-newlines](https://github.com/sindresorhus/trim-newlines) 1.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - trim-newlines 3.0.1
+ - [trim-newlines](https://github.com/sindresorhus/trim-newlines) 3.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - trim-off-newlines 1.0.1
+ - [trim-off-newlines](https://github.com/stevemao/trim-off-newlines) 1.0.1
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
- - tty-browserify 0.0.0
+ - [tty-browserify](https://github.com/substack/tty-browserify) 0.0.0
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - type-check 0.3.2
+ - [type-check](https://github.com/gkz/type-check) 0.3.2
     by George Zahariev (z@georgezahariev.com)
     under the MIT license
 
- - type-fest 0.18.1
+ - [type-fest](https://github.com/sindresorhus/type-fest) 0.18.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the (MIT OR CC0-1.0) license
 
- - type-fest 0.6.0
+ - [type-fest](https://github.com/sindresorhus/type-fest) 0.6.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the (MIT OR CC0-1.0) license
 
- - type-fest 0.8.1
+ - [type-fest](https://github.com/sindresorhus/type-fest) 0.8.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the (MIT OR CC0-1.0) license
 
- - type-is 1.6.18
+ - [type-is](https://github.com/jshttp/type-is) 1.6.18
     under the MIT license
 
- - type 1.2.0
+ - [type](https://github.com/medikoo/type) 1.2.0
     by Mariusz Nowak (medyk@medikoo.com)
     under the ISC license
 
- - type 2.5.0
+ - [type](https://github.com/medikoo/type) 2.5.0
     by Mariusz Nowak (medyk@medikoo.com)
     under the ISC license
 
- - typedarray 0.0.6
+ - [typedarray](https://github.com/substack/typedarray) 0.0.6
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - uc.micro 1.0.6
+ - [uc.micro](https://github.com/markdown-it/uc.micro) 1.0.6
     under the MIT license
 
- - uglify-js 3.4.10
+ - [uglify-js](https://github.com/mishoo/UglifyJS2) 3.4.10
     by Mihai Bazon (mihai.bazon@gmail.com)
     under the BSD-2-Clause license
 
- - unbox-primitive 1.0.1
+ - [unbox-primitive](https://github.com/ljharb/unbox-primitive) 1.0.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - unicode-canonical-property-names-ecmascript 1.0.4
+ - [unicode-canonical-property-names-ecmascript](https://github.com/mathiasbynens/unicode-canonical-property-names-ecmascript) 1.0.4
     by Mathias Bynens
     under the MIT license
 
- - unicode-match-property-ecmascript 1.0.4
+ - [unicode-match-property-ecmascript](https://github.com/mathiasbynens/unicode-match-property-ecmascript) 1.0.4
     by Mathias Bynens
     under the MIT license
 
- - unicode-match-property-value-ecmascript 1.2.0
+ - [unicode-match-property-value-ecmascript](https://github.com/mathiasbynens/unicode-match-property-value-ecmascript) 1.2.0
     by Mathias Bynens
     under the MIT license
 
- - unicode-properties 1.3.1
+ - [unicode-properties](https://github.com/devongovett/unicode-properties) 1.3.1
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - unicode-property-aliases-ecmascript 1.1.0
+ - [unicode-property-aliases-ecmascript](https://github.com/mathiasbynens/unicode-property-aliases-ecmascript) 1.1.0
     by Mathias Bynens
     under the MIT license
 
- - unicode-trie 0.3.1
+ - [unicode-trie](https://github.com/devongovett/unicode-trie) 0.3.1
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - unicode-trie 1.0.0
+ - [unicode-trie](https://github.com/devongovett/unicode-trie) 1.0.0
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - unicode-trie 2.0.0
+ - [unicode-trie](https://github.com/devongovett/unicode-trie) 2.0.0
     by Devon Govett (devongovett@gmail.com)
     under the MIT license
 
- - union-value 1.0.1
+ - [union-value](https://github.com/jonschlinkert/union-value) 1.0.1
     by Jon Schlinkert
     under the MIT license
 
- - uniq 1.0.1
+ - [uniq](https://github.com/mikolalysenko/uniq) 1.0.1
     by Mikola Lysenko
     under the MIT license
 
- - uniqs 2.0.0
+ - [uniqs](https://github.com/fgnass/uniqs) 2.0.0
     by Felix Gnass (fgnass@gmail.com)
     under the MIT license
 
- - unique-filename 1.1.1
+ - [unique-filename](https://github.com/iarna/unique-filename) 1.1.1
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - unique-slug 2.0.2
+ - [unique-slug](https://github.com/iarna/unique-slug) 2.0.2
     by Rebecca Turner (me@re-becca.org)
     under the ISC license
 
- - universalify 0.1.2
+ - [universalify](https://github.com/RyanZim/universalify) 0.1.2
     by Ryan Zimmerman (opensrc@ryanzim.com)
     under the MIT license
 
- - universalify 2.0.0
+ - [universalify](https://github.com/RyanZim/universalify) 2.0.0
     by Ryan Zimmerman (opensrc@ryanzim.com)
     under the MIT license
 
- - unorm 1.6.0
+ - [unorm](https://github.com/walling/unorm) 1.6.0
     by Bjarke Walling (bwp@bwp.dk)
     under the MIT* license
 
- - unpipe 1.0.0
+ - [unpipe](https://github.com/stream-utils/unpipe) 1.0.0
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - unquote 1.1.1
+ - [unquote](https://github.com/lakenen/node-unquote) 1.1.1
     by Cameron Lakenen (cameron@lakenen.com)
     under the MIT license
 
- - unset-value 1.0.0
+ - [unset-value](https://github.com/jonschlinkert/unset-value) 1.0.0
     by Jon Schlinkert
     under the MIT license
 
- - upath 1.2.0
+ - [upath](https://github.com/anodynos/upath) 1.2.0
     by Angelos Pikoulas (agelos.pikoulas@gmail.com)
     under the MIT license
 
- - uplot 1.6.11
+ - [uplot](https://github.com/leeoniya/uPlot) 1.6.11
     by Leon Sorokin (leeoniya@gmail.com)
     under the MIT license
 
- - upper-case 1.1.3
+ - [upper-case](https://github.com/blakeembrey/upper-case) 1.1.3
     by Blake Embrey (hello@blakeembrey.com)
     under the MIT license
 
- - uri-js 4.4.1
+ - [uri-js](https://github.com/garycourt/uri-js) 4.4.1
     by Gary Court (gary.court@gmail.com)
     under the BSD-2-Clause license
 
- - urix 0.1.0
+ - [urix](https://github.com/lydell/urix) 0.1.0
     by Simon Lydell
     under the MIT license
 
- - url-parse 1.5.1
+ - [url-parse](https://github.com/unshiftio/url-parse) 1.5.1
     by Arnout Kazemier
     under the MIT license
 
- - url 0.11.0
+ - [url](https://github.com/defunctzombie/node-url) 0.11.0
     under the MIT license
 
- - use 3.1.1
+ - [use](https://github.com/jonschlinkert/use) 3.1.1
     by Jon Schlinkert
     under the MIT license
 
- - uslug 1.0.4
+ - [uslug](https://github.com/jeremys/uslug) 1.0.4
     by Jeremy Selier (jerem.selier@gmail.com)
     under the MIT license
 
- - util-deprecate 1.0.2
+ - [util-deprecate](https://github.com/TooTallNate/util-deprecate) 1.0.2
     by Nathan Rajlich (nathan@tootallnate.net)
     under the MIT license
 
- - util.promisify 1.0.1
+ - [util.promisify](https://github.com/ljharb/util.promisify) 1.0.1
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - util 0.10.3
+ - [util](https://github.com/defunctzombie/node-util) 0.10.3
     by Joyent
     under the MIT license
 
- - util 0.11.1
+ - [util](https://github.com/defunctzombie/node-util) 0.11.1
     by Joyent
     under the MIT license
 
- - utils-merge 1.0.1
+ - [utils-merge](https://github.com/jaredhanson/utils-merge) 1.0.1
     by Jared Hanson (jaredhanson@gmail.com)
     under the MIT license
 
- - uuid 3.4.0
+ - [uuid](https://github.com/uuidjs/uuid) 3.4.0
     under the MIT license
 
- - uuid 8.3.2
+ - [uuid](https://github.com/uuidjs/uuid) 8.3.2
     under the MIT license
 
- - v8-compile-cache 2.3.0
+ - [v8-compile-cache](https://github.com/zertosh/v8-compile-cache) 2.3.0
     by Andres Suarez (zertosh@gmail.com)
     under the MIT license
 
- - validate-npm-package-license 3.0.4
+ - [validate-npm-package-license](https://github.com/kemitchell/validate-npm-package-license.js) 3.0.4
     by Kyle E. Mitchell (kyle@kemitchell.com)
     under the Apache-2.0 license
 
- - vary 1.1.2
+ - [vary](https://github.com/jshttp/vary) 1.1.2
     by Douglas Christopher Wilson (doug@somethingdoug.com)
     under the MIT license
 
- - vendors 1.0.4
+ - [vendors](https://github.com/wooorm/vendors) 1.0.4
     by Titus Wormer (tituswormer@gmail.com)
     under the MIT license
 
- - vm-browserify 1.1.2
+ - [vm-browserify](https://github.com/substack/vm-browserify) 1.1.2
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - vue-bootstrap-datetimepicker 5.0.1
+ - [vue-bootstrap-datetimepicker](https://github.com/ankurk91/vue-bootstrap-datetimepicker) 5.0.1
     by ankurk91
     under the MIT license
 
- - vue-click-outside 1.1.0
+ - [vue-click-outside](https://github.com/vue-bulma/click-outside) 1.1.0
     by Fangdun Cai (cfddream@gmail.com)
     under the MIT license
 
- - vue-hot-reload-api 2.3.4
+ - [vue-hot-reload-api](https://github.com/vuejs/vue-hot-reload-api) 2.3.4
     by Evan You
     under the MIT license
 
- - vue-loader 15.9.7
+ - [vue-loader](https://github.com/vuejs/vue-loader) 15.9.7
     by Evan You
     under the MIT license
 
- - vue-markdown 2.2.4
+ - [vue-markdown](https://github.com/miaolz123/vue-markdown) 2.2.4
     by miaolz123
     under the MIT license
 
- - vue-nl2br 0.1.2
+ - [vue-nl2br](https://github.com/inouetakuya/vue-nl2br) 0.1.2
     by INOUE Takuya
     under the MIT license
 
- - vue-quill-editor 3.0.6
+ - [vue-quill-editor](https://github.com/surmon-china/vue-quill-editor) 3.0.6
     by Surmon (surmon@foxmail.com)
     under the MIT license
 
- - vue-style-loader 4.1.3
+ - [vue-style-loader](https://github.com/vuejs/vue-style-loader) 4.1.3
     by Evan You
     under the MIT license
 
- - vue-template-compiler 2.6.13
+ - [vue-template-compiler](https://github.com/vuejs/vue) 2.6.13
     by Evan You
     under the MIT license
 
- - vue-template-es2015-compiler 1.9.1
+ - [vue-template-es2015-compiler](https://github.com/vuejs/vue-template-es2015-compiler) 1.9.1
     by Evan You
     under the MIT license
 
- - vue2-selectize 1.1.7
+ - [vue2-selectize](https://github.com/rhyek/vue2-selectize) 1.1.7
     by https://github.com/rhyek
     under the ISC license
 
- - vue 2.6.13
+ - [vue](https://github.com/vuejs/vue) 2.6.13
     by Evan You
     under the MIT license
 
- - vuedraggable 2.24.3
+ - [vuedraggable](https://github.com/SortableJS/Vue.Draggable) 2.24.3
     under the MIT license
 
- - watchpack-chokidar2 2.0.1
+ - [watchpack-chokidar2](https://github.com/webpack/watchpack) 2.0.1
     by Tobias Koppers @sokra
     under the MIT license
 
- - watchpack 1.7.5
+ - [watchpack](https://github.com/webpack/watchpack) 1.7.5
     by Tobias Koppers @sokra
     under the MIT license
 
- - wbuf 1.7.3
+ - [wbuf](https://github.com/indutny/wbuf) 1.7.3
     by Fedor Indutny (fedor@indutny.com)
     under the MIT license
 
- - webpack-cli 3.3.12
+ - [webpack-cli](https://github.com/webpack/webpack-cli) 3.3.12
     under the MIT license
 
- - webpack-dev-middleware 3.7.3
+ - [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware) 3.7.3
     by Tobias Koppers @sokra
     under the MIT license
 
- - webpack-dev-server 3.11.2
+ - [webpack-dev-server](https://github.com/webpack/webpack-dev-server) 3.11.2
     by Tobias Koppers @sokra
     under the MIT license
 
- - webpack-log 2.0.0
+ - [webpack-log](https://github.com/webpack-contrib/webpack-log) 2.0.0
     by Andrew Powell (andrew@shellscape.org)
     under the MIT license
 
- - webpack-merge 4.2.2
+ - [webpack-merge](https://github.com/survivejs/webpack-merge) 4.2.2
     by Juho Vepsalainen (bebraw@gmail.com)
     under the MIT license
 
- - webpack-notifier 1.13.0
+ - [webpack-notifier](https://github.com/Turbo87/webpack-notifier) 1.13.0
     by Tobias Bieniek (tobias.bieniek@gmx.de)
     under the ISC license
 
- - webpack-sources 1.4.3
+ - [webpack-sources](https://github.com/webpack/webpack-sources) 1.4.3
     by Tobias Koppers @sokra
     under the MIT license
 
- - webpack 4.46.0
+ - [webpack](https://github.com/webpack/webpack) 4.46.0
     by Tobias Koppers @sokra
     under the MIT license
 
- - websocket-driver 0.7.4
+ - [websocket-driver](https://github.com/faye/websocket-driver-node) 0.7.4
     by James Coglan (jcoglan@gmail.com)
     under the Apache-2.0 license
 
- - websocket-extensions 0.1.4
+ - [websocket-extensions](https://github.com/faye/websocket-extensions-node) 0.1.4
     by James Coglan (jcoglan@gmail.com)
     under the Apache-2.0 license
 
- - which-boxed-primitive 1.0.2
+ - [which-boxed-primitive](https://github.com/inspect-js/which-boxed-primitive) 1.0.2
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
- - which-module 2.0.0
+ - [which-module](https://github.com/nexdrew/which-module) 2.0.0
     by nexdrew
     under the ISC license
 
- - which 1.3.1
+ - [which](https://github.com/isaacs/node-which) 1.3.1
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - which 2.0.2
+ - [which](https://github.com/isaacs/node-which) 2.0.2
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - word-wrap 1.2.3
+ - [word-wrap](https://github.com/jonschlinkert/word-wrap) 1.2.3
     by Jon Schlinkert
     under the MIT license
 
- - wordwrap 0.0.3
+ - [wordwrap](https://github.com/substack/node-wordwrap) 0.0.3
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - wordwrap 1.0.0
+ - [wordwrap](https://github.com/substack/node-wordwrap) 1.0.0
     by James Halliday (mail@substack.net)
     under the MIT license
 
- - worker-farm 1.7.0
+ - [worker-farm](https://github.com/rvagg/node-worker-farm) 1.7.0
     under the MIT license
 
- - wrap-ansi 2.1.0
+ - [wrap-ansi](https://github.com/chalk/wrap-ansi) 2.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - wrap-ansi 5.1.0
+ - [wrap-ansi](https://github.com/chalk/wrap-ansi) 5.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - wrap-ansi 7.0.0
+ - [wrap-ansi](https://github.com/chalk/wrap-ansi) 7.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
- - wrappy 1.0.2
+ - [wrappy](https://github.com/npm/wrappy) 1.0.2
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - ws 6.2.2
+ - [ws](https://github.com/websockets/ws) 6.2.2
     by Einar Otto Stangvik (einaros@gmail.com)
     under the MIT license
 
- - xmldoc 1.1.2
+ - [xmldoc](https://github.com/nfarina/xmldoc) 1.1.2
     by Nick Farina (nfarina@gmail.com)
     under the MIT license
 
- - xtend 4.0.2
+ - [xtend](https://github.com/Raynos/xtend) 4.0.2
     by Raynos (raynos2@gmail.com)
     under the MIT license
 
- - y18n 4.0.3
+ - [y18n](https://github.com/yargs/y18n) 4.0.3
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - y18n 5.0.8
+ - [y18n](https://github.com/yargs/y18n) 5.0.8
     by Ben Coe (bencoe@gmail.com)
     under the ISC license
 
- - yallist 2.1.2
+ - [yallist](https://github.com/isaacs/yallist) 2.1.2
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - yallist 3.1.1
+ - [yallist](https://github.com/isaacs/yallist) 3.1.1
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - yallist 4.0.0
+ - [yallist](https://github.com/isaacs/yallist) 4.0.0
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
 
- - yaml 1.10.2
+ - [yaml](https://github.com/eemeli/yaml) 1.10.2
     by Eemeli Aro (eemeli@gmail.com)
     under the ISC license
 
- - yargs-parser 11.1.1
+ - [yargs-parser](https://github.com/yargs/yargs-parser) 11.1.1
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - yargs-parser 13.1.2
+ - [yargs-parser](https://github.com/yargs/yargs-parser) 13.1.2
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - yargs-parser 20.2.7
+ - [yargs-parser](https://github.com/yargs/yargs-parser) 20.2.7
     by Ben Coe (ben@npmjs.com)
     under the ISC license
 
- - yargs 12.0.5
+ - [yargs](https://github.com/yargs/yargs) 12.0.5
     under the MIT license
 
- - yargs 13.3.2
+ - [yargs](https://github.com/yargs/yargs) 13.3.2
     under the MIT license
 
- - yargs 16.2.0
+ - [yargs](https://github.com/yargs/yargs) 16.2.0
     under the MIT license
 
- - yocto-queue 0.1.0
+ - [yocto-queue](https://github.com/sindresorhus/yocto-queue) 0.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 

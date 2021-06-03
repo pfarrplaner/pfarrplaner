@@ -49,7 +49,7 @@ class LicensesToMarkdown extends Command
                 } else {
                     $licenseInfo = $record['license'].' license';
                 }
-                $output .= ' - '.$packageName.' '.$record['version']."\n"
+                $output .= ' - ['.$packageName.'](https://packagist.org/packages/'.$packageName.') '.$record['version']."\n"
                           .'    under the '.$licenseInfo."\n\n";
             }
             $output .= "\n\n";
@@ -66,7 +66,11 @@ class LicensesToMarkdown extends Command
                 } else {
                     $licenseInfo = $record['licenses'].' license';
                 }
-                $output .= ' - '.$packageName.' '.$version."\n";
+                if (isset($record['repository'])) {
+                    $output .= ' - ['.$packageName.']('.$record['repository'].') '.$version."\n";
+                } else {
+                    $output .= ' - '.$packageName.' '.$version."\n";
+                }
                 if (isset($record['publisher'])) {
                     $output .= '    by '.$record['publisher'];
                     if (isset($record['email'])) {
