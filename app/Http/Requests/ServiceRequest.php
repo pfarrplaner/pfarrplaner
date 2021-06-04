@@ -132,7 +132,7 @@ class ServiceRequest extends FormRequest
 
 
         // set location
-        if ($data['special_location']) {
+        if ($data['special_location'] ?? false) {
             $data['location_id'] = null;
         } else {
             $location = Location::find($data['location_id']);
