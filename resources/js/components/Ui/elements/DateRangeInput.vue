@@ -65,13 +65,11 @@ export default {
     },
     methods: {
         setFrom(e) {
-            console.log('setFrom', e);
             this.myFrom = e;
             this.myDatePickerConfig2.minDate = moment(e, 'DD.MM.YYYY');
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);
         },
         setTo(e) {
-            console.log('setTo', e);
             this.myTo = e;
             this.myDatePickerConfig1.maxDate = moment(e, 'DD.MM.YYYY');
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);
