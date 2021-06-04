@@ -38,6 +38,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -149,6 +150,9 @@ class AppServiceProvider extends ServiceProvider
                 }
             ]
         );
+        Inertia::share(['route' => function() {
+            return Route::currentRouteName();
+        }]);
 
         /**
          * Pass array or string of key column names to remove

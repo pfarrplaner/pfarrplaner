@@ -345,3 +345,5 @@ Route::post('/streaming/activateService/{service}', 'StreamingTroubleshooterCont
 Route::post('/streaming/resetService/{service}', 'StreamingTroubleshooterController@resetService')->name('streaming.troubleshooter.resetService');
 Route::post('/streaming/{city}/activateBroadcast/{broadcast}', 'StreamingTroubleshooterController@activateBroadcast')->name('streaming.troubleshooter.activateBroadcast');
 
+//manual
+Route::get('/manual/{routeName}', 'ManualController@page')->name('manual');

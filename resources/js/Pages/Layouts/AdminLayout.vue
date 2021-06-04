@@ -48,6 +48,11 @@
                         class="fas fa-cogs"></i></a>
                 </li>
                 <li class="nav-item">
+                    <a class="btn btn-navbar btn-light mr-1" :href="route('manual', layout.route)" target="_blank" title="Benutzerhandbuch">
+                        <i class="fa fa-question"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="btn btn-navbar" :href="route('logout')">
                         <i class="fa fa-power-off"></i><span class="d-none d-md-inline"> Abmelden</span>
                     </a>
