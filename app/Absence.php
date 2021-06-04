@@ -217,17 +217,12 @@ class Absence extends Model
     public function replacementText($prefix = '')
     {
         $prefix = $prefix ? $prefix . ' ' : '';
-        $replacements = $this->replacements;
-        if (count($replacements) == 1) {
-            return $prefix . $replacements->first()->toText();
-        } else {
-            $r = [];
-            /** @var Replacement $replacement */
-            foreach ($replacements as $replacement) {
-                $r[] = $replacement->toText(true);
-            }
-            return $prefix . join('; ', $r);
+        $r = [];
+        /** @var Replacement $replacement */
+        foreach ($this->replacements as $replacement) {
+            $r[] = $replacement->toText();
         }
+        return $prefix . join('; ', $r);
     }
 
     /**

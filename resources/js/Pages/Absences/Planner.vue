@@ -61,7 +61,7 @@
                             <div v-if="userDays[user.id][day.day].duration"
                                 class="absence" :class="{editable: user.canEdit}">
                                 <b>{{ userDays[user.id][day.day].absence.user.name }}</b> ({{ userDays[user.id][day.day].absence.reason }})<br />
-
+                                <small v-if="userDays[user.id][day.day].absence.replacementText">V: {{ userDays[user.id][day.day].absence.replacementText }}</small>
                             </div>
                         </td>
                     </tr>

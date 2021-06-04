@@ -31,6 +31,7 @@
 namespace App;
 
 use App\Tools\StringTool;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -67,16 +68,15 @@ class Replacement extends Model
     }
 
     /**
-     * @param bool $withDates
      * @return string
      */
-    public function toText(bool $withDates = false)
+    public function toText()
     {
         $u = [];
         /** @var User $user */
         foreach ($this->users as $user) {
             $u[] = $user->lastName();
         }
-        return join(' | ', $u) . ($withDates ? ' (' . StringTool::durationText($this->from, $this->to) . ')' : '');
+        return join(' | ', $u) . ' (' . StringTool::durationText($this->from, $this->to) . ')';
     }
 }
