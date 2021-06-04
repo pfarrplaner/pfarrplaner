@@ -159,7 +159,10 @@ Route::post('baptisms/{baptism}/attachment', 'BaptismController@attach')->name('
 Route::delete('baptisms/{baptism}/attachment/{attachment}', 'BaptismController@detach')->name('baptism.detach');
 
 
-Route::resource('funerals', 'FuneralController')->middleware('auth');
+Route::get('funerals/create/{service}', 'FuneralController@create')->middleware('auth')->name('funerals.create');
+Route::get('funerals/{funeral}', 'FuneralController@edit')->middleware('auth')->name('funerals.edit');
+Route::patch('funerals/{funeral}', 'FuneralController@update')->middleware('auth')->name('funerals.update');
+Route::delete('funerals/{funeral}', 'FuneralController@destroy')->middleware('auth')->name('funerals.destroy');
 Route::post('funerals/{funeral}/attachment', 'FuneralController@attach')->name('funeral.attach');
 Route::delete('funerals/{funeral}/attachment/{attachment}', 'FuneralController@detach')->name('funeral.detach');
 Route::get('/funeral/add/{service}', ['as' => 'funeral.add', 'uses' => 'FuneralController@create'])->middleware('auth');
