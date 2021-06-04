@@ -55,7 +55,7 @@
                             <people-select :people="users" v-model="replacement.users"/>
                         </div>
                         <div class="col-md-6">
-                            <date-range-input :from="replacement.from" :to="replacement.to"/>
+                            <date-range-input :from="replacement.from" :to="replacement.to" @input="setReplacementDateRange(replacement, $event)"/>
                         </div>
                         <div class="col-md-1 text-right">
                             <button class="btn btn-danger" @click.prevent="deleteReplacement(replacementKey)"
@@ -99,6 +99,11 @@ export default {
             this.myAbsence.from = moment(e[0]).format('YYYY-MM-DD HH:mm:ss');
             this.myAbsence.to = moment(e[1]).format('YYYY-MM-DD HH:mm:ss');
         },
+        setReplacementDateRange(replacement, e) {
+            console.log('setReplacementDateRange', replacement, e);
+            replacement.from = moment(e[0]).format('YYYY-MM-DD HH:mm:ss');
+            replacement.to = moment(e[1]).format('YYYY-MM-DD HH:mm:ss');
+        },
         addReplacement() {
             this.myAbsence.replacements.push({users: [], from: this.myAbsence.from, to: this.myAbsence.to});
         },
@@ -109,6 +114,10 @@ export default {
             var record = this.myAbsence;
             record.from = moment(this.myAbsence.from).format('DD.MM.YYYY');
             record.to = moment(this.myAbsence.to).format('DD.MM.YYYY');
+            record.replacements.forEach(replacement => {
+                replacement.from = moment(replacement.from).format('DD.MM.YYYY');
+                replacement.to = moment(replacement.to).format('DD.MM.YYYY');
+            });
             this.$inertia.patch(route('absences.update', {absence: this.absence.id}), record);
         },
         deleteAbsence() {

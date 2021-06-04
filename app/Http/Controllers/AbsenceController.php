@@ -276,10 +276,10 @@ class AbsenceController extends Controller
             );
             $replacement->save();
             if (isset($replacementData['users'])) {
-                foreach ($replacementData['users'] as $id => $userId) {
-                    $replacementData['users'][$id] = User::createIfNotExists($userId);
+                foreach ($replacementData['users'] as $id => $userData) {
+                    $replacementData['users'][$id] = $userData['id'];
                 }
-                $replacement->users()->sync($replacementData['user']);
+                $replacement->users()->sync($replacementData['users']);
             }
             $replacementIds[] = $replacement->id;
         }
