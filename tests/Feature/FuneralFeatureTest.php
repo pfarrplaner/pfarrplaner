@@ -31,6 +31,7 @@
 namespace Tests\Feature;
 
 use App\Funeral;
+use App\Service;
 use App\Traits\TestWithCredentialsTrait;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -51,10 +52,9 @@ class FuneralFeatureTest extends TestCase
      */
     public function testFuneralCanBeCreated()
     {
-        $raw = factory(Funeral::class)->raw();
-
+        $service = factory(Service::class)->create();
         $this->actingAs($this->user)
-            ->post(route('funerals.store'), $raw)
+            ->get(route('funerals.create', $service->id))
             ->assertStatus(302);
         $this->assertCount(1, Funeral::all());
     }

@@ -58,9 +58,11 @@ class AttachmentFeatureTest extends TestCase
      */
     public function testFuneralAttachmentCanBeCreated()
     {
+        $funeral = factory(Funeral::class)->create();
         $this->actingAs($this->user)
-            ->post(route('funerals.store'), $this->fakeFuneralAttachmentData())
-            ->assertStatus(302);
+            ->post(route('funeral.attach', $funeral->id), $this->fakeFuneralAttachmentData())
+            ->assertStatus(200)
+            ->assertJson([]);
 
         $this->assertCount(1, Funeral::all());
         $this->assertCount(1, Funeral::first()->attachments);
@@ -73,20 +75,19 @@ class AttachmentFeatureTest extends TestCase
      */
     public function testFuneralAttachmentCanBeRemoved()
     {
-        $raw = $this->fakeFuneralAttachmentData();
+        $funeral = factory(Funeral::class)->create();
         $this->actingAs($this->user)
-            ->post(route('funerals.store'), $raw)
-            ->assertStatus(302);
+            ->post(route('funeral.attach', $funeral->id), $this->fakeFuneralAttachmentData())
+            ->assertStatus(200)
+            ->assertJson([]);
 
         $this->assertCount(1, Funeral::all());
-        $this->assertCount(1, Funeral::first()->attachments);
-
-        unset($raw['attachments']);
-        $raw['remove_attachment'][] = Attachment::first()->id;
+        $funeral = Funeral::first();
+        $this->assertCount(1, $funeral->attachments);
         $this->actingAs($this->user)
-            ->patch(route('funerals.update', Funeral::first()->id), $raw)
-            ->assertStatus(302);
-
+            ->delete(route('funeral.detach', ['funeral' => $funeral->id, 'attachment' => $funeral->attachments[0]->id]))
+            ->assertStatus(200)
+            ->assertJson([]);
         $this->assertCount(0, Funeral::first()->attachments);
     }
 
@@ -97,7 +98,6 @@ class AttachmentFeatureTest extends TestCase
     protected function fakeFuneralAttachmentData(): array
     {
         Storage::fake('fake');
-        $raw = factory(Funeral::class)->raw();
         $raw['attachments'][1] = UploadedFile::fake()->image('test.jpg');
         $raw['attachment_text'][1] = 'Testing';
         return $raw;
