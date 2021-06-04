@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.55.4](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.3...v1.55.4) (2021-06-04)
+
+
+### Bug Fixes
+
+* AbsenceEditor fails to save replacements ([ac24879](https://github.com/potofcoffee/pfarrplaner/commits/ac24879a7f31334b6b6378ceac4d7aa948cd960f))
+* DateRangeInput does not set end of range ([ba2e73c](https://github.com/potofcoffee/pfarrplaner/commits/ba2e73c0f82114d69798f3fe6f3eff0ff89ccae5))
+* Planner does not show replacements ([f1c9867](https://github.com/potofcoffee/pfarrplaner/commits/f1c98671ed272699a51a9f1f918b8f4587be4e43))
+
 ### [1.55.3](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.2...v1.55.3) (2021-06-03)
 
 

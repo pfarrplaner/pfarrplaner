@@ -1,5 +1,5 @@
 {
-    "version": "1.55.3",
+    "version": "1.55.4",
     "private": true,
     "scripts": {
         "dev": "npm run development",
@@ -22,6 +22,7 @@
         "axios": "^0.21",
         "bootstrap": "^4.0.0",
         "cross-env": "^5.1",
+        "github-contributors": "^0.4.1",
         "husky": "^6.0.0",
         "jquery": "3.5.0",
         "laravel-mix": "^4.0.7",
