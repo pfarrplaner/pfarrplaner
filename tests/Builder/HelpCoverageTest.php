@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/potofcoffee/pfarrplaner
  * @version git: $Id$
@@ -28,19 +28,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Tests;
+namespace Tests\Builder;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
-/**
- * Class TestCase
- * @package Tests
- */
-abstract class TestCase extends BaseTestCase
+use Illuminate\Support\Facades\Route;
+use Tests\TestCase;
+
+class HelpCoverageTest extends TestCase
 {
-    use CreatesApplication;
 
-    protected function output($line) {
-        fwrite(STDERR, $line.PHP_EOL);
+    public function testAllGetRoutesHaveHelpFile()
+    {
+        $routes = Route::getRoutes()->getRoutesByMethod();
+        $routeKeys = [];
+        ksort($routes);
+        /** @var \Illuminate\Routing\Route $route */
+        foreach ($routes['GET'] as $route) {
+            $routeKey = $route->getAction('as');
+            if ($routeKey) {
+                if (!file_exists(base_path('manual/'.$routeKey.'.md'))) $routeKeys[] = $routeKey;
+            }
+        }
+        if (count($routeKeys)) {
+            $this->output('');
+            $this->output('WARNING: The following routes have no associated page in the manual:');
+            $this->output(join(', ', $routeKeys));
+            $this->output('');
+        }
+        $this->assertCount(0, $routeKeys);
     }
 }
