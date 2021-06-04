@@ -34,7 +34,7 @@
                 <date-picker v-model="myFrom" :config="myDatePickerConfig1" @input="setFrom"/>
             </div>
             <div class="col-md-6">
-                <date-picker v-model="myTo" :config="myDatePickerConfig2" />
+                <date-picker v-model="myTo" :config="myDatePickerConfig2" @input="setTo"/>
             </div>
         </div>
     </form-group>
@@ -71,7 +71,7 @@ export default {
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);
         },
         setTo(e) {
-            console.log('setFrom', e);
+            console.log('setTo', e);
             this.myTo = e;
             this.myDatePickerConfig1.maxDate = moment(e, 'DD.MM.YYYY');
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);

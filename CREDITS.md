@@ -1160,6 +1160,10 @@ Pfarrplaner uses the following open-source libraries:
     by Steve Mao (maochenyan@gmail.com)
     under the MIT license
 
+ - [array-slice](https://github.com/jonschlinkert/array-slice) 0.2.3
+    by Jon Schlinkert
+    under the MIT license
+
  - [array-union](https://github.com/sindresorhus/array-union) 1.0.2
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
@@ -2084,6 +2088,9 @@ Pfarrplaner uses the following open-source libraries:
     by Sam Verschueren (sam.verschueren@gmail.com)
     under the MIT license
 
+ - [decompress-response](https://github.com/sindresorhus/decompress-response) 3.3.0
+    under the MIT license
+
  - [deep-equal](https://github.com/substack/node-deep-equal) 1.1.1
     by James Halliday (mail@substack.net)
     under the MIT license
@@ -2413,6 +2420,10 @@ Pfarrplaner uses the following open-source libraries:
     by Jon Schlinkert
     under the MIT license
 
+ - [expand-range](https://github.com/jonschlinkert/expand-range) 1.8.2
+    by Jon Schlinkert
+    under the MIT license
+
  - [expand-tilde](https://github.com/jonschlinkert/expand-tilde) 2.0.2
     by Jon Schlinkert
     under the MIT license
@@ -2497,6 +2508,10 @@ Pfarrplaner uses the following open-source libraries:
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
+ - [fill-range](https://github.com/jonschlinkert/fill-range) 2.2.4
+    by Jon Schlinkert
+    under the MIT license
+
  - [fill-range](https://github.com/jonschlinkert/fill-range) 4.0.0
     by Jon Schlinkert
     under the MIT license
@@ -2564,6 +2579,14 @@ Pfarrplaner uses the following open-source libraries:
 
  - [for-in](https://github.com/jonschlinkert/for-in) 1.0.2
     by Jon Schlinkert
+    under the MIT license
+
+ - [for-own](https://github.com/jonschlinkert/for-own) 0.1.5
+    by Jon Schlinkert
+    under the MIT license
+
+ - [format-people](https://github.com/doowb/format-people) 0.1.4
+    by Brian Woodward
     under the MIT license
 
  - [forwarded](https://github.com/jshttp/forwarded) 0.2.0
@@ -2668,6 +2691,14 @@ Pfarrplaner uses the following open-source libraries:
  - [gitconfiglocal](https://github.com/soldair/node-gitconfiglocal) 1.0.0
     by Ryan Day
     under the BSD* license
+
+ - [github-base](https://github.com/jonschlinkert/github-base) 0.5.4
+    by Jon Schlinkert
+    under the MIT license
+
+ - [github-contributors](https://github.com/jonschlinkert/github-contributors) 0.4.1
+    by Jon Schlinkert
+    under the MIT license
 
  - [glob-parent](https://github.com/es128/glob-parent) 3.1.0
     by Elan Shanker
@@ -3146,7 +3177,15 @@ Pfarrplaner uses the following open-source libraries:
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
+ - [is-number](https://github.com/jonschlinkert/is-number) 2.1.0
+    by Jon Schlinkert
+    under the MIT license
+
  - [is-number](https://github.com/jonschlinkert/is-number) 3.0.0
+    by Jon Schlinkert
+    under the MIT license
+
+ - [is-number](https://github.com/jonschlinkert/is-number) 4.0.0
     by Jon Schlinkert
     under the MIT license
 
@@ -3391,6 +3430,10 @@ Pfarrplaner uses the following open-source libraries:
  - [linkify-it](https://github.com/markdown-it/linkify-it) 1.2.4
     under the MIT license
 
+ - [list-item](https://github.com/jonschlinkert/list-item) 1.1.1
+    by Jon Schlinkert
+    under the MIT license
+
  - [load-json-file](https://github.com/sindresorhus/load-json-file) 1.1.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
@@ -3507,6 +3550,14 @@ Pfarrplaner uses the following open-source libraries:
     by Tim Perry (pimterry@gmail.com)
     under the MIT license
 
+ - [longest-value](https://github.com/jonschlinkert/longest-value) 0.2.0
+    by Jon Schlinkert
+    under the MIT license
+
+ - [longest](https://github.com/jonschlinkert/longest) 1.0.1
+    by Jon Schlinkert
+    under the MIT license
+
  - [loud-rejection](https://github.com/sindresorhus/loud-rejection) 1.6.0
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
@@ -3602,8 +3653,16 @@ Pfarrplaner uses the following open-source libraries:
  - [markdown-it](https://github.com/markdown-it/markdown-it) 6.1.1
     under the MIT license
 
+ - [markdown-utils](https://github.com/jonschlinkert/markdown-utils) 0.7.3
+    by Jon Schlinkert
+    under the MIT license
+
  - [match-at](https://github.com/sophiebits/match-at) 0.1.1
     under the MIT* license
+
+ - [math-random](https://github.com/michaelrhodes/math-random) 1.0.4
+    by Michael Rhodes
+    under the MIT license
 
  - [md5.js](https://github.com/crypto-browserify/md5.js) 1.3.5
     by Kirill Fomichev (fanatid@ya.ru)
@@ -3693,6 +3752,10 @@ Pfarrplaner uses the following open-source libraries:
     under the MIT license
 
  - [mimic-fn](https://github.com/sindresorhus/mimic-fn) 2.1.0
+    by Sindre Sorhus (sindresorhus@gmail.com)
+    under the MIT license
+
+ - [mimic-response](https://github.com/sindresorhus/mimic-response) 1.0.1
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
@@ -3901,6 +3964,10 @@ Pfarrplaner uses the following open-source libraries:
     by Jordan Harband (ljharb@gmail.com)
     under the MIT license
 
+ - [object.omit](https://github.com/jonschlinkert/object.omit) 2.0.1
+    by Jon Schlinkert
+    under the MIT license
+
  - [object.omit](https://github.com/jonschlinkert/object.omit) 3.0.0
     by Jon Schlinkert
     under the MIT license
@@ -4020,6 +4087,10 @@ Pfarrplaner uses the following open-source libraries:
     by Sindre Sorhus (sindresorhus@gmail.com)
     under the MIT license
 
+ - [pad-right](https://github.com/jonschlinkert/pad-right) 0.2.2
+    by Jon Schlinkert
+    under the MIT license
+
  - [pako](https://github.com/nodeca/pako) 0.2.9
     under the MIT license
 
@@ -4059,6 +4130,10 @@ Pfarrplaner uses the following open-source libraries:
 
  - [parse-json](https://github.com/sindresorhus/parse-json) 5.2.0
     by Sindre Sorhus (sindresorhus@gmail.com)
+    under the MIT license
+
+ - [parse-link-header](https://github.com/thlorenz/parse-link-header) 0.4.1
+    by Thorsten Lorenz (thlorenz@gmx.de)
     under the MIT license
 
  - [parse-passwd](https://github.com/doowb/parse-passwd) 1.0.0
@@ -4442,6 +4517,10 @@ Pfarrplaner uses the following open-source libraries:
     by James Halliday (mail@substack.net)
     under the MIT license
 
+ - [randomatic](https://github.com/jonschlinkert/randomatic) 3.1.1
+    by Jon Schlinkert
+    under the MIT license
+
  - [randombytes](https://github.com/crypto-browserify/randombytes) 2.1.0
     under the MIT license
 
@@ -4669,6 +4748,10 @@ Pfarrplaner uses the following open-source libraries:
     by John Otander
     under the MIT license
 
+ - [right-pad-values](https://github.com/jonschlinkert/right-pad-values) 0.3.1
+    by Jon Schlinkert
+    under the MIT license
+
  - [rimraf](https://github.com/isaacs/rimraf) 2.7.1
     by Isaac Z. Schlueter (i@izs.me)
     under the ISC license
@@ -4830,6 +4913,14 @@ Pfarrplaner uses the following open-source libraries:
  - [signal-exit](https://github.com/tapjs/signal-exit) 3.0.3
     by Ben Coe (ben@npmjs.com)
     under the ISC license
+
+ - [simple-concat](https://github.com/feross/simple-concat) 1.0.1
+    by Feross Aboukhadijeh (feross@feross.org)
+    under the MIT license
+
+ - [simple-get](https://github.com/feross/simple-get) 2.8.1
+    by Feross Aboukhadijeh (feross@feross.org)
+    under the MIT license
 
  - [simple-swizzle](https://github.com/qix-/node-simple-swizzle) 0.2.2
     by Qix
@@ -5151,6 +5242,10 @@ Pfarrplaner uses the following open-source libraries:
 
  - [to-fast-properties](https://github.com/sindresorhus/to-fast-properties) 2.0.0
     by Sindre Sorhus (sindresorhus@gmail.com)
+    under the MIT license
+
+ - [to-gfm-code-block](https://github.com/jonschlinkert/to-gfm-code-block) 0.1.1
+    by Jon Schlinkert
     under the MIT license
 
  - [to-object-path](https://github.com/jonschlinkert/to-object-path) 0.3.0
