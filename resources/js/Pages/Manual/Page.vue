@@ -29,7 +29,7 @@
 
 <template>
     <help-layout :title="title">
-        <vue-markdown :source="content" />
+        <vue-markdown :source="myContent" />
     </help-layout>
 </template>
 
@@ -40,6 +40,12 @@ import VueMarkdown from 'vue-markdown';
 export default {
     components: {HelpLayout, VueMarkdown},
     props: ['routeName', 'title', 'content'],
+    data() {
+        var myContent = this.content.replaceAll('/manual/img', '/media/manual/img');
+        return {
+            myContent: myContent,
+        }
+    }
 }
 </script>
 
