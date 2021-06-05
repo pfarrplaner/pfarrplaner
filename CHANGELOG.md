@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.58.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.57.0...v1.58.0) (2021-06-05)
+
+
+### Features
+
+* LiturgySheets (here: FullTextLiturgySheet) can optionally be configured ([d1d24ff](https://github.com/pfarrplaner/pfarrplaner/commits/d1d24ff19b3bbd2b4bd2effe2480b6f0e681516e))
+
 ## [1.57.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.56.0...v1.57.0) (2021-06-05)
 
 
