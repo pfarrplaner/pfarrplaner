@@ -45,6 +45,9 @@ class AbstractLiturgySheet
     protected $fileTitle = 'Liturgie';
     protected $extension = 'pdf';
     protected $isNotAFile = false;
+    protected $configurationPage = null;
+    protected $defaultConfig = [];
+    protected $config = [];
 
 
     protected function getData(Service $service)
@@ -59,9 +62,8 @@ class AbstractLiturgySheet
     {
         if (Auth::guest()) {
             $authorData = ['author' => config('app.name')];
-
         } else {
-            $authorData =                 [
+            $authorData = [
                 'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
             ];
         }
@@ -77,15 +79,14 @@ class AbstractLiturgySheet
             $this->layout
         );
 
-        $filename = $service->dateTime()->format('Ymd-Hi').' '.$this->getFileTitle().'.pdf';
+        $filename = $service->dateTime()->format('Ymd-Hi') . ' ' . $this->getFileTitle() . '.pdf';
 
         return $pdf->download($filename);
-
     }
 
     protected function getRenderViewName()
     {
-        return 'liturgy.sheets.'.strtolower($this->getKey().'.render');
+        return 'liturgy.sheets.' . strtolower($this->getKey() . '.render');
     }
 
     /**
@@ -93,10 +94,13 @@ class AbstractLiturgySheet
      */
     public function getKey()
     {
-        return strtr(get_called_class(), [
-            'App\\Liturgy\\LiturgySheets\\' => '',
-            'LiturgySheet' => '',
-        ]);
+        return strtr(
+            get_called_class(),
+            [
+                'App\\Liturgy\\LiturgySheets\\' => '',
+                'LiturgySheet' => '',
+            ]
+        );
     }
 
     /**
@@ -195,5 +199,46 @@ class AbstractLiturgySheet
         $this->isNotAFile = $isNotAFile;
     }
 
+    /**
+     * @return null
+     */
+    public function getConfigurationPage()
+    {
+        return $this->configurationPage;
+    }
+
+    /**
+     * @param null $configurationPage
+     */
+    public function setConfigurationPage($configurationPage): void
+    {
+        $this->configurationPage = $configurationPage;
+    }
+
+
+    /**
+     * Get a configuration array combined from defaults and user settings
+     * @return array
+     */
+    public function getConfiguration()
+    {
+        return $this->config = array_replace_recursive(
+            $this->defaultConfig,
+            Auth::user()->getSetting('liturgySheetConfig_' . $this->getKey()) ?? []
+        );
+    }
+
+    /**
+     * Save configuration array to user settings, merging in any missing values from defaults
+     * @param array $data
+     */
+    public function setConfiguration(array $data)
+    {
+        $this->config = array_replace_recursive($this->defaultConfig, $data);
+        Auth::user()->setSetting(
+            'liturgySheetConfig_' . $this->getKey(),
+            $this->config,
+        );
+    }
 
 }

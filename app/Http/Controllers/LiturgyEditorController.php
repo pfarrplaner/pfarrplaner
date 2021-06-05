@@ -9,7 +9,6 @@ use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Liturgy\Resources\BlockResourceCollection;
 use App\Participant;
 use App\Service;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -30,7 +29,10 @@ class LiturgyEditorController extends Controller
         $autoFocusItem = $request->get('autoFocusItem', null);
         $ministries = $this->getAvailableMinistries();
 
-        return Inertia::render('liturgyEditor', compact('service', 'liturgySheets', 'autoFocusBlock', 'autoFocusItem', 'ministries'));
+        return Inertia::render(
+            'liturgyEditor',
+            compact('service', 'liturgySheets', 'autoFocusBlock', 'autoFocusItem', 'ministries')
+        );
     }
 
     public function save(Request $request, Service $service)
@@ -49,6 +51,13 @@ class LiturgyEditorController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Download a rendered LiturgySheet
+     * @param Request $request
+     * @param Service $service
+     * @param $key
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function download(Request $request, Service $service, $key)
     {
         $class = 'App\\Liturgy\\LiturgySheets\\' . $key . 'LiturgySheet';
@@ -58,7 +67,41 @@ class LiturgyEditorController extends Controller
 
         /** @var AbstractLiturgySheet $sheet */
         $sheet = new $class();
+        if ((null !== $sheet->getConfigurationPage()) && (!$request->has('config'))) {
+            return redirect()->route('services.liturgy.configure', ['service' => $service->id, 'key' => $key]);
+        }
+
+        if (null !== $sheet->getConfigurationPage()) {
+            $sheet->setConfiguration($request->get('config', []));
+        }
         return $sheet->render($service);
+    }
+
+    /**
+     * Show the configuration page for a LiturgySheet
+     * @param Request $request
+     * @param Service $service
+     * @param $key
+     * @return \Inertia\Response
+     */
+    public function configureLiturgySheet(Request $request, Service $service, $key)
+    {
+        $class = 'App\\Liturgy\\LiturgySheets\\' . $key . 'LiturgySheet';
+        if (!class_exists($class)) {
+            abort(404);
+        }
+        /** @var AbstractLiturgySheet $sheet */
+        $sheet = new $class();
+
+        $sheetConfig = [
+            'key' => $sheet->getKey(),
+            'title' => $sheet->getTitle(),
+            'fileTitle' => $sheet->getFileTitle(),
+        ];
+
+        $config = $sheet->getConfiguration();
+
+        return Inertia::render($sheet->getConfigurationPage(), compact('service', 'sheetConfig', 'config'));
     }
 
     public function sources(Service $service)
@@ -74,7 +117,7 @@ class LiturgyEditorController extends Controller
         $services3 = $services1->merge($services2)->unique();
         $services = [];
         foreach ($services3 as $service) {
-            $services[$service->dateTime->timestamp.$service->id] = $service;
+            $services[$service->dateTime->timestamp . $service->id] = $service;
         }
         krsort($services);
         $agendas = Service::isAgenda()->get();
@@ -98,7 +141,13 @@ class LiturgyEditorController extends Controller
                 $newItem->liturgy_block_id = $newBlock->id;
                 $newItem->sortable = $itemCtr;
                 if ($newItem->data_type == 'liturgic') {
-                    foreach (['funeral' => $service->funerals, 'baptism' => $service->baptisms, 'wedding' => $service->weddings] as $key => $collection) {
+                    foreach (
+                        [
+                            'funeral' => $service->funerals,
+                            'baptism' => $service->baptisms,
+                            'wedding' => $service->weddings
+                        ] as $key => $collection
+                    ) {
                         if ($newItem->data['needs_replacement'] == $key) {
                             $newItem->setData('foo', 'bar');
                             if ($collection->count()) {

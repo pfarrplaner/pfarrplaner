@@ -49,7 +49,12 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
     protected $icon = 'fa fa-file-word';
     protected $service = null;
     protected $extension = 'docx';
+    protected $configurationPage = 'Liturgy/LiturgySheets/FullTextSongSheetConfiguration';
 
+    protected $defaultConfig = [
+        'includeSongTexts' => 1,
+        'includeFullReadings' => 1,
+    ];
 
     public function render(Service $service)
     {
@@ -132,6 +137,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
         $doc->getSection()->addTitle($helper->getTitleText(),3);
+        if (!$this->config['includeSongTexts']) return;
 
         foreach ($helper->getActiveVerses() as $verse) {
             if ($verse['refrain_before']) {
@@ -148,6 +154,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
     {
         if (!$item->data['reference']) return;
         $doc->getSection()->addTitle($item->data['reference'], 3);
+        if (!$this->config['includeFullReadings']) return;
 
         $ref = ReferenceParser::getInstance()->parse($item->data['reference']);
         $bibleText = (new BibleText())->get($ref);

@@ -40,10 +40,16 @@
                             <span class="fa fa-download"></span> Herunterladen
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" v-for="sheet in sheets"
-                               :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
-                                <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
-                            </a>
+                            <div v-for="sheet in sheets">
+                                <inertia-link v-if="sheet.configurationPage" class="dropdown-item"
+                                   :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
+                                    <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
+                                </inertia-link>
+                                <a v-else class="dropdown-item"
+                                   :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
+                                    <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -279,7 +279,9 @@ Route::get('/calendar-day/{day}/{city}', 'CalController@singleDay')->name('calen
 
 // liturgy editor
 Route::get('/services/{service}/liturgy', 'LiturgyEditorController@editor')->name('services.liturgy.editor');
+Route::get('/services/{service}/liturgy/configure/{key}', 'LiturgyEditorController@configureLiturgySheet')->name('services.liturgy.configure');
 Route::get('/services/{service}/liturgy/download/{key}', 'LiturgyEditorController@download')->name('services.liturgy.download');
+Route::post('/services/{service}/liturgy/download/{key}', 'LiturgyEditorController@download')->name('services.liturgy.download.post');
 Route::post('/services/{service}/liturgy', 'LiturgyEditorController@save')->name('services.liturgy.save');
 Route::get('/services/{service}/liturgy/sources', 'LiturgyEditorController@sources')->name('services.liturgy.sources');
 Route::post('/services/{service}/liturgy/import/{source}', 'LiturgyEditorController@import')->name('services.liturgy.import');
