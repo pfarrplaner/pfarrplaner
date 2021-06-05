@@ -6,7 +6,7 @@
  * @author Christoph Fischer <chris@toph.de>
  * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
- * @link https://github.com/potofcoffee/pfarrplaner
+ * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
  *
  * Sponsored by: Evangelischer Kirchenbezirk Balingen, https://www.kirchenbezirk-balingen.de
@@ -35,7 +35,7 @@ return [
     'build_date' => \Carbon\Carbon::parse(env('BUILD_DATE', '')),
     'build_number' => env('BUILD_NUMBER', ''),
     'build_url' => env('BUILD_URL', ''),
-    'build_repository' => env('BUILD_REPOSITORY', 'https://github.com/potofcoffee/pfarrplaner'),
+    'build_repository' => env('BUILD_REPOSITORY', 'https://github.com/pfarrplaner/pfarrplaner'),
 
     /*
     |--------------------------------------------------------------------------

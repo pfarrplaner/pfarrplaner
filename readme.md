@@ -1,6 +1,6 @@
 <p align="center"><img src="https://www.pfarrplaner.de/img/logo/pfarrplaner.png"></p>
 
-![PHPUnit Tests](https://github.com/potofcoffee/pfarrplaner/workflows/PHPUnit%20Tests/badge.svg)
+![PHPUnit Tests](https://github.com/pfarrplaner/pfarrplaner/workflows/PHPUnit%20Tests/badge.svg)
 [![CodeFactor](https://www.codefactor.io/repository/github/potofcoffee/pfarrplaner/badge)](https://www.codefactor.io/repository/github/potofcoffee/pfarrplaner)
 
 ## Über Pfarrplaner

@@ -5,7 +5,7 @@
   - @author Christoph Fischer <chris@toph.de>
   - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
-  - @link https://github.com/potofcoffee/pfarrplaner
+  - @link https://github.com/pfarrplaner/pfarrplaner
   - @version git: $Id$
   -
   - Sponsored by: Evangelischer Kirchenbezirk Balingen, https://www.kirchenbezirk-balingen.de
@@ -37,8 +37,8 @@
                 v.{{ version }}-{{ env }} vom {{ moment(date).locale('DE').format('LLLL')}}
                 </div>
                 <p>Gehostet auf einem Server des <a href="https://wwww.kirchenbezirk-balingen.de/" target="_blank">Evangelischen Kirchenbezirks Balingen</a>.</p>
-                <p>Der Quellcode von Pfarrplaner ist als Open Source auf <a href="https://github.com/potofcoffee/pfarrplaner" target="_blank">GitHub</a> verfügbar und steht unter
-                    der <a href="https://github.com/potofcoffee/pfarrplaner/blob/master/LICENSE" target="_blank">GNU General Public License (GPL) 3.0</a> oder höher.
+                <p>Der Quellcode von Pfarrplaner ist als Open Source auf <a href="https://github.com/pfarrplaner/pfarrplaner" target="_blank">GitHub</a> verfügbar und steht unter
+                    der <a href="https://github.com/pfarrplaner/pfarrplaner/blob/master/LICENSE" target="_blank">GNU General Public License (GPL) 3.0</a> oder höher.
                 </p>
             </card-body>
         </card>
