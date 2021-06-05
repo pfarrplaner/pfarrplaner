@@ -11,10 +11,11 @@
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prepare": "husky install",
-        "release": "standard-version",
-        "release:minor": "standard-version --release-as minor",
-        "release:patch": "standard-version --release-as patch",
-        "release:major": "standard-version --release-as major"
+        "release": "license-checker --json > .npm-licenses && composer licenses --format=json > .composer-licenses && php artisan licenses:markdown && git add CREDITS.md && git commit -m \"chore: Updating license information\" && standard-version",
+        "release:minor": "license-checker --json > .npm-licenses && composer licenses --format=json > .composer-licenses && php artisan licenses:markdown && git add CREDITS.md && git commit -m \"chore: Updating license information\" && standard-version --release-as minor",
+        "release:patch": "license-checker --json > .npm-licenses && composer licenses --format=json > .composer-licenses && php artisan licenses:markdown && git add CREDITS.md && git commit -m \"chore: Updating license information\" && standard-version --release-as patch",
+        "release:major":  "standard-version --release-as major",
+        "licenses:update": "license-checker --json > .npm-licenses && composer licenses --format=json > .composer-licenses && php artisan licenses:markdown && git add CREDITS.md && git commit -m \"chore: Updating license information\""
     },
     "devDependencies": {
         "@commitlint/cli": "^12.1.4",
