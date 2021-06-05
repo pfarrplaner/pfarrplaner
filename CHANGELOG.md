@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.58.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.58.0...v1.58.1) (2021-06-05)
+
+
+### Bug Fixes
+
+* FormCheck does not handle 0 values correctly ([bad74b8](https://github.com/pfarrplaner/pfarrplaner/commits/bad74b84fb6762883874ae7b7be057dcc274997f))
+* LiturgySheet configuration does not correctly remember user settings ([ee5e770](https://github.com/pfarrplaner/pfarrplaner/commits/ee5e770e3209cebf7d995b961175556ed3fd9533))
+
 ## [1.58.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.57.0...v1.58.0) (2021-06-05)
 
 
