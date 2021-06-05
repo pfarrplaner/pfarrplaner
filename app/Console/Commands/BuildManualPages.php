@@ -89,7 +89,7 @@ class BuildManualPages extends Command
                         foreach ($levels as $level) {
                             $jsonObject = str_replace('##', '"_'.$level.'": { "items": { ## }}', $jsonObject);
                         }
-                        $jsonObject = str_replace('{ ## }', '{}, "title": "'.$matches2[2].'", "file": "manual/'.basename($file).'"', $jsonObject);
+                        $jsonObject = str_replace('{ ## }', '{}, "title": "'.$matches2[2].'", "file": "'.basename($file).'"', $jsonObject);
                         $toc = array_merge_recursive(json_decode($jsonObject, true), $toc);
                     }
                 }
@@ -108,7 +108,7 @@ class BuildManualPages extends Command
         ksort($data2);
         foreach ($data2 as $key => $item) {
             $o .= str_pad('', $level*4, ' ', STR_PAD_LEFT)
-                .'* ['.$prefix.$key.'. '.$item['title'].'](/'.$item['file'].')'.PHP_EOL;
+                .'* ['.$prefix.$key.'. '.$item['title'].']('.$item['file'].')'.PHP_EOL;
             if (isset($item['items'])) $o .= $this->outputTOCLevel($item['items'], ($level+1), $prefix.$key.'.');
         }
         return $o;
