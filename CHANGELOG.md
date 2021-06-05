@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.57.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.56.0...v1.57.0) (2021-06-05)
+
+
+### Bug Fixes
+
+* Manual paths need to be relative in order to work on GitHub ([908c7ea](https://github.com/pfarrplaner/pfarrplaner/commits/908c7ea960a394afb455d8cda33ec2f1413471db))
+* Prevent attempt to unserialize twice ([98c03ff](https://github.com/pfarrplaner/pfarrplaner/commits/98c03ff4ebac1c03180810f83776433bb5a94ef0))
+
 ## [1.56.0](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.4...v1.56.0) (2021-06-05)
 
 
