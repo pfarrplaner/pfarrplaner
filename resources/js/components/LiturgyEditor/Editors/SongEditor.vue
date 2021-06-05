@@ -98,7 +98,7 @@
                     <label>Text der Strophe</label>
                 </div>
             </div>
-            <div v-for="verse in modalSong.verses">
+            <div v-for="(verse,verseKey,verseIndex) in modalSong.verses">
                 <div class="row">
                     <div class="col-1 form-group">
                         <input type="text" class="form-control" v-model="verse.number"/>
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="col-1 text-right" style="margin-top: 2em;">
-                        <button class="btn btn-sm btn-danger" @click.prevent="deleteVerse(verseIndex)">
+                        <button class="btn btn-sm btn-danger" @click.prevent="deleteVerse(verseKey)">
                             <span class="fa fa-trash"></span>
                         </button>
                     </div>
@@ -298,7 +298,7 @@ export default {
             });
         },
         deleteVerse(verseIndex) {
-            this.editedElement.data.song.verses = this.editedElement.data.song.verses.splice(verseIndex, 1);
+            this.editedElement.data.song.verses.splice(verseIndex, 1);
         },
         save: function () {
             var data = {
