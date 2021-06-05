@@ -49,6 +49,7 @@ class LiturgySheets
                     'icon' => $object->getIcon(),
                     'extension' => $object->getExtension(),
                     'isNotAFile' => $object->isNotAFile(),
+                    'configurationPage' => $object->getConfigurationPage(),
                 ];
             }
         }

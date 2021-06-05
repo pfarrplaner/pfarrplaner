@@ -94,7 +94,11 @@ export default {
     },
     methods: {
         downloadSheet(sheet) {
-            window.location.href = route('services.liturgy.download', {service: this.service.id, key: sheet.key});
+            if (sheet.configurationPage) {
+                this.$inertia.visit(route('services.liturgy.configure', {service: this.service.id, key: sheet.key}));
+            } else {
+                window.location.href = route('services.liturgy.download', {service: this.service.id, key: sheet.key});
+            }
         },
         downloadQR() {
             window.location.href = route('report.step', {report: 'KonfiAppQR', step: 'single', service: this.myService.id});
