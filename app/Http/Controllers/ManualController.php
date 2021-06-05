@@ -13,6 +13,11 @@ class ManualController extends Controller
 
     public function page(Request $request, $routeName)
     {
+        // allow linking to routeName.md
+        if ('.md' == substr($routeName, -3)) {
+            $routeName = substr($routeName, 0, -3);
+        }
+
         $contentFile = file_exists(base_path('manual/' . $routeName . '.md'))
             ? base_path('manual/' . $routeName . '.md')
             : base_path('manual/notfound.md');
