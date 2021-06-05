@@ -56,6 +56,11 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         'includeFullReadings' => 1,
     ];
 
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function render(Service $service)
     {
         $this->service = $service;

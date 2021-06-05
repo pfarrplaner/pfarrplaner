@@ -49,6 +49,10 @@ class AbstractLiturgySheet
     protected $defaultConfig = [];
     protected $config = [];
 
+    public function __construct() {
+        $this->config = $this->getConfiguration();
+    }
+
 
     protected function getData(Service $service)
     {

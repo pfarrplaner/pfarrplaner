@@ -32,10 +32,8 @@
                                         :sheet-config="sheetConfig">
         <fieldset>
             <legend>Folgende Inhalte mit einschließen:</legend>
-            <form-check label="Komplette Liedtexte" v-model="myConfig.includeSongTexts"/>
-            <input type="hidden" name="config[includeSongTexts]" :value="myConfig.includeSongTexts ? 1: 0"/>
-            <form-check label="Komplette Schriftlesungen" v-model="myConfig.includeFullReadings"/>
-            <input type="hidden" name="config[includeFullReadings]" :value="myConfig.includeFullReadings ? 1: 0"/>
+            <form-check label="Komplette Liedtexte" v-model="myConfig.includeSongTexts" name="config[includeSongTexts]"/>
+            <form-check label="Komplette Schriftlesungen" v-model="myConfig.includeFullReadings" name="config[includeFullReadings]"/>
         </fieldset>
     </liturgy-sheet-configuration-layout>
 </template>
