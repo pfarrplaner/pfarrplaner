@@ -38,6 +38,9 @@ class BuildManualPages extends Command
      */
     public function handle()
     {
+        $toc = $this->getTOC();
+
+        $this->line('Scanning for missing manual pages...');
         // create empty pages for every get route not yet covered
         $empty = base_path('manual/notfound.md');
         $routes = Route::getRoutes()->getRoutesByMethod();
@@ -55,5 +58,65 @@ class BuildManualPages extends Command
             }
         }
 
+        $this->line('Moving image files...');
+        foreach (glob(base_path('manual/img*.png')) as $file) {
+            copy($file, base_path('manual/media/images/'.basename($file)));
+            unlink($file);
+        }
+        $this->line('Rewriting image references...');
+        foreach ($this->getAllPages() as $file) {
+            file_put_contents($file, str_replace('(img', '(media/images/img', file_get_contents($file)));
+        }
+
+        $this->line('Building table of contents...');
+        file_put_contents(base_path('manual/index.md'), 'Inhaltsverzeichnis'.PHP_EOL.'=================='.PHP_EOL.PHP_EOL.$this->outputTOCLevel($toc));
+        $this->line('Writing table of contents to file '.base_path('manual/index.md'));
+
+        $this->line('Done');
     }
+
+    protected function getTOC() {
+        $toc = [];
+        foreach ($this->getAllPages() as $file) {
+            $page = file_get_contents($file);
+            preg_match_all('/\[\/\/\]: \# \(TOC: (.*?)\)/', $page, $matches);
+            if (count($matches[1])) {
+                foreach ($matches[1] as $match) {
+                    preg_match('/((?:\d+.)+)(.*)/', $match, $matches2);
+                    if (count($matches2)) {
+                        $levels = explode('.', trim($matches2[1]));
+                        $jsonObject = '{ ## }';
+                        foreach ($levels as $level) {
+                            $jsonObject = str_replace('##', '"_'.$level.'": { "items": { ## }}', $jsonObject);
+                        }
+                        $jsonObject = str_replace('{ ## }', '{}, "title": "'.$matches2[2].'", "file": "manual/'.basename($file).'"', $jsonObject);
+                        $toc = array_merge_recursive(json_decode($jsonObject, true), $toc);
+                    }
+                }
+            }
+        }
+        return $toc;
+    }
+
+    protected function outputTOCLevel($data, $level = 0, $prefix='')
+    {
+        $o = '';
+        $data2 = [];
+        foreach ($data as $key => $item) {
+            $data2[substr($key, 1)] = $item;
+        }
+        ksort($data2);
+        foreach ($data2 as $key => $item) {
+            $o .= str_pad('', $level*4, ' ', STR_PAD_LEFT)
+                .'* ['.$prefix.$key.'. '.$item['title'].'](/'.$item['file'].')'.PHP_EOL;
+            if (isset($item['items'])) $o .= $this->outputTOCLevel($item['items'], ($level+1), $prefix.$key.'.');
+        }
+        return $o;
+    }
+
+    protected function getAllPages()
+    {
+        return glob(base_path('manual/*.md'));
+    }
+
 }

@@ -29,7 +29,8 @@
 
 <template>
     <help-layout :title="title">
-        <vue-markdown :source="myContent" />
+        <div id="toc"></div>
+        <vue-markdown :source="myContent" :toc="true" />
     </help-layout>
 </template>
 
@@ -37,11 +38,12 @@
 import HelpLayout from "../Layouts/HelpLayout";
 import VueMarkdown from 'vue-markdown';
 
+
 export default {
     components: {HelpLayout, VueMarkdown},
     props: ['routeName', 'title', 'content'],
     data() {
-        var myContent = this.content.replaceAll('/manual/img', '/media/manual/img');
+        var myContent = this.content.replaceAll('(media/images/img', '(/media/manual/media/images/img');
         return {
             myContent: myContent,
         }
@@ -51,4 +53,12 @@ export default {
 
 <style scoped>
 
+    /deep/ img {
+        margin: 2em;
+        max-width: 80%;
+    }
+
+    /deep/ .toc-anchor-link {
+        display: none;
+    }
 </style>
