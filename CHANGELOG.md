@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.56.0](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.4...v1.56.0) (2021-06-05)
+
+
+### Features
+
+* Add manual builder command ([366ce5c](https://github.com/potofcoffee/pfarrplaner/commits/366ce5c78dd3dcf8e1526449c63a68b116339556))
+* Allow linking to .md file paths ([b17a263](https://github.com/potofcoffee/pfarrplaner/commits/b17a2631c8a3139ee7a202b52d3d94bb5e4fbfd9))
+* Basic infrastructure for an online manual ([3391ba4](https://github.com/potofcoffee/pfarrplaner/commits/3391ba4f097ba2c3fa9e32b1b1c8d385db8a48d2))
+* Manual builder now creates TOC and moves images ([0b7015f](https://github.com/potofcoffee/pfarrplaner/commits/0b7015f3e0a49b15b0bc011f321e31d7400f5fc5))
+
+
+### Bug Fixes
+
+* HelpLayout should show TOC link with text ([130d8c4](https://github.com/potofcoffee/pfarrplaner/commits/130d8c40c614b258ad2e1bf20e48a97610846fb1))
+* ServiceRequest fails validation when special_location field is not present ([d5cbaed](https://github.com/potofcoffee/pfarrplaner/commits/d5cbaed4d8531c148d841c4f9fbfded6abc0fbc1))
+* wrong image path in manual media ([fcbef40](https://github.com/potofcoffee/pfarrplaner/commits/fcbef40355ed285cdaa9a175f940349bfce559e0))
+
 ### [1.55.4](https://github.com/potofcoffee/pfarrplaner/compare/v1.55.3...v1.55.4) (2021-06-04)
 
 
