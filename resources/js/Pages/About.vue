@@ -66,5 +66,8 @@ export default {
 </script>
 
 <style scoped>
-
+    /deep/ h1, /deep/ h2, /deep/ h3 {
+        font-size: 1em;
+        font-weight: bold;
+    }
 </style>
