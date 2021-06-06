@@ -54,6 +54,9 @@
                            title="Gehe zum Livestream auf YouTube"><span class="fab fa-youtube"></span>
                             <span class="d-none d-md-inline">Video</span>
                         </a>
+                        <a class="btn btn-light" v-if="dashboardUrl(service)" :href="dashboardUrl(service)" target="_blank"
+                           title="Gehe zum Live Dashboard auf YouTube"><span class="fa fa-video"></span>
+                        </a>
                         <a class="btn btn-light" :href="route('broadcast.refresh', service.id)"
                            title="Beschreibung auf YouTube erneuern"><span class="fa fa-sync"></span>
                         </a>
@@ -79,6 +82,12 @@ export default {
     methods: {
         deleteBroadcast(service) {
             this.$inertia.delete(route('broadcast.delete', service.id), {preserveState: false});
+        },
+        dashboardUrl(service) {
+            if (!service.city.youtube_channel_url) return null;
+            if (!service.youtube_url) return null;
+            var videoId = service.youtube_url.replace('https://youtu.be/', '').replace('https://www.youtube.com/watch?v=', '');
+            return 'https://studio.youtube.com/video/'+videoId+'/livestreaming';
         }
     }
 }
