@@ -4,7 +4,7 @@
             <inertia-link class="btn btn-light" :href="route('services.edit', service.id)" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>&nbsp;
             <inertia-link class="btn btn-light" :href="route('services.sermon.editor', service.id)" title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span> Predigt</inertia-link>&nbsp;
         </template>
-        <info-pane v-if="!agendaMode" :service="service"/>
+        <info-pane v-if="!agendaMode" :service="service" @info="infoWindow = true" />
         <agenda-info-pane v-if="agendaMode" :agenda="service"/>
         <div class="row">
             <div class="col-12">
@@ -14,11 +14,13 @@
                                @update-focus="updateFocus"/>
             </div>
         </div>
+        <info-window v-if="infoWindow" @close="infoWindow = false" :service="service" />
     </admin-layout>
 </template>
 
 <script>
 import moment from 'moment';
+import InfoWindow from "../components/LiturgyEditor/Pane/InfoWindow";
 
 const InfoPane = () => import('../components/LiturgyEditor/Pane/InfoPane');
 const AgendaInfoPane = () => import('../components/AgendaEditor/Pane/InfoPane');
@@ -42,6 +44,7 @@ export default {
         },
     },
     components: {
+        InfoWindow,
         InfoPane,
         AgendaInfoPane,
         LiturgyTree,
@@ -51,6 +54,7 @@ export default {
             blockIndex: null,
             itemIndex: null,
             element: null,
+            infoWindow: false,
             agendaMode: moment(this.service.day.date).format('YYYYMMDD') == 19780305,
         }
     },

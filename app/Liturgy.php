@@ -30,6 +30,8 @@
 
 namespace App;
 
+use App\Liturgy\Bible\BibleText;
+use App\Liturgy\Bible\ReferenceParser;
 use Illuminate\Support\Facades\Cache;
 use Storage;
 
@@ -42,6 +44,25 @@ class Liturgy
 
     /** @var Liturgy|null Instance */
     protected static $instance = null;
+
+    protected static $bibleReferences = [
+        'litTextsWeeklyPsalm',
+        'litTextsWeeklyQuote',
+        'litTextsEntryPsalm',
+        'litTextsOldTestament',
+        'litTextsEpistel',
+        'litTextsEvangelium',
+        'litTextsPreacher',
+        'litTextsHaleluja',
+        'litTextsPerikope1',
+        'litTextsPerikope2',
+        'litTextsPerikope3',
+        'litTextsPerikope4',
+        'litTextsPerikope5',
+        'litTextsPerikope6',
+        'litTextsSpecialty',
+        'currentPerikope',
+    ];
 
     /**
      * @return Liturgy|null
@@ -66,10 +87,14 @@ class Liturgy
             $day = new Day(['date' => $day]);
         }
         if (!Cache::has('liturgicalDays')) {
-            if (!Storage::exists('liturgy.json')) return [];
+            if (!Storage::exists('liturgy.json')) {
+                return [];
+            }
             $tmpData = json_decode(Storage::get('liturgy.json'), true);
             foreach ($tmpData['content']['days'] as $key => $val) {
-                if (!isset($data[$val['date']])) $data[$val['date']] = $val;
+                if (!isset($data[$val['date']])) {
+                    $data[$val['date']] = $val;
+                }
             }
             Cache::put('liturgicalDays', $data, 86400);
         } else {
@@ -87,8 +112,27 @@ class Liturgy
             $result = isset($data[$date->format('d.m.Y')]) ? $data[$date->format('d.m.Y')] : [];
         }
         if (!is_null($result)) {
-            $result['currentPerikope'] = $result['litTextsPerikope'.$result['perikope']];
-            $result['currentPerikopeLink'] = $result['litTextsPerikope'.$result['perikope'].'Link'];
+            $result['currentPerikope'] = $result['litTextsPerikope' . $result['perikope']];
+            $result['currentPerikopeLink'] = $result['litTextsPerikope' . $result['perikope'] . 'Link'];
+
+            $bible = new BibleText();
+            foreach (self::$bibleReferences as $referenceKey) {
+                if (isset($result[$referenceKey]) && ($result[$referenceKey]) && (!isset($result[$referenceKey . 'Text']))) {
+                    $result[$referenceKey] = str_replace('–', '-', $result[$referenceKey]);
+                    $ref = ReferenceParser::getInstance()->parse($result[$referenceKey]);
+                    $text = '';
+                    $bibleText = (new BibleText())->get($ref);
+
+                    foreach ($bibleText as $range) {
+                        foreach ($range['text'] as $verse) {
+                            $text .= $verse['verse'].' '.$verse['text'].' ';
+                        }
+                    }
+
+                    $result[$referenceKey . 'Text'] = trim($text);
+                }
+            }
+
             return $result;
         }
         return [];

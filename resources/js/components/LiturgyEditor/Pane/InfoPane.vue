@@ -45,33 +45,30 @@
                         <span v-for="subject in liturgy['subjects']"
                               class="badge badge-light">{{ subject.subjectTitle }}</span>
                     </div>
-                </div>
-                <div class="col-2">
-                    <div v-if="liturgy['litTextsWeeklyPsalm']">
-                        Ps <a :href="liturgy['litTextsWeeklyPsalmLink']"
-                              target="_blank">{{ liturgy['litTextsWeeklyPsalm'] }}</a>
-                    </div>
-                    <div v-if="liturgy['currentPerikopeLink']">
-                        Pr <a :href="liturgy['currentPerikopeLink']" target="_blank">{{
-                            liturgy['currentPerikope']
-                        }}</a>
+                    <div>
+                        <button class="btn btn-sm btn-light" @click.prevent="$emit('info')" title="Weitere Informationen">
+                            <span class="fa fa-info"></span> <span class="d-none d-md-inline">Weitere Infos</span>
+                        </button>
                     </div>
                 </div>
                 <div class="col-2">
-                    <div v-if="liturgy['perikope']" v-for="n in 3"
-                         :style="{fontWeight: (n==liturgy['perikope']) ? 'bold' : 'normal' }">
-                        {{ romanize(n) }} <a :href="liturgy['litTextsPerikope'+n+'Link']" target="_blank">
-                        {{ liturgy['litTextsPerikope' + n] }}
-                    </a>
-                    </div>
+                    <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyQuote" title="WSp" />
+                    <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyPsalm" title="Ps" />
+                    <bible-reference :liturgy="service.day.liturgy" liturgy-key="currentPerikope" title="Pr" />
                 </div>
                 <div class="col-2">
-                    <div v-if="liturgy['perikope']" v-for="n in 3"
-                         :style="{fontWeight: ((n+3)==liturgy['perikope']) ? 'bold' : 'normal' }">
-                        {{ romanize(n + 3) }} <a :href="liturgy['litTextsPerikope'+(n+3)+'Link']" target="_blank">
-                        {{ liturgy['litTextsPerikope' + (n + 3)] }}
-                    </a>
-                    </div>
+                    <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
+                                     :liturgy-key="'litTextsPerikope'+n"
+                                     :key="'litTextsPerikope'+n"
+                                     :title="romanize(n)"
+                                     :style="{fontWeight: (n==liturgy['perikope']) ? 'bold' : 'normal' }" />
+                </div>
+                <div class="col-2">
+                    <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
+                                     :liturgy-key="'litTextsPerikope'+(n+3)"
+                                     :key="'litTextsPerikope'+(n+3)"
+                                     :title="romanize(n+3)"
+                                     :style="{fontWeight: ((n+3)==liturgy['perikope']) ? 'bold' : 'normal' }" />
                 </div>
                 <div class="col-4">
                     <div v-if="liturgy['songs']" v-for="song in liturgy['songs']">
@@ -84,8 +81,10 @@
 </template>
 
 <script>
+import BibleReference from "../Elements/BibleReference";
 export default {
     name: "InfoPane",
+    components: {BibleReference},
     data() {
         return {
             liturgy: this.service.day.liturgy,
