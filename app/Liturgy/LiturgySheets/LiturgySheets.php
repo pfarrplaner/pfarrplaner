@@ -50,6 +50,8 @@ class LiturgySheets
                     'extension' => $object->getExtension(),
                     'isNotAFile' => $object->isNotAFile(),
                     'configurationPage' => $object->getConfigurationPage(),
+                    'configurationComponent' => $object->getConfigurationComponent(),
+                    'config' => $object->getConfiguration(),
                 ];
             }
         }

@@ -41,14 +41,7 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             <div v-for="sheet in sheets">
-                                <inertia-link v-if="sheet.configurationPage" class="dropdown-item"
-                                   :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
-                                    <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
-                                </inertia-link>
-                                <a v-else class="dropdown-item"
-                                   :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
-                                    <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
-                                </a>
+                                <liturgy-sheet-link :service="service" :sheet="sheet" @open="dialogs[sheet.key] = true"/>
                             </div>
                         </div>
                     </div>
@@ -189,6 +182,13 @@
                 Importmöglichquellen werden geladen... <span class="fa fa-spin fa-spinner"></span>
             </div>
         </modal>
+        <modal v-for="(sheet,sheetKey) in sheets" v-if="dialogs[sheet.key]" :title="sheet.title + ' herunterladen'"
+               :key="'dlg'+sheet.key"
+               @close="downloadConfiguredSheet(sheet)"
+               @cancel="dialogs[sheet.key] = false"
+               close-button-label="Herunterladen" cancel-button-label="Abbrechen">
+                <component :is="sheet.configurationComponent" :service="service" :sheet="sheet" />
+        </modal>
     </div>
 </template>
 
@@ -199,16 +199,20 @@ import DetailsPane from "./DetailsPane";
 import PeoplePane from "./PeoplePane";
 import Selectize from "vue2-selectize";
 import Modal from "../../Ui/modals/Modal";
+import LiturgySheetLink from "../Elements/LiturgySheetLink";
+import FullTextLiturgySheetConfiguration from "../LiturgySheets/FullTextLiturgySheetConfiguration";
 
 export default {
     name: "LiturgyTree",
     components: {
+        LiturgySheetLink,
         Modal,
         LiturgyBlock,
         DetailsPane,
         PeoplePane,
         draggable,
         Selectize,
+        FullTextLiturgySheetConfiguration,
     },
     props: {
         service: Object,
@@ -289,6 +293,11 @@ export default {
             });
         });
 
+        var dialogs = {};
+        Object.entries(this.sheets).forEach(sheet => {
+            if (sheet[1].configurationComponent) dialogs[sheet[1].key] = false;
+        });
+
         return {
             blocks: myBlocks,
             focusedBlock: null,
@@ -300,6 +309,7 @@ export default {
             hasDownload: (myBlocks.length > 0) && (Object.keys(this.sheets).length > 0),
             sourceWait: 'Bitte warten, Quellen werden geladen...',
             modalOpen: false,
+            dialogs: dialogs,
         }
     },
     methods: {
@@ -513,6 +523,10 @@ export default {
                 preserveState: false,
             })
         },
+        downloadConfiguredSheet(sheet) {
+            document.getElementById('frm'+sheet.key).submit();
+            this.dialogs[sheet.key] = false;
+        }
     }
 }
 </script>

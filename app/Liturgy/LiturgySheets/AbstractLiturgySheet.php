@@ -46,6 +46,7 @@ class AbstractLiturgySheet
     protected $extension = 'pdf';
     protected $isNotAFile = false;
     protected $configurationPage = null;
+    protected $configurationComponent = null;
     protected $defaultConfig = [];
     protected $config = [];
 
@@ -244,5 +245,23 @@ class AbstractLiturgySheet
             $this->config,
         );
     }
+
+    /**
+     * @return null
+     */
+    public function getConfigurationComponent()
+    {
+        return $this->configurationComponent;
+    }
+
+    /**
+     * @param null $configurationComponent
+     */
+    public function setConfigurationComponent($configurationComponent): void
+    {
+        $this->configurationComponent = $configurationComponent;
+    }
+
+
 
 }

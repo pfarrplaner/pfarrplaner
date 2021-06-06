@@ -33,7 +33,7 @@
         <div v-if="hasAutoAttachments || (service.attachments.length > 0)">
             <div v-if="myService.liturgy_blocks.length > 0">
                 <div class="liturgy-sheet btn btn-light" v-for="(sheet,key,index) in liturgySheets" :key="key"
-                     @click.prevent="downloadSheet(sheet)"
+                     @click.prevent="(sheet.configurationComponent) ? dialogs[sheet.key] = true : downloadSheet(sheet)"
                      v-if="!sheet.isNotAFile">
                     <b><span :class="sheet.icon"></span> {{ sheet.title }}</b><br/>
                     <small>.{{ sheet.extension }}, Größe unbekannt</small>
@@ -57,6 +57,13 @@
         <h3>Dateien hinzufügen</h3>
         <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
         <input v-else class="uploader" type="file" @change="upload" />
+        <modal v-for="(sheet,sheetKey) in liturgySheets" v-if="dialogs[sheet.key]" :title="sheet.title + ' herunterladen'"
+               :key="'dlg'+sheet.key"
+               @close="downloadConfiguredSheet(sheet)"
+               @cancel="dialogs[sheet.key] = false"
+               close-button-label="Herunterladen" cancel-button-label="Abbrechen">
+            <component :is="sheet.configurationComponent" :service="service" :sheet="sheet" />
+        </modal>
     </div>
 </template>
 
@@ -65,14 +72,18 @@ import Attachment from "../../Ui/elements/Attachment";
 import FormInput from "../../Ui/forms/FormInput";
 import FormGroup from "../../Ui/forms/FormGroup";
 import FormFileUpload from "../../Ui/forms/FormFileUpload";
+import Modal from "../../Ui/modals/Modal";
+import FullTextLiturgySheetConfiguration from "../../LiturgyEditor/LiturgySheets/FullTextLiturgySheetConfiguration";
 
 export default {
     name: "AttachmentsTab",
     components: {
+        Modal,
         FormFileUpload,
         FormGroup,
         FormInput,
-        Attachment
+        Attachment,
+        FullTextLiturgySheetConfiguration,
     },
     props: {
         service: Object,
@@ -87,9 +98,15 @@ export default {
     data() {
         var myService = this.service;
 
+        var dialogs = {};
+        Object.entries(this.liturgySheets).forEach(sheet => {
+            if (sheet[1].configurationComponent) dialogs[sheet[1].key] = false;
+        });
+
         return {
             myService: myService,
             uploading: false,
+            dialogs: dialogs,
         }
     },
     methods: {
@@ -99,6 +116,10 @@ export default {
             } else {
                 window.location.href = route('services.liturgy.download', {service: this.service.id, key: sheet.key});
             }
+        },
+        downloadConfiguredSheet(sheet) {
+            document.getElementById('frm'+sheet.key).submit();
+            this.dialogs[sheet.key] = false;
         },
         downloadQR() {
             window.location.href = route('report.step', {report: 'KonfiAppQR', step: 'single', service: this.myService.id});
