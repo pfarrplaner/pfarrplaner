@@ -63,26 +63,31 @@ class BibleText
             if ($this->matches($line, $reference[0])) $copy = true;
             if ($reference[1]['verse']=='') {
                 if ($copy && (!$this->matches($line, $reference[1]))) return $output;
-                $data = $this->parse($line);
-                if ($copy && (!isset($this->renderedVerses[$data['referenceKey']]))) {
-                    $output[$data['referenceKey']] = $data;
-                    $this->renderedVerses[$data['referenceKey']] = $data;
+                if ($data = $this->parse($line)) {
+                    if ($copy && (!isset($this->renderedVerses[$data['referenceKey']]))) {
+                        $output[$data['referenceKey']] = $data;
+                        $this->renderedVerses[$data['referenceKey']] = $data;
+                    }
                 }
             } else {
-                $data = $this->parse($line);
-                if ($copy && (!isset($this->renderedVerses[$data['referenceKey']]))) {
-                    $output[$data['referenceKey']] = $data;
-                    $this->renderedVerses[$data['referenceKey']] = $data;
+                if ($data = $this->parse($line)) {
+                    if ($copy && (!isset($this->renderedVerses[$data['referenceKey']]))) {
+                        $output[$data['referenceKey']] = $data;
+                        $this->renderedVerses[$data['referenceKey']] = $data;
+                    }
+                    if ($this->matches($line, $reference[1])) {
+                        return $output;
+                    }
                 }
-                if ($this->matches($line, $reference[1])) return $output;
             }
         }
         return $output;
     }
 
-    protected function parse(string $line): array {
+    protected function parse(string $line) {
         $tmp = explode(' ', $line);
         $book = $tmp[0];
+        if (!isset($tmp[1])) return;
         list($chapter, $verse) = explode(':',$tmp[1]);
         $slug = $book.' '.$chapter.':'.$verse;
         $bookTitle = ReferenceParser::getInstance()->getBookTitle($book);

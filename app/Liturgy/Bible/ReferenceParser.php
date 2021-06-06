@@ -69,7 +69,8 @@ class ReferenceParser
         }
         // build shortened names
         foreach ($this->rawMap as $bookName => $code) {
-            for ($i = strlen($bookName) - 1; $i > 2; $i--) {
+            $stopAtLength = (is_numeric(substr($bookName, 0, 1)) ? 3 : 2);
+            for ($i = strlen($bookName) - 1; $i > $stopAtLength; $i--) {
                 $short = substr($bookName, 0, $i);
 
                 if (isset($this->map[$short])) {
@@ -101,11 +102,13 @@ class ReferenceParser
     {
         preg_match_all("/###(.*)###/", $reference, $matches);
         foreach ($matches[1] as $match) {
-            $book = $this->map[$match];
-            if (is_array($book)) {
-                $book = $book[0];
+            if (isset($this->map[$match])) {
+                $book = $this->map[$match];
+                if (is_array($book)) {
+                    $book = $book[0];
+                }
+                $reference = str_replace('###' . $match . '###', $book, $reference);
             }
-            $reference = str_replace('###' . $match . '###', $book, $reference);
         }
         return $reference;
     }
@@ -123,6 +126,13 @@ class ReferenceParser
     public function parse(string $reference, bool $getOptionalReferenceInstead = false): array
     {
         $originalReference = trim($reference);
+        $reference = trim($reference);
+        if (is_numeric(substr($reference, 0, 1)) && (' ' == substr($reference, 2, 1))) {
+            $reference = substr($reference, 0, 2).substr($reference, 3);
+        }
+        if (is_numeric(substr($reference, 0, 1)) && ('.' == substr($reference, 1, 1))) {
+            $reference = substr($reference, 0, 1).substr($reference, 2);
+        }
         $reference = strtr(
             trim($originalReference),
             [
@@ -179,7 +189,7 @@ class ReferenceParser
         if (strpos($reference, ',') !== false) {
             list ($chapter, $verse) = explode(',', $reference);
         } else {
-            if ($defaults['chapter']) {
+            if (isset($defaults['chapter'])) {
                 $chapter = $defaults['chapter'];
                 $verse = $reference;
             } else {
@@ -190,7 +200,7 @@ class ReferenceParser
         $book = $this->matchBook($book);
         $verseNumeric = filter_var($verse, FILTER_SANITIZE_NUMBER_INT);
         if (trim($verseNumeric) == '') {
-            $verseNumeric = $defaults['verse'];
+            $verseNumeric = $defaults['verse'] ?? '';
         }
         return [
             'book' => $book,
