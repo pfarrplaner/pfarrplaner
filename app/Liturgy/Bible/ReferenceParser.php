@@ -122,7 +122,6 @@ class ReferenceParser
      */
     public function parse(string $reference, bool $getOptionalReferenceInstead = false): array
     {
-//if (substr($reference, 0, 3)=='Heb') Debugger::dumpAndDie($reference);
         $originalReference = trim($reference);
         $reference = strtr(
             trim($originalReference),
@@ -130,8 +129,8 @@ class ReferenceParser
                 '. ' => '.',
                 ' -' => '-',
                 '- ' => '-',
-                ') ' => '.',
-                ')' => '',
+                ')' => '.',
+                '. ' => '.',
                 ' (' => '.(',
                 '(' => '.(',
                 ' ;' => '.',
@@ -139,6 +138,7 @@ class ReferenceParser
                 '..' => '.'
             ]
         );
+        $reference = str_replace(',.', ',', $reference);
         $reference = $this->replaceBookNamesWithCodes($reference);
         $references = explode('.', $reference);
 
