@@ -173,10 +173,16 @@ class Broadcast
         $status->setPrivacyStatus($statusString);
         $status->setSelfDeclaredMadeForKids('false');
 
+        $contentDetails = new \Google_Service_YouTube_LiveBroadcastContentDetails();
+        if ($service->city->youtube_passive_stream_id) {
+            $contentDetails->setBoundStreamId($service->city->youtube_passive_stream_id);
+        }
+
         // Create the API request that inserts the liveBroadcast resource.
         $broadcastInsert = new Google_Service_YouTube_LiveBroadcast();
         $broadcastInsert->setSnippet($service->getBroadcastSnippet());
         $broadcastInsert->setStatus($status);
+        $broadcastInsert->setContentDetails($contentDetails);
         $broadcastInsert->setKind('youtube#liveBroadcast');
 
         // Execute the request and return an object that contains information
