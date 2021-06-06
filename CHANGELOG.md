@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.59.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.58.1...v1.59.0) (2021-06-06)
+
+
+### Features
+
+* Add link to Youtube's livestreaming dashboard to StreamingTab ([976fd7f](https://github.com/pfarrplaner/pfarrplaner/commits/976fd7f4158ae303980eb29d05ea651ca6e64d2b))
+* LiturgySheet configuration moved to modal dialogs ([ab263c4](https://github.com/pfarrplaner/pfarrplaner/commits/ab263c41a0868881722c5ffe79dc10d607618e21))
+
+
+### Bug Fixes
+
+* AttachmentTab doesn't use Inertia for calling LiturgySheet configuration ([3a91a94](https://github.com/pfarrplaner/pfarrplaner/commits/3a91a9475f3b5c38efb28b2b52cce804fb9a0702))
+* Created broadcasts have no streaming key ([47f7ecf](https://github.com/pfarrplaner/pfarrplaner/commits/47f7ecf1c4d06b435bfbaf32e2a7638f87330c4f))
+* Deleting wrong verses in SongEditor ([cc40417](https://github.com/pfarrplaner/pfarrplaner/commits/cc40417feed060becebca00df206f825d6f14480)), closes [#85](https://github.com/pfarrplaner/pfarrplaner/issues/85)
+* Modal dialogs default width does not scale on mobile devices ([7eb8c44](https://github.com/pfarrplaner/pfarrplaner/commits/7eb8c44d16431136aa19ae440f5e8aa816011115))
+* youtube:update command does not set streaming key when previous streaming is null ([aa68ac0](https://github.com/pfarrplaner/pfarrplaner/commits/aa68ac0244ee30aeb600b7345d73a98466cc32fb))
+
 ### [1.58.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.58.0...v1.58.1) (2021-06-05)
 
 
