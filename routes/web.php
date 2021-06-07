@@ -352,3 +352,6 @@ Route::post('/streaming/{city}/activateBroadcast/{broadcast}', 'StreamingTrouble
 
 //manual
 Route::get('/manual/{routeName}', 'ManualController@page')->name('manual');
+
+// bible texts
+Route::get('/bible/text/{reference}/{version?}', 'BibleController@text')->name('bible.text');

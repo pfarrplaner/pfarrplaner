@@ -114,25 +114,6 @@ class Liturgy
         if (!is_null($result)) {
             $result['currentPerikope'] = $result['litTextsPerikope' . $result['perikope']];
             $result['currentPerikopeLink'] = $result['litTextsPerikope' . $result['perikope'] . 'Link'];
-
-            $bible = new BibleText();
-            foreach (self::$bibleReferences as $referenceKey) {
-                if (isset($result[$referenceKey]) && ($result[$referenceKey]) && (!isset($result[$referenceKey . 'Text']))) {
-                    $result[$referenceKey] = str_replace('–', '-', $result[$referenceKey]);
-                    $ref = ReferenceParser::getInstance()->parse($result[$referenceKey]);
-                    $text = '';
-                    $bibleText = (new BibleText())->get($ref);
-
-                    foreach ($bibleText as $range) {
-                        foreach ($range['text'] as $verse) {
-                            $text .= $verse['verse'].' '.$verse['text'].' ';
-                        }
-                    }
-
-                    $result[$referenceKey . 'Text'] = trim($text);
-                }
-            }
-
             return $result;
         }
         return [];

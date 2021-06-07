@@ -29,10 +29,11 @@
 
 <template xmlns="http://www.w3.org/1999/html">
     <div class="bible-reference">
-        <div v-if="liturgy[liturgyKey]">
-            {{ title }} <a :href="liturgy[liturgyKey]+'Link'" :title="liturgy[liturgyKey+'Text']"
+        <div v-if="liturgy[liturgyKey]" :key="liturgyKey+'Text__'+text">
+            {{ title }} <a :href="liturgy[liturgyKey]+'Link'" :title="text"
                    target="_blank">{{ liturgy[liturgyKey] }}</a>
-            <span class="fa fa-copy" @click="copyToClipboard"
+            <span v-if="loading" class="fa fa-spin fa-spinner"></span>
+            <span v-if="!loading" class="fa fa-copy" @click="copyToClipboard"
                   title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
         </div>
     </div>
@@ -47,11 +48,29 @@ export default {
             const cb = navigator.clipboard;
             cb.writeText(this.liturgy[this.liturgyKey+'Text']+"\n("+this.liturgy[this.liturgyKey]+')').then(result => {});
         }
+    },
+    created() {
+        if(this.liturgy[this.liturgyKey]) {
+            axios.get(route('bible.text', {reference: this.liturgy[this.liturgyKey]}))
+                .then(result => {
+                    this.text = result.data.text;
+                    this.loading = false;
+                });
+        }
+    },
+    data() {
+        return {
+            text: '',
+            loading: true,
+        }
     }
 }
 </script>
 
 <style scoped>
+    .fa-spinner {
+        color: lightgray;
+    }
     .fa-copy {
         color: lightgray;
         display: none;
