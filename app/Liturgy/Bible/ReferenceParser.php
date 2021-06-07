@@ -170,7 +170,7 @@ class ReferenceParser
                     'book' => $bible['book'],
                     'bookTitle' => $this->getBookTitle($bible['book']),
                     'chapter' => $bible['chapter'],
-                    'verse' => $start,
+                    'verse' => $end,
                     'verseRaw' => $end,
                 ],
             ];
