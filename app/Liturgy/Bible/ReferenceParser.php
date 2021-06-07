@@ -90,34 +90,15 @@ class ReferenceParser
         }
     }
 
-    protected function replaceBookNamesWithCodes(string $reference): string
-    {
-        foreach ($this->rawMap as $bookName => $code) {
-            $reference = str_replace($bookName, '###' . $code . '###', $reference);
-        }
-        return $reference;
-    }
-
-    protected function replaceBookCodesWithNames(string $reference): string
-    {
-        preg_match_all("/###(.*)###/", $reference, $matches);
-        foreach ($matches[1] as $match) {
-            if (isset($this->map[$match])) {
-                $book = $this->map[$match];
-                if (is_array($book)) {
-                    $book = $book[0];
-                }
-                $reference = str_replace('###' . $match . '###', $book, $reference);
-            }
-        }
-        return $reference;
-    }
-
     /**
      * Get a parsed reference from a text
      *
      * Text reference may include optional verses in parentheses, like:
      * Jesaja 42,1-4 (5-9)
+     *
+     * originally based on:
+     * @source https://stackoverflow.com/a/23720736
+     * @author Jonny 5
      *
      * @param string $reference Reference string
      * @param bool $getOptionalReferenceInstead Return the full reference for the optional verses instead
@@ -125,90 +106,81 @@ class ReferenceParser
      */
     public function parse(string $reference, bool $getOptionalReferenceInstead = false): array
     {
-        $originalReference = trim($reference);
-        $reference = trim($reference);
-        if (is_numeric(substr($reference, 0, 1)) && (' ' == substr($reference, 2, 1))) {
-            $reference = substr($reference, 0, 2).substr($reference, 3);
-        }
-        if (is_numeric(substr($reference, 0, 1)) && ('.' == substr($reference, 1, 1))) {
-            $reference = substr($reference, 0, 1).substr($reference, 2);
-        }
-        $reference = strtr(
-            trim($originalReference),
-            [
-                '. ' => '.',
-                ' -' => '-',
-                '- ' => '-',
-                ')' => '.',
-                '. ' => '.',
-                ' (' => '.(',
-                '(' => '.(',
-                ' ;' => '.',
-                ';' => '.',
-                '..' => '.'
-            ]
-        );
-        $reference = str_replace(',.', ',', $reference);
-        $reference = $this->replaceBookNamesWithCodes($reference);
-        $references = explode('.', $reference);
+        $originalReference = $reference;
 
-        $defaultValues = [];
-        foreach ($references as $refKey => $referenceSection) {
-            $parsed = [];
-            $optional = strpos($referenceSection, '(') !== false;
-            $referenceSection = str_replace('(', '', $referenceSection);
-            foreach (explode('-', $referenceSection) as $singleReference) {
-                $singleReference = $this->parseSingleReference($singleReference, $defaultValues);
-                $parsed[] = $defaultValues = $singleReference;
+        // check for multiple commas: all but first should be replaced with periods
+        $firstComma = strpos($reference, ',');
+        $reference = substr($reference, 0, $firstComma+1).str_replace(',', '.', substr($reference, $firstComma+1));
+
+        // consider parentheses: should be preceded and followed by periods
+        $reference = strtr($reference, ['(' => '.(', ')' => ').']);
+
+        // eliminate space after period
+        $reference = trim(str_replace('. ', '.', $reference));
+
+        // elliminate doubled periods
+        $reference = trim(str_replace('..', '.', $reference));
+
+        // removing trailing dot
+        while (substr($reference, -1) == '.') $reference = substr($reference, 0, -1);
+
+
+        // split verses from book chapters
+        $parts = preg_split('/\s*,\s*/', trim($reference, " ;"));
+
+        // init book
+        $bible = array('book' => "", 'chapter' => "", 'verses' => array());
+
+        // $part[0] = book + chapter, if isset $part[1] is verses
+        if(isset($parts[0]))
+        {
+            // 1.) get chapter
+            if(preg_match('/\d+\s*$/', $parts[0], $out)) {
+                $bible['chapter'] = rtrim($out[0]);
             }
-            if (count($parsed) == 1) {
-                $parsed[1] = $parsed[0];
-            }
-            $references[$refKey] = [
-                'range' => $parsed,
-                'optional' => (bool)$optional
-            ];
-        }
-        return [
-            'originalReference' => $originalReference,
-            'parsed' => $references
-        ];
-    }
 
-    protected function parseSingleReference(string $reference, array $defaults): array
-    {
-        $reference = trim($this->replaceBookCodesWithNames($reference));
-        $reference = str_replace(', ', ',', $reference);
-
-        if (strpos($reference, ' ')) {
-            list($book, $tmp) = explode(' ', $reference);
-            $reference = trim(str_replace($book, '', $reference));
-        } else {
-            $book = $defaults['book'];
+            // 2.) book name
+            $bible['book'] = $this->matchBook(trim(preg_replace('/\d+\s*$/', "", $parts[0])));
         }
-        if (strpos($reference, ',') !== false) {
-            list ($chapter, $verse) = explode(',', $reference);
-        } else {
-            if (isset($defaults['chapter'])) {
-                $chapter = $defaults['chapter'];
-                $verse = $reference;
+
+        // 3.) verses
+        if(isset($parts[1])) {
+            $bible['verses'] = preg_split('~\s*\.\s*~', $parts[1]);
+        }
+
+        $references = [];
+        foreach ($bible['verses'] as $verse) {
+            $ref = [];
+            $ref['optional'] = (substr($verse, 0, 1) == '(');
+            if ($ref['optional']) $verse = strtr($verse, ['('=> '', ')' => '']);
+            if (false !== strpos($verse, '-')) {
+                list($start,$end) = explode('-', $verse);
             } else {
-                $chapter = $reference;
-                $verse = '';
+                $start = $end = $verse;
             }
+            $ref['range'] = [
+                0 => [
+                    'book' => $bible['book'],
+                    'bookTitle' => $this->getBookTitle($bible['book']),
+                    'chapter' => $bible['chapter'],
+                    'verse' => $start,
+                    'verseRaw' => $start,
+                ],
+                1 => [
+                    'book' => $bible['book'],
+                    'bookTitle' => $this->getBookTitle($bible['book']),
+                    'chapter' => $bible['chapter'],
+                    'verse' => $start,
+                    'verseRaw' => $end,
+                ],
+            ];
+            $references[] = $ref;
         }
-        $book = $this->matchBook($book);
-        $verseNumeric = filter_var($verse, FILTER_SANITIZE_NUMBER_INT);
-        if (trim($verseNumeric) == '') {
-            $verseNumeric = $defaults['verse'] ?? '';
-        }
-        return [
-            'book' => $book,
-            'bookTitle' => $this->getBookTitle($book),
-            'chapter' => $chapter,
-            'verseRaw' => $verse,
-            'verse' => $verseNumeric
-        ];
+
+        return ([
+                'originalReference' => $originalReference,
+                'parsed' => $references
+            ]);
     }
 
     protected function matchBook($bookCode)
@@ -243,6 +215,8 @@ class ReferenceParser
         bool $renderBook = true,
         bool $renderChapter = true
     ) {
+        $output = '';
+
         if ($renderBook) {
             $renderChapter = true;
         }
