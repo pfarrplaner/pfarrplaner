@@ -19,9 +19,7 @@
             <div class="liturgy">
                 <div class="liturgy-sermon" v-if="day.liturgy.perikope">
                     <div :class="day.liturgy.litColor" class="liturgy-color" :title="day.liturgy.feastCircleName"></div>
-                    <a :href="day.liturgy.currentPerikopeLink" target="_blank">
-                        {{ day.liturgy.currentPerikope }}
-                    </a>
+                    <bible-reference :liturgy="day.liturgy" liturgy-key="currentPerikope" title="" />
                 </div>
             </div>
             <div class="card-footer day-name" :title="day.liturgy.litProfileGist" v-if="day.liturgy.title">
@@ -40,8 +38,10 @@
 import moment from "moment";
 import EventBus from "../../../plugins/EventBus";
 import { CalendarToggleDayColumnEvent} from "../../../events/CalendarToggleDayColumnEvent";
+import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 
 export default {
+    components: {BibleReference},
     props: ['day', 'index', 'absences'],
     data: function() {
         return {
@@ -80,6 +80,10 @@ export default {
     }
     .liturgy-color.purple {
         background-color: rebeccapurple;
+    }
+
+    /deep/ .bible-reference, /deep/ .bible-reference div {
+        display: inline;
     }
 
 </style>

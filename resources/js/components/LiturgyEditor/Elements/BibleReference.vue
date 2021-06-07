@@ -30,10 +30,10 @@
 <template xmlns="http://www.w3.org/1999/html">
     <div class="bible-reference">
         <div v-if="liturgy[liturgyKey]" :key="liturgyKey+'Text__'+text">
-            {{ title }} <a :href="liturgy[liturgyKey]+'Link'" :title="text"
+            <span v-if="title">{{ title }} </span><a :href="liturgy[liturgyKey]+'Link'" :title="text"
                    target="_blank">{{ liturgy[liturgyKey] }}</a>
             <span v-if="loading" class="fa fa-spin fa-spinner"></span>
-            <span v-if="!loading" class="fa fa-copy" @click="copyToClipboard"
+            <span v-if="!loading" class="fa fa-copy" @click.prevent.stop="copyToClipboard"
                   title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
         </div>
     </div>
@@ -46,7 +46,7 @@ export default {
     methods: {
         copyToClipboard() {
             const cb = navigator.clipboard;
-            cb.writeText(this.liturgy[this.liturgyKey+'Text']+"\n("+this.liturgy[this.liturgyKey]+')').then(result => {});
+            cb.writeText(this.text+"\n("+this.liturgy[this.liturgyKey]+')').then(result => {});
         }
     },
     created() {
