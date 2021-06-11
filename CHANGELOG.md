@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.60.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.1...v1.60.2) (2021-06-11)
+
+
+### Bug Fixes
+
+* BaptismEditor won't save correctly ([6185af7](https://github.com/pfarrplaner/pfarrplaner/commits/6185af7814d91faf504edaa82d03d7ac206ae5f7))
+* Wizard buttons should use Inertia for baptism/funeral ([0e381d3](https://github.com/pfarrplaner/pfarrplaner/commits/0e381d3b055c0bf812874e372953e83487b4b3b6))
+
 ### [1.60.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.0...v1.60.1) (2021-06-11)
 
 
