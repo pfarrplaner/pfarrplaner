@@ -39,6 +39,9 @@ class A4LiturgySheet extends AbstractLiturgySheet
     protected $icon = 'fa fa-file-pdf';
 
     protected function getData(Service $service) {
+        // temporary override:
+        return ['recipients' => []];
+
         if (request()->has('noRecipients')) return ['recipients' => []];
 
         $recipients = [];
