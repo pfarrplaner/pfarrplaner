@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.60.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.0...v1.60.1) (2021-06-11)
+
+
+### Features
+
+* Additional liturgical info and copyable bible references in LiturgyEditor ([d959a96](https://github.com/pfarrplaner/pfarrplaner/commits/d959a9605c6cec560c963057511b10714286ba4f))
+* Show first line of FreeText items ([8c92664](https://github.com/pfarrplaner/pfarrplaner/commits/8c92664490bc131c98028fb207eeccb476024162))
+
+
+### Bug Fixes
+
+* ReferenceParser always returns single verse ranges ([d9417d9](https://github.com/pfarrplaner/pfarrplaner/commits/d9417d95acfbcc1fc206b86e3bbb28140bea12d4))
+
 ## [1.60.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.59.0...v1.60.0) (2021-06-06)
 
 
