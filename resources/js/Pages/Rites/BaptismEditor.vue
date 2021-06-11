@@ -58,7 +58,9 @@
                                             help="Leer lassen, um dies als Taufanfrage einzuordnen"
                                             :settings="myServicePickerConfig"
                                             v-model="myBaptism.service_id" />
-                            <form-selectize label="Kirchengemeinde" :items="cities" v-model="myBaptism.city_id"/>
+                            <form-selectize label="Kirchengemeinde" :options="cities" v-model="myBaptism.city_id"
+                                            id-key="id" title-key="name"
+                                            name="city_id" />
                         </fieldset>
                         <fieldset>
                             <legend>Täufling</legend>
