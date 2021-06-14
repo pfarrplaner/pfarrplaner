@@ -88,15 +88,17 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
             ->join('services', 'services.id', 'weddings.service_id')
             ->join('days', 'days.id', 'services.day_id')
             ->whereHas('service', function($service) {
-                $service->startingFrom(Carbon::now()->subWeeks(2))
-                    ->whereIn('city_id', Auth::user()->cities->pluck('id'));
+                $service->startingFrom(Carbon::now()->subWeeks(2));
                 if ($this->config['mine']) {
+                    $service->whereIn('city_id', Auth::user()->cities->pluck('id'));
                     $service->whereHas(
                         'participants',
                         function ($query) {
                             $query->where('user_id', Auth::user()->id);
                         }
                     );
+                } else {
+                    $service->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
                 }
             })->orderBy('days.date', 'ASC')
             ->orderBy('time', 'ASC');
