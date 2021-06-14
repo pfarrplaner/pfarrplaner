@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.60.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.2...v1.60.3) (2021-06-14)
+
+
+### Features
+
+* Show pastor on homescreen overviews ([c959957](https://github.com/pfarrplaner/pfarrplaner/commits/c9599575377ab85deaf79b5241d0097d43340430))
+
+
+### Bug Fixes
+
+* Baptisms/funerals/weddings from other cities appear on homescreen ([620939a](https://github.com/pfarrplaner/pfarrplaner/commits/620939aeaf540a911794936ba0bba400f8c890be))
+* NextOfferingsTab is empty ([140bce5](https://github.com/pfarrplaner/pfarrplaner/commits/140bce5ede5950928c2232ca5802b27d24db6825))
+
 ### [1.60.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.1...v1.60.2) (2021-06-11)
 
 
