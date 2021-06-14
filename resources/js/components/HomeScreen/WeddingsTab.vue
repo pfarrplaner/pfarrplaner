@@ -38,7 +38,7 @@
             <fake-table :columns="[2,2,4,3,1]" collapsed-header="Trauungen"
                         :headers="['Gottesdienst','Hochzeitspaar', 'Informationen zur Trauung', 'Dokumente', '']">
                 <wedding v-for="(wedding, weddingIndex) in weddings"  :wedding="wedding" :key="wedding.id"
-                         :show-service="true"
+                         :show-service="true" :show-pastor="true"
                          class="mb-3 p-1" :class="{'stripe-odd': (weddingIndex % 2 == 0)}"/>
             </fake-table>
         </div>

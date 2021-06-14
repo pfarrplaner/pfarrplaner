@@ -39,6 +39,7 @@
             <fake-table :columns="[2,2,4,3,1]" collapsed-header="Taufen"
                         :headers="['Gottesdienst', 'Täufling', 'Informationen zur Taufe', 'Dokumente', '']">
                 <baptism v-for="(baptism, baptismIndex) in baptisms" :baptism="baptism" :key="baptism.id" :show-service="true"
+                         :show-pastor="true"
                          class="mb-3 p-1" :class="{'stripe-odd': (baptismIndex % 2 == 0)}"/>
 
             </fake-table>
