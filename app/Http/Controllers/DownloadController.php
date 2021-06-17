@@ -85,13 +85,13 @@ class DownloadController extends Controller
                 abort(403);
             }
         } else {
-            if (!Auth::user()->can('update', $attachment->attachable->service)) {
+            if ((null !== $attachment->attachable->service) && (!Auth::user()->can('update', $attachment->attachable->service))) {
                 abort(403);
             }
             if (!Auth::user()->can('gd-kasualien-bearbeiten')) {
                 abort(403);
             }
-            if (!Auth::user()->writableCities->contains($attachment->attachable->service->city)) {
+            if ((null !== $attachment->attachable->service) && (!Auth::user()->writableCities->contains($attachment->attachable->service->city))) {
                 abort(403);
             }
         }
