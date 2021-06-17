@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.60.4](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.3...v1.60.4) (2021-06-17)
+
+
+### Features
+
+* Show pastor in cases overview on HomeScreen ([bea8452](https://github.com/pfarrplaner/pfarrplaner/commits/bea8452f341ee6dfb743dba287ffc39e4ae32adc))
+
+
+### Bug Fixes
+
+* BaptismEditor does not update service_id ([67df91e](https://github.com/pfarrplaner/pfarrplaner/commits/67df91e03129e7807590f528ccd1c7a901bbc55b))
+* downloading attachment from baptism request fails with error 403 ([027068d](https://github.com/pfarrplaner/pfarrplaner/commits/027068dc4bc2cdc1387fa3b5b8b554bd299c4a2f))
+
 ### [1.60.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.2...v1.60.3) (2021-06-14)
 
 
