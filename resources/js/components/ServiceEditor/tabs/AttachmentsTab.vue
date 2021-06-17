@@ -56,7 +56,10 @@
         <hr/>
         <h3>Dateien hinzufügen</h3>
         <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
-        <input v-else class="uploader" type="file" @change="upload" />
+        <form-file-uploader :parent="myService"
+                            :upload-route="route('service.attach', this.myService.id)"
+                            v-model="myService.attachments"/>
+
         <modal v-for="(sheet,sheetKey) in liturgySheets" v-if="dialogs[sheet.key]" :title="sheet.title + ' herunterladen'"
                :key="'dlg'+sheet.key"
                @close="downloadConfiguredSheet(sheet)"
@@ -74,10 +77,12 @@ import FormGroup from "../../Ui/forms/FormGroup";
 import FormFileUpload from "../../Ui/forms/FormFileUpload";
 import Modal from "../../Ui/modals/Modal";
 import FullTextLiturgySheetConfiguration from "../../LiturgyEditor/LiturgySheets/FullTextLiturgySheetConfiguration";
+import FormFileUploader from "../../Ui/forms/FormFileUploader";
 
 export default {
     name: "AttachmentsTab",
     components: {
+        FormFileUploader,
         Modal,
         FormFileUpload,
         FormGroup,
@@ -135,8 +140,8 @@ export default {
                 this.myService.attachments = response.data;
             });
         },
-        upload(event) {
-            let title = event.target.files[0].name;
+        upload(file) {
+            let title = file.name;
             console.log(title);
             title = title.substr(0, title.lastIndexOf('.'));
             title = title.charAt(0).toUpperCase() + title.slice(1);
@@ -145,8 +150,8 @@ export default {
 
             let fd = new FormData();
             fd.append('attachment_text[0]', title);
-            fd.append('attachments[0]', event.target.files[0]);
-            console.log(event.target.files[0], fd);
+            fd.append('attachments[0]', file);
+            console.log(file, fd);
 
             this.uploading = true;
             axios.post(route('service.attach', this.service.id), fd, {

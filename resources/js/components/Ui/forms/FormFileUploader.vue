@@ -30,13 +30,15 @@
 <template>
     <div class="form-file-uploader">
         <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
-        <input v-else class="uploader" type="file" @change="upload"/>
+        <form-file-upload @input="upload" multiple="1" />
     </div>
 </template>
 
 <script>
+import FormFileUpload from "./FormFileUpload";
 export default {
     name: "FormFileUploader",
+    components: {FormFileUpload},
     props: ['parent', 'uploadRoute', 'title'],
     data() {
         return {
@@ -44,20 +46,21 @@ export default {
         }
     },
     methods: {
-        upload(event) {
+        upload(file) {
             let title = this.title;
+            let fileName = file.name;
             if (!title) {
-                title = event.target.files[0].name;
+                title = file.name;
                 title = title.substr(0, title.lastIndexOf('.'));
                 title = title.charAt(0).toUpperCase() + title.slice(1);
-                title = window.prompt('Bitte gib eine Beschreibung zu dieser Datei an.', title);
+                title = window.prompt('Bitte gib eine Beschreibung für die Datei "'+fileName+'" an.', title);
             }
             if (null == title) return;
 
 
             let fd = new FormData();
             fd.append('attachment_text[0]', title);
-            fd.append('attachments[0]', event.target.files[0]);
+            fd.append('attachments[0]', file);
 
             this.uploading = true;
             axios.post(this.uploadRoute, fd, {
