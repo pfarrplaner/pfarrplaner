@@ -250,7 +250,7 @@
             <tr>
                 <td valign="top" width="25%" style="font-weight: bold">{{ $item->title }}</td>
                 @if($item->data_type == 'freetext')
-                    <td valign="top">{{ (false !== strpos($item->data['description'], "\n")) ? explode("\n", $item->data['description'])[0] : substr($item->data['description'], 0, 80).'...' }}</td>
+                    <td valign="top">@if($item->data['description']){{ (false !== strpos($item->data['description'], "\n")) ? explode("\n", $item->data['description'])[0] : substr($item->data['description'], 0, 80).'...' }}@endif</td>
                 @elseif($item->data_type == 'liturgic')
                     <td valign="top"></td>
                 @elseif($item->data_type == 'song')
