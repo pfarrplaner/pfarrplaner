@@ -53,6 +53,7 @@
                         <fieldset>
                             <legend>Gottesdienst</legend>
                             <form-selectize label="Taufgottesdienst"
+                                            name="service_id"
                                             :options="services"
                                             id-key="id" title-key="name"
                                             help="Leer lassen, um dies als Taufanfrage einzuordnen"
