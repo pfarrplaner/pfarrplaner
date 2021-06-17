@@ -45,11 +45,11 @@ class ServiceBeforeUpdateListener
      */
     public function handle(ServiceBeforeUpdate $event)
     {
-        Log::debug('Calling KonfiAppIntegration on updated service #' . $event->service->id);
+        if (!isset($event->data['konfiapp_event_type'])) return;
         if (KonfiAppIntegration::isActive($event->service->city)) {
             KonfiAppIntegration::get($event->service->city)->handleServiceUpdate(
                 $event->service,
-                $event->data['konfiapp_event_type'] ?: ''
+                $event->data['konfiapp_event_type'] ?? ''
             );
         }
     }

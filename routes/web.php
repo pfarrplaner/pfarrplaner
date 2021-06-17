@@ -284,6 +284,7 @@ Route::get('/services/{service}/liturgy/download/{key}', 'LiturgyEditorControlle
 Route::post('/services/{service}/liturgy/download/{key}', 'LiturgyEditorController@download')->name('services.liturgy.download.post');
 Route::post('/services/{service}/liturgy', 'LiturgyEditorController@save')->name('services.liturgy.save');
 Route::get('/services/{service}/liturgy/sources', 'LiturgyEditorController@sources')->name('services.liturgy.sources');
+Route::get('/services/{service}/liturgy/sermons', 'LiturgyEditorController@sermons')->name('services.liturgy.sermons');
 Route::post('/services/{service}/liturgy/import/{source}', 'LiturgyEditorController@import')->name('services.liturgy.import');
 
 // liturgy blocks

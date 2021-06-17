@@ -103,11 +103,13 @@
                                 </div>
                                 <div class="col-sm-4" v-if="item.data_type == 'sermon'">
                                     <div v-if="service.sermon === null">
-                                        <small>Für diesen Gottesdienst wurde noch keine Predigt angelegt.</small><br/>
+                                        <form-selectize v-if="sermons.length > 0" :options="sermons" id-key="id" title-key="title"
+                                        label="Bestehende Predigt auswählen" :settings="sermonSelectizeSettings" @input="setSermon($event, item)"/>
                                         <inertia-link :href="route('services.sermon.editor', {service: service.id})"
                                                       @click.stop=""
-                                                      title="Hier klicken, um die Predigt jetzt anzulegen"
-                                        >Jetzt anlegen
+                                                      class="btn btn-success"
+                                                      title="Hier klicken, um die Predigt jetzt anzulegen">
+                                            Neue Predigt anlegen
                                         </inertia-link>
                                     </div>
                                     <div v-else>
@@ -116,6 +118,10 @@
                                             {{ service.sermon.title }}<span
                                             v-if="service.sermon.subtitle">: {{ service.sermon.subtitle }}</span>
                                         </inertia-link>
+                                        <button class="btn btn-sm btn-light ml-1" @click="setSermon(null, item)"
+                                                title="Verknüpfung mit dieser Predigt aufheben">
+                                            <span class="fa fa-unlink"></span>
+                                        </button>
                                         <br/>
                                         <small>{{ service.sermon.reference }}</small>
                                     </div>
@@ -205,10 +211,12 @@ import Selectize from "vue2-selectize";
 import Modal from "../../Ui/modals/Modal";
 import LiturgySheetLink from "../Elements/LiturgySheetLink";
 import FullTextLiturgySheetConfiguration from "../LiturgySheets/FullTextLiturgySheetConfiguration";
+import FormSelectize from "../../Ui/forms/FormSelectize";
 
 export default {
     name: "LiturgyTree",
     components: {
+        FormSelectize,
         LiturgySheetLink,
         Modal,
         LiturgyBlock,
@@ -250,6 +258,8 @@ export default {
             this.sourceWait = 'Ablaufelemente importieren...';
             this.importFrom = -1;
         }
+
+        this.sermons = (await axios.get(route('services.liturgy.sermons', this.service.id))).data;
     },
     mounted() {
         if (this.autoFocusItem && this.autoFocusBlock) {
@@ -314,6 +324,10 @@ export default {
             sourceWait: 'Bitte warten, Quellen werden geladen...',
             modalOpen: false,
             dialogs: dialogs,
+            sermons: [],
+            sermonSelectizeSettings: {
+                searchField: ['title'],
+            }
         }
     },
     methods: {
@@ -576,6 +590,20 @@ export default {
             if (!item.data.needs_replacement) return '';
             if (!item.data.replacement) return 'badge-danger';
             return 'badge-success';
+        },
+        setSermon(e, item) {
+            this.service.sermon_id = e;
+            axios.patch(route('services.update', this.service.id), {sermon_id: e ?? null});
+            if (e) {
+                this.sermons.forEach(sermon => {
+                    if (sermon.id == e) this.service.sermon = sermon;
+                });
+            } else {
+                this.service.sermon = null;
+            }
+            item.editing = false;
+            this.focusedItem = null;
+            this.focusedBlock = null;
         }
     }
 }

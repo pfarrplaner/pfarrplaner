@@ -64,11 +64,11 @@ class ServiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'day_id' => 'required|integer|exists:days,id',
+            'day_id' => 'nullable|integer|exists:days,id',
             'location_id' => 'nullable',
             'time' => 'nullable|date_format:"H:i"',
             'description' => 'nullable|string',
-            'city_id' => 'required|exists:cities,id',
+            'city_id' => 'nullable|exists:cities,id',
             'special_location' => 'nullable|string',
             'need_predicant' => 'checkbox',
             'baptism' => 'checkbox',
@@ -130,33 +130,34 @@ class ServiceRequest extends FormRequest
         $data = parent::validated();
 
 
-
-        // set location
-        if ($data['special_location'] ?? false) {
-            $data['location_id'] = null;
-        } else {
-            $location = Location::find($data['location_id']);
-            if (null === $location) {
-                $data['special_location'] = $data['location_id'];
+        if (isset($data['location_id']) || isset($data['special_location'])) {
+            // set location
+            if ($data['special_location'] ?? false) {
                 $data['location_id'] = null;
-            }
-        }
-
-        // set time and place
-        if ($data['special_location'] = ($data['special_location'] ?? '')) {
-            $data['location_id'] = 0;
-            $data['time'] = $data['time'] ?: '';
-            $data['cc_location'] = $data['cc_location'] ?: '';
-        } elseif (isset($data['location_id'])) {
-            $locationId = $data['location_id'] ?: 0;
-            if ($locationId) {
-                $location = Location::find($locationId);
-                $data['location_id'] = $locationId;
-                $data['time'] = $data['time'] ?: $location->default_time;
-                $data['cc_location'] = $data['cc_location'] ?? ($data['cc'] ? $location->cc_default_location : '');
             } else {
+                $location = Location::find($data['location_id']);
+                if (null === $location) {
+                    $data['special_location'] = $data['location_id'];
+                    $data['location_id'] = null;
+                }
+            }
+
+            // set time and place
+            if ($data['special_location'] = ($data['special_location'] ?? '')) {
+                $data['location_id'] = 0;
                 $data['time'] = $data['time'] ?: '';
                 $data['cc_location'] = $data['cc_location'] ?: '';
+            } elseif (isset($data['location_id'])) {
+                $locationId = $data['location_id'] ?: 0;
+                if ($locationId) {
+                    $location = Location::find($locationId);
+                    $data['location_id'] = $locationId;
+                    $data['time'] = $data['time'] ?: $location->default_time;
+                    $data['cc_location'] = $data['cc_location'] ?? ($data['cc'] ? $location->cc_default_location : '');
+                } else {
+                    $data['time'] = $data['time'] ?: '';
+                    $data['cc_location'] = $data['cc_location'] ?: '';
+                }
             }
         }
 

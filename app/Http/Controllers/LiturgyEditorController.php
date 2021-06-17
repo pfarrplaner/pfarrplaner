@@ -8,7 +8,9 @@ use App\Liturgy\LiturgySheets\AbstractLiturgySheet;
 use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Liturgy\Resources\BlockResourceCollection;
 use App\Participant;
+use App\Sermon;
 use App\Service;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -106,11 +108,13 @@ class LiturgyEditorController extends Controller
 
     public function sources(Service $service)
     {
-        $services1 = Service::isNotAgenda()
+        $services1 = Service::setEagerLoads([])
+            ->isNotAgenda()
             ->writable()
             ->whereHas('liturgyBlocks')
             ->limit(50)->get();
-        $services2 = Service::isNotAgenda()
+        $services2 = Service::setEagerLoads([])
+            ->isNotAgenda()
             ->userParticipates(Auth::user(), 'P')
             ->whereHas('liturgyBlocks')
             ->get();
@@ -122,6 +126,21 @@ class LiturgyEditorController extends Controller
         krsort($services);
         $agendas = Service::isAgenda()->get();
         return response()->json(compact('services', 'agendas'));
+    }
+
+    public function sermons()
+    {
+        $sermonIds = Service::whereNotNull('sermon_id')
+            ->userParticipates(Auth::user(), 'P')
+            ->orderedDesc()
+            ->get()->pluck('sermon_id')->unique();
+
+        $sermons = Sermon::whereIn('id', $sermonIds)->get()->transform(function($sermon) {
+            $sermon->text = '';
+            return $sermon;
+        });;
+
+        return response()->json($sermons);
     }
 
     public function import(Service $service, Service $source)
