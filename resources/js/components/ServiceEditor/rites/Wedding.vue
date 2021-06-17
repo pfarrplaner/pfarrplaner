@@ -33,6 +33,9 @@
             {{ moment(wedding.service.day.date).format('DD.MM.YYYY') }}<br />
             {{ wedding.service.timeText }}<br />
             {{ wedding.service.locationText }}
+            <div v-if="showPastor">
+                <participants :participants="wedding.service.pastors"/>
+            </div>
         </div>
         <div class="col-md-2">
             <b>{{ wedding.spouse1_name }}</b><br />
@@ -62,12 +65,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div v-if="!showPastor">
                 <attachment  v-for="(attachment,key,index) in wedding.attachments" :key="'attachment'+key" :attachment="attachment" />
-            </div>
-            <div v-else>
-                <calendar-service-participants :participants="wedding.service.pastors" category="P" :predicant="wedding.service.need_predicant" />
-            </div>
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Trauung bearbeiten"
@@ -83,10 +81,12 @@
 import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
+import Participants from "../../Calendar/Service/Participants";
 
 export default {
     name: "Wedding",
     components: {
+        Participants,
         DetailsInfo,
         Attachment,
         CheckedProcessItem,

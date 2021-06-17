@@ -33,6 +33,9 @@
             {{ moment(baptism.service.day.date).format('DD.MM.YYYY') }}<br />
             {{ baptism.service.timeText }}<br />
             {{ baptism.service.locationText }}
+            <div v-if="showPastor">
+                <participants :participants="baptism.service.pastors"/>
+            </div>
         </div>
         <div class="col-md-2">
             {{ baptism.candidate_name}}<br />
@@ -67,12 +70,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div v-if="!showPastor">
             <attachment  v-for="(attachment,key,index) in baptism.attachments" :key="'attachment'+key" :attachment="attachment" />
-            </div>
-            <div v-else>
-                <calendar-service-participants :participants="baptism.service.pastors" category="P" :predicant="baptism.service.need_predicant" />
-            </div>
         </div>
         <div class="col-md-1 text-right">
             <inertia-link class="btn btn-sm btn-light" title="Taufe bearbeiten"
@@ -88,10 +86,12 @@
 import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
+import Participants from "../../Calendar/Service/Participants";
 
 export default {
     name: "Baptism",
     components: {
+        Participants,
         DetailsInfo,
         Attachment,
         CheckedProcessItem,
