@@ -120,7 +120,11 @@
                                         <small>{{ service.sermon.reference }}</small>
                                     </div>
                                 </div>
-                                <div class="col-sm-4" v-else>{{ itemDescription(item) }}</div>
+                                <div class="col-sm-4" v-else>{{ itemDescription(item) }}
+                                    <span v-if="item.data.needs_replacement" class="badge" :class="dataReplacerClass(item)">
+                                        <span class="fa fa-user" :title="dataReplacerTitle(item)"></span>
+                                    </span>
+                                </div>
                                 <div class="col-sm-3 responsible-list"
                                      @click="editResponsibles(blockIndex, itemIndex, item)">
                                     <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
@@ -526,6 +530,52 @@ export default {
         downloadConfiguredSheet(sheet) {
             document.getElementById('frm'+sheet.key).submit();
             this.dialogs[sheet.key] = false;
+        },
+        dataReplacerTitle(item) {
+            if (!item.data.needs_replacement) return '';
+            var t = 'Dieses Element wird mit Hilfe von persönlichen Daten ';
+            var error = '';
+            var replacerObject = null;
+            this.service[item.data.needs_replacement+'s'].forEach(obj => {
+                if (obj.id == item.data.replacement) replacerObject = obj;
+            })
+            console.log('replacerObject', replacerObject, item.data.needs_replacement+'s');
+            switch (item.data.needs_replacement) {
+                case 'funeral':
+                    t += 'für eine Bestattung';
+                    if (!item.data.replacement) {
+                        error = 'Es ist noch keine Bestattung ausgewählt!';
+                        if (this.service.funerals.length == 0) error += ' Dem Gottesdienst sind keine Bestattungen zugeordnet!';
+                    } else {
+                        t +=' ('+replacerObject.buried_name+')';
+                    }
+                    break;
+                case 'baptism':
+                    t += 'für eine Taufe';
+                    if (!item.data.replacement) {
+                        error = 'Es ist noch keine Taufe ausgewählt!';
+                        if (this.service.baptisms.length == 0) error += ' Dem Gottesdienst sind keine Taufen zugeordnet!';
+                    } else {
+                        t +=' ('+replacerObject.candidate_name+')';
+                    }
+                    break;
+                case 'wedding':
+                    t += 'für eine Trauung';
+                    if (!item.data.replacement) {
+                        error = 'Es ist noch keine Trauung ausgewählt!';
+                        if (this.service.weddings.length == 0) error += ' Dem Gottesdienst sind keine Trauungen zugeordnet!';
+                    } else {
+                        t +=' ('+replacerObject.spouse1_name+' / '+replacerObject.spouse2_name+')';
+                    }
+                    break;
+            };
+            t += ' angepasst.'+(error ? ' '+error : '');
+            return (t)
+        },
+        dataReplacerClass(item) {
+            if (!item.data.needs_replacement) return '';
+            if (!item.data.replacement) return 'badge-danger';
+            return 'badge-success';
         }
     }
 }
