@@ -29,7 +29,8 @@
 
 <template>
     <div class="liturgy-editor-details-pane" v-scroll-to>
-        <component :is="editorComponent" :element="element" v-model="element" :service="service" :agenda-mode="agendaMode"/>
+        <component :is="editorComponent" :element="element" v-model="element" :service="service"
+                   :agenda-mode="agendaMode" :markers="markers" />
     </div>
 </template>
 
@@ -59,6 +60,10 @@ export default {
         service: Object,
         agendaMode: {
             type: Boolean,
+            default: false,
+        },
+        markers: {
+            type: Object,
             default: false,
         }
     },

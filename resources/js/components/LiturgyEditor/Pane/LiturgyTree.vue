@@ -87,7 +87,7 @@
                         </div>
                     </div>
                     <details-pane v-if="block.editing == true" :service="service" :element="block"
-                                  :agenda-mode="agendaMode"/>
+                                  :agenda-mode="agendaMode" :markers="markers"/>
 
                     <draggable :list="block.items" group="items" class="liturgy-items-list"
                                v-bind:="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
@@ -156,7 +156,7 @@
                                 </div>
                             </div>
                             <details-pane v-if="item.editing == true" :service="service" :element="item"
-                                          :agenda-mode="agendaMode"/>
+                                          :agenda-mode="agendaMode" :markers="markers" />
                         </div>
                     </draggable>
                 </div>
@@ -245,6 +245,10 @@ export default {
             type: Object,
             default: [],
         },
+        markers: {
+            type: Object,
+            default: null,
+        }
     },
     /**
      * Load existing sources

@@ -39,6 +39,8 @@ use Carbon\Carbon;
 
 class BekanntgabenReplacer extends AbstractReplacer
 {
+    protected $description = 'Setzt automatisch die tagesaktuellen Bekanntgaben ein.';
+
     protected function getReplacementText(): string
     {
         $service = $this->service;

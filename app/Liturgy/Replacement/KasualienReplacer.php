@@ -42,6 +42,8 @@ use Carbon\Carbon;
 
 class KasualienReplacer extends AbstractReplacer
 {
+    protected $description = 'Setzt automatisch die abzukündigenden Kasualien (Beerdigungen, Taufen, Trauungen) ein.';
+
     protected function getReplacementText(): string
     {
         $service = $this->service;

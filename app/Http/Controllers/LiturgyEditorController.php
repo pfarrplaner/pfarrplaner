@@ -6,6 +6,7 @@ use App\Liturgy\Block;
 use App\Liturgy\Item;
 use App\Liturgy\LiturgySheets\AbstractLiturgySheet;
 use App\Liturgy\LiturgySheets\LiturgySheets;
+use App\Liturgy\Replacement\Replacement;
 use App\Liturgy\Resources\BlockResourceCollection;
 use App\Participant;
 use App\Sermon;
@@ -30,10 +31,11 @@ class LiturgyEditorController extends Controller
         $autoFocusBlock = $request->get('autoFocusBlock', null);
         $autoFocusItem = $request->get('autoFocusItem', null);
         $ministries = $this->getAvailableMinistries();
+        $markers = Replacement::getList();
 
         return Inertia::render(
             'liturgyEditor',
-            compact('service', 'liturgySheets', 'autoFocusBlock', 'autoFocusItem', 'ministries')
+            compact('service', 'liturgySheets', 'autoFocusBlock', 'autoFocusItem', 'ministries', 'markers')
         );
     }
 

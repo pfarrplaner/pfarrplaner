@@ -47,4 +47,29 @@ class Replacement
         }
         return $text;
     }
+
+    public static function factory() {
+        $classes = [];
+        foreach (glob(app_path('Liturgy/Replacement/*Replacer.php')) as $file) {
+            if (substr(basename($file), 0, 8) != 'Abstract') {
+                $className = 'App\\Liturgy\\Replacement\\'.str_replace('.php', '', basename($file));
+                /** @var AbstractReplacer $object */
+                $object = new $className(new Service());
+                $classes[$object->getKey()] = $object;
+            }
+        }
+        return $classes;
+    }
+
+    public static function getList() {
+        $records = [];
+        /**
+         * @var string $tag
+         * @var AbstractReplacer $replacer
+         */
+        foreach (self::factory() as $tag => $replacer) {
+            $records[$tag] = $replacer->getDescription();
+        }
+        return $records;
+    }
 }

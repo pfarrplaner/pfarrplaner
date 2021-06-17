@@ -39,12 +39,14 @@ abstract class AbstractReplacer
     /** @var Service */
     protected $service;
 
+    protected $description = '';
+
     public function __construct(Service $service)
     {
         $this->service = $service;
     }
 
-    protected function getKey() {
+    public function getKey() {
         return lcfirst(strtr(get_called_class(), ['App\\Liturgy\\Replacement\\' => '', 'Replacer' => '']));
     }
 
@@ -78,6 +80,22 @@ abstract class AbstractReplacer
     protected function renderParagraph($text = '')
     {
         return $text . PHP_EOL ;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
     }
 
 
