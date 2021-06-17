@@ -54,6 +54,9 @@ class LocationPolicy
         if ($user->can('ort-bearbeiten') || $user->can('gd-opfer-bearbeiten')) {
             return true;
         }
+        if (count($user->writableCities)) {
+            return true;
+        }
         return false;
     }
 
