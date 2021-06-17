@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.60.5](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.4...v1.60.5) (2021-06-17)
+
+
+### Features
+
+* Allow selecting existing sermon in LiturgyTree ([1b75f93](https://github.com/pfarrplaner/pfarrplaner/commits/1b75f930d9990b06d9672170aad4a62d083a4f58)), closes [#102](https://github.com/pfarrplaner/pfarrplaner/issues/102)
+* File upload via drag and drop ([8e8b077](https://github.com/pfarrplaner/pfarrplaner/commits/8e8b077c2f8ea9f898c19059015be1e91aafe8e5))
+* Show a marker in LiturgyTree when an item has personalized data ([c6943f8](https://github.com/pfarrplaner/pfarrplaner/commits/c6943f8214656bd767cccf6f271d877304020343)), closes [#107](https://github.com/pfarrplaner/pfarrplaner/issues/107)
+* Show available markers in FreetextEditor ([7bdb29a](https://github.com/pfarrplaner/pfarrplaner/commits/7bdb29a465c5acd91a942c9433207b850ef36348)), closes [#104](https://github.com/pfarrplaner/pfarrplaner/issues/104)
+* Users with write access are able to create/edit locations for a city ([cdd695d](https://github.com/pfarrplaner/pfarrplaner/commits/cdd695d18e4a1f2513615f5973206f67fd334d29)), closes [#106](https://github.com/pfarrplaner/pfarrplaner/issues/106)
+
 ### [1.60.4](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.3...v1.60.4) (2021-06-17)
 
 
