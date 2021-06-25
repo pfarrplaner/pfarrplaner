@@ -27,64 +27,74 @@
   - along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<template>
-    <div class="card liturgy-editor-info-pane" v-if="liturgy['title']">
-        <div class="card-body">
-            <div class="row" v-if="liturgy['title']">
-                <div class="col-2">
-                    <div v-if="liturgy['title']">
-                        <b>{{ liturgy['title'] }}</b>
-                        <span v-if="liturgy['litColor']" class="litColor"
-                              :style="{ backgroundColor: liturgy['litColor'] }"
-                              :title="'Liturgische Farbe: '+liturgy['litColorName']"></span>
-                    </div>
-                    <div v-if="liturgy['feastCircleName']">
-                        <span class="badge badge-info">{{ liturgy['feastCircleName'] }} ({{ romanize(liturgy['perikope'])}}) </span>
-                    </div>
-                    <div v-if="liturgy['subjects']">
+<template xmlns="http://www.w3.org/1999/html">
+    <div class="liturgy-editor-info-pane">
+        <div class="card" v-if="liturgy['title']">
+            <div class="card-body">
+                <div class="row" v-if="liturgy['title']">
+                    <div class="col-2">
+                        <div v-if="liturgy['title']">
+                            <b>{{ liturgy['title'] }}</b>
+                            <span v-if="liturgy['litColor']" class="litColor"
+                                  :style="{ backgroundColor: liturgy['litColor'] }"
+                                  :title="'Liturgische Farbe: '+liturgy['litColorName']"></span>
+                        </div>
+                        <div v-if="liturgy['feastCircleName']">
+                            <span class="badge badge-info">{{
+                                    liturgy['feastCircleName']
+                                }} ({{ romanize(liturgy['perikope']) }}) </span>
+                        </div>
+                        <div v-if="liturgy['subjects']">
                         <span v-for="subject in liturgy['subjects']"
                               class="badge badge-light">{{ subject.subjectTitle }}</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-light" @click.prevent="$emit('info')"
+                                    title="Weitere Informationen">
+                                <span class="fa fa-info"></span> <span class="d-none d-md-inline">Weitere Infos</span>
+                            </button>
+                        </div>
                     </div>
-                    <div>
-                        <button class="btn btn-sm btn-light" @click.prevent="$emit('info')" title="Weitere Informationen">
-                            <span class="fa fa-info"></span> <span class="d-none d-md-inline">Weitere Infos</span>
-                        </button>
+                    <div class="col-2">
+                        <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyQuote" title="WSp"/>
+                        <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyPsalm" title="Ps"/>
+                        <bible-reference :liturgy="service.day.liturgy" liturgy-key="currentPerikope" title="Pr"/>
                     </div>
-                </div>
-                <div class="col-2">
-                    <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyQuote" title="WSp" />
-                    <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyPsalm" title="Ps" />
-                    <bible-reference :liturgy="service.day.liturgy" liturgy-key="currentPerikope" title="Pr" />
-                </div>
-                <div class="col-2">
-                    <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
-                                     :liturgy-key="'litTextsPerikope'+n"
-                                     :key="'litTextsPerikope'+n"
-                                     :title="romanize(n)"
-                                     :style="{fontWeight: (n==liturgy['perikope']) ? 'bold' : 'normal' }" />
-                </div>
-                <div class="col-2">
-                    <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
-                                     :liturgy-key="'litTextsPerikope'+(n+3)"
-                                     :key="'litTextsPerikope'+(n+3)"
-                                     :title="romanize(n+3)"
-                                     :style="{fontWeight: ((n+3)==liturgy['perikope']) ? 'bold' : 'normal' }" />
-                </div>
-                <div class="col-4">
-                    <div v-if="liturgy['songs']" v-for="song in liturgy['songs']">
-                        {{ song.number }} {{ song.title }}
+                    <div class="col-2">
+                        <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
+                                         :liturgy-key="'litTextsPerikope'+n"
+                                         :key="'litTextsPerikope'+n"
+                                         :title="romanize(n)"
+                                         :style="{fontWeight: (n==liturgy['perikope']) ? 'bold' : 'normal' }"/>
+                    </div>
+                    <div class="col-2">
+                        <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
+                                         :liturgy-key="'litTextsPerikope'+(n+3)"
+                                         :key="'litTextsPerikope'+(n+3)"
+                                         :title="romanize(n+3)"
+                                         :style="{fontWeight: ((n+3)==liturgy['perikope']) ? 'bold' : 'normal' }"/>
+                    </div>
+                    <div class="col-4">
+                        <div v-if="liturgy['songs']" v-for="song in liturgy['songs']">
+                            {{ song.number }} {{ song.title }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <funeral-info-pane v-for="funeral in service.funerals"
+                           :key="'funeral_info_'+funeral.id"
+                           :funeral="funeral" :service="service" />
     </div>
 </template>
 
 <script>
 import BibleReference from "../Elements/BibleReference";
+import FuneralInfoPane from "./FuneralInfoPane";
+
 export default {
     name: "InfoPane",
-    components: {BibleReference},
+    components: {FuneralInfoPane, BibleReference},
     data() {
         return {
             liturgy: this.service.day.liturgy,
@@ -109,7 +119,7 @@ export default {
             while (i--)
                 roman = (key[+digits.pop() + (i * 10)] || "") + roman;
             return Array(+digits.join("") + 1).join("M") + roman;
-        }
+        },
     }
 }
 </script>
