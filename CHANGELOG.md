@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.61.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.5...v1.61.0) (2021-06-25)
+
+
+### Features
+
+* Add FuneralInfoPane in LiturgyEditor ([e1f2bb5](https://github.com/pfarrplaner/pfarrplaner/commits/e1f2bb55b821d9ae0db04bef94ac706145bb8719))
+* Add image preview to Attachment ([0639c20](https://github.com/pfarrplaner/pfarrplaner/commits/0639c2059bf66403e6d464e1fef0fbf843c2ef8d)), closes [#90](https://github.com/pfarrplaner/pfarrplaner/issues/90)
+* Add relative date for dod to FuneralEditor ([7389e9a](https://github.com/pfarrplaner/pfarrplaner/commits/7389e9adf306cd1a64842e6b103019449a2d4300)), closes [#110](https://github.com/pfarrplaner/pfarrplaner/issues/110)
+
+
+### Bug Fixes
+
+* Wrong links ([5773a11](https://github.com/pfarrplaner/pfarrplaner/commits/5773a115b29f5a7cd344437f71dd54b2d5912e73))
+
 ### [1.60.5](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.4...v1.60.5) (2021-06-17)
 
 
