@@ -31,10 +31,23 @@
     <div class="attachment btn btn-light" @click.prevent="download" :title="attachment.title + ' herunterladen'">
         <b><span class="fa" :class="attachment.icon"></span> {{ attachment.title }}</b><br/>
         <small>.{{ attachment.extension }}, {{ fileSize(attachment.size) }}</small>
-        <button v-if="allowDelete" class="float-right btn btn-xs btn-danger" title="Anhang löschen" @click.prevent.stop="deleteAttachment($event)">
+        <button v-if="allowDelete" class="float-right btn btn-xs btn-danger" title="Anhang löschen"
+                @click.prevent.stop="deleteAttachment($event)">
             <span class="fa fa-trash"></span>
         </button>
         <span class="float-right fa fa-download" :class="allowDelete ? 'mr-3 mt-1' : ''"></span>
+        <img v-if="isImage" class="float-right preview mr-4" :src="imageRoute()" @click.stop="showLightBox = true"/>
+        <div v-if="isImage && showLightBox" class="lightbox-backdrop"
+             @click.stop="showLightBox = false"
+             @keydown.esc="showLightBox = false">
+            <div class="btn btn-dark lightbox-close" title="Vorschau schließen"><span class="fa fa-times"></span></div>
+            <div class="lightbox" @keydown.esc="showLightBox = false">
+                <img class="img-fluid" :src="imageRoute()" @keydown.esc="showLightBox = false"/>
+                <div class="mt-2" @keydown.esc="showLightBox = false">
+                    <button class="btn btn-primary" @click.stop="download" @keydown.esc="showLightBox = false">Download</button>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -44,6 +57,12 @@ export default {
     props: {
         attachment: Object,
         allowDelete: Boolean,
+    },
+    data() {
+        return {
+            isImage: this.attachment.mimeType.substr(0, 5) == 'image',
+            showLightBox: false,
+        }
     },
     methods: {
         download() {
@@ -61,25 +80,73 @@ export default {
         },
         deleteAttachment(event) {
             this.$emit('delete-attachment');
+        },
+        imageRoute() {
+            return route('image', {path: this.attachment.file.replace('attachments/', '')});
         }
     }
 }
 </script>
 
 <style scoped>
-    .attachment {
-        width: 100%;
-        text-align: left;
-        margin-bottom: .25rem;
-        vertical-align: middle;
-    }
-    small {
-        padding-left: 15px;
-    }
-    .btn-danger {
-        margin-top: -.3rem;
-    }
-    .fa-download {
-        color: gray !important;
-    }
+.attachment {
+    width: 100%;
+    text-align: left;
+    margin-bottom: .25rem;
+    vertical-align: middle;
+}
+
+small {
+    padding-left: 15px;
+}
+
+.btn-danger {
+    margin-top: -.3rem;
+}
+
+.fa-download {
+    color: gray !important;
+}
+
+.preview {
+    max-height: 2em;
+    display: block;
+}
+
+.lightbox {
+    margin: 0;
+    position: absolute;
+    width: 90%;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.lightbox img {
+    max-height: 80vh;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
+.lightbox-backdrop {
+    position: fixed;
+    padding: 0;
+    margin: 0;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 20000;
+
+    vertical-align: center;
+    text-align: center;
+}
 </style>
