@@ -91,7 +91,7 @@
                                 </form-group>
                             </div>
                             <div class="col-md-6">
-                                <form-group name="dod" label="Sterbedatum" :help="age ? 'Sterbealter: '+age : ''">
+                                <form-group name="dod" label="Sterbedatum" :help="relativeDate(myFuneral.dod, moment())+(age ? ' im Alter von '+age+' Jahren' : '')">
                                     <date-picker :config="myDatePickerConfig" v-model="myFuneral.dod"/>
                                 </form-group>
                             </div>
@@ -290,6 +290,7 @@ import AttachmentList from "../../components/Ui/elements/AttachmentList";
 import ValueCheck from "../../components/Ui/elements/ValueCheck";
 import Participants from "../../components/Calendar/Service/Participants";
 import FakeAttachment from "../../components/Ui/elements/FakeAttachment";
+import RelativeDate from "../../libraries/RelativeDate";
 
 
 export default {
@@ -377,7 +378,8 @@ export default {
         },
         downloadForm() {
             window.location.href = route('funeral.form', {funeral: this.myFuneral.id});
-        }
+        },
+        relativeDate: RelativeDate,
     }
 }
 </script>
