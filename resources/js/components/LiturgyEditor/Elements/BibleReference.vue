@@ -30,8 +30,8 @@
 <template xmlns="http://www.w3.org/1999/html">
     <div class="bible-reference">
         <div v-if="liturgy[liturgyKey]" :key="liturgyKey+'Text__'+text">
-            <span v-if="title">{{ title }} </span><a :href="liturgy[liturgyKey]+'Link'" :title="text"
-                   target="_blank">{{ liturgy[liturgyKey] }}</a>
+            <span v-if="title">{{ title }} </span><a v-if="liturgy[liturgyKey+'Link']" :href="liturgy[liturgyKey+'Link']" :title="text"
+                   target="_blank">{{ liturgy[liturgyKey] }}</a><span v-else>{{ liturgy[liturgyKey]}} </span>
             <span v-if="loading" class="fa fa-spin fa-spinner"></span>
             <span v-if="!loading" class="fa fa-copy" @click.prevent.stop="copyToClipboard"
                   title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
