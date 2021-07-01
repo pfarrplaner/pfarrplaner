@@ -129,6 +129,7 @@ Route::get('/services/add/{date}/{city}', ['uses' => 'ServiceController@add'])->
 
 Route::get('/reports', ['as' => 'reports.list', 'uses' => 'ReportsController@list']);
 Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'ReportsController@render']);
+Route::get('/reports/render/{report}', ['as' => 'reports.render.get', 'uses' => 'ReportsController@render']);
 Route::get('/report/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
 Route::get('/report/{report}/embed', ['as' => 'report.embed', 'uses' => 'ReportsController@embed'])->middleware('cors');
 Route::post('/report/{report}/{step}', ['as' => 'report.step', 'uses' => 'ReportsController@step']);

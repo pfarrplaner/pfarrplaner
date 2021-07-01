@@ -38,6 +38,9 @@
                 <span class="d-inline d-md-none fa fa-trash"></span>
                 <span class="d-none d-md-inline">Löschen</span>
             </button>
+            <button @click="requestForm" class="btn btn-light ml-1" title="Urlaubsantrag öffnen">
+                Antragsformular
+            </button>
         </template>
         <card>
             <card-header>Informationen zum Urlaub</card-header>
@@ -124,6 +127,9 @@ export default {
             this.$inertia.delete(route('absences.destroy', {absence: this.myAbsence.id}, {
                 year: this.year, month: this.month
             }));
+        },
+        requestForm() {
+            window.location.href = route('reports.render.get', {report: 'leaveRequestForm', absence: this.myAbsence.id});
         }
     }
 }
