@@ -21,10 +21,8 @@
                     @endforeach
                 </div>
                 <div class="form-group">
-                    <input type="hidden" id="from" name="from" value=""/>
-                    <input type="hidden" id="to" name="to" value=""/>
-                    <div id="date-range12"></div>
-                    <div id="date-range12-container"></div>
+                    @input(['label' => 'Von', 'name' => 'from', 'class' => 'datepicker', 'placeholder' => 'TT.MM.JJJJ'])
+                    @input(['label' => 'Bis', 'name' => 'to', 'class' => 'datepicker', 'placeholder' => 'TT.MM.JJJJ'])
                 </div>
                 <div class="form-group">
                     <label for="rhythm">Rhythmus</label><br/>

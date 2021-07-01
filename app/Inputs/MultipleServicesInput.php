@@ -99,6 +99,8 @@ class MultipleServicesInput extends AbstractInput
         $rhythm = $request->get('rhythm') ?: 1;
         $title = $request->get('title') ?: '';
 
+        $services = [];
+
 
         $locations = Location::whereIn('id', $request->get('includeLocations') ?: [])->get();
 
