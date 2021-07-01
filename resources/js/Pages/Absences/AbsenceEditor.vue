@@ -45,7 +45,7 @@
                 <date-range-input label="Zeitraum" :from="absence.from" :to="absence.to"
                                   @input="setDateRange"
                 />
-                <form-input label="Beschreibung" help="Grund der Abwesenheit"
+                <form-input label="Beschreibung" help="Grund der Abwesenheit" name="reason"
                             placeholder="z.B. Urlaub" v-model="absence.reason"/>
                 <fake-table :columns="[5,6,1]" :headers="['Vertreter:in', 'Zeitraum', '']"
                             collapsed-header="Vertreter:innen" class="mt-3" :key="myAbsence.replacements.length">
@@ -69,7 +69,7 @@
                     <button class="btn btn-light" @click.prevent="addReplacement">Vertretung hinzufügen</button>
                 </div>
                 <hr />
-                <form-textarea label="Notizen für die Vertretung" v-model="absence.replacement_notes" />
+                <form-textarea label="Notizen für die Vertretung" v-model="absence.replacement_notes" name="replacement_notes"/>
             </card-body>
         </card>
     </admin-layout>

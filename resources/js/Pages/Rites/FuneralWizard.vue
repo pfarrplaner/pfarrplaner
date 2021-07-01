@@ -38,12 +38,12 @@
                 <form-group label="Datum">
                     <date-picker :config="myDatePickerConfig" v-model="funeral.date" />
                 </form-group>
-                <form-selectize v-model="funeral.city" :options="cities"
+                <form-selectize v-model="funeral.city" :options="cities" name="city"
                                 id-key="id" title-key="name"
                                 label="Kirchengemeinde" />
-                <location-select v-model="funeral.location" :locations="locations"
+                <location-select v-model="funeral.location" :locations="locations" name="location"
                                 label="Ort" @set-location="setLocation" />
-                <form-input label="Verstorbene:r" placeholder="Nachname, Vorname"
+                <form-input label="Verstorbene:r" placeholder="Nachname, Vorname" name="name"
                             v-model="funeral.name" />
             </card-body>
         </card>

@@ -60,7 +60,7 @@
                 </div>
                 <hr />
                 <h3>Neues Token hinzufügen</h3>
-                <form-input v-model="newTokenTitle" label="Bezeichnung"></form-input>
+                <form-input v-model="newTokenTitle" label="Bezeichnung" name="newTokenTitle"></form-input>
                 <button class="btn btn-success" title="Token hinzufügen" @click.prevent="addToken">
                     Neues Token anlegen
                 </button>

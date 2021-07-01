@@ -67,7 +67,8 @@
                             <legend>Täufling</legend>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <form-input label="Name des Täuflings" v-model="myBaptism.candidate_name"/>
+                                    <form-input name="candidate_name"
+                                        label="Name des Täuflings" v-model="myBaptism.candidate_name"/>
                                 </div>
                                 <div class="col-md-6">
                                     <form-group label="Zu verwendendes Pronomen">
@@ -88,18 +89,18 @@
                             <form-input label="Adresse" v-model="myBaptism.candidate_address"/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <form-input label="PLZ" v-model="myBaptism.candidate_zip"/>
+                                    <form-input name="candidate_zip" label="PLZ" v-model="myBaptism.candidate_zip"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <form-input label="Ort" v-model="myBaptism.candidate_city"/>
+                                    <form-input name="candidate_city" label="Ort" v-model="myBaptism.candidate_city"/>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <form-input label="Telefon" v-model="myBaptism.candidate_phone"/>
+                                    <form-input name="candidate_phone" label="Telefon" v-model="myBaptism.candidate_phone"/>
                                 </div>
                                 <div class="col-md-6">
-                                    <form-input label="E-Mailadresse" v-model="myBaptism.candidate_email" type="email"/>
+                                    <form-input name="candidate_email" label="E-Mailadresse" v-model="myBaptism.candidate_email" type="email"/>
                                 </div>
                             </div>
                         </fieldset>
@@ -109,16 +110,17 @@
                             <legend>Erstkontakt</legend>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <form-input label="Erstkontakt mit" v-model="myBaptism.first_contact_with"
-                                                is-checked-item="1"/>
+                                    <form-input name="first_contact_with"
+                                                label="Erstkontakt mit" v-model="myBaptism.first_contact_with"
+                                        is-checked-item="1"/>
                                 </div>
                                 <div class="col-md-4">
-                                    <form-group label="Datum" is-checked-item="1" :value="myBaptism.first_contact_on">
+                                    <form-group label="Datum" is-checked-item="1" :value="myBaptism.first_contact_on" name="first_contact_on" >
                                         <date-picker v-model="myBaptism.first_contact_on" :config="myDatePickerConfig"/>
                                     </form-group>
                                 </div>
                                 <div class="col-md-4">
-                                    <form-group label="Taufgespräch" is-checked-item="1" :value="myBaptism.appointment">
+                                    <form-group label="Taufgespräch" is-checked-item="1" :value="myBaptism.appointment" name="candidate_appointment" >
                                         <date-picker v-model="myBaptism.appointment" :config="myDateTimePickerConfig"/>
                                     </form-group>
                                 </div>
@@ -135,11 +137,11 @@
                             </div>
                             <div v-else>
                                 <checked-process-item check="1" positive="Anmeldedaten aufgenommen und Anmeldeformular erstellt" />
-                                <form-check label="Anmeldung unterschrieben" v-model="myBaptism.signed"
+                                <form-check label="Anmeldung unterschrieben" v-model="myBaptism.signed" name="signed"
                                             is-checked-item="1"/>
-                                <form-check label="Urkunden erstellt" v-model="myBaptism.docs_ready"
+                                <form-check label="Urkunden erstellt" v-model="myBaptism.docs_ready" name="ready"
                                             is-checked-item="1"/>
-                                <form-input label="Urkunden hinterlegt" v-model="myBaptism.docs_where"
+                                <form-input label="Urkunden hinterlegt" v-model="myBaptism.docs_where" name="docs_where"
                                             class="mt-3"
                                             help="Wo sind die Unterlagen hinterlegt?"
                                             is-checked-item="1"/>

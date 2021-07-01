@@ -36,6 +36,7 @@
             </div>
             <hr />
             <form-input label="YouTube-Adresse" help="Möglichkeit zur manuellen Eingabe eines YouTube-Links"
+                        name="youtube_url"
                         v-model="myService.youtube_url" />
         </div>
         <div v-if="creatingStream">

@@ -77,11 +77,11 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <form-input label="Rufname" v-model="myFuneral.spoken_name"
+                                <form-input label="Rufname" v-model="myFuneral.spoken_name" name="spoken_name"
                                             placeholder="falls abweichend vom kompletten Vornamen"/>
                             </div>
                             <div class="col-md-6">
-                                <form-input label="Beruf" v-model="myFuneral.profession"/>
+                                <form-input label="Beruf" v-model="myFuneral.profession" name="profession"/>
                             </div>
                         </div>
                         <div class="row">
@@ -98,10 +98,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <form-input label="Geburtsort" v-model="myFuneral.birth_place"/>
+                                <form-input label="Geburtsort" v-model="myFuneral.birth_place" name="birth_place"/>
                             </div>
                             <div class="col-md-6">
-                                <form-input label="Sterbeort" v-model="myFuneral.death_place"/>
+                                <form-input label="Sterbeort" v-model="myFuneral.death_place" name="death_place"/>
                             </div>
                         </div>
                         <hr/>
@@ -156,7 +156,7 @@
                         <hr/>
                         <form-input label="Predigttext" v-model="myFuneral.text" :is-checked-item="true"/>
                         <form-group label="Bestattungsart">
-                            <select v-model="myFuneral.type" class="form-control">
+                            <select v-model="myFuneral.type" class="form-control" name="type">
                                 <option>Erdbestattung</option>
                                 <option>Trauerfeier</option>
                                 <option>Trauerfeier mit Urnenbeisetzung</option>
@@ -164,19 +164,19 @@
                             </select>
                         </form-group>
                         <div v-if="myFuneral.type == 'Urnenbeisetzung'">
-                            <form-group label="Datum der vorhergehenden Trauerfeier">
+                            <form-group label="Datum der vorhergehenden Trauerfeier" name="wake">
                                 <date-picker :config="myDatePickerConfig" v-model="myFuneral.wake"/>
                             </form-group>
                             <form-input label="Ort der vorhergehenden Trauerfeier"
                                         v-model="myFuneral.wake_location" name="wake_location"/>
                         </div>
-                        <form-group label="Abkündigen am" :is-checked-item="true" :value="myFuneral.announcement">
+                        <form-group label="Abkündigen am" :is-checked-item="true" :value="myFuneral.announcement" name="announcement">
                             <date-picker :config="myDatePickerConfig" v-model="myFuneral.announcement"/>
                         </form-group>
                         <hr/>
-                        <form-textarea label="Bestatter" v-model="myFuneral.undertaker"/>
-                        <form-textarea label="Nachrufe" v-model="myFuneral.eulogies"/>
-                        <form-textarea label="Notizen" v-model="myFuneral.notes"/>
+                        <form-textarea label="Bestatter" v-model="myFuneral.undertaker" name="undertaker"/>
+                        <form-textarea label="Nachrufe" v-model="myFuneral.eulogies" name="eulogies"/>
+                        <form-textarea label="Notizen" v-model="myFuneral.notes" name="notes"/>
                     </tab>
                     <tab id="family" :active-tab="activeTab">
                         <form-input name="relative_name" v-model="myFuneral.relative_name"
@@ -186,50 +186,51 @@
                                 <span class="fa fa-copy"></span> Adresse übernehmen
                             </button>
                         </div>
-                        <form-input v-model="myFuneral.relative_address"
+                        <form-input v-model="myFuneral.relative_address" name="relative_address"
                                     label="Adresse" help="Straße und Hausnummer" :key="myFuneral.relative_address"/>
                         <div class="row">
                             <div class="col-md-3">
-                                <form-input v-model="myFuneral.relative_zip"
+                                <form-input v-model="myFuneral.relative_zip" name="relative_zip"
                                             label="Postleitzahl" type="number" :key="myFuneral.relative_zip"/>
                             </div>
                             <div class="col-md-9">
-                                <form-input v-model="myFuneral.relative_city" :key="myFuneral.relative_city"
+                                <form-input v-model="myFuneral.relative_city" :key="myFuneral.relative_city" name="relative_city"
                                             label="Ort"/>
                             </div>
                         </div>
-                        <form-textarea label="Weitere Kontaktdaten" v-model="myFuneral.relative_contact_data"/>
+                        <form-textarea label="Weitere Kontaktdaten" v-model="myFuneral.relative_contact_data"
+                        name="relative_contact_data"/>
                     </tab>
                     <tab id="interview" :active-tab="activeTab">
-                        <form-group label="Trauergespräch" :is-checked-item="true" :value="myFuneral.appointment">
+                        <form-group label="Trauergespräch" :is-checked-item="true" :value="myFuneral.appointment" name="appointment">
                             <date-picker v-model="myFuneral.appointment" :config="myDateTimePickerConfig"/>
                         </form-group>
-                        <form-textarea label="Anwesende" v-model="myFuneral.attending"/>
+                        <form-textarea label="Anwesende" v-model="myFuneral.attending" name="attending"/>
                         <hr/>
                         <div class="row">
                             <div class="col-md-4">
-                                <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents"/>
-                                <form-textarea label="Ehepartner" v-model="funeral.spouse"/>
-                                <form-textarea label="Kinder" v-model="funeral.children"/>
-                                <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family"/>
+                                <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents" name="parents"/>
+                                <form-textarea label="Ehepartner" v-model="funeral.spouse" name="spouse"/>
+                                <form-textarea label="Kinder" v-model="funeral.children" name="children"/>
+                                <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family" name="further_family"/>
                                 <hr/>
-                                <form-textarea label="Taufe" v-model="funeral.baptism"/>
-                                <form-textarea label="Konfirmation" v-model="funeral.confirmation"/>
+                                <form-textarea label="Taufe" v-model="funeral.baptism" name="baptism"/>
+                                <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation"/>
                             </div>
                             <div class="col-md-4">
-                                <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood"/>
-                                <form-input label="Beruf" v-model="myFuneral.profession"/>
-                                <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life"/>
-                                <form-textarea label="Heirat, Familie" v-model="funeral.family"/>
-                                <form-textarea label="Weiterer Lebenslauf" v-model="funeral.further_life"/>
-                                <form-textarea label="Lebensende" v-model="funeral.death"/>
+                                <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood" name="childhood"/>
+                                <form-input label="Beruf" v-model="myFuneral.profession" name="profession"/>
+                                <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life" name="professional_life"/>
+                                <form-textarea label="Heirat, Familie" v-model="funeral.family" name="family"/>
+                                <form-textarea label="Weiterer Lebenslauf" v-model="funeral.further_life" name="further_life"/>
+                                <form-textarea label="Lebensende" v-model="funeral.death" name="death"/>
                                 <hr/>
                                 <form-textarea label="Prägende Erlebnisse, Hobbies, Interessen"
-                                               v-model="funeral.events"/>
-                                <form-textarea label="Charakter" v-model="funeral.character"/>
-                                <form-textarea label="Glaube, Frömmigkeit, Kirche" v-model="funeral.faith"/>
+                                               v-model="funeral.events" name="events"/>
+                                <form-textarea label="Charakter" v-model="funeral.character" name="character"/>
+                                <form-textarea label="Glaube, Frömmigkeit, Kirche" v-model="funeral.faith" name="faith"/>
                                 <hr/>
-                                <form-textarea label="Zitate" v-model="funeral.quotes"/>
+                                <form-textarea label="Zitate" v-model="funeral.quotes" name="quotes"/>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
