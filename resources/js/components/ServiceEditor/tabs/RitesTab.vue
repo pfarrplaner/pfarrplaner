@@ -50,7 +50,7 @@
         <hr />
         <div id="rites-buttons">
             <a class="btn btn-default btn-light btn-rite" :href="route('wedding.add', service.id)">Trauung hinzufügen</a>
-            <a class="btn btn-default btn-light btn-rite" :href="route('baptism.add', service.id)">Taufe hinzufügen</a>
+            <inertia-link class="btn btn-default btn-light btn-rite" :href="route('baptism.add', service.id)">Taufe hinzufügen</inertia-link>
             <a class="btn btn-default btn-light btn-rite" :href="route('funeral.add', service.id)">Bestattung hinzufügen</a>
         </div>
     </div>
