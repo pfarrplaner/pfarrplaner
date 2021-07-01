@@ -272,6 +272,8 @@ class ServiceController extends Controller
             }
         }
 
+        $service->refresh();
+
         $closeAfterSaving = $request->get('closeAfterSaving', 1);
         if ($closeAfterSaving) {
             $route = $request->get('routeBack') ?: '';

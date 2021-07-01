@@ -38,6 +38,7 @@ use Carbon\Carbon;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -157,13 +158,24 @@ class KonfiAppIntegration extends AbstractIntegration
     {
         if ($service->konfiapp_event_type != '') {
             if ($service->konfiapp_event_qr == '') {
-                $service->update(['konfiapp_event_qr' => $this->createQRCode($service)]);
+                Log::debug('Updating service #'.$service->id.', no KonfiApp QR set yet.');
+                $code = $this->createQRCode($service);
+                Log::debug('Got code '.$code);
+                $service->update(['konfiapp_event_qr' => $code]);
+                $service->refresh();
+                Log::debug('Updated service to code '.$service->konfiapp_event_qr);
             } elseif ($service->konfiapp_event_type != $requestedChange) {
                 // change of event type: old qr needs to be deleted first
+                Log::debug('Updating service #'.$service->id.', changed KonfiApp event type from '.$service->konfiapp_event_type.' to '.$requestedChange);
+                Log::debug('Deleting old KonfiApp QR code '.$service->konfiapp_event_qr);
                 $this->deleteQRCodeByCode($service->konfiapp_event_qr, $service->konfiapp_event_type);
+                $code = $this->createQRCode($service);
+                Log::debug('Got code '.$code);
                 $service->update(
-                    ['konfiapp_event_type' => $requestedChange, 'konfiapp_event_qr' => $this->createQRCode($service)]
+                    ['konfiapp_event_type' => $requestedChange, 'konfiapp_event_qr' => $code]
                 );
+                $service2 = Service::find($service->id);
+                Log::debug('Updated service to code '.$service2->konfiapp_event_qr);
             }
         }
         return $service;

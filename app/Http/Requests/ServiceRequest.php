@@ -99,7 +99,6 @@ class ServiceRequest extends FormRequest
             'sermon_reference' => 'nullable|string',
             'sermon_description' => 'nullable|string',
             'konfiapp_event_type' => 'nullable|int',
-            'konfiapp_event_qr' => 'nullable|string',
             'hidden' => 'nullable|int|in:0,1',
             'needs_reservations' => 'nullable|int|in:0,1',
             'exclude_sections' => 'nullable|string',
