@@ -106,7 +106,7 @@ export default {
     props: ['funeral', 'showService', 'showPastor'],
     methods: {
         deleteFuneral() {
-            this.$inertia.delete('funerals.destroy', {funeral: this.funeral.id});
+            this.$inertia.delete(route('funerals.destroy', {funeral: this.funeral.id}), {preserveState: false});
         },
         downloadForm() {
             window.location.href = route('funeral.form', {funeral: this.funeral.id});

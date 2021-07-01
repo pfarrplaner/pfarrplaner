@@ -94,7 +94,7 @@ export default {
     props: ['wedding', 'showService', 'showPastor'],
     methods: {
         deleteWedding() {
-            this.$inertia.delete('weddings.destroy', {wedding: this.wedding.id});
+            this.$inertia.delete(route('weddings.destroy', {wedding: this.wedding.id}), {preserveState: false});
         }
     }
 

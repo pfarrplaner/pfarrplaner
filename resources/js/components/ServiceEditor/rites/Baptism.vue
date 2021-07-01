@@ -109,7 +109,7 @@ export default {
     },
     methods: {
         deleteBaptism() {
-            this.$inertia.delete('baptisms.destroy', {baptism: this.baptism.id});
+            this.$inertia.delete(route('baptisms.destroy', {baptism: this.baptism.id}), {preserveState: false});
         }
     }
 
