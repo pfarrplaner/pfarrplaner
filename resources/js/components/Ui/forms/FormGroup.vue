@@ -31,7 +31,7 @@
     <div class="form-group" :class="{'form-group-required' : required}">
         <value-check v-if="isCheckedItem" :value="value" />
         <label v-if="label" :for="id+'Input'" class="control-label"><span v-if="preLabel" :class="['fa', 'fa-'+preLabel]"></span> {{ label }}</label>
-        <slot :error="error" />
+        <slot />
         <small v-if="error" :key="error" class="invalid-feedback">{{ error || false }}</small>
         <div v-else><small v-if="help" class="form-text text-muted">{{ help }}</small></div>
     </div>
@@ -62,6 +62,11 @@ export default {
                     this.$forceUpdate();
                 }
             }
+        },
+        '$page.props.errors': function(newVal) {
+            this.errors = this.$page.props.errors;
+            this.error = this.errors[this.name] || false;
+            this.$forceUpdate();
         }
     }
 }

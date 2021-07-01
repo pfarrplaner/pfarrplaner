@@ -29,7 +29,7 @@
 
 <template>
     <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
-        <textarea class="form-control" :class="{'is-invalid': error}" :rows="rows" v-model="myValue" :id="myId+'Input'"
+        <textarea class="form-control" :class="{'is-invalid': $page.props.errors[name]}" :rows="rows" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled"
                @input="$emit('input', $event.target.value)" />
     </form-group>

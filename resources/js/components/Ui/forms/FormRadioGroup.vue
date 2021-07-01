@@ -32,10 +32,13 @@
         <span v-if="preLabel"><span :class="['fa', 'fa-'+preLabel]"></span> </span><label>{{ label }}</label>
         <div>
             <div class="form-check form-check-inline" v-for="(subLabel,value,index) in items" :key="value">
-                <input class="form-check-input" type="radio" :name="name" :id="'radio'+myId+index" :value="value"
+                <input class="form-check-input"
+                       :class="{'is-invalid': $page.props.errors[name]}"
+                       type="radio" :name="name" :id="'radio'+myId+index" :value="value"
                        v-model="myValue" :disabled="disabled"
                        @input="changed($event)">
                 <label class="form-check-label" :for="'radio'+myId+index">{{ subLabel }}</label>
+                <div v-if="$page.props.errors[name]" class="invalid-feedback">{{ $page.props.errors[name] }}</div>
             </div>
         </div>
     </div>
