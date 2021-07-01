@@ -96,7 +96,8 @@ class BaptismController extends Controller
                 'signed' => false,
                 'docs_ready' => false,
                 'docs_where' => '',
-                'service_id' => $serviceId
+                'service_id' => $serviceId,
+                'city_id' => ($service ? $service->city_id : null),
             ]
         );
         return redirect()->route('baptisms.edit', $baptism->id);
