@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.62.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.61.0...v1.62.0) (2021-07-01)
+
+
+### Features
+
+* Automatically create a vacation request form for an absence ([6bb381f](https://github.com/pfarrplaner/pfarrplaner/commits/6bb381ff46de2d5710de9f88dc98ea7722074a24))
+
+
+### Bug Fixes
+
+* cannot delete attached baptisms/funerals/weddings ([431e6af](https://github.com/pfarrplaner/pfarrplaner/commits/431e6af057d917dbc31f6d89c1f505040c48b4cf))
+* Date range input missing on MultipleServicesInput ([c51d013](https://github.com/pfarrplaner/pfarrplaner/commits/c51d01306e0d83893d8e1cef288157a276664da6))
+* KonfiAppIntegration fails to save new qr code ([2f91efd](https://github.com/pfarrplaner/pfarrplaner/commits/2f91efd0ef19d99b0c91699a4dde07783378bee1))
+* Newly created baptisms are not pre-associated to the correct city ([c8b229d](https://github.com/pfarrplaner/pfarrplaner/commits/c8b229dc4f7d7139760187b4fe6e1ad83bb6e1a1))
+* validation errors do not show ([156fb1b](https://github.com/pfarrplaner/pfarrplaner/commits/156fb1bfdad95cc40317d0607823748e2010cac6))
+
 ## [1.61.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.60.5...v1.61.0) (2021-06-25)
 
 
