@@ -80,6 +80,10 @@ class LeaveRequestFormReport extends AbstractPDFDocumentReport
 
         $data['duration'] = $data['absence']->to->diff($data['absence']->from)->days+1;
 
+        $packageConfig = json_decode(file_get_contents(base_path('package.json')), true);
+        $data['version'] = $packageConfig['version'];
+
+
         $fileName = $data['absence']->from->format('Ymd')
             . ($data['absence']->to != $data['absence']->from ? '-' . $data['absence']->to->format('Ymd') : '')
             . ' Urlaubsantrag ' . Auth::user()->name . '.pdf';

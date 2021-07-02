@@ -4,6 +4,8 @@
     <style>
         @page {
             margin: 1.5cm 2.7cm 1.5cm 2.7cm;
+            odd-footer-name: html_PageFooter;
+            even-footer-name: html_PageFooter;
         }
 
         body {
@@ -48,6 +50,13 @@
             text-decoration: underline;
         }
 
+        .footer {
+            width: 100%;
+            text-align: right;
+            font-size: .5em;
+            color: darkgray;
+        }
+
     </style>
 </head>
 <body>
@@ -67,7 +76,7 @@
             <td>,</td>
             <td>
                 <div class="input-wrapper"  style="width: 27mm;">
-                    <input type="text" name="date" value="{{ \Carbon\Carbon::now()->format('d.m.Y') }}"  style="width: 27mm;"/>
+                    <input type="text" name="date" value="{{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->format('d.m.Y') }}"  style="width: 27mm;"/>
                 </div>
             </td>
         </tr>
@@ -285,7 +294,7 @@
             <td style="width: 43mm;">Restanspruch {{ $year }}: </td>
             <td style="width: 43mm; padding-bottom: 2px;">
                 <span class="input-wrapper" style="width: 14mm;">
-                    <input type="text" name="rest{{ $year }}" value="" style="width: 14mm;" />
+                    <input type="text" name="rest{{ $year }}" value="" style="width: 14mm; text-align: right" />
                 </span>
                 Kalendertage
             </td>
@@ -293,5 +302,11 @@
         @endfor
     </table>
 </form>
+<htmlpagefooter name="PageFooter">
+    <div class="footer">
+        Automatisch erstellt mit Pfarrplaner v{{ $version }} für {{ Auth::user()->name }} ({{ \Carbon\Carbon::now()->setTimezone('Europe/Berlin')->format('d.m.Y H:i:s') }})
+    </div>
+</htmlpagefooter>
+
 </body>
 </html>
