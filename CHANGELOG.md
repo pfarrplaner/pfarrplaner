@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.63.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.62.0...v1.63.0) (2021-07-02)
+
+
+### Features
+
+* Add TravelRequestFormReport ([2bbda0d](https://github.com/pfarrplaner/pfarrplaner/commits/2bbda0de30e01ea2dad18ba9ebc65bb6b70d9b27))
+* Show button for vacation request in AbsencesTab ([1bcf7b5](https://github.com/pfarrplaner/pfarrplaner/commits/1bcf7b5caf7c397a3ca65e6bbb1af46fc987c4b7))
+
 ## [1.62.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.61.0...v1.62.0) (2021-07-01)
 
 
