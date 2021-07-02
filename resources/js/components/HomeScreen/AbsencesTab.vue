@@ -53,6 +53,10 @@
                         <a class="btn btn-primary" :href="route('absences.edit', absence.id)" title="Eintrag bearbeiten">
                             <span class="fa fa-edit"></span>
                         </a>
+                        <a class="btn btn-light" title="Urlaubsantrag erstellen"
+                           :href="route('reports.render', {report: 'leaveRequestForm', absence: absence.id})">
+                            Urlaubsantrag
+                        </a>
                     </div>
                 </div>
             </fake-table>
