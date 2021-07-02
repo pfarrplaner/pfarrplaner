@@ -37,11 +37,11 @@
         <div v-if="absences.length == 0" class="alert alert-info">Zur Zeit hast du keinen Urlaub geplant.</div>
         <div v-else>
             <h3>Urlaub / Abwesenheit</h3>
-            <fake-table :columns="[3,3,4,2]" :headers="['Zeitraum', 'Beschreibung', 'Vertretung', '']"
+            <fake-table :columns="[2,3,4,3]" :headers="['Zeitraum', 'Beschreibung', 'Vertretung', '']"
                         collapsed-header="Abwesenheiten">
                 <div v-for="(absence,absenceIndex) in absences" :key="'absence_'+absenceIndex"
                      class="row mb-3 p-1" :class="{'stripe-odd': (absenceIndex % 2 == 0)}">
-                    <div class="col-md-3">{{ absence.durationText }}</div>
+                    <div class="col-md-2">{{ absence.durationText }}</div>
                     <div class="col-md-3">{{ absence.reason }}</div>
                     <div class="col-md-4">{{ absence.replacementText }}
                         <div v-if="absence.replacement_notes" style="font-size: 0.8em;">
@@ -49,14 +49,29 @@
                             {{ absence.replacement_notes }}
                         </div>
                     </div>
-                    <div class="col-md-2 text-right">
+                    <div class="col-md-3 text-right">
                         <a class="btn btn-primary" :href="route('absences.edit', absence.id)" title="Eintrag bearbeiten">
                             <span class="fa fa-edit"></span>
                         </a>
-                        <a class="btn btn-light" title="Urlaubsantrag erstellen"
-                           :href="route('reports.render', {report: 'leaveRequestForm', absence: absence.id})">
-                            Urlaubsantrag
-                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-light dropdown-toggle m-1" type="button" id="dropdownMenuButton"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                    title="Dokumente herunterladen">
+                                <span class="fa fa-download"></span>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" title="Urlaubsantrag erstellen"
+                                   :href="route('reports.render', {report: 'leaveRequestForm', absence: absence.id})">
+                                    Urlaubsantrag
+                                </a>
+                                <a class="dropdown-item" title="Dienstreiseantrag erstellen"
+                                   :href="route('reports.render', {report: 'travelRequestForm', absence: absence.id})">
+                                    Dienstreiseantrag
+                                </a>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </fake-table>

@@ -38,9 +38,17 @@
                 <span class="d-inline d-md-none fa fa-trash"></span>
                 <span class="d-none d-md-inline">Löschen</span>
             </button>
-            <button @click="requestForm" class="btn btn-light ml-1" title="Urlaubsantrag öffnen">
-                Antragsformular
-            </button>
+            <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle m-1" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        title="Dokumente herunterladen">
+                    <span class="fa fa-download"></span> Anträge
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" @click.prevent="leaveRequestForm">Urlaubsantrag</a>
+                    <a class="dropdown-item" href="#" @click.prevent="travelRequestForm">Dienstreiseantrag</a>
+                </div>
+            </div>
         </template>
         <card>
             <card-header>Informationen zum Urlaub</card-header>
@@ -128,8 +136,11 @@ export default {
                 year: this.year, month: this.month
             }));
         },
-        requestForm() {
+        leaveRequestForm() {
             window.location.href = route('reports.render.get', {report: 'leaveRequestForm', absence: this.myAbsence.id});
+        },
+        travelRequestForm() {
+            window.location.href = route('reports.render.get', {report: 'travelRequestForm', absence: this.myAbsence.id});
         }
     }
 }
