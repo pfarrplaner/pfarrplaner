@@ -73,6 +73,10 @@ class HandleInertiaRequests extends Middleware
             'appName' => config('app.name'),
         ]);
 
+        $packageConfig = json_decode(file_get_contents(base_path('package.json')), true);
+        $version = $packageConfig['version'];
+
+
         if (!Auth::guest()) {
             $data = array_merge($data, [
                 'currentUser' => fn () => $request->user()
@@ -81,6 +85,7 @@ class HandleInertiaRequests extends Middleware
                 'menu' => fn() => MenuBuilder::sidebar(),
                 'currentRoute' => fn() => Route::currentRouteName(),
                 'settings' => fn() => Settings::all(Auth::user()),
+                'version' => $version,
             ]);
         }
 
