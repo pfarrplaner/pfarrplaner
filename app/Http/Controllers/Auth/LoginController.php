@@ -70,7 +70,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware('guest')->except(['logout','keepTokenAlive']);
     }
 
     /**
@@ -94,6 +94,11 @@ class LoginController extends Controller
 
     public function setInitialPassword() {
 
+    }
+
+    public function keepTokenAlive()
+    {
+        return csrf_token();
     }
 
 }

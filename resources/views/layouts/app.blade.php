@@ -263,5 +263,44 @@
         })();
     </script>
 @endif
+<script>
+    var csrfTokenTimeoutTarget;
+    var refreshCsrfTokenTimeout;
+
+    handleNewCsrfToken();
+
+    // Use visbility API to make sure the token gets updated in time, even when the device went to sleep.
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible') {
+            setTimeoutToRefreshCsrfToken();
+        } else if (document.visibilityState === 'hidden') {
+            clearTimeout(refreshCsrfTokenTimeout);
+        }
+    });
+
+    function handleNewCsrfToken() {
+        updateCsrfTokenTimeoutTarget();
+        setTimeoutToRefreshCsrfToken();
+    }
+
+    function updateCsrfTokenTimeoutTarget() {
+        csrfTokenTimeoutTarget = moment().add(2, 'hour').subtract(5, 'minute');
+    }
+
+    function setTimeoutToRefreshCsrfToken() {
+        refreshCsrfTokenTimeout = setTimeout(refreshCsrfToken, csrfTokenTimeoutTarget.diff());
+    }
+
+    function refreshCsrfToken() {
+        axios.get('/csrf-token').then(function(response) {
+            window.Laravel.csrfToken = response.data;
+            document.getElementsByName('_token').forEach(function(element) {
+                element.value = response.data;
+
+                handleNewCsrfToken();
+            });
+        });
+    }
+</script>
 </body>
 </html>

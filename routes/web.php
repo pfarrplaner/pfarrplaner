@@ -357,3 +357,6 @@ Route::get('/manual/{routeName}', 'ManualController@page')->name('manual');
 
 // bible texts
 Route::get('/bible/text/{reference}/{version?}', 'BibleController@text')->name('bible.text');
+
+// csrf token: keep alive
+Route::get('/csrf-token', 'Auth\\LoginController@keepTokenAlive')->name('csrf.keepalive');
