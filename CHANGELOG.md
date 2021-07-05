@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.64.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.63.0...v1.64.0) (2021-07-05)
+
+
+### Features
+
+* CommuniApp integration updated to respect publishing delays ([804b120](https://github.com/pfarrplaner/pfarrplaner/commits/804b1209d3d2ccecde586d86dc5634e8f6b5b121))
+
+
+### Bug Fixes
+
+* cc_alt_time input has wrong format, producing validation errors ([a390d9d](https://github.com/pfarrplaner/pfarrplaner/commits/a390d9d1fe0ca91dd767a563f888e50f378ddf89))
+* Debug logging produces error on CommuniApp updates ([75bdb4f](https://github.com/pfarrplaner/pfarrplaner/commits/75bdb4f412f89466a3424acf9f3f0f7108092ad8))
+* Forms expire when tab remains inactive too long ([59f6a97](https://github.com/pfarrplaner/pfarrplaner/commits/59f6a97684ef73c00ca1e76420f86cd1787abf2d))
+
 ## [1.63.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.62.0...v1.63.0) (2021-07-02)
 
 
