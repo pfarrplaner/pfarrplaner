@@ -97,13 +97,10 @@ class CommuniAppIntegration extends AbstractIntegration
     public function handleServiceCreated(Service $service)
     {
         if (!$this->mayPublish($service))  {
-            Log::debug('CommuniApp service for #'.$service->id, $this->getServiceArray($service). ' not to be published.');
             return;
         }
 
-        Log::debug('Creating CommuniApp service #'.$service->id, $this->getServiceArray($service));
         $response = $this->client->post(self::ROUTE_EVENT, ['body' => json_encode($this->getServiceArray($service))]);
-        Log::debug('Got response ', (array)$response);
         if ($response->getStatusCode() == 200) {
             $service->update(['communiapp_id' => json_decode($response->getBody())->id]);
         }
@@ -112,17 +109,14 @@ class CommuniAppIntegration extends AbstractIntegration
     public function handleServiceUpdated(Service $service)
     {
         if (!$this->mayPublish($service))  {
-            Log::debug('CommuniApp service for #'.$service->id, $this->getServiceArray($service). ' not to be published.');
             return;
         }
 
         if (!$service->communiapp_id) {
             return $this->handleServiceCreated($service);
         };
-        Log::debug('Updating CommuniApp service for #'.$service->id, $this->getServiceArray($service));
         $response = $this->client->put(sprintf('%s/%s', self::ROUTE_EVENT, $service->communiapp_id),
                                        ['body' => json_encode($this->getServiceArray($service))]);
-        Log::debug('Got response ', (array)$response);
     }
 
     public function mayPublish(Service $service) {
@@ -155,7 +149,6 @@ class CommuniAppIntegration extends AbstractIntegration
     public function handleserviceDeleted(Service $service)
     {
         if (!$service->communiapp_id) return;
-        Log::debug('Deleting CommuniApp service for #'.$service->id, $this->getServiceArray($service));
         $response = $this->client->delete(sprintf('%s/%s', self::ROUTE_EVENT, $service->communiapp_id));
         $service->update(['communiapp_id' => null]);
     }
