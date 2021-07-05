@@ -83,8 +83,12 @@ export default {
         }
     },
     data() {
+        var myService = this.service;
+        myService.cc_alt_time = myService.cc_alt_time ? myService.cc_alt_time.substr(0,5) : null;
+
+
         return {
-            myService: this.service,
+            myService: myService,
         }
     },
     methods: {}
