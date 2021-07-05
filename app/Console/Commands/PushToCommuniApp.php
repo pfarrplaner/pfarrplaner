@@ -8,6 +8,7 @@ use App\Integrations\CommuniApp\CommuniAppIntegration;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class PushToCommuniApp extends Command
 {
@@ -48,16 +49,36 @@ class PushToCommuniApp extends Command
                 $communiApp = CommuniAppIntegration::get($city);
                 $services = Service::notHidden()
                     ->inCity($city)
+                    ->notHidden()
                     ->whereDoesntHave('funerals')
                     ->whereDoesntHave('weddings')
-                    ->startingFrom(Carbon::now())
+                    ->where(function($query) {
+                        $query->where(function ($q) {
+                            $q->whereNull('communiapp_listing_start')
+                                ->startingFrom(Carbon::now())
+                                ->endingAt(Carbon::now()->addDays(8));
+                        })
+                        ->orWhere(function ($q) {
+                            $q->whereNotNull('communiapp_listing_start')
+                                ->startingFrom(Carbon::now())
+                                ->where('communiapp_listing_start', '<=', Carbon::now());
+                        });
+                    })
                     ->ordered()
                     ->get();
                 foreach ($services as $service) {
-                    $this->line('Updating service #'.$service->id);
+                    $this->line('Updating service #'.$service->id.' ('.$service->dateTime->setTimeZone('Europe/Berlin')->format('d.m.Y H:i').')');
                     $communiApp->handleServiceUpdated($service);
                 }
             }
         }
     }
+
+    public function line($string, $style = null, $verbosity = null)
+    {
+        Log::debug ($string);
+        parent::line($string, $style, $verbosity);
+    }
+
+
 }
