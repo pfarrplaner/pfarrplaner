@@ -41,6 +41,7 @@ use App\Liturgy\ItemHelpers\PsalmItemHelper;
 use App\Liturgy\ItemHelpers\SongItemHelper;
 use App\Liturgy\Replacement\Replacement;
 use App\Service;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Shared\Html;
 
 class SongSheetLiturgySheet extends AbstractLiturgySheet
@@ -60,6 +61,7 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
         $this->service = $service;
 
         $doc = new DefaultWordDocument();
+        $this->setProperties($doc);
 
         $doc->getSection()->addTitle($service->titleText(false)."<w:br />"
                                      .$service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
@@ -75,6 +77,19 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
         $filename = $service->dateTime()->format('Ymd-Hi') . ' ' . $this->getFileTitle();
         $doc->sendToBrowser($filename);
     }
+
+    protected function setProperties (DefaultWordDocument $doc) {
+        $properties = $doc->getPhpWord()->getDocInfo();
+        $properties->setCreator(Auth::user()->name);
+        $properties->setCompany(Auth::user()->office ?? '');
+        $properties->setTitle($this->getFileTitle());
+        $properties->setDescription($this->getFileTitle());
+        $properties->setCategory('Gottesdienste');
+        $properties->setLastModifiedBy(Auth::user()->name);
+        $properties->setSubject('Liedblatt');
+    }
+
+
 
     public function getFileTitle(): string
     {

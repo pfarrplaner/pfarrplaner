@@ -41,12 +41,15 @@ use App\Liturgy\ItemHelpers\PsalmItemHelper;
 use App\Liturgy\ItemHelpers\SongItemHelper;
 use App\Liturgy\Replacement\Replacement;
 use App\Service;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Shared\Html;
 
 class FullTextLiturgySheet extends AbstractLiturgySheet
 {
     protected $title = 'Volltext';
     protected $icon = 'fa fa-file-word';
+
+    /** @var Service $service  */
     protected $service = null;
     protected $extension = 'docx';
     protected $configurationPage = 'Liturgy/LiturgySheets/FullTextSongSheetConfiguration';
@@ -67,6 +70,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         $this->service = $service;
 
         $doc = new DefaultA5WordDocument();
+        $this->setProperties($doc);
 
         $doc->getSection()->addTitle($service->titleText(false)."<w:br />"
                                          .$service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
@@ -85,9 +89,20 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         $doc->sendToBrowser($filename);
     }
 
+    protected function setProperties (DefaultWordDocument $doc) {
+        $properties = $doc->getPhpWord()->getDocInfo();
+        $properties->setCreator(Auth::user()->name);
+        $properties->setCompany(Auth::user()->office ?? '');
+        $properties->setTitle($this->getFileTitle());
+        $properties->setDescription($this->getFileTitle().' ('.$this->title.')');
+        $properties->setCategory('Gottesdienste');
+        $properties->setLastModifiedBy(Auth::user()->name);
+        $properties->setSubject('Komplette Liturgie');
+    }
+
     public function getFileTitle(): string
     {
-        return 'Gottesdienst' . (($this->service) && ($this->service->sermon) ? ' - ' . $this->service->sermon->fullTitle : '');
+        return 'Gottesdienst' . (($this->service) && ($this->service->sermon) ? ' - ' . $this->service->sermon->title : '');
     }
 
     protected function renderFreetextItem(DefaultWordDocument $doc, Item $item)
