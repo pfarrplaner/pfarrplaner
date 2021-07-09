@@ -31,44 +31,81 @@
 namespace App\Liturgy\LiturgySheets;
 
 
-
-use App\Broadcast;
+use App\Documents\Word\DefaultA5WordDocument;
+use App\Documents\Word\DefaultWordDocument;
+use App\Liturgy\Bible\BibleText;
+use App\Liturgy\Bible\ReferenceParser;
+use App\Liturgy\Item;
+use App\Liturgy\ItemHelpers\LiturgicItemHelper;
+use App\Liturgy\ItemHelpers\PsalmItemHelper;
+use App\Liturgy\ItemHelpers\SongItemHelper;
+use App\Liturgy\Replacement\Replacement;
 use App\Service;
-use Illuminate\Support\Facades\Auth;
-use PDF;
+use PhpOffice\PhpWord\Shared\Html;
 
 class SongSheetLiturgySheet extends AbstractLiturgySheet
 {
+    protected $title = 'Liedblatt';
+    protected $icon = 'fa fa-file-word';
+    protected $service = null;
+    protected $extension = 'docx';
 
-    protected $title = 'Liedblatt (DIN A4)';
-    protected $icon = 'fa fa-file-pdf';
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     public function render(Service $service)
     {
-        $pdf = PDF::loadView(
-            $this->getRenderViewName(),
-            array_merge(compact('service'), $this->getData($service)),
-            [],
-            array_merge(
-                [
-                    'author' => isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email,
-                ],
-                $this->layout,
-            ),
-            $this->layout
-        );
+        $this->service = $service;
 
-        $storageName = 'attachments/'.md5(time()).'.pdf';
-        $content = $pdf->save(storage_path('app/'.$storageName));
+        $doc = new DefaultWordDocument();
 
-        $service->update(['songsheet' => $storageName]);
-        if (($service->youtube_url != '') && ($service->city->google_access_token != '')) {
-            Broadcast::get($service)->update();
+        $doc->getSection()->addTitle($service->titleText(false)."<w:br />"
+                                     .$service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
+                                     .$service->locationText(), 1);
+
+        foreach ($service->liturgyBlocks as $block) {
+            foreach ($block->items as $item) {
+                if (method_exists($this, ($method = 'render' . ucfirst($item->data_type . 'Item')))) {
+                    $this->$method($doc, $item);
+                }
+            }
         }
-
-        $fileName = $service->dateTime()->format('Ymd-Hi').' Lieder und Texte.pdf';
-        return $pdf->download($fileName);
+        $filename = $service->dateTime()->format('Ymd-Hi') . ' ' . $this->getFileTitle();
+        $doc->sendToBrowser($filename);
     }
 
+    public function getFileTitle(): string
+    {
+        return 'Liedblatt';
+    }
+
+    protected function renderPsalmItem(DefaultWordDocument $doc, Item $item)
+    {
+        if (!$item->data['psalm']['text']) return;
+        /** @var PsalmItemHelper $helper */
+        $helper = $item->getHelper();
+        $doc->getSection()->addTitle($helper->getTitleText(),3);
+        $doc->renderNormalText($item->data['psalm']['text']);
+    }
+
+    protected function renderSongItem(DefaultWordDocument $doc, Item $item)
+    {
+        if (null === $item->data['song']) return;
+        /** @var SongItemHelper $helper */
+        $helper = $item->getHelper();
+        $doc->getSection()->addTitle($helper->getTitleText(),3);
+
+        foreach ($helper->getActiveVerses() as $verse) {
+            if ($verse['refrain_before']) {
+                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+            }
+            $doc->renderNormalText($verse['number'].'. '.$verse['text']);
+            if ($verse['refrain_after']) {
+                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+            }
+        }
+    }
 
 }
