@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.65.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.64.0...v1.65.0) (2021-07-09)
+
+
+### Features
+
+* Output SongSheetLiturgySheet as a word document ([7da72b7](https://github.com/pfarrplaner/pfarrplaner/commits/7da72b76b17e55c65036d5275f7d4eb3900f7ffa))
+* Set document properties on FullTextLiturgySheet, SongSheetLiturgySheet ([c5486e3](https://github.com/pfarrplaner/pfarrplaner/commits/c5486e34032c2d988c39a327a34f2b92487559b6))
+
+
+### Bug Fixes
+
+* Revert csrf timeout changes (caused 419 errors) ([a89a488](https://github.com/pfarrplaner/pfarrplaner/commits/a89a488cbfab45c3609f5d2ae58194df69c36bff))
+
 ## [1.64.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.63.0...v1.64.0) (2021-07-05)
 
 
