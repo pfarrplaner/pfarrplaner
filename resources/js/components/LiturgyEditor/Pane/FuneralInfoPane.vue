@@ -39,8 +39,13 @@
                     <span class="fa fa-copy" @click.prevent.stop="copyToClipboard"
                           title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
                 </div>
-                <div class="col-md-5">
+                <div class="col-md-2">
                     <bible-reference v-if="funeral.text" :liturgy="liturgy" liturgy-key="funeral" title="Text:"/>
+                </div>
+                <div class="col-md-3 text-right">
+                    <inertia-link class="btn btn-light btn-sm"
+                                  :href="route('funerals.edit', funeral.id)"
+                                  title="Beerdigung bearbeiten"><span class="fa fa-edit"></span></inertia-link>
                 </div>
             </div>
         </div>
