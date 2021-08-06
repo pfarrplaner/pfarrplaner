@@ -186,15 +186,15 @@
                                 <span class="fa fa-copy"></span> Adresse übernehmen
                             </button>
                         </div>
-                        <form-input v-model="myFuneral.relative_address" name="relative_address"
-                                    label="Adresse" help="Straße und Hausnummer" :key="myFuneral.relative_address"/>
+                        <form-input v-model="myFuneral.relative_address" name="relative_address"  :key="copied"
+                                    label="Adresse" help="Straße und Hausnummer"/>
                         <div class="row">
                             <div class="col-md-3">
-                                <form-input v-model="myFuneral.relative_zip" name="relative_zip"
-                                            label="Postleitzahl" type="number" :key="myFuneral.relative_zip"/>
+                                <form-input v-model="myFuneral.relative_zip" name="relative_zip" :key="copied"
+                                            label="Postleitzahl" type="number"/>
                             </div>
                             <div class="col-md-9">
-                                <form-input v-model="myFuneral.relative_city" :key="myFuneral.relative_city" name="relative_city"
+                                <form-input v-model="myFuneral.relative_city"  name="relative_city" :key="copied"
                                             label="Ort"/>
                             </div>
                         </div>
@@ -338,6 +338,7 @@ export default {
                 showClear: true,
             },
             myFuneral: myFuneral,
+            copied: 0,
             activeTab: 'home',
             textEditorActive: false,
             editorOption: {
@@ -365,6 +366,7 @@ export default {
             this.myFuneral.relative_address = this.myFuneral.buried_address;
             this.myFuneral.relative_zip = this.myFuneral.buried_zip;
             this.myFuneral.relative_city = this.myFuneral.buried_city;
+            this.copied++;
             this.$forceUpdate();
         },
         saveFuneral() {
