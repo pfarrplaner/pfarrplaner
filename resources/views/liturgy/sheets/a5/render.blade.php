@@ -253,15 +253,21 @@
                     <td valign="top"></td>
                 @elseif($item->data_type == 'song')
                     <td valign="top">
-                        {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
-                        {{ $item->data['song']['reference'] ?: '' }}
-                        {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                        @if(isset($item->data['song']))
+                            @if (isset($item->data['song']['songbook_abbreviation']) || isset($item->data['song']['songbook']))
+                                {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
+                            @endif
+                            {{ $item->data['song']['reference'] ?: '' }}
+                            {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                        @endif
                     </td>
                 @elseif($item->data_type == 'psalm')
                     <td valign="top">
-                        {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
-                        {{ $item->data['psalm']['reference'] ?: '' }}
-                        {{ $item->data['psalm']['title'] ?: '' }}
+                        @if(isset($item->data['psalm']))
+                            {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
+                            {{ $item->data['psalm']['reference'] ?: '' }}
+                            {{ $item->data['psalm']['title'] ?: '' }}
+                        @endif
                     </td>
                 @elseif($item->data_type == 'reading')
                     <td valign="top">{{ $item->data['reference'] }}</td>
