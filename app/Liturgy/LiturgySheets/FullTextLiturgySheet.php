@@ -72,7 +72,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         $doc = new DefaultA5WordDocument();
         $this->setProperties($doc);
 
-        $doc->getSection()->addTitle($service->titleText(false)."<w:br />"
+        $doc->getSection()->addTitle($service->titleText(false)."\n"
                                          .$service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
                                          .$service->locationText(), 1);
 

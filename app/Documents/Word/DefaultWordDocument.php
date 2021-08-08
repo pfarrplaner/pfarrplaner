@@ -36,6 +36,7 @@ use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\PhpWord;
+use PhpOffice\PhpWord\Settings;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\Style\Font;
@@ -56,6 +57,7 @@ class DefaultWordDocument
 
     public function __construct()
     {
+        Settings::setOutputEscapingEnabled(true);
         $this->phpWord = new PhpWord();
         $this->phpWord->getSettings()->setThemeFontLang(new Language(Language::DE_DE));
         $this->configureLayout();;
