@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.65.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.65.0...v1.65.1) (2021-08-08)
+
+
+### Features
+
+* Add edit button to FuneralInfoPane ([ca3fd53](https://github.com/pfarrplaner/pfarrplaner/commits/ca3fd53d1c43d9fa1834f1fc07a61c0b51fabfde)), closes [#116](https://github.com/pfarrplaner/pfarrplaner/issues/116)
+
+
+### Bug Fixes
+
+* A5LiturgySheet fails when songbook is not correctly set on a song/psalm ([6379abb](https://github.com/pfarrplaner/pfarrplaner/commits/6379abbfef0baf6bc0a1682ecaa0ad6e3d592bbb))
+* FullTextLiturgySheet produces invalid document when text contains ampersand ([a452828](https://github.com/pfarrplaner/pfarrplaner/commits/a4528282448ad523067e1d601b91dce62e733794))
+* Relative address fields lose focus after each character input ([6b82914](https://github.com/pfarrplaner/pfarrplaner/commits/6b829148ccecd75292bb883ce2ef483c6b41f21e)), closes [#71](https://github.com/pfarrplaner/pfarrplaner/issues/71)
+
 ## [1.65.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.64.0...v1.65.0) (2021-07-09)
 
 
