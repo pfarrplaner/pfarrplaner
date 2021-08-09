@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.65.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.65.1...v1.65.2) (2021-08-09)
+
+
+### Bug Fixes
+
+* MinistryRow does not select newly-created ministries in dropdown ([830d5b1](https://github.com/pfarrplaner/pfarrplaner/commits/830d5b1c77388913832171f0204d2fd991d7d9ab))
+
 ### [1.65.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.65.0...v1.65.1) (2021-08-08)
 
 
