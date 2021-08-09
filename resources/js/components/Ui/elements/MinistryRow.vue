@@ -30,9 +30,7 @@
 <template>
     <div class="row">
         <div class="col-md-6">
-            <selectize class="form-group" :name="'ministries['+index+']'+'[description]'" v-model="myDescription" :settings="settings">
-                <option v-for="ministry in myMinistries" :value="ministry.category">{{ ministry.category }}</option>
-            </selectize>
+            <selectize class="form-group" :name="'ministries['+index+']'+'[description]'" v-model="myDescription" :settings="settings" />
         </div>
         <div class="col-md-5">
             <people-select :name="'ministries['+index+']'+'[people][]'" v-model="myMembers"
@@ -72,7 +70,13 @@ export default {
             myMembers: this.members,
             store: this.value,
             settings: {
-                create: true,
+                searchField: ['category'],
+                labelField: 'category',
+                valueField: 'category',
+                options: myMinistries,
+                create: function(input) {
+                    return {category: input};
+                },
                 render: {
                     option_create: function (data, escape) {
                         return '<div class="create">Neuen Dienst anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
