@@ -19,9 +19,6 @@
                         @tabheader(['id' => 'profile', 'title' => 'Profil', 'active' => $tab == '']) @endtabheader
                         @tabheader(['id' => 'notifications', 'title' => 'Benachrichtigungen', 'active' => $tab == 'notifications']) @endtabheader
                         @tabheader(['id' => 'homescreen', 'title' => 'Startbildschirm', 'active' => $tab == 'homescreen']) @endtabheader
-                        @if (strpos($user->email, '@elkw.de') !== false)
-                            @tabheader(['id' => 'calendars', 'title' => 'Verbundene Kalender', 'active' => $tab == 'calendars']) @endtabheader
-                        @endif
                     @endtabheaders
 
                     @tabs
@@ -73,19 +70,6 @@
                             @endforeach
                         @endtab
                         @include('users.profile.homescreen')
-                        @if (strpos($user->email, '@elkw.de') !== false)
-                            @tab(['id' => 'calendars', 'active' => $tab == 'calendars'])
-                                <p>Wenn du ein elkw.de-Konto hast, kannst du hier Kalender aus deinem Outlook oder auf dem Sharepoint verbinden.
-                                    Diese werden dann automatisch mit den hier angelegten Gottesdiensten befüllt.</p>
-                                @if(count($user->calendarConnections) == 0)
-                                    <p>Aktuell sind noch keine externen Kalender verbunden.</p>
-                                @else
-                                    @foreach($user->calendarConnections as $calendarConnection)
-                                    @endforeach
-                                @endif
-                                <a class="btn btn-success" href="{{ route('calendarConnection.create') }}"><span class="fa fa-plus"></span> Kalender verbinden</a>
-                            @endtab
-                        @endif
                     @endtabs
 
                 @endcomponent
