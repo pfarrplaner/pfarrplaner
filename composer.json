@@ -40,7 +40,7 @@
         "simplesoftwareio/simple-qrcode": "^4.1",
         "spatie/laravel-backup": "^6.11",
         "spatie/laravel-permission": "^3.13",
-        "staudenmeir/belongs-Refto-through": "^2.3",
+        "staudenmeir/belongs-to-through": "^2.3",
         "thybag/php-sharepoint-lists-api": "dev-master",
         "tightenco/ziggy": "^1.0",
         "ukfast/laravel-health-check": "^1.0",
