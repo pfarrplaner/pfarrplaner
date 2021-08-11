@@ -28,12 +28,12 @@
   -->
 
 <template>
-    <li :id="id+'Tab'" class="nav-item">
+    <li :id="id+'Tab'" class="nav-item" :title="disabled ? disabledTitle : ''">
         <span v-if="(!title) && (!icon)" class="nav-link fa fa-spin fa-spinner"></span>
-        <a v-else class="nav-link" :class="{active: active || (activeTab == id)}" :href="href || ('#'+id)" role="tab" data-toggle="tab">
+        <a v-else class="nav-link" :class="{active: (active || (activeTab == id)) && !disabled, disabled: disabled}" :href="href || ('#'+id)" role="tab" data-toggle="tab">
             <span v-if="icon" :class="icon"></span>
             {{ title }}
-            <span v-if="count && (count > 0)" class="badge" :class="badgeClass()">{{ count }}</span>
+            <span v-if="count && (count > 0) && (!disabled)" class="badge" :class="badgeClass()">{{ count }}</span>
             <value-check v-if="isCheckedItem" :value="checkValue" />
         </a>
     </li>
@@ -45,7 +45,7 @@ import ValueCheck from "../elements/ValueCheck";
 export default {
     name: "tabHeader",
     components: {ValueCheck},
-    props: ['id', 'active', 'activeTab', 'title', 'count', 'badgeType', 'icon', 'href', 'isCheckedItem', 'checkValue'],
+    props: ['id', 'active', 'activeTab', 'title', 'count', 'badgeType', 'icon', 'href', 'isCheckedItem', 'checkValue', 'disabled', 'disabledTitle'],
     methods: {
         badgeClass() {
             return this.badgeType ? 'badge-'+this.badgeType : 'badge-primary';
