@@ -35,10 +35,10 @@ use App\Facades\Settings;
 use App\HomeScreen\Tabs\HomeScreenTabFactory;
 use App\Location;
 use App\Misc\VersionInfo;
+use App\Replacement;
 use App\Service;
 use App\Services\RedirectorService;
 use App\User;
-use App\UserSetting;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Support\Renderable;
@@ -88,12 +88,24 @@ class HomeController extends Controller
     {
         RedirectorService::saveCurrentRoute();
         // check if the user still has a temp password
-        if (Hash::check('testtest', Auth::user()->password)) return redirect()->route('password.edit', ['from' => 'home']);
+        if (Hash::check('testtest', Auth::user()->password)) {
+            return redirect()->route('password.edit', ['from' => 'home']);
+        }
 
         $user = Auth::user()->load(['userSettings', 'roles', 'permissions']);
         $settings = Settings::all($user);
+        $replacements = [];
+        if ($settings['homeScreenConfig']['showReplacements']) {
+            $replacements = Replacement::with('absence')
+                ->whereHas('users', function($query) {
+                $query->where('user_id', Auth::user()->id);
+            })
+                ->where('from', '<=', Carbon::now())
+                ->where('to', '>=', Carbon::now())
+                ->get();
+        };
 
-        return Inertia::render('HomeScreen', compact('user', 'settings', 'activeTab'));
+        return Inertia::render('HomeScreen', compact('user', 'settings', 'activeTab', 'replacements'));
     }
 
     /**
@@ -122,7 +134,9 @@ class HomeController extends Controller
         $validatedData = $request->validate($rules);
         //Change Password
         Auth::user()->update(['password' => $validatedData['new_password']]);
-        if ($firstPassword) return redirect()->route('home')->with("success", "Dein Passwort wurde geändert.");
+        if ($firstPassword) {
+            return redirect()->route('home')->with("success", "Dein Passwort wurde geändert.");
+        }
         return redirect()->back()->with("success", "Dein Passwort wurde geändert.");
     }
 

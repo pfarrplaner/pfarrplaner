@@ -38,6 +38,15 @@
             <a v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('weddings.wizard')"><span class="fa fa-ring"></span>
                 <span class="d-none d-md-inline">Trauung anlegen...</span></a>&nbsp;
         </template>
+        <div v-if="settings.homeScreenConfig.showReplacements && (replacements.length > 0)" class="alert alert-info">
+            <div class="text-bold">Du vertrittst aktuell:</div>
+            <ul>
+                <li v-for="(replacement,replacementIndex) in replacements">
+                    {{ replacement.absence.user.name }} ({{ replacement.absence.reason }}, {{ moment(replacement.from).format('DD.MM.YYYY') }} - {{ moment(replacement.to).format('DD.MM.YYYY') }})
+                    <div v-if="replacement.absence.replacement_notes"><small><span class="text-bold">Hinweis: </span>{{ replacement.absence.replacement_notes }}</small></div>
+                </li>
+            </ul>
+        </div>
         <card>
             <card-header>
                 <tab-headers>
@@ -93,7 +102,7 @@ export default {
         AbsencesTab, BaptismsTab, CasesTab, FuneralsTab, MissingEntriesTab, NextOfferingsTab, NextServicesTab,
         RegistrationsTab, StreamingTab, WeddingsTab
     },
-    props: ['user', 'settings', 'activeTab'],
+    props: ['user', 'settings', 'activeTab', 'replacements'],
     beforeMount() {
         var index = 0;
         this.myTabsConfig.tabs.forEach(function (tab, tabIndex) {

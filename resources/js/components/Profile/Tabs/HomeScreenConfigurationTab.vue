@@ -29,6 +29,12 @@
 
 <template>
     <div class="homescreen-configruation-tab">
+        <div class="mb-3 p-1">
+            <form-check label="Schaltflächen für das schnelle Erstellen von Kasualien anzeigen"
+                        v-model="settings.homeScreenConfig.wizardButtons" />
+            <form-check label="Aktuell von mir vertretene Kollegen anzeigen"
+                        v-model="settings.homeScreenConfig.showReplacements" />
+        </div>
         <div class="row">
             <div class="col-md-9 pl-3">
                 <h3>Angezeigte Reiter</h3>
@@ -84,10 +90,12 @@ import FuneralsTabConfig from "../TabConfig/FuneralsTabConfig";
 import MissingEntriesTabConfig from "../TabConfig/MissingEntriesTabConfig";
 import StreamingTabConfig from "../TabConfig/StreamingTabConfig";
 import WeddingsTabConfig from "../TabConfig/WeddingsTabConfig";
+import FormCheck from "../../Ui/forms/FormCheck";
 
 export default {
-    name: "HomeScreenConfigurationTab",
+    name: "homeScreenConfigurationTab",
     components: {
+        FormCheck,
         draggable,
         NextServicesTabConfig,
         BaptismsTabConfig,
@@ -97,9 +105,13 @@ export default {
         StreamingTabConfig,
         WeddingsTabConfig,
     },
-    props: ['availableTabs', 'homeScreenTabsConfig', 'cities', 'locations', 'ministries'],
+    props: ['availableTabs', 'homeScreenTabsConfig', 'cities', 'locations', 'ministries', 'settings'],
+    created() {
+        if (!this.settings.homeScreenConfig) this.settings.homeScreenConfig = {};
+        if (!this.settings.homeScreenConfig.wizardButtons) this.settings.homeScreenConfig.wizardButtons = false;
+        if (!this.settings.homeScreenConfig.showReplacements) this.settings.homeScreenConfig.showReplacements = false;
+    },
     data() {
-
         this.homeScreenTabsConfig.tabs.forEach(tab => {
             tab['configVisible'] = false;
         })

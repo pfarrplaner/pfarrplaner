@@ -62,7 +62,7 @@
                         <home-screen-configuration-tab :available-tabs="availableTabs" :cities="cities"
                                                        :home-screen-tabs-config="homeScreenTabsConfig"
                                                        :locations="locations" :ministries="ministries"
-                        />
+                                                       :settings="settings" />
                     </tab>
                     <tab id="calendars" :active-tab="activeTab">
                         <calendar-connections-tab :user="user" :calendar-connections="calendarConnections"/>
@@ -90,7 +90,7 @@ import HomeScreenConfigurationTab from "../../components/Profile/Tabs/HomeScreen
 export default {
     name: "ProfileEditor",
     props: ['tab', 'user', 'calendarConnections', 'cities', 'subscriptions', 'availableTabs', 'homeScreenTabsConfig',
-        'locations', 'ministries'],
+        'locations', 'ministries', 'settings'],
     components: {
         HomeScreenConfigurationTab,
         SubscriptionsTab,
@@ -113,6 +113,7 @@ export default {
                 phone: this.user.phone,
                 subscriptions: this.subscriptions,
                 homeScreenTabsConfig: this.homeScreenTabsConfig,
+                settings: this.settings,
             };
             if (this.password.current && this.password.new && this.password.confirm) {
                 result['current_password'] = this.password.current;

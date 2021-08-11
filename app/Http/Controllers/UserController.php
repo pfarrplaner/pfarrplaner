@@ -32,6 +32,7 @@ namespace App\Http\Controllers;
 
 use App\CalendarConnection;
 use App\City;
+use App\Facades\Settings;
 use App\HomeScreen\Tabs\HomeScreenTabFactory;
 use App\Location;
 use App\Ministry;
@@ -228,6 +229,7 @@ class UserController extends Controller
 
         // homeScreenTabs
         $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig') ?? [];
+        $settings = Settings::all($user);
 
         $availableTabs = HomeScreenTabFactory::available();
 
@@ -249,23 +251,7 @@ class UserController extends Controller
                 'subscriptions',
                 'locations',
                 'ministries',
-            )
-        );
-
-        return view(
-            'users.profile',
-            compact(
-                'user',
-                'cities',
-                'sortedCities',
-                'unusedCities',
-                'calendarView',
-                'homeScreen',
-                'tab',
-                'homeScreenTabsActive',
-                'homeScreenTabsInactive',
-                'activeTabs',
-                'homeScreenTabsConfig'
+                'settings',
             )
         );
     }
@@ -293,9 +279,18 @@ class UserController extends Controller
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscriptions') ?: []);
 
+        // settings
+        if ($request->has('settings')) {
+            foreach ($request->get('settings', []) as $key => $setting) {
+                $user->setSetting($key, $setting);
+            }
+        }
+
         if ($request->has('homeScreenTabsConfig')) {
             $user->setSetting('homeScreenTabsConfig', $request->get('homeScreenTabsConfig'));
         }
+
+
 
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
