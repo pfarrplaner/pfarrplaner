@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CalendarConnection;
 use App\Calendars\Exchange\ExchangeCalendar;
 use App\Jobs\SyncEntireCalendarConnection;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -28,12 +29,11 @@ class CalendarConnectionController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return RedirectResponse
      */
     public function index()
     {
-        $calendarConnections = CalendarConnection::where('user_id', Auth::user()->id)->get();
-        return Inertia::render('CalendarConnections/Index', compact('calendarConnections'));
+        return redirect(route('user.profile', ['tab' => 'calendars']));
     }
 
     /**
