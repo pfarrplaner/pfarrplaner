@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use jamesiarmes\PhpEws\ArrayType\NonEmptyArrayOfItemChangeDescriptionsType;
 use jamesiarmes\PhpEws\Enumeration\BodyTypeType;
 use jamesiarmes\PhpEws\Enumeration\UnindexedFieldURIType;
+use jamesiarmes\PhpEws\Type\BodyContentType;
 use jamesiarmes\PhpEws\Type\BodyType;
 use jamesiarmes\PhpEws\Type\CalendarItemType;
 use jamesiarmes\PhpEws\Type\ItemChangeType;
@@ -16,6 +17,8 @@ use jamesiarmes\PhpEws\Type\PathToUnindexedFieldType;
 use jamesiarmes\PhpEws\Type\SetItemFieldType;
 use App\Calendars\AbstractCalendarItem;
 use App\Calendars\Exchange\Exceptions\CalendarNotSetException;
+use jamesiarmes\PhpEws\Type\TimeZoneDefinitionType;
+use jamesiarmes\PhpEws\Type\TimeZoneType;
 
 class ExchangeCalendarItem extends AbstractCalendarItem
 {
@@ -47,9 +50,15 @@ class ExchangeCalendarItem extends AbstractCalendarItem
         $event->End = $this->endDate->format('c');
         $event->Subject = $this->title ?: '';
         $event->Body = new BodyType();
+        $event->Body->BodyType = BodyTypeType::HTML;
         $event->Body->_ = $this->description ?: '';
-        $event->Body->BodyType = BodyTypeType::TEXT;
         $event->Location = $this->location;
+
+        // do not set reminder for past items!
+        if ($this->startDate <= Carbon::now()) {
+            $event->ReminderIsSet = false;
+        }
+
         return $event;
     }
 
@@ -102,19 +111,21 @@ class ExchangeCalendarItem extends AbstractCalendarItem
 
             switch ($key) {
                 case 'startDate':
-                    $field->CalendarItem->Start = $value->format('c');
+                    $field->CalendarItem->Start = is_object($value) ? $value->format('c') : $value;
                     break;
                 case 'endDate':
-                    $field->CalendarItem->End = $value->format('c');
+                    $field->CalendarItem->End = is_object($value) ? $value->format('c') : $value;
                     break;
                 case 'title':
-                    $field->CalendarItem->Subject = $value;
+                    $field->CalendarItem->Subject = $value ?? '';
                     break;
                 case 'description':
-                    $field->CalendarItem->Body->_ = $value;
+                    if (!$field->CalendarItem->Body) $field->CalendarItem->Body = new BodyType();
+                    $field->CalendarItem->Body->BodyType = BodyTypeType::HTML;
+                    $field->CalendarItem->Body->_ = $value ?? '';
                     break;
                 case 'location':
-                    $field->CalendarItem->Location = $value;
+                    $field->CalendarItem->Location = $value ?? '';
                     break;
             }
             $change->Updates->SetItemField[] = $field;

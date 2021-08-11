@@ -596,6 +596,20 @@ class Service extends Model
     }
 
     /**
+     * Get title plus some participants (for calendar entries)
+     * @param string[] $categories
+     * @return string
+     */
+    public function titleTextWithParticipants($categories = ['P', 'O', 'M'])
+    {
+        $participants = [];
+        foreach ($categories as $category) {
+            $participants[] = $category.': '.$this->participantsText($category);
+        }
+        return trim($this->titleText().' '.join(' ', $participants));
+    }
+
+    /**
      * @return string
      */
     public function weddingsText()

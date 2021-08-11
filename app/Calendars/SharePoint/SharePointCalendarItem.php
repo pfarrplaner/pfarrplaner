@@ -62,4 +62,14 @@ class SharePointCalendarItem extends AbstractCalendarItem
         if (null !== $this->calendar) $this->calendar->delete($this);
     }
 
+    public function setStartDate(Carbon $date): void
+    {
+        $this->startDate = $date->setTimezone('Europe/Berlin');
+    }
+
+    public function setEndDate(Carbon $date): void
+    {
+        $this->endDate = $date->setTimezone('Europe/Berlin');
+    }
+
 }
