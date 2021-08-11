@@ -114,7 +114,7 @@ export default {
             myTabNames: myTabNames,
             myTabsConfig: this.settings.homeScreenTabsConfig,
             myTabs: {},
-            myActiveTab: this.activeTab || myTabNames[0],
+            myActiveTab: this.activeTab || this.settings.homeScreenTabsConfig.tabs[0].type+'0',
         }
     },
     methods: {
