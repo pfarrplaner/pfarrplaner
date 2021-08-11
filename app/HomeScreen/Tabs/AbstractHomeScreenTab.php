@@ -170,7 +170,7 @@ class AbstractHomeScreenTab
     {
         $data['title'] = $this->getTitle();
         $data['description'] = $this->getDescription();
-        $data['key'] = $this->getKey();
+        $data['type'] = $this->getKey();
         $data['filled'] = true;
         if (!isset($data['badgeType'])) $data['badgeType'] = 'primary';
         return $data;

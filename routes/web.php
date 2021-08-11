@@ -189,7 +189,7 @@ Route::get('/wedding/destroy/{wedding}', ['as' => 'wedding.destroy', 'uses' => '
 // Home routes
 Route::get(    '/', ['as' => 'root', 'uses' => 'HomeController@root']);
 Route::get('/home/{activeTab?}', ['as' => 'home', 'uses' => 'HomeController@index']);
-Route::get('/tabs/{tab}', ['as' => 'tab', 'uses' => 'HomeController@tab']);
+Route::get('/tabs/{tabIndex}', ['as' => 'tab', 'uses' => 'HomeController@tab']);
 
 Route::get('/password/change', 'HomeController@showChangePassword')->name('password.edit');
 Route::post('/password/change', 'HomeController@changePassword')->name('password.change');

@@ -42,7 +42,7 @@
             <card-header>
                 <tab-headers>
                     <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key" :active-tab="myActiveTab"
-                                :count="tab.count" :badge-type="tab.badgeType"/>
+                                :count="tab.count" :badge-type="tab.badgeType" :class="'tabheader-'+tab.type"/>
                     <div class="ml-auto d-inline tab-setup">
                         <a :href="route('user.profile', {tab: 'homescreen'})" class="p-2 pl-3 tab-setup ml-auto"
                            title="Angezeigte Reiter konfigurieren"><span class="fa fa-cog"></span>
@@ -61,7 +61,7 @@
                 <tabs>
                     <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key"  :active-tab="myActiveTab" >
                         <component v-if="tab.filled" :is="tabComponent(tab)" v-bind="tab"
-                                   :user="user" :settings="settings" :config="settings.homeScreenTabsConfig[tab.key]"/>
+                                   :user="user" :settings="settings" :config="settings.homeScreenTabsConfig.tabs[tab.index].config"/>
                     </tab>
                 </tabs>
             </card-body>
@@ -95,14 +95,16 @@ export default {
     },
     props: ['user', 'settings', 'activeTab'],
     beforeMount() {
-        this.myTabNames.forEach(tab => {
-            this.myTabs[tab] = { title: '', key: tab, description: '', count: 0}
-            axios.get(route('tab', tab)).then(response => {
+        var index = 0;
+        this.myTabsConfig.tabs.forEach(function (tab, tabIndex) {
+            this.myTabs[tab.type+tabIndex] = { title: '', key: tab.type+tabIndex, description: '', count: 0, tabObject: tab}
+            axios.get(route('tab', tabIndex)).then(response => {
                 tab = response.data;
                 this.myTabs[tab.key] = tab;
                 this.$forceUpdate();
             });
-        });
+        }, this);
+        console.log(this.myTabs);
     },
     data() {
         let myTabNames = this.settings.homeScreenTabs ? this.settings.homeScreenTabs.split(',') : [];
@@ -110,13 +112,14 @@ export default {
             myUser: this.user,
             config: this.settings.homeScreenConfig || {},
             myTabNames: myTabNames,
+            myTabsConfig: this.settings.homeScreenTabsConfig,
             myTabs: {},
             myActiveTab: this.activeTab || myTabNames[0],
         }
     },
     methods: {
         tabComponent(tab) {
-            return tab.key.charAt(0).toUpperCase() + tab.key.slice(1)+'Tab';
+            return tab.type.charAt(0).toUpperCase() + tab.type.slice(1)+'Tab';
         }
     }
 }
@@ -146,6 +149,5 @@ ul.nav.nav-tabs {
 .alert a {
     text-decoration: none;
 }
-
 
 </style>

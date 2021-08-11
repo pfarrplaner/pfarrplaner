@@ -30,8 +30,11 @@
 
 namespace App\Http\Controllers;
 
+use App\CalendarConnection;
 use App\City;
 use App\HomeScreen\Tabs\HomeScreenTabFactory;
+use App\Location;
+use App\Ministry;
 use App\Parish;
 use App\Rules\CreatedInLocalAdminDomain;
 use App\Service;
@@ -48,6 +51,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 
 /**
@@ -204,32 +208,50 @@ class UserController extends Controller
         return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes', 'users'));
     }
 
+
     /**
      * @param Request $request
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function profile(Request $request)
     {
         $user = Auth::user();
         $allCities = $user->visibleCities;
-        $cities = $user->visibleCities;
+        $cities = $user->cities;
+
+        $subscriptions = [];
+        foreach ($cities as $city) {
+            $subscriptions[$city->id] = $user->getSubscriptionType($city);
+        }
+
         $sortedCities = $user->getSortedCities();
-        $unusedCities = $allCities->whereNotIn('id', $sortedCities->pluck('id'));
-        $calendarView = $user->getSetting('calendar_view', 'calendar.month');
-        $homeScreen = $user->getHomeScreen();
 
         // homeScreenTabs
         $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig') ?? [];
-        $activeTabs = explode(',', $user->getSetting('homeScreenTabs', '')) ?? [];
-        if ($activeTabs == [0 => '']) $activeTabs = [];
-        $homeScreenTabsInactive = HomeScreenTabFactory::all($homeScreenTabsConfig);
-        $homeScreenTabsActive = [];
-        foreach ($activeTabs as $tab) {
-            $homeScreenTabsActive[$tab] = $homeScreenTabsInactive[$tab];
-            unset($homeScreenTabsInactive[$tab]);
-        }
+
+        $availableTabs = HomeScreenTabFactory::available();
+
+        $calendarConnections = CalendarConnection::where('user_id', $user->id)->get();
+        $locations = Location::inCities(Auth::user()->cities->pluck('id'))->get();
+        $ministries = Ministry::all();
 
         $tab = $request->get('tab', '');
+
+        return Inertia::render(
+            'Profile/ProfileEditor',
+            compact(
+                'user',
+                'cities',
+                'tab',
+                'homeScreenTabsConfig',
+                'availableTabs',
+                'calendarConnections',
+                'subscriptions',
+                'locations',
+                'ministries',
+            )
+        );
+
         return view(
             'users.profile',
             compact(
@@ -258,26 +280,22 @@ class UserController extends Controller
         $data = $this->validateRequest($request);
         $user->save($data);
 
+        // change password?
+        if ($request->has('new_password')) {
+            $passwordData = $request->validate([
+                'current_password' => 'required|hash:' . Auth::user()->password,
+                'new_password' => 'required|string|min:6|confirmed|not_current_password|notIn:testtest',
+                'new_password_confirmation' => 'required',
+            ]);
+            $user->update(['password' => $passwordData['new_password']]);
+        }
+
         // set subscriptions
-        $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
+        $user->setSubscriptionsFromArray($request->get('subscriptions') ?: []);
 
-        // homescreen configuration
-        $homeScreen = $user->getHomeScreen();
-        if (null !== $homeScreen) {
-            $homeScreen->setConfiguration($request);
+        if ($request->has('homeScreenTabsConfig')) {
+            $user->setSetting('homeScreenTabsConfig', $request->get('homeScreenTabsConfig'));
         }
-        if ($request->has('homeScreenTabs')) {
-            $user->setSetting('homeScreenTabs', $request->get('homeScreenTabs'));
-        }
-
-        // settings
-        if ($request->has('settings')) {
-            foreach ($request->get('settings') as $settingKey => $setting) {
-                $user->setSetting($settingKey, $setting);
-            }
-        }
-
-
 
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }

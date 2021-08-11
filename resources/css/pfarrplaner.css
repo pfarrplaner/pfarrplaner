@@ -768,3 +768,8 @@ tr.changed, tr.changed td, tr.changed th {
 .fake-table-body {
     margin: 0 15px;
 }
+
+.nav-tabs .nav-item.tabheader-absences a.nav-link {
+    background-color: sandybrown !important;
+}
+

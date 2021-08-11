@@ -69,6 +69,26 @@ class HomeScreenTabFactory
     }
 
     /**
+     * Get a single tab with contents
+     * @param $tab
+     * @throws \Exception
+     */
+    public static function getOne($tab, $tabIndex) {
+        $class = 'App\\HomeScreen\\Tabs\\' . ucfirst($tab['type'].'HomeScreenTab');
+        if (class_exists($class)) {
+            $tabObject = new $class($tab['config']);
+        } else {
+            throw new \Exception('Class not found: '.$class);
+        }
+        /** @var AbstractHomeScreenTab $tabObject */
+        $result = $tabObject->toArray();
+        $result['config'] = $tab['config'];
+        $result['key'] = $result['type'].$tabIndex;
+        $result['index'] = $tabIndex;
+        return $result;
+    }
+
+    /**
      * Get all homescreen tabs
      * @param array $config
      * @return array
@@ -76,6 +96,24 @@ class HomeScreenTabFactory
     public static function all(array $config)
     {
         return self::get($config, []);
+    }
+
+    public static function available() {
+        $tabs = self::get([]);
+        $available = [];
+        /**
+         * @var  $key
+         * @var AbstractHomeScreenTab $tab
+         */
+        foreach ($tabs as $key =>$tab) {
+            $available[$key] = [
+                'type' =>  $key,
+                'title' => $tab->getTitle(),
+                'description' => $tab->getDescription(),
+                'config' => $tab->getConfig(),
+            ];
+        }
+        return $available;
     }
 
 }

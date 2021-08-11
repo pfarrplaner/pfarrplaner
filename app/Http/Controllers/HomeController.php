@@ -196,12 +196,11 @@ class HomeController extends Controller
     }
 
 
-    public function tab($tab)
+    public function tab($tabIndex)
     {
         $user = Auth::user();
         $config = $user->getSetting('homeScreenTabsConfig') ?? [];
-        $tabs = HomeScreenTabFactory::get($config, [$tab]);
-        $tab = array_pop($tabs)->toArray();
+        $tab = HomeScreenTabFactory::getOne($config['tabs'][$tabIndex], $tabIndex);
         return response()->json($tab);
     }
 }
