@@ -80,6 +80,7 @@ class EventServiceProvider extends ServiceProvider
         return [
             $this->app->path('Listeners'),
             $this->app->path('Integrations'),
+            $this->app->path('Calendars/Listeners'),
         ];
     }
 

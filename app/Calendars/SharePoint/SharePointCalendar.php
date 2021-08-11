@@ -27,12 +27,12 @@ class SharePointCalendar extends \App\Calendars\AbstractCalendar
     /** @var string List name */
     protected $listName = '';
 
-    public function __construct($url, $user = '', $password = '')
+    public function __construct($url, $user = '', $password = '', $wsdlUrl = null)
     {
         $this->setUrl($url);
         $this->setUser($user);
         $this->setPassword($password);
-        $this->loadWsdl();
+        $this->loadWsdl($wsdlUrl);
         $this->setApi(new SharePointAPI($user, $password, $this->wsdlFile, 'NTLM'));
     }
 
@@ -118,22 +118,23 @@ class SharePointCalendar extends \App\Calendars\AbstractCalendar
         return $calendars;
     }
 
-    protected function loadWsdl() {
+    protected function loadWsdl($wsdlUrl = null) {
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->getWsdlUrl());
+        curl_setopt($ch, CURLOPT_URL, $wsdlUrl ?? $this->getWsdlUrl());
         curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
         curl_setopt($ch, CURLOPT_USERPWD, $this->getUser().':'.$this->getPassword());
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_CAINFO, "./cacert.pem");
+        curl_setopt($ch, CURLOPT_CAINFO, resource_path('certificates/cacert.pem'));
+
         $return = curl_exec($ch);
         $info = curl_getinfo($ch);
         curl_close($ch);
 
-
         $tmpFile = tempnam(sys_get_temp_dir(), 'wsdl');
         file_put_contents($tmpFile, $return);
         $this->wsdlFile = $tmpFile;
+
         return $tmpFile;
     }
 

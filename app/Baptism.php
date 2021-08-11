@@ -30,6 +30,7 @@
 
 namespace App;
 
+use App\Calendars\SyncEngines\AbstractSyncEngine;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
@@ -97,6 +98,9 @@ class Baptism extends Model
         return $this->belongsTo(Service::class);
     }
 
+    /**
+     * @return bool
+     */
     public function getHasRegistrationFormAttribute()
     {
         $found = false;
@@ -104,5 +108,33 @@ class Baptism extends Model
             $found = $found || ($attachment->title == 'Anmeldeformular');
         }
         return $found;
+    }
+
+    /**
+     * Generate a record for sync'ing to external calendars
+     * @return array[]|null
+     */
+    public function getPreparationEvent()
+    {
+        if (!$this->appointment) return null;
+
+        $key = 'baptism_prep_'.$this->id;
+
+        $contacts = [];
+        if ($this->candidate_phone) $contacts[] = $this->candidate_phone;
+        if ($this->candidate_email) $contacts[] = $this->candidate_email;
+
+        $record = [
+            'startDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC'),
+            'endDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC')->addHour(1),
+            'title' => 'Taufgespräch '.$this->candidate_name,
+            'description' =>
+                '<p>Taufe am '.$this->service->day->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'
+                .'<p><a href="'.route('baptisms.edit', $this->id).'">Taufe im Pfarrplaner öffnen</a></p>'
+                .(count($contacts) ? '<p>Kontakt: '.join(', ', $contacts).'</p>' : '')
+                .AbstractSyncEngine::AUTO_WARNING,
+            'location' => $this->candidate_address.', '.$this->candidate_zip.' '.$this->candidate_city,
+        ];
+        return [$key => $record];
     }
 }

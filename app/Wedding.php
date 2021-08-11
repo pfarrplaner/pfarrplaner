@@ -30,6 +30,7 @@
 
 namespace App;
 
+use App\Calendars\SyncEngines\AbstractSyncEngine;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
@@ -98,5 +99,34 @@ class Wedding extends Model
     {
         return $this->belongsTo(Service::class);
     }
+
+    /**
+     * Generate a record for sync'ing to external calendars
+     * @return array[]|null
+     */
+    public function getPreparationEvent()
+    {
+        if (!$this->appointment) return null;
+
+        $key = 'wedding_prep_'.$this->id;
+
+        $description =                 '<p>Trauung am '.$this->service->day->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'
+            .'<p><a href="'.route('funerals.edit', $this->id).'">Trauung im Pfarrplaner öffnen</a></p>'
+            .'<p>Kontakt:<br />'
+            .trim(' - '.$this->spouse1_name.': '.$this->spouse1_phone.' '.$this->spouse1_email).'<br />'
+            .trim(' - '.$this->spouse2_name.': '.$this->spouse2_phone.' '.$this->spouse2_email)
+            .'</p>'
+            .AbstractSyncEngine::AUTO_WARNING;
+
+        $record = [
+            'startDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC'),
+            'endDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC')->addHour(1),
+            'title' => 'Traugespräch '.$this->spouse1_name.' / '.$this->spouse2_name,
+            'description' => $description,
+            'location' => '',
+        ];
+        return [$key => $record];
+    }
+
 
 }

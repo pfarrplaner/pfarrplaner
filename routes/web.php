@@ -92,7 +92,7 @@ Route::get('qr/{city}', 'CityController@qr')->name('qr');
 
 
 Route::resource('calendarConnection', 'CalendarConnectionController');
-Route::post('calendarConnection/configure', 'CalendarConnectionController@configure')->name('calendarConnection.configure');
+Route::post('exchangeCalendars', 'CalendarConnectionController@exchangeCalendars')->name('calendarConnection.exchangeCalendars');
 
 // embed in web site:
 Route::get(

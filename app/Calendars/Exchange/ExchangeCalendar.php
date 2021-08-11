@@ -60,7 +60,38 @@ class ExchangeCalendar extends \App\Calendars\AbstractCalendar
         $this->setServerVersion($serverVersion);
 
         $this->client = new Client($server, $username, $password, 'Exchange' . $serverVersion);
-        $this->folder = $this->findFolder($folder);
+        if ($folder) {
+            $this->folder = $this->findFolder($folder);
+        }
+    }
+
+    public function getAllCalendars() {
+        $request = new FindFolderType();
+        $request->FolderShape = new FolderResponseShapeType();
+        $request->FolderShape->BaseShape = DefaultShapeNamesType::ALL_PROPERTIES;
+        $request->ParentFolderIds = new NonEmptyArrayOfBaseFolderIdsType();
+
+        // Search recursively.
+        $request->Traversal = FolderQueryTraversalType::DEEP;
+
+        // Search within the root folder. Combined with the traversal set above, this
+        // should search through all folders in the user's mailbox.
+        $parent = new DistinguishedFolderIdType();
+        $parent->Id = DistinguishedFolderIdNameType::CALENDAR;
+        $request->ParentFolderIds->DistinguishedFolderId[] = $parent;
+
+        $response = $this->client->FindFolder($request);
+        $response_messages = $response->ResponseMessages->FindFolderResponseMessage;
+        $calendars = [];
+        foreach ($response_messages as $response_message) {
+            if ($response_message->ResponseClass == ResponseClassType::SUCCESS) {
+                $id = 0;
+                foreach($response_message->RootFolder->Folders->CalendarFolder as $calendar) {
+                    $calendars[] = ['id' => $calendar->DisplayName, 'name' => $calendar->DisplayName];
+                }
+            }
+        }
+        return $calendars;
     }
 
     public function findFolder()
