@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.66.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.66.1...v1.66.2) (2021-08-11)
+
+
+### Bug Fixes
+
+* Cannot use Auth::user() in queued job ([5fde117](https://github.com/pfarrplaner/pfarrplaner/commits/5fde11783aa3722692ea1450483f34ce057020e9))
+* Wrong column name ([2230efd](https://github.com/pfarrplaner/pfarrplaner/commits/2230efd629cc3bf471e11f3897852277afb791f2))
+
 ### [1.66.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.66.0...v1.66.1) (2021-08-11)
 
 
