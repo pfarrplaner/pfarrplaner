@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.66.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.66.0...v1.66.1) (2021-08-11)
+
+
+### Bug Fixes
+
+* HomeScreen fails when showReplacements setting is not set ([87b34fb](https://github.com/pfarrplaner/pfarrplaner/commits/87b34fb55cd6fab3a686b4a57c315931c76f50dd))
+
 ## [1.66.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.65.2...v1.66.0) (2021-08-11)
 
 
