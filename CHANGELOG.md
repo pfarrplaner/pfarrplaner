@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.66.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.65.2...v1.66.0) (2021-08-11)
+
+
+### Features
+
+* Allow export to Exchange and Sharepoint calendars ([41d1d5f](https://github.com/pfarrplaner/pfarrplaner/commits/41d1d5f2d45e1a2937fa2c8aafa4987f5db86360))
+* Allow export to Exchange and Sharepoint calendars ([93b7818](https://github.com/pfarrplaner/pfarrplaner/commits/93b7818118248f7dec7525f71403d81fe3f8af0f))
+* New inertia-based UI for user profile ([93b126d](https://github.com/pfarrplaner/pfarrplaner/commits/93b126d35b378974fad03194b0a20688dec178fe))
+* Show current replacements on HomeScreen ([bdf3e47](https://github.com/pfarrplaner/pfarrplaner/commits/bdf3e47003d00827a74690a89ea053a56134c0a0)), closes [#124](https://github.com/pfarrplaner/pfarrplaner/issues/124) [#125](https://github.com/pfarrplaner/pfarrplaner/issues/125)
+
+
+### Bug Fixes
+
+* Add missing certificates ([0a34e45](https://github.com/pfarrplaner/pfarrplaner/commits/0a34e45663c8b23b54ac0cef0d68b94f8a7a9e09))
+* Add missing disabled state to TabHeader ([ce43743](https://github.com/pfarrplaner/pfarrplaner/commits/ce43743e7ff44fc092f33d42b82d7d82ac65c789))
+* HomeScreen does not set activeTab correctly ([cb65e86](https://github.com/pfarrplaner/pfarrplaner/commits/cb65e867e660ae18c4b129b28a11bb938b55c330))
+* Remove non-functional UI for CalendarConnections from user profile ([8dab1a1](https://github.com/pfarrplaner/pfarrplaner/commits/8dab1a1400bbb468fc93cc7d31456b2729ca534e))
+* SongEditor modal dialog is not wide enough ([b562dd7](https://github.com/pfarrplaner/pfarrplaner/commits/b562dd7eb7ac3d8fac573ab878e144d9010aaec1)), closes [#118](https://github.com/pfarrplaner/pfarrplaner/issues/118)
+* wrong composer dependency for staudenmeir/belongs-to-through ([c3c1d90](https://github.com/pfarrplaner/pfarrplaner/commits/c3c1d904b7f033274e55ca558d16d6a3819ec70f))
+
 ### [1.65.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.65.1...v1.65.2) (2021-08-09)
 
 
