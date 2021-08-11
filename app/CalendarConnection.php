@@ -62,7 +62,7 @@ class CalendarConnection extends Model
                 $cityServices = Service::inCity($city);
                 break;
             case self::CONNECTION_TYPE_OWN:
-                $cityServices = Service::inCity($city)->userParticipates(Auth::user());
+                $cityServices = Service::inCity($city)->userParticipates($this->user);
         }
 
         // exclude hidden service if necessary
