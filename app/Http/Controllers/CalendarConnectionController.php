@@ -49,7 +49,7 @@ class CalendarConnectionController extends Controller
                 'title' => 'Neue Kalenderverbindung',
                 'credentials1' => Auth::user()->email ?? '',
                 'credentials2' => '',
-                'connection' => '',
+                'connection_string' => '',
                 'connection_type' => CalendarConnection::CONNECTION_TYPE_OWN,
             ]
         );
