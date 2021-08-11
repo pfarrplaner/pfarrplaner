@@ -95,7 +95,7 @@ class HomeController extends Controller
         $user = Auth::user()->load(['userSettings', 'roles', 'permissions']);
         $settings = Settings::all($user);
         $replacements = [];
-        if ($settings['homeScreenConfig']['showReplacements']) {
+        if ($settings['homeScreenConfig']['showReplacements'] ?? false) {
             $replacements = Replacement::with('absence')
                 ->whereHas('users', function($query) {
                 $query->where('user_id', Auth::user()->id);
