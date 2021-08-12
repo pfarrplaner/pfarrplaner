@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.69.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.69.0...v1.69.1) (2021-08-12)
+
+
+### Bug Fixes
+
+* Root calendar does not show up in exchange calendar list ([f4ebf8a](https://github.com/pfarrplaner/pfarrplaner/commits/f4ebf8a911ea4ff531cdee270a546e883aa2bbe3)), closes [#127](https://github.com/pfarrplaner/pfarrplaner/issues/127)
+
 ## [1.69.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.68.0...v1.69.0) (2021-08-12)
 
 
