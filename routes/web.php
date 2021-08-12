@@ -39,6 +39,7 @@
 |
 */
 
+use App\Http\Controllers\CalendarConnectionController;
 use App\Http\Controllers\WeddingController;
 use Inertia\Inertia;
 
@@ -93,7 +94,7 @@ Route::get('qr/{city}', 'CityController@qr')->name('qr');
 
 
 Route::resource('calendarConnection', 'CalendarConnectionController');
-Route::post('exchangeCalendars', 'CalendarConnectionController@exchangeCalendars')->name('calendarConnection.exchangeCalendars');
+Route::post('exchangeCalendars', [CalendarConnectionController::class, 'exchangeCalendars'])->name('calendarConnection.exchangeCalendars');
 
 // embed in web site:
 Route::get(
