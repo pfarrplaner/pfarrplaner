@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.69.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.69.1...v1.69.2) (2021-08-12)
+
+
+### Bug Fixes
+
+* exchange sync fails when root calendar folder is selected as target ([14e0fe1](https://github.com/pfarrplaner/pfarrplaner/commits/14e0fe10d3f3124dc278e2f38f8bf07d9d4ac788))
+
 ### [1.69.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.69.0...v1.69.1) (2021-08-12)
 
 
