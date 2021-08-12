@@ -65,7 +65,11 @@
             </div>
         </div>
         <div class="col-md-3">
+            <file-drag-receiver multi
+                                v-model="myWedding.attachments"
+                                :upload-route="route('wedding.attach', myWedding.id)" :key="Object.keys(myWedding.attachments).length">
                 <attachment  v-for="(attachment,key,index) in wedding.attachments" :key="'attachment'+key" :attachment="attachment" />
+            </file-drag-receiver>
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Trauung bearbeiten"
@@ -82,14 +86,21 @@ import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
 import Participants from "../../Calendar/Service/Participants";
+import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
 
 export default {
     name: "Wedding",
     components: {
+        FileDragReceiver,
         Participants,
         DetailsInfo,
         Attachment,
         CheckedProcessItem,
+    },
+    data() {
+        return {
+            myWedding: this.wedding,
+        };
     },
     props: ['wedding', 'showService', 'showPastor'],
     methods: {

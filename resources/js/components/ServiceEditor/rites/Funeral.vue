@@ -71,11 +71,15 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment v-for="(attachment,key,index) in funeral.attachments" :key="'attachment_'+key"
-                        :attachment="attachment"/>
-            <fake-attachment :href="route('funeral.form', {funeral: funeral.id})"
-                             title="Formular für Kirchenregisteramt" extension="pdf"
-                             icon="fa-file-pdf" size="ca. 135 kB" />
+            <file-drag-receiver multi
+                                v-model="myFuneral.attachments"
+                                :upload-route="route('funeral.attach', funeral.id)" :key="Object.keys(myFuneral.attachments).length">
+                    <attachment v-for="(attachment,key,index) in funeral.attachments" :key="'attachment_'+key"
+                                :attachment="attachment"/>
+                    <fake-attachment :href="route('funeral.form', {funeral: funeral.id})"
+                                     title="Formular für Kirchenregisteramt" extension="pdf"
+                                     icon="fa-file-pdf" size="ca. 135 kB"/>
+            </file-drag-receiver>
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Bestattung bearbeiten"
@@ -93,10 +97,14 @@ import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
 import Participants from "../../Calendar/Service/Participants";
 import FakeAttachment from "../../Ui/elements/FakeAttachment";
+import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
+import AttachmentList from "../../Ui/elements/AttachmentList";
 
 export default {
     name: "Funeral",
     components: {
+        AttachmentList,
+        FileDragReceiver,
         FakeAttachment,
         Participants,
         DetailsInfo,
@@ -104,6 +112,11 @@ export default {
         CheckedProcessItem,
     },
     props: ['funeral', 'showService', 'showPastor'],
+    data() {
+        return {
+            myFuneral : this.funeral,
+        }
+    },
     methods: {
         deleteFuneral() {
             this.$inertia.delete(route('funerals.destroy', {funeral: this.funeral.id}), {preserveState: false});

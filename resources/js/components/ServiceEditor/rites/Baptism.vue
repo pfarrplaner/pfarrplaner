@@ -70,7 +70,11 @@
             </div>
         </div>
         <div class="col-md-3">
-            <attachment  v-for="(attachment,key,index) in baptism.attachments" :key="'attachment'+key" :attachment="attachment" />
+            <file-drag-receiver multi
+                                v-model="myBaptism.attachments"
+                                :upload-route="route('baptism.attach', myBaptism.id)" :key="Object.keys(myBaptism.attachments).length">
+                <attachment  v-for="(attachment,key,index) in myBaptism.attachments" :key="'attachment'+key" :attachment="attachment" />
+            </file-drag-receiver>
         </div>
         <div class="col-md-1 text-right">
             <inertia-link class="btn btn-sm btn-light" title="Taufe bearbeiten"
@@ -87,14 +91,21 @@ import CheckedProcessItem from "../../Ui/elements/CheckedProcessItem";
 import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
 import Participants from "../../Calendar/Service/Participants";
+import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
 
 export default {
     name: "Baptism",
     components: {
+        FileDragReceiver,
         Participants,
         DetailsInfo,
         Attachment,
         CheckedProcessItem,
+    },
+    data() {
+        return {
+            myBaptism: this.baptism,
+        }
     },
     props: {
         baptism: Object,
