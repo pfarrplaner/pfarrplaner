@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.67.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.66.2...v1.67.0) (2021-08-12)
+
+
+### Features
+
+* Use separate queued jobs to sync/delete services on CalendarConnections ([a79f772](https://github.com/pfarrplaner/pfarrplaner/commits/a79f77250640a7672b0962efb953aaccd3aa3038))
+
 ### [1.66.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.66.1...v1.66.2) (2021-08-11)
 
 
