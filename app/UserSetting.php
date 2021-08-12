@@ -71,4 +71,17 @@ class UserSetting extends Model
         return 'key';
     }
 
+    public function getValueAttribute()
+    {
+        $value = $this->getAttributeFromArray('value');
+        if (is_array($value)) return $value;
+        if (substr($value, 0, 5) == '_____') return unserialize(substr($value, 5));
+        return $value;
+    }
+
+    public function setValueAttribute($value) {
+        if (is_array($value)) $value = '_____'.serialize($value);
+        $this->attributes['value'] = $value;
+    }
+
 }

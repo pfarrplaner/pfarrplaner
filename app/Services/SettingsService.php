@@ -55,7 +55,7 @@ class SettingsService
      * @param bool $unserialize
      * @return UserSetting|mixed
      */
-    public function get(User $user, string $key, $default = null, $returnObject = false, $unserialize = true) {
+    public function get(User $user, string $key, $default = null, $returnObject = false) {
         // need to trick error reporting or else this will fail with an E_NOTICE
         $err = error_reporting();
         error_reporting(0);
@@ -72,7 +72,6 @@ class SettingsService
             );
         } else {
             $setting = $this->settings[$user->id][$key];
-            if ($unserialize && (substr($setting->value, 0, 5) == '_____')) $setting->value = unserialize(substr($setting->value, 5));
         }
         $return = ($returnObject ? $setting : $setting->value);
         error_reporting($err);
@@ -108,8 +107,7 @@ class SettingsService
     {
         $this->cacheSettings($user);
         return $this->settings[$user->id] ? $this->settings[$user->id]->map(function($item){
-            if (is_array($item->value)) return $item->value;
-            return substr($item->value, 0, 5) == '_____' ? unserialize(substr($item->value, 5)) : $item->value;
+            return $item->value;
         }) : [];
     }
 
