@@ -72,7 +72,6 @@ export default {
     methods: {
         clickHandler: function() {
             if (this.limited) {
-                console.log('toggle collapse');
                 this.$emit('collapse', {day: this.day, state: !this.day.collapsed});
                 this.$forceUpdate();
             }

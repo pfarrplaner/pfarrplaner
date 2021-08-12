@@ -30,7 +30,6 @@ export default {
     data() {
         var myDays = this.days;
         var scrollToDate = null;
-        console.log(moment());
 
         myDays.forEach((day,dayId) => {
             myDays[dayId].collapsed = (day.day_type == 1 ? (this.collapseState == null ? true: !this.collapseState) : false);
@@ -73,7 +72,6 @@ export default {
             return this.services[city.id][day.id];
         },
         changeCollapseState(e) {
-            console.log('changeCollapseState', e);
             this.myDays[e.day.index].collapsed = e.state;
             this.$forceUpdate();
         },

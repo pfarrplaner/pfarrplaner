@@ -74,7 +74,6 @@ export default {
             return this.services[city.id][day.id];
         },
         changeCollapseState(e) {
-            console.log('changeCollapseState', e);
             this.myDays[e.day.index].collapsed = e.state;
             this.$forceUpdate();
         },

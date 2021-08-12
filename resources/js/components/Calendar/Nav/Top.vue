@@ -141,7 +141,6 @@ export default {
                     window.scroll(0, window.scrollY-84);
                 }
             } else {
-                alert(this.orientation);
                 this.$inertia.get(route('calendar', moment().format('YYYY-MM')));
             }
         },
