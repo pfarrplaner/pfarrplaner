@@ -36,11 +36,9 @@
                           title="Einen Monat zurück">
                 <span class="fa fa-backward"></span>
             </inertia-link>
-            <inertia-link class="btn btn-default"
-                          :href="route('calendar', { date: moment().format('YYYY-MM') })"
-                          title="Gehe zum aktuellen Monat">
+            <button class="btn btn-default" @click="today">
                 <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute </span>
-            </inertia-link>
+            </button>
 
             <!-- TODO month / year dropdown -->
             <div class="btn-group" role="group">
@@ -118,7 +116,7 @@ export default {
         }
     },
     props: {
-        'date': {type: Date}, 'years': {type: Object}
+        'date': {type: Date}, 'years': {type: Object}, 'orientation': {type: String},
     },
     methods: {
         monthLink: function (month) {
@@ -134,7 +132,19 @@ export default {
         toggleColumns() {
             this.allColumnsOpen = !this.allColumnsOpen;
             this.$emit('collapseall', this.allColumnsOpen);
-        }
+        },
+        today() {
+            if ((this.orientation == 'vertical') && (moment(this.date).format('YYYYMM') == moment().format('YYYYMM'))) {
+                var el = document.getElementsByClassName('scroll-to-me');
+                if (el) {
+                    el[0].parentElement.scrollIntoView();
+                    window.scroll(0, window.scrollY-84);
+                }
+            } else {
+                alert(this.orientation);
+                this.$inertia.get(route('calendar', moment().format('YYYY-MM')));
+            }
+        },
     }
 }
 </script>

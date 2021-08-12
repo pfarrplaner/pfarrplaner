@@ -1,7 +1,7 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(date)">
         <template #navbar-left>
-            <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse"></calendar-nav-top>
+            <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse" :orientation="orientation"></calendar-nav-top>
         </template>
         <template #control-sidebar>
             <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities"/>

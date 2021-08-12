@@ -6,6 +6,7 @@
             collapsed: this.day.collapsed,
             'scroll-to-me': scrollToMe,
         }"
+        :ref="scrollToMe ? 'scrollToMe' : null"
         @click="clickHandler()"
         :title="day.day_type == 1 ? today().format('DD.MM.YYYY')+' (Klicken, um Ansicht umzuschalten)' : ''"
         :data-day="day.id">
