@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.68.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.67.0...v1.68.0) (2021-08-12)
+
+
+### Features
+
+* Better labels in ProfileEditor ([9710d8f](https://github.com/pfarrplaner/pfarrplaner/commits/9710d8f6c51e66314a80f890d1a9a3c840b741ff))
+
+
+### Bug Fixes
+
+* A4/A5 LiturgySheets crash when psalm item is empty ([5b3ff41](https://github.com/pfarrplaner/pfarrplaner/commits/5b3ff41dd4dadbf93a116982915085841226e4aa)), closes [#115](https://github.com/pfarrplaner/pfarrplaner/issues/115)
+* Remove duplicate route names for compliance with Laravel 7 ([9f6f8fb](https://github.com/pfarrplaner/pfarrplaner/commits/9f6f8fb837803cdc734782070ff7ac7737f2ee1b))
+
 ## [1.67.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.66.2...v1.67.0) (2021-08-12)
 
 
