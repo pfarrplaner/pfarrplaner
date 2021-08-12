@@ -28,7 +28,9 @@
   -->
 
 <template>
-    <td valign="top" v-bind:class="{
+    <td valign="top"
+        class="calendar-cell"
+        v-bind:class="{
             now: false, // TODO: next day
             limited: limited, // DAY_TYPE_LIMITED
             collapsed: this.day.collapsed,
@@ -39,10 +41,9 @@
         <div class="celldata">
             <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"/>
             <a v-if="canCreate && user.writableCities.includes(city.id)"
-               class="btn btn-success btn-sm btn-add-day"
-               title="Neuen Gottesdiensteintrag hinzufügen"
-               :href="route('services.add', {date: day.id, city: city.id})"><span
-                class="fa fa-plus" title="Neuen Gottesdienst hinzufügen"></span><span class="d-none d-md-inline"> Neuer GD</span></a>
+               class="btn btn-light btn-sm btn-add-day m-1"
+               title="Neuen Gottesdienst hinzufügen"
+               :href="route('services.add', {date: day.id, city: city.id})"><span class="fa fa-plus"></span></a>
         </div>
     </td>
 </template>
@@ -79,3 +80,8 @@ export default {
     }
 }
 </script>
+<style scoped>
+    .calendar-cell {
+        padding: 0;
+    }
+</style>

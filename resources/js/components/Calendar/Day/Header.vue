@@ -1,9 +1,10 @@
 <template>
-    <th
+    <th class="day-header-cell"
         v-bind:class="{
             now: false, // TODO: next day
             limited: day.day_type == 1, // DAY_TYPE_LIMITED
             collapsed: this.day.collapsed,
+            'scroll-to-me': scrollToMe,
         }"
         @click="clickHandler()"
         :title="day.day_type == 1 ? today().format('DD.MM.YYYY')+' (Klicken, um Ansicht umzuschalten)' : ''"
@@ -42,10 +43,19 @@ import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 
 export default {
     components: {BibleReference},
-    props: ['day', 'index', 'absences'],
+    props: ['day', 'index', 'absences', 'scrollToDate'],
     data: function() {
+        var scrollToMe = false;
+        if (this.scrollToDate) {
+            if (moment(this.scrollToDate).format('YYYYMMDD') == moment(this.day.date).format('YYYYMMDD')) {
+                scrollToMe = true;
+            }
+        }
+
+
         return {
             limited: this.day.day_type == 1,
+            scrollToMe,
         }
     },
     methods: {

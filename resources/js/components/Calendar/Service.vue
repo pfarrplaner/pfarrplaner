@@ -51,21 +51,11 @@
             <a :href="service.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span class="fab fa-youtube"></span></a>
             <a v-if="service.city.youtube_channel_url" :href="service.liveDashboardUrl" target="_blank" class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="fa fa-video"></span></a>
         </span>
-        <div v-if="(service.titleText != 'GD') && (service.funerals.length == 0)" class="service-description">{{ service.titleText }}</div>
+        <div v-if="(service.titleText != 'Gottesdienst') && (service.titleText != 'GD') && (service.funerals.length == 0)" class="service-description">{{ service.titleText }}</div>
 
-        <div class="service-description" v-if="service.weddings.length > 0">
-            <span class="fa fa-ring"></span>
-            <calendar-service-wedding v-for="(wedding,index) in service.weddings" :key="wedding.id" :wedding="wedding" trailer=", " :trail="index > 0"/>
-        </div>
         <div class="service-description" v-if="service.funerals.length > 0">
             <span class="fa fa-cross"></span>
             <calendar-service-funeral v-for="(funeral, index) in service.funerals" :key="funeral.id" :funeral="funeral" trailer=", " :trail="index > 0"/>
-        </div>
-        <div class="float-right service-calendar-button">
-            <a class="btn btn-sm btn-secondary"
-               :href="route('services.ical', {service: service})"
-               title="In Outlook übernehmen"><span
-                class="fa fa-calendar-alt"></span></a>
         </div>
         <div class="service-description" v-html="service.descriptionText"></div>
         <div class="service-description" v-if="service.internal_remarks">

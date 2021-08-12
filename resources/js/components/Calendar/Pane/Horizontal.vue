@@ -3,7 +3,7 @@
         <table class="table table-bordered">
             <thead>
             <tr>
-                <th class="no-print text-left">Kirchengemeinde<!-- // TODO: slave mode --></th>
+                <th class="no-print text-left"></th>
                 <calendar-day-header
                     v-for="(day,index) in myDays"
                     :day="day"
@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr v-for="city in cities">
-                    <th>{{ city.name }}</th>
+                    <th class="city-title"><span class="pt-2">{{ city.name }}</span><span class="fa fa-arrow-alt-circle-down pt-2"></span></th>
                     <calendar-cell v-for="(day,index) in myDays" :day="day"
                                    :key="'day_'+day.id+'_'+(day.collapsed ? 'closed' : 'open')"
                                    :index="index" :services="getServices(city,day)"
@@ -91,4 +91,10 @@ export default {
     table.table thead th {
         vertical-align: top;
     }
+
+    .city-title {
+        writing-mode: sideways-lr;
+        padding: 1px;
+    }
+
 </style>

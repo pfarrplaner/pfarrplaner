@@ -135,7 +135,7 @@ body.calendar .content-header {
 
 
 .day-header-collapse-hover {
-    font-size: 10px;
+    font-size: 1em;
 }
 
 .calendar-horizontal .day-header-collapse-hover {
@@ -773,3 +773,12 @@ tr.changed, tr.changed td, tr.changed th {
     background-color: sandybrown !important;
 }
 
+.calendar-vertical .day-header-cell {
+    max-width: 150px;
+}
+
+
+.main-header.navbar {
+    position: sticky;
+    top: 0px;
+}
