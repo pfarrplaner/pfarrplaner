@@ -33,6 +33,7 @@ namespace App\Calendars\Listeners;
 
 use App\CalendarConnection;
 use App\Events\ServiceBeforeDelete;
+use App\Jobs\DeleteSingleServiceFromCalendarConnection;
 use Illuminate\Support\Facades\Log;
 
 class ServiceBeforeDeleteListener
@@ -49,8 +50,7 @@ class ServiceBeforeDeleteListener
 
         /** @var CalendarConnection $calendarConnection */
         foreach ($calendarConnections as $calendarConnection) {
-            $syncEngine = $calendarConnection->getSyncEngine();
-            if ($syncEngine) $syncEngine->deleteSingleService($event->service);
+            DeleteSingleServiceFromCalendarConnection::dispatch($calendarConnection, $event->service);
         }
     }
 

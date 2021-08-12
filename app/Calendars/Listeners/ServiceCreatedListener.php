@@ -33,7 +33,7 @@ namespace App\Calendars\Listeners;
 
 use App\CalendarConnection;
 use App\Events\ServiceCreated;
-use App\Jobs\SyncSingleServiceToCalendarConnections;
+use App\Jobs\SyncSingleServiceToCalendarConnection;
 
 class ServiceCreatedListener
 {
@@ -46,7 +46,11 @@ class ServiceCreatedListener
     public function handle(ServiceCreated $event)
     {
         if (!$event->service) return;
-        SyncSingleServiceToCalendarConnections::dispatch($event->service);
+        $calendarConnections = CalendarConnection::getConnectionsForService($event->service);
+        foreach ($calendarConnections as $calendarConnection) {
+            SyncSingleServiceToCalendarConnection::dispatch($calendarConnection, $event->service);
+        }
+
     }
 
 }

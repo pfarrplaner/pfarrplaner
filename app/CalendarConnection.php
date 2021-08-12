@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Calendars\SyncEngines\SyncEngines;
+use App\Jobs\SyncSingleServiceToCalendarConnection;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -87,29 +88,16 @@ class CalendarConnection extends Model
      */
     public function syncEntireCalendar()
     {
-        $syncEngine = $this->getSyncEngine();
-        if ($syncEngine) {
-            Log::debug('Syncing CalendarConnection #' . $this->id . ' with SyncEngine ' . get_class($syncEngine));
-            // delete old entries
-            $entries = CalendarConnectionEntry::where('calendar_connection_id', $this->id)->get();
-            Log::debug('Deleting ' . count($entries) . ' old entries');
-            foreach ($entries as $entry) {
-                $syncEngine->deleteSingleEntry($entry);
-            }
+        // create new entries
+        $services = new Collection();
+        foreach ($this->cities as $city) {
+            $services = $services->merge($this->getSyncableServicesForCity($city));
+        }
 
-            // create new entries
-            $services = new Collection();
-            foreach ($this->cities as $city) {
-                $services = $services->merge($this->getSyncableServicesForCity($city));
-            }
-
-            Log::debug('Creating ' . count($entries) . ' new entries');
-            $syncEngine->syncServices($services);
-        } else {
-            Log::error(
-                'No SyncEngine found for CalendarConnection #' . $this->id
-                . ', connection string ' . $this->connection_string
-            );
+        Log::debug('Syncing entire calendar for CalendarConnection #'.$this->id);
+        Log::debug('Dispatching ' . count($services) . ' sync jobs');
+        foreach ($services as $service) {
+            SyncSingleServiceToCalendarConnection::dispatch($this, $service);
         }
     }
 
