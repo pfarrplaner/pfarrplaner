@@ -48,7 +48,14 @@
 
 Route::namespace('Api')->group(
     function () {
-        Route::resource('cities', 'CityController');
+
+        Route::name('api.')->group(
+            function() {
+                Route::resource('cities', 'CityController');
+
+            }
+        );
+
         Route::get(
             'calendar/month/{year}/{month}',
             ['as' => 'api.calendar.month', 'uses' => 'CalendarController@month']
@@ -65,7 +72,7 @@ Route::namespace('Api')->group(
         Route::middleware('auth:api')->group(
             function () {
                 // Services
-                Route::get('service/{service}', 'ServiceController@show')->name('service.show');
+                Route::get('service/{service}', 'ServiceController@show')->name('api.service.show');
                 //Route::patch('service/{service}', 'ServiceController@update')->name('api.service.update')->middleware('auth');
                 Route::patch('service/{service}', 'ServiceController@update')->name('api.service.update')->middleware(
                     'auth:api'
