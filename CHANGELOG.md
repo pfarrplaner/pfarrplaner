@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.69.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.68.0...v1.69.0) (2021-08-12)
+
+
+### Features
+
+* Allow drag/drop upload directly into baptism/funeral/wedding attachment lists ([943a828](https://github.com/pfarrplaner/pfarrplaner/commits/943a828c48f91f6d86af3979d72fa6070898841f))
+* Better use of space in Calendar ([3ce5039](https://github.com/pfarrplaner/pfarrplaner/commits/3ce5039f226842736d2dce0764eff7778a8015e2)), closes [#114](https://github.com/pfarrplaner/pfarrplaner/issues/114)
+* Use today button to scroll in vertical calendar view when month is current ([ffcadd6](https://github.com/pfarrplaner/pfarrplaner/commits/ffcadd68d929698c3a985bd5edbb5572038a2b36))
+
+
+### Bug Fixes
+
+* BaptismsTab has extraneous header line ([eaef551](https://github.com/pfarrplaner/pfarrplaner/commits/eaef551f8c124248d8aaade04ef250bef267c2be))
+* Tabs try to access obsolete config structure ([f71f6eb](https://github.com/pfarrplaner/pfarrplaner/commits/f71f6eb59b80e9ce7d163bacb78614304494547f))
+
 ## [1.68.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.67.0...v1.68.0) (2021-08-12)
 
 
