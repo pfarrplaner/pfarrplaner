@@ -39,6 +39,7 @@
 |
 */
 
+use App\Http\Controllers\WeddingController;
 use Inertia\Inertia;
 
 Route::resource('cities', 'CityController')->middleware('auth');
@@ -179,6 +180,8 @@ Route::get('/wedding/wizard', ['as' => 'weddings.wizard', 'uses' => 'WeddingCont
 Route::post('/wedding/wizard/step2', ['as' => 'weddings.wizard.step2', 'uses' => 'WeddingController@wizardStep2']);
 Route::post('/wedding/wizard/step3', ['as' => 'weddings.wizard.step3', 'uses' => 'WeddingController@wizardStep3']);
 Route::post('/wedding/done/{wedding}', ['as' => 'wedding.done', 'uses' => 'WeddingController@done']);
+Route::post('weddings/{wedding}/attachment', [WeddingController::class, 'attach'])->name('wedding.attach');
+Route::delete('weddings/{wedding}/attachment/{attachment}', [WeddingController::class, 'detach'])->name('wedding.detach');
 
 
 Route::resource('weddings', 'WeddingController')->middleware('auth');

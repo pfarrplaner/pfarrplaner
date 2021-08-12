@@ -30,6 +30,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Attachment;
 use App\City;
 use App\Day;
 use App\Location;
@@ -325,6 +326,36 @@ class WeddingController extends Controller
         $wedding->save();
         return json_encode(true);
     }
+
+    /**
+     * @param Request $request
+     * @param Wedding $wedding
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attach(Request $request, Wedding $wedding)
+    {
+        $this->handleAttachments($request, $wedding);
+        $wedding->refresh();
+        return response()->json($wedding->attachments);
+    }
+
+    /**
+     * @param Request $request
+     * @param Wedding $wedding
+     * @param Attachment $attachment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function detach(Request $request, Wedding $wedding, Attachment $attachment)
+    {
+        $file = $attachment->file;
+        $wedding->attachments()->where('id', $attachment->id)->delete();
+        Storage::delete($file);
+        $attachment->delete();
+        $wedding->refresh();
+        return response()->json($wedding->attachments);
+    }
+
 
 
     protected function validateRequest(Request $request)
