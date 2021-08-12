@@ -32,7 +32,7 @@
         <h2>{{ title }}</h2>
         <div v-if="baptisms.length == 0" class="alert alert-info">
             <span
-                v-if="(settings.homeScreenTabsConfig.baptisms.mine || false)">Zur Zeit hast du keine Taufen geplant.</span>
+                v-if="(config.mine || false)">Zur Zeit hast du keine Taufen geplant.</span>
             <span v-else>Zur Zeit sind keine Taufen geplant.</span>
         </div>
         <div v-else>
@@ -75,7 +75,7 @@ export default {
     name: "BaptismsTab",
     components: {FakeTable, Baptism},
     props: {
-        title: String, description: String, user: Object, settings: Object, baptisms: Array, baptismRequests: Array,
+        title: String, description: String, user: Object, config: Object, baptisms: Array, baptismRequests: Array,
     },
 }
 </script>

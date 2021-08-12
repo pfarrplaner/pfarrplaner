@@ -31,7 +31,7 @@
     <div class="funerals-tab">
         <h2>{{ title }}</h2>
         <div v-if="!count" class="alert alert-info">
-            <span v-if="(settings.homeScreenTabsConfig.funerals.mine || false)">Zur Zeit hast du keine Beerdigungen geplant.</span>
+            <span v-if="(config.mine || false)">Zur Zeit hast du keine Beerdigungen geplant.</span>
             <span v-else>Zur Zeit sind keine Beerdigungen geplant.</span>
         </div>
         <div v-else>
@@ -52,7 +52,7 @@ export default {
     name: "FuneralsTab",
     components: {FakeTable, Funeral},
     props: {
-        title: String, description: String, user: Object, settings: Object, funerals: Array, count: null,
+        title: String, description: String, user: Object, config: Object, funerals: Array, count: null,
     },
 }
 </script>
