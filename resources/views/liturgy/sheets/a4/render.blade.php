@@ -266,7 +266,9 @@
                 @elseif($item->data_type == 'psalm')
                     <td valign="top">
                         @if(isset($item->data['psalm']))
-                            {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
+                            @if (isset($item->data['psalm']['songbook_abbreviation']) || isset($item->data['psalm']['songbook']))
+                                {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
+                            @endif
                             {{ $item->data['psalm']['reference'] ?: '' }}
                             {{ $item->data['psalm']['title'] ?: '' }}
                         @endif
