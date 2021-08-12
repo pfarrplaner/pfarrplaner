@@ -57,10 +57,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Blade::component('partials.form.tabheader', 'tabheader');
-        Blade::component('partials.form.tabheaders', 'tabheaders');
-        Blade::component('partials.form.tabs', 'tabs');
-        Blade::component('partials.form.tab', 'tab');
+        Blade::withoutComponentTags();
+        Blade::aliasComponent('partials.form.tabheader', 'tabheader');
+        Blade::aliasComponent('partials.form.tabheaders', 'tabheaders');
+        Blade::aliasComponent('partials.form.tabs', 'tabs');
+        Blade::aliasComponent('partials.form.tab', 'tab');
         Blade::include('partials.form.input', 'input');
         Blade::include('partials.form.file', 'upload');
         Blade::include('partials.form.datetimepicker', 'datetimepicker');
