@@ -77,7 +77,7 @@ class ExchangeCalendar extends \App\Calendars\AbstractCalendar
         // Search within the root folder. Combined with the traversal set above, this
         // should search through all folders in the user's mailbox.
         $parent = new DistinguishedFolderIdType();
-        $parent->Id = DistinguishedFolderIdNameType::CALENDAR;
+        $parent->Id = DistinguishedFolderIdNameType::ROOT;
         $request->ParentFolderIds->DistinguishedFolderId[] = $parent;
 
         $response = $this->client->FindFolder($request);
