@@ -29,13 +29,15 @@
 
 <template>
     <div class="calendar-connections-tab">
+        <div v-if="calendarConnections.length == 0" class="alert alert-info">Du hast noch keine externen Kalender verbunden.</div>
         <div class="mb-2">
             <inertia-link class="btn btn-light" title="Neuen Kalender verbinden"
                           :href="route('calendarConnection.create')">
-                <span class="d-inline d-md-none fa fa-plus"></span><span class="d-none d-md-inline">Neue Verbindung</span>
+                <span class="d-inline d-md-none fa fa-plus"></span><span class="d-none d-md-inline">Neue Verbindung anlegen</span>
             </inertia-link>
         </div>
-        <fake-table :columns="[5,5,2]" collapsed-header="Kalender"
+        <fake-table v-if="calendarConnections.length >0"
+                    :columns="[5,5,2]" collapsed-header="Kalender"
                     :headers="['Titel', 'Typ', '']" >
             <div class="row p-1" v-for="(calendarConnection, key) in calendarConnections" :key="key">
                 <div class="col-md-5">{{ calendarConnection.title }}</div>

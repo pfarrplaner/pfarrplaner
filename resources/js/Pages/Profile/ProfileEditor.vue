@@ -41,7 +41,7 @@
                     <tab-header title="Sicherheit" id="security" :active-tab="activeTab"/>
                     <tab-header title="E-Mailbenachrichtigungen" id="subscriptions" :active-tab="activeTab"/>
                     <tab-header title="Startseite" id="homeScreenConfiguration" :active-tab="activeTab"/>
-                    <tab-header title="Kalender" id="calendars" :active-tab="activeTab"
+                    <tab-header title="Verbundene Kalender" id="calendars" :active-tab="activeTab"
                                 :count="calendarConnections.length"
                                 :disabled="user.email.slice(-8) != '@elkw.de'"
                                 disabled-title="Diese Funktion ist nur für Benutzer mit einem ELKW-Konto verfügbar."/>
