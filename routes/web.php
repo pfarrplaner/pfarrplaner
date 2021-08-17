@@ -40,6 +40,7 @@
 */
 
 use App\Http\Controllers\CalendarConnectionController;
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\WeddingController;
 use Inertia\Inertia;
 
@@ -326,6 +327,7 @@ Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', 'PublicController@
     ->name('ministry.request');
 Route::post('/anfrage/{ministry}/{user}/{sender?}', 'PublicController@ministryRequestFilled')
     ->name('ministry.request.fill');
+Route::get('/dienste/{cityName}/{ministry}', [PublicController::class, 'ministryPlan'])->name('ministry.plan');
 
 // settings
 Route::post('/setting/{user}/{key}', 'SettingsController@set')->name('setting.set');

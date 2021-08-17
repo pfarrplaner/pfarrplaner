@@ -298,4 +298,35 @@ class PublicController extends Controller
         return view('reports.ministryrequest.thanks', compact('user', 'ministry'));
     }
 
+    public function ministryPlan($cityName, $ministry)
+    {
+        $city = City::where('name', 'like', $cityName)->first();
+        if (!$city) {
+            abort(404);
+        }
+
+        if (str_contains($ministry, ',')) {
+            $ministries = collect(explode(',', $ministry));
+        } else {
+            $ministries = collect([ucfirst($ministry)]);
+        }
+        $ministries = $ministries->map(
+            function ($item) {
+                return ucfirst(trim($item));
+            }
+        );
+
+        $services = Service::where('city_id', $city->id)
+            ->whereHas(
+                'participants',
+                function ($q) use ($ministries) {
+                    return $q->whereIn('category', $ministries);
+                }
+            )
+            ->startingFrom(Carbon::now())
+            ->ordered()
+            ->get();
+
+        return view('public.ministries.plan', compact('city', 'ministries', 'services'));
+    }
 }
