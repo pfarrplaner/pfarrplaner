@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.70.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.69.2...v1.70.0) (2021-08-17)
+
+
+### Features
+
+* Bible text field is now present in all rites ([d4698a4](https://github.com/pfarrplaner/pfarrplaner/commits/d4698a42ceb5e7170d8c3459d6aea64055522f61))
+* New vue-based WeddingEditor ([ec42b4f](https://github.com/pfarrplaner/pfarrplaner/commits/ec42b4f5294ff6c009c5a74e45674b70698b69de))
+* Publicly viewable plan for individual ministries ([14c3752](https://github.com/pfarrplaner/pfarrplaner/commits/14c37520ef4774433f44f3da612373695b8dfd15))
+
+
+### Bug Fixes
+
+* Tests do not work any more on Laravel 8.x ([72a5852](https://github.com/pfarrplaner/pfarrplaner/commits/72a58520b9e32e3f4731512daa406e18ea0d333b))
+
 ### [1.69.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.69.1...v1.69.2) (2021-08-12)
 
 
