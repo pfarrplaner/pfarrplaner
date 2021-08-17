@@ -61,6 +61,36 @@
                     <bible-reference title="Trautext:" :liturgy="{ ref: wedding.text }" liturgy-key="ref" inline="1" />
                 </template>
             </checked-process-item>
+            <div v-if="wedding.spouse1_needs_dimissorial">
+                <checked-process-item v-if="wedding.spouse1_dimissorial_requested" :check="wedding.spouse1_dimissorial_received"
+                                      :positive="'Dimissoriale für '+spouseName(1)+' erhalten'">
+                    <template slot="negative">
+                        Dimissoriale für {{ spouseName(1)}} steht noch aus (beantragt am {{ moment(wedding.spouse1_dimissorial_requested).format('DD.MM.YYYY') }})
+                    </template>
+                </checked-process-item>
+                <checked-process-item v-else :check="wedding.spouse1_dimissorial_requested"
+                                      :negative="'Dimissoriale für '+spouseName(1)+' noch nicht beantragt'" positive="" />
+            </div>
+            <div v-if="wedding.spouse2_needs_dimissorial">
+                <checked-process-item v-if="wedding.spouse2_dimissorial_requested" :check="wedding.spouse2_dimissorial_received"
+                                      :positive="'Dimissoriale für '+spouseName(2)+' erhalten'">
+                    <template slot="negative">
+                        Dimissoriale für {{ spouseName(2)}} steht noch aus (beantragt am {{ moment(wedding.spouse2_dimissorial_requested).format('DD.MM.YYYY') }})
+                    </template>
+                </checked-process-item>
+                <checked-process-item v-else :check="wedding.spouse2_dimissorial_requested"
+                                      :negative="'Dimissoriale für '+spouseName(2)+' noch nicht beantragt'" positive="" />
+            </div>
+            <div v-if="wedding.needs_permission != 0">
+                <checked-process-item v-if="wedding.permission_requested" :check="wedding.permission_received"
+                                      positive="Genehmigung vom Dekanatamt erhalten">
+                    <template slot="negative">
+                        Genehmigung vom Dekanatamt steht noch aus (beantragt am {{ moment(wedding.permission_requested).format('DD.MM.YYYY') }})
+                    </template>
+                </checked-process-item>
+                <checked-process-item v-else :check="wedding.permission_requested"
+                                      negative="Genehmigung des Dekanatamts noch nicht beantragt." positive="" />
+            </div>
             <div>
                 <checked-process-item :check="wedding.docs_ready" positive="Urkunden erstellt" negative="Urkunden noch nicht erstellt">
                     <template slot="positive">
@@ -113,7 +143,11 @@ export default {
     methods: {
         deleteWedding() {
             this.$inertia.delete(route('weddings.destroy', {wedding: this.wedding.id}), {preserveState: false});
-        }
+        },
+        spouseName(index) {
+            var name = this.myWedding['spouse' + index + '_name'].split(', ');
+            return name[1] + ' ' + name[0];
+        },
     }
 
 }

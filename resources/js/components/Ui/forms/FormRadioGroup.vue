@@ -29,14 +29,14 @@
 
 <template>
     <div class="form-group">
-        <span v-if="preLabel"><span :class="['fa', 'fa-'+preLabel]"></span> </span><label>{{ label }}</label>
+        <div v-if="label || preLabel"><span v-if="preLabel"><span :class="['fa', 'fa-'+preLabel]"></span> </span><label>{{ label }}</label></div>
         <div>
-            <div class="form-check form-check-inline" v-for="(subLabel,value,index) in items" :key="value">
+            <div class="form-check" :class="{'form-check-inline': inline}" v-for="(subLabel,subValue,index) in items" :key="subValue">
                 <input class="form-check-input"
                        :class="{'is-invalid': $page.props.errors[name]}"
-                       type="radio" :name="name" :id="'radio'+myId+index" :value="value"
+                       type="radio" :name="name" :id="'radio'+myId+index" :value="subValue"
                        v-model="myValue" :disabled="disabled"
-                       @input="changed($event)">
+                       @input="changed($event)" />
                 <label class="form-check-label" :for="'radio'+myId+index">{{ subLabel }}</label>
                 <div v-if="$page.props.errors[name]" class="invalid-feedback">{{ $page.props.errors[name] }}</div>
             </div>
@@ -59,6 +59,10 @@ export default {
             type: Boolean,
             default: false,
         },
+        inline: {
+            type: Boolean,
+            default: true,
+        }
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
@@ -72,7 +76,10 @@ export default {
     },
     methods: {
         changed(event) {
-            if (event.target.checked) this.$emit('input', event.target.value);
+            var result = typeof event.target.value == Array ? event.target.value[0] : event.target.value;
+            if (!isNaN(result)) result=parseInt(result);
+            if (event.target.checked) this.$emit('input', result);
+            this.$forceUpdate();
         },
     }
 }

@@ -69,6 +69,30 @@ class Wedding extends Model
         'signed',
         'docs_ready',
         'docs_where',
+        'spouse1_dob',
+        'spouse1_address',
+        'spouse1_zip',
+        'spouse1_city',
+        'spouse1_needs_dimissorial',
+        'spouse1_dimissorial_issuer',
+        'spouse1_dimissorial_requested',
+        'spouse1_dimissorial_received',
+        'spouse2_dob',
+        'spouse2_address',
+        'spouse2_zip',
+        'spouse2_city',
+        'spouse2_needs_dimissorial',
+        'spouse2_dimissorial_issuer',
+        'spouse2_dimissorial_requested',
+        'spouse2_dimissorial_received',
+        'needs_permission',
+        'permission_requested',
+        'permission_received',
+        'notes',
+        'music',
+        'gift',
+        'flowers',
+        'docs_format',
     ];
 
     /**
@@ -76,6 +100,14 @@ class Wedding extends Model
      */
     protected $dates = [
         'appointment',
+        'spouse1_dob',
+        'spouse2_dob',
+        'spouse1_dimissorial_requested',
+        'spouse1_dimissorial_received',
+        'spouse2_dimissorial_requested',
+        'spouse2_dimissorial_received',
+        'permission_requested',
+        'permission_received',
     ];
 
     /** @var array $encrypted These fields are en-/decrypted on-the-fly */
@@ -88,6 +120,13 @@ class Wedding extends Model
         'spouse2_birth_name',
         'spouse2_email',
         'spouse2_phone',
+        'spouse1_address',
+        'spouse1_zip',
+        'spouse1_city',
+        'spouse2_address',
+        'spouse2_zip',
+        'spouse2_city',
+        'notes',
     ];
 
     protected $with = ['attachments'];
