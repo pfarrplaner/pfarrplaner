@@ -127,6 +127,11 @@
                             </div>
                         </fieldset>
                         <fieldset>
+                            <legend>Wichtige Informationen</legend>
+                            <form-input name="text" label="Taufspruch" v-model="myBaptism.text" is-checked-item="1" />
+                            <form-textarea name="notes" label="Notizen aus dem Taufgespräch" v-model="myBaptism.notes" />
+                        </fieldset>
+                        <fieldset>
                             <legend>Unterlagen</legend>
                             <div v-if="!hasRegistrationForm" class="mb-3">
                                 <p>Wenn das Anmeldeformular in AHAS Online erstellt wurde, kannst du es hier hochladen:</p>
@@ -186,10 +191,12 @@ import FormSelectize from "../../components/Ui/forms/FormSelectize";
 import AttachmentList from "../../components/Ui/elements/AttachmentList";
 import FormFileUploader from "../../components/Ui/forms/FormFileUploader";
 import CheckedProcessItem from "../../components/Ui/elements/CheckedProcessItem";
+import FormTextarea from "../../components/Ui/forms/FormTextarea";
 
 export default {
     name: "BaptismEditor",
     components: {
+        FormTextarea,
         CheckedProcessItem,
         FormFileUploader,
         AttachmentList,
@@ -244,7 +251,8 @@ export default {
                 && (this.myBaptism.registered)
                 && (this.myBaptism.signed)
                 && (this.myBaptism.docs_ready)
-                && (this.myBaptism.docs_where);
+                && (this.myBaptism.docs_where)
+                && (this.myBaptism.text);
         },
         saveBaptism() {
             this.$inertia.patch(route('baptisms.update', {baptism: this.myBaptism.id}), this.myBaptism);

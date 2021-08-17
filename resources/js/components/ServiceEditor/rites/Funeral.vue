@@ -59,7 +59,7 @@
                 </checked-process-item>
                 <checked-process-item :check="(funeral.text)" negative="Predigttext noch nicht eingetragen">
                     <template slot="positive">
-                        Predigttext: {{ funeral.text }}
+                        <bible-reference title="Predigttext:" :liturgy="{ ref: funeral.text }" liturgy-key="ref" inline="1" />
                     </template>
                 </checked-process-item>
                 <checked-process-item :check="(funeral.announcement)"
@@ -99,10 +99,12 @@ import Participants from "../../Calendar/Service/Participants";
 import FakeAttachment from "../../Ui/elements/FakeAttachment";
 import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
 import AttachmentList from "../../Ui/elements/AttachmentList";
+import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 
 export default {
     name: "Funeral",
     components: {
+        BibleReference,
         AttachmentList,
         FileDragReceiver,
         FakeAttachment,

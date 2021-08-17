@@ -56,6 +56,11 @@
                 <checked-process-item :check="wedding.registered" positive="Anmeldeformular erstellt" negative="Anmeldeformular noch nicht erstellt" />
                 <checked-process-item :check="wedding.signed" positive="Anmeldung unterschrieben" negative="Anmeldung noch nicht unterschrieben" />
             </div>
+            <checked-process-item :check="wedding.text" positive="Trautext" negative="Trautext noch nicht eingetragen">
+                <template slot="positive">
+                    <bible-reference title="Trautext:" :liturgy="{ ref: wedding.text }" liturgy-key="ref" inline="1" />
+                </template>
+            </checked-process-item>
             <div>
                 <checked-process-item :check="wedding.docs_ready" positive="Urkunden erstellt" negative="Urkunden noch nicht erstellt">
                     <template slot="positive">
@@ -87,10 +92,12 @@ import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
 import Participants from "../../Calendar/Service/Participants";
 import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
+import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 
 export default {
     name: "Wedding",
     components: {
+        BibleReference,
         FileDragReceiver,
         Participants,
         DetailsInfo,

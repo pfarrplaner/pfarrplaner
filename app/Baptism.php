@@ -66,7 +66,9 @@ class Baptism extends Model
         'appointment',
         'docs_ready',
         'docs_where',
-        'city_id'
+        'city_id',
+        'text',
+        'notes',
     ];
 
     /**
@@ -84,6 +86,7 @@ class Baptism extends Model
         'candidate_city',
         'candidate_email',
         'candidate_phone',
+        'text'
     ];
 
     protected $with = ['attachments'];

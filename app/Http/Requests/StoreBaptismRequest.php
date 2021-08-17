@@ -78,6 +78,8 @@ class StoreBaptismRequest extends FormRequest
             'signed' => 'nullable|integer|between:0,1',
             'docs_ready' => 'nullable|integer|between:0,1',
             'docs_where' => 'nullable|string',
+            'text' => 'nullable|string',
+            'notes' => 'nullable|string',
         ];
     }
 

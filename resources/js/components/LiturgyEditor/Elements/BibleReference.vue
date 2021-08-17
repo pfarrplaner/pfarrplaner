@@ -28,9 +28,9 @@
   -->
 
 <template xmlns="http://www.w3.org/1999/html">
-    <div class="bible-reference">
+    <div class="bible-reference" :class="{'bible-reference-inline' : inline}" :title="text">
         <div v-if="liturgy[liturgyKey]" :key="liturgyKey+'Text__'+text">
-            <span v-if="title">{{ title }} </span><a v-if="liturgy[liturgyKey+'Link']" :href="liturgy[liturgyKey+'Link']" :title="text"
+            <span v-if="title">{{ title }} </span><a v-if="liturgy[liturgyKey+'Link']" :href="liturgy[liturgyKey+'Link']"
                    target="_blank">{{ liturgy[liturgyKey] }}</a><span v-else>{{ liturgy[liturgyKey]}} </span>
             <span v-if="loading" class="fa fa-spin fa-spinner"></span>
             <span v-if="!loading" class="fa fa-copy" @click.prevent.stop="copyToClipboard"
@@ -42,7 +42,7 @@
 <script>
 export default {
     name: "BibleReference",
-    props: ['liturgy', 'liturgyKey', 'title'],
+    props: ['liturgy', 'liturgyKey', 'title', 'inline'],
     methods: {
         copyToClipboard() {
             const cb = navigator.clipboard;
@@ -68,6 +68,10 @@ export default {
 </script>
 
 <style scoped>
+    .bible-reference.bible-reference-inline, .bible-reference.bible-reference-inline div {
+        display: inline;
+    }
+
     .fa-spinner {
         color: lightgray;
     }

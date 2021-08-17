@@ -62,6 +62,13 @@
                 <checked-process-item :check="baptism.signed" positive="Anmeldung unterschrieben" negative="Anmeldung noch nicht unterschrieben" />
             </div>
             <div>
+                <checked-process-item :check="baptism.text" positive="Taufspruch" negative="Taufspruch noch nicht eingetragen">
+                    <template slot="positive">
+                        <bible-reference title="Taufspruch:" :liturgy="{ ref: myBaptism.text }" liturgy-key="ref" inline="1" />
+                    </template>
+                </checked-process-item>
+            </div>
+            <div>
                 <checked-process-item :check="baptism.docs_ready" positive="Urkunden erstellt" negative="Urkunden noch nicht erstellt">
                     <template slot="positive">
                         Urkunden erstellt<small v-if="baptism.docs_where"><br />Hinterlegt: {{ baptism.docs_where }}</small>
@@ -92,10 +99,12 @@ import Attachment from "../../Ui/elements/Attachment";
 import DetailsInfo from "../../Service/DetailsInfo";
 import Participants from "../../Calendar/Service/Participants";
 import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
+import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 
 export default {
     name: "Baptism",
     components: {
+        BibleReference,
         FileDragReceiver,
         Participants,
         DetailsInfo,
