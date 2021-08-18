@@ -172,6 +172,7 @@
                                             :is-checked-item="true"/>
                             </div>
 
+                            <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myWedding.processed" is-checked-item />
                         </fieldset>
                     </tab>
                     <tab id="attachments" :active-tab="activeTab">
@@ -293,7 +294,8 @@ export default {
                 && (this.myWedding.signed)
                 && (this.myWedding.docs_ready)
                 && (this.myWedding.docs_where)
-                && (this.myWedding.text);
+                && (this.myWedding.text)
+                && (this.myWedding.processed);
         },
         permissionChecks() {
             var check = true;

@@ -145,6 +145,7 @@ class FuneralStoreRequest extends FormRequest
             'professional_life' => 'nullable|string',
             'birth_place' => 'nullable|string',
             'death_place' => 'nullable|string',
+            'processed' => 'nullable|integer|between:0,1'
         ];
     }
 }

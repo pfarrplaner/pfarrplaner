@@ -151,7 +151,7 @@
                                             help="Wo sind die Unterlagen hinterlegt?"
                                             is-checked-item="1"/>
                             </div>
-
+                            <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myBaptism.processed" is-checked-item/>
                         </fieldset>
                     </tab>
                     <tab id="attachments" :active-tab="activeTab">
@@ -252,7 +252,8 @@ export default {
                 && (this.myBaptism.signed)
                 && (this.myBaptism.docs_ready)
                 && (this.myBaptism.docs_where)
-                && (this.myBaptism.text);
+                && (this.myBaptism.text)
+                && (this.myBaptism.processed);
         },
         saveBaptism() {
             this.$inertia.patch(route('baptisms.update', {baptism: this.myBaptism.id}), this.myBaptism);

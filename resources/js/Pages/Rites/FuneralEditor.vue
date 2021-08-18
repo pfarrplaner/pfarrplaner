@@ -43,7 +43,7 @@
                     <tab-header title="Allgemeines" id="home" :active-tab="activeTab"/>
                     <tab-header title="Bestattung" id="funeral" :active-tab="activeTab"
                                 :is-checked-item="true"
-                                :check-value="myFuneral.text && myFuneral.announcement"/>
+                                :check-value="myFuneral.text && myFuneral.announcement && myFuneral.processed"/>
                     <tab-header title="Angehörige" id="family" :active-tab="activeTab"/>
                     <tab-header title="Trauergespräch" id="interview" :active-tab="activeTab" :is-checked-item="true"
                                 :check-value="myFuneral.appointment"/>
@@ -177,6 +177,7 @@
                         <form-textarea label="Bestatter" v-model="myFuneral.undertaker" name="undertaker"/>
                         <form-textarea label="Nachrufe" v-model="myFuneral.eulogies" name="eulogies"/>
                         <form-textarea label="Notizen" v-model="myFuneral.notes" name="notes"/>
+                        <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myFuneral.processed" is-checked-item />
                     </tab>
                     <tab id="family" :active-tab="activeTab">
                         <form-input name="relative_name" v-model="myFuneral.relative_name"
@@ -292,11 +293,13 @@ import ValueCheck from "../../components/Ui/elements/ValueCheck";
 import Participants from "../../components/Calendar/Service/Participants";
 import FakeAttachment from "../../components/Ui/elements/FakeAttachment";
 import RelativeDate from "../../libraries/RelativeDate";
+import FormCheck from "../../components/Ui/forms/FormCheck";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        FormCheck,
         FakeAttachment,
         Participants,
         quillEditor,

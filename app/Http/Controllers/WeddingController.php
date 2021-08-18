@@ -393,6 +393,7 @@ class WeddingController extends Controller
                 'flowers' => 'nullable|string',
                 'docs_format' => 'nullable|int',
                 'notes' => 'nullable|string',
+                'processed' => 'nullable|integer|between:0,1'
             ]
         );
         if (!isset($data['text'])) $data['text'] = '';

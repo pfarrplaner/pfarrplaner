@@ -93,6 +93,7 @@ class Wedding extends Model
         'gift',
         'flowers',
         'docs_format',
+        'processed',
     ];
 
     /**

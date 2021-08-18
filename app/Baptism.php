@@ -69,6 +69,7 @@ class Baptism extends Model
         'city_id',
         'text',
         'notes',
+        'processed'
     ];
 
     /**

@@ -96,6 +96,7 @@ class Funeral extends Model
         'professional_life',
         'birth_place',
         'death_place',
+        'processed'
     ];
 
     /**

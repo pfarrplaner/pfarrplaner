@@ -75,6 +75,9 @@
                     </template>
                 </checked-process-item>
             </div>
+            <div>
+                <checked-process-item :check="baptism.processed" positive="Ins Kirchenbuch eingetragen" negative="Noch nicht ins Kirchenbuch eingetragen" />
+            </div>
         </div>
         <div class="col-md-3">
             <file-drag-receiver multi
