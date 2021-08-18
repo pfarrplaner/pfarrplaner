@@ -57,6 +57,7 @@
                     </template>
                 </checked-process-item>
             </div>
+            <dimissorial-check-item :parent="baptism" />
             <div>
                 <checked-process-item :check="baptism.hasRegistrationForm" positive="Anmeldung aufgenommen und Anmeldeformular erstellt" negative="Anmeldeformular noch nicht erstellt" />
                 <checked-process-item :check="baptism.signed" positive="Anmeldung unterschrieben" negative="Anmeldung noch nicht unterschrieben" />
@@ -103,10 +104,12 @@ import DetailsInfo from "../../Service/DetailsInfo";
 import Participants from "../../Calendar/Service/Participants";
 import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
 import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
+import DimissorialCheckItem from "../../RiteEditors/DimissorialCheckItem";
 
 export default {
     name: "Baptism",
     components: {
+        DimissorialCheckItem,
         BibleReference,
         FileDragReceiver,
         Participants,

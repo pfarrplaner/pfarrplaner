@@ -40,7 +40,8 @@
         <card>
             <card-header>
                 <tab-headers>
-                    <tab-header title="Allgemeines" id="home" :active-tab="activeTab"/>
+                    <tab-header title="Allgemeines" id="home" :active-tab="activeTab" :is-checked-item="true"
+                                :check-value="(!myFuneral.needs_dimissorial) || (myFuneral.dimissorial_received)"/>
                     <tab-header title="Bestattung" id="funeral" :active-tab="activeTab"
                                 :is-checked-item="true"
                                 :check-value="myFuneral.text && myFuneral.announcement && myFuneral.processed"/>
@@ -117,6 +118,7 @@
                                             label="Ort"/>
                             </div>
                         </div>
+                        <dimissorial-form-part :parent="myFuneral" />
                     </tab>
                     <tab id="funeral" :active-tab="activeTab">
                         <fake-table :columns="[2,2,2,3,3]" :headers="['Datum', 'Uhrzeit', 'Ort', 'Pfarrer:in', '']"
@@ -294,11 +296,13 @@ import Participants from "../../components/Calendar/Service/Participants";
 import FakeAttachment from "../../components/Ui/elements/FakeAttachment";
 import RelativeDate from "../../libraries/RelativeDate";
 import FormCheck from "../../components/Ui/forms/FormCheck";
+import DimissorialFormPart from "../../components/RiteEditors/DimissorialFormPart";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        DimissorialFormPart,
         FormCheck,
         FakeAttachment,
         Participants,

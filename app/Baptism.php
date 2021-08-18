@@ -69,7 +69,11 @@ class Baptism extends Model
         'city_id',
         'text',
         'notes',
-        'processed'
+        'processed',
+        'needs_dimissorial',
+        'dimissorial_issuer',
+        'dimissorial_requested',
+        'dimissorial_received',
     ];
 
     /**
@@ -78,6 +82,8 @@ class Baptism extends Model
     protected $dates = [
         'first_contact_on',
         'appointment',
+        'dimissorial_requested',
+        'dimissorial_received',
     ];
 
     /** @var array */

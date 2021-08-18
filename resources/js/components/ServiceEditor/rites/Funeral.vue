@@ -57,6 +57,7 @@
                         </a>
                     </template>
                 </checked-process-item>
+                <dimissorial-check-item :parent="funeral" />
                 <checked-process-item :check="(funeral.text)" negative="Predigttext noch nicht eingetragen">
                     <template slot="positive">
                         <bible-reference title="Predigttext:" :liturgy="{ ref: funeral.text }" liturgy-key="ref" inline="1" />
@@ -103,10 +104,12 @@ import FakeAttachment from "../../Ui/elements/FakeAttachment";
 import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
 import AttachmentList from "../../Ui/elements/AttachmentList";
 import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
+import DimissorialCheckItem from "../../RiteEditors/DimissorialCheckItem";
 
 export default {
     name: "Funeral",
     components: {
+        DimissorialCheckItem,
         BibleReference,
         AttachmentList,
         FileDragReceiver,

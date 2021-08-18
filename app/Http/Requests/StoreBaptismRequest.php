@@ -80,7 +80,11 @@ class StoreBaptismRequest extends FormRequest
             'docs_where' => 'nullable|string',
             'text' => 'nullable|string',
             'notes' => 'nullable|string',
-            'processed' => 'nullable|integer|between:0,1'
+            'processed' => 'nullable|integer|between:0,1',
+            'needs_dimissorial' => 'nullable|integer|between:0,1',
+            'dimissorial_issuer' => 'nullable|string',
+            'dimissorial_requested' => 'nullable|date_format:d.m.Y',
+            'dimissorial_received' => 'nullable|date_format:d.m.Y',
         ];
     }
 
@@ -101,6 +105,8 @@ class StoreBaptismRequest extends FormRequest
 
         $data['first_contact_on'] ? $data['first_contact_on'] = Carbon::createFromFormat('d.m.Y', $data['first_contact_on']) : $data['first_contact_on'] = null;
         $data['appointment'] ? $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment']) : $data['appointment'] = null;
+        $data['dimissorial_requested'] ? $data['dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_requested']) : $data['dimissorial_requested'] = null;
+        $data['dimissorial_received'] ? $data['dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_received']) : $data['dimissorial_received'] = null;
 
         return $data;
     }

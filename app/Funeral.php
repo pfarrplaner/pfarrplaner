@@ -96,7 +96,11 @@ class Funeral extends Model
         'professional_life',
         'birth_place',
         'death_place',
-        'processed'
+        'processed',
+        'needs_dimissorial',
+        'dimissorial_issuer',
+        'dimissorial_requested',
+        'dimissorial_received',
     ];
 
     /**
@@ -108,6 +112,8 @@ class Funeral extends Model
         'appointment',
         'dob',
         'dod',
+        'dimissorial_requested',
+        'dimissorial_received',
     ];
 
     /** @var array */

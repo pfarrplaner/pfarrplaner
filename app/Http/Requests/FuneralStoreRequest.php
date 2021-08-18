@@ -30,6 +30,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
 /**
@@ -89,6 +90,11 @@ class FuneralStoreRequest extends FormRequest
         ) {
             $data[$key] = $data[$key] ?? '';
         }
+
+        $data['dimissorial_requested'] ? $data['dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_requested']) : $data['dimissorial_requested'] = null;
+        $data['dimissorial_received'] ? $data['dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_received']) : $data['dimissorial_received'] = null;
+
+
         return $data;
     }
 
@@ -145,7 +151,11 @@ class FuneralStoreRequest extends FormRequest
             'professional_life' => 'nullable|string',
             'birth_place' => 'nullable|string',
             'death_place' => 'nullable|string',
-            'processed' => 'nullable|integer|between:0,1'
+            'processed' => 'nullable|integer|between:0,1',
+            'needs_dimissorial' => 'nullable|integer|between:0,1',
+            'dimissorial_issuer' => 'nullable|string',
+            'dimissorial_requested' => 'nullable|date_format:d.m.Y',
+            'dimissorial_received' => 'nullable|date_format:d.m.Y',
         ];
     }
 }

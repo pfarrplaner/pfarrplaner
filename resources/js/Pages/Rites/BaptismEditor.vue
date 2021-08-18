@@ -40,8 +40,9 @@
         <card>
             <card-header>
                 <tab-headers>
-                    <tab-header title="Allgemeines" id="home" :active-tab="activeTab"/>
-                    <tab-header title="Vorbereitung" id="prep" :active-tab="activeTab" is-checked-item="1"
+                    <tab-header title="Allgemeines" id="home" :active-tab="activeTab" :is-checked-item="true"
+                                :check-value="(!myBaptism.needs_dimissorial) || (myBaptism.dimissorial_received)"/>
+                    <tab-header title="Vorbereitung" id="prep" :active-tab="activeTab" :is-checked-item="true"
                                 :check-value="prepChecks()"/>
                     <tab-header title="Dateien" id="attachments" :active-tab="activeTab"
                                 :count="myBaptism.attachments.length"/>
@@ -104,6 +105,7 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <dimissorial-form-part :parent="myBaptism" />
                     </tab>
                     <tab id="prep" :active-tab="activeTab">
                         <fieldset id="fsPrep">
@@ -192,10 +194,12 @@ import AttachmentList from "../../components/Ui/elements/AttachmentList";
 import FormFileUploader from "../../components/Ui/forms/FormFileUploader";
 import CheckedProcessItem from "../../components/Ui/elements/CheckedProcessItem";
 import FormTextarea from "../../components/Ui/forms/FormTextarea";
+import DimissorialFormPart from "../../components/RiteEditors/DimissorialFormPart";
 
 export default {
     name: "BaptismEditor",
     components: {
+        DimissorialFormPart,
         FormTextarea,
         CheckedProcessItem,
         FormFileUploader,
