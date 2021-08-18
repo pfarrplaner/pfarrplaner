@@ -33,6 +33,7 @@ namespace App\Http\Controllers;
 use App\Attachment;
 use App\City;
 use App\Day;
+use App\Events\ServiceUpdated;
 use App\Funeral;
 use App\Http\Requests\FuneralStoreRequest;
 use App\Liturgy\PronounSets\PronounSets;
@@ -241,6 +242,7 @@ class FuneralController extends Controller
         $funeral->service->setDefaultOfferingValues();
         $funeral->service->save();
         $this->handleAttachments($request, $funeral);
+        ServiceUpdated::dispatch($funeral->service, $funeral->service->participants);
 
         return redirect(route('services.edit', ['service' => $funeral->service->id, 'tab' => 'rites']));
     }

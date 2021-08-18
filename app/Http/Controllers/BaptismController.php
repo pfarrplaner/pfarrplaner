@@ -32,6 +32,7 @@ namespace App\Http\Controllers;
 
 use App\Attachment;
 use App\Baptism;
+use App\Events\ServiceUpdated;
 use App\Http\Requests\StoreBaptismRequest;
 use App\Liturgy\PronounSets\PronounSets;
 use App\Service;
@@ -179,6 +180,9 @@ class BaptismController extends Controller
     {
         $data = $request->validated();
         $baptism->update($data);
+        if ($baptism->service) {
+            ServiceUpdated::dispatch($baptism->service, $baptism->service->participants);
+        }
 
         if ($baptism->service_id) {
             return redirect(route('services.edit', ['service' => $baptism->service_id, 'tab' => 'rites']));

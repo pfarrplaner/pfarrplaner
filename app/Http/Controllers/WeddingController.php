@@ -33,6 +33,7 @@ namespace App\Http\Controllers;
 use App\Attachment;
 use App\City;
 use App\Day;
+use App\Events\ServiceUpdated;
 use App\Liturgy\PronounSets\PronounSets;
 use App\Location;
 use App\Service;
@@ -160,7 +161,7 @@ class WeddingController extends Controller
 
         $wedding->service->setDefaultOfferingValues();
         $wedding->service->save();
-        $this->handleAttachments($request, $wedding);
+        ServiceUpdated::dispatch($wedding->service, $wedding->service->participants);
 
         return redirect(route('services.edit', ['service' => $wedding->service->id, 'tab' => 'rites']));
     }
