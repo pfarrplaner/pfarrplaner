@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.72.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.0...v1.72.1) (2021-08-18)
+
+
+### Bug Fixes
+
+* Timezone error in Funeral list view ([7b9f603](https://github.com/pfarrplaner/pfarrplaner/commits/7b9f603ed83fedea4f54b302f8e46fb07b8a3e23))
+
 ## [1.72.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.71.0...v1.72.0) (2021-08-18)
 
 
