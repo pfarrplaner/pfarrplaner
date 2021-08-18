@@ -31,9 +31,9 @@
     <div class="form-check">
         <input type="hidden" :name="name" value="0" />
         <input type="checkbox" class="form-check-input" :class="{'is-invalid': $page.props.errors[name]}" :id="myId+'Input'" :name="name"
-               :checked="myValue && (myValue != 0) && (myValue != '0')" @input="$emit('input', $event.target.checked ? 1: 0)" value="1" :disabled="disabled"/>
+               :checked="isChecked" @input="handleInput" value="1" :disabled="disabled"/>
         <label class="form-check-label" v-if="label" :for="id+'Input'">{{ label }}</label>
-        <span v-if="isCheckedItem" class="fa" :class="myValue ? 'fa-check-circle' : 'fa-times-circle'"></span>
+        <span v-if="isCheckedItem" class="fa" :class="myValue ? 'fa-check-circle' : 'fa-times-circle'" :key="myValue"></span>
         <div v-if="$page.props.errors[name]" class="invalid-feedback">{{ $page.props.errors[name] }}</div>
         <div v-if="help" class="form-text text-muted">{{ help }}</div>
     </div>
@@ -59,6 +59,11 @@ export default {
         },
         isCheckedItem: Boolean,
     },
+    computed: {
+        isChecked() {
+            return (this.myValue) && (this.myValue != 0) && (this.myValue != '0');
+        }
+    },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
     },
@@ -69,6 +74,12 @@ export default {
             error: this.$page.props.errors[this.name],
         }
     },
+    methods: {
+        handleInput(event) {
+            this.myValue = event.target.checked ? 1: 0;
+            this.$emit('input', this.myValue);
+        }
+    }
 }
 </script>
 
