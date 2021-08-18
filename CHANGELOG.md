@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.71.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.70.0...v1.71.0) (2021-08-18)
+
+
+### Features
+
+* Add dimissorial fields to baptisms, weddings ([1a613da](https://github.com/pfarrplaner/pfarrplaner/commits/1a613da5fcd9fa22b9490dfa443b118016e05e0c)), closes [#109](https://github.com/pfarrplaner/pfarrplaner/issues/109)
+* Dimissorials can be granted online via a secure url ([ce60ef9](https://github.com/pfarrplaner/pfarrplaner/commits/ce60ef970e0b0a70533df9abb883134a07199cf9))
+* Mark rites as processed ([8ab6987](https://github.com/pfarrplaner/pfarrplaner/commits/8ab69876ea671029a56f2f559d184b7e91df55f7))
+
+
+### Bug Fixes
+
+* Checkboxes with isCheckedItem flag do not update correctly on input ([360ff2c](https://github.com/pfarrplaner/pfarrplaner/commits/360ff2ca97747ae252b18e5a1673fa4687d8bfe2))
+* Timezone and formatting problems with wedding appointment ([48f7737](https://github.com/pfarrplaner/pfarrplaner/commits/48f773740dff77014768da7d32eae17139eddd34))
+
 ## [1.70.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.69.2...v1.70.0) (2021-08-17)
 
 
