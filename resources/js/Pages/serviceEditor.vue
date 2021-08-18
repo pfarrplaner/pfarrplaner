@@ -233,6 +233,10 @@ name: "serviceEditor",
                 }
             }
             if (this.editedService.konfiapp_event_qr) ctr++;
+
+            // default auto attachments:
+            ctr += 1;
+
             return ctr;
         },
         cancelEdit() {

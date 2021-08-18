@@ -135,7 +135,7 @@ Route::post('/reports/render/{report}', ['as' => 'reports.render', 'uses' => 'Re
 Route::get('/reports/render/{report}', ['as' => 'reports.render.get', 'uses' => 'ReportsController@render']);
 Route::get('/report/{report}', ['as' => 'reports.setup', 'uses' => 'ReportsController@setup']);
 Route::get('/report/{report}/embed', ['as' => 'report.embed', 'uses' => 'ReportsController@embed'])->middleware('cors');
-Route::match(['GET', 'POST'], '/report/{report}/{step}', ['as' => 'report.step.post', 'uses' => 'ReportsController@step']);
+Route::match(['GET', 'POST'], '/report/{report}/{step}', ['as' => 'report.step', 'uses' => 'ReportsController@step']);
 
 Route::get('/input/{input}', ['as' => 'inputs.setup', 'uses' => 'InputController@setup']);
 Route::post('/input/collect/{input}', ['as' => 'inputs.input', 'uses' => 'InputController@input']);

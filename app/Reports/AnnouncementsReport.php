@@ -194,26 +194,32 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
     }
 
-    /**
-     * @param Request $request
-     * @return string|void
-     * @throws Exception
-     */
-    public function render(Request $request)
+    public function auto(Request $request)
     {
-        $request->validate(
-            [
-                'offerings' => 'required|string',
-                'lastService' => 'required|date|date_format:d.m.Y',
-            ]
-        );
+        if (!$request->has('service')) abort(404);
+        $service = Service::findOrFail($request->get('service'));
+        $lastService = Service::where('offering_amount', '!=', '')
+            ->endingAt($service->dateTime)
+            ->orderedDesc()
+            ->first();
+        $this->renderReport([
+            'lastService' => $lastService->day->date->format('d.m.Y'),
+            'offerings' => $lastService->offering_amount,
+            'offering_text' => $service->offering_text,
+            'service' => $service,
+            'mix_outlook' => $service->city->public_events_calendar_url ? true : false,
+            'mix_op' => $service->city->op_customer_token ? true : false,
+                                   ]);
+    }
 
-        $service = Service::findOrFail($request->session()->pull('service'));
-        $city = City::findOrFail($request->session()->pull('city'));
+    public function renderReport($data)
+    {
+        $service = $data['service'] ?? Service::findOrFail($data['service_id'] ?? session()->pull('service'));
+        $city = $service->city ?? City::findOrFail(session()->pull('city'));
 
-        $lastService = $request->get('lastService');
-        $offerings = $request->get('offerings');
-        $offeringText = $request->get('offering_text') ?: '';
+        $lastService = $data['lastService'];
+        $offerings = $data['offerings'];
+        $offeringText = $data['offering_text'] ?: '';
 
         $lastWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 last Sunday');
         $nextWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 next Sunday');
@@ -274,14 +280,14 @@ class AnnouncementsReport extends AbstractWordDocumentReport
 
         $events = [];
 
-        if ($request->get('mix_outlook', false)) {
+        if ($data['mix_outlook'] ?? false) {
             $calendar = new EventCalendarImport($city->public_events_calendar_url);
             $events = $calendar->mix($events, $service->day->date, $nextWeek, true);
         }
 
         $events = Service::mix($events, $services, $service->day->date, $nextWeek);
 
-        if ($request->get('mix_op', false)) {
+        if ($data['mix_op'] ??  false) {
             $op = new OPEventsImport($city);
             $events = $op->mix($events, $service->day->date, $nextWeek);
         }
@@ -719,9 +725,33 @@ Amen.'
             );
         }
 
+        if ($service->announcements) {
+            $this->renderParagraph();
+            $textRun = $this->renderLiteral($service->announcements);
+        }
+
 
         $filename = $service->day->date->format('Y_m_d') . ' Bekanntgaben';
         $this->sendToBrowser($filename);
+
+    }
+
+    /**
+     * @param Request $request
+     * @return string|void
+     * @throws Exception
+     */
+    public function render(Request $request)
+    {
+        return $this->renderReport(
+            $request->validate(
+                [
+                    'offerings' => 'required|string',
+                    'lastService' => 'required|date|date_format:d.m.Y',
+                ]
+            )
+        );
+
     }
 
     /**

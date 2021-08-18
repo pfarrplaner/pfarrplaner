@@ -47,6 +47,11 @@
                     <span class="float-right fa fa-download"></span>
                 </div>
             </div>
+            <div class="liturgy-sheet btn btn-light" @click.prevent="downloadAnnouncements">
+                <b><span class="fa fa-file-word"></span> Bekanntgaben</b><br/>
+                <small>.docx, ca. 20 kB</small>
+                <span class="float-right fa fa-download"></span>
+            </div>
             <div v-if="service.attachments.length > 0">
                 <attachment v-for="(attachment,key,index) in service.attachments" :key="key" :attachment="attachment"
                             @delete-attachment="deleteAttachment(attachment, key)" allow-delete />
@@ -97,7 +102,7 @@ export default {
     },
     computed: {
         hasAutoAttachments() {
-            return (this.myService.liturgy_blocks.length > 0) || (this.myService.konfiapp_event_qr);
+            return true;
         }
     },
     data() {
@@ -128,6 +133,9 @@ export default {
         },
         downloadQR() {
             window.location.href = route('report.step', {report: 'KonfiAppQR', step: 'single', service: this.myService.id});
+        },
+        downloadAnnouncements() {
+            window.location.href = route('report.step', {report: 'Announcements', step: 'auto', service: this.myService.id});
         },
         newRow() {
             this.files.attachment_text.push('');
