@@ -53,7 +53,7 @@
                     <template slot="positive">
                         <a :href="route('funeral.appointment.ical', funeral)" title="In den Kalender übernehmen">
                             <span class="fa fa-calendar"></span> Trauergespräch am
-                            {{ moment(funeral.appointment).locale('de-DE').format('LLLL') }} Uhr
+                            {{ DateTime.fromISO(funeral.appointment).setZone('Europe/Berlin' , {keepLocalTime: true}).setZone('UTC').setLocale('de').toLocaleString(DateTime.DATETIME_SHORT) }} Uhr
                         </a>
                     </template>
                 </checked-process-item>
@@ -105,6 +105,7 @@ import FileDragReceiver from "../../Ui/elements/FileDragReceiver";
 import AttachmentList from "../../Ui/elements/AttachmentList";
 import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 import DimissorialCheckItem from "../../RiteEditors/DimissorialCheckItem";
+import { DateTime } from 'luxon';
 
 export default {
     name: "Funeral",
@@ -118,11 +119,13 @@ export default {
         DetailsInfo,
         Attachment,
         CheckedProcessItem,
+        DateTime,
     },
     props: ['funeral', 'showService', 'showPastor'],
     data() {
         return {
             myFuneral : this.funeral,
+            DateTime: DateTime,
         }
     },
     methods: {
