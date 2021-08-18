@@ -403,7 +403,7 @@ class WeddingController extends Controller
         if (!isset($data['docs_ready'])) $data['docs_ready'] = 0;
 
         // dates
-        if (isset($data['appointment'])) $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment']);
+        if (isset($data['appointment'])) $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment'])->shiftTimezone('Europe/Berlin')->setTimeZone('UTC');
         if (isset($data['spouse1_dob'])) $data['spouse1_dob'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dob']);
         if (isset($data['spouse1_dimissorial_requested'])) $data['spouse1_dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dimissorial_requested']);
         if (isset($data['spouse1_dimissorial_received'])) $data['spouse1_dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dimissorial_received']);

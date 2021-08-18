@@ -322,7 +322,9 @@ export default {
             ].forEach(item => {
                 if (result[item]) result[item] = moment(result['item']).format('DD.MM.YYYY');
             });
-            if (result.appointment) result.appointment = moment(result.appointment).format('DD.MM.YYYY HH:mm');
+
+            if (result.appointment) result.appointment = moment(result.appointment, 'DD.MM.YYYY HH:mm').format('DD.MM.YYYY HH:mm');
+
             this.$inertia.patch(route('weddings.update', this.myWedding.id), result);
         },
         deleteWedding() {
