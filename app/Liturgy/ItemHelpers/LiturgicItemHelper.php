@@ -53,7 +53,7 @@ class LiturgicItemHelper extends AbstractItemHelper
         }
         switch ($this->item->data['needs_replacement']) {
             case 'funeral':
-                $funeralId = $this->item->data['replacement'] ?: $service->funerals->first()->id;
+                $funeralId = $this->item->data['replacement'] ?? $service->funerals->first()->id;
                 if ($service->funerals->pluck('id')->contains($funeralId)) {
                     $funeral = Funeral::find($funeralId);
                     list($lastName, $firstName) = explode(',', $funeral->buried_name);
@@ -105,7 +105,7 @@ class LiturgicItemHelper extends AbstractItemHelper
                 }
                 break;
             case 'wedding':
-                $weddingId = $this->item->data['replacement']  ?: $service->weddings->first()->id;
+                $weddingId = $this->item->data['replacement']  ?? $service->weddings->first()->id;
                 if ($service->weddings->pluck('id')->contains($weddingId)) {
                     $wedding = Wedding::find($weddingId);
                     list($lastName1, $firstName1) = explode(',', $wedding->spouse1_name);
