@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.72.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.71.0...v1.72.0) (2021-08-18)
+
+
+### Features
+
+* Add announcements as automated download ([d5a212c](https://github.com/pfarrplaner/pfarrplaner/commits/d5a212c623a4735f0b5acdadc59d7b85c3cea550))
+
+
+### Bug Fixes
+
+* External calendars do not update when only a rite record is edited ([0c17ef3](https://github.com/pfarrplaner/pfarrplaner/commits/0c17ef3d5193f2a142342acc32e53c940c80272e))
+
 ## [1.71.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.70.0...v1.71.0) (2021-08-18)
 
 
