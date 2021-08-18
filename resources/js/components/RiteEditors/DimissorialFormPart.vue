@@ -47,6 +47,7 @@
                                   :is-checked-item="true" />
             </div>
         </div>
+        <dimissorial-url v-if="needed" :url="parent.dimissorialUrl" />
     </fieldset>
 </template>
 
@@ -54,10 +55,11 @@
 import FormCheck from "../Ui/forms/FormCheck";
 import FormInput from "../Ui/forms/FormInput";
 import FormDatePicker from "../Ui/forms/FormDatePicker";
+import DimissorialUrl from "./DimissorialUrl";
 
 export default {
     name: "DimissorialFormPart",
-    components: {FormDatePicker, FormInput, FormCheck},
+    components: {DimissorialUrl, FormDatePicker, FormInput, FormCheck},
     props: ['parent'],
     watch: {
         needed: function (newV, oldV) {

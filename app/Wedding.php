@@ -36,6 +36,7 @@ use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\URL;
 
 /**
  * Class Wedding
@@ -131,6 +132,7 @@ class Wedding extends Model
     ];
 
     protected $with = ['attachments'];
+    protected $appends = ['spouse1DimissorialUrl', 'spouse2DimissorialUrl'];
 
     /**
      * @return BelongsTo
@@ -166,6 +168,14 @@ class Wedding extends Model
             'location' => '',
         ];
         return [$key => $record];
+    }
+
+    public function getSpouse1DimissorialUrlAttribute() {
+        return URL::signedRoute('dimissorial.show', ['type' => 'trauung', 'id' => $this->id, 'spouse' => 1]);
+    }
+
+    public function getSpouse2DimissorialUrlAttribute() {
+        return URL::signedRoute('dimissorial.show', ['type' => 'trauung', 'id' => $this->id, 'spouse' => 2]);
     }
 
 

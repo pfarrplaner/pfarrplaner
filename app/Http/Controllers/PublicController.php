@@ -30,11 +30,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Baptism;
 use App\City;
 use App\Day;
+use App\Funeral;
 use App\Mail\MinistryRequestFilled;
 use App\Service;
 use App\User;
+use App\Wedding;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -328,5 +331,65 @@ class PublicController extends Controller
             ->get();
 
         return view('public.ministries.plan', compact('city', 'ministries', 'services'));
+    }
+
+    /**
+     * @param $type
+     * @param $id
+     * @return Baptism|Funeral|Wedding|null
+     */
+    protected function getRite($type, $id) {
+        switch ($type) {
+            case 'taufe':
+                return Baptism::findOrFail($id);
+            case 'beerdigung':
+                return Funeral::findOrFail($id);
+            case 'trauung':
+                return Wedding::findOrFail($id);
+        }
+        return null;
+    }
+
+    /**
+     * @param Request $request
+     * @param $type
+     * @param $id
+     * @return Application|Factory|View
+     */
+    public function showDimissorial(Request $request, $type, $id) {
+        if (!$request->hasValidSignature()) abort(401);
+        if (!$rite = $this->getRite($type, $id)) abort(404);
+
+        if ($type == 'trauung') {
+            if (!$request->has('spouse')) abort(404);
+            $spouse = $request->get('spouse');
+            $method = 'spouse'.$spouse.'_needs_dimissorial';
+            if (!$rite->$method) abort(403);
+        } else {
+            if (!$rite->needs_dimissorial) abort(403);
+            $spouse = null;
+        }
+
+        $rite->load(['service']);
+        $type = ucfirst($type);
+        return view('public.dimissorial.show', compact('rite', 'type', 'id', 'spouse'));
+    }
+
+    public function grantDimissorial(Request $request, $type, $id)
+    {
+        if (!$rite = $this->getRite($type, $id)) abort(404);
+        $rite->load(['service']);
+        if ($type == 'trauung') {
+            if (!$request->has('spouse')) abort(404);
+            $spouse = $request->get('spouse');
+            $method = 'spouse'.$spouse.'_needs_dimissorial';
+            if (!$rite->$method) dd($method);
+            $rite->update(['spouse'.$spouse.'_dimissorial_received' => Carbon::now()]);
+        } else {
+            if (!$rite->needs_dimissorial) abort(403);
+            $rite->update(['dimissorial_received' => Carbon::now()]);
+        }
+        $type = ucfirst($type);
+        return view('public.dimissorial.thanks', compact('rite', 'type'));
     }
 }

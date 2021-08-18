@@ -28,27 +28,37 @@
   -->
 
 <template>
-    <div v-if="parent.needs_dimissorial">
-        <checked-process-item v-if="parent.dimissorial_requested || parent.dimissorial_received" :check="parent.dimissorial_received"
-                              :positive="'Dimissoriale  erhalten'">
-            <template slot="negative">
-                Dimissoriale steht noch aus (beantragt am {{ moment(parent.dimissorial_requested).format('DD.MM.YYYY') }})
-            </template>
-        </checked-process-item>
-        <checked-process-item v-else :check="parent.dimissorial_requested"
-                              :negative="'Dimissoriale noch nicht beantragt'" positive="" />
+    <div class="dimissorial-url">
+        <b>Link zum automatischen Erteilen des Dimissoriale:</b> <a :href="url" target="_blank">{{ url }}</a>
+        <span class="fa fa-copy" @click.prevent.stop="copyToClipboard"
+              title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
     </div>
 </template>
 
 <script>
-import CheckedProcessItem from "../Ui/elements/CheckedProcessItem";
 export default {
-    name: "DimissorialCheckItem",
-    components: {CheckedProcessItem},
-    props: ['parent'],
+    name: "DimissorialUrl",
+    props: ['url'],
+    methods: {
+        copyToClipboard() {
+            const cb = navigator.clipboard;
+            cb.writeText(this.url).then(result => {});
+        }
+    },
 }
 </script>
 
 <style scoped>
+.fa-copy {
+    color: lightgray;
+    display: none;
+}
+.fa-copy:hover {
+    color: gray;
+}
+
+.dimissorial-url:hover .fa-copy {
+    display: inline;
+}
 
 </style>

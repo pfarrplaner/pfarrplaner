@@ -36,6 +36,7 @@ use App\Traits\HasCommentsTrait;
 use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\URL;
 
 /**
  * Class Baptism
@@ -98,7 +99,7 @@ class Baptism extends Model
 
     protected $with = ['attachments'];
 
-    protected $appends = ['hasRegistrationForm'];
+    protected $appends = ['hasRegistrationForm', 'dimissorialUrl'];
 
     /**
      * @return BelongsTo
@@ -146,5 +147,14 @@ class Baptism extends Model
             'location' => $this->candidate_address.', '.$this->candidate_zip.' '.$this->candidate_city,
         ];
         return [$key => $record];
+    }
+
+    /**
+     * Get the signed url for an online dimissorial
+     * @return string
+     */
+    public function getDimissorialUrlAttribute()
+    {
+        return URL::signedRoute('dimissorial.show', ['type' => 'taufe', 'id' => $this->id]);
     }
 }

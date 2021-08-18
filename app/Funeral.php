@@ -37,6 +37,7 @@ use AustinHeap\Database\Encryption\Traits\HasEncryptedAttributes;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\URL;
 
 /**
  * Class Funeral
@@ -153,7 +154,7 @@ class Funeral extends Model
         'death_place',
     ];
 
-    protected $appends = ['age'];
+    protected $appends = ['age', 'dimissorialUrl'];
     protected $with = ['attachments'];
 
     /**
@@ -252,6 +253,15 @@ class Funeral extends Model
             'location' => $this->relative_address.', '.$this->relative_zip.' '.$this->relative_city,
         ];
         return [$key => $record];
+    }
+
+    /**
+     * Get the signed url for an online dimissorial
+     * @return string
+     */
+    public function getDimissorialUrlAttribute()
+    {
+        return URL::signedRoute('dimissorial.show', ['type' => 'beerdigung', 'id' => $this->id]);
     }
 
 

@@ -93,6 +93,9 @@
                                                       v-model="wedding[spouseKey(spouseIndex, 'dimissorial_received')]"
                                                       :is-checked-item="true"
                                                       label="Dimissoriale erhalten am"/>
+                                    <div>
+                                        <dimissorial-url :url="wedding['spouse'+spouseIndex+'DimissorialUrl']" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -216,10 +219,12 @@ import CheckedProcessItem from "../../components/Ui/elements/CheckedProcessItem"
 import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 import FormRadioGroup from "../../components/Ui/forms/FormRadioGroup";
 import FormSelectize from "../../components/Ui/forms/FormSelectize";
+import DimissorialUrl from "../../components/RiteEditors/DimissorialUrl";
 
 export default {
     name: "WeddingEditor",
     components: {
+        DimissorialUrl,
         FormSelectize,
         FormRadioGroup,
         FormDatePicker,

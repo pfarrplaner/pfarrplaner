@@ -361,3 +361,7 @@ Route::get('/bible/text/{reference}/{version?}', 'BibleController@text')->name('
 
 // csrf token: keep alive
 Route::get('/csrf-token', 'Auth\\LoginController@keepTokenAlive')->name('csrf.keepalive');
+
+// dimissorial
+Route::get('/dimissoriale/{type}/{id}', [PublicController::class, 'showDimissorial'])->name('dimissorial.show');
+Route::post('/dimissoriale/{type}/{id}', [PublicController::class, 'grantDimissorial'])->name('dimissorial.grant');
