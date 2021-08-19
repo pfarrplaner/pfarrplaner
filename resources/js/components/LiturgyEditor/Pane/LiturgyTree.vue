@@ -519,7 +519,6 @@ export default {
         },
         displayResponsible(record) {
             var title = '';
-            console.log(typeof record);
             if (typeof record != 'string') return;
             var tmp = record.split(':');
             if (tmp[0] == 'user') {
@@ -557,7 +556,6 @@ export default {
             this.service[item.data.needs_replacement+'s'].forEach(obj => {
                 if (obj.id == item.data.replacement) replacerObject = obj;
             })
-            console.log('replacerObject', replacerObject, item.data.needs_replacement+'s');
             switch (item.data.needs_replacement) {
                 case 'funeral':
                     t += 'für eine Bestattung';
