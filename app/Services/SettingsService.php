@@ -103,8 +103,9 @@ class SettingsService
         return $setting;
     }
 
-    public function all(User $user)
+    public function all(User $user, $forceReload = false)
     {
+        if ($forceReload) unset($this->settings[$user->id]);
         $this->cacheSettings($user);
         return $this->settings[$user->id] ? $this->settings[$user->id]->map(function($item){
             return $item->value;

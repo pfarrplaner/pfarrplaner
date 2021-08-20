@@ -903,4 +903,30 @@ class User extends Authenticatable
         }
         return $can;
     }
+
+
+    /**
+     * Ensure certain user settings are present, if not, set a sensible default
+     */
+    public function ensureDefaultSettings()
+    {
+        $needReload = false;
+        $settings = Settings::all($this);
+        $defaults = config('user-settings.defaults');
+        foreach ($defaults as $key => $defaultSetting) {
+            if (!isset($settings[$key])) {
+                $settings[$key] = $defaultSetting;
+                Settings::set($this, $key, $defaultSetting);
+            } else {
+                if (is_array($defaultSetting)) {
+                    if (is_array($settings[$key])) {
+                        $settings[$key] = array_replace_recursive($defaultSetting, $settings[$key]);
+                    } else {
+                        $settings[$key] = $defaultSetting;
+                    }
+                    Settings::set($this, $key, $settings[$key]);
+                }
+            }
+        }
+    }
 }

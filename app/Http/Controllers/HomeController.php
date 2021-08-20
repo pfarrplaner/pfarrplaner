@@ -93,7 +93,9 @@ class HomeController extends Controller
         }
 
         $user = Auth::user()->load(['userSettings', 'roles', 'permissions']);
+        $user->ensureDefaultSettings();
         $settings = Settings::all($user);
+
         $replacements = [];
         if ($settings['homeScreenConfig']['showReplacements'] ?? false) {
             $replacements = Replacement::with('absence')

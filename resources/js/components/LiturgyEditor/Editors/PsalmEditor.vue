@@ -129,6 +129,9 @@ export default {
     async created() {
         const psalms = await axios.get(route('liturgy.psalm.index'))
         if (psalms.data) {
+            psalms.data.forEach(psalm => {
+                psalm['display'] = displayTitle(psalm);
+            });
             this.psalms = psalms.data;
         }
     },

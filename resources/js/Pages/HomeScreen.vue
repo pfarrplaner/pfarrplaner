@@ -53,7 +53,7 @@
                     <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key" :active-tab="myActiveTab"
                                 :count="tab.count" :badge-type="tab.badgeType" :class="'tabheader-'+tab.type"/>
                     <div class="ml-auto d-inline tab-setup">
-                        <a :href="route('user.profile', {tab: 'homescreen'})" class="p-2 pl-3 tab-setup ml-auto"
+                        <a :href="route('user.profile', {tab: 'homeScreenConfiguration'})" class="p-2 pl-3 tab-setup ml-auto"
                            title="Angezeigte Reiter konfigurieren"><span class="fa fa-cog"></span>
                             <span class="d-none d-md-inline">Anzeige</span>
                         </a>
@@ -61,10 +61,10 @@
                 </tab-headers>
             </card-header>
             <card-body>
-                <div v-if="myTabNames.length == 0" class="alert alert-info">
+                <div v-if="myTabsConfig.tabs.length == 0" class="alert alert-info">
                     Dieser Startbildschirm ist noch ziemlich leer. In deinem Profil kannst du einstellen, was du hier sehen möchtest.
                     <div>
-                        <a class="btn btn-primary" :href="route('user.profile', {tab: 'homescreen'})">Profil bearbeiten</a>
+                        <a class="btn btn-primary" :href="route('user.profile', {tab: 'homeScreenConfiguration'})">Profil bearbeiten</a>
                     </div>
                 </div>
                 <tabs>
@@ -123,7 +123,7 @@ export default {
             myTabNames: myTabNames,
             myTabsConfig: this.settings.homeScreenTabsConfig,
             myTabs: {},
-            myActiveTab: this.activeTab || this.settings.homeScreenTabsConfig.tabs[0].type+'0',
+            myActiveTab: this.activeTab || (this.settings.homeScreenTabsConfig.tabs[0] ? this.settings.homeScreenTabsConfig.tabs[0].type+'0' : null),
         }
     },
     methods: {
