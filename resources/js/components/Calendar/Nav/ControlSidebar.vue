@@ -53,14 +53,6 @@
         <hr class="mb-2">
         <calendar-control-city-sort :cities="cities" />
         <hr class="mb-2">
-        <div class="mb-1">
-            <h6>Namen anzeigen als:</h6>
-            <select class="form-control" v-model="nameFormat" @change="handleNameFormatChange">
-                <option value="1">Pfr. Müller</option>
-                <option value="2">Pfr. K. Müller</option>
-                <option value="3">Pfr. Karl Müller</option>
-            </select>
-        </div>
     </div>
 </template>
 
@@ -90,12 +82,6 @@ export default {
                 value: this.orientation
             });
         },
-        handleNameFormatChange() {
-            EventBus.publish(new CalendarNewNameFormatEvent(this.nameFormat));
-            axios.post(route('setting.set', {user: this.user.id, key: 'calendar_name_format'}), {
-                value: this.nameFormat
-            });
-        }
     }
 }
 </script>

@@ -47,26 +47,11 @@ export default {
             user: vm.$children[0].page.props.currentUser.data,
         }
     },
-    mounted() {
-        EventBus.listen(CalendarNewNameFormatEvent, this.handeNameFormatChange);
-    },
     methods: {
         formatName(person) {
-            switch(parseInt(this.nameFormat)) {
-                case 1:
-                    if (!person.last_name) return person.name;
-                    return [person.title, person.last_name].join(' ').trim();
-                case 2:
-                    if (!person.last_name) return person.name;
-                    if (!person.first_name) return person.name;
-                    return [person.title, person.first_name.substr(0,1)+'.', person.last_name].join(' ').trim();
-                case 3:
-                    if (!person.last_name) return person.name;
-                    if (!person.first_name) return person.name;
-                    return [person.title, person.first_name, person.last_name].join(' ').trim();
-                default:
-                    return '[['+this.nameFormat+']]';
-            }
+            if (!person.last_name) return person.name;
+            if (!person.first_name) return person.name;
+            return [person.title, person.first_name, person.last_name].join(' ').trim();
         },
         handeNameFormatChange(e) {
             this.nameFormat = e.format;
