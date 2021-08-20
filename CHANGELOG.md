@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.72.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.1...v1.72.2) (2021-08-20)
+
+
+### Features
+
+* Calendar always shows full name ([a23e4f7](https://github.com/pfarrplaner/pfarrplaner/commits/a23e4f7dbb4da175e8105556597e4e4178028ff4)), closes [#132](https://github.com/pfarrplaner/pfarrplaner/issues/132)
+
+
+### Bug Fixes
+
+* Auto-select first baptism/funeral/wedding when rendering LiturgicItems where no association is selected ([a08146f](https://github.com/pfarrplaner/pfarrplaner/commits/a08146f45e48c73aa1f63c84fc3ce083e0ccd7b5)), closes [#89](https://github.com/pfarrplaner/pfarrplaner/issues/89)
+* Empty screen after login when certain settings are not set ([6e06e2e](https://github.com/pfarrplaner/pfarrplaner/commits/6e06e2e014289472650211f89c20f27d579aa959)), closes [#130](https://github.com/pfarrplaner/pfarrplaner/issues/130) [#131](https://github.com/pfarrplaner/pfarrplaner/issues/131)
+
 ### [1.72.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.0...v1.72.1) (2021-08-18)
 
 
