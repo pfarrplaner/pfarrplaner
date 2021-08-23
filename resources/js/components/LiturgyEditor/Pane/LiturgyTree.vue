@@ -50,12 +50,13 @@
         </div>
         <div class="card-body">
             <draggable :list="blocks" group="blocks" v-bind:="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
-                       @start="focusOff" @end="saveState" :disabled="!editable">
+                       @start="focusOff" @end="saveState" :disabled="!editable" handle=".handle">
                 <div v-for="block,blockIndex in blocks" class="liturgy-block"
                      :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
                      @click="focusBlock(blockIndex)">
                     <div class="row">
                         <div class="col-11 liturgy-block-title">
+                            <span class="fa fa-bars handle mr-1" title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
                             <span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ block.title }}
                         </div>
                         <div class="col-1 text-right" v-if="editable">
@@ -89,16 +90,19 @@
                     <details-pane v-if="block.editing == true" :service="service" :element="block"
                                   :agenda-mode="agendaMode" :markers="markers"/>
 
-                    <draggable :list="block.items" group="items" class="liturgy-items-list"
+                    <draggable :list="block.items" group="items" class="liturgy-items-list" handle=".handle"
                                v-bind:="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
                                :disabled="!editable">
                         <div v-for="item,itemIndex in block.items" class="liturgy-item"
                              @click.stop="focusItem(blockIndex, itemIndex)"
                              :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}"
                              :data-block-index="blockIndex" :data-item-index="itemIndex">
-                            <div class="row"
-                                 title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
-                                <div class="col-sm-3 item-title"><span class="fa fa-chevron-circle-right"
+                            <div class="row item"
+                                 title="Klicken, um zu bearbeiten.">
+                                <div class="col-sm-3 item-title">
+                                    <span class="fa data-type-icon handle mr-1" :class="icons[item.data_type]"
+                                          title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
+                                    <span class="fa fa-chevron-circle-right"
                                                                        style="display: none;"></span> {{ item.title }}
                                 </div>
                                 <div class="col-sm-4" v-if="item.data_type == 'sermon'">
@@ -317,6 +321,14 @@ export default {
         });
 
         return {
+            icons: {
+                freetext: 'fa-file',
+                psalm: 'fa-praying-hands',
+                reading: 'fa-bible',
+                sermon: 'fa-microphone-alt',
+                song: 'fa-music',
+                liturgic: 'fa-file-alt',
+            },
             blocks: myBlocks,
             focusedBlock: null,
             focusedItem: null,
@@ -678,6 +690,18 @@ export default {
 
 .ghost-item {
 
+}
+
+.handle {
+    cursor: move;
+}
+
+.item .handle {
+    color: gray;
+}
+
+.data-type-icon {
+    color: gray;
 }
 
 </style>
