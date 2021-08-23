@@ -38,12 +38,9 @@
                 Bitte warten, Liste der Psalmen wird geladen...
             </div>
             <div v-else>
-                <div class="form-group">
-                    <label for="existing_text">Psalm</label>
-                    <selectize class="form-control" name="existing_text" v-model="selectedPsalm">
-                        <option v-for="psalm in psalms" :value="psalm.id">{{ displayTitle(psalm) }}</option>
-                    </selectize>
-                </div>
+                <form-selectize name="psalm" label="Psalm" :value="selectedPsalm"
+                                :options="psalms" :settings="{ searchField: ['name'], }"
+                                @input="handlePsalmSelection" />
                 <div v-if="(editedElement.data.psalm.id == -1) || editPsalm">
                     <div class="form-group">
                         <label for="title">Titel des Psalms</label>
@@ -107,12 +104,14 @@
 <script>
 import Nl2br from 'vue-nl2br';
 import Selectize from 'vue2-selectize';
+import FormSelectize from "../../Ui/forms/FormSelectize";
 
 export default {
     name: "PsalmEditor",
     components: {
         Nl2br,
         Selectize,
+        FormSelectize,
     },
     props: {
         element: Object,
@@ -130,13 +129,12 @@ export default {
         const psalms = await axios.get(route('liturgy.psalm.index'))
         if (psalms.data) {
             psalms.data.forEach(psalm => {
-                psalm['display'] = displayTitle(psalm);
+                psalm['name'] = this.displayTitle(psalm);
             });
             this.psalms = psalms.data;
         }
     },
     data() {
-        var e = this.element;
         var emptyPsalm = {
             id: -1,
             title: '',
@@ -148,33 +146,20 @@ export default {
             reference: '',
         };
 
-        if (undefined == e.data.psalm) e.data.psalm = emptyPsalm;
+        if (undefined == this.element.data.psalm) {
+            this.element.data = {};
+            this.element.data['psalm'] = {};
+            this.element.data['psalm'] = emptyPsalm;
+        }
+        var editedElement = this.element;
         return {
-            editedElement: e,
+            editedElement: editedElement,
             emptyPsalm: emptyPsalm,
             editPsalm: false,
             psalms: null,
             psalmIsDirty: false,
-            selectedPsalm: e.data.psalm.id,
+            selectedPsalm: editedElement.data.psalm.id,
         };
-    },
-    watch: {
-        selectedPsalm: {
-            handler: function (newVal, oldVal) {
-                var found = false;
-                this.psalms.forEach(function(psalm) {
-                    if (psalm.id == newVal) found = psalm;
-                })
-                if (found) this.editedElement.data.psalm = found;
-                this.psalmIsDirty = this.editPsalm;
-            },
-        },
-        'editedElement.data.psalm': {
-            handler: function (oldVal, newVal) {
-                this.psalmIsDirty = this.editPsalm;
-            },
-            deep: true,
-        }
     },
     methods: {
         save: function () {
@@ -228,6 +213,17 @@ export default {
 
             return text;
         },
+        handlePsalmSelection(e) {
+            this.selectedPsalm = e;
+
+            var found = false;
+            this.psalms.forEach(function(psalm) {
+                if (psalm.id == e) found = psalm;
+            })
+            if (found) this.editedElement.data.psalm = found;
+            console.log('found', found, this.editedElement.data.psalm);
+            this.psalmIsDirty = this.editPsalm;
+        }
     }
 }
 </script>
