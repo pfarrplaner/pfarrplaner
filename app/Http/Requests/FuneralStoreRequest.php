@@ -86,7 +86,8 @@ class FuneralStoreRequest extends FormRequest
                 'events',
                 'character',
                 'death',
-            ] as $key
+                'birth_name',
+                ] as $key
         ) {
             $data[$key] = $data[$key] ?? '';
         }
@@ -156,6 +157,7 @@ class FuneralStoreRequest extends FormRequest
             'dimissorial_issuer' => 'nullable|string',
             'dimissorial_requested' => 'nullable|date_format:d.m.Y',
             'dimissorial_received' => 'nullable|date_format:d.m.Y',
+            'birth_name' => 'nullable|string',
         ];
     }
 }

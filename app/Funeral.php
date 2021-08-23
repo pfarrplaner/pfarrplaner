@@ -102,6 +102,7 @@ class Funeral extends Model
         'dimissorial_issuer',
         'dimissorial_requested',
         'dimissorial_received',
+        'birth_name',
     ];
 
     /**
@@ -152,6 +153,7 @@ class Funeral extends Model
         'professional_life',
         'birth_place',
         'death_place',
+        'birth_name',
     ];
 
     protected $appends = ['age', 'dimissorialUrl'];

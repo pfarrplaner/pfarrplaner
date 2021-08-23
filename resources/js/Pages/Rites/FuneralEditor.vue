@@ -78,10 +78,16 @@
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <form-input label="Rufname" v-model="myFuneral.spoken_name" name="spoken_name"
-                                            placeholder="falls abweichend vom kompletten Vornamen"/>
+                                <form-input name="birth_name" label="Geburtsname"
+                                            help="falls abweichend vom Nachnamen" v-model="myFuneral.birth_name" />
                             </div>
                             <div class="col-md-6">
+                                <form-input label="Rufname" v-model="myFuneral.spoken_name" name="spoken_name"
+                                            help="falls abweichend vom kompletten Vornamen"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <form-input label="Beruf" v-model="myFuneral.profession" name="profession"/>
                             </div>
                         </div>
