@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.72.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.2...v1.72.3) (2021-08-23)
+
+
+### Bug Fixes
+
+* PsalmEditor does not save selected psalm ([8ae95b3](https://github.com/pfarrplaner/pfarrplaner/commits/8ae95b34f3782c5b6491b03ca3452b19e828033c))
+
 ### [1.72.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.1...v1.72.2) (2021-08-20)
 
 
