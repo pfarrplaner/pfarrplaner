@@ -42,6 +42,7 @@ use App\Liturgy\ItemHelpers\SongItemHelper;
 use App\Liturgy\Replacement\Replacement;
 use App\Service;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Shared\Html;
 
 class SongSheetLiturgySheet extends AbstractLiturgySheet
@@ -63,9 +64,12 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
         $doc = new DefaultWordDocument();
         $this->setProperties($doc);
 
-        $doc->getSection()->addTitle($service->titleText(false)."<w:br />"
-                                     .$service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
-                                     .$service->locationText(), 1);
+        $run = new TextRun($doc->getParagraphStyle('heading1'));
+        $run->addText($service->titleText(false), $doc->getFontStyle('heading1'));
+        $run->addTextBreak();
+        $run->addText($service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
+                      .$service->locationText(), $doc->getFontStyle('heading1'));
+        $doc->getSection()->addTitle($run, 0);
 
         foreach ($service->liturgyBlocks as $block) {
             foreach ($block->items as $item) {
@@ -111,6 +115,9 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
         $doc->getSection()->addTitle($helper->getTitleText(),3);
+        if ($item->data['song']['copyrights']) {
+            $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 8]);
+        }
 
         foreach ($helper->getActiveVerses() as $verse) {
             if ($verse['refrain_before']) {

@@ -107,24 +107,7 @@ class DefaultWordDocument
         ]);
 
         // Überschrift 1
-        $this->phpWord->addTitleStyle(1, [
-            'name' => 'Helvetica Condensed',
-            'size' => 16,
-            'bold' => true,
-            'italic' => false,
-        ], [
-            'alignment' => Jc::START,
-            'indentation' => [
-                'left' => 0,
-                'right' => 0,
-                'firstLine' => 0,
-                'hanging' => 0,
-            ],
-            'keepNext' => true,
-            'lineHeight' => 1.08,
-            'spaceBefore' => Converter::pointToTwip(12),
-            'spaceAfter' => 0,
-        ]);
+        $this->phpWord->addTitleStyle(1, $this->getFontStyle('heading1'), $this->getParagraphStyle('heading1'));
 
         // Überschrift 2
         $this->phpWord->addTitleStyle(2, [
@@ -294,5 +277,38 @@ class DefaultWordDocument
         }
     }
 
+    public function getParagraphStyle($style)
+    {
+        switch ($style) {
+            case 'heading1':
+                return [
+                    'alignment' => Jc::START,
+                    'indentation' => [
+                        'left' => 0,
+                        'right' => 0,
+                        'firstLine' => 0,
+                        'hanging' => 0,
+                    ],
+                    'keepNext' => true,
+                    'lineHeight' => 1.08,
+                    'spaceBefore' => Converter::pointToTwip(12),
+                    'spaceAfter' => 0,
+                ];
+        }
+    }
+
+
+    public function getFontStyle($style)
+    {
+        switch ($style) {
+            case 'heading1':
+                return [
+                    'name' => 'Helvetica Condensed',
+                    'size' => 16,
+                    'bold' => true,
+                    'italic' => false,
+                ];
+        }
+    }
 }
 
