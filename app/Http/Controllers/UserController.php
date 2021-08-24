@@ -203,7 +203,7 @@ class UserController extends Controller
         $user = User::find($id);
         $cities = City::all();
         $roles = Role::all()->sortBy('name');
-        $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
+        $parishes = Parish::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $homescreen = $user->getSetting('homeScreen', 'route:calendar');
         $users = User::all();
         return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes', 'users'));
