@@ -71,13 +71,19 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
                 if ($item->data_type == 'song') {
                     /** @var SongItemHelper $helper */
                     $helper = $item->getHelper();
+                    $copyrights = $item->data['song']['copyrights'] ?? '';
+                    if ($copyrights) {
+                        if ($item->data['song']['songbook_abbreviation']) {
+                            $copyrights = $item->data['song']['songbook_abbreviation'].' '.$item->data['song']['reference'].'. '.$copyrights;
+                        }
+                    }
                     foreach ($helper->getActiveVerses() as $verse) {
                         if ($verse['refrain_before']) {
-                            $this->slide($item->data['song']['refrain']);
+                            $this->slide($item->data['song']['refrain'], 30, 'FFFFFFFF', true,  $copyrights);
                         }
-                        $this->slide($verse['number'].'. '.$verse['text']);
+                        $this->slide($verse['number'].'. '.$verse['text'], 30, 'FFFFFFFF', true,  $copyrights);
                         if ($verse['refrain_after']) {
-                            $this->slide($item->data['song']['refrain']);
+                            $this->slide($item->data['song']['refrain'], 30, 'FFFFFFFF', true,  $copyrights);
                         }
                     }
                     $this->slide();
@@ -89,6 +95,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
                     if ($item->title == 'Ehr sei dem Vater') {
 //                        unset($slides[count($slides) - 1]);
                         $this->slide($item->data['text']);
+                        $this->slide();
                     }
                 }
             }
@@ -101,7 +108,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
         return $this->sendToBrowser($fileName);
     }
 
-    protected function slide($text = '', $size = 30, $rgb = 'FFFFFFFF', $bold = true)
+    protected function slide($text = '', $size = 30, $rgb = 'FFFFFFFF', $bold = true, $copyrights = '')
     {
         $slide = $this->createEmptySlide();
         if ($text) {
@@ -120,6 +127,12 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
                 }
                 $paragraph->getFont()->setBold($bold)->setSize($size)->setColor($color)->setName('Calibri');
                 $paragraph->createTextRun(str_replace('&', '**', $line));
+            }
+            if ($copyrights) {
+                $paragraph = $shape->createParagraph();
+                $paragraph->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+                $paragraph->getFont()->setBold(false)->setSize(10)->setColor($color)->setName('Calibri');
+                $paragraph->createTextRun("\n" . $copyrights);
             }
         }
     }
@@ -142,9 +155,9 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
     protected function createFullScreenRichTextShape(Slide $slide): RichText
     {
         $shape = $slide->createRichTextShape()
-            ->setWidth(960)
-            ->setHeight(540)
-            ->setOffsetX(0)
+            ->setWidth(950)
+            ->setHeight(530)
+            ->setOffsetX(10)
             ->setOffsetY(0);
         $shape->getActiveParagraph()->getAlignment()->setVertical(Alignment::VERTICAL_BOTTOM);
         return $shape;
