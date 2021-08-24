@@ -99,7 +99,7 @@ class MenuBuilder
                     'icon' => 'fa fa-globe-europe',
                     'url' => route('absences.index'),
                     'active' => Route::currentRouteName() == 'absences.index',
-                    'inertia' => false,
+                    'inertia' => true,
                 ],
                 [
                     'text' => 'Urlaubsanträge',
