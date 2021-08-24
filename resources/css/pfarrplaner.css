@@ -782,3 +782,12 @@ tr.changed, tr.changed td, tr.changed th {
     position: sticky;
     top: 0px;
 }
+
+.ql-custom.ql-picker .ql-picker-label::before {
+    content: attr(data-label);
+    padding-right: 15px;
+}
+
+.ql-snow .ql-picker-options .ql-picker-item:before {
+    content: attr(data-label);
+}

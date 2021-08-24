@@ -79,7 +79,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <form-input name="birth_name" label="Geburtsname"
-                                            help="falls abweichend vom Nachnamen" v-model="myFuneral.birth_name" />
+                                            help="falls abweichend vom Nachnamen" v-model="myFuneral.birth_name"/>
                             </div>
                             <div class="col-md-6">
                                 <form-input label="Rufname" v-model="myFuneral.spoken_name" name="spoken_name"
@@ -98,7 +98,8 @@
                                 </form-group>
                             </div>
                             <div class="col-md-6">
-                                <form-group name="dod" label="Sterbedatum" :help="relativeDate(myFuneral.dod, moment())+(age ? ' im Alter von '+age+' Jahren' : '')">
+                                <form-group name="dod" label="Sterbedatum"
+                                            :help="relativeDate(myFuneral.dod, moment())+(age ? ' im Alter von '+age+' Jahren' : '')">
                                     <date-picker :config="myDatePickerConfig" v-model="myFuneral.dod"/>
                                 </form-group>
                             </div>
@@ -124,7 +125,7 @@
                                             label="Ort"/>
                             </div>
                         </div>
-                        <dimissorial-form-part :parent="myFuneral" />
+                        <dimissorial-form-part :parent="myFuneral"/>
                     </tab>
                     <tab id="funeral" :active-tab="activeTab">
                         <fake-table :columns="[2,2,2,3,3]" :headers="['Datum', 'Uhrzeit', 'Ort', 'Pfarrer:in', '']"
@@ -178,14 +179,16 @@
                             <form-input label="Ort der vorhergehenden Trauerfeier"
                                         v-model="myFuneral.wake_location" name="wake_location"/>
                         </div>
-                        <form-group label="Abkündigen am" :is-checked-item="true" :value="myFuneral.announcement" name="announcement">
+                        <form-group label="Abkündigen am" :is-checked-item="true" :value="myFuneral.announcement"
+                                    name="announcement">
                             <date-picker :config="myDatePickerConfig" v-model="myFuneral.announcement"/>
                         </form-group>
                         <hr/>
                         <form-textarea label="Bestatter" v-model="myFuneral.undertaker" name="undertaker"/>
                         <form-textarea label="Nachrufe" v-model="myFuneral.eulogies" name="eulogies"/>
                         <form-textarea label="Notizen" v-model="myFuneral.notes" name="notes"/>
-                        <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myFuneral.processed" is-checked-item />
+                        <form-check name="processed" label="Kirchenbucheintrag abgeschlossen"
+                                    v-model="myFuneral.processed" is-checked-item/>
                     </tab>
                     <tab id="family" :active-tab="activeTab">
                         <form-input name="relative_name" v-model="myFuneral.relative_name"
@@ -195,7 +198,7 @@
                                 <span class="fa fa-copy"></span> Adresse übernehmen
                             </button>
                         </div>
-                        <form-input v-model="myFuneral.relative_address" name="relative_address"  :key="copied"
+                        <form-input v-model="myFuneral.relative_address" name="relative_address" :key="copied"
                                     label="Adresse" help="Straße und Hausnummer"/>
                         <div class="row">
                             <div class="col-md-3">
@@ -203,25 +206,28 @@
                                             label="Postleitzahl" type="number"/>
                             </div>
                             <div class="col-md-9">
-                                <form-input v-model="myFuneral.relative_city"  name="relative_city" :key="copied"
+                                <form-input v-model="myFuneral.relative_city" name="relative_city" :key="copied"
                                             label="Ort"/>
                             </div>
                         </div>
                         <form-textarea label="Weitere Kontaktdaten" v-model="myFuneral.relative_contact_data"
-                        name="relative_contact_data"/>
+                                       name="relative_contact_data"/>
                     </tab>
                     <tab id="interview" :active-tab="activeTab">
-                        <form-group label="Trauergespräch" :is-checked-item="true" :value="myFuneral.appointment" name="appointment">
+                        <form-group label="Trauergespräch" :is-checked-item="true" :value="myFuneral.appointment"
+                                    name="appointment">
                             <date-picker v-model="myFuneral.appointment" :config="myDateTimePickerConfig"/>
                         </form-group>
                         <form-textarea label="Anwesende" v-model="myFuneral.attending" name="attending"/>
                         <hr/>
                         <div class="row">
                             <div class="col-md-4">
-                                <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents" name="parents"/>
+                                <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents"
+                                               name="parents"/>
                                 <form-textarea label="Ehepartner" v-model="funeral.spouse" name="spouse"/>
                                 <form-textarea label="Kinder" v-model="funeral.children" name="children"/>
-                                <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family" name="further_family"/>
+                                <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family"
+                                               name="further_family"/>
                                 <hr/>
                                 <form-textarea label="Taufe" v-model="funeral.baptism" name="baptism"/>
                                 <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation"/>
@@ -229,15 +235,18 @@
                             <div class="col-md-4">
                                 <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood" name="childhood"/>
                                 <form-input label="Beruf" v-model="myFuneral.profession" name="profession"/>
-                                <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life" name="professional_life"/>
+                                <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life"
+                                               name="professional_life"/>
                                 <form-textarea label="Heirat, Familie" v-model="funeral.family" name="family"/>
-                                <form-textarea label="Weiterer Lebenslauf" v-model="funeral.further_life" name="further_life"/>
+                                <form-textarea label="Weiterer Lebenslauf" v-model="funeral.further_life"
+                                               name="further_life"/>
                                 <form-textarea label="Lebensende" v-model="funeral.death" name="death"/>
                                 <hr/>
                                 <form-textarea label="Prägende Erlebnisse, Hobbies, Interessen"
                                                v-model="funeral.events" name="events"/>
                                 <form-textarea label="Charakter" v-model="funeral.character" name="character"/>
-                                <form-textarea label="Glaube, Frömmigkeit, Kirche" v-model="funeral.faith" name="faith"/>
+                                <form-textarea label="Glaube, Frömmigkeit, Kirche" v-model="funeral.faith"
+                                               name="faith"/>
                                 <hr/>
                                 <form-textarea label="Zitate" v-model="funeral.quotes" name="quotes"/>
                             </div>
@@ -247,7 +256,31 @@
                                     <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
                                                   v-model="funeral.life"
                                                   :options="editorOption" @focus="textEditorActive = true"
-                                                  @blur="textEditorActive = false"/>
+                                                  @blur="textEditorActive = false">
+                                        <div id="toolbar" slot="toolbar">
+                                            <button class="ql-bold"></button>
+                                            <button class="ql-italic"></button>
+                                            <button class="ql-underline mr-2"></button>
+                                            <button class="ql-header" value="1"></button>
+                                            <button class="ql-blockquote mr-2"></button>
+                                            <span class="ql-formats mr-2">
+                                                <button class="ql-list" value="ordered"></button>
+                                                <button class="ql-list" value="bullet"></button>
+                                                <button class="ql-indent" value="-1"></button>
+                                                <button class="ql-indent" value="+1"></button>
+                                            </span>
+                                            <button class="ql-clean mr-2"></button>
+                                            <select class="ql-custom" data-label="Texte">
+                                                <option value="dob" data-label="Geburtsdatum" data-value="dob">Geburtsdatum</option>
+                                                <option value="dod" data-label="Sterbedatum" data-value="dod">Sterbedatum</option>
+                                                <option value="birth_place" data-label="Geburtsort" data-value="birth_place">Geburtsort</option>
+                                                <option value="death_place" data-label="Sterbeort" data-value="death_place">Sterbeort</option>
+                                                <option value="birth_name" data-label="Geburtsname" data-value="birth_name">Geburtsname</option>
+                                                <option value="spoken_name" data-label="Rufname" data-value="spoken_name">Rufname</option>
+                                                <option value="age" data-label="Sterbealter" data-value="age">Sterbealter</option>
+                                            </select>
+                                        </div>
+                                    </quill-editor>
                                 </div>
 
                             </div>
@@ -260,7 +293,7 @@
                                          :key="myFuneral.attachments.length"/>
                         <fake-attachment :href="route('funeral.form', {funeral: this.myFuneral.id})"
                                          title="Formular für Kirchenregisteramt" extension="pdf"
-                                         icon="fa-file-pdf" size="ca. 135 kB" />
+                                         icon="fa-file-pdf" size="ca. 135 kB"/>
 
                         <hr/>
                         <h3>Dateien hinzufügen.</h3>
@@ -357,7 +390,15 @@ export default {
             editorOption: {
                 placeholder: 'Hier kannst du einen Textentwurf für den Lebenslauf schreiben...',
                 modules: {
+                    toolbar: {
+                        container: '#toolbar',
+                        handlers: {
+                            custom: this.quillInsertText,
+                        }
+                    },
+                    /*
                     toolbar: [
+
                         ['bold', 'italic', 'underline'],        // toggled buttons
                         ['blockquote'],
 
@@ -366,6 +407,7 @@ export default {
 
                         ['clean']                                         // remove formatting button
                     ],
+                     */
                     clipboard: {
                         matchVisual: false,
                     },
@@ -396,6 +438,26 @@ export default {
             window.location.href = route('funeral.form', {funeral: this.myFuneral.id});
         },
         relativeDate: RelativeDate,
+        quillInsertText(e) {
+            var quill = this.$refs.textEditor.quill;
+            var text = null;
+
+            switch (e) {
+                case 'dob':
+                    text = moment(this.myFuneral.dob, 'DD.MM.YYYY').locale('de').format('LL');
+                    break;
+                case 'dod':
+                    text = moment(this.myFuneral.dod, 'DD.MM.YYYY').locale('de').format('LL');
+                    break;
+                case 'age':
+                    text = this.age.toString();
+                    break;
+                default:
+                    if (this.myFuneral[e]) text = this.myFuneral[e];
+            }
+
+            if (text) quill.insertText(quill.getSelection(true).index, text);
+        },
     }
 }
 </script>
@@ -423,4 +485,9 @@ ul.nav.nav-tabs {
     color: gray !important;
 }
 
+
+.ql-custom.ql-picker .ql-picker-item:before {
+    content: attr(data-label);
+    content: 'Hello world';
+}
 </style>
