@@ -396,18 +396,6 @@ export default {
                             custom: this.quillInsertText,
                         }
                     },
-                    /*
-                    toolbar: [
-
-                        ['bold', 'italic', 'underline'],        // toggled buttons
-                        ['blockquote'],
-
-                        [{'header': 1}],               // custom button values
-                        [{'list': 'ordered'}, {'list': 'bullet'}],
-
-                        ['clean']                                         // remove formatting button
-                    ],
-                     */
                     clipboard: {
                         matchVisual: false,
                     },
@@ -485,9 +473,4 @@ ul.nav.nav-tabs {
     color: gray !important;
 }
 
-
-.ql-custom.ql-picker .ql-picker-item:before {
-    content: attr(data-label);
-    content: 'Hello world';
-}
 </style>
