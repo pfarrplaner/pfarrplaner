@@ -791,3 +791,7 @@ tr.changed, tr.changed td, tr.changed th {
 .ql-snow .ql-picker-options .ql-picker-item:before {
     content: attr(data-label);
 }
+
+.ql-toolbar .quill-fa-button {
+    padding-top: 1px;
+}

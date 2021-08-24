@@ -110,7 +110,23 @@
                             <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
                                           v-model="editedSermon.text"
                                           :options="editorOption" @focus="textEditorActive = true"
-                                          @blur="textEditorActive = false"/>
+                                          @blur="textEditorActive = false">
+                                <div id="toolbar" slot="toolbar">
+                                    <button class="ql-bold"></button>
+                                    <button class="ql-italic"></button>
+                                    <button class="ql-underline mr-2"></button>
+                                    <button class="ql-header" value="1"></button>
+                                    <button class="ql-blockquote mr-2"></button>
+                                    <span class="ql-formats mr-2">
+                                                    <button class="ql-list" value="ordered"></button>
+                                                    <button class="ql-list" value="bullet"></button>
+                                                    <button class="ql-indent" value="-1"></button>
+                                                    <button class="ql-indent" value="+1"></button>
+                                                </span>
+                                    <button class="ql-clean mr-2"></button>
+                                    <button class="ql-insertbible quill-fa-button" title="Bibeltext hinzufügen"><span class="fa fa-bible"></span></button>
+                                </div>
+                            </quill-editor>
 
                             <div v-if="editedSermon.text.length > 0">
                                 <small class="form-text text-muted">{{
@@ -231,15 +247,13 @@ export default {
             editorOption: {
                 placeholder: 'Schreibe hier den Text deiner Predigt hin...',
                 modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline'],        // toggled buttons
-                        ['blockquote'],
-
-                        [{'header': 1}],               // custom button values
-                        [{'list': 'ordered'}, {'list': 'bullet'}],
-
-                        ['clean']                                         // remove formatting button
-                    ],
+                    toolbar: {
+                        container: '#toolbar',
+                        handlers: {
+                            custom: this.quillInsertText,
+                            insertbible: this.quillInsertBible,
+                        }
+                    },
                     clipboard: {
                         matchVisual: false,
                     },
@@ -320,10 +334,34 @@ export default {
         },
         setImage(event) {
             this.fileUpload = event.target.files[0];
+        },
+        quillInsertText(e) {
+            var quill = this.$refs.textEditor.quill;
+            var text = null;
+
+            switch (e) {
+                default:
+                    text = e;
+            }
+
+            if (text) quill.insertText(quill.getSelection(true).index, text);
+        },
+        quillInsertBible() {
+            var reference = window.prompt('Welche Bibelstelle möchtest du einfügen?');
+            axios.get(route('bible.text', {reference: reference, showReference: 1, showVerseNumbers: 0}) ).then(result => {
+                if (result.data.text) {
+                    this.quillInsertText(result.data.text);
+                } else {
+                    alert('Zu dieser Stellenangabe konnte kein Text gefunden werden.');
+                }
+            });
         }
     }
 }
 </script>
 
 <style scoped>
+.ql-toolbar .quill-fa-button {
+    padding-top: 1px;
+}
 </style>

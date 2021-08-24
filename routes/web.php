@@ -39,6 +39,7 @@
 |
 */
 
+use App\Http\Controllers\BibleController;
 use App\Http\Controllers\CalendarConnectionController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\WeddingController;
@@ -357,7 +358,7 @@ Route::post('/streaming/{city}/activateBroadcast/{broadcast}', 'StreamingTrouble
 Route::get('/manual/{routeName}', 'ManualController@page')->name('manual');
 
 // bible texts
-Route::get('/bible/text/{reference}/{version?}', 'BibleController@text')->name('bible.text');
+Route::get('/bible/text/{reference}/{version?}', [BibleController::class, 'text'])->name('bible.text');
 
 // csrf token: keep alive
 Route::get('/csrf-token', 'Auth\\LoginController@keepTokenAlive')->name('csrf.keepalive');
