@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.73.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.3...v1.73.0) (2021-08-24)
+
+
+### Features
+
+* Add birth name in FuneralEditor ([9f92802](https://github.com/pfarrplaner/pfarrplaner/commits/9f928025374606cad2a5750eb4df6c8f04bca617)), closes [#136](https://github.com/pfarrplaner/pfarrplaner/issues/136)
+* Add common text templates to story field in FuneralEditor ([4594502](https://github.com/pfarrplaner/pfarrplaner/commits/45945022b51637610597d906655d92b40ac21a14))
+* Add service button to insert bible text in SermonEditor ([f2b7450](https://github.com/pfarrplaner/pfarrplaner/commits/f2b7450bd3525abc3e23fd85a79601f6538b3390)), closes [#78](https://github.com/pfarrplaner/pfarrplaner/issues/78)
+* New image upload in SermonEditor ([dae5bc9](https://github.com/pfarrplaner/pfarrplaner/commits/dae5bc9f286f5c0235d9b3abeff4d9cd7be1a066)), closes [#117](https://github.com/pfarrplaner/pfarrplaner/issues/117) [#103](https://github.com/pfarrplaner/pfarrplaner/issues/103)
+* Use drag handles in LiturgyTree to improve handling on touch screens ([8d1e049](https://github.com/pfarrplaner/pfarrplaner/commits/8d1e049bd1c699ef2023dae38c781a97c1abb2c0)), closes [#137](https://github.com/pfarrplaner/pfarrplaner/issues/137)
+
 ### [1.72.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.2...v1.72.3) (2021-08-23)
 
 
