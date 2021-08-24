@@ -39,7 +39,11 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\StreamingTroubleshooterController; 
+
+Route::get('/streaming/{city}', [StreamingTroubleshooterController::class, 'index'])->name('streaming.troubleshooter');
+Route::post('/streaming/activateService/{service}', [StreamingTroubleshooterController::class, 'activateService'])->name('streaming.troubleshooter.activateService');
+Route::post('/streaming/resetService/{service}', [StreamingTroubleshooterController::class, 'resetService'])->name('streaming.troubleshooter.resetService');
+Route::post('/streaming/{city}/activateBroadcast/{broadcast}', [StreamingTroubleshooterController::class, 'activateBroadcast'])->name('streaming.troubleshooter.activateBroadcast');

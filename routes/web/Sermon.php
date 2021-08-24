@@ -39,7 +39,14 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\SermonController; 
+
+Route::get('/services/{service}/sermon', [SermonController::class, 'editorByService'])->name('services.sermon.editor');
+Route::post('/services/{service}/sermon', [SermonController::class, 'store'])->name('services.sermon.store');
+Route::delete('/services/{service}/sermon', [SermonController::class, 'uncouple'])->name('services.sermon.uncouple');
+Route::get('/sermons/{sermon}', [SermonController::class, 'editor'])->name('sermon.editor');
+Route::patch('/sermons/{sermon}', [SermonController::class, 'update'])->name('sermon.update');
+Route::post('/sermons/{model}/image', [SermonController::class, 'attachImage'])->name('sermon.image.attach');
+Route::delete('/sermons/{model}/image', [SermonController::class, 'detachImage'])->name('sermon.image.detach');

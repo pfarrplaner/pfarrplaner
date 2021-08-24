@@ -39,7 +39,13 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\EmbedController; 
+
+Route::get('services/embed/locations/{ids}/{limit?}', [EmbedController::class, 'embedByLocations'])->name('embed.table-locations');
+Route::get('services/embed/baptismalServices/{ids}/{limit?}/{maxBaptisms?}', [EmbedController::class, 'embedByBaptismalServices'])->name('embed.table-baptismalservices');
+Route::get('services/embed/cities/{ids}/{limit?}', [EmbedController::class, 'embedByCities'])->name('embed.table-cities');
+Route::get('services/embed/cc/cities/{ids}/{limit?}', [EmbedController::class, 'embedCCByCities'])->name('embed.table-cc');
+Route::get('user/embed/vacations/{user}', [EmbedController::class, 'embedUserVacations'])->name('embed.user.vacations');
+Route::get('services/embed/{report}', [EmbedController::class, 'embedReport'])->name('embed.report');

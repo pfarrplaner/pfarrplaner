@@ -39,7 +39,11 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\GoogleApiController; 
+
+Route::get('/google/auth/city', [GoogleApiController::class, 'auth'])->name('google-auth');
+Route::get('/google/youtube/createServiceBroadcast/{service}', [GoogleApiController::class, 'createBroadcast'])->name('broadcast.create');
+Route::get('/google/youtube/serviceBroadcast/{service}/refresh', [GoogleApiController::class, 'refreshBroadcast'])->name('broadcast.refresh');
+Route::delete('/google/youtube/serviceBroadcast/{service}', [GoogleApiController::class, 'deleteBroadcast'])->name('broadcast.delete');

@@ -39,7 +39,8 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\PodcastController; 
+
+Route::get('/podcasts/{cityName}.xml', [PodcastController::class, 'podcast'])->name('podcast');

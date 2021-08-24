@@ -39,7 +39,13 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\BaptismController; 
+
+Route::get('/baptism/add/{service}', [BaptismController::class, 'create'])->name('baptism.add');
+Route::get('/baptism/destroy/{baptism}', [BaptismController::class, 'destroy'])->name('baptism.destroy');
+Route::get('/baptism/{baptism}/appointment/ical', [BaptismController::class, 'appointmentIcal'])->name('baptism.appointment.ical');
+Route::post('/baptism/done/{baptism}', [BaptismController::class, 'done'])->name('baptism.done');
+Route::post('baptisms/{baptism}/attachment', [BaptismController::class, 'attach'])->name('baptism.attach');
+Route::delete('baptisms/{baptism}/attachment/{attachment}', [BaptismController::class, 'detach'])->name('baptism.detach');

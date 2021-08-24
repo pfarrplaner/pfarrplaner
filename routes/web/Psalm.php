@@ -39,7 +39,10 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\PsalmController; 
+
+Route::get('/liturgy/psalms', [PsalmController::class, 'index'])->name('liturgy.psalm.index');
+Route::post('/liturgy/psalms', [PsalmController::class, 'store'])->name('liturgy.psalm.store');
+Route::patch('/liturgy/psalms/{psalm}', [PsalmController::class, 'update'])->name('liturgy.psalm.update');

@@ -39,7 +39,8 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\ManualController; 
+
+Route::get('/manual/{routeName}', [ManualController::class, 'page'])->name('manual');

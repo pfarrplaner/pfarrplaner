@@ -39,7 +39,12 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\LiturgicalTextsController; 
+
+Route::get('/liturgy/texts', [LiturgicalTextsController::class, 'index'])->name('liturgy.text.index');
+Route::get('/liturgy/texts/list', [LiturgicalTextsController::class, 'list'])->name('liturgy.text.list');
+Route::post('/liturgy/texts', [LiturgicalTextsController::class, 'store'])->name('liturgy.text.store');
+Route::post('/liturgy/texts/import', [LiturgicalTextsController::class, 'import'])->name('liturgy.text.import');
+Route::patch('/liturgy/texts/{text}', [LiturgicalTextsController::class, 'update'])->name('liturgy.text.update');

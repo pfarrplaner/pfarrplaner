@@ -39,7 +39,15 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\UserController; 
+
+Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::patch('user/profile', [UserController::class, 'profileSave'])->name('user.profile.save');
+Route::post('user/{user}/join', [UserController::class, 'join'])->name('user.join');
+Route::post('users/join', [UserController::class, 'doJoin'])->name('users.join');
+Route::get('user/{user}/services', [UserController::class, 'services'])->name('user.services');
+Route::get('user/switch/{user}', [UserController::class, 'switch'])->name('user.switch');
+Route::post('users/add', [UserController::class, 'add'])->name('users.add');
+Route::get('/logout', [UserController::class, 'logout'])->name('logout');

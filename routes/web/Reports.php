@@ -39,7 +39,13 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\ReportsController; 
+
+Route::get('/reports', [ReportsController::class, 'list'])->name('reports.list');
+Route::post('/reports/render/{report}', [ReportsController::class, 'render'])->name('reports.render');
+Route::get('/reports/render/{report}', [ReportsController::class, 'render'])->name('reports.render.get');
+Route::get('/report/{report}', [ReportsController::class, 'setup'])->name('reports.setup');
+Route::get('/report/{report}/embed', [ReportsController::class, 'embed'])->name('report.embed')->middleware('cors');
+Route::match(['GET', 'POST'], '/report/{report}/{step}', [ReportsController::class, 'step'])->name('report.step');

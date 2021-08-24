@@ -39,7 +39,9 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\AgendaController;
+
+// agenda
+AgendaController::defaultRoutes('liturgy');

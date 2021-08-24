@@ -39,7 +39,15 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\PublicController; 
+
+Route::get('/kinderkirche/{city}/pdf', [PublicController::class, 'childrensChurch'])->name('cc-public-pdf');
+Route::get('/kinderkirche/{city}', [PublicController::class, 'childrensChurch'])->name('cc-public');
+Route::get('/dimissoriale/{type}/{id}', [PublicController::class, 'showDimissorial'])->name('dimissorial.show');
+Route::post('/dimissoriale/{type}/{id}', [PublicController::class, 'grantDimissorial'])->name('dimissorial.grant');
+Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', [PublicController::class, 'ministryRequest'])->name('ministry.request');
+Route::post('/anfrage/{ministry}/{user}/{sender?}', [PublicController::class, 'ministryRequestFilled'])->name('ministry.request.fill');
+Route::get('/dienste/{cityName}/{ministry}', [PublicController::class, 'ministryPlan'])->name('ministry.plan');
+Route::get('/services/{city}/streaming/next', [PublicController::class, 'nextStream'])->name('service.nextstream');

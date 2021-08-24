@@ -39,7 +39,9 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\DayController; 
+
+Route::get('days/list/{city}', [DayController::class, 'list'])->name('days.list');
+Route::get('/days/add/{year}/{month}', [DayController::class, 'add'])->name('days.add');

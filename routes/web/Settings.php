@@ -39,7 +39,8 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\SettingsController; 
+
+Route::post('/setting/{user}/{key}', [SettingsController::class, 'set'])->name('setting.set');

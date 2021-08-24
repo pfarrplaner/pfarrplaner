@@ -39,7 +39,10 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\InputController; 
+
+Route::get('/input/{input}', [InputController::class, 'setup'])->name('inputs.setup');
+Route::post('/input/collect/{input}', [InputController::class, 'input'])->name('inputs.input');
+Route::post('/input/save/{input}', [InputController::class, 'save'])->name('inputs.save');

@@ -39,7 +39,10 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\LiveChatController; 
+
+Route::get('/livechat/{service}', [LiveChatController::class, 'liveChat'])->name('service.livechat');
+Route::get('/livechat/{service}/messages', [LiveChatController::class, 'liveChatAjax'])->name('service.livechat.ajax');
+Route::post('/livechat/message/{service}', [LiveChatController::class, 'liveChatPostMessage'])->name('service.livechat.message.post');

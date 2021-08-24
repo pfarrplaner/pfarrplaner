@@ -39,7 +39,15 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\ServiceController; 
+
+Route::patch('/services/{service}', [ServiceController::class, 'update2'])->name('services.update');
+Route::get('services/{service}/ical', [ServiceController::class, 'ical'])->name('services.ical');
+Route::get('/service/{service}/songsheet', [ServiceController::class, 'songsheet'])->name('service.songsheet');
+Route::get('services/{service}', [ServiceController::class, 'editor'])->name('services.editor');
+Route::post('services/{service}/attachment', [ServiceController::class, 'attach'])->name('service.attach');
+Route::delete('services/{service}/attachment/{attachment}', [ServiceController::class, 'detach'])->name('service.detach');
+Route::get('/services/add/{date}/{city}', [ServiceController::class, 'add'])->name('services.add');
+Route::get('/lastUpdate', [ServiceController::class, 'lastUpdate'])->name('lastUpdate');

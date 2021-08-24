@@ -39,7 +39,8 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\BibleController; 
+
+Route::get('/bible/text/{reference}/{version?}', [BibleController::class, 'text'])->name('bible.text');

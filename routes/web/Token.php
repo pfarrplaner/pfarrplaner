@@ -39,7 +39,10 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\TokenController;
+
+Route::get('/user/tokens', [TokenController::class, 'index'])->name('tokens.index');
+Route::post('/user/tokens/create', [TokenController::class, 'create'])->name('tokens.create');
+Route::delete('/user/tokens/{token}', [TokenController::class, 'destroy'])->name('tokens.destroy');

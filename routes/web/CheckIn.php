@@ -39,7 +39,10 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\CheckInController; 
+
+Route::get('/checkin/{location}', [CheckInController::class, 'create'])->name('checkin.create');
+Route::post('/checkin/{service}', [CheckInController::class, 'store'])->name('checkin.store');
+Route::get('/checkin/{location}/qr', [CheckInController::class, 'qr'])->name('checkin.qr');

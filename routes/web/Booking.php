@@ -39,7 +39,11 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\BookingController; 
+
+Route::post('booking/{booking}/pin', [BookingController::class, 'pin'])->name('booking.pin');
+Route::get('services/{service}/bookings', [BookingController::class, 'index'])->name('service.bookings');
+Route::get('seatfinder/{service}/{number?}', [BookingController::class, 'findSeat'])->name('seatfinder');
+Route::get('services/{service}/bookingList', [BookingController::class, 'finalize'])->name('booking.finalize');

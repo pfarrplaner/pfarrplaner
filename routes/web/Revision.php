@@ -39,7 +39,9 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\RevisionController; 
+
+Route::post('revisions', [RevisionController::class, 'index'])->name('revisions.index.post');
+Route::post('revisions/revert', [RevisionController::class, 'revert'])->name('revisions.revert');

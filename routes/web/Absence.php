@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -28,18 +28,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\AbsenceController;
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+Route::resource('absences', 'AbsenceController')->except(['index', 'create'])->middleware('auth');
+Route::get('planner/users', [AbsenceController::class, 'users'])->name('planner.users');
+Route::get('planner/days/{date}/{user}', [AbsenceController::class, 'days'])->name('planner.days');
+Route::get('absences/{year?}/{month?}', [AbsenceController::class, 'index'])->name('absences.index');
+Route::get('absences/create/{year}/{month}/{user}/{day?}', [AbsenceController::class, 'create'])->name('absences.create');
+Route::get('absence/{absence}/approve', [AbsenceController::class, 'approve'])->name('absence.approve');
+Route::get('absence/{absence}/reject', [AbsenceController::class, 'approve'])->name('absence.reject');
+
+

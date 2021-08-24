@@ -39,7 +39,11 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\LiturgyBlockController; 
+
+Route::post('/liturgy/{service}/block', [LiturgyBlockController::class, 'store'])->name('liturgy.block.store');
+Route::post('/liturgy/{service}/block/{block}', [LiturgyBlockController::class, 'sync'])->name('liturgy.block.sync');
+Route::patch('/liturgy/{service}/block/{block}', [LiturgyBlockController::class, 'update'])->name('liturgy.block.update');
+Route::delete('/liturgy/{service}/block/{block}', [LiturgyBlockController::class, 'destroy'])->name('liturgy.block.destroy');

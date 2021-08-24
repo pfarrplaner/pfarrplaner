@@ -39,7 +39,16 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\HomeController; 
+
+Route::get('/', [HomeController::class, 'root'])->name('root');
+Route::get('/home/{activeTab?}', [HomeController::class, 'index'])->name('home');
+Route::get('/tabs/{tabIndex}', [HomeController::class, 'tab'])->name('tab');
+Route::get('/password/change', [HomeController::class, 'showChangePassword'])->name('password.edit');
+Route::post('/password/change', [HomeController::class, 'changePassword'])->name('password.change');
+Route::get('/counter/{counter}', [HomeController::class, 'counters'])->name('counter');
+Route::get('/whatsnew', [HomeController::class, 'whatsnew'])->name('whatsnew')->middleware('auth');
+Route::get('features', [HomeController::class, 'features']);
+Route::get('/about', [HomeController::class, 'about'])->name('about');

@@ -39,7 +39,19 @@
 |
 */
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+
+
+use App\Http\Controllers\FuneralController; 
+
+Route::get('funerals/create/{service}', [FuneralController::class, 'create'])->name('funerals.create');
+Route::get('funerals/{funeral}', [FuneralController::class, 'edit'])->name('funerals.edit');
+Route::patch('funerals/{funeral}', [FuneralController::class, 'update'])->name('funerals.update');
+Route::delete('funerals/{funeral}', [FuneralController::class, 'destroy'])->name('funerals.destroy');
+Route::post('funerals/{funeral}/attachment', [FuneralController::class, 'attach'])->name('funeral.attach');
+Route::delete('funerals/{funeral}/attachment/{attachment}', [FuneralController::class, 'detach'])->name('funeral.detach');
+Route::get('/funeral/add/{service}', [FuneralController::class, 'create'])->name('funeral.add');
+Route::get('/funeral/destroy/{funeral}', [FuneralController::class, 'destroy'])->name('funeral.destroy');
+Route::get('/funeral/{funeral}/Formular KRA.pdf', [FuneralController::class, 'pdfForm'])->name('funeral.form');
+Route::get('/funeral/wizard', [FuneralController::class, 'wizard'])->name('funerals.wizard');
+Route::post('/funeral/wizard', [FuneralController::class, 'wizardSave'])->name('funerals.wizard.save');
+Route::get('/funeral/{funeral}/appointment/ical', [FuneralController::class, 'appointmentIcal'])->name('funeral.appointment.ical');
