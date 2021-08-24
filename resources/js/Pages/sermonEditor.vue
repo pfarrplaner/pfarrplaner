@@ -169,17 +169,16 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Bild zur Predigt</label><br/>
-                                    <img v-if="editedSermon.image" class="img-fluid"
-                                         :src="uploadedImage(editedSermon.image)" style="margin-bottom: 10px;"/>
-                                    <input class="form-control-file" type="file" @change="setImage"/>
+                                <div v-if="!(editedSermon.id)" class="alert alert-info">
+                                    Du musst die Predigt erst einmal speichern, um ein Bild hinzufügen zu können.
                                 </div>
-                                <div class="form-check" v-if="editedSermon.image">
-                                    <input class="form-check-input" type="checkbox" value="" id="inputRemoveImage"
-                                           v-model="removeImage" value="1"/>
-                                    <label class="form-check-label" for="inputRemoveImage">Bestehendes Bild
-                                        entfernen</label>
+                                <div v-else>
+                                <form-image-attacher
+                                    :attach-route="route('sermon.image.attach', {model: editedSermon.id})"
+                                    :detach-route="route('sermon.image.detach', {model: editedSermon.id})"
+                                    label="Bild zur Predigt" :handle-paste="true"
+                                    v-model="editedSermon.image"
+                                />
                                 </div>
                             </div>
                         </div>
@@ -204,10 +203,14 @@ import 'quill/dist/quill.bubble.css'
 import '../components/SermonEditor/quill.css';
 
 import {quillEditor} from 'vue-quill-editor';
+import FormFileUploader from "../components/Ui/forms/FormFileUploader";
+import FormImageAttacher from "../components/Ui/forms/FormImageAttacher";
 
 export default {
     name: "sermonEditor",
     components: {
+        FormImageAttacher,
+        FormFileUploader,
         quillEditor,
     },
     props: {

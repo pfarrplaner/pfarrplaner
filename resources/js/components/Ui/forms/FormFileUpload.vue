@@ -34,7 +34,7 @@
                 <input class="form-control-file"
                        type="file" :name="name" @change="handleInput" :multiple="multi"
                        @dragenter="dragEnter" @dragleave="dragLeave"/>
-                Hier klicken oder Dateien hierher ziehen...
+                Hier klicken oder Dateien hierher ziehen... {{ helpText || '' }}
             </div>
         </div>
     </form-group>
@@ -45,7 +45,7 @@ import FormGroup from "./FormGroup";
 
 export default {
     name: "FormFileUpload",
-    props: ['name', 'label', 'help', 'multiple'],
+    props: ['name', 'label', 'help', 'multiple', 'helpText'],
     components: {FormGroup},
     data() {
         return {

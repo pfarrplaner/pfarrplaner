@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Traits\HasAttachedImage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -9,6 +10,10 @@ use Illuminate\Support\Str;
 
 class Sermon extends Model
 {
+    use HasAttachedImage;
+
+    protected $imageField = 'image';
+
     protected $guarded = [];
     protected $appends = ['fullTitle'];
 
