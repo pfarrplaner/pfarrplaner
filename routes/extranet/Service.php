@@ -28,13 +28,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Route::name('extranet.')->group(
-    function() {
-        foreach(glob(base_path('routes/extranet/*.php')) as $file) {
-            Route::group([], $file);
-        }
-    }
-);
+use App\Http\Controllers\Extranet\ServiceController;
 
+Route::get('/user/services/next', [ServiceController::class, 'next'])->name('services.next');
+Route::get('/user/services/past', [ServiceController::class, 'past'])->name('services.past');
+Route::get('/user/services/lastWithSermon', [ServiceController::class, 'lastWithSermon'])->name('services.lastWithSermon');
 
 

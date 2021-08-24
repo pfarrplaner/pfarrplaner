@@ -28,13 +28,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-Route::name('extranet.')->group(
-    function() {
-        foreach(glob(base_path('routes/extranet/*.php')) as $file) {
-            Route::group([], $file);
-        }
-    }
-);
 
+use App\Http\Controllers\Extranet\SermonController;
 
-
+Route::get('/user/sermons/latest', [SermonController::class, 'latest'])->name('sermons.lastest');
+Route::get('/sermon/{sermonId}', [SermonController::class, 'details'])->name('sermon.details');
