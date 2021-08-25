@@ -825,7 +825,7 @@ class Service extends Model
      */
     public function scopeWritable(Builder $query)
     {
-        return $query->whereIn('city_id', Auth::user()->writableCities);
+        return $query->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
     }
 
     /**
