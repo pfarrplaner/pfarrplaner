@@ -106,9 +106,11 @@ class AbsenceController extends Controller
         $users = Auth::user()->getViewableAbsenceUsers();
         foreach ($users as $key => $user) {
             $user->canEdit = false;
-            if (($user->id == Auth::user()->id) || (Auth::user()->hasPermissionTo(
-                        'fremden-urlaub-bearbeiten'
-                    ) && (count(Auth::user()->writableCities->intersect($user->homeCities))))) {
+            if (($user->id == Auth::user()->id)
+                || (Auth::user()->hasPermissionTo('fremden-urlaub-bearbeiten')
+                    && (!$user->hasRole('Pfarrer*in'))
+                    && (count(Auth::user()->writableCities->intersect($user->homeCities))))
+            ) {
                 $user->canEdit = true;
             }
         }
