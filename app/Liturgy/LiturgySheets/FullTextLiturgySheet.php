@@ -158,12 +158,16 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderSongItem(DefaultWordDocument $doc, Item $item)
     {
-        if (null === $item->data['song']) return;
+        if (!isset($item->data['song'])) return;
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
         $doc->getSection()->addTitle($helper->getTitleText(),3);
-        if ($item->data['song']['copyrights']) {
-            $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 8]);
+        if (isset($item->data['song'])) {
+            if (isset($item->data['song']['copyrights'])) {
+                if ($item->data['song']['copyrights']) {
+                    $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 8]);
+                }
+            }
         }
         if (!$this->config['includeSongTexts']) return;
 
