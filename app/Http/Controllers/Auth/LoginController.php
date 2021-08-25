@@ -35,6 +35,7 @@ use App\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 
 /**
@@ -78,6 +79,7 @@ class LoginController extends Controller
      */
     public function showLoginForm()
     {
+        Session::flush();
         if (env('DEMO_MODE')) {
             $users = User::with('roles', 'homeCities')->get();
             return view('demo.login', compact('users'));
