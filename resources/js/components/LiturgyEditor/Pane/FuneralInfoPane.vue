@@ -68,7 +68,7 @@ export default {
         dodString() {
             if (!this.funeral.dod) return '';
             let dod = moment(this.funeral.dod).locale('de');
-            return dod.format('LL') + '(' + RelativeDate(dod.format('DD.MM.YYYY'), moment()) + ', ' + this.age + ')';
+            return dod.format('LL') + ' (' + RelativeDate(dod.format('DD.MM.YYYY'), moment().format('DD.MM.YYYY')) + ', ' + this.age+')';
         },
     },
     data() {
@@ -81,7 +81,7 @@ export default {
             if (!this.funeral.dod) return;
             let dod = moment(this.funeral.dod).locale('de');
             const cb = navigator.clipboard;
-            cb.writeText(dod.format('LL') + ' = ' + RelativeDate(dod.format('DD.MM.YYYY'), moment()) + ', im Alter von ' + this.age + ' Jahren ');
+            cb.writeText(dod.format('LL') + ' = ' + RelativeDate(dod.format('DD.MM.YYYY'), moment(this.service.day.date).format('DD.MM.YYYY')) + ', im Alter von ' + this.age + ' Jahren ');
         }
     }
 }

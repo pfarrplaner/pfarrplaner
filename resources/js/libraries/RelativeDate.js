@@ -46,6 +46,6 @@ function relative(date1, date2) {
 
 
 export default function (date1, date2) {
-    return relative(moment(date1, 'DD.MM.YYYY').locale('de'), moment());
+    return relative(moment(date1, 'DD.MM.YYYY').locale('de'), moment(date2, 'DD.MM.YYYY').locale('de'));
 }
 
