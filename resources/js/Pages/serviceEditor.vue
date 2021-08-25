@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 <a class="btn btn-light" :href="route('liturgy.editor', service.slug)" title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
-                <a class="btn btn-light" :href="route('services.sermon.editor', service.id)"  title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span class="d-none d-md-inline"> Predigt</span></a>&nbsp;
+                <a class="btn btn-light" :href="route('service.sermon.editor', service.slug)"  title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span class="d-none d-md-inline"> Predigt</span></a>&nbsp;
             </template>
             <form @submit.prevent="saveService" id="formSermon">
                 <card>

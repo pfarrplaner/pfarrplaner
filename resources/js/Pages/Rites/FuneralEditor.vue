@@ -153,7 +153,7 @@
                                         <span class="fa fa-th-list"></span> <span
                                         class="d-none d-md-inline">Liturgie</span>
                                     </inertia-link>
-                                    <inertia-link :href="route('services.sermon.editor', funeral.service.id)"
+                                    <inertia-link :href="route('service.sermon.editor', funeral.service.slug)"
                                                   title="Predigt bearbeiten"
                                                   class="btn btn-light">
                                         <span class="fa fa-microphone"></span> <span

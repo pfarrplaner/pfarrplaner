@@ -109,7 +109,7 @@
                                     <div v-if="service.sermon === null">
                                         <form-selectize v-if="sermons.length > 0" :options="sermons" id-key="id" title-key="title"
                                         label="Bestehende Predigt auswählen" :settings="sermonSelectizeSettings" @input="setSermon($event, item)"/>
-                                        <inertia-link :href="route('services.sermon.editor', {service: service.id})"
+                                        <inertia-link :href="route('service.sermon.editor', {service: service.slug})"
                                                       @click.stop=""
                                                       class="btn btn-success"
                                                       title="Hier klicken, um die Predigt jetzt anzulegen">

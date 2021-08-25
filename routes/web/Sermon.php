@@ -41,12 +41,19 @@
 
 
 
-use App\Http\Controllers\SermonController; 
+use App\Http\Controllers\SermonController;
 
-Route::get('/services/{service}/sermon', [SermonController::class, 'editorByService'])->name('services.sermon.editor');
-Route::post('/services/{service}/sermon', [SermonController::class, 'store'])->name('services.sermon.store');
-Route::delete('/services/{service}/sermon', [SermonController::class, 'uncouple'])->name('services.sermon.uncouple');
-Route::get('/sermons/{sermon}', [SermonController::class, 'editor'])->name('sermon.editor');
-Route::patch('/sermons/{sermon}', [SermonController::class, 'update'])->name('sermon.update');
-Route::post('/sermons/{model}/image', [SermonController::class, 'attachImage'])->name('sermon.image.attach');
-Route::delete('/sermons/{model}/image', [SermonController::class, 'detachImage'])->name('sermon.image.detach');
+// multiple sermons
+
+// one sermon
+Route::get('/predigt/{sermon}', [SermonController::class, 'editor'])->name('sermon.editor');
+Route::patch('/predigt/{sermon}', [SermonController::class, 'update'])->name('sermon.update');
+Route::delete('/predigt/gottesdienst-abkoppeln/{service:slug}', [SermonController::class, 'uncouple'])->name('sermon.uncouple');
+Route::post('/predigt/{model}/bild', [SermonController::class, 'attachImage'])->name('sermon.image.attach');
+Route::delete('/predigt/{model}/bild', [SermonController::class, 'detachImage'])->name('sermon.image.detach');
+
+// one sermon via-service
+Route::get('/gottesdienst/{service:slug}/predigt', [SermonController::class, 'editorByService'])->name('service.sermon.editor');
+Route::post('/gottesdienst/{service:slug}/predigt', [SermonController::class, 'store'])->name('sermon.store');
+
+

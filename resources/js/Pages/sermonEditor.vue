@@ -293,7 +293,7 @@ export default {
                 formData.append('image', this.fileUpload);
             }
             if (undefined === this.editedSermon.id) {
-                this.$inertia.post(route('services.sermon.store', {service: this.service.id}), formData, {
+                this.$inertia.post(route('sermon.store', {service: this.service.slug}), formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
@@ -332,7 +332,7 @@ export default {
         },
         uncoupleService(service) {
             if ((this.services.length > 1) || confirm('Diese Predigt ist nur mit einem Gottesdienst verbunden. Wenn du diese Verbindung trennst, wird die Predigt gelöscht. Willst du das wirklich?')) {
-                this.$inertia.delete(route('services.sermon.uncouple', {service: service.id}), {preserveState: false});
+                this.$inertia.delete(route('sermon.uncouple', {service: service.slug}), {preserveState: false});
             }
         },
         setImage(event) {
