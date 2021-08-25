@@ -21,13 +21,13 @@
                     <td>{{ $service->descriptionText() }}</td>
                     <td class="text-right">
                         @can('update', $service)
-                            <a href="{{ route('service.edit',$service->id)}}" class="btn btn-sm btn-primary"
+                            <a href="{{ route('service.edit',$service->slug)}}" class="btn btn-sm btn-primary"
                                title="Bearbeiten">
                                 <span class="fa fa-edit"></span>
                             </a>
                         @endcan
                         @can('delete', $service)
-                            <form action="{{ route('service.destroy', $service->id)}}" method="post" class="form-inline"
+                            <form action="{{ route('service.destroy', $service->slug)}}" method="post" class="form-inline"
                                   style="display:inline;">
                                 @csrf
                                 @method('DELETE')

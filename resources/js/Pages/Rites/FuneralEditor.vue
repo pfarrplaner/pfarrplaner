@@ -141,7 +141,7 @@
                                     <participants :participants="myFuneral.service.pastors"></participants>
                                 </div>
                                 <div class="col-md-3 text-right">
-                                    <inertia-link :href="route('service.edit', funeral.service.id)"
+                                    <inertia-link :href="route('service.edit', funeral.service.slug)"
                                                   title="Gottesdienst bearbeiten"
                                                   class="btn btn-light">
                                         <span class="fa fa-edit"></span> <span

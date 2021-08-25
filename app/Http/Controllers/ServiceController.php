@@ -177,6 +177,7 @@ class ServiceController extends Controller
         event(new ServiceBeforeUpdate($service, $validatedData));
 
         $service->fill($validatedData);
+        $service->slug = $service->createSlug();
         $service->setDefaultOfferingValues();
         $this->updateFromRequest($request, $service);
         $service->save();
@@ -208,7 +209,7 @@ class ServiceController extends Controller
                 return RedirectorService::back();
             }
         } else {
-            return redirect()->route('service.edit', $service->id);
+            return redirect()->route('service.edit', $service->slug);
         }
     }
 
@@ -245,7 +246,7 @@ class ServiceController extends Controller
                 'location_id' => $city->locations->first()->id,
             ]
         );
-        return redirect()->route('service.edit', $service);
+        return redirect()->route('service.edit', $service->slug);
     }
 
     /**

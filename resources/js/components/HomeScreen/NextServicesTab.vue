@@ -50,7 +50,7 @@
                         <span class="fa fa-calendar"></span>
                     </inertia-link>
                     <inertia-link class="btn btn-primary" title="Gottesdienst bearbeiten"
-                                  :href="route('service.edit', service.id)">
+                                  :href="route('service.edit', service.slug)">
                         <span class="fa fa-edit"></span>
                     </inertia-link>
                     <inertia-link class="btn btn-light" title="Liturgie bearbeiten"

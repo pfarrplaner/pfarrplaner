@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Venturecraft\Revisionable\RevisionableTrait;
 
 /**
@@ -189,6 +190,7 @@ class Service extends Model
         'offering_text',
         'communiapp_id',
         'communiapp_listing_start',
+        'slug',
     ];
 
     /**
@@ -1511,5 +1513,12 @@ class Service extends Model
 
     public function unsetAdditionalFields() {
         $this->appends = [];
+    }
+
+    public function createSlug()
+    {
+        return $this->dateTime()->format('Ymd-Hi')
+            .($this->city ? '-'.Str::slug($this->city->name) : '')
+            .'-'.Str::slug($this->locationText());
     }
 }

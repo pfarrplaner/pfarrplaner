@@ -62,7 +62,7 @@
         <h3>Dateien hinzufügen</h3>
         <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
         <form-file-uploader :parent="myService"
-                            :upload-route="route('service.attach', this.myService.id)"
+                            :upload-route="route('service.attach', this.myService.slug)"
                             v-model="myService.attachments"/>
 
         <modal v-for="(sheet,sheetKey) in liturgySheets" v-if="dialogs[sheet.key]" :title="sheet.title + ' herunterladen'"
@@ -143,7 +143,7 @@ export default {
             this.$forceUpdate();
         },
         deleteAttachment(attachment, key) {
-            axios.delete(route('service.detach', {service: this.myService.id, attachment: attachment.id}))
+            axios.delete(route('service.detach', {service: this.myService.slug, attachment: attachment.id}))
             .then(response => {
                 this.myService.attachments = response.data;
             });
@@ -162,7 +162,7 @@ export default {
             console.log(file, fd);
 
             this.uploading = true;
-            axios.post(route('service.attach', this.service.id), fd, {
+            axios.post(route('service.attach', this.service.slug), fd, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

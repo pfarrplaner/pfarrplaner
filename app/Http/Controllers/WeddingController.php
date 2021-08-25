@@ -120,7 +120,7 @@ class WeddingController extends Controller
         }
 
 
-        return redirect(route('service.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        return redirect(route('service.edit', ['service' => $wedding->service->slug, 'tab' => 'rites']));
     }
 
     /**
@@ -163,7 +163,7 @@ class WeddingController extends Controller
         $wedding->service->save();
         ServiceUpdated::dispatch($wedding->service, $wedding->service->participants);
 
-        return redirect(route('service.edit', ['service' => $wedding->service->id, 'tab' => 'rites']));
+        return redirect(route('service.edit', ['service' => $wedding->service->slug, 'tab' => 'rites']));
     }
 
     /**
@@ -174,9 +174,9 @@ class WeddingController extends Controller
      */
     public function destroy(Wedding $wedding)
     {
-        $serviceId = $wedding->service_id;
+        $serviceSlug = $wedding->service->slug;
         $wedding->delete();
-        return redirect(route('service.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        return redirect(route('service.edit', ['service' => $serviceSlug, 'tab' => 'rites']));
     }
 
 

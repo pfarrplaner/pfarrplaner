@@ -185,7 +185,7 @@ class BaptismController extends Controller
         }
 
         if ($baptism->service_id) {
-            return redirect(route('service.edit', ['service' => $baptism->service_id, 'tab' => 'rites']));
+            return redirect(route('service.edit', ['service' => $baptism->service->slug, 'tab' => 'rites']));
         } else {
             return redirect(route('home'));
         }
@@ -201,10 +201,10 @@ class BaptismController extends Controller
     function destroy(
         Baptism $baptism
     ) {
-        $serviceId = $baptism->service_id;
+        $serviceSlug = $baptism->service->slug;
         $baptism->delete();
-        if ($serviceId) {
-            return redirect(route('service.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        if ($serviceSlug) {
+            return redirect(route('service.edit', ['service' => $serviceSlug, 'tab' => 'rites']));
         } else {
             return redirect(route('home'));
         }

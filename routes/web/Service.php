@@ -45,16 +45,16 @@ use App\Http\Controllers\ServiceController;
 
 // multiple services
 Route::get('/gottesdienste/neu/{date}/{city}', [ServiceController::class, 'add'])->name('services.add');
+Route::get('/gottesdienste/meine/letzte-aktualisierung', [ServiceController::class, 'lastUpdate'])->name('services.currentUser.lastUpdate');
 
 // one service
-Route::get('/gottesdienst/{service}', [ServiceController::class, 'edit'])->name('service.edit');
-Route::patch('/gottesdienst/{service}', [ServiceController::class, 'update'])->name('service.update');
-Route::delete('/gottesdienst/{service}', [ServiceController::class, 'destroy'])->name('service.destroy');
+Route::get('/gottesdienst/{service:slug}', [ServiceController::class, 'edit'])->name('service.edit');
+Route::patch('/gottesdienst/{service:slug}', [ServiceController::class, 'update'])->name('service.update');
+Route::delete('/gottesdienst/{service:slug}', [ServiceController::class, 'destroy'])->name('service.destroy');
 
 // additional service routes
-Route::get('/gottesdienst/{service}/ical', [ServiceController::class, 'ical'])->name('service.ical');
-Route::get('/gottesdienst/{service}/liedblatt', [ServiceController::class, 'songsheet'])->name('service.songsheet');
-Route::post('/gottesdienst/{service}/dateien', [ServiceController::class, 'attach'])->name('service.attach');
-Route::delete('/gottesdienst/{service}/datei/{attachment}', [ServiceController::class, 'detach'])->name('service.detach');
+Route::get('/gottesdienst/{service:slug}/ical', [ServiceController::class, 'ical'])->name('service.ical');
+Route::get('/gottesdienst/{service:slug}/liedblatt', [ServiceController::class, 'songsheet'])->name('service.songsheet');
+Route::post('/gottesdienst/{service:slug}/dateien', [ServiceController::class, 'attach'])->name('service.attach');
+Route::delete('/gottesdienst/{service:slug}/datei/{attachment}', [ServiceController::class, 'detach'])->name('service.detach');
 
-Route::get('/gottesdienste/meine/letzte-aktualisierung', [ServiceController::class, 'lastUpdate'])->name('services.currentUser.lastUpdate');

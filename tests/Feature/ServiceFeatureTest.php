@@ -81,7 +81,7 @@ class ServiceFeatureTest extends TestCase
         $title = $service->description;
         $response = $this->actingAs($this->user)
             ->patch(
-                route('service.update', Service::first()->id),
+                route('service.update', Service::first()->slug),
                 factory(Service::class)->raw(['description' => 'cool title'])
             );
         $response->assertStatus(403);
@@ -98,7 +98,7 @@ class ServiceFeatureTest extends TestCase
         $service = factory(Service::class)->create(['city_id' => $this->city]);
         $this->assertCount(1, Service::all());
         $response = $this->actingAs($this->user)
-            ->delete(route('service.destroy', $service->id));
+            ->delete(route('service.destroy', $service->slug));
         $response->assertStatus(302);
         $this->assertCount(0, Service::all());
     }

@@ -130,7 +130,7 @@ abstract class AbstractSyncEngine
             'title' => $service->titleTextWithParticipants(),
             'location' => $service->locationText(),
             'description' => '<p><a href="'
-                . route('service.edit', $service->id) . '">'
+                . route('service.edit', $service->slug) . '">'
                 . 'Im Pfarrplaner ansehen'
                 . '</a></p><p></p>'
                 . self::AUTO_WARNING,

@@ -2,7 +2,7 @@
     @if(null !== $service)
         <a class="btn btn-sm btn-secondary" href="{{ route('calendar', $service->day->date->format('Y-m')) }}" title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
         @can('update', $service)
-            <a class="btn btn-sm btn-primary" href="{{route('service.edit', ['service' => $service->id, 'tab' => 'rites'])}}?back=/home" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span></a>
+            <a class="btn btn-sm btn-primary" href="{{route('service.edit', ['service' => $service->slug, 'tab' => 'rites'])}}?back=/home" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span></a>
         @endcan
         @if(is_object($service->location) && count($service->location->seatingSections))
             <div style="margin-top: 2px;">

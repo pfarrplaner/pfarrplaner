@@ -45,7 +45,7 @@
                           class="badge badge-danger">{{ ministry }}</span>
                 </div>
                 <div class="col-md-2 text-right">
-                    <inertia-link class="btn btn-primary" :href="route('service.edit', service.id)"
+                    <inertia-link class="btn btn-primary" :href="route('service.edit', service.slug)"
                        title="Eintrag bearbeiten"><span class="fa fa-edit"></span></inertia-link>
                 </div>
             </div>
