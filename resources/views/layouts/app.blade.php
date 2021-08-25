@@ -64,8 +64,6 @@
         <ul class="navbar-nav ml-auto">
         @auth
             <!-- Notifications Dropdown Menu -->
-                @component('components.ui.whatsnew')
-                @endcomponent
                 <li class="nav-item" id="toggleControlSidebar" style="display: none;">
                     <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
                             class="fas fa-cogs"></i></a>
