@@ -36,7 +36,7 @@
         <div v-else>
             <fake-table :columns="[2,2,4,3,1]" collapsed-header="Beerdigungen"
                         :headers="['Gottesdienst', 'Verstorbene:r', 'Informationen zur Bestattung', 'Details', '']">
-                <funeral v-for="(funeral,funeralIndex) in funerals" :funeral="funeral" :key="'funeral_'+funeral.id"
+                <funeral v-for="(funeral,funeralIndex) in funerals" :funeral="funeral" :key="'case_funeral_'+funeral.id"
                          :show-service="true" :show-pastor="true"
                          class="row mb-3 p-1" :class="{'stripe-odd': (funeralIndex % 2 == 0)}"/>
             </fake-table>
@@ -49,7 +49,7 @@
         <div v-else>
             <fake-table :columns="[2,2,4,3,1]" collapsed-header="Trauungen"
                         :headers="['Gottesdienst','Hochzeitspaar', 'Informationen zur Trauung', 'Details', '']">
-                <wedding v-for="(wedding, weddingIndex) in weddings"  :wedding="wedding" :key="'wedding_'+wedding.id"
+                <wedding v-for="(wedding, weddingIndex) in weddings"  :wedding="wedding" :key="'case_wedding_'+wedding.id"
                          :show-service="true" :show-pastor="true"
                          class="mb-3 p-1" :class="{'stripe-odd': (weddingIndex % 2 == 0)}"/>
             </fake-table>
@@ -62,7 +62,7 @@
         <div v-else>
             <fake-table :columns="[2,2,4,3,1]" collapsed-header="Taufen"
                         :headers="['Gottesdienst', 'Täufling', 'Informationen zur Taufe', 'Details', '']">
-                <baptism v-for="(baptism, baptismIndex) in baptisms" :baptism="baptism" :key="'baptism_'+baptism.id"
+                <baptism v-for="(baptism, baptismIndex) in baptisms" :baptism="baptism" :key="'case_baptism_'+baptism.id"
                          :show-service="true" :show-pastor="true"
                          class="mb-3 p-1" :class="{'stripe-odd': (baptismIndex % 2 == 0)}"/>
 
