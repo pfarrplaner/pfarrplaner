@@ -142,8 +142,10 @@ class HomeController extends Controller
         $date = (new Carbon(filemtime(base_path('package.json'))))->setTimeZone('Europe/Berlin');
         $changelog = file_get_contents(base_path('CHANGELOG.md'));
         $env = App::environment();
+        $phpVersion = phpversion();
+        $laravelVersion = app()->version();
 
-        return Inertia::render('About', compact('version', 'date', 'changelog', 'env'));
+        return Inertia::render('About', compact('version', 'date', 'changelog', 'env', 'phpVersion', 'laravelVersion'));
     }
 
 

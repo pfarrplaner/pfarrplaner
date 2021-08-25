@@ -34,7 +34,8 @@
             <card-body>
                 <div>
                 <h3>Pfarrplaner</h3><br />
-                v.{{ version }}-{{ env }} vom {{ moment(date).locale('DE').format('LLLL')}}
+                v.{{ version }}-{{ env }} vom {{ moment(date).locale('DE').format('LLLL')}}<br />
+                    Laravel {{ laravelVersion }} auf PHP {{ phpVersion}}
                 </div>
                 <p>Gehostet auf einem Server des <a href="https://wwww.kirchenbezirk-balingen.de/" target="_blank">Evangelischen Kirchenbezirks Balingen</a>.</p>
                 <p>Der Quellcode von Pfarrplaner ist als Open Source auf <a href="https://github.com/pfarrplaner/pfarrplaner" target="_blank">GitHub</a> verfügbar und steht unter
@@ -61,7 +62,7 @@ export default {
     name: "About",
     components: {Card, CardBody, CardHeader, VueMarkdown},
 
-    props: ['version', 'date', 'changelog', 'env']
+    props: ['version', 'date', 'changelog', 'env', 'phpVersion', 'laravelVersion']
 }
 </script>
 
