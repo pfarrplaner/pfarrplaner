@@ -71,6 +71,11 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__ . '/Commands');
+        foreach (glob(app_path('Integrations/*')) as $folder) {
+            if (is_dir($folder) && (file_exists($folder.'/Commands')) && (is_dir($folder.'/Commands'))) {
+                $this->load($folder.'/Commands');
+            }
+        }
 
         require base_path('routes/console.php');
     }
