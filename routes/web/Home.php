@@ -41,14 +41,10 @@
 
 
 
-use App\Http\Controllers\HomeController; 
+use App\Http\Controllers\HomeController;
 
-Route::get('/', [HomeController::class, 'root'])->name('root');
-Route::get('/home/{activeTab?}', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/tabs/{tabIndex}', [HomeController::class, 'tab'])->name('tab');
-Route::get('/password/change', [HomeController::class, 'showChangePassword'])->name('password.edit');
-Route::post('/password/change', [HomeController::class, 'changePassword'])->name('password.change');
-Route::get('/counter/{counter}', [HomeController::class, 'counters'])->name('counter');
-Route::get('/whatsnew', [HomeController::class, 'whatsnew'])->name('whatsnew')->middleware('auth');
-Route::get('features', [HomeController::class, 'features']);
-Route::get('/about', [HomeController::class, 'about'])->name('about');
+Route::get('/passwort/aendern', [HomeController::class, 'showChangePassword'])->name('password.edit');
+Route::post('/passwort/aendern', [HomeController::class, 'changePassword'])->name('password.change');
+Route::get('/info', [HomeController::class, 'about'])->name('about');
