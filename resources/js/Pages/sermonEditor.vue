@@ -43,7 +43,7 @@
                         </td>
                         <td valign="top" class="text-right">
                             <inertia-link class="btn btn-sm btn-light"
-                               :href="route('services.edit', {service: service.id})"
+                               :href="route('service.edit', {service: service.id})"
                                title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>
                             <inertia-link class="btn btn-sm btn-light"
                                           :href="route('services.liturgy.editor', {service: service.id})"

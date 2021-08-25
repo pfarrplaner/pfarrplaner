@@ -56,7 +56,7 @@
                         <span class="fa fa-calendar"></span>
                     </inertia-link>
                     <inertia-link class="btn btn-primary" title="Gottesdienst bearbeiten"
-                                  :href="route('services.edit', service.id)">
+                                  :href="route('service.edit', service.id)">
                         <span class="fa fa-edit"></span>
                     </inertia-link>
                 </div>

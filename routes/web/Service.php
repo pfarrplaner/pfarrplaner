@@ -41,13 +41,20 @@
 
 
 
-use App\Http\Controllers\ServiceController; 
+use App\Http\Controllers\ServiceController;
 
-Route::patch('/services/{service}', [ServiceController::class, 'update2'])->name('services.update');
-Route::get('services/{service}/ical', [ServiceController::class, 'ical'])->name('services.ical');
-Route::get('/service/{service}/songsheet', [ServiceController::class, 'songsheet'])->name('service.songsheet');
-Route::get('services/{service}', [ServiceController::class, 'editor'])->name('services.editor');
-Route::post('services/{service}/attachment', [ServiceController::class, 'attach'])->name('service.attach');
-Route::delete('services/{service}/attachment/{attachment}', [ServiceController::class, 'detach'])->name('service.detach');
-Route::get('/services/add/{date}/{city}', [ServiceController::class, 'add'])->name('services.add');
-Route::get('/lastUpdate', [ServiceController::class, 'lastUpdate'])->name('lastUpdate');
+// multiple services
+Route::get('/gottesdienste/neu/{date}/{city}', [ServiceController::class, 'add'])->name('services.add');
+
+// one service
+Route::get('/gottesdienst/{service}', [ServiceController::class, 'edit'])->name('service.edit');
+Route::patch('/gottesdienst/{service}', [ServiceController::class, 'update2'])->name('service.update');
+Route::delete('/gottesdienst/{service}', [ServiceController::class, 'destroy'])->name('service.destroy');
+
+// additional service routes
+Route::get('/gottesdienst/{service}/ical', [ServiceController::class, 'ical'])->name('service.ical');
+Route::get('/gottesdienst/{service}/liedblatt', [ServiceController::class, 'songsheet'])->name('service.songsheet');
+Route::post('/gottesdienst/{service}/dateien', [ServiceController::class, 'attach'])->name('service.attach');
+Route::delete('/gottesdienst/{service}/datei/{attachment}', [ServiceController::class, 'detach'])->name('service.detach');
+
+Route::get('/gottesdienste/meine/letzte-aktualisierung', [ServiceController::class, 'lastUpdate'])->name('services.currentUser.lastUpdate');

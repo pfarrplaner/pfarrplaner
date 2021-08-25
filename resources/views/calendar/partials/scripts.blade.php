@@ -25,7 +25,7 @@
 
     function checkForUpdates() {
         $('#heartbeat').removeClass('fa-sync').addClass('fa-heart').css('color', 'red');
-        fetch('{{ route('lastUpdate') }}')
+        fetch('{{ route('services.currentUser.lastUpdate') }}')
             .then(response => response.json())
             .then(data => {
                 if (null === lastUpdate) {

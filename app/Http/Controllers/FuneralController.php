@@ -244,7 +244,7 @@ class FuneralController extends Controller
         $this->handleAttachments($request, $funeral);
         ServiceUpdated::dispatch($funeral->service, $funeral->service->participants);
 
-        return redirect(route('services.edit', ['service' => $funeral->service->id, 'tab' => 'rites']));
+        return redirect(route('service.edit', ['service' => $funeral->service->id, 'tab' => 'rites']));
     }
 
     /**
@@ -257,7 +257,7 @@ class FuneralController extends Controller
     {
         $serviceId = $funeral->service_id;
         $funeral->delete();
-        return redirect(route('services.edit', ['service' => $serviceId, 'tab' => 'rites']));
+        return redirect(route('service.edit', ['service' => $serviceId, 'tab' => 'rites']));
     }
 
     /**

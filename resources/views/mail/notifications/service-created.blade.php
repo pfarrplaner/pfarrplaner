@@ -1251,7 +1251,7 @@
                                                                             <td style="border-spacing: 0px; border-collapse: collapse; line-height: 24px; font-size: 16px; border-radius: 4px; margin: 0;"
                                                                                 align="center" bgcolor="#007bff">
                                                                                 @if($user->can('update', $service))<a
-                                                                                        href="{{ route('services.edit', $service) }}"
+                                                                                        href="{{ route('service.edit', $service) }}"
                                                                                         style="font-size: 20px; font-family: Helvetica, Arial, sans-serif; text-decoration: none; border-radius: 4.8px; line-height: 30px; display: inline-block; font-weight: normal; white-space: nowrap; background-color: #007bff; color: #ffffff; padding: 8px 16px; border: 1px solid #007bff;">Diesen
                                                                                     Gottesdienst ansehen</a>
                                                                                 @else <a href="{{ route('calendar') }}"

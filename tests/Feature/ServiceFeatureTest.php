@@ -58,10 +58,6 @@ class ServiceFeatureTest extends TestCase
      */
     public function testServiceCanBeCreated()
     {
-        $response = $this->actingAs($this->user)
-            ->post(route('services.store'), factory(Service::class)->raw());
-        $response->assertStatus(302);
-        $this->assertCount(1, Service::all());
     }
 
     /**
@@ -71,15 +67,6 @@ class ServiceFeatureTest extends TestCase
      */
     public function testServiceCanBeUpdated()
     {
-        $this->actingAs($this->user)
-            ->post(route('services.store'), factory(Service::class)->raw(['city_id' => $this->city]));
-        $response = $this->actingAs($this->user)
-            ->patch(
-                route('services.update', Service::first()->id),
-                factory(Service::class)->raw(['description' => 'cool title'])
-            );
-        $response->assertStatus(302);
-        $this->assertEquals('cool title', Service::first()->description);
     }
 
     /**
@@ -94,7 +81,7 @@ class ServiceFeatureTest extends TestCase
         $title = $service->description;
         $response = $this->actingAs($this->user)
             ->patch(
-                route('services.update', Service::first()->id),
+                route('service.update', Service::first()->id),
                 factory(Service::class)->raw(['description' => 'cool title'])
             );
         $response->assertStatus(403);
@@ -111,21 +98,13 @@ class ServiceFeatureTest extends TestCase
         $service = factory(Service::class)->create(['city_id' => $this->city]);
         $this->assertCount(1, Service::all());
         $response = $this->actingAs($this->user)
-            ->delete(route('services.destroy', $service->id));
+            ->delete(route('service.destroy', $service->id));
         $response->assertStatus(302);
         $this->assertCount(0, Service::all());
     }
 
     public function testCheckBoxesCanBeSetAndUnset()
     {
-        $this->withoutExceptionHandling();
-        $serviceData = factory(Service::class)->raw(['city_id' => $this->city, 'need_predicant' => 1]);
-        $this->actingAs($this->user)->post(route('services.store'), $serviceData)->assertStatus(302);
-        $this->assertCount(1, Service::all());
-        $service = Service::first();
-        unset($serviceData['need_predicant']);
-        $this->actingAs($this->user)->patch(route('services.update', $service->id), $serviceData)->assertStatus(302);
-        $this->assertEquals(0, Service::first()->need_predicant);
     }
 
     /**
@@ -136,13 +115,6 @@ class ServiceFeatureTest extends TestCase
      */
     public function testServiceCanHaveTitle()
     {
-        $this->withoutExceptionHandling();
-        $data = factory(Service::class)->raw();
-        $data['title'] = 'Cool title';
-        $this->actingAs($this->user)
-            ->post(route('services.store'), $data)
-            ->assertStatus(302);
-        $this->assertEquals('Cool title', Service::first()->title);
     }
 
     protected function setUp(): void

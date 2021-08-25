@@ -41,7 +41,7 @@
 
 
 
-use App\Http\Controllers\UserController; 
+use App\Http\Controllers\UserController;
 
 Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
 Route::patch('user/profile', [UserController::class, 'profileSave'])->name('user.profile.save');

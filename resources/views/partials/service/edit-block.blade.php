@@ -2,7 +2,7 @@
    href="{{ route('calendar', $service->day->date->format('Y-m')) }}"
    title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
 @can('update', $service)
-    <a class="btn btn-sm btn-primary" href="{{route('services.edit', $service->id)}}" title="Bearbeiten"><span
+    <a class="btn btn-sm btn-primary" href="{{route('service.edit', $service->id)}}" title="Bearbeiten"><span
             class="fa fa-edit"></span></a>
 @endcan
     @if(($service->needs_reservations) || (is_object($service->location) && count($service->location->seatingSections)))

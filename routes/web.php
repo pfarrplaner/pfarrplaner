@@ -39,6 +39,25 @@
 |
 */
 
+Route::resource('cities', 'CityController')->middleware('auth');
+Route::resource('locations', 'LocationController')->middleware('auth');
+Route::resource('days', 'DayController')->middleware('auth');
+Route::resource('users', 'UserController');
+Route::resource('roles', 'RoleController')->middleware('auth');
+Route::resource('comments', 'CommentController')->middleware('auth');
+Route::resource('absences', 'AbsenceController')->except(['index', 'create'])->middleware('auth');
+Route::resource('tags', 'TagController')->middleware('auth');
+Route::resource('parishes', 'ParishController')->middleware('auth');
+Route::resource('seatingSection', 'SeatingSectionController');
+Route::resource('seatingRow', 'SeatingRowController');
+Route::resource('booking', 'BookingController');
+Route::resource('calendarConnection', 'CalendarConnectionController');
+Route::resource('baptisms', 'BaptismController')->middleware('auth');
+Route::resource('weddings', 'WeddingController')->middleware('auth');
+Route::resource('revisions', 'RevisionController');
+Route::resource('approvals', 'ApprovalController');
+
+
 // import individual route files
 foreach(glob(base_path('routes/web/*.php')) as $file) {
     Route::group([], $file);

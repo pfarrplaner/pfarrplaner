@@ -537,7 +537,7 @@ Breadcrumbs::for(
             $service = $service->id;
         }
         $trail->parent('calendar');
-        $trail->push('#' . $service, route('services.edit', $service));
+        $trail->push('#' . $service, route('service.edit', $service));
     }
 );
 
@@ -684,7 +684,7 @@ Breadcrumbs::for(
             $service = $service->id;
         }
         $trail->parent('calendar');
-        $trail->push('#' . $service, route('services.edit', $service));
+        $trail->push('#' . $service, route('service.edit', $service));
         $trail->push('Liturgie', route('liturgyBlocks.index', $service));
     }
 );

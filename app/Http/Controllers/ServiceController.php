@@ -142,7 +142,7 @@ class ServiceController extends Controller
      */
     public function show(Service $service)
     {
-        return redirect()->route('services.edit', $service);
+        return redirect()->route('service.edit', $service);
     }
 
 
@@ -150,16 +150,6 @@ class ServiceController extends Controller
     {
         $data = $request->validated();
         return redirect()->back();
-    }
-
-    /**
-     * Show the (new-style) editing form for the service
-     * @param Request $request
-     * @param Service $service
-     * @return \Inertia\Response
-     */
-    public function editor(Request $request, Service $service)
-    {
     }
 
     /**
@@ -283,7 +273,7 @@ class ServiceController extends Controller
                 return RedirectorService::back();
             }
         } else {
-            return redirect()->route('services.edit', $service->id);
+            return redirect()->route('service.edit', $service->id);
         }
     }
 
@@ -320,7 +310,7 @@ class ServiceController extends Controller
                 'location_id' => $city->locations->first()->id,
             ]
         );
-        return redirect()->route('services.edit', $service);
+        return redirect()->route('service.edit', $service);
     }
 
     /**

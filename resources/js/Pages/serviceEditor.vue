@@ -53,7 +53,7 @@
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" :href="route('services.ical', {service: service.id})">In Outlook übernehmen</a>
+                        <a class="dropdown-item" :href="route('service.ical', {service: service.id})">In Outlook übernehmen</a>
                         <a class="dropdown-item" :href="route('reports.setup', {report: 'regulatory', service: service.id})">Meldung an das Ordnungsamt</a>
                     </div>
                 </div>
@@ -205,12 +205,12 @@ name: "serviceEditor",
                 fd.append(key, value || '');
             }
             // send the request
-            this.$inertia.patch(route('services.update', this.service.id), record, {
+            this.$inertia.patch(route('service.update', this.service.id), record, {
                 preserveState: false
             });
         },
         deleteService() {
-            this.$inertia.delete(route('services.destroy', this.editedService.id), {}, { preserveState: false});
+            this.$inertia.delete(route('service.destroy', this.editedService.id), {}, { preserveState: false});
         },
         extractParticipants(e) {
             var items = [];

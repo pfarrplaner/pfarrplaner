@@ -8,7 +8,7 @@
         @can('update', $service)
         style="cursor: pointer;"
         title="Klicken, um diesen Eintrag zu bearbeiten (#{{ $service->id }})"
-        onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
+        onclick="window.location.href='{{ route('service.edit', $service->id) }}';"
         @endcan
         data-day="{{ $service->day->id }}"
 >
@@ -51,7 +51,7 @@
     @endcanany
     <div class="float-right service-calendar-button">
         <a class="btn btn-sm btn-secondary"
-           href="{{ route('services.ical', $service) }}"
+           href="{{ route('service.ical', $service) }}"
            title="In Outlook übernehmen"><span
                     class="fa fa-calendar-alt"></span></a>
     </div>
