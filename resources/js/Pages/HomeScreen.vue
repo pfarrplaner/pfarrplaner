@@ -113,7 +113,6 @@ export default {
                 this.$forceUpdate();
             });
         }, this);
-        console.log(this.myTabs);
     },
     data() {
         let myTabNames = this.settings.homeScreenTabs ? this.settings.homeScreenTabs.split(',') : [];
