@@ -60,7 +60,7 @@
 
         methods: {
             getData(api_url) {
-                api_url = api_url || '/api/servicesByDayAndCity/'+this.day.id+'/'+this.city.id;
+                api_url = api_url || route('api.services.byDayAndCity', {day: this.day.id, city: this.city.id});
                 fetch(api_url)
                     .then(response => response.json())
                     .then(response => {
@@ -70,7 +70,7 @@
                     .catch(err => console.log(err));
             },
             serviceAddRoute: function() {
-                return '/services/add/'+this.day.id+'/'+this.city.id;
+                return route('services.add', {day: this.day.id, city: this.city.id});
             }
         }
     };</script>
