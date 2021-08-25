@@ -7,7 +7,7 @@
             @can('update', $service)
             style="cursor: pointer;"
             title="Klicken, um diesen Eintrag zu bearbeiten"
-            onclick="window.location.href='{{ route('services.edit', $service->id) }}';"
+            onclick="window.location.href='{{ route('service.edit', $service->id) }}';"
             @endcan>
         @if (!is_object($service->location))
             <div class="service-time service-special-time">
