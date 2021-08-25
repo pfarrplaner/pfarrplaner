@@ -214,8 +214,9 @@ import PeoplePane from "./PeoplePane";
 import Selectize from "vue2-selectize";
 import Modal from "../../Ui/modals/Modal";
 import LiturgySheetLink from "../Elements/LiturgySheetLink";
-import FullTextLiturgySheetConfiguration from "../LiturgySheets/FullTextLiturgySheetConfiguration";
 import FormSelectize from "../../Ui/forms/FormSelectize";
+import FullTextLiturgySheetConfiguration from "../LiturgySheets/FullTextLiturgySheetConfiguration";
+import SongPPTLiturgySheetConfiguration from "../LiturgySheets/SongPPTLiturgySheetConfiguration";
 
 export default {
     name: "LiturgyTree",
@@ -229,6 +230,7 @@ export default {
         draggable,
         Selectize,
         FullTextLiturgySheetConfiguration,
+        SongPPTLiturgySheetConfiguration,
     },
     props: {
         service: Object,

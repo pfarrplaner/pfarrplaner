@@ -49,6 +49,27 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
     protected $icon = 'fa fa-file-powerpoint';
     protected $extension = 'pptx';
 
+    protected $configurationPage = 'Liturgy/LiturgySheets/SongPPTSongSheetConfiguration';
+    protected $configurationComponent = 'SongPPTLiturgySheetConfiguration';
+
+    protected $defaultConfig = [
+        'textColor' => 'FFFFFFFF',
+        'backgroundColor' => 'FF043b04',
+        'backgroundColorEmpty' => 'FF043b04',
+        'includeEmpty' => 1,
+        'includeJingleAndIntro' => 1,
+        'includeCredits' => 1,
+        'verticalAlignment' => 'b',
+        'fontSize' => 40,
+    ];
+
+    protected $counterColor = [
+        'FFFFFFFF' => 'FF000000',
+        'FF000000' => 'FFFFFFFF',
+        'FF043b04' => 'FFFFFFFF',
+    ];
+
+
     /** @var PhpPresentation */
     protected $ppt;
 
@@ -57,14 +78,20 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
         $this->ppt = new PhpPresentation();
         $this->setDocumentProperties($service);
         $this->ppt->getLayout()->setDocumentLayout(DocumentLayout::LAYOUT_SCREEN_16X9);
-        $white = new Color('FFFFFFFF');
-        $orange = new Color('FFF79646');
+        $textColor = new Color($this->config['textColor']);
+        $highlightedTextColor = new Color('FFF79646');
         $this->ppt->removeSlideByIndex(0);
 
-        $this->slide();
-        $this->slide('Hier Jingle einfügen');
-        $this->slide('Hier Intro einfügen');
-        $this->slide();
+        if ($this->config['includeEmpty']) {
+            $this->slide();
+        }
+        if ($this->config['includeJingleAndIntro']) {
+            $this->slide('Hier Jingle einfügen');
+            $this->slide('Hier Intro einfügen');
+        }
+        if ($this->config['includeEmpty']) {
+            $this->slide();
+        }
 
         foreach ($service->liturgyBlocks as $block) {
             foreach ($block->items as $item) {
@@ -79,43 +106,54 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
                     }
                     foreach ($helper->getActiveVerses() as $verse) {
                         if ($verse['refrain_before']) {
-                            $this->slide($item->data['song']['refrain'], 30, 'FFFFFFFF', true,  $copyrights);
+                            $this->slide($item->data['song']['refrain'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
                         }
-                        $this->slide($verse['number'].'. '.$verse['text'], 30, 'FFFFFFFF', true,  $copyrights);
+                        $this->slide($verse['number'].'. '.$verse['text'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
                         if ($verse['refrain_after']) {
-                            $this->slide($item->data['song']['refrain'], 30, 'FFFFFFFF', true,  $copyrights);
+                            $this->slide($item->data['song']['refrain'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
                         }
                     }
-                    $this->slide();
+                    if ($this->config['includeEmpty']) {
+                        $this->slide();
+                    }
                 } elseif ($item->data_type == 'psalm') {
                     /** @var PsalmItemHelper $helper */
                     $helper = $item->getHelper();
-                    foreach ($helper->getVerses() as $verse) $this->slide($verse, 30);
+                    foreach ($helper->getVerses() as $verse) $this->slide($verse, $this->config['fontSize']);
                 } elseif ($item->data_type == 'liturgic') {
                     if ($item->title == 'Ehr sei dem Vater') {
 //                        unset($slides[count($slides) - 1]);
                         $this->slide($item->data['text']);
-                        $this->slide();
+                        if ($this->config['includeEmpty']) {
+                            $this->slide();
+                        }
                     }
                 }
             }
 
         }
-        $this->slide($service->credits, 18, 'FFFFFFFF', false);
-        $this->slide('Hier Jingle einfügen', 18);
+        if ($this->config['includeCredits']) {
+            $this->creditsSlide($service->credits);
+        }
+        if ($this->config['includeJingleAndIntro']) {
+            $this->slide('Hier Jingle einfügen', 18);
+        }
 
         $fileName = $service->dateTime()->format('Ymd-Hi') . ' Texte und Lieder.pptx';
         return $this->sendToBrowser($fileName);
     }
 
-    protected function slide($text = '', $size = 30, $rgb = 'FFFFFFFF', $bold = true, $copyrights = '')
+    protected function slide($text = '', $size = -1, $rgb = -1, $bold = true, $copyrights = '', $backgroundColor = null)
     {
-        $slide = $this->createEmptySlide();
+        if ($size == -1) $size = $this->config['fontSize'];
+        if ($rgb == -1) $rgb = $this->config['textColor'];
+        $color = new Color($rgb);
+        $slide = $this->createEmptySlide($backgroundColor ?: ($text ? $this->config['backgroundColor'] : $this->config['backgroundColorEmpty']));
         if ($text) {
             if (!is_array($text)) $text = [$text];
             $text = str_replace("\n\t", "\r\t", $text);
             $shape = $this->createFullScreenRichTextShape($slide);
-            $color = new Color($rgb);
+            $shape->setParagraphs([]);
             $ct = 0;
             foreach ($text as $line) {
                 if ($ct=0) $paragraph = $shape->getActiveParagraph();
@@ -125,25 +163,38 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
                     $paragraph->getAlignment()->setMarginLeft(35);
                     $line = substr($line, 1);
                 }
+                $paragraph->getAlignment()->setVertical($this->config['verticalAlignment']);
                 $paragraph->getFont()->setBold($bold)->setSize($size)->setColor($color)->setName('Calibri');
                 $paragraph->createTextRun(str_replace('&', '**', $line));
             }
-            if ($copyrights) {
-                $paragraph = $shape->createParagraph();
-                $paragraph->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
-                $paragraph->getFont()->setBold(false)->setSize(10)->setColor($color)->setName('Calibri');
-                $paragraph->createTextRun("\n" . $copyrights);
-            }
         }
+        if ($copyrights) {
+            $shape = $slide->createRichTextShape()
+                ->setWidth(950)
+                ->setHeight(30)
+                ->setOffsetX(10)
+                ->setOffsetY(505);
+            $paragraph = $shape->getActiveParagraph();
+            $paragraph->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
+            $paragraph->getFont()->setBold(false)->setSize(10)->setColor($color)->setName('Calibri');
+            $paragraph->createTextRun($copyrights);
+        }
+        return $slide;
     }
 
-    protected function createEmptySlide(): Slide
+    protected function creditsSlide($credits)
     {
-        $black = new Color('FF043b04');
-        $blackBG = new \PhpOffice\PhpPresentation\Slide\Background\Color();
-        $blackBG->setColor($black);
+        $slide = $this->slide('', -1, $this->counterColor[$this->config['backgroundColorEmpty']], false,
+                              $credits, $this->config['backgroundColorEmpty']);
+    }
+
+    protected function createEmptySlide($color): Slide
+    {
+        $backgroundColor = new Color($color);
+        $backgroundColorBG = new \PhpOffice\PhpPresentation\Slide\Background\Color();
+        $backgroundColorBG->setColor($backgroundColor);
         $slide = $this->ppt->createSlide();
-        $slide->setBackground($blackBG);
+        $slide->setBackground($backgroundColorBG);
         return $slide;
     }
 
@@ -156,10 +207,9 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
     {
         $shape = $slide->createRichTextShape()
             ->setWidth(950)
-            ->setHeight(530)
+            ->setHeight(500)
             ->setOffsetX(10)
             ->setOffsetY(0);
-        $shape->getActiveParagraph()->getAlignment()->setVertical(Alignment::VERTICAL_BOTTOM);
         return $shape;
     }
 

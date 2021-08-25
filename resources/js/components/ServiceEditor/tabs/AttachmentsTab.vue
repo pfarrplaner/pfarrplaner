@@ -81,8 +81,9 @@ import FormInput from "../../Ui/forms/FormInput";
 import FormGroup from "../../Ui/forms/FormGroup";
 import FormFileUpload from "../../Ui/forms/FormFileUpload";
 import Modal from "../../Ui/modals/Modal";
-import FullTextLiturgySheetConfiguration from "../../LiturgyEditor/LiturgySheets/FullTextLiturgySheetConfiguration";
 import FormFileUploader from "../../Ui/forms/FormFileUploader";
+import FullTextLiturgySheetConfiguration from "../../LiturgyEditor/LiturgySheets/FullTextLiturgySheetConfiguration";
+import SongPPTLiturgySheetConfiguration from "../../LiturgyEditor/LiturgySheets/SongPPTLiturgySheetConfiguration";
 
 export default {
     name: "AttachmentsTab",
@@ -94,6 +95,7 @@ export default {
         FormInput,
         Attachment,
         FullTextLiturgySheetConfiguration,
+        SongPPTLiturgySheetConfiguration,
     },
     props: {
         service: Object,
