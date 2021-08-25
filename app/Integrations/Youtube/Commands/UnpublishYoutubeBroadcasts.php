@@ -30,9 +30,11 @@
 
 namespace App\Integrations\Youtube\Commands;
 
+use App\Broadcast;
 use App\City;
 use App\Helpers\YoutubeHelper;
 use App\Integrations\Youtube\YoutubeIntegration;
+use App\Service;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -81,63 +83,45 @@ class UnpublishYoutubeBroadcasts extends Command
             $this->output('Checking videos for "' . $city->name . '"');
             $youtube = YoutubeIntegration::get($city);
             $channelId = YoutubeHelper::getChannelId($city->youtube_channel_url);
-            $this->output('Checking channel ' . $channelId);
-            /** @var \Google_Service_YouTube_Channel $channel */
-            $channel = $youtube->getYoutube()->channels->listChannels(
-                'id,snippet,contentDetails',
-                ['id' => $channelId]
-            )->getItems()[0];
 
             $this->output('Configured cut-off after '.$city->youtube_cutoff_days.' days');
             $cutoffDate = Carbon::now()->subDays($city->youtube_cutoff_days);
             $this->output('Cut-off date: '.$cutoffDate->format('Y-m-d H:i:s'));
 
-            $allBroadcasts = [];
-            $broadcasts = $youtube->getYoutube()->liveBroadcasts->listLiveBroadcasts(
-                'id,snippet,status',
-                [
-                    'mine' => 'true',
-                    'maxResults' => 50
-                ]
-            );
-            foreach ($broadcasts->getItems() as $broadcast) {
-                $allBroadcasts[] = $broadcast;
-            }
-            while (null !== ($token = $broadcasts->getNextPageToken())) {
-                $broadcasts = $youtube->getYoutube()->liveBroadcasts->listLiveBroadcasts(
-                    'id,snippet,status',
-                    [
-                        'mine' => 'true',
-                        'maxResults' => 50,
-                        'pageToken' => $token
-                    ]
-                );
-                foreach ($broadcasts->getItems() as $broadcast) {
-                    $allBroadcasts[] = $broadcast;
-                }
-            }
+            $services = Service::inCity($city)
+                ->where('youtube_url', '!=', '')
+                ->startingFrom($cutoffDate->copy()->subDays(1))
+                ->endingAt($cutoffDate)
+                ->orderedDesc()
+                ->limit(10)
+                ->get();
 
-            /** @var \Google_Service_YouTube_LiveBroadcast $broadcast */
-            foreach ($allBroadcasts as $broadcast) {
-                $pubDate = new Carbon($broadcast->getSnippet()->getScheduledStartTime());
-                if ($pubDate < $cutoffDate) {
+            foreach ($services as $service) {
+                $this->output('Checking broadcast for service #'.$service->id);
+                if ($broadcastRecord = Broadcast::get($service)) {
+                    $broadcast = $broadcastRecord->getLiveBroadcast();
+                    $pubDate = (new Carbon($broadcast->getSnippet()->getScheduledStartTime()))
+                        ->shiftTimezone('UTC')->setTimezone('Europe/Berlin');
                     if ($broadcast->getStatus()->getPrivacyStatus() == 'public') {
                         $this->output('Unpublishing broadcast id ' . $broadcast->getId()
-                                    . ' (' . $pubDate->format('Y-m-d H:i:s').')'
+                                      . ' (' . $pubDate->format('Y-m-d H:i:s').')'
                         );
 
                         $status = $broadcast->getStatus();
                         $status->setPrivacyStatus('private');
                         $broadcast->setStatus($status);
 
-                        $youtube->getYoutube()->liveBroadcasts->update('snippet,status', $broadcast);
+                        $youtube->getYoutube()->liveBroadcasts->update('snippet,status,contentDetails', $broadcast);
+                    } else {
+                        $this->output('Broadcast id ' . $broadcast->getId()
+                                      . ' (' . $pubDate->format('Y-m-d H:i:s').') is already unpublished.'
+                        );
                     }
                 } else {
-                    $this->output('Leaving broadcast id ' . $broadcast->getId()
-                                . ' (' . $pubDate->format('Y-m-d H:i:s').') online.'
-                    );
+                    $this->output('No corresponding broadcast found.');
                 }
             }
+
         }
     }
 }
