@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.74.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.74.0...v1.74.1) (2021-08-25)
+
+
+### Features
+
+* Include Laravel/PHP version info in about page ([1dd54af](https://github.com/pfarrplaner/pfarrplaner/commits/1dd54af3117097f172a48239c71d5552c303bc8d))
+
+
+### Bug Fixes
+
+* Wrong redirection after login / auth routes ([94e4523](https://github.com/pfarrplaner/pfarrplaner/commits/94e4523343c6135bbe75883dd6653e221fbc653b))
+
 ## [1.74.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.73.0...v1.74.0) (2021-08-25)
 
 
