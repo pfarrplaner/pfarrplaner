@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.74.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.73.0...v1.74.0) (2021-08-25)
+
+
+### Features
+
+* Add copyright to songsheet, full text output ([1f5b733](https://github.com/pfarrplaner/pfarrplaner/commits/1f5b733952f320944c41d831dbafda8d0f379f43)), closes [#100](https://github.com/pfarrplaner/pfarrplaner/issues/100)
+* Include song copyrights in PPT ([6fd46a3](https://github.com/pfarrplaner/pfarrplaner/commits/6fd46a368b5fcff2c828d38cc8489ba4b9abc1d7)), closes [#100](https://github.com/pfarrplaner/pfarrplaner/issues/100)
+* Rewrote youtube:unpublish command to only touch broadcasts connected to a known service ([805588b](https://github.com/pfarrplaner/pfarrplaner/commits/805588b38178a4208cdbab3fc9a59f5fb4382495))
+
+
+### Bug Fixes
+
+* Absences link should be called with inertia ([3240650](https://github.com/pfarrplaner/pfarrplaner/commits/3240650e96283a282320ccb467ee9c51f9feb83f))
+* FullTextLiturgySheet fails when song data is not present ([6e46866](https://github.com/pfarrplaner/pfarrplaner/commits/6e46866bc8f6b9befd445b283f60e03aef725c0f))
+* prevent duplicate key error message in CasesTab ([513498e](https://github.com/pfarrplaner/pfarrplaner/commits/513498e3dfe43b50e613fce3af10fe57ff2a9f84))
+* Relative date in funeral liturgy is relative to current day, not funeral day ([78f499e](https://github.com/pfarrplaner/pfarrplaner/commits/78f499e86803a38d2ba6b2027416eb5fa18c68eb)), closes [#128](https://github.com/pfarrplaner/pfarrplaner/issues/128)
+* Remove reference to obsolete whatsnew component ([299cd50](https://github.com/pfarrplaner/pfarrplaner/commits/299cd50c0432241a7809bc093df4ac61290b807f))
+* scopeWritable does not correctly suppy city ids ([c54b074](https://github.com/pfarrplaner/pfarrplaner/commits/c54b074645a20a8f8ddacbac6f591f648106d1f4))
+* uncoupling a sermon leads to error 404 ([db1f3f7](https://github.com/pfarrplaner/pfarrplaner/commits/db1f3f7abe929f9d1f933d796ca36ca2704316ac))
+* UserController crashes on edit action ([17e6c87](https://github.com/pfarrplaner/pfarrplaner/commits/17e6c874f3008cc900f0e4d3fa70568264f7d87b))
+
 ## [1.73.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.72.3...v1.73.0) (2021-08-24)
 
 
