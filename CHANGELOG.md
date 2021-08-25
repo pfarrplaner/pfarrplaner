@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.76.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.75.0...v1.76.0) (2021-08-25)
+
+
+### Features
+
+* Allow overloading auto-created announcement file ([cba6c5c](https://github.com/pfarrplaner/pfarrplaner/commits/cba6c5c352a690bd17572b6c95d6bec940949df8))
+* Show warnings when auto-created announcements are overwritten ([de3c18a](https://github.com/pfarrplaner/pfarrplaner/commits/de3c18a413a609c3cfa2d3c5588c753ed5162e52))
+
 ## [1.75.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.74.1...v1.75.0) (2021-08-25)
 
 
