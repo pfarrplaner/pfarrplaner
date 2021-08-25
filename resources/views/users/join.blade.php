@@ -12,7 +12,7 @@
             <div class="card-body">
                 @component('components.errors')
                 @endcomponent
-                <form method="post" action="{{ route('users.join') }}">
+                <form method="post" action="{{ route('user.join.finalize') }}">
                     @csrf
                     <input type="hidden" name="user1" value="{{ $user->id }}" />
                     <div class="form-group">

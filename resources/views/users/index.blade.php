@@ -4,7 +4,7 @@
 @section('navbar-left')
     @can('create', \App\User::class)
         <li class="nav-item">
-            <a class="btn btn-success" href="{{ route('users.create') }}"><i class="fa fa-user-plus"></i> Neuen Benutzer
+            <a class="btn btn-success" href="{{ route('user.create') }}"><i class="fa fa-user-plus"></i> Neuen Benutzer
                 hinzufügen</a>
         </li>
     @endcan
@@ -63,7 +63,7 @@
                             </td>
                             <td class="text-right">
                                 @can('update', $user)
-                                    <a href="{{ route('users.edit',$user->id)}}" class="btn btn-sm btn-primary"
+                                    <a href="{{ route('user.edit',$user->id)}}" class="btn btn-sm btn-primary"
                                        title="Bearbeiten">
                                         <span class="fa fa-edit"></span>
                                     </a>
@@ -78,7 +78,7 @@
                                     </a>
                                 @endif
                                 @can('delete', $user)
-                                    <form action="{{ route('users.destroy', $user->id)}}" method="post"
+                                    <form action="{{ route('user.destroy', $user->id)}}" method="post"
                                           class="form-inline" style="display:inline;">
                                         @csrf
                                         @method('DELETE')
@@ -131,13 +131,13 @@
                                 </td>
                                 <td class="text-right">
                                     @can('update', $user)
-                                        <a href="{{ route('users.edit',$user->id)}}" class="btn btn-sm btn-primary"
+                                        <a href="{{ route('user.edit',$user->id)}}" class="btn btn-sm btn-primary"
                                            title="Bearbeiten">
                                             <span class="fa fa-edit"></span>
                                         </a>
                                     @endcan
                                     @can('delete', $user)
-                                        <form action="{{ route('users.destroy', $user->id)}}" method="post"
+                                        <form action="{{ route('user.destroy', $user->id)}}" method="post"
                                               class="form-inline" style="display:inline;">
                                             @csrf
                                             @method('DELETE')

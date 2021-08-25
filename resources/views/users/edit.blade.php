@@ -4,7 +4,7 @@
 
 
 @section('content')
-    <form method="post" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
+    <form method="post" action="{{ route('user.update', $user->id) }}" enctype="multipart/form-data">
         @csrf
         @method('PATCH')
         @component('components.ui.card')

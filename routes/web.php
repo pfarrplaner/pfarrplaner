@@ -42,7 +42,6 @@
 Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
-Route::resource('users', 'UserController');
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
 Route::resource('absences', 'AbsenceController')->except(['index', 'create'])->middleware('auth');

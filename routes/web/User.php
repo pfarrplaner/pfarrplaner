@@ -43,11 +43,23 @@
 
 use App\Http\Controllers\UserController;
 
-Route::get('user/profile', [UserController::class, 'profile'])->name('user.profile');
-Route::patch('user/profile', [UserController::class, 'profileSave'])->name('user.profile.save');
-Route::post('user/{user}/join', [UserController::class, 'join'])->name('user.join');
-Route::post('users/join', [UserController::class, 'doJoin'])->name('users.join');
-Route::get('user/{user}/services', [UserController::class, 'services'])->name('user.services');
-Route::get('user/switch/{user}', [UserController::class, 'switch'])->name('user.switch');
-Route::post('users/add', [UserController::class, 'add'])->name('users.add');
-Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+// all users
+Route::get('/benutzer', [UserController::class, 'index'])->name('users.index');
+Route::post('/benutzer/{user}/zusammenfuehren', [UserController::class, 'join'])->name('user.join');
+Route::post('/benutzer/final-zusammenfuehren', [UserController::class, 'doJoin'])->name('user.join.finalize');
+
+// create person via ajax call
+Route::post('/person/neu', [UserController::class, 'add'])->name('users.add');
+
+// single user
+Route::post('/benutzer', [UserController::class, 'store'])->name('user.store');
+Route::get('/benutzer/neu', [UserController::class, 'create'])->name('user.create');
+Route::get('/benutzer/{user}', [UserController::class, 'edit'])->name('user.edit');
+Route::patch('/benutzer/{user}', [UserController::class, 'update'])->name('user.update');
+Route::delete('/benutzer/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+
+// additional user routes
+Route::get('/benutzer/profil', [UserController::class, 'profile'])->name('user.profile');
+Route::patch('/benutzer/profil', [UserController::class, 'profileSave'])->name('user.profile.save');
+Route::get('/benutzer/{user}/gottesdienste', [UserController::class, 'services'])->name('user.services');
+Route::get('/benutzer/login-als/{user}', [UserController::class, 'switch'])->name('user.switch');

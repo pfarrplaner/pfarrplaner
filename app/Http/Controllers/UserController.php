@@ -182,17 +182,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param int $id
@@ -534,7 +523,7 @@ class UserController extends Controller
         // special treatment if the submitter is a local admin
         if (Auth::user()->isLocalAdmin) {
             // on create:
-            if ($request->route()->getName() == 'users.store') {
+            if ($request->route()->getName() == 'user.store') {
                 // check if at least one permission is set
                 $rules['cityPermission'] = [new CreatedInLocalAdminDomain()];
 

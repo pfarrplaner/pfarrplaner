@@ -597,13 +597,13 @@ Breadcrumbs::for(
 );
 
 Breadcrumbs::for(
-    'users.edit',
+    'user.edit',
     function (BreadcrumbsGenerator $trail, $user) {
         if (is_numeric($user)) {
             $user = \App\User::find($user);
         }
         $trail->parent('users.index');
-        $trail->push($user->fullName(), route('users.edit', $user));
+        $trail->push($user->fullName(), route('user.edit', $user));
     }
 );
 
@@ -612,7 +612,7 @@ Breadcrumbs::for(
     function (BreadcrumbsGenerator $trail, $user) {
         $trail->parent('home');
         $trail->push('Benutzer', route('users.index'));
-        $trail->push($user->fullName(), route('users.edit', $user));
+        $trail->push($user->fullName(), route('user.edit', $user));
         $trail->push('Zusammenführen', route('user.join', $user));
     }
 );
@@ -629,7 +629,7 @@ Breadcrumbs::for(
 Breadcrumbs::for(
     'user.services',
     function (BreadcrumbsGenerator $trail, $user) {
-        $trail->parent('users.edit', $user);
+        $trail->parent('user.edit', $user);
         $trail->push('Gottesdienste', route('user.services', $user));
     }
 );

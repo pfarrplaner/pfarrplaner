@@ -3,7 +3,7 @@
 @section('title', 'Benutzer hinzufügen')
 
 @section('content')
-    <form method="post" action="{{ route('users.store') }}" enctype="multipart/form-data">
+    <form method="post" action="{{ route('user.store') }}" enctype="multipart/form-data">
         @csrf
         @component('components.ui.card')
             @slot('cardFooter')
