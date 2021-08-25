@@ -48,7 +48,7 @@ Route::get('/gottesdienste/neu/{date}/{city}', [ServiceController::class, 'add']
 
 // one service
 Route::get('/gottesdienst/{service}', [ServiceController::class, 'edit'])->name('service.edit');
-Route::patch('/gottesdienst/{service}', [ServiceController::class, 'update2'])->name('service.update');
+Route::patch('/gottesdienst/{service}', [ServiceController::class, 'update'])->name('service.update');
 Route::delete('/gottesdienst/{service}', [ServiceController::class, 'destroy'])->name('service.destroy');
 
 // additional service routes

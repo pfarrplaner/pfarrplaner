@@ -75,53 +75,6 @@ class ServiceController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param ServiceRequest $request
-     * @return Response
-     */
-    public function store(ServiceRequest $request)
-    {
-        $validatedData = $request->validated();
-        $service = new Service($validatedData);
-
-        // emit event so that integrations may react
-        event(new ServiceBeforeStore($service, $validatedData));
-
-        $service->setDefaultOfferingValues();
-        $service->save();
-        $this->updateFromRequest($request, $service);
-        $this->handleAttachments($request, $service);
-        $this->handleIndividualAttachment($request, $service, 'songsheet');
-        $this->handleIndividualAttachment($request, $service, 'sermon_image');
-
-        // emit event so that integrations may react
-        event(new ServiceCreated($service));
-
-        return redirect()->route('calendar', $service->day->date->format('Y-m'))
-            ->with('success', 'Der Gottesdienst wurde hinzugefügt');
-    }
-
-    /**
      * @param ServiceRequest $request
      * @param Service $service
      */
@@ -132,24 +85,6 @@ class ServiceController extends Controller
 
         $service->tags()->sync($request->get('tags') ?: []);
         $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param Service $service
-     * @return Response
-     */
-    public function show(Service $service)
-    {
-        return redirect()->route('service.edit', $service);
-    }
-
-
-    public function update2(ServiceRequest $request, Service $service)
-    {
-        $data = $request->validated();
-        return redirect()->back();
     }
 
     /**
@@ -311,24 +246,6 @@ class ServiceController extends Controller
             ]
         );
         return redirect()->route('service.edit', $service);
-    }
-
-    /**
-     * @param $cityId
-     * @param $dayId
-     * @return Application|Factory|\Illuminate\View\View
-     */
-    public function servicesByCityAndDay($cityId, $dayId)
-    {
-        $day = Day::find($dayId);
-        $city = City::find($cityId);
-        $vacations = [$dayId => Vacations::getByDay($day)];
-        $services = Service::with('day', 'location')
-            ->where('city_id', $cityId)
-            ->where('day_id', '=', $dayId)
-            ->orderBy('time')
-            ->get();
-        return view('services.ajax.byCityAndDay', compact('services', 'day', 'vacations', 'city'));
     }
 
     /**
