@@ -61,7 +61,7 @@ class LiturgyBlockController extends Controller
         $data['service_id'] = $service->id;
         $data['sortable'] = count($service->liturgyBlocks);
         $block = Block::create($data);
-        return Redirect::route('services.liturgy.editor', ['service' => $service, 'autoFocusBlock' => $block->id]);
+        return Redirect::route('liturgy.editor', ['service' => $service, 'autoFocusBlock' => $block->id]);
     }
 
     /**
@@ -74,7 +74,7 @@ class LiturgyBlockController extends Controller
     {
         $data = $this->validateRequest($request);
         $block->update($data);
-        return Redirect::route('services.liturgy.editor', $service);
+        return Redirect::route('liturgy.editor', $service);
     }
 
     /**
@@ -86,7 +86,7 @@ class LiturgyBlockController extends Controller
     public function destroy(Request $request, Service $service, Block $block)
     {
         $block->delete();
-        return Redirect::route('services.liturgy.editor', $service);
+        return Redirect::route('liturgy.editor', $service);
     }
 
     /**

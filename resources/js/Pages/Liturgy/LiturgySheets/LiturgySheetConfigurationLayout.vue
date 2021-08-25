@@ -45,8 +45,8 @@
         <card>
             <card-header>Einstellungen für {{ title }}</card-header>
             <card-body>
-                <form id="configForm" method="post" :action="route('services.liturgy.download', {
-                    service: this.service.id,
+                <form id="configForm" method="post" :action="route('liturgy.download', {
+                    service: this.service.slug,
                     key: this.sheetConfig.key,
                 })">
                     <input type="hidden" name="_token" :value="token"/>

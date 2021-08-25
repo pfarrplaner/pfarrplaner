@@ -44,4 +44,4 @@
 use App\Http\Controllers\AgendaController;
 
 // agenda
-AgendaController::defaultRoutes('liturgy');
+AgendaController::defaultRoutes('liturgie');

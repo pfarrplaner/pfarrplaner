@@ -43,11 +43,10 @@
 
 use App\Http\Controllers\LiturgyEditorController;
 
-Route::get('/services/{service}/liturgy', [LiturgyEditorController::class, 'editor'])->name('services.liturgy.editor');
-Route::get('/services/{service}/liturgy/configure/{key}', [LiturgyEditorController::class, 'configureLiturgySheet']);
-Route::get('/services/{service}/liturgy/download/{key}', [LiturgyEditorController::class, 'download'])->name('services.liturgy.download');
-Route::post('/services/{service}/liturgy/download/{key}', [LiturgyEditorController::class, 'download'])->name('services.liturgy.download.post');
-Route::post('/services/{service}/liturgy', [LiturgyEditorController::class, 'save'])->name('services.liturgy.save');
-Route::get('/services/{service}/liturgy/sources', [LiturgyEditorController::class, 'sources'])->name('services.liturgy.sources');
-Route::get('/services/{service}/liturgy/sermons', [LiturgyEditorController::class, 'sermons'])->name('services.liturgy.sermons');
-Route::post('/services/{service}/liturgy/import/{source}', [LiturgyEditorController::class, 'import'])->name('services.liturgy.import');
+Route::get('/liturgie/{service:slug}', [LiturgyEditorController::class, 'editor'])->name('liturgy.editor');
+Route::get('/liturgie/{service:slug}/optionen/{key}', [LiturgyEditorController::class, 'liturgy.configure']);
+Route::match(['GET', 'POST'], '/liturgie/{service:slug}/download/{key}', [LiturgyEditorController::class, 'download'])->name('liturgy.download');
+Route::post('/liturgie/{service:slug}', [LiturgyEditorController::class, 'save'])->name('liturgy.save');
+Route::get('/liturgie/{service:slug}/quellen', [LiturgyEditorController::class, 'sources'])->name('liturgy.sources');
+Route::get('/liturgie/{service:slug}/predigten', [LiturgyEditorController::class, 'sermons'])->name('liturgy.sermons');
+Route::post('/liturgie/{service:slug}/import/{source}', [LiturgyEditorController::class, 'import'])->name('liturgy.import');

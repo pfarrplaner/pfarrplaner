@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-sm-3 text-right" style="padding-top: 2rem;">
                     <button class="btn btn-primary" title="Eintrag speichern"><span class="fa fa-save"></span></button>
-                    <a class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)" title="Abbrechen"><span class="fa fa-times"></span></a>
+                    <a class="btn btn-secondary" :href="route('liturgy.editor', this.service.id)" title="Abbrechen"><span class="fa fa-times"></span></a>
 
                 </div>
             </div>

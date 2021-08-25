@@ -65,7 +65,7 @@ class LiturgyItemController extends Controller
             $item->checkMarkerReplacementSettings();
             $item->save();
         }
-        return redirect()->route('services.liturgy.editor', ['service' => $service->id, 'autoFocusBlock' => $block->id, 'autoFocusItem' => $item->id]);
+        return redirect()->route('liturgy.editor', ['service' => $service->id, 'autoFocusBlock' => $block->id, 'autoFocusItem' => $item->id]);
     }
 
     /**
@@ -84,7 +84,7 @@ class LiturgyItemController extends Controller
             $item->checkMarkerReplacementSettings();
             $item->save();
         }
-        return redirect()->route('services.liturgy.editor', $service->id);
+        return redirect()->route('liturgy.editor', $service->id);
     }
 
     /**
@@ -97,7 +97,7 @@ class LiturgyItemController extends Controller
     public function destroy(Request $request, Service $service, Block $block, Item $item)
     {
         $item->delete();
-        return redirect()->route('services.liturgy.editor', $service->id);
+        return redirect()->route('liturgy.editor', $service->id);
     }
 
     /**
@@ -113,7 +113,7 @@ class LiturgyItemController extends Controller
         $data['responsible'] = $request->all();
         $item->data = $data;
         $item->save();
-        return redirect()->route('services.liturgy.editor', $service->id);
+        return redirect()->route('liturgy.editor', $service->id);
     }
 
     /**

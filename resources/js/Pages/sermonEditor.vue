@@ -46,7 +46,7 @@
                                :href="route('service.edit', {service: service.slug})"
                                title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>
                             <inertia-link class="btn btn-sm btn-light"
-                                          :href="route('services.liturgy.editor', {service: service.id})"
+                                          :href="route('liturgy.editor', {service: service.slug})"
                                           title="Liturgie bearbeiten">
                                 <span class="fa fa-th-list"></span> Liturgie
                             </inertia-link>

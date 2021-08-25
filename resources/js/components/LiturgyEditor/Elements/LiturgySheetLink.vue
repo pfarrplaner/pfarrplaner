@@ -33,7 +33,7 @@
             <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
         </a>
         <a v-else class="dropdown-item"
-           :href="route('services.liturgy.download', {service: service.id, key: sheet.key})">
+           :href="route('liturgy.download', {service: service.slug, key: sheet.key})">
             <span v-if="sheet.icon" :class="sheet.icon"></span> {{ sheet.title }}
         </a>
     </div>

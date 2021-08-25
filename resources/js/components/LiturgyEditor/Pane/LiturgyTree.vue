@@ -259,7 +259,7 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        const sources = await axios.get(route('services.liturgy.sources', this.service.id))
+        const sources = await axios.get(route('liturgy.sources', this.service.slug))
         if (sources.data) {
             this.agendas = sources.data.agendas;
             this.services = sources.data.services;
@@ -267,7 +267,7 @@ export default {
             this.importFrom = -1;
         }
 
-        this.sermons = (await axios.get(route('services.liturgy.sermons', this.service.id))).data;
+        this.sermons = (await axios.get(route('liturgy.sermons', this.service.slug))).data;
     },
     mounted() {
         if (this.autoFocusItem && this.autoFocusBlock) {
@@ -372,7 +372,7 @@ export default {
                     item.sortable = j++;
                 })
             })
-            this.$inertia.post(route('services.liturgy.save', this.service.id), this.blocks)
+            this.$inertia.post(route('liturgy.save', this.service.slug), this.blocks)
         },
         addItem(blockIndex, type) {
             if (!this.editable) return false;
@@ -522,7 +522,7 @@ export default {
             this.$emit('update-focus', this.focusedBlock, this.focusedItem, object);
         },
         save() {
-            this.$inertia.post(route('services.liturgy.save', {service: this.service}), {blocks: this.blocks}, {preserveState: true});
+            this.$inertia.post(route('liturgy.save', {service: this.service}), {blocks: this.blocks}, {preserveState: true});
         },
         editResponsibles(blockIndex, itemIndex, item) {
             this.editable = false;
@@ -552,7 +552,7 @@ export default {
         },
         importElements() {
             if (this.importFrom == -1) return;
-            this.$inertia.post(route('services.liturgy.import', {service: this.service, source: this.importFrom}), {}, {
+            this.$inertia.post(route('liturgy.import', {service: this.service, source: this.importFrom}), {}, {
                 preserveState: false,
             })
         },

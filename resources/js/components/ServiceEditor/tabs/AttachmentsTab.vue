@@ -122,9 +122,9 @@ export default {
     methods: {
         downloadSheet(sheet) {
             if (sheet.configurationPage) {
-                this.$inertia.visit(route('services.liturgy.configure', {service: this.service.id, key: sheet.key}));
+                this.$inertia.visit(route('liturgy.configure', {service: this.service.slug, key: sheet.key}));
             } else {
-                window.location.href = route('services.liturgy.download', {service: this.service.id, key: sheet.key});
+                window.location.href = route('liturgy.download', {service: this.service.slug, key: sheet.key});
             }
         },
         downloadConfiguredSheet(sheet) {

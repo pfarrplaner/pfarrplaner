@@ -93,7 +93,7 @@
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" @click="save" :disabled="psalmIsDirty" :title="psalmIsDirty ? 'Du musst zuerst die Änderungen am Lied speichern.' : ''">Speichern</button>
-                <inertia-link class="btn btn-secondary" :href="route('services.liturgy.editor', this.service.id)">
+                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.id)">
                     Abbrechen
                 </inertia-link>
             </div>

@@ -54,7 +54,7 @@
                         <span class="fa fa-edit"></span>
                     </inertia-link>
                     <inertia-link class="btn btn-light" title="Liturgie bearbeiten"
-                                  :href="route('services.liturgy.editor', service.id)">
+                                  :href="route('liturgy.editor', service.id)">
                         <span class="fa fa-th-list"></span>
                     </inertia-link>
                     <inertia-link class="btn btn-light" title="Predigt bearbeiten"

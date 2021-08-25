@@ -74,7 +74,7 @@ class AgendaController extends Controller
         $data = $this->validateRequest($request);
         $data['day_id'] = Day::getAgendaDay()->id;
         $agenda = Service::create($data);
-        return redirect()->route('services.liturgy.editor', $agenda->id);
+        return redirect()->route('liturgy.editor', $agenda->id);
     }
 
     public function update(Request $request, Service $agenda)
@@ -82,7 +82,7 @@ class AgendaController extends Controller
         $data = $this->validateRequest($request);
         $data['day_id'] = Day::getAgendaDay()->id;
         $agenda->update($data);
-        return redirect()->route('services.liturgy.editor', $agenda->id);
+        return redirect()->route('liturgy.editor', $agenda->id);
     }
 
     protected function validateRequest(Request $request): array

@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <form :id="'frm'+sheet.key" method="post" :action="route('services.liturgy.download', {service: service.id, key: sheet.key})">
+    <form :id="'frm'+sheet.key" method="post" :action="route('liturgy.download', {service: service.slug, key: sheet.key})">
         <input type="hidden" name="_token" :value="token" />
         <slot />
     </form>

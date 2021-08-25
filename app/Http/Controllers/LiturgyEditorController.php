@@ -72,7 +72,7 @@ class LiturgyEditorController extends Controller
         /** @var AbstractLiturgySheet $sheet */
         $sheet = new $class();
         if ((null !== $sheet->getConfigurationPage()) && (!$request->has('config'))) {
-            return redirect()->route('services.liturgy.configure', ['service' => $service->id, 'key' => $key]);
+            return redirect()->route('liturgy.configure', ['service' => $service->id, 'key' => $key]);
         }
 
         if (null !== $sheet->getConfigurationPage()) {
@@ -182,7 +182,7 @@ class LiturgyEditorController extends Controller
                 $newItem->save();
             }
         }
-        return redirect()->route('services.liturgy.editor', $service->id);
+        return redirect()->route('liturgy.editor', $service->id);
     }
 
     /**

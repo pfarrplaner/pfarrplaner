@@ -61,7 +61,7 @@ export default {
             });
         },
         openAgenda(agenda) {
-            this.$inertia.get(route('services.liturgy.editor', agenda.id));
+            this.$inertia.get(route('liturgy.editor', agenda.slug));
         }
     }
 }

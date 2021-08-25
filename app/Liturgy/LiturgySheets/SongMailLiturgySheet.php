@@ -62,7 +62,7 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
 
         $body .= PHP_EOL
             .'Der komplette Ablauf kann hier heruntergeladen werden:'.PHP_EOL
-            .route('services.liturgy.download', ['service' => $service->id, 'key' => 'A4']).PHP_EOL
+            .route('liturgy.download', ['service' => $service->slug, 'key' => 'A4']).PHP_EOL
             .PHP_EOL.'Freundliche Grüße, '.PHP_EOL.Auth::user()->name;
 
         $recipients = [];
