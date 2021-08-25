@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.75.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.74.1...v1.75.0) (2021-08-25)
+
+
+### Features
+
+* Add configuration options for PPT export ([a078406](https://github.com/pfarrplaner/pfarrplaner/commits/a0784067b484cca6ee0f8364ca6420dcc9530c99))
+* Specify more finely-grained permissions in case of "fremden-urlaub-bearbeiten" ([8a99e3b](https://github.com/pfarrplaner/pfarrplaner/commits/8a99e3bd03699d7155b094de68daab84bcc0773e)), closes [#134](https://github.com/pfarrplaner/pfarrplaner/issues/134)
+
+
+### Bug Fixes
+
+* Logout sometimes doesn't close session ([ac47000](https://github.com/pfarrplaner/pfarrplaner/commits/ac47000894493d4a70183a4c07e044505d2be930))
+* Session not flushed on logout ([46811c1](https://github.com/pfarrplaner/pfarrplaner/commits/46811c15989714a59f36c5d16ca7f632d3a3f060))
+* wrong route ([5301e5f](https://github.com/pfarrplaner/pfarrplaner/commits/5301e5f7017414545946e0d6c87cdf27097342f8))
+
 ### [1.74.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.74.0...v1.74.1) (2021-08-25)
 
 
