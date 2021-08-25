@@ -32,6 +32,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class Kernel
@@ -71,6 +72,10 @@ class Kernel extends ConsoleKernel
     protected function commands()
     {
         $this->load(__DIR__ . '/Commands');
+        foreach (glob(__DIR__ . '/Commands/*') as $folder) {
+            if (is_dir($folder)) $this->load($folder.'/Commands');
+        }
+
         foreach (glob(app_path('Integrations/*')) as $folder) {
             if (is_dir($folder) && (file_exists($folder.'/Commands')) && (is_dir($folder.'/Commands'))) {
                 $this->load($folder.'/Commands');

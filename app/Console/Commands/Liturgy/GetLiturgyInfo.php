@@ -1,29 +1,25 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Console\Commands\Liturgy;
 
-use App\QueryLog;
 use Illuminate\Console\Command;
+use Storage;
 
-/**
- * Class DecryptQueryLog
- * @package App\Console\Commands
- */
-class DecryptQueryLog extends Command
+class GetLiturgyInfo extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'query:list {log?}';
+    protected $signature = 'liturgy:get';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'List all queries executed against the database';
+    protected $description = 'Get liturgical calendar from kirchenjahr-evangelisch.de';
 
     /**
      * Create a new command instance.
@@ -42,10 +38,12 @@ class DecryptQueryLog extends Command
      */
     public function handle()
     {
-        $log = $this->argument('log') ?? '';
-        $queries = QueryLog::all();
-        foreach ($queries as $query) {
-            $this->line($query['query']);
-        }
+        Storage::put(
+            'liturgy.json',
+            file_get_contents(
+                'https://www.kirchenjahr-evangelisch.de/service.php?o=lcf&f=gaa&r=json&dl=user'
+            )
+        );
+        $this->line('Renewed the liturgical calendar');
     }
 }
