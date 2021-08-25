@@ -47,7 +47,7 @@
                     <span class="float-right fa fa-download"></span>
                 </div>
             </div>
-            <div class="liturgy-sheet btn btn-light" @click.prevent="downloadAnnouncements">
+            <div v-if="!hasAnnouncements" class="liturgy-sheet btn btn-light" @click.prevent="downloadAnnouncements">
                 <b><span class="fa fa-file-word"></span> Bekanntgaben</b><br/>
                 <small>.docx, ca. 20 kB</small>
                 <span class="float-right fa fa-download"></span>
@@ -105,7 +105,14 @@ export default {
     computed: {
         hasAutoAttachments() {
             return true;
-        }
+        },
+        hasAnnouncements() {
+            let found = false;
+            this.service.attachments.forEach(attachment => {
+                found = found || (attachment.title == 'Bekanntgaben');
+            });
+            return found;
+        },
     },
     data() {
         var myService = this.service;

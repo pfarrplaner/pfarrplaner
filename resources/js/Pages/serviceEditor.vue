@@ -155,6 +155,13 @@ name: "serviceEditor",
         backRoute: String,
     },
     computed: {
+        hasAnnouncements() {
+            let found = false;
+            this.service.attachments.forEach(attachment => {
+                found = found || (attachment.title == 'Bekanntgaben');
+            });
+            return found;
+        },
         peopleCount() {
             var count = this.editedService.pastors.length
                 + this.editedService.organists.length
@@ -235,7 +242,7 @@ name: "serviceEditor",
             if (this.editedService.konfiapp_event_qr) ctr++;
 
             // default auto attachments:
-            ctr += 1;
+            if (!this.hasAnnouncements) ctr++;
 
             return ctr;
         },
