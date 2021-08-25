@@ -40,6 +40,8 @@
             </div>
         </div>
         <hr/>
+        <div v-if="hasAnnouncements" class="alert alert-warning"><b>Bitte beachte:</b> Diesem Gottesdienst wurde eine Datei namens "Bekanntgaben" angehängt.
+            Diese überschreibt die automatisch erstellten Bekanntmachungen. Änderungen an den folgenden Feldern werden daher möglicherweise nicht bei den Bekanntgaben berücksichtigt.</div>
         <div class="row">
             <div class="col-md-6">
                 <form-input name="offering_goal" label="Opferzweck" v-model="myService.offering_goal"/>
@@ -75,6 +77,15 @@ export default {
     },
     props: {
         service: Object,
+    },
+    computed: {
+        hasAnnouncements() {
+            let found = false;
+            this.service.attachments.forEach(attachment => {
+                found = found || (attachment.title == 'Bekanntgaben');
+            });
+            return found;
+        },
     },
     data() {
         return {

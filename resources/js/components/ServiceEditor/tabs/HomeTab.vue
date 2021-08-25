@@ -89,6 +89,8 @@
             </div>
         </div>
         <hr/>
+        <div v-if="hasAnnouncements" class="alert alert-warning"><b>Bitte beachte:</b> Diesem Gottesdienst wurde eine Datei namens "Bekanntgaben" angehängt.
+            Diese überschreibt die automatisch erstellten Bekanntmachungen. Änderungen an diesem Feld werden daher möglicherweise nicht berücksichtigt.</div>
         <form-textarea name="announcements" label="Zusätzliche Bekanntgaben" v-model="service.announcements"
                        help="Bekanntgaben, die über die automatisch erstellte Terminliste hinausgehen."/>
     </div>
@@ -131,6 +133,15 @@ export default {
         days: Array,
         tags: Array,
         serviceGroups: Array,
+    },
+    computed: {
+        hasAnnouncements() {
+            let found = false;
+            this.service.attachments.forEach(attachment => {
+                found = found || (attachment.title == 'Bekanntgaben');
+            });
+            return found;
+        },
     },
     data() {
         let myDatePickerConfig =  {
