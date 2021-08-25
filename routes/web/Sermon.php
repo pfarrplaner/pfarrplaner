@@ -48,7 +48,7 @@ use App\Http\Controllers\SermonController;
 // one sermon
 Route::get('/predigt/{sermon}', [SermonController::class, 'editor'])->name('sermon.editor');
 Route::patch('/predigt/{sermon}', [SermonController::class, 'update'])->name('sermon.update');
-Route::delete('/predigt/gottesdienst-abkoppeln/{service:slug}', [SermonController::class, 'uncouple'])->name('sermon.uncouple');
+Route::delete('/predigt/abkoppeln/{service:slug}', [SermonController::class, 'uncouple'])->name('sermon.uncouple');
 Route::post('/predigt/{model}/bild', [SermonController::class, 'attachImage'])->name('sermon.image.attach');
 Route::delete('/predigt/{model}/bild', [SermonController::class, 'detachImage'])->name('sermon.image.detach');
 

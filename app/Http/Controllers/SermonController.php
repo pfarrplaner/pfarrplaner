@@ -68,7 +68,7 @@ class SermonController extends Controller
         $sermon->refresh();
         if (count($sermon->services) == 0) {
             $sermon->delete();
-            return redirect()->route('liturgy.editor', $service->id);
+            return redirect()->route('liturgy.editor', $service->slug);
         } else {
             return redirect()->route('sermon.editor', $sermon->id);
         }
