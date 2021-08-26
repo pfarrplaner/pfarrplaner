@@ -102,7 +102,16 @@
                                     <i v-if="item.submenu" class="right fas fa-angle-left"></i></p></a>
                             <ul class="nav nav-treeview" style="display: none;" v-if="item.submenu != undefined">
                                 <li class="nav-item" v-for="subitem in item.submenu">
-                                    <a class="nav-link" :class="{active: subitem.active}"
+                                    <inertia-link v-if="subitem.inertia" class="nav-link" :class="{active: subitem.active}"
+                                       :href="subitem.url">
+                                        <i v-if="subitem.icon" class="nav-icon" :class="subitem.icon"
+                                           :style="subitem.icon_color ? 'color: '+subitem.icon_color+';' : ''"></i>
+                                        <p>{{ subitem.text }}
+                                            <span v-if="subitem.counter != undefined" class="badge right"
+                                                  :class="subitem.counter_class ? 'badge-'+subitem.counter_class : 'badge-info'">{{ subitem.counter }}</span>
+                                        </p>
+                                    </inertia-link>
+                                    <a v-else class="nav-link" :class="{active: subitem.active}"
                                        :href="subitem.url">
                                         <i v-if="subitem.icon" class="nav-icon" :class="subitem.icon"
                                            :style="subitem.icon_color ? 'color: '+subitem.icon_color+';' : ''"></i>
