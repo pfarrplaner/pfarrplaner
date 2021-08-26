@@ -37,11 +37,11 @@ use Illuminate\Support\Facades\Storage;
 trait HandlesAttachedImageTrait
 {
 
-    public function attachImage(Request $request, $model)
+    public function attachImage(Request $request, $model, $field = null)
     {
 
         $modelObject = $this->model::find($model);
-        $imageField = $modelObject->getImageField();
+        $imageField = $field ?? $modelObject->getImageField();
         if ($request->hasFile('attachments')) {
             $files = $request->file('attachments');
             foreach($files as $file) {
@@ -54,10 +54,10 @@ trait HandlesAttachedImageTrait
 
     }
 
-    public function detachImage(Request $request, $model)
+    public function detachImage(Request $request, $model, $field = null)
     {
         $modelObject = $this->model::find($model);
-        $imageField = $modelObject->getImageField();
+        $imageField = $field ?? $modelObject->getImageField();
         if ($modelObject->$imageField) {
             Storage::delete($modelObject->$imageField);
             $modelObject->update([$imageField => '']);
