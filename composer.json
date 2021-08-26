@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^8.0",
         "almasaeed2010/adminlte": "~3.0",
         "austinheap/laravel-database-encryption": "dev-laravel8",
         "barryvdh/laravel-ide-helper": "^2.6",
@@ -30,11 +30,10 @@
         "mpdf/qrcode": "^1.0",
         "nesbot/carbon": "^2.44",
         "niklasravnsborg/laravel-pdf": "^4.0",
-        "paragonie/random_compat": "9.99.99 as 2.0.18",
         "php-ews/php-ews": "^1.0",
         "phpoffice/phppresentation": "dev-master",
         "phpoffice/phpspreadsheet": "^1.6",
-        "phpoffice/phpword": "^0.16.0",
+        "phpoffice/phpword": "^0.18.2",
         "predis/predis": "^1.1",
         "rap2hpoutre/laravel-log-viewer": "^1.3",
         "shetabit/visitor": "^2.0",
