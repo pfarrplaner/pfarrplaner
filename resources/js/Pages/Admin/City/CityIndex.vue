@@ -60,7 +60,7 @@ export default {
     methods: {
         deleteCity(city) {
             if (confirm('Willst du die Kirchengemeinde wirklich komplett löschen?')) {
-                this.$inertia.delete(route('cities.destroy', {city: city.id}));
+                this.$inertia.delete(route('city.destroy', {city: city.name}));
             }
         }
     }

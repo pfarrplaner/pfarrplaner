@@ -43,8 +43,6 @@
 
 use App\Http\Controllers\CityController;
 
-Route::resource('cities', 'CityController')->middleware('auth');
-
 Route::get('/kirchengemeinden', [CityController::class, 'index'])->name('cities.index');
 Route::get('/kirchengemeinden/neu', [CityController::class, 'create'])->name('cities.create');
 

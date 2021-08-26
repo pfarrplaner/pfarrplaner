@@ -154,7 +154,7 @@ class CityTest extends TestCase
         $this->assertTrue($city->update(['name' => 'New York']));
 
         $response = $this->patch(
-            route('cities.update', $city->name),
+            route('city.update', $city->name),
             [
                 'name' => 'Hamburg',
             ]
@@ -172,7 +172,7 @@ class CityTest extends TestCase
     public function testCityCanBeDeleted()
     {
         $city = factory(City::class)->create();
-        $response = $this->delete(route('cities.destroy', $city->id));
+        $response = $this->delete(route('city.destroy', $city->name));
         $response->assertStatus(302);
         $this->assertCount(0, City::all());
     }
