@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.76.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.76.0...v1.76.1) (2021-08-26)
+
+
+### Bug Fixes
+
+* Cannot login because of empty CSRF token ([92c4d61](https://github.com/pfarrplaner/pfarrplaner/commits/92c4d61d0e4c85d945965fe55ab5c75270573944))
+
 ## [1.76.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.75.0...v1.76.0) (2021-08-25)
 
 
