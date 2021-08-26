@@ -185,7 +185,7 @@ class MenuBuilder
                 'icon' => 'fa fa-church',
                 'url' => route('cities.index'),
                 'active' => $route == 'cities.index',
-                'inertia' => false,
+                'inertia' => true,
             ];
             $adminActive |= ($route == 'cities.index');
         }
