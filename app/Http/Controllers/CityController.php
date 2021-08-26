@@ -34,11 +34,13 @@ use App\City;
 use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Integrations\Youtube\YoutubeIntegration;
 use App\Service;
+use App\Traits\HandlesAttachedImageTrait;
 use App\Traits\HandlesAttachmentsTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 /**
  * Class CityController
@@ -48,6 +50,9 @@ class CityController extends Controller
 {
 
     use HandlesAttachmentsTrait;
+    use HandlesAttachedImageTrait;
+
+    protected $model = City::class;
 
     public function __construct()
     {
@@ -58,7 +63,7 @@ class CityController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
@@ -67,7 +72,12 @@ class CityController extends Controller
         } else {
             $cities = Auth::user()->cities;
         }
-        return view('cities.index', compact('cities'));
+
+        foreach ($cities as $cityKey => $city) {
+            $cities[$cityKey]['canEdit'] = Auth::user()->can('update', $city);
+            $cities[$cityKey]['canDelete'] = Auth::user()->can('delete', $city);
+        }
+        return Inertia::render('Admin/City/CityIndex', compact('cities'));
     }
 
 
@@ -78,7 +88,8 @@ class CityController extends Controller
      */
     public function create()
     {
-        return view('cities.create', ['streams' => []]);
+        $city = City::create([]);
+        return redirect()->route('cities.edit', $city);
     }
 
     /**
@@ -89,10 +100,6 @@ class CityController extends Controller
      */
     public function store(Request $request)
     {
-        $city = City::create($this->validateRequest());
-        $this->handleIndividualAttachment($request, $city, 'podcast_logo');
-        $this->handleIndividualAttachment($request, $city, 'sermon_default_image');
-        return redirect()->route('cities.index')->with('success', 'Die neue Kirchengemeinde wurde gespeichert.');
     }
 
     /**
@@ -149,7 +156,7 @@ class CityController extends Controller
             $streams = [];
         }
 
-        return view('cities.edit', compact('city', 'streams'));
+        return Inertia::render('Admin/City/CityEditor', compact('city', 'streams'));
     }
 
     /**
@@ -164,7 +171,7 @@ class CityController extends Controller
         $city->update($this->validateRequest());
         $this->handleIndividualAttachment($request, $city, 'podcast_logo');
         $this->handleIndividualAttachment($request, $city, 'sermon_default_image');
-        return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde geändert.');
+        return redirect()->route('cities.index')->with('success', 'Die Kirchengemeinde wurde geändert.');
     }
 
     /**
@@ -176,7 +183,7 @@ class CityController extends Controller
     public function destroy(City $city)
     {
         $city->delete();
-        return redirect('/cities')->with('success', 'Die Kirchengemeinde wurde gelöscht.');
+        return route('cities.index')->with('success', 'Die Kirchengemeinde wurde gelöscht.');
     }
 
 

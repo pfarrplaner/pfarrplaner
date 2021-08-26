@@ -41,6 +41,8 @@
 
 
 
-use App\Http\Controllers\CityController; 
+use App\Http\Controllers\CityController;
 
 Route::get('qr/{city}', [CityController::class, 'qr'])->name('qr');
+Route::post('/city/{city}/attach/{field}', [CityController::class, 'attachImage'])->name('city.attach');
+Route::delete('/city/{city}/detach/{field}', [CityController::class, 'detachImage'])->name('city.detach');
