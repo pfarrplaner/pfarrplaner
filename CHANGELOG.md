@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.77.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.77.0...v1.77.1) (2021-08-26)
+
+
+### Features
+
+* enable inertia linking for submenu items ([b141130](https://github.com/pfarrplaner/pfarrplaner/commits/b1411300cf3df711780f4736bd356a7acd27a580))
+
 ## [1.77.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.76.2...v1.77.0) (2021-08-26)
 
 
