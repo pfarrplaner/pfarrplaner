@@ -111,6 +111,7 @@ export default {
                 mySettings['render']['option'] = this.optionRenderer;
             }
         }
+        if (!mySettings['searchField']) mySettings['searchField'] = [mySettings['labelField'] || 'name'];
 
         return {
             myId: this.id || '',
