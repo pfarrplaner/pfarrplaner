@@ -43,6 +43,16 @@
 
 use App\Http\Controllers\CityController;
 
+Route::resource('cities', 'CityController')->middleware('auth');
+
+Route::get('/kirchengemeinden', [CityController::class, 'index'])->name('cities.index');
+Route::get('/kirchengemeinden/neu', [CityController::class, 'create'])->name('cities.create');
+
+
+Route::get('/kirchengemeinde/{city:name}', [CityController::class, 'edit'])->name('city.edit');
+Route::patch('/kirchengemeinde/{city:name}', [CityController::class, 'update'])->name('city.update');
+Route::delete('/kirchengemeinde/{city:name}', [CityController::class, 'destroy'])->name('city.delete');
+
 Route::get('qr/{city}', [CityController::class, 'qr'])->name('qr');
 Route::post('/city/{city}/attach/{field}', [CityController::class, 'attachImage'])->name('city.attach');
 Route::delete('/city/{city}/detach/{field}', [CityController::class, 'detachImage'])->name('city.detach');

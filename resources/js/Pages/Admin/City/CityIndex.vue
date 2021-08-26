@@ -35,7 +35,7 @@
                     <div class="row pt-1 pb-1" v-for="(city,cityIndex) in cities" :class="{ even: cityIndex % 2 != 0}">
                         <div class="col-md-10">{{ city.name }}</div>
                         <div class="col-md-2 text-right">
-                                <inertia-link v-if="city.canEdit" class="btn btn-primary" title="Kirchengemeinde bearbeiten" :href="route('cities.edit', {city: city.id})">
+                                <inertia-link v-if="city.canEdit" class="btn btn-primary" title="Kirchengemeinde bearbeiten" :href="route('city.edit', {city: city.name})">
                                     <span class="fa fa-edit"></span>
                                 </inertia-link>
                                 <button v-if="city.canDelete" class="btn btn-danger" title="Kirchengemeinde löschen" @click="deleteCity(city)">

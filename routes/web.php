@@ -39,7 +39,6 @@
 |
 */
 
-Route::resource('cities', 'CityController')->middleware('auth');
 Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
 Route::resource('roles', 'RoleController')->middleware('auth');

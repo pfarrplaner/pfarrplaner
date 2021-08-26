@@ -89,7 +89,7 @@ class CityController extends Controller
     public function create()
     {
         $city = City::create([]);
-        return redirect()->route('cities.edit', $city);
+        return redirect()->route('city.edit', $city);
     }
 
     /**
