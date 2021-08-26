@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.76.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.76.1...v1.76.2) (2021-08-26)
+
+
+### Bug Fixes
+
+* Dependencies need updating for PHP 8.x ([790779e](https://github.com/pfarrplaner/pfarrplaner/commits/790779ef5a2d827d8bce64589d01412d5d4f6595))
+* wrong routes to LiturgyEditor ([dae8ee6](https://github.com/pfarrplaner/pfarrplaner/commits/dae8ee60b8472cc0f20e71e544eb07ca36498071))
+
 ### [1.76.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.76.0...v1.76.1) (2021-08-26)
 
 
