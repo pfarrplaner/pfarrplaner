@@ -33,7 +33,7 @@
             <default-fields :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern</button>
-                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', element.service_id)">Abbrechen
+                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">Abbrechen
                 </inertia-link>
             </div>
         </div>

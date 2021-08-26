@@ -182,7 +182,7 @@ class LiturgyEditorController extends Controller
                 $newItem->save();
             }
         }
-        return redirect()->route('liturgy.editor', $service->id);
+        return redirect()->route('liturgy.editor', $service->slug);
     }
 
     /**

@@ -115,7 +115,7 @@
             <div class="form-group" v-if="service">
                 <button class="btn btn-primary" @click="save">Speichern</button>
                 <inertia-link class="btn btn-secondary"
-                              :href="route('liturgy.editor', this.service.id)">
+                              :href="route('liturgy.editor', this.service.slug)">
                     Abbrechen
                 </inertia-link>
             </div>
