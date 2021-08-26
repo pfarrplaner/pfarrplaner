@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.77.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.76.2...v1.77.0) (2021-08-26)
+
+
+### Features
+
+* Add default service type for KonfiApp ([3f68423](https://github.com/pfarrplaner/pfarrplaner/commits/3f68423b9a90ebb7364c7f3bd3268129fd1cfeb7))
+* Allow downloading existing file from FormImageAttacher ([1520ba2](https://github.com/pfarrplaner/pfarrplaner/commits/1520ba291340c6a99b9d0b957518f6c3e8a1569f))
+* Allow free-text entries for responsible persons in LiturgyEditor ([e0ba041](https://github.com/pfarrplaner/pfarrplaner/commits/e0ba041ee49791f48e1edbac3afa104c979408aa))
+* Automatically set labelField as searchField in FormSelectize ([b072b9c](https://github.com/pfarrplaner/pfarrplaner/commits/b072b9c74af1a923d93beaae8d93a3046133c0c3))
+* HandlesAttachedImageTrait now handles multiple image fields per model ([b70fa56](https://github.com/pfarrplaner/pfarrplaner/commits/b70fa56df196b4d893fa5cae1372bbdb9a9cea84))
+
+
+### Bug Fixes
+
+* Typo in trait name for HandlesAttachedImageTrait ([2bd59f1](https://github.com/pfarrplaner/pfarrplaner/commits/2bd59f1e884e9cd28cb12d6bba1347e3a1de92ee))
+* user.profile route not working ([e8ae1f0](https://github.com/pfarrplaner/pfarrplaner/commits/e8ae1f02c12478c4696bb687a158c29d19134000))
+
 ### [1.76.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.76.1...v1.76.2) (2021-08-26)
 
 
