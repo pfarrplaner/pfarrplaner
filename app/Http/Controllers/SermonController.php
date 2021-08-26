@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Sermon;
 use App\Service;
-use App\Traits\HandesAttachedImageTrait;
+use App\Traits\HandlesAttachedImageTrait;
 use App\Traits\HandlesAttachmentsTrait;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,7 +13,7 @@ class SermonController extends Controller
 {
 
     use HandlesAttachmentsTrait;
-    use HandesAttachedImageTrait;
+    use HandlesAttachedImageTrait;
 
     protected $model = Sermon::class;
 

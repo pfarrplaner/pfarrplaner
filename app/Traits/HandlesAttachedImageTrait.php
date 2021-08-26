@@ -34,7 +34,7 @@ use App\Sermon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-trait HandesAttachedImageTrait
+trait HandlesAttachedImageTrait
 {
 
     public function attachImage(Request $request, $model)
