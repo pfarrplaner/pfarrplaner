@@ -537,10 +537,10 @@ export default {
             var tmp = record.split(':');
             if (tmp[0] == 'user') {
                 this.service.participants.forEach(function (person) {
-                    if (person.id == tmp[1]) title = '<span class="fa fa-user"></span> ' + person.name;
+                    if (person.id == tmp[1]) title = '<span class="fa fa-user-check"></span> ' + person.name;
                 });
                 return title;
-            } else {
+            } else if (tmp[0] == 'ministry') {
                 switch (tmp[1]) {
                     case 'pastors':
                         return '<span class="fa fa-users"></span> Pfarrer*in';
@@ -549,7 +549,9 @@ export default {
                     case 'sacristans':
                         return '<span class="fa fa-users"></span> Mesner*in';
                 }
-                return "<span class=\"fa fa-users\"></span> " + tmp[1] + "";
+                return "<span class=\"fa fa-users\"></span> " + tmp[1];
+            } else {
+                return '<span class="fa fa-user-times"></span> '+tmp[1];
             }
         },
         importElements() {

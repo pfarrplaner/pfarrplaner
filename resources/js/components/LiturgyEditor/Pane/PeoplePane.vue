@@ -33,30 +33,9 @@
             <div class="row">
                 <div class="col-sm-9 form-group">
                     <label>Verantwortliche*r</label>
-                    <selectize name="responsible[]" class="form-control" v-model="selected" multiple ref="peopleSelect">
-                        <optgroup
-                            v-for="ministry,ministryIndex in { pastors: 'Pfarrer*in', organists: 'Organist*in', sacristans: 'Mesner*in'}"
-                            :label="ministry">
-                            <option :value="'ministry:'+ministryIndex">{{ ministry }} (Alle Eingeteilten)</option>
-                            <option v-for="person,personIndex in service[ministryIndex]"
-                                    :value="'user:'+person.id">{{ person.name }}
-                            </option>
-                        </optgroup>
-                        <optgroup v-for="ministry,ministryIndex in service.ministriesByCategory" :label="ministryIndex">
-                            <option :value="'ministry:'+ministryIndex">{{ ministryIndex }} (Alle Eingeteilten)
-                            </option>
-                            <option v-for="person,personIndex in service.ministriesByCategory[ministryIndex]"
-                                    :value="'user:'+person.id">{{ person.name }}
-                            </option>
-                        </optgroup>
-                        <optgroup v-if="Object.keys(ministries).length > 0" v-for="ministry,ministryIndex in ministries" label="Alle bekannten Dienste">
-                            <option :value="'ministry:'+ministryIndex">{{ ministryIndex }} (Alle Eingeteilten)
-                            </option>
-                            <option v-for="person,personIndex in service.ministriesByCategory[ministryIndex]"
-                                    :value="'user:'+person.id">{{ person.name }}
-                            </option>
-                        </optgroup>
-                    </selectize>
+                    <selectize name="responsible[]" class="form-control" v-model="selected" multiple ref="peopleSelect"
+                               :options="options"
+                               :settings="selectizeSettings" />
 
                 </div>
                 <div class="col-sm-3 text-right" style="padding-top: 2rem;">
@@ -95,10 +74,60 @@ export default {
         if (undefined == e.data.responsible) e.data.responsible = [emptyOption];
         if (e.data.responsible.length == 0) e.data.responsible = [emptyOption];
 
+        var options = [];
+        var optGroups = [];
+
+        const basicMinistries = { pastors: 'Pfarrer*in', organists: 'Organist*in', sacristans: 'Mesner*in'};
+        for (var ministryIndex in basicMinistries) {
+            optGroups.push({ groupName: basicMinistries[ministryIndex] });
+            options.push({id:'ministry:'+ministryIndex, name: basicMinistries[ministryIndex], category: basicMinistries[ministryIndex], type: 'users'});
+            this.service[ministryIndex].forEach(person => {
+                options.push({id: 'user:'+person.id, name: person.name, category: basicMinistries[ministryIndex], type: 'user-check'});
+            });
+        }
+        for (var ministry in this.ministries) {
+            if (this.service[ministry]) {
+                optGroups.push({ groupName: ministry });
+                options.push({id:'ministry:'+ministry, name: ministry, category: ministry, type: 'users'});
+                this.service[ministry].forEach(person => {
+                    options.push({id: 'user:'+person.id, name: person.name, category: ministry, type: 'user-check'});
+                });
+            }
+        }
+        optGroups.push({ groupName: 'Eigene Eingaben'});
+        e.data.responsible.forEach(item => {
+            if (item.substr(0,5) == 'free:') {
+                options.push({id: item, name: item.substr(5), category: 'Eigene Eingaben', type: 'user-times'});
+            }
+        });
+
+
         return {
             emptyOption: emptyOption,
             editedElement: e,
             selected: e.data.responsible,
+            options: options,
+            selectizeSettings: {
+                options: options,
+                searchField: ['name', 'category'],
+                valueField: 'id',
+                labelField: 'name',
+                optgroupField: 'category',
+                optgroupLabelField: 'groupName',
+                optgroupValueField: 'groupName',
+                optgroups: optGroups,
+                create: function (input) {
+                    return {id: 'free:'+input, name: input, category: 'Eigene Eingaben', type: 'user-times'}
+                },
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create">Freie Texteingabe: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    },
+                    item: function (item, escape) {
+                        return '<div><span class="fa fa-'+item.type+'"></span> '+item.name+'</div>';
+                    }
+                }
+            },
         }
     },
     mounted() {

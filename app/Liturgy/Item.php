@@ -91,8 +91,10 @@ class Item extends Model
             if ($type == 'ministry') {
                 $id = isset(self::replacement[$id]) ? self::replacement[$id] : $id;
                 $p[] = $this->block->service->participantsText($id, true, false);
-            } else {
+            } elseif ($type == 'user') {
                 $p[] = User::find($id)->fullName(false);
+            } else {
+                $p[] = $id;
             }
         }
         return array_unique($p);
