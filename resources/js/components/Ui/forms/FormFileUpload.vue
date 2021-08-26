@@ -34,7 +34,7 @@
                 <input class="form-control-file"
                        type="file" :name="name" @change="handleInput" :multiple="multi"
                        @dragenter="dragEnter" @dragleave="dragLeave"/>
-                Hier klicken oder Dateien hierher ziehen... {{ helpText || '' }}
+                Hier klicken oder {{ multi ? 'Dateien' : 'Datei' }} hierher ziehen... {{ helpText || '' }}
             </div>
         </div>
     </form-group>
