@@ -59,7 +59,7 @@ Route::patch('/benutzer/{user}', [UserController::class, 'update'])->name('user.
 Route::delete('/benutzer/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 
 // additional user routes
-Route::get('/benutzer/profil', [UserController::class, 'profile'])->name('user.profile');
-Route::patch('/benutzer/profil', [UserController::class, 'profileSave'])->name('user.profile.save');
+Route::get('/profil', [UserController::class, 'profile'])->name('user.profile');
+Route::patch('/profil', [UserController::class, 'profileSave'])->name('user.profile.save');
 Route::get('/benutzer/{user}/gottesdienste', [UserController::class, 'services'])->name('user.services');
 Route::get('/benutzer/login-als/{user}', [UserController::class, 'switch'])->name('user.switch');
