@@ -77,6 +77,7 @@ class City extends Model
         'communiapp_default_group_id',
         'communiapp_use_outlook',
         'communiapp_use_op',
+        'konfiapp_default_type',
     ];
 
     /**

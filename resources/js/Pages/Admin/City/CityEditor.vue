@@ -131,6 +131,9 @@
                                     <span class="badge badge-secondary">qr_delete</span>
                                 </p>
                                 <form-input name="konfiapp_apikey" label="API-Schlüssel für die KonfiApp" v-model="myCity.konfiapp_apikey" />
+                                <konfi-app-event-type-select v-if="myCity.konfiapp_apikey" name="konfiapp_event_type" label="Veranstaltungsart in der KonfiApp"
+                                                             :city="myCity" v-model="myCity.konfiapp_default_type" />
+
                             </div>
                         </div>
                         <hr />
@@ -172,9 +175,11 @@ import FormSelectize from "../../../components/Ui/forms/FormSelectize";
 import FormCheck from "../../../components/Ui/forms/FormCheck";
 import FormImageAttacher from "../../../components/Ui/forms/FormImageAttacher";
 import FormTextarea from "../../../components/Ui/forms/FormTextarea";
+import KonfiAppEventTypeSelect from "../../../components/Ui/elements/KonfiAppEventTypeSelect";
 export default {
     name: "CityEditor",
     components: {
+        KonfiAppEventTypeSelect,
         FormTextarea,
         FormImageAttacher,
         FormCheck, FormSelectize, FormInput, Tab, Tabs, TabHeader, TabHeaders, CardBody, CardHeader, Card},

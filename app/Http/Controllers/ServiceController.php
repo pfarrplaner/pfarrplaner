@@ -239,13 +239,17 @@ class ServiceController extends Controller
     public function add($date, City $city)
     {
         $day = Day::find($date);
-        $service = Service::create(
-            [
-                'city_id' => $city->id,
-                'day_id' => $day->id,
-                'location_id' => $city->locations->first()->id,
-            ]
-        );
+
+        $data = [
+            'city_id' => $city->id,
+            'day_id' => $day->id,
+            'location_id' => $city->locations->first()->id,
+        ];
+
+        if ($city->konfiapp_default_type) $data['konfiapp_event_type'] = $city->konfiapp_default_type;
+
+        $service = Service::create($data);
+        $service->update(['slug' => $service->createSlug()]);
         return redirect()->route('service.edit', $service->slug);
     }
 
