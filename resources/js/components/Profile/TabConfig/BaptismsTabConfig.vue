@@ -31,6 +31,8 @@
     <div class="baptisms-tab-config">
         <form-check label="Nur meine eigenen Taufen anzeigen" v-model="tab.config.mine" />
         <form-check label="Taufanfragen anzeigen" v-model="tab.config.showRequests" />
+        <form-check label="Späteste Tauftermine zuerst anzeigen" v-model="tab.config.newestFirst" />
+        <form-check label="Ins Kirchenbuch eingetragene Taufen ausblenden" v-model="tab.config.excludeProcessed" />
     </div>
 </template>
 

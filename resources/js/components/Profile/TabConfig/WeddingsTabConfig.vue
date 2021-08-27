@@ -30,6 +30,8 @@
 <template>
     <div class="weddings-tab-config">
         <form-check label="Nur meine eigenen Trauungen anzeigen" v-model="tab.config.mine" />
+        <form-check label="Späteste Trautermine zuerst anzeigen" v-model="tab.config.newestFirst" />
+        <form-check label="Ins Kirchenbuch eingetragene Trauungen ausblenden" v-model="tab.config.excludeProcessed" />
     </div>
 </template>
 

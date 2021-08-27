@@ -44,7 +44,7 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
 
     public function __construct($config = [])
     {
-        $this->setDefaultConfig($config, ['mine' => 0]);
+        $this->setDefaultConfig($config, ['mine' => 0, 'newestFirst' => 0, 'excludeProcessed' => 0]);
         parent::__construct($config);
         $this->query = $this->buildQuery();
     }
@@ -82,6 +82,7 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
+        $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
 
         $query =  Wedding::with(['service', 'service.day'])
             ->select(['weddings.*'])
@@ -100,8 +101,10 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
                 } else {
                     $service->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
                 }
-            })->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC');
+            })->orderBy('days.date', $order)
+            ->orderBy('time', $order);
+
+        if ($this->config['excludeProcessed']) $query->where('processed', '!=', 1);
 
         return $query;
     }

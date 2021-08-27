@@ -30,6 +30,8 @@
 <template>
     <div class="funerals-tab-config">
         <form-check label="Nur meine eigenen Beerdigungen anzeigen" v-model="tab.config.mine" />
+        <form-check label="Späteste Beerdigungstermine zuerst anzeigen" v-model="tab.config.newestFirst" />
+        <form-check label="Ins Kirchenbuch eingetragene Beerdigungen ausblenden" v-model="tab.config.excludeProcessed" />
     </div>
 </template>
 

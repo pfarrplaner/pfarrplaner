@@ -46,7 +46,7 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
     public function __construct($config = [])
     {
         // preset default config
-        $this->setDefaultConfig($config, ['mine' => 0, 'showRequests' => 0]);
+        $this->setDefaultConfig($config, ['mine' => 0, 'showRequests' => 0, 'newestFirst' => 0, 'excludeProcessed' => 0]);
 
         parent::__construct($config);
         $this->buildQueries();
@@ -92,6 +92,8 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
+        $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
+
         $this->baptismQuery = Baptism::with(['service', 'service.day'])
             ->select(['baptisms.*'])
             ->join('services', 'services.id', 'baptisms.service_id')
@@ -109,8 +111,10 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
                 } else {
                     $service->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
                 }
-            })->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC');
+            })->orderBy('days.date', $order)
+            ->orderBy('time', $order);
+
+        if ($this->config['excludeProcessed']) $this->baptismQuery->where('processed', '!=', 1);
 
         $this->baptismRequestQuery = Baptism::whereNull('service_id')
             ->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
