@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.78.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.77.1...v1.78.0) (2021-08-27)
+
+
+### Features
+
+* Add more options for case-related HomeScreenTabs (reverse sorting, exclusion of processed items) ([1ea51aa](https://github.com/pfarrplaner/pfarrplaner/commits/1ea51aa573e69300a6f2d64360041c0c1b3e2d43))
+
 ### [1.77.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.77.0...v1.77.1) (2021-08-26)
 
 
