@@ -44,6 +44,9 @@
 use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// workaround for cached home routes
+Route::get('/home', [HomeController::class, 'index']);
 Route::get('/tabs/{tabIndex}', [HomeController::class, 'tab'])->name('tab');
 Route::get('/passwort/aendern', [HomeController::class, 'showChangePassword'])->name('password.edit');
 Route::post('/passwort/aendern', [HomeController::class, 'changePassword'])->name('password.change');
