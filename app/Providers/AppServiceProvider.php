@@ -32,9 +32,11 @@ namespace App\Providers;
 
 use App\QueryLog;
 use App\Seating\SeatingValidators;
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Hash;
@@ -141,6 +143,13 @@ class AppServiceProvider extends ServiceProvider
                 }
             ]
         );
+        Inertia::share([
+            'package' =>  [
+                'info' => json_decode(file_get_contents(base_path('package.json')), true),
+                'date' => (new Carbon(filemtime(base_path('package.json'))))->setTimeZone('Europe/Berlin'),
+                'env' => App::environment(),
+            ]
+                       ]);
         Inertia::share(
             [
                 'flash' => function () {
