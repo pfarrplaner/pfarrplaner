@@ -190,6 +190,7 @@ class MultipleServicesInput extends AbstractInput
                         ]
                     );
                     $newService->save();
+                    $newService->update(['slug' => $newService->createSlug()]);
                     $serviceRecords[] = $newService;
                     $ctrAdded++;
                 } else {

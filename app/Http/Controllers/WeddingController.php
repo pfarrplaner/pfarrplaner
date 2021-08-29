@@ -300,6 +300,7 @@ class WeddingController extends Controller
             ]
         );
         $service->save();
+        $service->update(['slug' => $service->createSlug()]);
         $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
         Session::flash('wizard', 1);
 

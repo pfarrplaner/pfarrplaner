@@ -74,6 +74,7 @@ class AgendaController extends Controller
         $data = $this->validateRequest($request);
         $data['day_id'] = Day::getAgendaDay()->id;
         $agenda = Service::create($data);
+        $agenda->update(['slug' => $agenda->createSlug()]);
         return redirect()->route('liturgy.editor', $agenda->slug);
     }
 

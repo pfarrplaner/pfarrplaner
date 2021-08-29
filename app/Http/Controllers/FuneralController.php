@@ -190,6 +190,7 @@ class FuneralController extends Controller
                 'cc_staff' => '',
             ]
         );
+        $service->update(['slug' => $service->createSlug()]);
         if (Auth::user()->hasRole('Pfarrer*in')) {
             $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
         }

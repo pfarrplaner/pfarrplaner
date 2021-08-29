@@ -116,6 +116,7 @@ class ServiceUnitTest extends TestCase
         $data = factory(Service::class)->raw();
         $data['title'] = 'Cool title';
         $service = Service::create($data);
+        $service->update(['slug' => $service->createSlug()]);
         $this->assertEquals('Cool title', Service::first()->title);
     }
 
