@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.0...v1.78.1) (2021-08-29)
+
+
+### Bug Fixes
+
+* Some browsers have /home route cached and now produce error 404 ([7588511](https://github.com/pfarrplaner/pfarrplaner/commits/758851199b8607916da206ddbbaabf7b9e8bb2b2))
+* Wizards etc. create new services without setting slug ([285ab45](https://github.com/pfarrplaner/pfarrplaner/commits/285ab456df0f9ca27afe52290b769a073cfc2e8a))
+
 ## [1.78.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.77.1...v1.78.0) (2021-08-27)
 
 
