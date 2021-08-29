@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.1...v1.78.2) (2021-08-29)
+
+
+### Features
+
+* Display version info when hovering over app icon ([1d3a1b2](https://github.com/pfarrplaner/pfarrplaner/commits/1d3a1b25333f540000ab242864f58f535c96132a))
+
 ### [1.78.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.0...v1.78.1) (2021-08-29)
 
 
