@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.2...v1.78.3) (2021-09-10)
+
+
+### Bug Fixes
+
+* KonfiAppIntegration to throws an error when a service didn't have a time before saving. ([c632f72](https://github.com/pfarrplaner/pfarrplaner/commits/c632f720d3754d7e0f29817f8d53796450d9c63f))
+* Query error in MinistryRequestReport ([d263180](https://github.com/pfarrplaner/pfarrplaner/commits/d263180d4a2123191ae65b36eb155b475d1f3dea))
+
 ### [1.78.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.1...v1.78.2) (2021-08-29)
 
 

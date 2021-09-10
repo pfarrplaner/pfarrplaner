@@ -1,9 +1,9 @@
- {
+{
     "name": "potofcoffee/pfarrplaner",
     "type": "project",
     "description": "Service and vacation planning for a district of Lutheran churches",
     "license": "GPL-3.0-or-later",
-    "version": "1.78.2",
+    "version": "1.78.3",
     "repositories": [
         {
             "type": "vcs",
