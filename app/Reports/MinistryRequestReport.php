@@ -71,7 +71,7 @@ class MinistryRequestReport extends AbstractReport
     public function setup()
     {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first()->date;
-        $locations = Location::whereIn('city_id', Auth::user()->writableCities)->get();
+        $locations = Location::whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
         return $this->renderView('setup', compact('maxDate', 'locations'));
     }
 
