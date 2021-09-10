@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -30,29 +30,28 @@
 
 namespace App\Integrations\KonfiApp;
 
+use App\Events\ServiceUpdated;
+use App\Integrations\KonfiApp\KonfiAppIntegration;
 
-use App\Events\ServiceBeforeUpdate;
-use Illuminate\Support\Facades\Log;
-
-class ServiceBeforeUpdateListener
+class ServiceUpdatedListener
 {
 
     /**
-     * Handle the ServiceBeforeUpdate event
+     * Handle the ServiceUpdated event
      *
-     * @param ServiceBeforeUpdate $event
+     * @param ServiceUpdated $event
      * @return void
      */
-    public function handle(ServiceBeforeUpdate $event)
+    public function handle(ServiceUpdated $event)
     {
-        if (!isset($event->data['konfiapp_event_type'])) return;
-        if (!isset($event->data['time']) || (!$event->data['time'])) return;
+        if (!$event->service->konfiapp_event_type) return;
         if (KonfiAppIntegration::isActive($event->service->city)) {
             KonfiAppIntegration::get($event->service->city)->handleServiceUpdate(
                 $event->service,
-                $event->data['konfiapp_event_type'] ?? ''
+                $event->service->konfiapp_event_type ?? ''
             );
         }
     }
+
 
 }
