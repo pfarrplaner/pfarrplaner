@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.4](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.3...v1.78.4) (2021-09-13)
+
+
+### Bug Fixes
+
+* PeoplePane crashes on some empty items ([daa37e7](https://github.com/pfarrplaner/pfarrplaner/commits/daa37e7356cb327cb8667365d5c1b75d623fbfad))
+
 ### [1.78.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.2...v1.78.3) (2021-09-10)
 
 
