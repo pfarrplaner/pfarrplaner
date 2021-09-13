@@ -96,8 +96,10 @@ export default {
         }
         optGroups.push({ groupName: 'Eigene Eingaben'});
         e.data.responsible.forEach(item => {
-            if (item.substr(0,5) == 'free:') {
-                options.push({id: item, name: item.substr(5), category: 'Eigene Eingaben', type: 'user-times'});
+            if ((item) && (typeof item == String)) {
+                if (item.substr(0,5) == 'free:') {
+                    options.push({id: item, name: item.substr(5), category: 'Eigene Eingaben', type: 'user-times'});
+                }
             }
         });
 
