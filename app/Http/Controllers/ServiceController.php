@@ -257,9 +257,9 @@ class ServiceController extends Controller
      * Export a service as ical
      * @param $service Service
      */
-    public function ical($service)
+    public function ical(Service $service)
     {
-        $services = [Service::findOrFail($service)];
+        $services = [$service];
         $raw = View::make('ical.ical', ['services' => $services, 'token' => null]);
 
         $raw = str_replace(
@@ -271,7 +271,7 @@ class ServiceController extends Controller
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Expires', '0')
             ->header('Content-Type', 'text/calendar')
-            ->header('Content-Disposition', 'inline; filename=' . $service . '.ics');
+            ->header('Content-Disposition', 'inline; filename=' . $service->slug . '.ics');
     }
 
     /**
