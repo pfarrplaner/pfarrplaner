@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.5](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.4...v1.78.5) (2021-09-17)
+
+
+### Bug Fixes
+
+* Service ical returns error 404 ([27bbded](https://github.com/pfarrplaner/pfarrplaner/commits/27bbded93a060ab539f4c62ddbc9541a949b6d8b))
+
 ### [1.78.4](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.3...v1.78.4) (2021-09-13)
 
 
