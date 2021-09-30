@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.6](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.5...v1.78.6) (2021-09-30)
+
+
+### Bug Fixes
+
+* Delete baptism request fails because service is null ([9a1bbf9](https://github.com/pfarrplaner/pfarrplaner/commits/9a1bbf90a128c9806b449b6835e4a0cab520a190))
+
 ### [1.78.5](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.4...v1.78.5) (2021-09-17)
 
 
