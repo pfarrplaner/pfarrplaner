@@ -201,7 +201,7 @@ class BaptismController extends Controller
     function destroy(
         Baptism $baptism
     ) {
-        $serviceSlug = $baptism->service->slug;
+        $serviceSlug = $baptism->service ? $baptism->service->slug : null;
         $baptism->delete();
         if ($serviceSlug) {
             return redirect(route('service.edit', ['service' => $serviceSlug, 'tab' => 'rites']));
