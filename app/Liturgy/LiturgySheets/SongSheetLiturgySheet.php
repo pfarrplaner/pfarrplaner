@@ -102,6 +102,7 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
 
     protected function renderPsalmItem(DefaultWordDocument $doc, Item $item)
     {
+        if (!isset($item->data['psalm'])) return;
         if (!$item->data['psalm']['text']) return;
         /** @var PsalmItemHelper $helper */
         $helper = $item->getHelper();
@@ -111,6 +112,7 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
 
     protected function renderSongItem(DefaultWordDocument $doc, Item $item)
     {
+        if (!isset($item->data['song'])) return;
         if (null === $item->data['song']) return;
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
