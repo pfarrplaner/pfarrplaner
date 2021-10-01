@@ -219,7 +219,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
 
         $lastService = $data['lastService'];
         $offerings = $data['offerings'];
-        $offeringText = $data['offering_text'] ?: '';
+        $offeringText = $data['offering_text'] ?? '';
 
         $lastWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 last Sunday');
         $nextWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 next Sunday');
@@ -349,7 +349,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
 
                 if (is_array($event)) {
                     if ($service->day->date->format('Ymd') == $eventStart->format('Ymd')) {
-                        if ($event['allDay']) {
+                        if (isset($event['allDay']) && ($event['allDay'])) {
                             $textRun = $this->section->addTextRun('Bekanntgaben ohne Einrückung');
                             $textRun->addText($event['title']);
                             $done = true;
