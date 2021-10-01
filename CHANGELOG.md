@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.7](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.6...v1.78.7) (2021-10-01)
+
+
+### Bug Fixes
+
+* AnnouncementsReport fails when certain fields are not set ([d06a716](https://github.com/pfarrplaner/pfarrplaner/commits/d06a716693676edddaaaf5dfffc120a797001f01))
+* SongSheetLiturgySheet fails on empty psalm/song items ([251f1bf](https://github.com/pfarrplaner/pfarrplaner/commits/251f1bf8f3ce0f9db54cd43a813e1934f6aa9c0f))
+
 ### [1.78.6](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.5...v1.78.6) (2021-09-30)
 
 
