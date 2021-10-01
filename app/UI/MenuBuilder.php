@@ -44,6 +44,7 @@ use App\Inputs\Inputs;
 use App\Location;
 use App\Parish;
 use App\Tag;
+use App\Team;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -166,6 +167,16 @@ class MenuBuilder
                 'url' => route('users.index'),
                 'active' => $route == 'users.index',
                 'inertia' => false,
+            ];
+            $adminActive |= ($route == 'users.index');
+        }
+        if ($user->can('index', Team::class)) {
+            $adminMenu[] = [
+                'text' => 'Teams',
+                'icon' => 'fa fa-users',
+                'url' => route('teams.index'),
+                'active' => $route == 'teams.index',
+                'inertia' => true,
             ];
             $adminActive |= ($route == 'users.index');
         }

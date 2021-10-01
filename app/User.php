@@ -211,6 +211,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(City::class)->withPivot('permission')->wherePivotIn('permission', ['a']);
     }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class);
+    }
 // END ACCESSORS
 
 // MUTATORS

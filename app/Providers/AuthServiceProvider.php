@@ -42,8 +42,10 @@ use App\Policies\ParishPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\ServicePolicy;
 use App\Policies\TagPolicy;
+use App\Policies\TeamPolicy;
 use App\Policies\UserPolicy;
 use App\Tag;
+use App\Team;
 use App\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -82,6 +84,7 @@ class AuthServiceProvider extends ServiceProvider
         Absence::class => AbsencePolicy::class,
         Parish::class => ParishPolicy::class,
         Tag::class => TagPolicy::class,
+        Team::class => TeamPolicy::class,
     ];
 
     /**
