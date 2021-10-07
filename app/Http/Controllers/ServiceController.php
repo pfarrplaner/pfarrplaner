@@ -133,6 +133,10 @@ class ServiceController extends Controller
             ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
 
         $ministries = DB::table('service_user')->select('category')->distinct()->get();
+
+        $availableCities = Auth::user()->cities->pluck('id');
+        if (!$availableCities->contains($service->city_id)) $availableCities->push($service->city_id);
+
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $liturgySheets = LiturgySheets::all();
 
