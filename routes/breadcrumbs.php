@@ -689,6 +689,8 @@ Breadcrumbs::for(
     }
 );
 
+Breadcrumbs::for('user.create', function (BreadcrumbsGenerator $trail) {
+});
 
 
 
