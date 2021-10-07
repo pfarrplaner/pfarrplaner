@@ -101,7 +101,6 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
             ->whereHas('service', function($service) {
                 $service->startingFrom(Carbon::now()->subWeeks(2));
                 if ($this->config['mine']) {
-                    $service->whereIn('city_id', Auth::user()->cities->pluck('id'));
                     $service->whereHas(
                         'participants',
                         function ($query) {
