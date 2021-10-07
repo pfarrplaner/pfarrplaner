@@ -112,6 +112,8 @@ export default {
         if (!this.settings.homeScreenConfig.showReplacements) this.settings.homeScreenConfig.showReplacements = false;
     },
     data() {
+        if (!this.homeScreenTabsConfig.tabs) this.homeScreenTabsConfig.tabs = [];
+
         this.homeScreenTabsConfig.tabs.forEach(tab => {
             tab['configVisible'] = false;
         })
