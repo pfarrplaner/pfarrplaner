@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.9](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.8...v1.78.9) (2021-10-07)
+
+
+### Bug Fixes
+
+* Hide edit buttons for non-editable services ([9989a0a](https://github.com/pfarrplaner/pfarrplaner/commits/9989a0a5c3e3438279cf5ac586c0d9ea48617cc1))
+* Service edit form shows no location if user has no rights for the city (but may be pastor/...) ([27dcecc](https://github.com/pfarrplaner/pfarrplaner/commits/27dceccc43705a99198f5dafebbfda62a6349768))
+* Show own rites from any church ([84da979](https://github.com/pfarrplaner/pfarrplaner/commits/84da979d000392b40f98035733aa5057210326d6))
+* Show own services from any church ([f294873](https://github.com/pfarrplaner/pfarrplaner/commits/f294873d254eb3634bd077d9a8f9f43dc56f7bad))
+
 ### [1.78.8](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.7...v1.78.8) (2021-10-07)
 
 
