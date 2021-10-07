@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.78.8](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.7...v1.78.8) (2021-10-07)
+
+
+### Features
+
+* Allow creation of teams to group users together ([4001796](https://github.com/pfarrplaner/pfarrplaner/commits/40017969d0146c77d3614c028e60598e8570dd1a))
+
+
+### Bug Fixes
+
+* Cannot change password from form ([1c036be](https://github.com/pfarrplaner/pfarrplaner/commits/1c036beaf5646d339136769c88bd5fdea1b5a7ac))
+* Setting HomeScreenTabs not possible for new users ([02b2828](https://github.com/pfarrplaner/pfarrplaner/commits/02b28289944ba3e03ab0296b59af9e46bed82685))
+* User creation fails ([2b9b299](https://github.com/pfarrplaner/pfarrplaner/commits/2b9b2990be2b1eb205024fa5e64e215ba2fc8049))
+* User creation fails because breadcrumb is missing ([7172f18](https://github.com/pfarrplaner/pfarrplaner/commits/7172f18a527d86200c5d23100f057bc2af31bd8c))
+
 ### [1.78.7](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.6...v1.78.7) (2021-10-01)
 
 
