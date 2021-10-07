@@ -103,7 +103,7 @@ class UserController extends Controller
     public function create()
     {
         $cities = City::all();
-        $parishes = Parish::whereIn('city_id', Auth::user()->cities)->get();
+        $parishes = Parish::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $users = User::all();
         $roles = $this->getRoles();
         return view('users.create', compact('cities', 'roles', 'parishes', 'users'));
