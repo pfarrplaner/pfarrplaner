@@ -118,7 +118,7 @@ export default {
             if (this.password.current && this.password.new && this.password.confirm) {
                 result['current_password'] = this.password.current;
                 result['new_password'] = this.password.new;
-                result['new_password.confirmation'] = this.password.confirm;
+                result['new_password_confirmation'] = this.password.confirm;
             }
             this.$inertia.patch(route('user.profile.save'), result);
         },
