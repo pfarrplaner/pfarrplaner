@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.79.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.9...v1.79.0) (2021-10-08)
+
+
+### Features
+
+* Update PeopleSelect architecture to work with teams ([c201777](https://github.com/pfarrplaner/pfarrplaner/commits/c201777b38bb511e0ab1b538f5bcf02218b65fa6))
+
 ### [1.78.9](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.8...v1.78.9) (2021-10-07)
 
 
