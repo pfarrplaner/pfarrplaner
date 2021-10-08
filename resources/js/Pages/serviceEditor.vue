@@ -199,7 +199,7 @@ name: "serviceEditor",
             var ct = 0;
             Object.keys(this.editedService.ministriesByCategory).forEach(key => {
                 record.ministries[ct] = { description: key, people: [] };
-                this.editedService.ministriesByCategory[key].forEach(person => { record.ministries[ct].people.push(person.id) });
+                this.editedService.ministriesByCategory[key].forEach(person => { if (person) record.ministries[ct].people.push(person.id) });
                 ct++;
             });
             this.editedService.tags.forEach(tag => {record.tags.push(tag.id); });
