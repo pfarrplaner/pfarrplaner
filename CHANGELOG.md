@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.79.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.0...v1.79.1) (2021-10-08)
+
+
+### Bug Fixes
+
+* Array defaults should be set with factory function ([429b69f](https://github.com/pfarrplaner/pfarrplaner/commits/429b69f195231c85239e8d4619b2c3e8dc4334dd))
+* Gracefully handle null entries ([814c636](https://github.com/pfarrplaner/pfarrplaner/commits/814c636cb2a013fcc665eaf94c0f48812e3d996a))
+
 ## [1.79.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.78.9...v1.79.0) (2021-10-08)
 
 
