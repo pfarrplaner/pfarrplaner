@@ -75,7 +75,10 @@ export default {
         error: String,
         people: Array,
         includeTeamsFromCity: Object,
-        teams: Array,
+        teams: {
+            type: Array,
+            default() { return [] },
+        },
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
