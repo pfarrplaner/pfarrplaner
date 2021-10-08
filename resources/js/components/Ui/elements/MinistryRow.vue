@@ -33,8 +33,8 @@
             <selectize class="form-group" :name="'ministries['+index+']'+'[description]'" v-model="myDescription" :settings="settings" />
         </div>
         <div class="col-md-5">
-            <people-select :name="'ministries['+index+']'+'[people][]'" v-model="myMembers"
-                           :people="people" @input="changed"/>
+            <people-select :name="'ministries['+index+']'+'[people][]'" v-model="myMembers" :teams="teams"
+                           :people="people" @input="changed" :include-teams-from-city="includeTeamsFromCity" />
         </div>
         <div class="col-md-1 text-right">
             <button class="btn btn-danger btn-sm" @click.prevent="deleteRow()" title="Reihe entfernen"><span class="fa fa-trash"></span></button>
@@ -55,6 +55,8 @@ export default {
         index: Number,
         ministries: Array,
         value: Object,
+        includeTeamsFromCity: Object,
+        teams: Array,
     },
     data() {
         var myMinistries = [];

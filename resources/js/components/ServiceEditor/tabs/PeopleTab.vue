@@ -31,19 +31,19 @@
     <div class="people-tab">
         <div class="row">
             <div class="col-md-4">
-                <people-select name="participants[P][]" label="Pfarrer*in" :people="people"
-                               v-model="myService.pastors"/>
+                <people-select name="participants[P][]" label="Pfarrer*in" :people="people" :teams="teams"
+                               v-model="myService.pastors" :include-teams-from-city="myService.city" />
                 <form-check name="need_predicant"
                             label="Für diesen Gottesdienst wird ein*e Prädikant*in benötigt."
                             v-model="myService.need_predicant"/>
             </div>
             <div class="col-md-4">
-                <people-select name="participants[O][]" label="Organist*in" :people="people"
-                               v-model="myService.organists"/>
+                <people-select name="participants[O][]" label="Organist*in" :people="people" :teams="teams"
+                               v-model="myService.organists"  :include-teams-from-city="myService.city" />
             </div>
             <div class="col-md-4">
-                <people-select name="participants[M][]" label="Mesner*in" :people="people"
-                               v-model="myService.sacristans"/>
+                <people-select name="participants[M][]" label="Mesner*in" :people="people" :teams="teams"
+                               v-model="myService.sacristans" :include-teams-from-city="myService.city" />
             </div>
         </div>
         <hr/>
@@ -53,9 +53,10 @@
             <div class="col-md-6"><label>Eingeteilte Personen</label></div>
         </div>
         <ministry-row v-for="(members,title,index) in myService.ministriesByCategory"
-                      :title="title" :members="members" :index="index" :people="people"
+                      :title="title" :members="members" :index="index" :people="people" :teams="teams"
                       :key="'ministry_rows'+Object.entries(myService.ministriesByCategory).length+'_'+index"
                       :ministries="ministries" v-model="myService.ministriesByCategory" @delete="deleteRow"
+                      :include-teams-from-city="myService.city"
         />
         <button class="btn btn-light btn-sm" @click.prevent.stop="addRow">Reihe hinzufügen</button>
         <hr>
@@ -95,6 +96,7 @@ export default {
         days: Array,
         people: Array,
         ministries: Array,
+        teams: Array,
     },
     data() {
         if (!this.service.ministriesByCategory) this.service.ministriesByCategory = {};

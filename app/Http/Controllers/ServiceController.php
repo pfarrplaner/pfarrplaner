@@ -46,6 +46,7 @@ use App\Service;
 use App\ServiceGroup;
 use App\Services\RedirectorService;
 use App\Tag;
+use App\Team;
 use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use App\Vacations;
@@ -141,6 +142,7 @@ class ServiceController extends Controller
         $liturgySheets = LiturgySheets::all();
 
         $users = User::all();
+        $teams = Team::with('users')->where('city_id', $service->city_id)->get();
 
         $backRoute = RedirectorService::backRoute();
 
@@ -159,6 +161,7 @@ class ServiceController extends Controller
                 'days',
                 'liturgySheets',
                 'backRoute',
+                'teams',
             )
         );
     }

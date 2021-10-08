@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\City;
 use App\Team;
 use App\User;
 use Illuminate\Http\Request;
@@ -94,5 +95,15 @@ class TeamController extends Controller
             'city_id' => 'required|int|exists:cities,id',
             'users' => 'nullable',
                                   ]);
+    }
+
+    /**
+     * @param City $city
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function byCity(City $city)
+    {
+        $teams = Team::with('users')->where('city_id', $city->id)->orderBy('name')->get();
+        return response()->json($teams);
     }
 }

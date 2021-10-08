@@ -1357,8 +1357,10 @@ class Service extends Model
         $participants = [];
         foreach (($request->get('participants') ?: []) as $category => $participantList) {
             foreach ($participantList as $participant) {
-                $participant = User::createIfNotExists($participant);
-                $participants[$category][$participant]['category'] = $category;
+                if ($participant) {
+                    $participant = User::createIfNotExists($participant);
+                    $participants[$category][$participant]['category'] = $category;
+                }
             }
         }
 
@@ -1366,8 +1368,10 @@ class Service extends Model
         foreach ($ministries as $ministry) {
             if (isset($ministry['people'])) {
                 foreach ($ministry['people'] as $participant) {
-                    $participant = User::createIfNotExists($participant);
-                    $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
+                    if ($participant) {
+                        $participant = User::createIfNotExists($participant);
+                        $participants[$ministry['description']][$participant]['category'] = $ministry['description'];
+                    }
                 }
             }
         }

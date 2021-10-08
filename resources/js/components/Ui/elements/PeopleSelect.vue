@@ -31,19 +31,11 @@
     <div class="peopleselect">
         <form-group :id="myId" :name="name" :label="label" :help="help" pre-label="fa fa-user">
             <div ref="container">
-                <div class="peopleselect-placeholder" v-if="!editing" @click="activate">
-                <span v-for="person in getPeople(myValue)" class="badge badge-light people-badge">{{
-                        person.name
-                    }}</span>
-                </div>
-                <div v-else>
-                    <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
-                               :value="myValue" multiple @input="changed" @blur="editing = false" :settings="settings">
-                        <option v-for="person in allPeople" :value="person.id">{{ person.name }}</option>
-                    </selectize>
-                    <small class="form-text text-muted">Eine oder mehrere Personen (keine Anmerkungen, Notizen,
-                        usw.)</small>
-                </div>
+                <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
+                           :value="myValue" multiple @input="changed" @blur="editing = false" :settings="settings"
+                           :options="people" />
+                <small class="form-text text-muted">Eine oder mehrere Personen (keine Anmerkungen, Notizen,
+                    usw.)</small>
             </div>
         </form-group>
         <modal title="Neue Person anlegen" v-if="showModal" @close="closeModal" @cancel="cancelModal"
@@ -82,20 +74,44 @@ export default {
         placeholder: String,
         error: String,
         people: Array,
+        includeTeamsFromCity: Object,
+        teams: Array,
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
-        var myValue = [];
+        var myValue = this.value;
+        var myPeople = this.people;
+        var myPeopleReference = {};
+        var myTeamReference = {};
+
         this.value.forEach(function (person) {
             myValue.push(person.id);
         });
+
+        myPeople.forEach(person => {
+            myPeopleReference[person.id] = person;
+            person.type = person.type || 'user';
+            person.category = person.category || 'Personen';
+            person.userString = person.userString || '';
+        });
+
+        this.teams.forEach(team => {
+            myTeamReference[team.id] = team;
+            let tempTeam = {name: team.name, id: 'team:'+team.id, type: 'users', category: 'Teams', users: team.users, userString: ''};
+            tempTeam.users.forEach(user => tempTeam.userString += user.name+' ');
+            myPeople.push(tempTeam);
+        });
+
+
+
         return {
+            createCallback: null,
             myId: this.id || '',
             myValue: myValue,
-            myPeople: this.value,
-            allPeople: this.people,
+            myPeople: myPeople,
+            myPeopleReference: myPeopleReference,
             editing: false,
             clicked: false,
             personCreated: false,
@@ -106,61 +122,74 @@ export default {
                 last_name: '',
                 title: '',
             },
+            myTeamReference: myTeamReference,
             settings: {
-                create: true,
+                valueField: 'id',
+                labelField: 'name',
+                searchField: ['name', 'category', 'userString'],
+                optgroupField: 'category',
+                optgroupLabelField: 'groupName',
+                optgroupValueField: 'groupName',
+                optgroups: [{ groupName: 'Personen'}, {groupName: 'Teams'}],
+                create: this.addPerson,
+                options: myPeople,
                 render: {
                     option_create: function (data, escape) {
                         return '<div class="create">Neue Person anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+                    },
+                    item: function (item, escape) {
+                        if (item.type == 'user') {
+                            return '<div><span class="fa fa-user"></span> '+escape(item.name)+'</div>';
+                        } else {
+                            let users = [];
+                            item.users.forEach(user => {
+                                users.push(user.name);
+                            });
+                            return '<div><span class="fa fa-users"></span> '+escape(item.name)+': '+escape(users.join(', '))+'</div>';
+                        }
+                    },
+                    option: function (item, escape) {
+                        var t= '<div><span class="ml-1 fa fa-'+item.type+'"></span> '+escape(item.name);
+
+                        if (item.type == 'users') {
+                            t += '<span class="ml-1 badge badge-dark">'+item.users.length+'</span>'
+                            if (item.users.length > 0) t += '<div>';
+                            item.users.forEach(user => {
+                                t += '<span class="ml-1 badge badge-light">'+user.name+'</span>'
+                            });
+                            if (item.users.length > 0) t += '</div>';
+                        }
+                            t+='</div>';
+                        return t;
                     }
                 },
-            }
+            },
         }
-    },
-    updated() {
-        this.$nextTick(function () {
-            if (this.editing && this.clicked) {
-                this.clicked = false;
-                this.$refs.container.firstChild.firstChild.nextSibling.firstChild.click()
-            }
-            if (this.personCreated) {
-                this.personCreated = false;
-                var foundPeople = this.getPeople(this.myValue);
-                this.$emit('input', foundPeople);
-            }
-        })
     },
     methods: {
         changed(newVal) {
-            var newList = [];
-            var allFound = [];
-            var foundString = false;
-            const container = this;
-            newVal.forEach(function (item) {
-                if (isNaN(item)) {
-                    foundString = item; //container.addPerson(item);
-                } else {
-                    newList.push(item);
-                }
-            });
-            this.people.forEach(function (person) {
-                if (newList.includes(person.id.toString())) allFound.push(person);
-            });
-            this.myPeople = allFound;
-            this.$emit('input', allFound);
+            var externalValue = [];
+            var newVal2 = [];
 
-            // new Person added?
-            if (foundString) this.addPerson(foundString);
-        },
-        getPeople(value) {
-            var foundPeople = [];
-            this.people.forEach(function (person) {
-                if (value.includes(person.id) || value.includes(person.id.toString())) foundPeople.push(person);
+            newVal.forEach(item => {
+               if (isNaN(item) && (item.substr(0,5) == 'team:')) {
+                   console.log('referencing team #'+item.substr(5), this.myTeamReference[item.substr(5)]);
+                   this.myTeamReference[item.substr(5)].users.forEach(user => {
+                       newVal2.push(user.id);
+                       console.log('added user #'+user.id, this.myValue);
+                   });
+               } else {
+                   newVal2.push(item);
+               }
             });
-            return foundPeople;
-        },
-        activate() {
-            this.editing = true;
-            this.clicked = true;
+
+            newVal2.forEach(item => {
+                externalValue.push(this.myPeopleReference[item]);
+            })
+
+            this.$emit('input', externalValue);
+            this.myValue = newVal2;
+            this.$forceUpdate();
         },
         closeModal() {
             var component = this;
@@ -170,11 +199,14 @@ export default {
                     return response.data;
                 })
                 .then(data => {
-                    var allFound = component.getPeople(component.myValue);
-                    allFound.push(data);
-                    this.$emit('input', allFound);
-                    component.myValue.push(data.id);
-                    component.allPeople.push(data);
+                    data.type='user';
+                    data.category='Personen';
+                    data.userString = '';
+
+                    this.myPeople.push(data);
+                    this.myPeopleReference[data.id] = data;
+                    this.createCallback(data);
+                    this.changed(this.myValue);
                     component.personCreated = true;
                 });
         },
@@ -186,7 +218,7 @@ export default {
             el.focus();
             el.select();
         },
-        addPerson(item) {
+        addPerson(item, callback = null) {
             var tmp, firstName, lastName;
             tmp = item.split(' ');
             firstName = tmp[0];
@@ -198,6 +230,7 @@ export default {
                 title: '',
                 email: '',
             };
+            this.createCallback = callback;
             this.showModal = true;
         }
     }

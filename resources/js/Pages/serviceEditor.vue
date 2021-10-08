@@ -83,7 +83,7 @@
                                           :tags="tags" :service-groups="serviceGroups"/>
                             </tab>
                             <tab id="people" :active-tab="activeTab">
-                                <people-tab :service="service"
+                                <people-tab :service="service" :teams="teams"
                                             :people="users" :ministries="ministries" />
                             </tab>
                             <tab id="offerings" :active-tab="activeTab">
@@ -153,6 +153,7 @@ name: "serviceEditor",
         days: Array,
         liturgySheets: Object,
         backRoute: String,
+        teams: Array,
     },
     computed: {
         hasAnnouncements() {
