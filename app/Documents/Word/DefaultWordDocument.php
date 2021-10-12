@@ -41,6 +41,7 @@ use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Language;
+use PhpOffice\PhpWord\Style\Tab;
 
 class DefaultWordDocument
 {
@@ -49,8 +50,12 @@ class DefaultWordDocument
     /** @var Section  */
     protected $section = null;
 
+    protected $instructionsFontStyle = ['size' => 8, 'italic' => true];
+    protected $instructionsParagraphStyle = [];
+
     public const NORMAL = 'Standard';
     public const BLOCKQUOTE = 'Zitat';
+    public const INSTRUCTIONS = 'Standard mit Anweisungen';
     public const BOLD = ['bold' => true];
     public const UNDERLINE = ['underline' => Font::UNDERLINE_SINGLE];
     public const BOLD_UNDERLINE = ['bold' => true, 'underline' => Font::UNDERLINE_SINGLE];
@@ -169,6 +174,24 @@ class DefaultWordDocument
             'bold' => false,
             'italic' => false,
         ]);
+
+        // indented paragraph with instructions
+        $this->phpWord->addParagraphStyle(self::INSTRUCTIONS, [
+                'alignment' => Jc::START,
+                'indentation' => [
+                    'left' => Converter::cmToTwip(1.27),
+                    'right' => 0,
+                    'firstLine' => 0,
+                    'hanging' => Converter::cmToTwip(1.27),
+                ],
+                'lineHeight' => 1.08,
+                'spaceBefore' => 0,
+                'spaceAfter' => Converter::pointToTwip(8),
+                'tabs' => [
+                    new Tab('left', Converter::cmToTwip(1.27)),
+                ],
+            ]
+        );
     }
 
 // SETTERS
@@ -266,13 +289,28 @@ class DefaultWordDocument
      */
     public function renderText($text, $paragraphOption = [], $fontOption = [], $breakAfter = false)
     {
+        $instructionMode = (substr($text, 0, 1) == '[');
+        if (!$instructionMode) $textRun = $this->section->addTextRun($paragraphOption);
         if (trim($text) == '') return;
         $paragraphs = explode("\n", trim($text));
-        $textRun = $this->section->addTextRun($paragraphOption);
         $ct = 0;
         foreach ($paragraphs as $paragraph) {
             $ct++;
-            $textRun->addText($paragraph, $fontOption);
+            if (substr($paragraph, 0, 1) != '[') {
+                if ($instructionMode) $textRun = $this->section->addTextRun($paragraphOption);
+                $textRun->addText($paragraph, $fontOption);
+            } else {
+                preg_match('/\[(.*)?]/', $paragraph, $matches);
+                if (count($matches)) {
+                    $textRun = $this->section->addTextRun($paragraphOption == self::NORMAL ? self::INSTRUCTIONS : $paragraphOption);
+                    $keyWord = $matches[1];
+                    $paragraph = trim(str_replace('['.$keyWord.']', '', $paragraph));
+                    $textRun->addText($keyWord."\t", $this->getInstructionsFontStyle());
+                } else {
+                    $textRun = $this->section->addTextRun($paragraphOption);
+                }
+                $textRun->addText($paragraph, $fontOption);
+            }
             if (($ct < count($paragraphs)) || $breakAfter) $textRun->addTextBreak();
         }
     }
@@ -310,5 +348,42 @@ class DefaultWordDocument
                 ];
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getInstructionsFontStyle(): array
+    {
+        return $this->instructionsFontStyle;
+    }
+
+    /**
+     * @param array $instructionsFontStyle
+     */
+    public function setInstructionsFontStyle(array $instructionsFontStyle): void
+    {
+        $this->instructionsFontStyle = $instructionsFontStyle;
+    }
+
+    /**
+     * @return array
+     */
+    public function getInstructionsParagraphStyle(): array
+    {
+        return $this->instructionsParagraphStyle;
+    }
+
+    /**
+     * @param array $instructionsParagraphStyle
+     */
+    public function setInstructionsParagraphStyle(array $instructionsParagraphStyle): void
+    {
+        $this->instructionsParagraphStyle = $instructionsParagraphStyle;
+    }
+
+
+
 }
+
+
 

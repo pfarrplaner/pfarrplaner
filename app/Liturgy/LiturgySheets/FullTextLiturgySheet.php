@@ -72,6 +72,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
         $doc = new DefaultA5WordDocument();
         $this->setProperties($doc);
+        $doc->setInstructionsFontStyle(['size' => 8, 'italic' => true]);
 
         $run = new TextRun($doc->getParagraphStyle('heading1'));
         $run->addText($service->titleText(false), $doc->getFontStyle('heading1'));
