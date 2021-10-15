@@ -85,15 +85,18 @@ export default {
                 options.push({id: 'user:'+person.id, name: person.name, category: basicMinistries[ministryIndex], type: 'user-check'});
             });
         }
-        for (var ministry in this.ministries) {
-            if (this.service[ministry]) {
+        console.log('ministries', this.ministries, Object.keys(this.ministries));
+        var knownMinistries = this.service.ministriesByCategory;
+        Object.keys(this.ministries).forEach(ministry => {
+            console.log('ministry', ministry, knownMinistries[ministry]);
+            if (knownMinistries[ministry]) {
                 optGroups.push({ groupName: ministry });
                 options.push({id:'ministry:'+ministry, name: ministry, category: ministry, type: 'users'});
-                this.service[ministry].forEach(person => {
+                knownMinistries[ministry].forEach(person => {
                     options.push({id: 'user:'+person.id, name: person.name, category: ministry, type: 'user-check'});
                 });
             }
-        }
+        }, this);
         optGroups.push({ groupName: 'Eigene Eingaben'});
         e.data.responsible.forEach(item => {
             if ((item) && (typeof item == String)) {
