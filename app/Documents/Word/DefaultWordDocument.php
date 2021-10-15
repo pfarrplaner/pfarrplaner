@@ -45,9 +45,9 @@ use PhpOffice\PhpWord\Style\Tab;
 
 class DefaultWordDocument
 {
-    /** @var PhpWord|null  */
+    /** @var PhpWord|null */
     protected $phpWord = null;
-    /** @var Section  */
+    /** @var Section */
     protected $section = null;
 
     protected $instructionsFontStyle = ['size' => 8, 'italic' => true];
@@ -69,7 +69,8 @@ class DefaultWordDocument
         $this->setDefaultDocumentStyles();
     }
 
-    protected function configureLayout() {
+    protected function configureLayout()
+    {
         $this->section = $this->phpWord->addSection(
             [
                 'orientation' => 'portrait',
@@ -120,19 +121,19 @@ class DefaultWordDocument
             'size' => 13,
             'bold' => true,
             'italic' => false,
-        ], [
-            'alignment' => Jc::START,
-            'indentation' => [
-                'left' => 0,
-                'right' => 0,
-                'firstLine' => 0,
-                'hanging' => 0,
-            ],
-            'keepNext' => true,
-            'lineHeight' => 1.08,
-            'spaceBefore' => Converter::pointToTwip(2),
-            'spaceAfter' => 0,
-        ]);
+        ],                            [
+                                          'alignment' => Jc::START,
+                                          'indentation' => [
+                                              'left' => 0,
+                                              'right' => 0,
+                                              'firstLine' => 0,
+                                              'hanging' => 0,
+                                          ],
+                                          'keepNext' => true,
+                                          'lineHeight' => 1.08,
+                                          'spaceBefore' => Converter::pointToTwip(2),
+                                          'spaceAfter' => 0,
+                                      ]);
 
         // Überschrift 3
         $this->phpWord->addTitleStyle(3, [
@@ -140,19 +141,19 @@ class DefaultWordDocument
             'size' => 12,
             'bold' => true,
             'italic' => false,
-        ], [
-            'alignment' => Jc::START,
-            'indentation' => [
-                'left' => 0,
-                'right' => 0,
-                'firstLine' => 0,
-                'hanging' => 0,
-            ],
-            'keepNext' => true,
-            'lineHeight' => 1.08,
-            'spaceBefore' => Converter::pointToTwip(2),
-            'spaceAfter' => 0,
-        ]);
+        ],                            [
+                                          'alignment' => Jc::START,
+                                          'indentation' => [
+                                              'left' => 0,
+                                              'right' => 0,
+                                              'firstLine' => 0,
+                                              'hanging' => 0,
+                                          ],
+                                          'keepNext' => true,
+                                          'lineHeight' => 1.08,
+                                          'spaceBefore' => Converter::pointToTwip(2),
+                                          'spaceAfter' => 0,
+                                      ]);
 
         // Zitat
         $this->phpWord->addParagraphStyle(self::BLOCKQUOTE, [
@@ -177,24 +178,25 @@ class DefaultWordDocument
 
         // indented paragraph with instructions
         $this->phpWord->addParagraphStyle(self::INSTRUCTIONS, [
-                'alignment' => Jc::START,
-                'indentation' => [
-                    'left' => Converter::cmToTwip(1.27),
-                    'right' => 0,
-                    'firstLine' => 0,
-                    'hanging' => Converter::cmToTwip(1.27),
-                ],
-                'lineHeight' => 1.08,
-                'spaceBefore' => 0,
-                'spaceAfter' => Converter::pointToTwip(8),
-                'tabs' => [
-                    new Tab('left', Converter::cmToTwip(1.27)),
-                ],
-            ]
+                                                                'alignment' => Jc::START,
+                                                                'indentation' => [
+                                                                    'left' => Converter::cmToTwip(1.27),
+                                                                    'right' => 0,
+                                                                    'firstLine' => 0,
+                                                                    'hanging' => Converter::cmToTwip(1.27),
+                                                                ],
+                                                                'lineHeight' => 1.08,
+                                                                'spaceBefore' => 0,
+                                                                'spaceAfter' => Converter::pointToTwip(8),
+                                                                'tabs' => [
+                                                                    new Tab('left', Converter::cmToTwip(1.27)),
+                                                                ],
+                                                            ]
         );
     }
 
 // SETTERS
+
     /**
      * @return PhpWord|null
      */
@@ -290,28 +292,51 @@ class DefaultWordDocument
     public function renderText($text, $paragraphOption = [], $fontOption = [], $breakAfter = false)
     {
         $instructionMode = (substr($text, 0, 1) == '[');
-        if (!$instructionMode) $textRun = $this->section->addTextRun($paragraphOption);
-        if (trim($text) == '') return;
+        if ($instructionMode) {
+            $text = str_replace("\n\n", "\n", $text);
+        }
+        $textRun = $this->section->addTextRun(($instructionMode ? (self::INSTRUCTIONS) : $paragraphOption));
+        if (trim($text) == '') {
+            return;
+        }
         $paragraphs = explode("\n", trim($text));
         $ct = 0;
         foreach ($paragraphs as $paragraph) {
             $ct++;
             if (substr($paragraph, 0, 1) != '[') {
-                if ($instructionMode) $textRun = $this->section->addTextRun($paragraphOption);
                 $textRun->addText($paragraph, $fontOption);
             } else {
                 preg_match('/\[(.*)?]/', $paragraph, $matches);
+                $keyWord = '';
                 if (count($matches)) {
-                    $textRun = $this->section->addTextRun($paragraphOption == self::NORMAL ? self::INSTRUCTIONS : $paragraphOption);
                     $keyWord = $matches[1];
-                    $paragraph = trim(str_replace('['.$keyWord.']', '', $paragraph));
-                    $textRun->addText($keyWord."\t", $this->getInstructionsFontStyle());
-                } else {
-                    $textRun = $this->section->addTextRun($paragraphOption);
+                    $paragraph = trim(str_replace('[' . $keyWord . ']', '', $paragraph));
+                    $paragraph = strtr($paragraph, ["\r" => '', "\n" => '', '>>' => "\t"]);
                 }
-                $textRun->addText($paragraph, $fontOption);
+                $textRun->addText($keyWord . "\t", $this->getInstructionsFontStyle());
+                if (trim($paragraph)) {
+                    $this->renderWithLineBreaks($textRun, $paragraph, $fontOption);
+                }
             }
-            if (($ct < count($paragraphs)) || $breakAfter) $textRun->addTextBreak();
+            if ((!$instructionMode) && (($ct < count($paragraphs)) || $breakAfter)) {
+                $textRun->addTextBreak();
+            }
+            if ($instructionMode) {
+                $textRun = $this->section->addTextRun(self::INSTRUCTIONS);
+            }
+        }
+    }
+
+    protected function renderWithLineBreaks(TextRun $textRun, $text, $fontOption)
+    {
+        $lines = explode("\n", str_replace("|", "\n", $text));
+        $ct = 0;
+        foreach ($lines as $line) {
+            $ct++;
+            $textRun->addText($line, $fontOption);
+            if ($ct < count($lines)) {
+                $textRun->addTextBreak();
+            }
         }
     }
 
@@ -380,7 +405,6 @@ class DefaultWordDocument
     {
         $this->instructionsParagraphStyle = $instructionsParagraphStyle;
     }
-
 
 
 }
