@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.79.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.1...v1.79.2) (2021-10-19)
+
+
+### Features
+
+* Allow adding instructions to FullTextLiturgySheet ([432b323](https://github.com/pfarrplaner/pfarrplaner/commits/432b3239780590a78ea8149661103db4f2ed449e))
+* Allow adding instructions to FullTextLiturgySheet ([80dc111](https://github.com/pfarrplaner/pfarrplaner/commits/80dc111c5233f214b31b15129d6cc0fd663c7792))
+
+
+### Bug Fixes
+
+* Assigned ministries do not show up in PeoplePane ([2a7a32d](https://github.com/pfarrplaner/pfarrplaner/commits/2a7a32d73dffebf7121f33200bb08bf9d65bb0b1))
+* Cannot create new wedding records ([3e1e81b](https://github.com/pfarrplaner/pfarrplaner/commits/3e1e81be5f1b11a089d51ce0ee5f3efeb4192460))
+
 ### [1.79.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.0...v1.79.1) (2021-10-08)
 
 
