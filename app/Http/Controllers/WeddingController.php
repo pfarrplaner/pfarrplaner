@@ -76,8 +76,26 @@ class WeddingController extends Controller
      * @param int $serviceId Service Id
      * @return Response
      */
-    public function create($serviceId)
+    public function create(Service $service)
     {
+        $wedding = Wedding::create([
+                                       'service_id' => $service->id,
+                                       'spouse1_name' => '',
+                                       'spouse1_birth_name' => '',
+                                       'spouse1_email' => '',
+                                       'spouse1_phone' => '',
+                                       'spouse2_name' => '',
+                                       'spouse2_birth_name' => '',
+                                       'spouse2_email' => '',
+                                       'spouse2_phone' => '',
+                                       'text' => '',
+                                        'registered' => false,
+                                        'registration_document' => '',
+            'signed' => false,
+            'docs_ready' => false,
+            'docs_where' => '',
+                                   ]);
+        return redirect()->route('weddings.edit', $wedding->id);
     }
 
     /**
@@ -94,7 +112,6 @@ class WeddingController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $this->validateRequest($request);
         $serviceId = $data['service_id'] = $data['service'];
         $wedding = new Wedding($data);
@@ -156,7 +173,9 @@ class WeddingController extends Controller
     public function update(Request $request, Wedding $wedding)
     {
         $data = $this->validateRequest($request);
-        if (isset($data['service'])) $serviceId = $data['service_id'] = $data['service'];
+        if (isset($data['service'])) {
+            $serviceId = $data['service_id'] = $data['service'];
+        }
         $wedding->update($data);
 
         $wedding->service->setDefaultOfferingValues();
@@ -349,7 +368,6 @@ class WeddingController extends Controller
     }
 
 
-
     protected function validateRequest(Request $request)
     {
         $data = $request->validate(
@@ -398,23 +416,67 @@ class WeddingController extends Controller
                 'processed' => 'nullable|integer|between:0,1'
             ]
         );
-        if (!isset($data['text'])) $data['text'] = '';
-        if (!isset($data['docs_where'])) $data['docs_where'] = '';
-        if (!isset($data['registration_document'])) $data['registration_document'] = '';
-        if (!isset($data['registered'])) $data['registered'] = 0;
-        if (!isset($data['signed'])) $data['signed'] = 0;
-        if (!isset($data['docs_ready'])) $data['docs_ready'] = 0;
+        if (!isset($data['text'])) {
+            $data['text'] = '';
+        }
+        if (!isset($data['docs_where'])) {
+            $data['docs_where'] = '';
+        }
+        if (!isset($data['registration_document'])) {
+            $data['registration_document'] = '';
+        }
+        if (!isset($data['registered'])) {
+            $data['registered'] = 0;
+        }
+        if (!isset($data['signed'])) {
+            $data['signed'] = 0;
+        }
+        if (!isset($data['docs_ready'])) {
+            $data['docs_ready'] = 0;
+        }
 
         // dates
-        if (isset($data['appointment'])) $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment'])->shiftTimezone('Europe/Berlin')->setTimeZone('UTC');
-        if (isset($data['spouse1_dob'])) $data['spouse1_dob'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dob']);
-        if (isset($data['spouse1_dimissorial_requested'])) $data['spouse1_dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dimissorial_requested']);
-        if (isset($data['spouse1_dimissorial_received'])) $data['spouse1_dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dimissorial_received']);
-        if (isset($data['spouse2_dob'])) $data['spouse2_dob'] = Carbon::createFromFormat('d.m.Y', $data['spouse2_dob']);
-        if (isset($data['spouse2_dimissorial_requested'])) $data['spouse2_dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['spouse2_dimissorial_requested']);
-        if (isset($data['spouse2_dimissorial_received'])) $data['spouse2_dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['spouse2_dimissorial_received']);
-        if (isset($data['permission_requested'])) $data['permission_requested'] = Carbon::createFromFormat('d.m.Y', $data['permission_requested']);
-        if (isset($data['permission_received'])) $data['permission_received'] = Carbon::createFromFormat('d.m.Y', $data['permission_received']);
+        if (isset($data['appointment'])) {
+            $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment'])->shiftTimezone(
+                'Europe/Berlin'
+            )->setTimeZone('UTC');
+        }
+        if (isset($data['spouse1_dob'])) {
+            $data['spouse1_dob'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dob']);
+        }
+        if (isset($data['spouse1_dimissorial_requested'])) {
+            $data['spouse1_dimissorial_requested'] = Carbon::createFromFormat(
+                'd.m.Y',
+                $data['spouse1_dimissorial_requested']
+            );
+        }
+        if (isset($data['spouse1_dimissorial_received'])) {
+            $data['spouse1_dimissorial_received'] = Carbon::createFromFormat(
+                'd.m.Y',
+                $data['spouse1_dimissorial_received']
+            );
+        }
+        if (isset($data['spouse2_dob'])) {
+            $data['spouse2_dob'] = Carbon::createFromFormat('d.m.Y', $data['spouse2_dob']);
+        }
+        if (isset($data['spouse2_dimissorial_requested'])) {
+            $data['spouse2_dimissorial_requested'] = Carbon::createFromFormat(
+                'd.m.Y',
+                $data['spouse2_dimissorial_requested']
+            );
+        }
+        if (isset($data['spouse2_dimissorial_received'])) {
+            $data['spouse2_dimissorial_received'] = Carbon::createFromFormat(
+                'd.m.Y',
+                $data['spouse2_dimissorial_received']
+            );
+        }
+        if (isset($data['permission_requested'])) {
+            $data['permission_requested'] = Carbon::createFromFormat('d.m.Y', $data['permission_requested']);
+        }
+        if (isset($data['permission_received'])) {
+            $data['permission_received'] = Carbon::createFromFormat('d.m.Y', $data['permission_received']);
+        }
 
         return $data;
     }
