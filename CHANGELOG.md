@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.80.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.3...v1.80.0) (2021-10-29)
+
+
+### Features
+
+* Add A4WordSpecificLiturgySheet ([97bf6f5](https://github.com/pfarrplaner/pfarrplaner/commits/97bf6f5248bf7e5eb262e8b83c7c481747bdae84))
+* Implement first password change view in Vue ([3f6247b](https://github.com/pfarrplaner/pfarrplaner/commits/3f6247b7b07e260c165e762d0338b49472df1dde)), closes [#159](https://github.com/pfarrplaner/pfarrplaner/issues/159)
+* Show alert in NextServicesTab when no services are planned ([a45c400](https://github.com/pfarrplaner/pfarrplaner/commits/a45c40029bb7f84034f05ea159aa8e9bbd06e95d)), closes [#160](https://github.com/pfarrplaner/pfarrplaner/issues/160)
+
+
+### Bug Fixes
+
+* Add missing name attribute ([26213f1](https://github.com/pfarrplaner/pfarrplaner/commits/26213f1e468415ef74c8fe5ce8ab4a37c6468189))
+* Use less data for filling import source list ([b1970d1](https://github.com/pfarrplaner/pfarrplaner/commits/b1970d1ea2a59f974e9a2ac9b703f30067ce69df)), closes [#166](https://github.com/pfarrplaner/pfarrplaner/issues/166)
+* Use Microsoft 365-based exchange server for sync ([63d934e](https://github.com/pfarrplaner/pfarrplaner/commits/63d934e7e6866468911c35703b267c0e98cd4b9e)), closes [#162](https://github.com/pfarrplaner/pfarrplaner/issues/162)
+
 ### [1.79.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.2...v1.79.3) (2021-10-29)
 
 
