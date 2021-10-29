@@ -181,13 +181,12 @@
                             }">
                     <optgroup label="Vorlagen">
                         <option v-for="agenda in agendas" :value="agenda.id">
-                            {{ agenda.title }}{{ (agenda.source ? ' (' + agenda.source + ')' : '') }}
+                            {{ agenda.text }}
                         </option>
                     </optgroup>
                     <optgroup label="Gottesdienste">
                         <option v-for="service in services" :value="service.id">
-                            {{ moment(service.day.date).format('DD.MM.YYYY') }}, {{ service.timeText }} -
-                            {{ service.titleText }} ({{ service.locationText }})
+                            {{ service.text }})
                         </option>
                     </optgroup>
                 </selectize>

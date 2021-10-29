@@ -110,12 +110,12 @@ class LiturgyEditorController extends Controller
 
     public function sources(Service $service)
     {
-        $services1 = Service::setEagerLoads([])
+        $services1 = Service::with([])
             ->isNotAgenda()
             ->writable()
             ->whereHas('liturgyBlocks')
-            ->limit(50)->get();
-        $services2 = Service::setEagerLoads([])
+            ->limit(50)->get(['id', 'title']);
+        $services2 = Service::with([])
             ->isNotAgenda()
             ->userParticipates(Auth::user(), 'P')
             ->whereHas('liturgyBlocks')
@@ -123,10 +123,22 @@ class LiturgyEditorController extends Controller
         $services3 = $services1->merge($services2)->unique();
         $services = [];
         foreach ($services3 as $service) {
-            $services[$service->dateTime->timestamp . $service->id] = $service;
+            $service->load(['day', 'location']);
+            if (!$service->day == null)
+            $services[$service->dateTime->timestamp . $service->id] = [
+                'id' => $service->id,
+                'text' => trim(($service->day ? $service->day->date->format('d.m.Y') : '').' '.$service->timeText().' '.$service->titleText().' '.$service->locationText),
+            ];
         }
         krsort($services);
-        $agendas = Service::isAgenda()->get();
+        $agendas1 = Service::with(['day'])->isAgenda()->get();
+        $agendas = [];
+        foreach ($agendas1 as $agenda) {
+            $agendas[] = [
+                'id' => $agenda->id,
+                'text' => $agenda->title.($agenda->source ? ' ('.$agenda->source.')' : '')
+            ];
+        }
         return response()->json(compact('services', 'agendas'));
     }
 
@@ -135,12 +147,9 @@ class LiturgyEditorController extends Controller
         $sermonIds = Service::whereNotNull('sermon_id')
             ->userParticipates(Auth::user(), 'P')
             ->orderedDesc()
-            ->get()->pluck('sermon_id')->unique();
+            ->get(['sermon_id'])->pluck('sermon_id')->unique();
 
-        $sermons = Sermon::whereIn('id', $sermonIds)->get()->transform(function($sermon) {
-            $sermon->text = '';
-            return $sermon;
-        });;
+        $sermons = Sermon::whereIn('id', $sermonIds)->get(['id', 'title']);
 
         return response()->json($sermons);
     }
