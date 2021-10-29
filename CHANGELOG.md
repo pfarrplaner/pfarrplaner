@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.79.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.2...v1.79.3) (2021-10-29)
+
+
+### Bug Fixes
+
+* AbstractLiturgySheet throws an exception for guest user ([2a4f9b2](https://github.com/pfarrplaner/pfarrplaner/commits/2a4f9b2793401ea4810333553cf3f690eb85b453))
+* Menu not closable in mobile view ([deef512](https://github.com/pfarrplaner/pfarrplaner/commits/deef512936c81d47e49a88c4c53774c3815bbcd4)), closes [#161](https://github.com/pfarrplaner/pfarrplaner/issues/161)
+* Reactivity problems on mobile calendar view ([2ca6a52](https://github.com/pfarrplaner/pfarrplaner/commits/2ca6a52636bd638bd920cd07fa2d7c58bfe92ba8))
+* Redirect to empty screen after password change ([3a18949](https://github.com/pfarrplaner/pfarrplaner/commits/3a189494fc9f6cbee016d878d49c7ddcb8ba6f3b))
+* Use cache-busting for bundled JS ([06a5870](https://github.com/pfarrplaner/pfarrplaner/commits/06a5870cf5ff93c2d7495591fc0626f62ba0e555)), closes [#164](https://github.com/pfarrplaner/pfarrplaner/issues/164)
+
 ### [1.79.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.1...v1.79.2) (2021-10-19)
 
 
