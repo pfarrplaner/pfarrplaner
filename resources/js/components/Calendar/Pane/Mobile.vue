@@ -17,7 +17,7 @@
                     <div v-if="day.liturgy.title" class="liturgy">{{ day.liturgy.title }}</div>
                 </th>
                 <td class="day-cell" v-for="(city,index) in cities"
-                    @click="goToDay(day,city)">
+                    @click="goToDay(day.id,city.id)">
                     <div class="service-info" v-for="(service, serviceIndex) in getServices(city,day)"
                          :key="service.id"
                          :class="{ mine: service.isMine, funeral: (service.funerals.length > 0)}">
@@ -64,8 +64,8 @@ export default {
             })
             return mine ? 'badge-success' : 'badge-secondary';
         },
-        goToDay(day, city) {
-            this.$inertia.visit(route('calendar.day', {day: day.id, city: city.id}));
+        goToDay(dayId, cityId) {
+            this.$inertia.visit(route('calendar.day', {day: dayId, city: cityId}), { preserveScroll: false, preserveState: false });
         }
     }
 }
