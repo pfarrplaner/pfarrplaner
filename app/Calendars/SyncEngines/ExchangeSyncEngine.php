@@ -44,7 +44,7 @@ class ExchangeSyncEngine extends AbstractSyncEngine
         parent::__construct($calendarConnection);
         $this->setCalendar(
             new ExchangeCalendar(
-                'mail.elkw.de',
+                'outlook.office365.com',
                 $calendarConnection->credentials1,
                 $calendarConnection->credentials2,
                 '2010_SP2',

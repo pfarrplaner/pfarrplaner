@@ -21,7 +21,7 @@ class CalendarConnectionController extends Controller
     {
         $data = $request->validate(['credentials1' => 'required|string', 'credentials2' => 'required|string']);
 
-        $exchange = new ExchangeCalendar('mail.elkw.de', $data['credentials1'], $data['credentials2'], '2010_SP2', '');
+        $exchange = new ExchangeCalendar('outlook.office365.com', $data['credentials1'], $data['credentials2'], '2010_SP2', '');
         $folders = $exchange->getAllCalendars();
         return response()->json($folders);
     }
