@@ -73,6 +73,7 @@ const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 //   .sass('resources/sass/app.scss', 'public/css-old');
 
 mix.js('resources/scripts/bundle.js', 'public/js')
+    .version()
     .autoload({
         'jquery': ['$', 'window.jQuery', 'jQuery'],
         'vue': ['Vue','window.Vue'],
@@ -84,6 +85,7 @@ mix.js('resources/scripts/bundle.js', 'public/js')
 
 
 mix.js('resources/js/inertia-app.js', 'public/js')
+    .version()
     .autoload({
         'jquery': ['$', 'window.jQuery', 'jQuery'],
         'vue': ['Vue','window.Vue'],

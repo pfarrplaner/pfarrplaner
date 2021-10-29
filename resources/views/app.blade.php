@@ -83,7 +83,7 @@
         }
     }, window.Laravel.timeout);
 </script>
-<script src="{{ asset('js/bundle.js') }}"></script>
+<script src="{{ mix('/js/bundle.js') }}"></script>
 <!-- other libraries -->
 <script src="{{ asset('js/pfarrplaner/forms.js') }}"></script>
 @yield('scripts')
