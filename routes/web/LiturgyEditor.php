@@ -44,9 +44,10 @@
 use App\Http\Controllers\LiturgyEditorController;
 
 Route::get('/liturgie/{service:slug}', [LiturgyEditorController::class, 'editor'])->name('liturgy.editor');
-Route::get('/liturgie/{service:slug}/optionen/{key}', [LiturgyEditorController::class, 'liturgy.configure']);
+Route::get('/liturgie/{service:slug}/optionen/{key}', [LiturgyEditorController::class, 'configureLiturgySheet'])->name('liturgy.configure');
 Route::match(['GET', 'POST'], '/liturgie/{service:slug}/download/{key}', [LiturgyEditorController::class, 'download'])->name('liturgy.download');
 Route::post('/liturgie/{service:slug}', [LiturgyEditorController::class, 'save'])->name('liturgy.save');
 Route::get('/liturgie/{service:slug}/quellen', [LiturgyEditorController::class, 'sources'])->name('liturgy.sources');
 Route::get('/liturgie/{service:slug}/predigten', [LiturgyEditorController::class, 'sermons'])->name('liturgy.sermons');
+Route::get('/liturgie/{service:slug}/mitwirkende', [LiturgyEditorController::class, 'recipients'])->name('liturgy.recipients');
 Route::post('/liturgie/{service:slug}/import/{source}', [LiturgyEditorController::class, 'import'])->name('liturgy.import');

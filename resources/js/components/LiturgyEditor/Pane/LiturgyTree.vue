@@ -215,6 +215,7 @@ import Modal from "../../Ui/modals/Modal";
 import LiturgySheetLink from "../Elements/LiturgySheetLink";
 import FormSelectize from "../../Ui/forms/FormSelectize";
 import FullTextLiturgySheetConfiguration from "../LiturgySheets/FullTextLiturgySheetConfiguration";
+import A4WordSpecificLiturgySheetConfiguration from "../LiturgySheets/A4WordSpecificLiturgySheetConfiguration";
 import SongPPTLiturgySheetConfiguration from "../LiturgySheets/SongPPTLiturgySheetConfiguration";
 
 export default {
@@ -230,6 +231,7 @@ export default {
         Selectize,
         FullTextLiturgySheetConfiguration,
         SongPPTLiturgySheetConfiguration,
+        A4WordSpecificLiturgySheetConfiguration,
     },
     props: {
         service: Object,

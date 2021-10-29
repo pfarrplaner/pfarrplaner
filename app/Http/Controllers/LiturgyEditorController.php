@@ -72,7 +72,7 @@ class LiturgyEditorController extends Controller
         /** @var AbstractLiturgySheet $sheet */
         $sheet = new $class();
         if ((null !== $sheet->getConfigurationPage()) && (!$request->has('config'))) {
-            return redirect()->route('liturgy.configure', ['service' => $service->id, 'key' => $key]);
+            return redirect()->route('liturgy.configure', ['service' => $service->slug, 'key' => $key]);
         }
 
         if (null !== $sheet->getConfigurationPage()) {
@@ -194,6 +194,21 @@ class LiturgyEditorController extends Controller
         return redirect()->route('liturgy.editor', $service->slug);
     }
 
+    public function recipients(Service $service)
+    {
+        $recipients = [];
+        foreach ($service->liturgyBlocks as $block) {
+            foreach ($block->items as $item) {
+                foreach ($item->recipients() as $recipient) {
+                    $recipients[$recipient] = ['id' => $recipient, 'name' => $recipient];
+                }
+            }
+        }
+        ksort($recipients);
+        $recipients = array_values($recipients);
+        return response()->json(compact('recipients'));
+    }
+
     /**
      * @param $reqMinistries
      * @return array
@@ -214,6 +229,8 @@ class LiturgyEditorController extends Controller
         }
         return $ministries;
     }
+
+
 
 
 }
