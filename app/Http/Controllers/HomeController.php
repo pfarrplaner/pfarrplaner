@@ -128,10 +128,7 @@ class HomeController extends Controller
         $validatedData = $request->validate($rules);
         //Change Password
         Auth::user()->update(['password' => $validatedData['new_password']]);
-        if ($firstPassword) {
-            return redirect()->route('home')->with("success", "Dein Passwort wurde geändert.");
-        }
-        return redirect()->back()->with("success", "Dein Passwort wurde geändert.");
+        return redirect()->route('home')->with("success", "Dein Passwort wurde geändert.");
     }
 
     public function about()
