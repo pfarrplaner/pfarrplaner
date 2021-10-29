@@ -103,11 +103,12 @@ class HomeController extends Controller
     }
 
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function showChangePassword()
     {
-        return view('auth.passwords.change');
+        $originalPassword = Hash::check('testtest', Auth::user()->password);
+        return Inertia::render('Auth/PasswordChanger', compact('originalPassword'));
     }
 
     /**
