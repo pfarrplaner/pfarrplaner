@@ -64,11 +64,15 @@
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4" :class="{dev: dev}">
             <!-- Brand Logo -->
-            <inertia-link :href="route('home')" class="brand-link" style="margin-left: 5px;" :title="'Startseite (Pfarrplaner '+package.info.version+'-'+package.env+', '+moment(package.date).locale('de').format('LLLL')+')'">
-                <img src="/img/logo/pfarrplaner.png" width="22" height="22" class="brand-image"
-                     style="opacity: .8; margin-top: 7px;"/>
-                <span class="brand-text font-weight-light">Pfarrplaner</span>
-            </inertia-link>
+            <div class="brand-link" style="margin-left: 5px;">
+                <inertia-link class="brand-link-anchor" :href="route('home')"  :title="'Startseite (Pfarrplaner '+package.info.version+'-'+package.env+', '+moment(package.date).locale('de').format('LLLL')+')'">
+                    <img src="/img/logo/pfarrplaner.png" width="22" height="22" class="brand-image"
+                         style="opacity: .8; margin-top: 7px;"/>
+                    <span class="brand-text font-weight-light">Pfarrplaner</span>
+                </inertia-link>
+                <a class="mobile-menu-handle d-md-none" data-widget="pushmenu" href="#" title="Menüleiste schließen"><i class="fas fa-chevron-circle-left"></i></a>
+            </div>
+
 
             <div class="sidebar" v-if="!noNavBar">
                 <!-- Sidebar user panel (optional) -->
@@ -216,5 +220,22 @@ export default {
 
 .nav-item {
     cursor: pointer;
+}
+
+.brand-link a {
+    text-decoration: none;
+    color: rgba(255,255,255,.8);
+}
+
+.brand-link a:hover,
+a.brand-link-anchor:hover,
+a.brand-link-anchor:hover span.brand-text {
+    text-decoration: none !important;
+    color: white;
+}
+
+.mobile-menu-handle {
+    float: right;
+    margin-right: 5px;
 }
 </style>
