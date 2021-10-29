@@ -31,8 +31,9 @@
     <div class="next-services-tab">
         <h2>{{ title }}</h2>
         <p>Angezeigt werden die Gottesdienste der nächsten 2 Monate.</p>
+        <div class="alert alert-info" v-if="services.length == 0">Es sind keine anzuzeigenden Gottesdienste vorhanden.</div>
         <fake-table :columns="[2,4,4,2]" :headers="['Gottesdienst', 'Liturgie', 'Infos zum Gottesdienst', '']"
-                    collapsed-header="Gottesdienste">
+                    collapsed-header="Gottesdienste" v-if="services.length > 0">
             <div v-for="(service,serviceIndex) in services" :key="serviceIndex"
                  :class="{'stripe-odd': (serviceIndex %2 ==0)}" class="row mb-3 p-1">
                 <div class="col-md-2">
