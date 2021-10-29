@@ -227,6 +227,7 @@ class AbstractLiturgySheet
      */
     public function getConfiguration()
     {
+	if (Auth::guest()) return $this->defaultConfig;
         return $this->config = array_replace_recursive(
             $this->defaultConfig,
             Auth::user()->getSetting('liturgySheetConfig_' . $this->getKey()) ?? []
@@ -240,6 +241,7 @@ class AbstractLiturgySheet
     public function setConfiguration(array $data)
     {
         $this->config = array_replace_recursive($this->defaultConfig, $data);
+	if (Auth::guest()) return;
         Auth::user()->setSetting(
             'liturgySheetConfig_' . $this->getKey(),
             $this->config,
