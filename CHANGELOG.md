@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.81.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.80.0...v1.81.0) (2021-10-30)
+
+
+### Features
+
+* Highlight recipient name in instruction text ([75d0e9e](https://github.com/pfarrplaner/pfarrplaner/commits/75d0e9e80a3cf95d2214530da9dfd7b73ac87b2c))
+* More options for A4WordSpecificLiturgySheet ([71fa6a8](https://github.com/pfarrplaner/pfarrplaner/commits/71fa6a87c1c70631aa973f0cced4e6a65b76b7bd))
+
+
+### Bug Fixes
+
+* Item recipients should be individual persons ([05e3932](https://github.com/pfarrplaner/pfarrplaner/commits/05e3932a84037584c2476ffcb4ab3f7ca83fed7b))
+
 ## [1.80.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.79.3...v1.80.0) (2021-10-29)
 
 
