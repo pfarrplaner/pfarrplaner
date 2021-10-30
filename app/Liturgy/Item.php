@@ -90,7 +90,9 @@ class Item extends Model
             if ((!$type) || (!$id)) continue;
             if ($type == 'ministry') {
                 $id = isset(self::replacement[$id]) ? self::replacement[$id] : $id;
-                $p[] = $this->block->service->participantsText($id, true, false);
+                foreach ($this->block->service->participantsByCategory($id) as $user) {
+                    $p[] = $user->fullName(false);
+                }
             } elseif ($type == 'user') {
                 $p[] = User::find($id)->fullName(false);
             } else {
