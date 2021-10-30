@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.81.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.81.0...v1.81.1) (2021-10-30)
+
+
+### Features
+
+* Improved cache-busting for JS ([5038cc2](https://github.com/pfarrplaner/pfarrplaner/commits/5038cc2e615224fec2bff5b5808f0cb90c7f9cff))
+
 ## [1.81.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.80.0...v1.81.0) (2021-10-30)
 
 
