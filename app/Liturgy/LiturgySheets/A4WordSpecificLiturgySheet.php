@@ -61,6 +61,12 @@ class A4WordSpecificLiturgySheet extends AbstractLiturgySheet
     protected $currentRecipient = '';
 
     protected $defaultConfig = [
+        'includeTexts' => 1,
+        'includeTable' => 1,
+        'includeSongTexts' => 1,
+        'includeFullReadings' => 1,
+        'includeAdditionalHeaders' => 1,
+        'includeAllTexts' => 1,
         'recipients' => [],
     ];
 
@@ -71,12 +77,24 @@ class A4WordSpecificLiturgySheet extends AbstractLiturgySheet
 
     public function render(Service $service)
     {
+        if (!$this->config['includeTexts']) {
+            $this->config['includeAllTexts']
+                = $this->config['includeAdditionalHeaders']
+                = $this->config['includeSongTexts']
+                = $this->config['includeFullReadings']
+                = 0;
+        }
+
+        if ($this->config['includeAllTexts']) {
+            $this->config['includeAdditionalHeaders'] = 1;
+        }
+
         $this->service = $service;
 
         $doc = new DefaultWordDocument();
         $this->setProperties($doc);
         $doc->setInstructionsFontStyle(['size' => 8, 'italic' => true]);
-        $doc->getPhpWord()->addTableStyle('Ablauf', ['borderSize' => 6, 'borderColor' => '444444', 'cellMargin' => 80, 'alignment' => JcTable::START, 'cellSpacing' => 50]);
+        $doc->getPhpWord()->addTableStyle('Ablauf', ['borderSize' => 6, 'borderColor' => '444444', 'cellMargin' => 80, 'alignment' => JcTable::START]);
 
         if (count($this->config['recipients'])) {
             $first = true;
@@ -86,25 +104,37 @@ class A4WordSpecificLiturgySheet extends AbstractLiturgySheet
                 $first = false;
                 $this->renderLiturgyTable($doc, $recipient);
 
-                // collect items for this user
-                $items = [];
-                foreach ($this->service->liturgyBlocks as $block) {
-                    foreach ($block->items as $item) {
-                        if (in_array($recipient, $item->recipients())) {
-                            $items[] = $item;
+                if ($this->config['includeTexts']) {
+                    // collect items for this user
+                    $items = [];
+                    $hasHeader = false;
+                    foreach ($this->service->liturgyBlocks as $block) {
+                        foreach ($block->items as $item) {
+                            if ($this->config['includeAllTexts'] || in_array(
+                                    $recipient,
+                                    $item->recipients()
+                                ) || $this->config['includeAdditionalHeaders']) {
+                                if (!$hasHeader) {
+                                    $doc->getSection()->addTitle('Texte für ' . $recipient, 1);
+                                    $hasHeader = true;
+                                }
+                                $doc->getSection()->addTitle($item->title, 2);
+                                if ($this->config['includeAllTexts'] && in_array($recipient, $item->recipients())) {
+                                    $doc->getSection()->addText($recipient, ['italic' => true, 'fgColor' => 'yellow']);
+                                }
+                            }
+                            if ($this->config['includeAllTexts']
+                                || in_array($recipient, $item->recipients())
+                                || ($this->config['includeSongTexts'] && (in_array($item->data_type, ['song', 'psalm']
+                                    )))) {
+                                if (method_exists($this, ($method = 'render' . ucfirst($item->data_type . 'Item')))) {
+                                    $this->$method($doc, $item);
+                                }
+                            }
                         }
                     }
                 }
 
-                if (count($items)) {
-                    $doc->getSection()->addTitle('Texte für '.$recipient, 1);
-                    foreach ($items as $item) {
-                        $doc->getSection()->addTitle($item->title, 2);
-                        if (method_exists($this, ($method = 'render' . ucfirst($item->data_type . 'Item')))) {
-                            $this->$method($doc, $item);
-                        }
-                    }
-                }
             }
         } else {
             $this->renderLiturgyTable($doc);
@@ -121,10 +151,12 @@ class A4WordSpecificLiturgySheet extends AbstractLiturgySheet
         $run->addText($this->service->dateTime()->formatLocalized('%d.%m.%Y, %H:%M Uhr').', '
                       .$this->service->locationText(), $doc->getFontStyle('heading1'));
         $doc->getSection()->addTitle($run, 0);
+
+        if (!$this->config['includeTable']) return;
+
         if ($recipient) {
             $doc->renderNormalText('Ablaufplan für '.$recipient, ['italic' => true], true);
         }
-
 
         foreach ($this->service->liturgyBlocks as $block) {
             $doc->getSection()->addTitle($block->title, 1);

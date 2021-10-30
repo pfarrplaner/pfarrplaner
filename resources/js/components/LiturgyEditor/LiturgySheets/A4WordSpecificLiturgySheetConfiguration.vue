@@ -39,6 +39,17 @@
                             label="Texte für folgende Benutzer ausgeben" v-model="myConfig.recipients"
                             :options="recipients" />
         </fieldset>
+        <fieldset v-if="myConfig.recipients.length > 0">
+            <legend>Folgende Inhalte mit einschließen:</legend>
+            <form-check label="Übersichtstabelle" v-model="myConfig.includeTable" name="config[includeTable]"/>
+            <form-check label="Individuelle Texte für die genannten Personen" v-model="myConfig.includeTexts" name="config[includeTexts]"/>
+            <div v-if="myConfig.includeTexts">
+                <form-check label="Lieder, Psalmen usw. immer mit einschließen" v-model="myConfig.includeSongTexts" name="config[includeSongTexts]"/>
+                <form-check v-if="!myConfig.includeAllTexts" label="Zwischenüberschriften für alle Elemente im Ablauf" v-model="myConfig.includeAdditionalHeaders" name="config[includeAdditionalHeaders]"/>
+                <form-check label="Texte der anderen Mitwirkenden" v-model="myConfig.includeAllTexts" name="config[includeAllTexts]"/>
+                <form-check label="Bei Schriftlesungen Bibeltext mit einschließen" v-model="myConfig.includeFullReadings" name="config[includeFullReadings]"/>
+            </div>
+        </fieldset>
     </liturgy-sheet-configuration-form>
 </template>
 
