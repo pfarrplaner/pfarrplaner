@@ -100,6 +100,7 @@ class A4WordSpecificLiturgySheet extends AbstractLiturgySheet
             $first = true;
             foreach ($this->config['recipients'] as $recipient) {
                 $this->currentRecipient = $recipient;
+                $doc->setRecipient($recipient);
                 if (!$first) $doc->getSection()->addPageBreak();
                 $first = false;
                 $this->renderLiturgyTable($doc, $recipient);

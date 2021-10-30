@@ -52,6 +52,7 @@ class DefaultWordDocument
 
     protected $instructionsFontStyle = ['size' => 8, 'italic' => true];
     protected $instructionsParagraphStyle = [];
+    protected $recipient = null;
 
     public const NORMAL = 'Standard';
     public const BLOCKQUOTE = 'Zitat';
@@ -313,7 +314,12 @@ class DefaultWordDocument
                     $paragraph = trim(str_replace('[' . $keyWord . ']', '', $paragraph));
                     $paragraph = strtr($paragraph, ["\r" => '', "\n" => '', '>>' => "\t"]);
                 }
-                $textRun->addText($keyWord . "\t", $this->getInstructionsFontStyle());
+                if ($keyWord == $this->recipient) {
+                    // highlight for current recipient
+                    $textRun->addText($keyWord . "\t", array_merge($this->getInstructionsFontStyle(), ['fgColor' => 'yellow']));
+                } else {
+                    $textRun->addText($keyWord . "\t", $this->getInstructionsFontStyle());
+                }
                 if (trim($paragraph)) {
                     $this->renderWithLineBreaks($textRun, $paragraph, $fontOption);
                 }
@@ -404,6 +410,22 @@ class DefaultWordDocument
     public function setInstructionsParagraphStyle(array $instructionsParagraphStyle): void
     {
         $this->instructionsParagraphStyle = $instructionsParagraphStyle;
+    }
+
+    /**
+     * @return null
+     */
+    public function getRecipient()
+    {
+        return $this->recipient;
+    }
+
+    /**
+     * @param null $recipient
+     */
+    public function setRecipient($recipient): void
+    {
+        $this->recipient = $recipient;
     }
 
 
