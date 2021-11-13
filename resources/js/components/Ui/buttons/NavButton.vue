@@ -30,7 +30,7 @@
 <template>
     <button class="btn" :class="'btn-'+type" :title="title" @click="$emit('click')">
         <span v-if="icon" class="d-inline d-md-none fa" :class="'fa-'+icon"></span>
-        <span v-if="icon" :class="icon ? 'd-none d-md-inline' : ''"><slot /></span>
+        <span :class="icon ? 'd-none d-md-inline' : ''"><slot /></span>
     </button>
 </template>
 

@@ -76,6 +76,7 @@ class Sermon extends Model
         usort($dates, function($a, $b) {
             return ((new Carbon($a)) < (new Carbon($b))) ? 1 : -1;
         });
+        if (!isset($dates[0])) return null;
         return (string)$dates[0];
     }
 

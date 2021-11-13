@@ -1375,6 +1375,7 @@ class Service extends Model
                 }
             }
         }
+        dd($participants);
         $this->participants()->sync([]);
         if (count($participants)) {
             foreach ($participants as $category => $participant) {

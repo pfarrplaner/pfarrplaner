@@ -51,6 +51,7 @@ Route::get('/gottesdienste/meine/letzte-aktualisierung', [ServiceController::cla
 Route::get('/gottesdienst/{service:slug}', [ServiceController::class, 'edit'])->name('service.edit');
 Route::patch('/gottesdienst/{service:slug}', [ServiceController::class, 'update'])->name('service.update');
 Route::delete('/gottesdienst/{service:slug}', [ServiceController::class, 'destroy'])->name('service.destroy');
+Route::get('/gottesdienst-daten/{service:slug}', [ServiceController::class, 'data'])->name('service.data');
 
 // additional service routes
 Route::get('/gottesdienst/{service:slug}/ical', [ServiceController::class, 'ical'])->name('service.ical');

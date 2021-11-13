@@ -30,6 +30,12 @@ class ServiceUpdated
         Log::debug('ServiceUpdated called on service #'.$service->id);
         $this->service = $service;
         $this->originalParticipants = $originalParticipants;
+
+        // update youtube if necessary
+        if (($service->youtube_url != '') && ($service->city->google_access_token != '')) {
+            Broadcast::get($service)->update();
+        }
+
     }
 
 }

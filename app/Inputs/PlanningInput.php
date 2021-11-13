@@ -32,18 +32,21 @@ namespace App\Inputs;
 
 use App\City;
 use App\Day;
+use App\Events\ServiceUpdated;
 use App\Location;
-use App\Mail\ServiceUpdated;
 use App\Participant;
 use App\Service;
 use App\Subscription;
+use App\Team;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class PlanningInput
@@ -71,9 +74,8 @@ class PlanningInput extends AbstractInput
      */
     public function setup(Request $request)
     {
-        $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->writableCities;
+        $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
 
         $ministries = $this->getAvailableMinistries(
             Participant::all()
@@ -81,16 +83,8 @@ class PlanningInput extends AbstractInput
                 ->unique()
         );
 
-        return view(
-            $this->getViewName('setup'),
-            [
-                'input' => $this,
-                'minDate' => $minDate,
-                'maxDate' => $maxDate,
-                'cities' => $cities,
-                'ministries' => $ministries,
-            ]
-        );
+        return Inertia::render('Inputs/Planning/PlanningInputSetup', compact('cities', 'ministries', 'locations'));
+
     }
 
     /**
@@ -137,38 +131,45 @@ class PlanningInput extends AbstractInput
      */
     public function input(Request $request)
     {
-        $request->validate(
+        \Debugbar::disable();
+        $setup = $request->validate(
             [
-                'year' => 'int|required',
-                'city' => 'int|required',
+                'from' => 'required|date_format:d.m.Y',
+                'to' => 'required|date_format:d.m.Y',
+                'city' => 'required|exists:cities,id',
+                'locations.*' => 'nullable|exists:locations,id',
+                'ministries.*' => 'required|string',
             ]
         );
 
-        $city = City::find($request->get('city'));
+        $city = City::find($setup['city']);
         $locations = Location::where('city_id', $city->id)->get();
-        $year = $request->get('year');
 
-        $services = Service::with('day', 'location', 'participants')
-            ->select('services.*')
+        $teams = Team::with('users')->where('city_id', $city->id)->get();
+
+         $query = Service::with([])
+            ->select('services.slug')
             ->join('days', 'services.day_id', '=', 'days.id')
             ->where('city_id', $city->id)
-            ->where('days.date', '>=', $year . '-01-01')
-            ->where('days.date', '<=', $year . '-12-31')
+            ->where('days.date', '>=', Carbon::createFromFormat('d.m.Y', $setup['from']))
+            ->where('days.date', '<=', Carbon::createFromFormat('d.m.Y', $setup['to']))
             ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
-            ->get();
+            ->orderBy('time', 'ASC');
 
+        if (count($setup['locations'] ?? [])) {
+            $query->whereIn('services.location_id', $setup['locations']);
+        }
+
+        $serviceSlugs = $query->get()->pluck('slug');
 
         $users = User::all();
 
-        $ministries = $this->getAvailableMinistries($request->get('ministries') ?: []);
+        $ministries = $this->getAvailableMinistries($setup['ministries'] ?: []);
 
 
         $input = $this;
-        return view(
-            $this->getInputViewName(),
-            compact('input', 'city', 'services', 'year', 'locations', 'users', 'ministries')
-        );
+
+        return Inertia::render('Inputs/Planning/PlanningInputForm', compact('serviceSlugs', 'users', 'ministries', 'teams', 'city'));
     }
 
     /**
@@ -177,34 +178,42 @@ class PlanningInput extends AbstractInput
      */
     public function save(Request $request)
     {
-        $services = $request->get('service') ?: [];
+        $data = $request->validate([
+            'slug' => 'required|string|exists:services,slug',
+            'ministries' => 'required',
+                                   ]);
 
-        foreach ($services as $id => $data) {
-            $service = Service::find($id);
-            if (null !== $service) {
-                // get old data set for comparison
-                $service->trackChanges();
+        $service = Service::where('slug', $data['slug'])->first();
+        $service->trackChanges();
+        $originalParticipants = $service->participants;
 
-                if (isset($data['ministries'])) {
-                    // participants first
-                    foreach ($data['ministries'] as $ministry => $people) {
-                        $participants = [];
-                        foreach ($people as $person) {
-                            $participant = User::createIfNotExists($person);
-                            $participants[$participant]['category'] = $ministry;
-                        }
-                        $service->ministryParticipants($ministry)->sync($participants);
-                    }
-                    unset($data['ministries']);
-                }
+        // build existing participants table
+        $participants = [];
+        foreach ($service->participants as $participant) {
+            $participants[$participant->pivot->category][$participant->id] = ['category' => $participant->pivot->category];
+        }
 
-
-                $service->update($data);
-                if ($service->isChanged()) {
-                    Subscription::send($service, ServiceUpdated::class);
-                }
+        // replace with new ministry settings
+        foreach ($data['ministries'] as $ministry => $people) {
+            $participants[$ministry] = [];
+            foreach ($people as $person) {
+                $id = is_array($person) ? $person['id'] : $person;
+                $participants[$ministry][$id] = ['category' => $ministry];
             }
         }
-        return redirect()->route('calendar')->with('success', 'Der Plan wurde gespeichert.');
+
+        $service->participants()->sync([]);
+        if (count($participants)) {
+            foreach ($participants as $category => $participant) {
+                $service->participants()->attach($participant);
+            }
+        }
+
+        if ($service->isChanged()) {
+            $service->storeDiff();
+            event(new ServiceUpdated($service, $originalParticipants));
+        }
+
+        return response()->json($service->slug);
     }
 }

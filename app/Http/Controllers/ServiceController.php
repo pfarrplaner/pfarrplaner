@@ -40,6 +40,7 @@ use App\Events\ServiceBeforeUpdate;
 use App\Events\ServiceCreated;
 use App\Events\ServiceUpdated;
 use App\Http\Requests\ServiceRequest;
+use App\Liturgy;
 use App\Liturgy\LiturgySheets\LiturgySheets;
 use App\Location;
 use App\Service;
@@ -53,6 +54,7 @@ use App\Vacations;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -197,12 +199,6 @@ class ServiceController extends Controller
             $service->storeDiff();
             event(new ServiceUpdated($service, $originalParticipants));
             $success = 'Der Gottesdienst wurde mit geänderten Angaben gespeichert.';
-
-            // update YouTube as well (but only if there's a connected account for this city
-            if (($service->youtube_url != '') && ($service->city->google_access_token != '')) {
-                Broadcast::get($service)->update();
-                $success .= ' Diese wurden automatisch auch auf YouTube aktualisiert.';
-            }
         }
 
         $service->refresh();
@@ -355,4 +351,21 @@ class ServiceController extends Controller
         $attachment->delete();
         return response()->json($service->attachments);
     }
+
+    /**
+     * @param Service $service
+     * @return JsonResponse
+     */
+    public function data(Service $service)
+    {
+        $service->load(
+            ['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms', 'day', 'tags', 'serviceGroups']
+        );
+        $service->liturgy = Liturgy::getDayInfo($service->day);
+        if (isset($liturgy['title']) && ($service->day->name == '')) {
+            $service->day->name = $service->liturgy['title'];
+        }
+        return response()->json($service);
+    }
+
 }
