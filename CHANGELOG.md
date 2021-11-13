@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.82.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.81.1...v1.82.0) (2021-11-13)
+
+
+### Features
+
+* Completely rewrote PlanningInput ([3504396](https://github.com/pfarrplaner/pfarrplaner/commits/3504396c9578f275f1d3860ae10135bfabc74981))
+
 ### [1.81.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.81.0...v1.81.1) (2021-10-30)
 
 
