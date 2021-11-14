@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.82.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.0...v1.82.1) (2021-11-14)
+
+
+### Features
+
+* Prevent opening PlanningInputForm without any ministries selected ([57e6a67](https://github.com/pfarrplaner/pfarrplaner/commits/57e6a67812c6f71b9822544be14e99f9cd901bbd))
+
+
+### Bug Fixes
+
+* Debug output prevents saving services ([d1333a9](https://github.com/pfarrplaner/pfarrplaner/commits/d1333a9ae4a7bac0e11d290e0888a8cdae4bb47c))
+
 ## [1.82.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.81.1...v1.82.0) (2021-11-13)
 
 
