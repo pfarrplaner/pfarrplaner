@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <button class="btn" :class="'btn-'+type" :title="title" @click="$emit('click')">
+    <button class="btn" :class="'btn-'+type" :title="title" @click="$emit('click')" :disabled="disabled">
         <span v-if="icon" class="d-inline d-md-none fa" :class="'fa-'+icon"></span>
         <span :class="icon ? 'd-none d-md-inline' : ''"><slot /></span>
     </button>
@@ -44,6 +44,7 @@ export default {
         },
         icon: String,
         title: String,
+        disabled: Boolean,
     },
 }
 </script>

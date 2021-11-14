@@ -30,7 +30,10 @@
 <template>
     <admin-layout title="Planungstabelle konfigurieren">
         <template slot="navbar-left">
-            <nav-button type="primary" title="Planungstabelle anzeigen" icon="table" @click="showTable">Planungstabelle anzeigen</nav-button>
+            <nav-button type="primary" title="Planungstabelle anzeigen" icon="table"
+                        :disabled="setup.ministries.length == 0"
+                        :title="setup.ministries.length ? 'Planungstabelle erstellen und anzeigen' : 'Du musst mindestens einen Dienst auswählen, um eine Planungstabelle erstellen zu können.'"
+                        @click="showTable">Planungstabelle anzeigen</nav-button>
         </template>
         <form-selectize label="Planungstabelle für folgende Kirchengemeinde erstellen" :options="cities" v-model="setup.city" />
         <form-selectize label="Auf folgende Orte beschränken" placeholder="Leer lassen für alle Orte"
@@ -41,7 +44,9 @@
         <form-group name="to" label="Gottesdienste anzeigen bis">
             <date-picker v-model="setup.to" :config="myDatePickerConfig" />
         </form-group>
-        <form-selectize name="ministries" label="Folgende Dienste anzeigen" :options="myMinistries" v-model="setup.ministries" multiple/>
+        <form-selectize name="ministries" label="Folgende Dienste anzeigen"
+                        :help="setup.ministries.length ? '' : 'Bitte wähle mindestens einen Dienst aus.'"
+                        :options="myMinistries" v-model="setup.ministries" multiple/>
     </admin-layout>
 </template>
 
