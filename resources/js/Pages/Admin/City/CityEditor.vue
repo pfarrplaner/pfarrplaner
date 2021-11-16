@@ -111,7 +111,7 @@
                     <tab id="integrations" :active-tab="activeTab">
                         <div class="row">
                             <div class="col-sm-1">
-                                <img class="img-fluid img-responsive" src="https://www.pfarrplaner.de/img/external/konfiapp.png" />
+                                <img class="img-fluid img-responsive" src="https://www.pfarrplaner.de/img/external/konfiapp.png?v=2" />
                             </div>
                             <div class="col-sm-11">
                                 <h4>KonfiApp</h4>
