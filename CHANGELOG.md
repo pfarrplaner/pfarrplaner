@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.82.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.1...v1.82.2) (2021-11-18)
+
+
+### Bug Fixes
+
+* Failure to parse registration start/end dates ([c391dec](https://github.com/pfarrplaner/pfarrplaner/commits/c391dec85ac7815965e51e2e4ddf24e7d49a30c2))
+
 ### [1.82.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.0...v1.82.1) (2021-11-14)
 
 
