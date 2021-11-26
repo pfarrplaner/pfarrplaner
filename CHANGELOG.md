@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.82.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.2...v1.82.3) (2021-11-26)
+
+
+### Bug Fixes
+
+* ServiceUpdated fails due to missing import ([844f9c3](https://github.com/pfarrplaner/pfarrplaner/commits/844f9c37a7bfa07c7c42767fe51d05a65ee8c655))
+
 ### [1.82.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.1...v1.82.2) (2021-11-18)
 
 
