@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Broadcast;
 use App\Service;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
