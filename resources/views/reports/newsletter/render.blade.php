@@ -22,6 +22,7 @@
                             {{ $event->timeText(true, '.') }}</td>
                         <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0 30px 0 0;" valign="top">
                             <strong>{{ $event->titleText(false, false) }}</strong> ({{ $event->locationText() }})
+                            @if ($event->controlled_access) @component('components.service.controlledAccess', ['service' => $event]) @endcomponent @endif
                         </td>
                         <td style="font-size: 12px; font-family: verdana, arial, helvetica, sans-serif; padding: 0;" valign="top">
                             <strong>{{ $event->participantsText('P') }}</strong></td>
