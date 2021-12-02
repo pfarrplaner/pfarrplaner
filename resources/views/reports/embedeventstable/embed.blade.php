@@ -73,6 +73,7 @@
                                     <b>{{ ($event->title ?: 'Gottesdienst') }}</b> @if($event->participantsText('P') != '')
                                         ({{ $event->participantsText('P') }})@endif
                                     @if($event->descriptionText())<br/>{{ $event->descriptionText() }}@endif
+                                    @if($event->controlled_access) @component('components.service.controlledAccess', ['service' => $event]) @endcomponent @endif
                                     @if ($event->offering_goal)<br/>Opfer: {{ $event->offering_goal }}@endif
                                     <div>
                                     @if ($event->songsheet) <span class="small-button" href="{{ $event->songsheetUrl }}" title="Klicken Sie hier, um das Liedblatt herunterzuladen"><span class="fa fa-file-pdf"></span> Liedblatt</span> @endif

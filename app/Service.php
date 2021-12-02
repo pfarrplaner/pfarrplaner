@@ -191,6 +191,7 @@ class Service extends Model
         'communiapp_id',
         'communiapp_listing_start',
         'slug',
+        'controlled_access',
     ];
 
     /**

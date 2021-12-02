@@ -52,6 +52,9 @@
                         <td>{{ $service->locationText() }}</td>
                     @endif
                     <td>{{ $service->descriptionText() }}
+                        @if($service->controlled_access)
+                            @component('components.service.controlledAccess', ['service' => $service]) @endcomponent
+                        @endif
                         @if (is_object($service->location) && ($service->location->instructions != ''))@if ($service->descriptionText()!='')
                             <br/>@endif
                         {!! nl2br($service->location->instructions) !!}<br/>

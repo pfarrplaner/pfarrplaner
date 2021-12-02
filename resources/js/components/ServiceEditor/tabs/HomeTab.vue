@@ -46,8 +46,9 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                <form-check name="baptism" label="Dies ist ein Taufgottesdienst." v-model="service.baptism"/>
-                <form-check name="eucharist" label="Dies ist ein Abendmahlsgottesdienst." v-model="service.eucharist"/>
+                <form-selectize name="controlled_access" :options="controlledAccessOptions"
+                                label="Zugangsbeschränkung"
+                                v-model="myService.controlled_access" />
             </div>
             <div v-if="myService.city.konfiapp_apikey" class="col-md-4">
                 <konfi-app-event-type-select name="konfiapp_event_type" label="Veranstaltungsart in der KonfiApp"
@@ -59,6 +60,12 @@
                 <form-group label="In der CommuniApp anzeigen ab" help="Leer lassen für den Standard (8 Tage vor Beginn)">
                     <date-picker v-model="myService.communiapp_listing_start" :config="myDatePickerConfig" />
                 </form-group>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <form-check name="baptism" label="Dies ist ein Taufgottesdienst." v-model="service.baptism"/>
+                <form-check name="eucharist" label="Dies ist ein Abendmahlsgottesdienst." v-model="service.eucharist"/>
             </div>
         </div>
         <hr/>
@@ -156,6 +163,15 @@ export default {
             myLocation: this.service.location || this.service.special_location,
             myDatePickerConfig: myDatePickerConfig,
             locationUpdating: false,
+            controlledAccessOptions: [
+                { id: 0, name: 'keine Zugangsbeschränkung'},
+                { id: 1, name: '3G'},
+                { id: 2, name: '2G'},
+                { id: 3, name: '2G+'},
+                { id: 4, name: 'Schnelltest für alle Besucher'},
+                { id: 5, name: 'Schnelltest empfohlen'},
+                { id: 6, name: 'Geschlossene Gruppe'},
+            ]
         }
     },
     methods: {

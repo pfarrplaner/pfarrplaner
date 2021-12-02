@@ -116,6 +116,7 @@ class ServiceRequest extends FormRequest
             'offering_text' => 'nullable|string',
             'communiapp_id' => 'nullable|int',
             'communiapp_listing_start' => 'nullable',
+            'controlled_access' => 'nullable|int',
         ];
     }
 

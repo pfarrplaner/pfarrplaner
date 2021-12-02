@@ -51,6 +51,7 @@
             <a :href="service.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span class="fab fa-youtube"></span></a>
             <a v-if="service.city.youtube_channel_url" :href="service.liveDashboardUrl" target="_blank" class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="fa fa-video"></span></a>
         </span>
+        <controlled-access v-if="service.controlled_access" :service="service" />
         <div v-if="(service.titleText != 'Gottesdienst') && (service.titleText != 'GD') && (service.funerals.length == 0)" class="service-description">{{ service.titleText }}</div>
 
         <div class="service-description" v-if="service.funerals.length > 0">
@@ -77,7 +78,9 @@
 <script>
 
 
+import ControlledAccess from "./Element/ControlledAccess";
 export default {
+    components: {ControlledAccess},
     props: ['service'],
     computed: {
     },
