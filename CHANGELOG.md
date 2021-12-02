@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.84.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.83.0...v1.84.0) (2021-12-02)
+
+
+### Features
+
+* Add controlled access info to newsletter report ([9cf6064](https://github.com/pfarrplaner/pfarrplaner/commits/9cf60646e6104df72aed8e1c723d36eb0b598460))
+
 ## [1.83.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.3...v1.83.0) (2021-12-02)
 
 
