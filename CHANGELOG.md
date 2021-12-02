@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.83.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.3...v1.83.0) (2021-12-02)
+
+
+### Features
+
+* Allow specifying controlled access level (3G, 2G, 2G+, ...) for services ([7ecd97b](https://github.com/pfarrplaner/pfarrplaner/commits/7ecd97bdb06f9d390829e6ba2ffb35b4bc03b5ab))
+
 ### [1.82.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.82.2...v1.82.3) (2021-11-26)
 
 
