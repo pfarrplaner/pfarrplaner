@@ -281,6 +281,7 @@
                                             </select>
                                         </div>
                                     </quill-editor>
+                                    <text-stats :text="funeral.life" />
                                 </div>
 
                             </div>
@@ -336,11 +337,13 @@ import FakeAttachment from "../../components/Ui/elements/FakeAttachment";
 import RelativeDate from "../../libraries/RelativeDate";
 import FormCheck from "../../components/Ui/forms/FormCheck";
 import DimissorialFormPart from "../../components/RiteEditors/DimissorialFormPart";
+import TextStats from "../../components/LiturgyEditor/Elements/TextStats";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        TextStats,
         DimissorialFormPart,
         FormCheck,
         FakeAttachment,

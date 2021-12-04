@@ -89,6 +89,7 @@
                         <p v-if="editedElement.data.psalm.intro"><i>{{ editedElement.data.psalm.intro }}</i></p>
                         <nl2br v-if="editedElement.data.psalm.text" tag="p" :text="editedElement.data.psalm.text" />
                     </div>
+                    <text-stats :text="editedElement.data.psalm.text" />
                 </div>
             </div>
             <div class="form-group">
@@ -105,10 +106,12 @@
 import Nl2br from 'vue-nl2br';
 import Selectize from 'vue2-selectize';
 import FormSelectize from "../../Ui/forms/FormSelectize";
+import TextStats from "../Elements/TextStats";
 
 export default {
     name: "PsalmEditor",
     components: {
+        TextStats,
         Nl2br,
         Selectize,
         FormSelectize,

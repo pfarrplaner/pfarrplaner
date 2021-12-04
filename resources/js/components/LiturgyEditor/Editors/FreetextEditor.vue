@@ -37,6 +37,7 @@
                 <div class="form-group">
                     <label for="description">Beschreibender Text</label>
                     <textarea class="form-control" v-model="editedElement.data.description"></textarea>
+                    <text-stats :text="editedElement.data.description" />
                 </div>
                 <div class="help">
                     <div class="help-title">Verfügbare Platzhalter:</div>
@@ -56,8 +57,10 @@
 </template>
 
 <script>
+import TextStats from "../Elements/TextStats";
 export default {
     name: "FreetextEditor",
+    components: {TextStats},
     props: {
         element: Object,
         service: Object,

@@ -65,6 +65,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="liturgical-text-quote" v-html="quote"/>
+                    <text-stats :text="quote" />
                 </div>
             </div>
             <div class="form-group">
@@ -153,10 +154,12 @@
 import Nl2br from 'vue-nl2br';
 import Selectize from 'vue2-selectize';
 import Modal from "../../Ui/modals/Modal";
+import TextStats from "../Elements/TextStats";
 
 export default {
     name: "SongEditor",
     components: {
+        TextStats,
         Nl2br,
         Selectize,
         Modal,

@@ -128,13 +128,7 @@
                                 </div>
                             </quill-editor>
 
-                            <div v-if="editedSermon.text.length > 0">
-                                <small class="form-text text-muted">{{
-                                        editedSermon.text.length.toLocaleString('de-DE')
-                                    }} Zeichen &middot;
-                                    {{ wordCount().toLocaleString('de-DE') }} Wörter &middot;
-                                    Voraussichtliche Redezeit: {{ calculatedSpeechTime() }}</small>
-                            </div>
+                            <text-stats :text="editedSermon.text" />
 
                         </div>
                         <div class="row">
@@ -205,10 +199,12 @@ import '../components/SermonEditor/quill.css';
 import {quillEditor} from 'vue-quill-editor';
 import FormFileUploader from "../components/Ui/forms/FormFileUploader";
 import FormImageAttacher from "../components/Ui/forms/FormImageAttacher";
+import TextStats from "../components/LiturgyEditor/Elements/TextStats";
 
 export default {
     name: "sermonEditor",
     components: {
+        TextStats,
         FormImageAttacher,
         FormFileUploader,
         quillEditor,
@@ -308,27 +304,6 @@ export default {
                     preserveState: false,
                 });
             }
-        },
-        wordCount() {
-            return this.editedSermon.text.trim().split(/\s+/).length;
-        },
-        calculatedSpeechTime() {
-            var speechTime = (this.wordCount()) / 110 * 60;
-            var sec_num = parseInt(speechTime, 10); // don't forget the second param
-            var hours = Math.floor(sec_num / 3600);
-            var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-            var seconds = sec_num - (hours * 3600) - (minutes * 60);
-
-            if (hours < 10) {
-                hours = "0" + hours;
-            }
-            if (minutes < 10) {
-                minutes = "0" + minutes;
-            }
-            if (seconds < 10) {
-                seconds = "0" + seconds;
-            }
-            return hours + ':' + minutes + ':' + seconds;
         },
         uncoupleService(service) {
             if ((this.services.length > 1) || confirm('Diese Predigt ist nur mit einem Gottesdienst verbunden. Wenn du diese Verbindung trennst, wird die Predigt gelöscht. Willst du das wirklich?')) {

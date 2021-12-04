@@ -108,8 +108,11 @@
                         <button class="btn btn-sm btn-light" @click.prevent="openNewTextForm">Neuer Text</button>
                     </div>
                 </div>
-                <div class="col-md-3 liturgical-text-quote">
-                    <nl2br tag="div" :text="editedElement.data.text" />
+                <div class="col-md-3">
+                    <div class="liturgical-text-quote">
+                        <nl2br tag="div" :text="editedElement.data.text" />
+                    </div>
+                    <text-stats class="mt-3" :text="editedElement.data.text" />
                 </div>
             </div>
             <div class="form-group" v-if="service">
@@ -167,10 +170,12 @@ import Nl2br from 'vue-nl2br';
 import DefaultFields from "./Elements/DefaultFields";
 import Selectize from "vue2-selectize";
 import Modal from "../../Ui/modals/Modal";
+import TextStats from "../Elements/TextStats";
 
 export default {
     name: "LiturgicEditor",
     components: {
+        TextStats,
         Modal,
         Nl2br,
         DefaultFields,
