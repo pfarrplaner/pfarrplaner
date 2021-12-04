@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.85.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.84.0...v1.85.0) (2021-12-04)
+
+
+### Features
+
+* Provide time calc for all liturgy text fields + story field in funeral editor ([39ea3ae](https://github.com/pfarrplaner/pfarrplaner/commits/39ea3ae1a8e901f58531f0999ed3476e52b628ed)), closes [#173](https://github.com/pfarrplaner/pfarrplaner/issues/173)
+
 ## [1.84.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.83.0...v1.84.0) (2021-12-02)
 
 
