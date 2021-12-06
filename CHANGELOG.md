@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.86.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.85.0...v1.86.0) (2021-12-06)
+
+
+### Features
+
+* new KonfiApp brand asset ([#168](https://github.com/pfarrplaner/pfarrplaner/issues/168)) ([120408a](https://github.com/pfarrplaner/pfarrplaner/commits/120408ae1965fd9538880a2c0a143ab14341d704))
+* Show timing info in LiturgyTree ([8f1a3f7](https://github.com/pfarrplaner/pfarrplaner/commits/8f1a3f76da467bb5d8455918e476edbe5f643b74))
+
 ## [1.85.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.84.0...v1.85.0) (2021-12-04)
 
 
