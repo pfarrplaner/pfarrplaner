@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.87.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.86.0...v1.87.0) (2021-12-06)
+
+
+### Bug Fixes
+
+* Add missing time fields to other LiturgyItem types ([6e15eab](https://github.com/pfarrplaner/pfarrplaner/commits/6e15eab374cb444e016bc7ac8423b72aba5f3239))
+
 ## [1.86.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.85.0...v1.86.0) (2021-12-06)
 
 
