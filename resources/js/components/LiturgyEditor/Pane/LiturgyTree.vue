@@ -135,7 +135,7 @@
                                         <span class="fa fa-user" :title="dataReplacerTitle(item)"></span>
                                     </span>
                                 </div>
-                                <div class="col-sm-3 responsible-list"
+                                <div class="col-sm-2 responsible-list"
                                      @click="editResponsibles(blockIndex, itemIndex, item)">
                                     <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
                                                  :ministries="ministries"/>
@@ -152,7 +152,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-2 text-right" v-if="editable">
+                                <div class="col-sm-2">
+                                    <div class="row">
+                                        <item-starting-time class="col-6" :item="item" :service="service" />
+                                        <item-text-stats class="col-6" :item="item" :service="service" />
+                                    </div>
+                                </div>
+                                <div class="col-1 text-right" v-if="editable">
                                     <button @click.stop="deleteItem(blockIndex, itemIndex)"
                                             class="btn btn-sm btn-danger" title="Element löschen">
                                         <span class="fa fa-trash"></span>
@@ -165,6 +171,13 @@
                     </draggable>
                 </div>
             </draggable>
+            <div class="row">
+                <div class="col-sm-7"></div>
+                <div class="col-sm-2" style="border-top: solid 1px lightgray;">
+                    <small>Berechnetes Ende:</small>
+                </div>
+                <item-starting-time class="col-sm-2" style="border-top: solid 1px lightgray;" :item="{id: -1}" :service="service" />
+            </div>
         </div>
         <div class="card-footer">
             <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt
@@ -217,10 +230,14 @@ import FormSelectize from "../../Ui/forms/FormSelectize";
 import FullTextLiturgySheetConfiguration from "../LiturgySheets/FullTextLiturgySheetConfiguration";
 import A4WordSpecificLiturgySheetConfiguration from "../LiturgySheets/A4WordSpecificLiturgySheetConfiguration";
 import SongPPTLiturgySheetConfiguration from "../LiturgySheets/SongPPTLiturgySheetConfiguration";
+import ItemTextStats from "../Elements/ItemTextStats";
+import ItemStartingTime from "../Elements/ItemStartingTime";
 
 export default {
     name: "LiturgyTree",
     components: {
+        ItemStartingTime,
+        ItemTextStats,
         FormSelectize,
         LiturgySheetLink,
         Modal,

@@ -46,6 +46,7 @@
                         <div class="col-10">{{ marker }}</div>
                     </div>
                 </div>
+            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern</button>
                 <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">
@@ -58,9 +59,10 @@
 
 <script>
 import TextStats from "../Elements/TextStats";
+import TimeFields from "./Elements/TimeFields";
 export default {
     name: "FreetextEditor",
-    components: {TextStats},
+    components: {TimeFields, TextStats},
     props: {
         element: Object,
         service: Object,

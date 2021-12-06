@@ -28,32 +28,30 @@
   -->
 
 <template>
-    <div v-if="text.length > 0">
-        <small class="form-text text-muted">{{
+    <div v-if="text && (text.length > 0)">
+        <small class="form-text text-muted"><span v-if="!timeOnly">{{
                 text.length.toLocaleString('de-DE')
             }} Zeichen &middot;
             {{ wordCount().toLocaleString('de-DE') }} Wörter &middot;
-            Voraussichtliche Redezeit: {{ calculatedSpeechTime() }}</small>
+            Voraussichtliche Redezeit: </span>{{ calculatedSpeechTime() }}</small>
     </div>
 </template>
 
 <script>
 export default {
     name: "TextStats",
-    props: ['text'],
+    props: ['text', 'timeOnly', 'hideHours', 'wpm'],
     methods: {
         wordCount() {
             return this.text.trim().split(/\s+/).length;
         },
-        calculatedSpeechTime() {
-            var speechTime = (this.wordCount()) / 110 * 60;
-            var sec_num = parseInt(speechTime, 10); // don't forget the second param
+        formatTime(sec_num) {
             var hours = Math.floor(sec_num / 3600);
             var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
             var seconds = sec_num - (hours * 3600) - (minutes * 60);
 
             if (hours < 10) {
-                hours = "0" + hours;
+                var hoursText = "0" + hours;
             }
             if (minutes < 10) {
                 minutes = "0" + minutes;
@@ -61,7 +59,13 @@ export default {
             if (seconds < 10) {
                 seconds = "0" + seconds;
             }
-            return hours + ':' + minutes + ':' + seconds;
+            return (this.hideHours ? (hours > 0 ? hoursText+':' : '') : hourText+':') + minutes + ':' + seconds;
+        },
+        calculatedSpeechTime() {
+            const defaultWPM = 110;
+            const wpm = this.wpm || defaultWPM;
+            const speechTime = (this.wordCount()) / wpm * 60;
+            return this.formatTime(parseInt(speechTime, 10));
         },
     }
 }

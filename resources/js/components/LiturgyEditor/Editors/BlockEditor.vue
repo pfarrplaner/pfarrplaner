@@ -31,6 +31,7 @@
     <form @submit.prevent="save">
         <div class="liturgy-item-block-editor">
             <default-fields :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
+            <time-fields :service="service" :element="editedElement" :agenda-mode="agendaMode" />
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern</button>
                 <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">Abbrechen
@@ -43,10 +44,12 @@
 
 <script>
 import DefaultFields from "./Elements/DefaultFields";
+import TimeFields from "./Elements/TimeFields";
 
 export default {
     name: "BlockEditor",
     components: {
+      TimeFields,
         DefaultFields,
     },
     props: {
