@@ -38,6 +38,7 @@
                     <label for="description">Bibelstelle</label>
                     <input class="form-control" type="text" v-model="editedElement.data.reference"></input>
                 </div>
+            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern</button>
                 <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">
@@ -49,8 +50,10 @@
 </template>
 
 <script>
+import TimeFields from "./Elements/TimeFields";
 export default {
     name: "ReadingEditor",
+    components: {TimeFields},
     props: {
         element: Object,
         service: Object,

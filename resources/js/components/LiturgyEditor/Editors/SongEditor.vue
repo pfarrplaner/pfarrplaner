@@ -68,6 +68,7 @@
                     <text-stats :text="quote" />
                 </div>
             </div>
+            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern
                 </button>
@@ -155,10 +156,12 @@ import Nl2br from 'vue-nl2br';
 import Selectize from 'vue2-selectize';
 import Modal from "../../Ui/modals/Modal";
 import TextStats from "../Elements/TextStats";
+import TimeFields from "./Elements/TimeFields";
 
 export default {
     name: "SongEditor",
     components: {
+        TimeFields,
         TextStats,
         Nl2br,
         Selectize,

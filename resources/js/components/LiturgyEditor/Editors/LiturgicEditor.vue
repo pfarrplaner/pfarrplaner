@@ -115,6 +115,7 @@
                     <text-stats class="mt-3" :text="editedElement.data.text" />
                 </div>
             </div>
+            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
             <div class="form-group" v-if="service">
                 <button class="btn btn-primary" @click="save">Speichern</button>
                 <inertia-link class="btn btn-secondary"
@@ -171,10 +172,12 @@ import DefaultFields from "./Elements/DefaultFields";
 import Selectize from "vue2-selectize";
 import Modal from "../../Ui/modals/Modal";
 import TextStats from "../Elements/TextStats";
+import TimeFields from "./Elements/TimeFields";
 
 export default {
     name: "LiturgicEditor",
     components: {
+        TimeFields,
         TextStats,
         Modal,
         Nl2br,

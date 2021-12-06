@@ -92,6 +92,7 @@
                     <text-stats :text="editedElement.data.psalm.text" />
                 </div>
             </div>
+            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
             <div class="form-group">
                 <button class="btn btn-primary" @click="save" :disabled="psalmIsDirty" :title="psalmIsDirty ? 'Du musst zuerst die Änderungen am Lied speichern.' : ''">Speichern</button>
                 <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">
@@ -107,10 +108,12 @@ import Nl2br from 'vue-nl2br';
 import Selectize from 'vue2-selectize';
 import FormSelectize from "../../Ui/forms/FormSelectize";
 import TextStats from "../Elements/TextStats";
+import TimeFields from "./Elements/TimeFields";
 
 export default {
     name: "PsalmEditor",
     components: {
+        TimeFields,
         TextStats,
         Nl2br,
         Selectize,
