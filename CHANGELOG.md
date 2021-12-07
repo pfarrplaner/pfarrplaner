@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.88.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.87.0...v1.88.0) (2021-12-07)
+
+
+### Features
+
+* Allow configuring rounded times and speech velocity ([623869f](https://github.com/pfarrplaner/pfarrplaner/commits/623869f77b1a6070e9cde56d29f31a66d52dc43a))
+* Handle inertia requests in SettingsController ([e649aa7](https://github.com/pfarrplaner/pfarrplaner/commits/e649aa7e608b48f4df04ceccd8c17bd9c5ae1c2a))
+
+
+### Bug Fixes
+
+* Cannot retrieve setting for other user ([39b8099](https://github.com/pfarrplaner/pfarrplaner/commits/39b80998a208e3c065462fbba726249509a2abec))
+
 ## [1.87.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.86.0...v1.87.0) (2021-12-06)
 
 
