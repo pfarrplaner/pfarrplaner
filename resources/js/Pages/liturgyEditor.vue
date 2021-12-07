@@ -4,6 +4,11 @@
             <inertia-link class="btn btn-light" :href="route('service.edit', service.slug)" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>&nbsp;
             <inertia-link class="btn btn-light" :href="route('service.sermon.editor', service.slug)" title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span> Predigt</inertia-link>&nbsp;
         </template>
+        <template slot="control-sidebar">
+            <form-check label="Zeitangaben runden" v-model="$page.props.settings.liturgy_times_rounded" @input="setLiturgyTimesRounded"/>
+            <form-input class="mt-2" label="Sprechgeschwindigkeit" v-model="$page.props.settings.wpm" @input="setWPM" help="Wörter pro Minute"/>
+            <button class="btn btn-sm btn-primary" @click.prevent.stop="reloadPage">Anwenden</button>
+        </template>
         <info-pane v-if="!agendaMode" :service="service" @info="infoWindow = true" />
         <agenda-info-pane v-if="agendaMode" :agenda="service"/>
         <div class="row">
@@ -21,6 +26,8 @@
 <script>
 import moment from 'moment';
 import InfoWindow from "../components/LiturgyEditor/Pane/InfoWindow";
+import FormCheck from "../components/Ui/forms/FormCheck";
+import FormInput from "../components/Ui/forms/FormInput";
 
 const InfoPane = () => import('../components/LiturgyEditor/Pane/InfoPane');
 const AgendaInfoPane = () => import('../components/AgendaEditor/Pane/InfoPane');
@@ -48,12 +55,17 @@ export default {
         }
     },
     components: {
+        FormInput,
+        FormCheck,
         InfoWindow,
         InfoPane,
         AgendaInfoPane,
         LiturgyTree,
     },
     data() {
+        if (undefined == this.$page.props.settings.liturgy_times_rounded) this.$page.props.settings.liturgy_times_rounded = false;
+        if (undefined == this.$page.props.settings.liturgy_times_rounded) this.$page.props.settings.liturgy_times_rounded = 110;
+
         return {
             blockIndex: null,
             itemIndex: null,
@@ -72,6 +84,22 @@ export default {
             this.itemIndex = itemIndex;
             this.element = element;
             this.showModal = true;
+        },
+        setLiturgyTimesRounded() {
+            this.$forceUpdate();
+            this.$inertia.post(route('setting.set', {user: this.$page.props.currentUser.data.id , key: 'liturgy_times_rounded'}), {
+                value: this.$page.props.settings.liturgy_times_rounded,
+            });
+            window.location.reload();
+        },
+        setWPM() {
+            this.$forceUpdate();
+            this.$inertia.post(route('setting.set', {user: this.$page.props.currentUser.data.id , key: 'wpm'}), {
+                value: this.$page.props.settings.wpm,
+            });
+        },
+        reloadPage() {
+            window.location.reload();
         }
     }
 }

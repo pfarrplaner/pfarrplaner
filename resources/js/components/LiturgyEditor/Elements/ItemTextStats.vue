@@ -41,17 +41,23 @@ export default {
     name: "ItemTextStats",
     components: {TextStats},
     props: ['item', 'service'],
+    data() {
+        return {
+            rounded: this.$page.props.settings.liturgy_times_rounded ?  true : false,
+            wpm: this.$page.props.settings.wpm || 110,
+        }
+    },
     methods: {
         getItemText() {
             switch(this.item.data_type) {
                 case 'freetext':
-                    return this.item.data.description || '';
+                    return this.item.data ? (this.item.data.description || '') : '';
                 case 'liturgic':
-                    return this.item.data.text || '';
+                    return this.item.data ? (this.item.data.text || '') : '';
                 case 'psalm':
-                    return this.item.data.psalm.text || '';
+                    return this.item.data.psalm ? (this.item.data.psalm.text || '') : '';
                 case 'sermon':
-                    return this.service.sermon.text || '';
+                    return this.service.sermon ? (this.service.sermon.text || '') : '';
                 case 'song':
                     return this.quotableSongText(this.item);
             }
@@ -125,7 +131,8 @@ export default {
             return hoursText + minutes + ':' + seconds;
         },
         speechTimeInSeconds() {
-            return parseInt((this.wordCount()) / this.getItemWPM() * 60, 10);
+            let seconds = parseInt((this.wordCount()) / this.getItemWPM() * 60, 10);
+            return this.rounded ? Math.ceil(seconds / 30) * 30 : seconds;
         },
         calculatedSpeechTime() {
             return this.formatTime(this.speechTimeInSeconds());
