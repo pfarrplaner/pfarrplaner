@@ -65,7 +65,7 @@ class SettingsService
         if (!isset($this->settings[$user->id][$key])) {
             $setting = new UserSetting(
                 [
-                    'user_id' => $this->id,
+                    'user_id' => $user->id,
                     'key' => $key,
                     'value' => $default,
                 ]
