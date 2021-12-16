@@ -29,7 +29,9 @@
 
 <template>
     <div>
-        <small><span class="fa fa-clock"></span> {{ formatTime(startingTime(), false) }} Uhr</small>
+        <small><span class="fa fa-clock" :class="(start == '00:00') ? 'fa-stopwatch' : 'fa-clock'"></span>
+            {{ formatTime(startingTime(), (start == '00:00')) }} {{ (start == '00:00') ? '' : 'Uhr' }}
+        </small>
     </div>
 </template>
 
@@ -40,7 +42,7 @@ import Vue from "vue";
 
 export default {
     name: "ItemStartingTime",
-    props: ['service', 'item'],
+    props: ['service', 'item', 'start'],
     methods: {
         startingTime() {
             let found = false;
@@ -56,7 +58,7 @@ export default {
             return seconds;
         },
         countStarter() {
-            let t = this.service.time;
+            let t = this.start || this.service.time;
             if (t.length == 5) t += ':00';
             console.log('count starter', t, this.parseTimeString(t));
             return this.parseTimeString(t);

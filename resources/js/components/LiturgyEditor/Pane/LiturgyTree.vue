@@ -176,7 +176,12 @@
                 <div class="col-sm-2" style="border-top: solid 1px lightgray;">
                     <small>Berechnetes Ende:</small>
                 </div>
-                <item-starting-time class="col-sm-2" style="border-top: solid 1px lightgray;" :item="{id: -1}" :service="service" />
+                <div class="col-sm-2">
+                    <div class="row">
+                        <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}" :service="service" />
+                        <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}" :service="service" start="00:00"/>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-footer">
