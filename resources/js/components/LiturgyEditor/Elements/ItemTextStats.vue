@@ -75,6 +75,7 @@ export default {
         getVersesToDisplay(song) {
             const range = song.data.verses;
             var verses = [];
+            if (undefined == song.data.song) return [];
             if ((null === range) || (undefined === range) || (range == '')) {
                 song.data.song.verses.forEach(function (verse) {
                     verses.push(verse.number);
