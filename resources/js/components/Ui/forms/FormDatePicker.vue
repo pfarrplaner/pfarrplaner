@@ -73,7 +73,7 @@ export default {
     },
     data() {
         return {
-            myValue: this.value,
+            myValue: (typeof this.value == 'string') ? new Date(this.value) : this.value,
             myDatePickerConfig: this.config ||  {
                 locale: 'de',
                 format: 'DD.MM.YYYY',

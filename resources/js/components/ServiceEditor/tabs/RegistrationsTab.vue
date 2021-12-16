@@ -46,16 +46,12 @@
         </div>
         <div class="row">
             <div class="col-md-6">
-                <form-group label="Anmeldung online ab">
-                    <date-picker type="datetime" v-model="myService.registration_online_start"
-                                 :config="myDatePickerConfig"/>
-                </form-group>
+                <form-date-picker v-model="myService.registration_online_start"
+                                  label="Anmeldung online ab" :config="myDatePickerConfig" />
             </div>
             <div class="col-md-6">
-                <form-group label="Anmeldung online bis">
-                    <date-picker type="datetime" v-model="myService.registration_online_end"
-                                 :config="myDatePickerConfig"/>
-                </form-group>
+                <form-date-picker v-model="myService.registration_online_end"
+                                  label="Anmeldung online bis" :config="myDatePickerConfig" />
             </div>
         </div>
         <form-input name="registration_max" v-model="myService.registration_max" type="number"
@@ -150,10 +146,11 @@ import FormSelectize from "../../Ui/forms/FormSelectize";
 import SeatSelect from "../../Ui/elements/SeatSelect";
 import Seat from "../../Ui/elements/seating/Seat";
 import SectionSelect from "../../Ui/elements/SectionSelect";
+import FormDatePicker from "../../Ui/forms/FormDatePicker";
 
 export default {
     name: "RegistrationsTab",
-    components: {SectionSelect, Seat, SeatSelect, FormSelectize, FormGroup, FormInput, FormCheck},
+    components: {FormDatePicker, SectionSelect, Seat, SeatSelect, FormSelectize, FormGroup, FormInput, FormCheck},
     props: ['service'],
     data() {
         var myService = this.service;

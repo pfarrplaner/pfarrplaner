@@ -170,10 +170,10 @@ class ServiceRequest extends FormRequest
         $data['reserved_places'] = strtoupper($data['reserved_places'] ?? '');
 
         if (isset($data['registration_online_start'])) {
-            $data['registration_online_start'] = Carbon::parse($data['registration_online_start']);
+            $data['registration_online_start'] = $this->getDateTime($data['registration_online_start']);
         }
         if (isset($data['registration_online_end'])) {
-            $data['registration_online_end'] = Carbon::parse($data['registration_online_end']);
+            $data['registration_online_end'] = $this->getDateTime($data['registration_online_end']);
         }
         if (isset($data['communiapp_listing_start']) && ($data['communiapp_listing_start'] != 'Invalid date')) {
             $data['communiapp_listing_start'] = Carbon::createFromFormat('d.m.Y', $data['communiapp_listing_start']);
@@ -184,5 +184,9 @@ class ServiceRequest extends FormRequest
         return $data;
     }
 
+    protected function getDateTime($data)
+    {
+        return Carbon::parse($data, 'Europe/Berlin')->setTimezone('UTC');
+    }
 
 }
