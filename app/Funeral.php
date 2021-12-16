@@ -103,6 +103,7 @@ class Funeral extends Model
         'dimissorial_requested',
         'dimissorial_received',
         'birth_name',
+        'appointment_address',
     ];
 
     /**
@@ -252,7 +253,7 @@ class Funeral extends Model
                 .'<p><a href="'.route('funerals.edit', $this->id).'">Bestattung im Pfarrplaner öffnen</a></p>'
                 .'<p>Kontakt: '.nl2br($this->relative_contact_data).'</p>'
                 .AbstractSyncEngine::AUTO_WARNING,
-            'location' => $this->relative_address.', '.$this->relative_zip.' '.$this->relative_city,
+            'location' => $this->appointment_address,
         ];
         return [$key => $record];
     }

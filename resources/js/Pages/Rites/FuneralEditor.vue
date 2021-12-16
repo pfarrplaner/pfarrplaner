@@ -214,10 +214,21 @@
                                        name="relative_contact_data"/>
                     </tab>
                     <tab id="interview" :active-tab="activeTab">
-                        <form-group label="Trauergespräch" :is-checked-item="true" :value="myFuneral.appointment"
-                                    name="appointment">
-                            <date-picker v-model="myFuneral.appointment" :config="myDateTimePickerConfig"/>
-                        </form-group>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form-group label="Trauergespräch" :is-checked-item="true" :value="myFuneral.appointment"
+                                            name="appointment">
+                                    <date-picker v-model="myFuneral.appointment" :config="myDateTimePickerConfig"/>
+                                </form-group>
+                            </div>
+                            <div class="col-md-6">
+                                <form-input label="Ort des Trauergesprächs" name="appointment_address"
+                                            :key="myFuneral.appointment_address"
+                                            v-model="myFuneral.appointment_address" />
+                                <button class="btn btn-sm btn-light" @click="copyBuriedAddress">Von Adresse übernehmen</button>
+                                <button class="btn btn-sm btn-light" @click="copyRelativeAddress">Von Angehörigen übernehmen</button>
+                            </div>
+                        </div>
                         <form-textarea label="Anwesende" v-model="myFuneral.attending" name="attending"/>
                         <hr/>
                         <div class="row">
@@ -414,6 +425,14 @@ export default {
             this.myFuneral.relative_city = this.myFuneral.buried_city;
             this.copied++;
             this.$forceUpdate();
+        },
+        copyBuriedAddress() {
+            console.log('address');
+            this.myFuneral.appointment_address = this.myFuneral.buried_address+', '+this.myFuneral.buried_zip+' '+this.myFuneral.buried_city;
+        },
+        copyRelativeAddress() {
+            console.log('relative address');
+            this.myFuneral.appointment_address = this.myFuneral.relative_address+', '+this.myFuneral.relative_zip+' '+this.myFuneral.relative_city;
         },
         saveFuneral() {
             this.$inertia.patch(route('funerals.update', this.myFuneral.id), this.myFuneral, {
