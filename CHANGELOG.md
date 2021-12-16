@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.89.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.88.1...v1.89.0) (2021-12-16)
+
+
+### Features
+
+* Add appointment address to funeral records ([c388895](https://github.com/pfarrplaner/pfarrplaner/commits/c38889568d6ec6eabf45e84f4ed68a01030bba1e))
+
 ### [1.88.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.88.0...v1.88.1) (2021-12-16)
 
 
