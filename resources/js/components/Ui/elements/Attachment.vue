@@ -45,6 +45,7 @@
                 <img class="img-fluid" :src="imageRoute()" @keydown.esc="showLightBox = false"/>
                 <div class="mt-2" @keydown.esc="showLightBox = false">
                     <button class="btn btn-primary" @click.stop="download" @keydown.esc="showLightBox = false">Download</button>
+                    <a class="btn btn-secondary" target="_blank" :href="imageRoute()">In neuem Tab öffnen</a>
                 </div>
             </div>
         </div>
