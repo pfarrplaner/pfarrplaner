@@ -60,6 +60,8 @@ export default {
                     return this.service.sermon ? (this.service.sermon.text || '') : '';
                 case 'song':
                     return this.quotableSongText(this.item);
+                case 'reading':
+                    return this.item.data ? (this.item.data.text || '') : '';
             }
             return '';
         },

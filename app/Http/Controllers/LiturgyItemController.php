@@ -62,7 +62,7 @@ class LiturgyItemController extends Controller
         $item = Item::create($data);
         if (isset($data['data'])) {
             $item->data = $data['data'];
-            $item->checkMarkerReplacementSettings();
+            $item->performTypeSpecificActionsOnCreate();
             $item->save();
         }
         return redirect()->route('liturgy.editor', ['service' => $service->slug, 'autoFocusBlock' => $block->id, 'autoFocusItem' => $item->id]);
@@ -81,7 +81,7 @@ class LiturgyItemController extends Controller
         $item->update($data);
         if ($data['data']) {
             $item->data = $data['data'];
-            $item->checkMarkerReplacementSettings();
+            $item->performTypeSpecificActionsOnUpdate();
             $item->save();
         }
         return redirect()->route('liturgy.editor', $service->slug);

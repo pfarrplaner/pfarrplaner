@@ -31,6 +31,8 @@
 namespace App\Liturgy;
 
 
+use App\Liturgy\Bible\BibleText;
+use App\Liturgy\Bible\ReferenceParser;
 use App\Liturgy\ItemHelpers\AbstractItemHelper;
 use App\Liturgy\ItemHelpers\ItemHelperNotFoundException;
 use App\User;
@@ -136,6 +138,43 @@ class Item extends Model
     public function setData($key, $value)
     {
         $this->setDataAttribute(array_merge($this->getDataAttribute(), [$key => $value]));
+    }
+
+    /**
+     * Add bible text to 'reading' items
+     */
+    public function addBibleText()
+    {
+        if ($this->data_type != 'reading') return;
+        $data = $this->data;
+        $bible = new BibleText();
+        $bibleText = $bible->get(ReferenceParser::getInstance()->parse($this->data['reference']));
+        $text = '';
+        foreach ($bibleText as $textSection) {
+            foreach ($textSection['text'] as $verse) {
+                $text .= $verse['verse'].' '.$verse['text'].' ';
+            }
+        }
+        $data['text'] = trim($text) ? trim($text).' ('.$this->data['reference'].')' : '';
+        $this->data = $data;
+    }
+
+    /**
+     * On create: Perform specific actions for this data_type
+     */
+    public function performTypeSpecificActionsOnCreate()
+    {
+        $this->addBibleText();
+        $this->checkMarkerReplacementSettings();
+    }
+
+    /**
+     * On update: Perform specific actions for this data_type
+     */
+    public function performTypeSpecificActionsOnUpdate()
+    {
+        $this->addBibleText();
+        $this->checkMarkerReplacementSettings();
     }
 
 }
