@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.90.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.90.0...v1.90.1) (2021-12-16)
+
+
+### Bug Fixes
+
+* No time estimate for scripture readings ([16892a8](https://github.com/pfarrplaner/pfarrplaner/commits/16892a88b8defe2c0a243e607e2982102e0d95b3))
+
 ## [1.90.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.89.0...v1.90.0) (2021-12-16)
 
 
