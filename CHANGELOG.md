@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.91.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.90.1...v1.91.0) (2021-12-16)
+
+
+### Features
+
+* Highlight unspecified item time ([f1ab6bd](https://github.com/pfarrplaner/pfarrplaner/commits/f1ab6bd746a46c256c012b31de4d2c1375da2838))
+* Show total service length in LiturgyTree ([b009756](https://github.com/pfarrplaner/pfarrplaner/commits/b009756e45a2084c45af2fbdb6a8704b68429970))
+
+
+### Bug Fixes
+
+* Speech time estimates fail when a song is not set ([aff6e51](https://github.com/pfarrplaner/pfarrplaner/commits/aff6e5100c64ed4dd9b3b3f3170afe6af7eb773d))
+
 ### [1.90.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.90.0...v1.90.1) (2021-12-16)
 
 
