@@ -53,7 +53,7 @@
                     <template slot="positive">
                         <a :href="route('funeral.appointment.ical', funeral)" title="In den Kalender übernehmen">
                             <span class="fa fa-calendar"></span> Trauergespräch am
-                            {{ DateTime.fromISO(funeral.appointment).setZone('Europe/Berlin' , {keepLocalTime: true}).setZone('UTC').setLocale('de').toLocaleString(DateTime.DATETIME_SHORT) }} Uhr
+                            {{ DateTime.fromISO(funeral.appointment).setZone('Europe/Berlin' , {keepLocalTime: true}).setLocale('de').toLocaleString(DateTime.DATETIME_SHORT) }} Uhr
                         </a>
                     </template>
                 </checked-process-item>

@@ -244,8 +244,8 @@ class Funeral extends Model
         $key = 'funeral_prep_'.$this->id;
 
         $record = [
-            'startDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC'),
-            'endDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC')->addHour(1),
+            'startDate' => $this->appointment->copy(),
+            'endDate' => $this->appointment->copy()->addHour(1),
             'title' => 'Trauergespräch '.$this->buried_name,
             'description' =>
                 '<p>'.$this->type.' am '.$this->service->day->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'

@@ -95,6 +95,9 @@ class FuneralStoreRequest extends FormRequest
         $data['dimissorial_requested'] ? $data['dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_requested']) : $data['dimissorial_requested'] = null;
         $data['dimissorial_received'] ? $data['dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_received']) : $data['dimissorial_received'] = null;
 
+        if (isset($data['appointment'])) {
+            $data['appointment'] = Carbon::parse($data['appointment'], 'Europe/Berlin')->setTimezone('UTC')->format('d.m.Y H:i');
+        }
 
         return $data;
     }
