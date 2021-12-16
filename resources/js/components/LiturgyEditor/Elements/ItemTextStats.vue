@@ -29,8 +29,7 @@
 
 <template>
     <div>
-        <small v-if="item.data.time"><span class="fa fa-stopwatch"></span> {{ item.data.time }}</small>
-        <small v-else><span class="fa fa-stopwatch"></span> {{ calculatedSpeechTime()}}</small>
+        <small><span class="fa fa-stopwatch"></span> <span :class="speechTime == '00:00' ? 'warning' : ''">{{ speechTime }}</span></small>
     </div>
 </template>
 
@@ -45,6 +44,11 @@ export default {
         return {
             rounded: this.$page.props.settings.liturgy_times_rounded ?  true : false,
             wpm: this.$page.props.settings.wpm || 110,
+        }
+    },
+    computed: {
+        speechTime() {
+            return this.item.data.time || this.calculatedSpeechTime();
         }
     },
     methods: {
@@ -146,5 +150,9 @@ export default {
 <style scoped>
 .fa {
     color: lightgray;
+}
+
+span.warning {
+    background-color: yellow;
 }
 </style>
