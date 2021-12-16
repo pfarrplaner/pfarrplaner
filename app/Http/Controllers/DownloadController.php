@@ -135,7 +135,7 @@ class DownloadController extends Controller
         }
         $prettyName = $prettyName ? FileHelper::normalizeFilename($prettyName) : basename($path);
         if (Storage::exists('attachments/' . $path)) {
-            return Storage::download('attachments/' . $path, $prettyName);
+            return Storage::response('attachments/' . $path);
         }
         abort(404);
     }
