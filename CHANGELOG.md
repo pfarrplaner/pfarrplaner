@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.88.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.88.0...v1.88.1) (2021-12-16)
+
+
+### Bug Fixes
+
+* Funeral appointment timezone issues ([abe3d45](https://github.com/pfarrplaner/pfarrplaner/commits/abe3d452ff866865a827271ab90df6e55b2038ea)), closes [#149](https://github.com/pfarrplaner/pfarrplaner/issues/149)
+* Remove unnecessary TimeFields component from BlockEditor ([ae08a24](https://github.com/pfarrplaner/pfarrplaner/commits/ae08a24ba7fbe702e367eda9c9fd9d4e65085860))
+* Start and end dates for registration not shown in ServiceEditor ([75bc65b](https://github.com/pfarrplaner/pfarrplaner/commits/75bc65b0941dc5bce9b88652b82ef090d11eb837))
+* Typo in TextStats component ([35ecb3d](https://github.com/pfarrplaner/pfarrplaner/commits/35ecb3d6ca5f1152e2dac9412e02649af27899c5))
+
 ## [1.88.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.87.0...v1.88.0) (2021-12-07)
 
 
