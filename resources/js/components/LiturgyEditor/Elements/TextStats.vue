@@ -59,7 +59,7 @@ export default {
             if (seconds < 10) {
                 seconds = "0" + seconds;
             }
-            return (this.hideHours ? (hours > 0 ? hoursText+':' : '') : hourText+':') + minutes + ':' + seconds;
+            return (this.hideHours ? (hours > 0 ? hoursText+':' : '') : hoursText+':') + minutes + ':' + seconds;
         },
         calculatedSpeechTime() {
             const defaultWPM = 110;
