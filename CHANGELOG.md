@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.90.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.89.0...v1.90.0) (2021-12-16)
+
+
+### Features
+
+* Allow opening attached images in new tab ([a3f8e7a](https://github.com/pfarrplaner/pfarrplaner/commits/a3f8e7acab59630ac46b947db04b663704660d25))
+
+
+### Bug Fixes
+
+* Image route forces downloading image ([64db3b3](https://github.com/pfarrplaner/pfarrplaner/commits/64db3b31c9594e2db9a846b68501ea631508b478))
+
 ## [1.89.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.88.1...v1.89.0) (2021-12-16)
 
 
