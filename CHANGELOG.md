@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.92.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.92.0...v1.92.1) (2021-12-20)
+
+
+### Features
+
+* Allow overriding liturgical day names in config ([ee72d25](https://github.com/pfarrplaner/pfarrplaner/commits/ee72d25769bdc2d2ffe369c139f95176bb5a932c))
+
 ## [1.92.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.91.0...v1.92.0) (2021-12-20)
 
 
