@@ -12,7 +12,7 @@
             @if(count($services))
                 @foreach ($services as $dayKey => $dayServices)
                     @if(!$singleService)
-                    <h2 style="margin-bottom: 20px;">Gottesdienste am {{ $dayServices[0]->day->date->format('d.m.Y') }} {{ \App\Liturgy::getDayInfo($dayServices[0]->day)['title'] ?? ''}}</h2>
+                    <h2 style="margin-bottom: 20px;">Gottesdienste am {{ $dayServices[0]->day->date->format('d.m.Y') }}</h2>
                     @endif
                     @foreach($dayServices as $serviceKey => $service)
                         <div class="card-panel default registrable-service" id="{{ $randomId }}-{{ $dayKey }}-{{ $serviceKey }}">
