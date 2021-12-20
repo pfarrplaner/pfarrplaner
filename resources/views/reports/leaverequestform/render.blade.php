@@ -251,7 +251,7 @@
             <td style="width: 38mm;">Unterschrift:</td>
             <td style="width: 106mm; padding-bottom: 2px;">
                 <div class="input-wrapper" style="width: 106mm;">
-                    <input type="text" style="width: 106mm;" name="unterschrift" />
+
                 </div>
             </td>
         </tr>
