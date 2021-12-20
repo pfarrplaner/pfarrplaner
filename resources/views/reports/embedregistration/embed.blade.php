@@ -77,7 +77,7 @@
                                         style="width: auto; height: auto; position: relative; background-color: none;"
                                    data-container="#{{ $randomId }}-{{ $dayKey }}-{{ $serviceKey }}">Anmeldung absenden</a>
                                 <br/>
-                                <small>Die Erhebung dieser Daten erfolgt nach §6 Abs. 1 CoronaVO. Nach §6 Abs. 4-5 CoronaVO
+                                <small>Die Erhebung dieser Daten erfolgt nach §8 Abs. 1 CoronaVO. Nach §8 Abs. 2-3 CoronaVO
                                     können Sie nur
                                     nach korrekter Angabe Ihrer Kontaktdaten am Gottesdienst teilnehmen. Wir bitten hierfür
                                     um

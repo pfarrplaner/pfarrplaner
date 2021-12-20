@@ -29,7 +29,7 @@
 <div style="padding-top: 17mm; padding-left: 12mm; width: 97mm; height: 57mm;">
     <b>Besucherliste für den Gottesdienst<br/>{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}
         <br/>{{ $service->locationText() }}</b><br/><br/>
-    Nach §6 Abs. 2 CoronaVO<br/>
+    Nach §8 Abs. 1 CoronaVO<br/>
     verwahren bis einschl. <br/>
     <span style="color: red; font-weight: bold;">{{ $service->day->date->clone()->addWeek(4)->format('d.m.Y') }}</span>
 </div>

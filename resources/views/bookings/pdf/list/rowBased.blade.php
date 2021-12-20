@@ -22,7 +22,7 @@
 <body>
 <div style="padding-top: 17mm; padding-left: 12mm; width: 97mm; height: 57mm;">
     <b>Besucherliste für den Gottesdienst<br />{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}<br />{{ $service->locationText() }}</b><br /><br />
-    Nach §6 Abs. 2 CoronaVO<br />
+    Nach §8 Abs. 1 CoronaVO<br />
     verwahren bis einschl. <br />
     <span style="color: red; font-weight: bold;">{{ $service->day->date->clone()->addWeek(4)->format('d.m.Y') }}</span>
 </div>
@@ -78,7 +78,7 @@
 <p><b>Bitte nur ausfüllen, wenn das für diesen Gottesdienst erlaubt ist.</b></p>
 @endif
 @if(count($empty))
-<p><span style="text-decoration: underline;">Hinweis:</span> Die Datenerhebung ist nach §6 Abs. 1 CoronaVO gestattet. Nach §6 Abs. 4-5 CoronaVO ist der Zutritt zum Gottesdienst nur nach vollständiger und korrekter Erhebung dieser Kontaktdaten gestattet.</p>
+<p><span style="text-decoration: underline;">Hinweis:</span> Die Datenerhebung ist nach §8 Abs. 1 CoronaVO gestattet. Nach §8 Abs. 2-3 CoronaVO ist der Zutritt zum Gottesdienst nur nach vollständiger und korrekter Erhebung dieser Kontaktdaten gestattet.</p>
 <p>Wird eine teilbare Reihe ganz belegt, bitte unter Platz A eintragen und alle weiteren Plätze streichen.</p>
 <hr />
 <table width="100%">
