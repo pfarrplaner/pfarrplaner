@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.92.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.91.0...v1.92.0) (2021-12-20)
+
+
+### Bug Fixes
+
+* corrected §§ numbers for CoronaVO ([5ecabd9](https://github.com/pfarrplaner/pfarrplaner/commits/5ecabd93efb19fd4da606664acbc7664d11fb4e3))
+* Remove text field over signature area in LeaveRequestForm ([b359668](https://github.com/pfarrplaner/pfarrplaner/commits/b35966826f7c03962baf400ffa69db914e828662))
+* Temporarily remove day title from embedded registration form ([0fd8313](https://github.com/pfarrplaner/pfarrplaner/commits/0fd8313bb567ea4fa27c89c678a07719d5a626ab))
+
 ## [1.91.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.90.1...v1.91.0) (2021-12-16)
 
 
