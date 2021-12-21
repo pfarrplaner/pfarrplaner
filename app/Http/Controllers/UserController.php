@@ -254,7 +254,7 @@ class UserController extends Controller
     {
         $user = Auth::user();
         $data = $this->validateRequest($request);
-        $user->save($data);
+        $user->update($data);
 
         // change password?
         if ($request->has('new_password')) {
