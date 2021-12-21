@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.93.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.92.1...v1.93.0) (2021-12-21)
+
+
+### Features
+
+* Shortcut buttons for sermon reference in SermonEditor, FuneralEditor ([8748dfb](https://github.com/pfarrplaner/pfarrplaner/commits/8748dfb31949001040492778cdc0381864eeabd3))
+
 ### [1.92.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.92.0...v1.92.1) (2021-12-20)
 
 
