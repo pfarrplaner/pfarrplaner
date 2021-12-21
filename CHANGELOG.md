@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.93.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.93.0...v1.93.1) (2021-12-21)
+
+
+### Bug Fixes
+
+* Menu sidebar scrolls out of view ([6a319b1](https://github.com/pfarrplaner/pfarrplaner/commits/6a319b11ed9e0c6bdacde1c8178d2bc66bf93755))
+
 ## [1.93.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.92.1...v1.93.0) (2021-12-21)
 
 
