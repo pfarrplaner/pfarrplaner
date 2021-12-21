@@ -62,7 +62,7 @@
         <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4" :class="{dev: dev}">
+        <aside class="main-sidebar sidebar-dark-primary elevation-4" :class="{dev: dev}" style="position: fixed;">
             <!-- Brand Logo -->
             <div class="brand-link" style="margin-left: 5px;">
                 <inertia-link class="brand-link-anchor" :href="route('home')"  :title="'Startseite (Pfarrplaner '+package.info.version+'-'+package.env+', '+moment(package.date).locale('de').format('LLLL')+')'">
@@ -209,6 +209,10 @@ export default {
 </script>
 
 <style scoped>
+aside.main-sidebar {
+    position: fixed !important;
+}
+
 .main-sidebar.dev {
     background-color: orangered;
 }
