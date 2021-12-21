@@ -43,8 +43,9 @@
                         </td>
                         <td valign="top" class="text-right">
                             <inertia-link class="btn btn-sm btn-light"
-                               :href="route('service.edit', {service: service.slug})"
-                               title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>
+                                          :href="route('service.edit', {service: service.slug})"
+                                          title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst
+                            </inertia-link>
                             <inertia-link class="btn btn-sm btn-light"
                                           :href="route('liturgy.editor', {service: service.slug})"
                                           title="Liturgie bearbeiten">
@@ -89,7 +90,22 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Predigttext</label>
-                                    <input class="form-control" type="text" v-model="editedSermon.reference"/>
+                                    <input class="form-control" type="text" v-model="editedSermon.reference"
+                                           :key="editedSermon.reference"/>
+                                    <div v-for="service in services" class="mt-1">
+                                        <button class="btn btn-light btn-sm"
+                                                v-if="undefined != service.day.liturgy.title"
+                                                @click="editedSermon.reference = service.day.liturgy.currentPerikope"
+                                                :title="'Perikope für '+service.day.liturgy.title+' übernehmen ('+service.day.liturgy.currentPerikope+')'">
+                                            Perikope für {{ service.day.liturgy.title }} übernehmen
+                                        </button>
+                                        <button class="btn btn-light btn-sm"
+                                                v-for="funeral in service.funerals"
+                                                @click="editedSermon.reference = funeral.text"
+                                                :title="'Von Beerdigung ('+funeral.buried_name+') übernehmen ('+funeral.text+')'">
+                                            Von Beerdigung ({{ funeral.buried_name }}) übernehmen
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -124,11 +140,12 @@
                                                     <button class="ql-indent" value="+1"></button>
                                                 </span>
                                     <button class="ql-clean mr-2"></button>
-                                    <button class="ql-insertbible quill-fa-button" title="Bibeltext hinzufügen"><span class="fa fa-bible"></span></button>
+                                    <button class="ql-insertbible quill-fa-button" title="Bibeltext hinzufügen"><span
+                                        class="fa fa-bible"></span></button>
                                 </div>
                             </quill-editor>
 
-                            <text-stats :text="editedSermon.text" />
+                            <text-stats :text="editedSermon.text"/>
 
                         </div>
                         <div class="row">
@@ -167,12 +184,12 @@
                                     Du musst die Predigt erst einmal speichern, um ein Bild hinzufügen zu können.
                                 </div>
                                 <div v-else>
-                                <form-image-attacher
-                                    :attach-route="route('sermon.image.attach', {model: editedSermon.id})"
-                                    :detach-route="route('sermon.image.detach', {model: editedSermon.id})"
-                                    label="Bild zur Predigt" :handle-paste="true"
-                                    v-model="editedSermon.image"
-                                />
+                                    <form-image-attacher
+                                        :attach-route="route('sermon.image.attach', {model: editedSermon.id})"
+                                        :detach-route="route('sermon.image.detach', {model: editedSermon.id})"
+                                        label="Bild zur Predigt" :handle-paste="true"
+                                        v-model="editedSermon.image"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -326,7 +343,11 @@ export default {
         },
         quillInsertBible() {
             var reference = window.prompt('Welche Bibelstelle möchtest du einfügen?');
-            axios.get(route('bible.text', {reference: reference, showReference: 1, showVerseNumbers: 0}) ).then(result => {
+            axios.get(route('bible.text', {
+                reference: reference,
+                showReference: 1,
+                showVerseNumbers: 0
+            })).then(result => {
                 if (result.data.text) {
                     this.quillInsertText(result.data.text);
                 } else {

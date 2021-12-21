@@ -226,6 +226,7 @@ class FuneralController extends Controller
     public function edit(Funeral $funeral)
     {
         $funeral->load('service');
+        $funeral->service->load('sermon');
         $pronounSets = PronounSets::toArray();
         return Inertia::render('Rites/FuneralEditor', compact('funeral', 'pronounSets'));
     }
