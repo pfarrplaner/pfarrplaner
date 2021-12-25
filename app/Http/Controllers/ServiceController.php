@@ -368,4 +368,17 @@ class ServiceController extends Controller
         return response()->json($service);
     }
 
+    /**
+     * Set the sermon for a service
+     * @param Request $request
+     * @param Service $service
+     * @return JsonResponse
+     */
+    public function setSermon(Request $request, Service $service)
+    {
+        $data = $request->validate(['sermon_id' => 'int|nullable|exists:sermons,id']);
+        $service->update(['sermon_id' => $data['sermon_id']]);
+        return response()->json($service);
+    }
+
 }

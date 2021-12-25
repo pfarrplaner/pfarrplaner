@@ -634,7 +634,7 @@ export default {
         },
         setSermon(e, item) {
             this.service.sermon_id = e;
-            axios.patch(route('service.update', this.service.slug), {sermon_id: e ?? null});
+            axios.patch(route('service.setsermon', this.service.slug), {sermon_id: e ?? null});
             if (e) {
                 this.sermons.forEach(sermon => {
                     if (sermon.id == e) this.service.sermon = sermon;
