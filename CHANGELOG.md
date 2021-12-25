@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.93.4](https://github.com/pfarrplaner/pfarrplaner/compare/v1.93.3...v1.93.4) (2021-12-25)
+
+
+### Bug Fixes
+
+* Adding an existing sermon to a services wipes all ministry assignments ([8330cbe](https://github.com/pfarrplaner/pfarrplaner/commits/8330cbe39a2c1c689bf52676f8812a4bfaf63b52)), closes [#177](https://github.com/pfarrplaner/pfarrplaner/issues/177)
+
 ### [1.93.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.93.2...v1.93.3) (2021-12-21)
 
 
