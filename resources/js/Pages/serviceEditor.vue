@@ -84,7 +84,8 @@
                             </tab>
                             <tab id="people" :active-tab="activeTab">
                                 <people-tab :service="service" :teams="teams"
-                                            :people="users" :ministries="ministries" />
+                                            :people="users" :ministries="ministries"
+                                            @count="updatePeopleCounter" />
                             </tab>
                             <tab id="offerings" :active-tab="activeTab">
                                 <offerings-tab :service="service" />
@@ -163,25 +164,35 @@ name: "serviceEditor",
             });
             return found;
         },
-        peopleCount() {
-            var count = this.editedService.pastors.length
-                + this.editedService.organists.length
-                + this.editedService.sacristans.length;
-
-            Object.entries(this.editedService.ministriesByCategory).forEach(ministry => {
-                    count += ministry[1].length;
-                });
-            return count;
-        }
     },
     data() {
         return {
             activeTab: this.tab,
             editedService: this.service,
             files: { attachments: [null], attachment_text: [''] },
+            counted: 0,
+            peopleCount: 0,
         };
     },
+    mounted() {
+        this.updatePeopleCounter();
+    },
     methods: {
+        updatePeopleCounter() {
+            let count = 0;
+            let ministries = this.service.ministriesByCategory;
+
+            [this.editedService.pastors, this.editedService.organists, this.editedService.sacristans].forEach(group => {
+                group.forEach(person => {
+                    if (isNaN(person)) count++;
+                });
+            });
+
+            Object.keys(ministries).forEach(ministry => {
+                count += ministries[ministry].length;
+            });
+            this.peopleCount = count;
+        },
         saveService(closeAfterSaving) {
             // build a request record:
             var record = {

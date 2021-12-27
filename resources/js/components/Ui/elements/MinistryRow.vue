@@ -34,7 +34,8 @@
         </div>
         <div class="col-md-5">
             <people-select :name="'ministries['+index+']'+'[people][]'" v-model="myMembers" :teams="teams"
-                           :people="people" @input="changed" :include-teams-from-city="includeTeamsFromCity" />
+                           :people="people" @input="changed" :include-teams-from-city="includeTeamsFromCity"
+                           @count="$emit('count')" />
         </div>
         <div class="col-md-1 text-right">
             <button class="btn btn-danger btn-sm" @click.prevent="deleteRow()" title="Reihe entfernen"><span class="fa fa-trash"></span></button>

@@ -191,6 +191,7 @@ export default {
             })
 
             this.$emit('input', externalValue);
+            this.$emit('count');
             this.myValue = newVal2;
             this.$forceUpdate();
         },
