@@ -98,7 +98,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         $properties = $doc->getPhpWord()->getDocInfo();
         $properties->setCreator(Auth::user()->name);
         $properties->setCompany(Auth::user()->office ?? '');
-        $properties->setTitle($this->getFileTitle());
+        $properties->setTitle($this->service->dateTime()->format('Ymd-Hi') . ' ' .$this->getFileTitle());
         $properties->setDescription($this->getFileTitle().' ('.$this->title.')');
         $properties->setCategory('Gottesdienste');
         $properties->setLastModifiedBy(Auth::user()->name);
@@ -107,7 +107,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     public function getFileTitle(): string
     {
-        return 'Gottesdienst' . (($this->service) && ($this->service->sermon) ? ' - ' . $this->service->sermon->title : '');
+        return $this->service->titleText(false) . (($this->service) && ($this->service->sermon) ? ' - ' . $this->service->sermon->title : '');
     }
 
     protected function renderFreetextItem(DefaultWordDocument $doc, Item $item)

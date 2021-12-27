@@ -577,6 +577,7 @@ class Service extends Model
      */
     public function titleText($short = true, $skipRites = false)
     {
+        $includeDefaultServiceTitle = true;
         $elements = [];
         if ($this->title != '') {
             $elements[] = $x = $this->title;
@@ -584,15 +585,17 @@ class Service extends Model
         if (!$skipRites) {
             if ($this->weddingsText() != '') {
                 $elements[] = $x = $this->weddingsText();
+                $includeDefaultServiceTitle = false;
             }
             if ($this->funeralsText() != '') {
                 $elements[] = $x = $this->funeralsText();
+                $includeDefaultServiceTitle = false;
             }
             if ($this->baptismsText() != '') {
                 $elements[] = $x = 'Taufe(n)';
             }
         }
-        if ((count($elements) == 1) && ($x != '') && ($x != $this->title)) {
+        if ($includeDefaultServiceTitle && (count($elements) == 1) && ($x != '') && ($x != $this->title)) {
             $elements[0] = ($short ? 'GD' : 'Gottesdienst') . ' mit ' . $elements[0];
         }
         return join(' / ', $elements) ?: ($short ? 'GD' : 'Gottesdienst');
