@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.95.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.94.0...v1.95.0) (2021-12-27)
+
+
+### Features
+
+* Add MinistrySignupSheetReport ([4e3f6bc](https://github.com/pfarrplaner/pfarrplaner/commits/4e3f6bc8dfb007cea9e389c949e0db5afeeca2b8))
+
+
+### Bug Fixes
+
+* PeopleTab has wrong participant count ([b0e2021](https://github.com/pfarrplaner/pfarrplaner/commits/b0e2021ec3c69b5834a60af6372f684a14e2f48b))
+
 ## [1.94.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.93.4...v1.94.0) (2021-12-27)
 
 
