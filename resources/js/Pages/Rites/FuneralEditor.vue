@@ -389,7 +389,7 @@ export default {
         imageAttachments() {
             let images = [];
             this.myFuneral.attachments.forEach(attachment => {
-                images.push(attachment);
+                if (attachment.mimeType.substr(0,6) == 'image/') images.push(attachment);
             });
             return images;
         },
