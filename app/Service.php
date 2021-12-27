@@ -1358,6 +1358,8 @@ class Service extends Model
      */
     public function associateParticipants($request, Service $service)
     {
+        if (!$request->has('participants')) return;
+
         $participants = [];
         foreach (($request->get('participants') ?: []) as $category => $participantList) {
             foreach ($participantList as $participant) {
