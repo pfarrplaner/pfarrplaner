@@ -234,8 +234,17 @@
                         </div>
                         <form-textarea label="Anwesende" v-model="myFuneral.attending" name="attending"/>
                         <hr/>
+                        <div v-if="imageAttachments.length > 0" class="d-none d-md-block">
+                            <label>Angehängte Bilder</label>
+                            <div class="row">
+                                <div class="col-md-3 p-2" v-for="(image,imageIndex,imageKey) in imageAttachments" :key="imageKey">
+                                    <attachment  :attachment="image" />
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-lg-4">
                                 <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents"
                                                name="parents"/>
                                 <form-textarea label="Ehepartner" v-model="funeral.spouse" name="spouse"/>
@@ -246,7 +255,7 @@
                                 <form-textarea label="Taufe" v-model="funeral.baptism" name="baptism"/>
                                 <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation"/>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-lg-4">
                                 <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood" name="childhood"/>
                                 <form-input label="Beruf" v-model="myFuneral.profession" name="profession"/>
                                 <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life"
@@ -264,7 +273,7 @@
                                 <hr/>
                                 <form-textarea label="Zitate" v-model="funeral.quotes" name="quotes"/>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-lg-4">
                                 <div class="form-group">
                                     <label>Lebenslauf</label>
                                     <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
@@ -376,7 +385,14 @@ export default {
         age() {
             if ((!this.myFuneral.dod) || (!this.myFuneral.dob)) return null;
             return moment(this.myFuneral.dod, 'DD.MM.YYYY').diff(moment(this.myFuneral.dob, 'DD.MM.YYYY'), 'years');
-        }
+        },
+        imageAttachments() {
+            let images = [];
+            this.myFuneral.attachments.forEach(attachment => {
+                images.push(attachment);
+            });
+            return images;
+        },
     },
     created() {
         if (this.myFuneral.dob) this.myFuneral.dob = moment(this.myFuneral.dob).format('DD.MM.YYYY');
