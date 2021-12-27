@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.94.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.93.4...v1.94.0) (2021-12-27)
+
+
+### Features
+
+* Improved service titling ([a5d82ce](https://github.com/pfarrplaner/pfarrplaner/commits/a5d82ce1ba260d25996b7fdab52874c565971663))
+* Show attached images on interview tab in FuneralEditor ([6920e2b](https://github.com/pfarrplaner/pfarrplaner/commits/6920e2ba1d2a696f72f7621a84a7f97f32bb6e07))
+
+
+### Bug Fixes
+
+* Service update deletes all existing participants when request has no participants data ([96e3ca1](https://github.com/pfarrplaner/pfarrplaner/commits/96e3ca112dcc87b467f451cc967115fde763ae58)), closes [#177](https://github.com/pfarrplaner/pfarrplaner/issues/177)
+* Text/reference fields only accept one character at a time ([6260f28](https://github.com/pfarrplaner/pfarrplaner/commits/6260f2836b77e4d6f2840aaf9be084756df3eee4))
+
 ### [1.93.4](https://github.com/pfarrplaner/pfarrplaner/compare/v1.93.3...v1.93.4) (2021-12-25)
 
 
