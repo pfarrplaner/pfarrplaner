@@ -91,17 +91,17 @@
                                 <div class="form-group">
                                     <label>Predigttext</label>
                                     <input class="form-control" type="text" v-model="editedSermon.reference"
-                                           :key="editedSermon.reference"/>
+                                           :key="referenceCopied"/>
                                     <div v-for="service in services" class="mt-1">
                                         <button class="btn btn-light btn-sm"
                                                 v-if="undefined != service.day.liturgy.title"
-                                                @click="editedSermon.reference = service.day.liturgy.currentPerikope"
+                                                @click.prevent.stop="setSermonReference(service.day.liturgy.currentPerikope)"
                                                 :title="'Perikope für '+service.day.liturgy.title+' übernehmen ('+service.day.liturgy.currentPerikope+')'">
                                             Perikope für {{ service.day.liturgy.title }} übernehmen
                                         </button>
                                         <button class="btn btn-light btn-sm"
                                                 v-for="funeral in service.funerals"
-                                                @click="editedSermon.reference = funeral.text"
+                                                @click.prevent.stop="setSermonReference(funeral.text)"
                                                 :title="'Von Beerdigung ('+funeral.buried_name+') übernehmen ('+funeral.text+')'">
                                             Von Beerdigung ({{ funeral.buried_name }}) übernehmen
                                         </button>
@@ -257,6 +257,7 @@ export default {
 
         if (null === editedSermon.text) editedSermon.text = '';
         return {
+            referenceCopied: 0,
             textEditorActive: false,
             literatureEditorActive: false,
             editedSermon: editedSermon,
@@ -354,6 +355,10 @@ export default {
                     alert('Zu dieser Stellenangabe konnte kein Text gefunden werden.');
                 }
             });
+        },
+        setSermonReference(ref) {
+            this.editedSermon.reference = ref;
+            this.referenceCopied++;
         }
     }
 }

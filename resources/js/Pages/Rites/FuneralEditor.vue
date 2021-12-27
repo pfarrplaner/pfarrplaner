@@ -163,10 +163,10 @@
                             </div>
                         </fake-table>
                         <hr/>
-                        <form-input label="Predigttext" v-model="myFuneral.text" :is-checked-item="true" :key="myFuneral.text"/>
+                        <form-input label="Predigttext" v-model="myFuneral.text" :is-checked-item="true" :key="referenceCopied"/>
                         <button v-if="funeral.service.sermon && funeral.service.sermon.reference"
                                 class="btn btn-sm btn-light" :title="'Von Predigt übernehmen ('+funeral.service.sermon.reference+')'"
-                                @click="myFuneral.text = funeral.service.sermon.reference">Von Predigt übernehmen</button>
+                                @click="setFuneralText(funeral.service.sermon.reference)">Von Predigt übernehmen</button>
                         <form-group label="Bestattungsart">
                             <select v-model="myFuneral.type" class="form-control" name="type">
                                 <option>Erdbestattung</option>
@@ -406,6 +406,7 @@ export default {
         myFuneral.life = myFuneral.life || '';
 
         return {
+            referenceCopied: 0,
             myDatePickerConfig: {
                 locale: 'de',
                 format: 'DD.MM.YYYY',
@@ -487,6 +488,10 @@ export default {
 
             if (text) quill.insertText(quill.getSelection(true).index, text);
         },
+        setFuneralText(t) {
+            this.myFuneral.text = t;
+            this.referenceCopied++;
+        }
     }
 }
 </script>
