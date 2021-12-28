@@ -92,7 +92,18 @@ class LoginController extends Controller
 
                 if (count($blog->channel->item) > 3) $columns = 3;
             }
-            return view('auth.login', compact('blog'));
+
+            $ytFeed = (array) simplexml_load_file(config('support.youtube_channel_feed'));
+            $videos = [];
+            foreach ($ytFeed['entry'] as $video) {
+                $videos[(string)$video->title] = str_replace(
+                    'https://www.youtube.com/watch?v=',
+                    'https://www.youtube.com/embed/',
+                    (string)$video->link->attributes()->href
+                );
+            }
+
+            return view('auth.login', compact('blog', 'videos'));
         }
     }
 

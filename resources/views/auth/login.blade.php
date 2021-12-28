@@ -38,6 +38,23 @@
                     E-Mail <a href="mailto:christoph.fischer@elkw.de">christoph.fischer@elkw.de</a>
                 </p>
             @endcomponent
+            @if($videos)
+                @component('components.ui.card')
+                    @slot('cardHeader')
+                        Tutorials zum Pfarrplaner
+                    @endslot
+                    <div class="row">
+                        @foreach($videos as $videoTitle => $videoUrl)
+                            <div class="col-md-3 mb-3">
+                                <div class="embed-responsive embed-responsive-16by9">
+                                    <iframe class="embed-responsive-item" src="{{ $videoUrl }}"></iframe>
+                                </div>
+                                <b>{{ $videoTitle }}</b>
+                            </div>
+                        @endforeach
+                    </div>
+                @endcomponent
+            @endif
             @if((null !== $blog) && (count($blog->channel->item)))
                 @component('components.ui.card')
                     @slot('cardHeader')
