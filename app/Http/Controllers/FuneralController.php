@@ -42,6 +42,7 @@ use App\Mail\ServiceCreated;
 use App\Service;
 use App\Subscription;
 use App\Traits\HandlesAttachmentsTrait;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -105,7 +106,9 @@ class FuneralController extends Controller
     {
         $cities = Auth::user()->writableCities;
         $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
-        return Inertia::render('Rites/FuneralWizard', compact('cities', 'locations'));
+        $people = User::all();
+        $user = Auth::user();
+        return Inertia::render('Rites/FuneralWizard', compact('cities', 'locations', 'people', 'user'));
     }
 
     public function wizardSave(Request $request)
@@ -116,6 +119,7 @@ class FuneralController extends Controller
                 'city' => 'required|exists:cities,id',
                 'location' => 'required',
                 'name' => 'required|string',
+                'pastor' => 'nullable',
             ]
         );
         if (is_numeric($data['location'])) {
@@ -191,9 +195,18 @@ class FuneralController extends Controller
             ]
         );
         $service->update(['slug' => $service->createSlug()]);
-        if (Auth::user()->hasRole('Pfarrer*in')) {
-            $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+        if (!is_array($data['pastor'])) {
+            if (Auth::user()->hasRole('Pfarrer*in')) {
+                $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+            }
+        } else {
+            $sync = [];
+            foreach ($data['pastor'] as $person) {
+                $sync[$person['id']] = ['category' => 'P'];
+            }
+            $service->pastors()->sync($sync);
         }
+
 
         $funeral = Funeral::create(
             [

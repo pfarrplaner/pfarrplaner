@@ -45,6 +45,9 @@
                                 label="Ort" @set-location="setLocation" />
                 <form-input label="Verstorbene:r" placeholder="Nachname, Vorname" name="name"
                             v-model="funeral.name" />
+                <form-group label="Pfarrer*in">
+                    <people-select :people="people" v-model="funeral.pastor" />
+                </form-group>
             </card-body>
         </card>
     </admin-layout>
@@ -57,10 +60,11 @@ import FormSelectize from "../../components/Ui/forms/FormSelectize";
 import FormGroup from "../../components/Ui/forms/FormGroup";
 import LocationSelect from "../../components/Ui/elements/LocationSelect";
 import FormInput from "../../components/Ui/forms/FormInput";
+import PeopleSelect from "../../components/Ui/elements/PeopleSelect";
 export default {
     name: "FuneralWizard",
-    components: {FormInput, LocationSelect, FormGroup, FormSelectize, CardBody, Card},
-    props: ['cities', 'locations'],
+    components: {PeopleSelect, FormInput, LocationSelect, FormGroup, FormSelectize, CardBody, Card},
+    props: ['cities', 'locations', 'people', 'user'],
     data() {
         return {
             myDatePickerConfig: {
@@ -72,7 +76,8 @@ export default {
                 city: null,
                 location: null,
                 name: null,
-            }
+                pastor: [this.user.id],
+            },
         }
     },
     methods: {
