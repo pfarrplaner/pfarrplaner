@@ -30,7 +30,9 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\City;
 use App\Http\Controllers\Controller;
+use App\Service;
 use App\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -103,7 +105,16 @@ class LoginController extends Controller
                 );
             }
 
-            return view('auth.login', compact('blog', 'videos'));
+            $count = [
+                'cities' => City::count(),
+                'users' => User::where('password', '!=', '')->count(),
+                'services' => Service::count(),
+            ];
+
+            $packageConfig = json_decode(file_get_contents(base_path('package.json')), true);
+            $version = $packageConfig['version'];
+
+            return view('auth.login', compact('blog', 'videos', 'count', 'version'));
         }
     }
 

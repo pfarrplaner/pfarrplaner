@@ -8,6 +8,7 @@
             @if(isset($placeholder)) placeholder="{{ $placeholder }}" @endif
             @if(isset($enabled) && (!$enabled)) disabled @endif
             @if(isset($required) && ($required)) required @endif
+            @if(isset($autofocus) && ($autofocus)) autofocus @endif
             @if(isset($pattern)) pattern="{{ $pattern }}" @endif
     />
     @include('partials.form.validation')

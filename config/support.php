@@ -31,4 +31,5 @@
 
 return [
     'youtube_channel_feed' => env('YT_CHANNEL_FEED'),
+    'repository_commit_feed' => env('REPO_COMMIT_FEED'),
 ];
