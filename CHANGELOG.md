@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.96.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.95.0...v1.96.0) (2021-12-28)
+
+
+### Features
+
+* Allow choosing another pastor in FuneralWizard ([bf925f2](https://github.com/pfarrplaner/pfarrplaner/commits/bf925f2643a88e2029922ab572611596cdc70e07)), closes [#179](https://github.com/pfarrplaner/pfarrplaner/issues/179)
+* Include videos from Youtube channel on welcome page ([a5846e7](https://github.com/pfarrplaner/pfarrplaner/commits/a5846e783ad063473ad7421110d139365ef5978b)), closes [#156](https://github.com/pfarrplaner/pfarrplaner/issues/156)
+
+
+### Bug Fixes
+
+* Image attachments not filtered correctly ([206b214](https://github.com/pfarrplaner/pfarrplaner/commits/206b21470811d21729a20cf8e292dfd9ae780fca))
+
 ## [1.95.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.94.0...v1.95.0) (2021-12-27)
 
 
