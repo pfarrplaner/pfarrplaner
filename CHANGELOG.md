@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.97.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.96.0...v1.97.0) (2021-12-29)
+
+
+### Features
+
+* Create a public landing page ([a94bb1c](https://github.com/pfarrplaner/pfarrplaner/commits/a94bb1c0dcc113571f71c3bee49b6b10021f9503))
+* Implement public-facing contact form ([6731e6b](https://github.com/pfarrplaner/pfarrplaner/commits/6731e6b8467f679b9c7caa30685429e1a593788c))
+
 ## [1.96.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.95.0...v1.96.0) (2021-12-28)
 
 
