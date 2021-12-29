@@ -34,6 +34,7 @@ use App\Baptism;
 use App\City;
 use App\Day;
 use App\Funeral;
+use App\Mail\ContactFormMessage;
 use App\Mail\MinistryRequestFilled;
 use App\Service;
 use App\User;
@@ -391,5 +392,18 @@ class PublicController extends Controller
         }
         $type = ucfirst($type);
         return view('public.dimissorial.thanks', compact('rite', 'type'));
+    }
+
+    public function submitContactForm(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email',
+            'subject' => 'required|string',
+            'message' => 'required|string',
+                                   ]);
+
+        Mail::to('christoph.fischer@elkw.de')->send(new ContactFormMessage($data));
+        return response('OK');
     }
 }

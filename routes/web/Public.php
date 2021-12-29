@@ -41,7 +41,7 @@
 
 
 
-use App\Http\Controllers\PublicController; 
+use App\Http\Controllers\PublicController;
 
 Route::get('/kinderkirche/{city}/pdf', [PublicController::class, 'childrensChurch'])->name('cc-public-pdf');
 Route::get('/kinderkirche/{city}', [PublicController::class, 'childrensChurch'])->name('cc-public');
@@ -51,3 +51,5 @@ Route::get('/anfrage/{ministry}/{user}/{services}/{sender?}', [PublicController:
 Route::post('/anfrage/{ministry}/{user}/{sender?}', [PublicController::class, 'ministryRequestFilled'])->name('ministry.request.fill');
 Route::get('/dienste/{cityName}/{ministry}', [PublicController::class, 'ministryPlan'])->name('ministry.plan');
 Route::get('/services/{city}/streaming/next', [PublicController::class, 'nextStream'])->name('service.nextstream');
+
+Route::post('/kontaktformular', [PublicController::class, 'submitContactForm'])->name('contactForm.submit');
