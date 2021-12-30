@@ -38,15 +38,30 @@
                 <a class="btn btn-sm btn-light mt-md-2" :href="route('user.switch', {user: selectedPerson})"><span class="fa fa-sign-in-alt"></span></a>
             </div>
         </div>
+        <h3>Backup Status</h3>
+        <fake-table :headers="['Ziel', 'Erreichbar', 'Gesund', 'Anzahl Backups', 'Disk', 'Neuestes Backup', 'Speicherplatz']"
+                    :columns="[2,1,1,2,2,2,2]" collapsed-header="Backups">
+            <div class="row" v-for="backup in backups">
+                <div class="col-md-2">{{ backup.name }}</div>
+                <div class="col-md-1"><checked-process-item :check="backup.reachable" /></div>
+                <div class="col-md-1"><checked-process-item :check="backup.healthy" /></div>
+                <div class="col-md-2">{{ backup.amount }}</div>
+                <div class="col-md-2"><checked-process-item :check="backup.diskCheck" :positive="backup.disk" :negative="backup.disk"/></div>
+                <div class="col-md-2">{{ backup.newest }}</div>
+                <div class="col-md-2">{{ backup.usedStorage }}</div>
+            </div>
+        </fake-table>
     </div>
 </template>
 
 <script>
 import FormSelectize from "../Ui/forms/FormSelectize";
+import FakeTable from "../Ui/FakeTable";
+import CheckedProcessItem from "../Ui/elements/CheckedProcessItem";
 export default {
     name: "AdminTab",
-    components: {FormSelectize},
-    props: ['people'],
+    components: {CheckedProcessItem, FakeTable, FormSelectize},
+    props: ['people', 'backups'],
     data() {
         return {
             selectedPerson: null,

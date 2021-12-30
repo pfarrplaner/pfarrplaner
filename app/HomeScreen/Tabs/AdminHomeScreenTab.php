@@ -32,6 +32,11 @@ namespace App\HomeScreen\Tabs;
 
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Backup\BackupDestination\Backup;
+use Spatie\Backup\Commands\ListCommand;
+use Spatie\Backup\Helpers\Format;
+use Spatie\Backup\Tasks\Monitor\BackupDestinationStatus;
+use Spatie\Backup\Tasks\Monitor\BackupDestinationStatusFactory;
 
 class AdminHomeScreenTab extends AbstractHomeScreenTab
 {
@@ -48,7 +53,50 @@ class AdminHomeScreenTab extends AbstractHomeScreenTab
     public function toArray($data = [])
     {
         $data['people'] = User::all();
+        $data['backups'] = $this->getBackups();
+
         return parent::toArray($data);
     }
+
+    protected function getBackups() {
+        $statuses = BackupDestinationStatusFactory::createForMonitorConfig(config('backup.monitor_backups'));
+
+        $cmd = new ListCommand();
+        $result = [];
+
+        /** @var BackupDestinationStatus $status */
+        foreach ($statuses as $status) {
+            $destination = $status->backupDestination();
+
+            $row = [
+                'name' => $destination->backupName(),
+                'disk' => $destination->diskName(),
+                'diskCheck' => ($status->getHealthCheckFailure() === null),
+                'reachable' => $destination->isReachable(),
+                'healthy' => $status->isHealthy(),
+                'amount' => $destination->backups()->count(),
+                'newest' => $this->getFormattedBackupDate($destination->newestBackup()),
+                'usedStorage' => Format::humanReadableSize($destination->usedStorage()),
+            ];
+
+            if (! $destination->isReachable()) {
+                foreach (['amount', 'newest', 'usedStorage'] as $propertyName) {
+                    $row[$propertyName] = '/';
+                }
+            }
+
+            $result[] = $row;
+        }
+
+        return $result;
+    }
+
+    protected function getFormattedBackupDate(Backup $backup = null)
+    {
+        return is_null($backup)
+            ? 'Keine Backups vorhanden'
+            : Format::ageInDays($backup->date());
+    }
+
 
 }
