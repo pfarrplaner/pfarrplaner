@@ -512,7 +512,7 @@ class UserController extends Controller
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
             'title' => 'nullable|string',
-            'email' => 'nullable|string|email|max:255|unique:users,email',
+            'email' => 'nullable|string|email|max:255|unique:users,email,'.$user->id,
             'password' => 'nullable|string',
             'notifications' => 'nullable|string',
             'office' => 'nullable|string',
