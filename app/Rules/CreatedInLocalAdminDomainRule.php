@@ -5,7 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
-class CreatedInLocalAdminDomain implements Rule
+class CreatedInLocalAdminDomainRule implements Rule
 {
     /**
      * Create a new rule instance.

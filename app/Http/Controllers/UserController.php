@@ -37,7 +37,7 @@ use App\HomeScreen\Tabs\HomeScreenTabFactory;
 use App\Location;
 use App\Ministry;
 use App\Parish;
-use App\Rules\CreatedInLocalAdminDomain;
+use App\Rules\CreatedInLocalAdminDomainRule;
 use App\Service;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -529,7 +529,7 @@ class UserController extends Controller
             // on create:
             if ($request->route()->getName() == 'user.store') {
                 // check if at least one permission is set
-                $rules['cityPermission'] = [new CreatedInLocalAdminDomain()];
+                $rules['cityPermission'] = [new CreatedInLocalAdminDomainRule()];
 
                 // force setting a password
                 $rules['email'] = 'required|email';
