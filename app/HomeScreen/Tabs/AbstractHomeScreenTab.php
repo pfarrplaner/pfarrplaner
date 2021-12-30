@@ -46,6 +46,15 @@ class AbstractHomeScreenTab
     }
 
     /**
+     * Check if this tab is available to the current user
+     * @return bool
+     */
+    public function isAvailable(): bool
+    {
+        return true;
+    }
+
+    /**
      * @return string
      */
     public function getTitle(): string

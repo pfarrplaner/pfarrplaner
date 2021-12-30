@@ -86,6 +86,7 @@ import TabHeader from "../components/Ui/tabs/tabHeader";
 import Tabs from "../components/Ui/tabs/tabs";
 import Tab from "../components/Ui/tabs/tab";
 import CardHeader from "../components/Ui/cards/cardHeader";
+import AdminTab from "../components/HomeScreen/AdminTab";
 import AbsencesTab from "../components/HomeScreen/AbsencesTab";
 import BaptismsTab from "../components/HomeScreen/BaptismsTab";
 import CasesTab from "../components/HomeScreen/CasesTab";
@@ -99,8 +100,8 @@ import WeddingsTab from "../components/HomeScreen/WeddingsTab";
 export default {
     name: "HomeScreen",
     components: {CardHeader, TabHeader, TabHeaders, Tabs, Tab, CardBody, Card,
-        AbsencesTab, BaptismsTab, CasesTab, FuneralsTab, MissingEntriesTab, NextOfferingsTab, NextServicesTab,
-        RegistrationsTab, StreamingTab, WeddingsTab
+        AdminTab, AbsencesTab, BaptismsTab, CasesTab, FuneralsTab, MissingEntriesTab, NextOfferingsTab, NextServicesTab,
+        RegistrationsTab, StreamingTab, WeddingsTab,
     },
     props: ['user', 'settings', 'activeTab', 'replacements'],
     beforeMount() {

@@ -50,7 +50,7 @@ class HomeScreenTabFactory
                 $class = 'App\\HomeScreen\\Tabs\\' . basename($file, '.php');
                 /** @var AbstractHomeScreenTab $object */
                 $object = new $class($config);
-                $homeScreenTabs[$object->getTitle()] = $object;
+                if ($object->isAvailable()) $homeScreenTabs[$object->getTitle()] = $object;
             }
         }
         ksort($homeScreenTabs);
@@ -77,6 +77,7 @@ class HomeScreenTabFactory
         $class = 'App\\HomeScreen\\Tabs\\' . ucfirst($tab['type'].'HomeScreenTab');
         if (class_exists($class)) {
             $tabObject = new $class($tab['config']);
+            if (!$tabObject->isAvailable()) return null;
         } else {
             throw new \Exception('Class not found: '.$class);
         }
@@ -106,12 +107,14 @@ class HomeScreenTabFactory
          * @var AbstractHomeScreenTab $tab
          */
         foreach ($tabs as $key =>$tab) {
-            $available[$key] = [
-                'type' =>  $key,
-                'title' => $tab->getTitle(),
-                'description' => $tab->getDescription(),
-                'config' => $tab->getConfig(),
-            ];
+            if ($tab->isAvailable()) {
+                $available[$key] = [
+                    'type' =>  $key,
+                    'title' => $tab->getTitle(),
+                    'description' => $tab->getDescription(),
+                    'config' => $tab->getConfig(),
+                ];
+            }
         }
         return $available;
     }
