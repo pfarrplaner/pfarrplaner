@@ -49,7 +49,7 @@
             </div>
         </div>
         <div class="card-body">
-            <draggable :list="blocks" group="blocks" v-bind:="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
+            <draggable :list="blocks" group="blocks" v-bind:class="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
                        @start="focusOff" @end="saveState" :disabled="!editable" handle=".handle">
                 <div v-for="block,blockIndex in blocks" class="liturgy-block"
                      :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
@@ -91,7 +91,7 @@
                                   :agenda-mode="agendaMode" :markers="markers"/>
 
                     <draggable :list="block.items" group="items" class="liturgy-items-list" handle=".handle"
-                               v-bind:="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
+                               v-bind:class="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
                                :disabled="!editable">
                         <div v-for="item,itemIndex in block.items" class="liturgy-item"
                              @click.stop="focusItem(blockIndex, itemIndex)"
