@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.98.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.97.0...v1.98.0) (2021-12-30)
+
+
+### Features
+
+* Create basic AdminTab with user quick-select ([232c94f](https://github.com/pfarrplaner/pfarrplaner/commits/232c94fb1b50005b01a97eb09daa7b8df18c0ddf))
+* Show backup status in AdminTab ([63a40ea](https://github.com/pfarrplaner/pfarrplaner/commits/63a40ea676d55802c6f89a2b480dc1bed1d63554))
+
 ## [1.97.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.96.0...v1.97.0) (2021-12-29)
 
 
