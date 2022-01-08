@@ -74,6 +74,8 @@ class OPEventsImport
      */
     public function mix($events, Carbon $start, Carbon $end, $removeMatching = false)
     {
+        if (empty($this->city->op_customer_token.$this->city->op_customer_key)) return $events;
+
         $myEvents = $this->getEvents();
         foreach ($myEvents['data'] as $myEvent) {
             $myEvent['record_type'] = 'OP_Event';
@@ -112,7 +114,7 @@ class OPEventsImport
      */
     public function getEvents()
     {
-        if (($this->city->op_customer_token ?? '') == '') return [];
+        if (empty($this->city->op_customer_token.$this->city->op_customer_key)) return [];
         $url = 'https://backend.online-geplant.de/public/event/' . $this->city->op_customer_token . '/' . $this->city->op_customer_key;
         $cacheKey = 'OPEventsImport_' . $url;
         if (Cache::has($cacheKey)) {

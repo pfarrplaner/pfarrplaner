@@ -83,6 +83,8 @@ class EventCalendarImport
      */
     public function mix($events, Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
+        if (empty($this->url)) return $events;
+
         $theseEvents = $this->getEvents($weekStart, $weekEnd, $removeServices);
         foreach ($theseEvents as $dateCode => $subEvents) {
             foreach ($subEvents as $event) {
@@ -102,6 +104,8 @@ class EventCalendarImport
      */
     public function getEvents(Carbon $weekStart, Carbon $weekEnd, $removeServices = false): array
     {
+        if (empty($this->url)) return [];
+
         $cacheKey = 'EventCalendarImport_' . $this->url;
         if (Cache::has($cacheKey)) {
             $events = Cache::get($cacheKey);
