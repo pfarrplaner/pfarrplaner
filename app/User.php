@@ -94,7 +94,12 @@ class User extends Authenticatable
         'canEditCC',
         'new_features',
         'manage_absences',
-        'api_token'
+        'api_token',
+        'own_website',
+        'own_podcast_title',
+        'own_podcast_url',
+        'own_podcast_spotify',
+        'own_podcast_itunes',
     ];
 
     /**

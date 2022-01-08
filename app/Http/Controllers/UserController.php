@@ -253,7 +253,7 @@ class UserController extends Controller
     public function profileSave(Request $request)
     {
         $user = Auth::user();
-        $data = $this->validateRequest($request);
+        $data = $this->validateRequest($request, $user);
         $user->update($data);
 
         // change password?
@@ -512,7 +512,7 @@ class UserController extends Controller
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
             'title' => 'nullable|string',
-            'email' => 'nullable|string|email|max:255|unique:users,email,'.$user->id,
+            'email' => 'nullable|string|email|max:255|unique:users,email'.($user ? ','.$user->id : ''),
             'password' => 'nullable|string',
             'notifications' => 'nullable|string',
             'office' => 'nullable|string',
@@ -522,6 +522,11 @@ class UserController extends Controller
             'manage_absences' => 'nullable|string',
             'homeCities' => 'nullable',
             'homeCities.*' => 'int|exists:cities,id',
+            'own_website' => 'nullable|string',
+            'own_podcast_title' => 'nullable|string',
+            'own_podcast_url' => 'nullable|string|url',
+            'own_podcast_spotify' => 'nullable|checkbox',
+            'own_podcast_itunes' => 'nullable|checkbox',
         ];
 
         // special treatment if the submitter is a local admin

@@ -45,6 +45,7 @@
                                 :count="calendarConnections.length"
                                 :disabled="user.email.slice(-8) != '@elkw.de'"
                                 disabled-title="Diese Funktion ist nur für Benutzer mit einem ELKW-Konto verfügbar."/>
+                    <tab-header title="Externe Inhalte" id="externalContent" :active-tab="activeTab" />
                 </tab-headers>
             </card-header>
             <card-body>
@@ -67,6 +68,9 @@
                     <tab id="calendars" :active-tab="activeTab">
                         <calendar-connections-tab :user="user" :calendar-connections="calendarConnections"/>
                     </tab>
+                    <tab id="externalContent" :active-tab="activeTab">
+                        <external-content-tab :user="editedUser" />
+                    </tab>
                 </tabs>
             </card-body>
         </card>
@@ -86,12 +90,14 @@ import SecurityTab from "../../components/Profile/Tabs/SecurityTab";
 import CalendarConnectionsTab from "../../components/Profile/Tabs/CalendarConnectionsTab";
 import SubscriptionsTab from "../../components/Profile/Tabs/SubscriptionsTab";
 import HomeScreenConfigurationTab from "../../components/Profile/Tabs/HomeScreenConfigurationTab";
+import ExternalContentTab from "../../components/Profile/Tabs/ExternalContentTab";
 
 export default {
     name: "ProfileEditor",
     props: ['tab', 'user', 'calendarConnections', 'cities', 'subscriptions', 'availableTabs', 'homeScreenTabsConfig',
         'locations', 'ministries', 'settings'],
     components: {
+        ExternalContentTab,
         HomeScreenConfigurationTab,
         SubscriptionsTab,
         CalendarConnectionsTab,
@@ -100,7 +106,8 @@ export default {
     data() {
         return {
             activeTab: this.tab || 'profile',
-            password: {current: '', new: '', confirm: ''}
+            password: {current: '', new: '', confirm: ''},
+            editedUser: this.user,
         }
     },
     methods: {
@@ -114,6 +121,11 @@ export default {
                 subscriptions: this.subscriptions,
                 homeScreenTabsConfig: this.homeScreenTabsConfig,
                 settings: this.settings,
+                own_website: this.user.own_website,
+                own_podcast_title: this.user.own_podcast_title,
+                own_podcast_url: this.user.own_podcast_url,
+                own_podcast_spotify: this.user.own_podcast_spotify,
+                own_podcast_itunes: this.user.own_podcast_itunes,
             };
             if (this.password.current && this.password.new && this.password.confirm) {
                 result['current_password'] = this.password.current;
