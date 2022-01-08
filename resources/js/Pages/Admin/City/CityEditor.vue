@@ -49,7 +49,12 @@
                 <tabs>
                     <tab id="home" :active-tab="activeTab">
                         <form-input name="name" label="Name der Kirchengemeinde" v-model="myCity.name" autofocus />
+                        <form-input name="offical_name" label="Offizielle Bezeichnung" v-model="myCity.official_name" />
                         <form-input name="homepage" label="Homepage der Kirchengemeinde" v-model="myCity.homepage" />
+                        <form-image-attacher v-model="myCity.logo" label="Logo der Kirchengemeinde"
+                                             :attach-route="route('city.attach', {city: myCity.id, field: 'logo'})"
+                                             :detach-route="route('city.detach', {city: myCity.id, field: 'logo'})" />
+
                     </tab>
                     <tab id="offerings" :active-tab="activeTab">
                         <form-input name="default_offering_goal" label="Opferzweck, wenn nicht angegeben"

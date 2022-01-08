@@ -78,6 +78,8 @@ class City extends Model
         'communiapp_use_outlook',
         'communiapp_use_op',
         'konfiapp_default_type',
+        'official_name',
+        'logo',
     ];
 
     /**
@@ -129,4 +131,5 @@ class City extends Model
     public function hasRegistrableLocations() {
         return Location::where('city_id', $this->id)->whereHas('seatingSections')->count() > 0;
     }
+
 }

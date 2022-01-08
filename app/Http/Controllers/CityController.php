@@ -139,6 +139,8 @@ class CityController extends Controller
                 'communiapp_use_outlook' => 'nullable|checkbox',
                 'communiapp_use_op' => 'nullable|checkbox',
                 'konfiapp_default_type' => 'nullable|string',
+                'logo' => 'nullable|string',
+                'official_name' => 'nullable|string',
             ]
         );
     }
