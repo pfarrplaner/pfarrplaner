@@ -263,7 +263,7 @@
                                 <form-textarea label="Heirat, Familie" v-model="funeral.family" name="family"/>
                                 <form-textarea label="Weiterer Lebenslauf" v-model="funeral.further_life"
                                                name="further_life"/>
-                                <form-textarea label="Lebensende" v-model="funeral.death" name="death"/>
+                                <form-textarea label="Lebensende" v-model="funeral.death" name="death" :help="endOfLifeText"/>
                                 <hr/>
                                 <form-textarea label="Prägende Erlebnisse, Hobbies, Interessen"
                                                v-model="funeral.events" name="events"/>
@@ -393,6 +393,14 @@ export default {
             });
             return images;
         },
+        endOfLifeText() {
+            let parts = [];
+            if (this.myFuneral.dod) parts.push(this.myFuneral.dod);
+            if (this.myFuneral.death_place) parts.push(this.myFuneral.death_place);
+            if (this.myFuneral.dod) parts.push(this.age);
+            if (parts.length == 0) return '';
+            return 'Gestorben: '+parts.join(', ');
+        }
     },
     created() {
         if (this.myFuneral.dob) this.myFuneral.dob = moment(this.myFuneral.dob).format('DD.MM.YYYY');
