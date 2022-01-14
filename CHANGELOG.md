@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.99.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.98.0...v1.99.0) (2022-01-14)
+
+
+### Features
+
+* Add duplicates wizard ([d508cc1](https://github.com/pfarrplaner/pfarrplaner/commits/d508cc18e0bb3d85c760918bba34c98a778e3eb6))
+* Add external content fields to user record ([c500c5f](https://github.com/pfarrplaner/pfarrplaner/commits/c500c5fe8ab59b417ccc0a853cd2012a54d2e460))
+* Add logo and official name to City records ([ce0cc47](https://github.com/pfarrplaner/pfarrplaner/commits/ce0cc47db1abd6a9ab46399190156a0ff42a205e))
+* Show DOD, place of death, age over "Lebensende" field in FuneralEditor ([35b8204](https://github.com/pfarrplaner/pfarrplaner/commits/35b82042956e36e1b820da712ede754b15e53c3a)), closes [#191](https://github.com/pfarrplaner/pfarrplaner/issues/191)
+* Some tweaks to backup table on AdminTab ([4cbf4b1](https://github.com/pfarrplaner/pfarrplaner/commits/4cbf4b19c5ce5331ef4a508fb87bd98bd48289f9))
+
+
+### Bug Fixes
+
+* incomplete attributes ([535f8a3](https://github.com/pfarrplaner/pfarrplaner/commits/535f8a3157af578b99486283f32388c804eb868e))
+* Landing page has wrong favicon ([fb2fcc7](https://github.com/pfarrplaner/pfarrplaner/commits/fb2fcc7f66758d4870ebd5329b192d48af835871)), closes [#192](https://github.com/pfarrplaner/pfarrplaner/issues/192)
+* Return empty result set when external calendar is not configured ([3d6ff45](https://github.com/pfarrplaner/pfarrplaner/commits/3d6ff4577193b786d9198f0ac8873159c86eb62c))
+* User cannot use own email address twice ([0f93645](https://github.com/pfarrplaner/pfarrplaner/commits/0f93645d01ae7477dc0d41f8c9a7f28eebccee86))
+* Users can have duplicate email addresses ([d89ba85](https://github.com/pfarrplaner/pfarrplaner/commits/d89ba85475665398a846e715c1ac2b6efbdcdd31))
+
 ## [1.98.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.97.0...v1.98.0) (2021-12-30)
 
 
