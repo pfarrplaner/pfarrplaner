@@ -564,4 +564,69 @@ class UserController extends Controller
         $user = User::create($data);
         return response()->json($user);
     }
+
+    public function findDuplicates()
+    {
+        $allUsers = User::all();
+        $possibleDuplicates = [];
+        $withoutDuplicates = [];
+
+        foreach($allUsers as $user) {
+            $usersWithSameName = User::with('homeCities')
+                ->where('name', $user->name)
+                ->where('id', '!=', $user->id)
+                ->get();
+            if (count($usersWithSameName) > 0) {
+                $alreadyListed = false;
+                foreach ($usersWithSameName as $thisUser) {
+                    if (isset($possibleDuplicates[$thisUser->name])) {
+                        $alreadyListed = true;
+                        if ($thisUser->isOfficialUser && (!$possibleDuplicates[$thisUser->name]->isOfficialUser)) {
+                            $thisUser->duplicates = $possibleDuplicates[$thisUser->name]->duplicates->reject(function ($item) use ($thisUser) {
+                                return $item->id == $thisUser->id;
+                            });
+                            $possibleDuplicates[$thisUser->name]->duplicates = collect();
+                            $thisUser->duplicates->push($possibleDuplicates[$thisUser->name]);
+                            $possibleDuplicates[$thisUser->name] = $thisUser;
+                        }
+                    }
+                }
+                if (!$alreadyListed) {
+                    $user->load('homeCities');
+                    $usersWithSameName = $usersWithSameName->map(function ($item) {
+                        $item->duplicates = collect();
+                        $item->fullNameText = $item->fullName(true);
+                        return $item;
+                    });
+                    $user->duplicates = $usersWithSameName;
+                    $user->fullNameText = $user->fullName(true);
+                    $possibleDuplicates[$user->name] = $user;
+                }
+            } else {
+                $user->duplicates = collect();
+                $user->fullNameText = $user->fullName(true);
+                $withoutDuplicates[] = $user;
+            }
+        }
+        $possibleDuplicates = array_values($possibleDuplicates);
+
+        return Inertia::render('Admin/User/DuplicatesWizard', compact('possibleDuplicates', 'withoutDuplicates'));
+    }
+
+    public function fixDuplicates(Request $request)
+    {
+        foreach ($request->all() as $target => $duplicates) {
+            $target = User::find($target);
+            if ($target) {
+                foreach ($duplicates as $duplicate) {
+                    $duplicate = User::find($duplicate);
+                    if ($duplicate) {
+                        $duplicate->mergeInto($target);
+                        $duplicate->delete();
+                    }
+                }
+            }
+        }
+        return redirect()->route('users.duplicates');
+    }
 }

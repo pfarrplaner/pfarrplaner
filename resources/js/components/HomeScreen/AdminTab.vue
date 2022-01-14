@@ -38,6 +38,8 @@
                 <a class="btn btn-sm btn-light mt-md-2" :href="route('user.switch', {user: selectedPerson})"><span class="fa fa-sign-in-alt"></span></a>
             </div>
         </div>
+        <a :href="route('users.duplicates')" class="btn btn-sm btn-light">Duplikate suchen</a>
+        <hr class="mt-3" />
         <h3>Backup Status</h3>
         <fake-table :headers="['Ziel', 'Erreichbar', 'Gesund', 'Anzahl Backups', 'Neuestes Backup', 'Benötigter Speicherplatz']"
                     :columns="[2,2,2,2,2,2]" collapsed-header="Backups">

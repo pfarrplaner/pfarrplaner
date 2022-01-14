@@ -50,6 +50,7 @@ use Shetabit\Visitor\Traits\Visitor;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Traits\HasRoles;
 use App\Facades\Settings;
+use Venturecraft\Revisionable\Revision;
 
 /**
  * Class User
@@ -117,6 +118,10 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    protected $appends = [
+        'isOfficialUser',
     ];
 
     /**
@@ -937,6 +942,54 @@ class User extends Authenticatable
                     Settings::set($this, $key, $settings[$key]);
                 }
             }
+        }
+    }
+
+    public function getIsOfficialUserAttribute() {
+        return !empty($this->password);
+    }
+
+    public function mergeInto(User $user)
+    {
+        if ((!$user->isOfficialUser) && $this->isOfficialUser) {
+            $user->password = $this->password;
+            $user->cities()->sync($this->cities->pluck('id'));
+            $user->writableCities()->sync($this->writableCities->pluck('id'));
+            $user->adminCities()->sync($this->adminCities->pluck('id'));
+            $user->roles()->sync($this->roles->pluck('id'));
+            $user->permissions()->sync($this->permissions->pluck('id'));
+            $user->update([
+                'manage_absences' => $this->manage_absences,
+                'preference_cities' => $this->preference_cities,
+                          ]);
+
+        }
+        Absence::where('user_id', $this->id)->update(['user_id' => $user->id]);
+        Approval::where('user_id', $this->id)->update(['user_id' => $user->id]);
+        CalendarConnection::where('user_id', $this->id)->update(['user_id' => $user->id]);
+        Comment::where('user_id', $this->id)->update(['user_id' => $user->id]);
+        Participant::where('user_id', $this->id)->update(['user_id' => $user->id]);
+        Revision::where('user_id', $this->id)->update(['user_id' => $user->id]);
+        Subscription::where('user_id', $this->id)->update(['user_id' => $user->id]);
+        UserSetting::where('user_id', $this->id)->update(['user_id' => $user->id]);
+
+        foreach ($this->parishes as $parish) {
+            /** @var Parish $parish */
+            $parish->users()->detach($this->id);
+            $parish->users()->attach($user->id);
+        }
+
+        foreach ($this->teams as $team) {
+            /** @var Team $team */
+            $team->users()->detach($this->id);
+            $team->users()->attach($user->id);
+        }
+
+        $srcUser = $this;
+        foreach (Replacement::whereHas('users', function ($query) use ($srcUser) {
+            $query->where('user_id', $srcUser);
+        }) as $replacement) {
+            $replacement->update(['user_id' => $user->id]);
         }
     }
 }
