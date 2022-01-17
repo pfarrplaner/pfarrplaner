@@ -35,7 +35,20 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Song extends \Illuminate\Database\Eloquent\Model
 {
-    protected $fillable = ['title', 'refrain', 'copyrights', 'songbook', 'songbook_abbreviation', 'reference'];
+    protected $fillable = [
+        'title',
+        'refrain',
+        'copyrights',
+        'songbook',
+        'songbook_abbreviation',
+        'reference',
+        'key',
+        'measure',
+        'note_length',
+        'prolog',
+        'notation',
+        'refrain_notation',
+    ];
     protected $with = ['verses'];
 
     protected static function boot()
@@ -49,7 +62,6 @@ class Song extends \Illuminate\Database\Eloquent\Model
             $builder->orderBy('title', 'asc');
         });
     }
-
 
 
     public function verses()

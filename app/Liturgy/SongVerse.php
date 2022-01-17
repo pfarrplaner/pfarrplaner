@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Builder;
 class SongVerse extends \Illuminate\Database\Eloquent\Model
 {
 
-    protected $fillable = ['song_id', 'number', 'text', 'refrain_before', 'refrain_after'];
+    protected $fillable = ['song_id', 'number', 'text', 'refrain_before', 'refrain_after', 'notation'];
 
     protected static function boot()
     {

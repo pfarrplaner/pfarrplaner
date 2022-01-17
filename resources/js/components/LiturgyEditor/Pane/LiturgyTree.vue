@@ -134,6 +134,12 @@
                                     <span v-if="item.data.needs_replacement" class="badge" :class="dataReplacerClass(item)">
                                         <span class="fa fa-user" :title="dataReplacerTitle(item)"></span>
                                     </span>
+                                    <span v-if="item.data_type=='song'" :class="item.data.song && item.data.song.notation ? '' : 'fa-stack fa-2x'" style="font-size: .5em"
+                                          :title="item.data.song && item.data.song.notation ? 'Zu diesem Lied sind Noten vorhanden.' : 'Zu diesem Lied sind keine Noten vorhanden.'">
+                                        <span class="fa fa-music"
+                                              :class="item.data.song && item.data.song.notation ? 'text-success' : 'text-muted fa-stack-1x'" />
+                                        <span v-if="!(item.data.song && item.data.song.notation)" class="fa fa-ban fa-stack-2x text-muted" />
+                                    </span>
                                 </div>
                                 <div class="col-sm-2 responsible-list"
                                      @click="editResponsibles(blockIndex, itemIndex, item)">

@@ -31,10 +31,13 @@
 namespace App\Http\Controllers;
 
 
+use App\Liturgy\Item;
+use App\Liturgy\Music\ABCMusic;
 use App\Liturgy\Psalm;
 use App\Liturgy\Song;
 use App\Liturgy\SongVerse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SongController extends Controller
 {
@@ -62,10 +65,16 @@ class SongController extends Controller
     {
         $songbooks = [];
         foreach (Song::all() as $song) {
-            $songbooks[$song->songbook_abbreviation] = ['title' => $song->songbook, 'abbreviation' => $song->songbook_abbreviation];
+            $songbooks[$song->songbook_abbreviation] = [
+                'title' => $song->songbook,
+                'abbreviation' => $song->songbook_abbreviation
+            ];
         }
         foreach (Psalm::all() as $song) {
-            $songbooks[$song->songbook_abbreviation] = ['title' => $song->songbook, 'abbreviation' => $song->songbook_abbreviation];
+            $songbooks[$song->songbook_abbreviation] = [
+                'title' => $song->songbook,
+                'abbreviation' => $song->songbook_abbreviation
+            ];
         }
         return response()->json($songbooks);
     }
@@ -120,12 +129,28 @@ class SongController extends Controller
                 'songbook' => 'nullable|string',
                 'songbook_abbreviation' => 'nullable|string',
                 'reference' => 'nullable|string',
+                'key' => 'nullable|string',
+                'measure' => 'nullable|string',
+                'note_length' => 'nullable|string',
+                'notation' => 'nullable|string',
+                'refrain_notation' => 'nullable|string',
                 'verses.*.number' => 'nullable',
                 'verses.*.text' => 'nullable|string',
                 'verses.*.refrain_before' => 'nullable|bool',
                 'verses.*.refrain_after' => 'nullable|bool',
+                'verses.*.notation' => 'nullable|string',
             ]
         );
+    }
+
+    public function musicEditor(Song $song)
+    {
+        return Inertia::render('Liturgy/Songs/MusicEditor', compact('song'));
+    }
+
+    public function music(Song $song, $verses = '', $lineNumber = null)
+    {
+        return response()->file(ABCMusic::renderToFile(ABCMusic::make($song, $verses, $lineNumber)));
     }
 
 }
