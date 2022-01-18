@@ -134,6 +134,7 @@ class SongController extends Controller
                 'note_length' => 'nullable|string',
                 'notation' => 'nullable|string',
                 'refrain_notation' => 'nullable|string',
+                'refrain_text_notation' => 'nullable|string',
                 'verses.*.number' => 'nullable',
                 'verses.*.text' => 'nullable|string',
                 'verses.*.refrain_before' => 'nullable|bool',

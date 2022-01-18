@@ -48,6 +48,7 @@ class Song extends \Illuminate\Database\Eloquent\Model
         'prolog',
         'notation',
         'refrain_notation',
+        'refrain_text_notation',
     ];
     protected $with = ['verses'];
 

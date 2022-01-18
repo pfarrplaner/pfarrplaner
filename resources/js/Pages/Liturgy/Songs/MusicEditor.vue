@@ -34,48 +34,85 @@
         </template>
         <div class="row">
             <div class="col-md-6">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <form-input name="key" label="Tonart" v-model="mySong.key" />
-                    </div>
-                    <div class="col-sm-4">
-                        <form-input name="measure" label="Takt" v-model="mySong.measure" />
-                    </div>
-                    <div class="col-sm-4">
-                        <form-input name="note_length" label="Notenlänge" v-model="mySong.note_length" />
-                    </div>
-                </div>
-                <form-textarea name="notation" label="Notation (Strophen)" v-model="mySong.notation" />
-                <form-textarea name="notation_refrain" label="Notation (Refrain)" v-model="mySong.refrain_notation" />
 
 
 
                 <div class="accordion" id="accordionExample">
+                    <div class="card z-depth-0 bordered">
+                        <div class="card-header" :id="'setupHeading'">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" :data-target="'#setupBody'"
+                                        aria-expanded="true" :aria-controls="'setupBody'">
+                                    Einstellungen
+                                </button>
+                            </h5>
+                        </div>
+                        <div :id="'setupBody'" class="collapse p-2 show"  aria-labelledby="headingOne"
+                             data-parent="#accordionExample">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <form-input name="key" label="Tonart" v-model="mySong.key" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <form-input name="measure" label="Takt" v-model="mySong.measure" />
+                                </div>
+                                <div class="col-sm-4">
+                                    <form-input name="note_length" label="Notenlänge" v-model="mySong.note_length" />
+                                </div>
+                            </div>
+                            <form-textarea name="prolog" label="Weitere Konfiguration" v-model="mySong.prolog" help="Kopfzeilen (ABC-Notation)"/>
+                        </div>
+                    </div>
+                    <div class="card z-depth-0 bordered">
+                        <div class="card-header" :id="'notationRefrainHeading'">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" :data-target="'#notationRefrainBody'"
+                                        aria-expanded="true" :aria-controls="'notationRefrainBody'">
+                                    Kehrvers
+                                </button>
+                            </h5>
+                        </div>
+                        <div :id="'notationRefrainBody'" class="collapse p-2"  aria-labelledby="headingOne"
+                             data-parent="#accordionExample">
+                            <form-textarea name="notation_refrain" label="Notation (Kehrvers)" v-model="mySong.refrain_notation" />
+                            <form-textarea name="refrain_text_notation" label="Kehrverstext" v-model="mySong.refrain_text_notation" />
+                        </div>
+                    </div>
+                    <div class="card z-depth-0 bordered">
+                        <div class="card-header" :id="'notationHeading'">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" :data-target="'#notationBody'"
+                                        aria-expanded="true" :aria-controls="'notationBody'">
+                                    Notation (Strophen)
+                                </button>
+                            </h5>
+                        </div>
+                        <div :id="'notationBody'" class="collapse p-2"  aria-labelledby="headingOne"
+                             data-parent="#accordionExample">
+                            <form-textarea name="notation" label="Notation (Strophen)" v-model="mySong.notation" />
+                        </div>
+                    </div>
                     <div v-for="(verse,verseIndex) in mySong.verses" class="card z-depth-0 bordered">
                         <div class="card-header" :id="'verseHeading'+verseIndex">
                             <h5 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" :data-target="'#verseBody'+verseIndex"
+                                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" :data-target="'#verseBody'+verseIndex"
                                         aria-expanded="true" :aria-controls="'verseBody'+verseIndex">
-                                    <span class="fa" :class="verseVisible[verse.number] ? 'fa-eye' : 'fa-eye-slash'"
+                                    <span class="fa toggle-visibility mr-1" :class="verseVisible[verse.number] ? 'fa-eye' : 'fa-eye-slash'"
                                           @click.prevent.stop="verseVisible[verse.number] = !verseVisible[verse.number]"></span>
                                     Strophe {{ verse.number }} -- {{ verse.text.substr(0,40) }}...
                                 </button>
                             </h5>
                         </div>
-                        <div :id="'verseBody'+verseIndex" class="collapse p-2" :class="verseIndex == 0 ? 'show' : ''" aria-labelledby="headingOne"
+                        <div :id="'verseBody'+verseIndex" class="collapse p-2" aria-labelledby="headingOne"
                              data-parent="#accordionExample">
-                            <form-textarea label="Notation" v-model="verse.notation" />
+                            <form-textarea label="Verstext" v-model="verse.notation" />
                         </div>
                     </div>
                 </div>
-
-                <form-textarea name="prolog" label="Weitere Konfiguration" v-model="mySong.prolog" />
-
-                <pre id="music">{{ music }}</pre>
             </div>
-            <div class="col-md-6">Noten
-                <div id="paper">
-                </div>
+            <div class="col-md-6">
+                <div id="paper"></div>
+                <div id="refrain"></div>
             </div>
         </div>
     </admin-layout>
@@ -132,15 +169,33 @@ export default {
 
 
             return music;
+        },
+        refrain() {
+            if (!this.mySong.refrain_notation) return '';
+            let music = 'X:2\n'
+                + 'T:Kehrvers\n'
+                + 'M:'+this.mySong.measure+'\n'
+                + 'L:'+this.mySong.note_length+'\n';
+            if (this.mySong.refrain_notation) {
+                let lineCtr = 0;
+                let refrainLines = (this.mySong.refrain_text_notation || '').split('\n');
+                this.mySong.refrain_notation.split('\n').forEach(line => {
+                    music += line+'\n';
+                    music += 'w:'+refrainLines[lineCtr]+'\n';
+                    lineCtr++;
+                });
+            }
+            return music;
         }
     },
     data() {
         let mySong = this.setupSong(this.song);
         let verseVisible = {};
         for (const verseIndex in mySong.verses) {
-            mySong.verses[verseIndex].notation = mySong.verses[verseIndex].notation || mySong.verses[verseIndex].text;
+            mySong.verses[verseIndex].notation = mySong.verses[verseIndex].notation || mySong.verses[verseIndex].text || '';
             verseVisible[mySong.verses[verseIndex].number] = true;
         }
+        mySong.refrain_text_notation = mySong.refrain_text_notation || mySong.refrain || '';
         return {
             mySong,
             renderer: abcjs,
@@ -172,7 +227,8 @@ export default {
             return mySong;
         },
         redraw() {
-            this.renderer.renderAbc('paper', this.music)
+            this.renderer.renderAbc('paper', this.music);
+            this.renderer.renderAbc('refrain', this.refrain);
         },
         saveSong() {
             axios.patch(route('liturgy.song.update', {song: this.mySong.id}), this.mySong)
@@ -188,5 +244,20 @@ export default {
 </script>
 
 <style scoped>
+    .btn-link {
+        width: 100%;
+        text-align: left;
+    }
+
+    .btn-link:after {
+        content: "\f107";
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        float: right;
+    }
+
+    .btn-link.collapsed:after {
+        content: "\f106";
+    }
 
 </style>

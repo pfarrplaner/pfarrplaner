@@ -20,6 +20,7 @@ class AddNotationFieldsToSongs extends Migration
             $table->text('prolog')->nullable();
             $table->text('notation')->nullable();
             $table->text('refrain_notation')->nullable();
+            $table->text('refrain_text_notation')->nullable();
         });
         Schema::table('song_verses', function (Blueprint $table) {
             $table->text('notation')->nullable();
@@ -40,6 +41,7 @@ class AddNotationFieldsToSongs extends Migration
             $table->dropColumn('prolog');
             $table->dropColumn('notation');
             $table->dropColumn('refrain_notation');
+            $table->dropColumn('refrain_text_notation');
         });
         Schema::table('song_verses', function (Blueprint $table) {
             $table->dropColumn('notation');

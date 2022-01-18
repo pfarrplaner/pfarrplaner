@@ -39,10 +39,13 @@ use App\Liturgy\Item;
 use App\Liturgy\ItemHelpers\LiturgicItemHelper;
 use App\Liturgy\ItemHelpers\PsalmItemHelper;
 use App\Liturgy\ItemHelpers\SongItemHelper;
+use App\Liturgy\Music\ABCMusic;
 use App\Liturgy\Replacement\Replacement;
+use App\Liturgy\Song;
 use App\Service;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Element\TextRun;
+use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Shared\Html;
 
 class SongSheetLiturgySheet extends AbstractLiturgySheet
@@ -121,15 +124,24 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
             $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 8]);
         }
 
-        foreach ($helper->getActiveVerses() as $verse) {
-            if ($verse['refrain_before']) {
-                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+        if ($item->data['song']['notation']) {
+            $song = Song::find($item->data['song']['id']);
+            $images = ABCMusic::images($song, $item->data['verses']);
+            foreach ($images as $image) {
+                $doc->getSection()->addImage($image, ['width' => Converter::cmToPoint(17.5)]);
             }
-            $doc->renderNormalText($verse['number'].'. '.$verse['text']);
-            if ($verse['refrain_after']) {
-                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+        } else {
+            foreach ($helper->getActiveVerses() as $verse) {
+                if ($verse['refrain_before']) {
+                    $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+                }
+                $doc->renderNormalText($verse['number'].'. '.$verse['text']);
+                if ($verse['refrain_after']) {
+                    $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+                }
             }
         }
+
     }
 
 }
