@@ -48,6 +48,7 @@ class ABCMusic
      */
     public static function getVerses(Song $song, $rangeString)
     {
+        if ('refrain' == $rangeString) return [$rangeString];
         if (is_array($rangeString)) return $rangeString;
         $verseRefs = [];
         if (empty($rangeString)) {
@@ -139,7 +140,7 @@ class ABCMusic
             $song->reference,
             join('+', self::getVerses($song, $verses)),
             $colors,
-            $lineNumber ? $lineNumber : 'X',
+            (null !== $lineNumber) ? $lineNumber : 'X',
             $wildCard ? '*' : md5($music),
         ];
         return storage_path(
@@ -211,12 +212,31 @@ class ABCMusic
         $verses = self::getVerses($song, $verses);
         foreach ($verses as $verseNumber) {
             $verse = self::getVerse($song, $verseNumber);
+
+            if ($verse->refrain_before) {
+                $refrainLines = explode("\n", $song->refrain_notation);
+                $refrainText = explode("\n", $song->refrain_text_notation);
+                for ($i = 0; $i < count(explode("\n", $verse->refrain_notation)); $i++) {
+                    $music = self::makeHeaders($song, $i).$refrainLines[$i]."\n".($refrainText[$i] ? 'w:'.$refrainText[$i]."\n" : '');
+                    $images['refrain-before-'.$verseNumber.'-' . $i] = self::renderToFile($song, 'refrain', $music, $colors, $i);
+                }
+            }
+
             for ($i = 0; $i < count(explode("\n", $verse->notation)); $i++) {
                 $music = self::makeHeaders($song, $i) . self::makeSingleLine($song, $verseNumber, $i, ($i == 0));
                 $images[$verseNumber . '-' . $i] = self::renderToFile($song, $verse->number, $music, $colors, $i);
             }
-        }
 
+            if ($verse->refrain_after) {
+                $refrainLines = explode("\n", $song->refrain_notation);
+                $refrainText = explode("\n", $song->refrain_text_notation);
+                for ($i = 0; $i < count($refrainLines); $i++) {
+                    $music = self::makeHeaders($song, $i).$refrainLines[$i]."\n".($refrainText[$i] ? 'w:'.$refrainText[$i]."\n" : '');
+                    $images['refrain-after-'.$verseNumber.'-' . $i] = self::renderToFile($song, 'refrain', $music, $colors, $i);
+                }
+            }
+
+        }
         return $images;
     }
 }
