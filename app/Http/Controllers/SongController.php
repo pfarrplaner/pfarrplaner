@@ -150,7 +150,7 @@ class SongController extends Controller
 
     public function music(Song $song, $verses = '', $lineNumber = null)
     {
-        return response()->file(ABCMusic::renderToFile(ABCMusic::make($song, $verses, $lineNumber)));
+        return response()->file(ABCMusic::renderToFile($song, $verses, ABCMusic::make($song, $verses, $lineNumber)));
     }
 
 }

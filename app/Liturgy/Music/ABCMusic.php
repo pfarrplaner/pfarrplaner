@@ -31,9 +31,14 @@
 namespace App\Liturgy\Music;
 
 use App\Liturgy\Song;
+use Illuminate\Support\Facades\Storage;
 
 class ABCMusic
 {
+
+    public const COLORS_NORMAL = 1;
+    public const COLORS_INVERTED = 2;
+    public const COLORS_GREENSCREEN = 3;
 
     /**
      * Get printable verses from a verse range string
@@ -41,10 +46,14 @@ class ABCMusic
      * @param $rangeString Verse range string
      * @return array List of verse numbers
      */
-    public static function getVerses(Song $song, $rangeString) {
+    public static function getVerses(Song $song, $rangeString)
+    {
+        if (is_array($rangeString)) return $rangeString;
         $verseRefs = [];
         if (empty($rangeString)) {
-            foreach ($song->verses as $verse) $verseRefs[] = (int)$verse['number'];
+            foreach ($song->verses as $verse) {
+                $verseRefs[] = (int)$verse['number'];
+            }
         } else {
             foreach (explode('+', $rangeString) as $range) {
                 $subRange = explode('-', $range);
@@ -55,7 +64,9 @@ class ABCMusic
                         $verseRefs[] = (int)$subRange[0];
                     } else {
                         if (is_numeric($subRange[0]) && is_numeric($subRange[1]) && ($subRange[0] < $subRange[1])) {
-                            for ($i=$subRange[0]; $i<= $subRange[1]; $i++) $verseRefs[] = (int)$i;
+                            for ($i = $subRange[0]; $i <= $subRange[1]; $i++) {
+                                $verseRefs[] = (int)$i;
+                            }
                         } else {
                             $verseRefs[] = (int)$range;
                         }
@@ -66,14 +77,15 @@ class ABCMusic
         return $verseRefs;
     }
 
-    public static function make(Song $song, $verses = '', $lineNumber = null) {
+    public static function make(Song $song, $verses = '', $lineNumber = null)
+    {
         $music = self::makeHeaders($song, $lineNumber);
         $verses = self::getVerses($song, $verses);
 
         if (null !== $lineNumber) {
             $music .= self::makeSingleLine($song, $verses, $lineNumber);
         } else {
-            for ($lineCtr=0; $lineCtr<count(explode("\n", $song->notation)); $lineCtr++) {
+            for ($lineCtr = 0; $lineCtr < count(explode("\n", $song->notation)); $lineCtr++) {
                 $music .= self::makeSingleLine($song, $verses, $lineCtr);
             }
         }
@@ -92,67 +104,116 @@ class ABCMusic
         }
 
         foreach ($headers as $key => $header) {
-            $music .= $key.':'.$header."\n";
+            $music .= $key . ':' . $header . "\n";
         }
-        if ($song->prolog) $music .= trim($song->prolog)."\n";
-        $music .= 'K:'.$song->key."\n";
+        if ($song->prolog) {
+            $music .= trim($song->prolog) . "\n";
+        }
+        $music .= 'K:' . $song->key . "\n";
         return $music;
     }
 
-    public static function makeSingleLine(Song $song, $verses, $lineNumber, $showLineNumber = true) {
+    public static function makeSingleLine(Song $song, $verses, $lineNumber, $showLineNumber = true)
+    {
         $musicLines = explode("\n", $song->notation);
-        $music = ($musicLines[$lineNumber] ?? '')."\n";
-        if (!is_array($verses)) $verses = [$verses];
+        $music = ($musicLines[$lineNumber] ?? '') . "\n";
+        if (!is_array($verses)) {
+            $verses = [$verses];
+        }
         foreach ($verses as $verseNumber) {
             $verse = self::getVerse($song, $verseNumber);
             $textLines = explode("\n", $verse->notation);
-            if (isset($textLines[$lineNumber])) $music .= 'w:'
-                .($showLineNumber ? $verse->number.'.~' : '')
-                .$textLines[$lineNumber]."\n";
+            if (isset($textLines[$lineNumber])) {
+                $music .= 'w:'
+                    . ($showLineNumber ? $verse->number . '.~' : '')
+                    . $textLines[$lineNumber] . "\n";
+            }
         }
 
         return $music;
     }
 
-    public static function renderToFile($music, $path = null)
+    protected static function cachedFilePath(Song $song, $verses, $music, $colors, $lineNumber = null, $wildCard = false) {
+        $parts = [
+            $song->songbook_abbreviation,
+            $song->reference,
+            join('+', self::getVerses($song, $verses)),
+            $colors,
+            $lineNumber ? $lineNumber : 'X',
+            $wildCard ? '*' : md5($music),
+        ];
+        return storage_path(
+            'app/music/abc/' . join('--', $parts).'.jpg'
+        );
+    }
+
+    protected static function clearCache(Song $song, $verses, $colors, $lineNumber = null) {
+        exec('rm '.self::cachedFilePath($song, $verses, '', $colors, $lineNumber, true));
+    }
+
+    public static function renderToFile(Song $song, $verses, $music, $colors = self::COLORS_NORMAL, $lineNumber = null)
     {
+        Storage::makeDirectory('music/abc/');
+
+        $cachedFileName = self::cachedFilePath($song, $verses, $music, $colors, $lineNumber);
+        if (file_exists($cachedFileName)) return $cachedFileName;
+        self::clearCache($song, $verses, $colors, $lineNumber);
+
+
         $temp = tempnam(sys_get_temp_dir(), 'pfp-abc-');
-        $tempABC = $temp.'.abc';
-        $tempPS = $temp.'.ps';
-        $tempJPG = $temp.'.jpg';
+        $tempABC = $temp . '.abc';
+        $tempPS = $temp . '.ps';
+        $tempJPG = $temp . '.jpg';
 
         // build ABC
         file_put_contents($tempABC, $music);
 
         // build PS
-        exec('abcm2ps -O '.$tempPS.' '.$tempABC);
+        exec('abcm2ps -O ' . $tempPS . ' ' . $tempABC);
         unlink($tempABC);
 
-        exec('gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile='.$tempJPG.' '.$tempPS);
-        unlink ($tempPS);
+        exec('gs -sDEVICE=jpeg -dJPEGQ=100 -dNOPAUSE -dBATCH -dSAFER -r300 -sOutputFile=' . $tempJPG . ' ' . $tempPS);
+        unlink($tempPS);
 
-        exec('convert '.$tempJPG.' -trim '.$tempJPG);
+        $params = ['-trim'];
 
+        switch ($colors) {
+            case self::COLORS_INVERTED:
+                $params[] = '-channel RGB';
+                $params[] = '-negate';
+                break;
+            case self::COLORS_GREENSCREEN:
+                $params[] = '-channel RGB';
+                $params[] = '-negate';
+                $params[] = "-fill 'rgb(4,59,4)'";
+                $params[] = "-opaque 'rgb(0,0,0)'";
+                break;
+        }
 
-        return $tempJPG;
+        exec('convert ' . $tempJPG . ' ' . join(' ', $params) . ' ' . $cachedFileName);
+
+        return $cachedFileName;
     }
 
-    protected static function getVerse(Song $song, $number) {
+    protected static function getVerse(Song $song, $number)
+    {
         foreach ($song->verses as $verse) {
-            if ($verse->number == $number) return $verse;
+            if ($verse->number == $number) {
+                return $verse;
+            }
         }
     }
 
-    public static function images(Song $song, $verses)
+    public static function images(Song $song, $verses, $colors = self::COLORS_NORMAL)
     {
         $images = [];
 
         $verses = self::getVerses($song, $verses);
         foreach ($verses as $verseNumber) {
             $verse = self::getVerse($song, $verseNumber);
-            for ($i=0; $i<count(explode("\n", $verse->notation)); $i++) {
-                $music = self::makeHeaders($song, $i).self::makeSingleLine($song, $verseNumber, $i, ($i==0));
-                $images[$verseNumber.'-'.$i] = self::renderToFile($music);
+            for ($i = 0; $i < count(explode("\n", $verse->notation)); $i++) {
+                $music = self::makeHeaders($song, $i) . self::makeSingleLine($song, $verseNumber, $i, ($i == 0));
+                $images[$verseNumber . '-' . $i] = self::renderToFile($song, $verse->number, $music, $colors, $i);
             }
         }
 

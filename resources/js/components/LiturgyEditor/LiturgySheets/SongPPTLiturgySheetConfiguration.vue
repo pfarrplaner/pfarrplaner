@@ -54,6 +54,10 @@
             <form-check label="Platzhalter für Jingle, Intro, ..." v-model="myConfig.includeJingleAndIntro" name="config[includeJingleAndIntro]"/>
             <form-check label="Mitwirkende anzeigen" v-model="myConfig.includeCredits" name="config[includeCredits]"/>
         </fieldset>
+        <fieldset>
+            <legend>Lieder</legend>
+            <form-check label="Wo möglich, Noten statt Text verwenden" v-model="myConfig.renderMusic" name="config[renderMusic]" />
+        </fieldset>
     </liturgy-sheet-configuration-form>
 </template>
 

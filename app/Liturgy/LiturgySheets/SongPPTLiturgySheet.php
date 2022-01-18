@@ -31,8 +31,10 @@
 namespace App\Liturgy\LiturgySheets;
 
 
+use App\Liturgy;
 use App\Liturgy\ItemHelpers\PsalmItemHelper;
 use App\Liturgy\ItemHelpers\SongItemHelper;
+use App\Liturgy\Music\ABCMusic;
 use App\Service;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpPresentation\DocumentLayout;
@@ -61,12 +63,19 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
         'includeCredits' => 1,
         'verticalAlignment' => 'b',
         'fontSize' => 40,
+        'renderMusic' => false,
     ];
 
     protected $counterColor = [
         'FFFFFFFF' => 'FF000000',
         'FF000000' => 'FFFFFFFF',
         'FF043b04' => 'FFFFFFFF',
+    ];
+
+    protected $musicColorSet = [
+        'FFFFFFFF' => ABCMusic::COLORS_NORMAL,
+        'FF000000' => ABCMusic::COLORS_INVERTED,
+        'FF043b04' => ABCMusic::COLORS_GREENSCREEN,
     ];
 
 
@@ -96,26 +105,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
         foreach ($service->liturgyBlocks as $block) {
             foreach ($block->items as $item) {
                 if ($item->data_type == 'song') {
-                    /** @var SongItemHelper $helper */
-                    $helper = $item->getHelper();
-                    $copyrights = $item->data['song']['copyrights'] ?? '';
-                    if ($copyrights) {
-                        if ($item->data['song']['songbook_abbreviation']) {
-                            $copyrights = $item->data['song']['songbook_abbreviation'].' '.$item->data['song']['reference'].'. '.$copyrights;
-                        }
-                    }
-                    foreach ($helper->getActiveVerses() as $verse) {
-                        if ($verse['refrain_before']) {
-                            $this->slide($item->data['song']['refrain'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
-                        }
-                        $this->slide($verse['number'].'. '.$verse['text'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
-                        if ($verse['refrain_after']) {
-                            $this->slide($item->data['song']['refrain'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
-                        }
-                    }
-                    if ($this->config['includeEmpty']) {
-                        $this->slide();
-                    }
+                    $this->renderSongItem($item);
                 } elseif ($item->data_type == 'psalm') {
                     /** @var PsalmItemHelper $helper */
                     $helper = $item->getHelper();
@@ -141,6 +131,52 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
 
         $fileName = $service->dateTime()->format('Ymd-Hi') . ' Texte und Lieder.pptx';
         return $this->sendToBrowser($fileName);
+    }
+
+    protected function renderSongItem(Liturgy\Item $item) {
+        if ($this->config['renderMusic'] && ($item->data['song']['notation'])) return $this->renderSongItemWithMusic($item);
+
+        /** @var SongItemHelper $helper */
+        $helper = $item->getHelper();
+        $copyrights = $item->data['song']['copyrights'] ?? '';
+        if ($copyrights) {
+            if ($item->data['song']['songbook_abbreviation']) {
+                $copyrights = $item->data['song']['songbook_abbreviation'].' '.$item->data['song']['reference'].'. '.$copyrights;
+            }
+        }
+        foreach ($helper->getActiveVerses() as $verse) {
+            if ($verse['refrain_before']) {
+                $this->slide($item->data['song']['refrain'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
+            }
+            $this->slide($verse['number'].'. '.$verse['text'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
+            if ($verse['refrain_after']) {
+                $this->slide($item->data['song']['refrain'], $this->config['fontSize'], $this->config['textColor'], true,  $copyrights);
+            }
+        }
+        if ($this->config['includeEmpty']) {
+            $this->slide();
+        }
+    }
+
+    protected function renderSongItemWithMusic(Liturgy\Item $item) {
+        $song = Liturgy\Song::find($item->data['song']['id']);
+        $colorSet = $this->musicColorSet[$this->config['backgroundColor']];
+        $images = ABCMusic::images($song, $item->data['verses'], $colorSet);
+
+        foreach ($images as $key => $image) {
+            $slide = $this->createEmptySlide($this->config['backgroundColor']);
+            $shape = $slide->createDrawingShape()
+                ->setName($item->data['song']['title'].' '.$key)
+                ->setPath($image)
+                ->setWidth(940)
+                ->setOffsetX(10);
+             $shape->setOffsetY(520-$shape->getHeight());
+
+        }
+
+        if ($this->config['includeEmpty']) {
+            $this->slide();
+        }
     }
 
     protected function slide($text = '', $size = -1, $rgb = -1, $bold = true, $copyrights = '', $backgroundColor = null)
