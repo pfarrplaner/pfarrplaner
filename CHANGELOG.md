@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.100.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.99.0...v1.100.0) (2022-01-19)
+
+
+### Features
+
+* Add music to SongPPTLiturgySheet ([4e99825](https://github.com/pfarrplaner/pfarrplaner/commits/4e99825f121fe48901a1f9434d366727e342caac))
+* Add refrain to music rendering ([5112f34](https://github.com/pfarrplaner/pfarrplaner/commits/5112f34697979a04c8ce22f8880d37a5adbebf91))
+* Add refrain to MusicEditor ([42a0554](https://github.com/pfarrplaner/pfarrplaner/commits/42a05546db337f7e579fa565cda6a9604c93521b))
+* Implement basic infrastructure for musical notation in songs ([15ea603](https://github.com/pfarrplaner/pfarrplaner/commits/15ea6030238ce91aff31045962da859b269b7f5e))
+
 ## [1.99.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.98.0...v1.99.0) (2022-01-14)
 
 
