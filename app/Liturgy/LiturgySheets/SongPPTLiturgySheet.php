@@ -134,7 +134,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
     }
 
     protected function renderSongItem(Liturgy\Item $item) {
-        if ($this->config['renderMusic'] && ($item->data['song']['notation'])) return $this->renderSongItemWithMusic($item);
+        if ($this->config['renderMusic'] && (isset($item->data['song']['notation']))) return $this->renderSongItemWithMusic($item);
 
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
