@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.101.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.101.0...v1.101.1) (2022-01-21)
+
+
+### Bug Fixes
+
+* Manual does not show images with filenames other than img* ([bef8765](https://github.com/pfarrplaner/pfarrplaner/commits/bef8765225a1dcbe3584e7ac67b32ec8c0fb9990))
+* Minor layout tweaks ([2b0deb9](https://github.com/pfarrplaner/pfarrplaner/commits/2b0deb9d008a667447ef7e46f53f85419f349775))
+
 ## [1.101.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.100.0...v1.101.0) (2022-01-21)
 
 
