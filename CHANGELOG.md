@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.101.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.100.0...v1.101.0) (2022-01-21)
+
+
+### Features
+
+* Open MusicEditor in new window ([976e92f](https://github.com/pfarrplaner/pfarrplaner/commits/976e92fb78f8ddc47f6e1fa5c45caa22b4970bf7))
+
+
+### Bug Fixes
+
+* DateRangeInput sets incorrect range limits ([822d4dd](https://github.com/pfarrplaner/pfarrplaner/commits/822d4ddd412baf9781ff1a3a2a3ca30cae3b7222))
+* Only show music icon when music is actually present ([92a4f77](https://github.com/pfarrplaner/pfarrplaner/commits/92a4f77c11272caafee6395a99e342b5f2fb8225))
+* PPT fails when a song does not have music ([3d9dcba](https://github.com/pfarrplaner/pfarrplaner/commits/3d9dcbabb62cbbd624b88b52eb988c5226e7ab54))
+
 ## [1.100.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.99.0...v1.100.0) (2022-01-19)
 
 
