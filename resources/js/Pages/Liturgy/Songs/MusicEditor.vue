@@ -231,13 +231,7 @@ export default {
             this.renderer.renderAbc('refrain', this.refrain);
         },
         saveSong() {
-            axios.patch(route('liturgy.song.update', {song: this.mySong.id}), this.mySong)
-            .then(response => {
-                return response.data;
-            }).then(data => {
-                this.mySong = this.setupSong(data);
-                window.history.back();
-            });
+            axios.patch(route('liturgy.song.update', {song: this.mySong.id}), this.mySong);
         }
     }
 }

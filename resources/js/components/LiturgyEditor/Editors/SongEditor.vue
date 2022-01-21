@@ -60,7 +60,8 @@
                                     title="Lied bearbeiten" @click.prevent="editSong">Lied bearbeiten
                             </button>
                             <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
-                                    title="Lied im Noteneditor bearbeiten" @click.prevent="editMusic">Lied im Noteneditor bearbeiten
+                                    title="Lied im Noteneditor bearbeiten" @click.prevent="editMusic">
+                                <span class="fa fa-music"></span> Lied im Noteneditor bearbeiten
                             </button>
                         </div>
                     </div>
@@ -298,7 +299,7 @@ export default {
             this.modalOpen = true;
         },
         editMusic() {
-            this.$inertia.get(route('liturgy.song.musiceditor', this.editedElement.data.song.id));
+            window.open(route('liturgy.song.musiceditor', this.editedElement.data.song.id));
         },
         addVerse() {
             this.modalSong.verses.push({
