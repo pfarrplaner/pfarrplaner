@@ -43,7 +43,7 @@ export default {
     components: {HelpLayout, VueMarkdown},
     props: ['routeName', 'title', 'content'],
     data() {
-        var myContent = this.content.replaceAll('(media/images/img', '(/media/manual/media/images/img');
+        var myContent = this.content.replaceAll('(media/images/', '(/media/manual/media/images/');
         return {
             myContent: myContent,
         }
