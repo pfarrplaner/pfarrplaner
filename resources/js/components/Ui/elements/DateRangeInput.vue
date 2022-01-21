@@ -47,6 +47,8 @@ export default {
     components: {FormGroup},
     props: ['from', 'to', 'label', 'preLabel', 'help', 'isCheckedItem'],
     data() {
+        this.from = this.from || moment().format('DD.MM.YYYY');
+        this.from = this.to || moment().addYears(5).format('DD.MM.YYYY');
         return {
             myDatePickerConfig1: {
                 locale: 'de',
@@ -66,12 +68,12 @@ export default {
     methods: {
         setFrom(e) {
             this.myFrom = e;
-            this.myDatePickerConfig2.minDate = moment(e, 'DD.MM.YYYY');
+            this.myDatePickerConfig2.minDate = e ? moment(e, 'DD.MM.YYYY') : moment().format('DD.MM.YYYY');
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);
         },
         setTo(e) {
             this.myTo = e;
-            this.myDatePickerConfig1.maxDate = moment(e, 'DD.MM.YYYY');
+            this.myDatePickerConfig1.maxDate = e ? moment(e, 'DD.MM.YYYY') : moment().addYears(5).format('DD.MM.YYYY');
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);
         }
     }
