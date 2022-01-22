@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.103.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.102.0...v1.103.0) (2022-01-22)
+
+
+### Features
+
+* Allow configuring SongSheet ([aca6421](https://github.com/pfarrplaner/pfarrplaner/commits/aca642185fab9e4752ace8eb1c82a664b29c7068))
+
 ## [1.102.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.101.1...v1.102.0) (2022-01-22)
 
 
