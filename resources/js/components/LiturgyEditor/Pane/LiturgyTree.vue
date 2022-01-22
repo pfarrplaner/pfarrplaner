@@ -237,6 +237,7 @@ import FormSelectize from "../../Ui/forms/FormSelectize";
 import FullTextLiturgySheetConfiguration from "../LiturgySheets/FullTextLiturgySheetConfiguration";
 import A4WordSpecificLiturgySheetConfiguration from "../LiturgySheets/A4WordSpecificLiturgySheetConfiguration";
 import SongPPTLiturgySheetConfiguration from "../LiturgySheets/SongPPTLiturgySheetConfiguration";
+import SongSheetLiturgySheetConfiguration from "../LiturgySheets/SongSheetLiturgySheetConfiguration";
 import ItemTextStats from "../Elements/ItemTextStats";
 import ItemStartingTime from "../Elements/ItemStartingTime";
 
@@ -256,6 +257,7 @@ export default {
         FullTextLiturgySheetConfiguration,
         SongPPTLiturgySheetConfiguration,
         A4WordSpecificLiturgySheetConfiguration,
+        SongSheetLiturgySheetConfiguration,
     },
     props: {
         service: Object,

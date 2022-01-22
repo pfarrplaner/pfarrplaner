@@ -55,6 +55,14 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
     protected $service = null;
     protected $extension = 'docx';
 
+    protected $configurationPage = 'Liturgy/LiturgySheets/SongSheetConfiguration';
+    protected $configurationComponent = 'SongSheetLiturgySheetConfiguration';
+
+    protected $defaultConfig = [
+        'renderMusic' => false,
+    ];
+
+
     public function __construct()
     {
         parent::__construct();
@@ -124,7 +132,7 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
             $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 8]);
         }
 
-        if ($item->data['song']['notation']) {
+        if ($this->config['renderMusic'] && isset($item->data['song']['notation'])) {
             $song = Song::find($item->data['song']['id']);
             $images = ABCMusic::images($song, $item->data['verses']);
             foreach ($images as $image) {
