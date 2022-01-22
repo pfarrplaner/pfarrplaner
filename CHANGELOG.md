@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.102.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.101.1...v1.102.0) (2022-01-22)
+
+
+### Features
+
+* Allow showing liturgy information for another day ([7492f07](https://github.com/pfarrplaner/pfarrplaner/commits/7492f07559faa4749b0e798bd7dfa3ea1771a82a)), closes [#194](https://github.com/pfarrplaner/pfarrplaner/issues/194)
+
 ### [1.101.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.101.0...v1.101.1) (2022-01-21)
 
 
