@@ -29,7 +29,14 @@
 
 <template>
     <div class="liturgical-info">
-        <div v-if="liturgy.title">{{ liturgy.title }}</div>
+        <div v-if="liturgy.title">
+            {{ liturgy.title }}
+            <span v-if="service.day.date != service.liturgicalInfoDate"
+                  class="fa fa-calendar-alt text-warning"
+                  :title="'Aufgrund der Gottesdiensteinstellungen werden abweichend die Informationen für '
+                  +moment(service.liturgicalInfoDate).locale('de').format('dddd, DD.MM.YYYY')+' angezeigt'">
+            </span>
+        </div>
         <div v-if="liturgy.currentPerikopeLink">
             <a :href="liturgy.currentPerikopeLink" target="_blank">
                 {{ liturgy.currentPerikope }}</a>
@@ -43,7 +50,7 @@ export default {
     props: ['service'],
     data() {
         return {
-            liturgy: this.service.day.liturgy,
+            liturgy: this.service.liturgicalInfo,
         }
     }
 }

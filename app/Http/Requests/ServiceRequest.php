@@ -117,6 +117,7 @@ class ServiceRequest extends FormRequest
             'communiapp_id' => 'nullable|int',
             'communiapp_listing_start' => 'nullable',
             'controlled_access' => 'nullable|int',
+            'alt_liturgy_date' => 'nullable|date_format:d.m.Y',
         ];
     }
 

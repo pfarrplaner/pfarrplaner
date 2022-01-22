@@ -94,10 +94,10 @@
                                            :key="referenceCopied"/>
                                     <div v-for="service in services" class="mt-1">
                                         <button class="btn btn-light btn-sm"
-                                                v-if="undefined != service.day.liturgy.title"
-                                                @click.prevent.stop="setSermonReference(service.day.liturgy.currentPerikope)"
-                                                :title="'Perikope für '+service.day.liturgy.title+' übernehmen ('+service.day.liturgy.currentPerikope+')'">
-                                            Perikope für {{ service.day.liturgy.title }} übernehmen
+                                                v-if="undefined != service.liturgicalInfo.title"
+                                                @click.prevent.stop="setSermonReference(service.liturgicalInfo.currentPerikope)"
+                                                :title="'Perikope für '+service.liturgicalInfo.title+' übernehmen ('+service.liturgicalInfo.currentPerikope+')'">
+                                            Perikope für {{ service.liturgicalInfo.title }} übernehmen
                                         </button>
                                         <button class="btn btn-light btn-sm"
                                                 v-for="funeral in service.funerals"

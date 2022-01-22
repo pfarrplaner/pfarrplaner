@@ -64,8 +64,13 @@
         </div>
         <div class="row">
             <div class="col-md-4">
+                <label>Sakramente</label>
                 <form-check name="baptism" label="Dies ist ein Taufgottesdienst." v-model="service.baptism"/>
                 <form-check name="eucharist" label="Dies ist ein Abendmahlsgottesdienst." v-model="service.eucharist"/>
+            </div>
+            <div class="col-md-4">
+                <form-date-picker name="alt_liturgy_date" label="Datum für Liturgische Informationen " v-model="service.alt_liturgy_date"
+                help="Zeigt liturgische Information für ein abweichendes Datum an."/>
             </div>
         </div>
         <hr/>
@@ -117,10 +122,12 @@ import FormGroup from "../../Ui/forms/FormGroup";
 import DatePickerConfig from "../../Ui/config/DatePickerConfig.js";
 import TagSelect from "../../Ui/elements/TagSelect";
 import ServiceGroupSelect from "../../Ui/elements/ServiceGroupSelect";
+import FormDatePicker from "../../Ui/forms/FormDatePicker";
 
 export default {
     name: "HomeTab",
     components: {
+        FormDatePicker,
         ServiceGroupSelect,
         TagSelect,
         FormGroup,

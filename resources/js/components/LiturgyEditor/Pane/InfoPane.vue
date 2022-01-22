@@ -31,6 +31,10 @@
     <div class="liturgy-editor-info-pane">
         <div class="card" v-if="liturgy['title']">
             <div class="card-body">
+                <div v-if="myService.day.date != myService.liturgicalInfoDate" class="alert alert-warning mb-1">
+                    Aufgrund der Gottesdiensteinstellungen werden hier die liturgischen Informationen für
+                    <b>{{ moment(myService.liturgicalInfoDate).locale('de').format('dddd, DD.MM.YYYY') }}</b> angezeigt.
+                </div>
                 <div class="row" v-if="liturgy['title']">
                     <div class="col-2">
                         <div v-if="liturgy['title']">
@@ -56,19 +60,21 @@
                         </div>
                     </div>
                     <div class="col-2">
-                        <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyQuote" title="WSp"/>
-                        <bible-reference :liturgy="service.day.liturgy" liturgy-key="litTextsWeeklyPsalm" title="Ps"/>
-                        <bible-reference :liturgy="service.day.liturgy" liturgy-key="currentPerikope" title="Pr"/>
+                        <bible-reference :liturgy="myService.liturgicalInfo" liturgy-key="litTextsWeeklyQuote"
+                                         title="WSp"/>
+                        <bible-reference :liturgy="myService.liturgicalInfo" liturgy-key="litTextsWeeklyPsalm"
+                                         title="Ps"/>
+                        <bible-reference :liturgy="myService.liturgicalInfo" liturgy-key="currentPerikope" title="Pr"/>
                     </div>
                     <div class="col-2">
-                        <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
+                        <bible-reference v-for="n in 3" :liturgy="myService.liturgicalInfo"
                                          :liturgy-key="'litTextsPerikope'+n"
                                          :key="'litTextsPerikope'+n"
                                          :title="romanize(n)"
                                          :style="{fontWeight: (n==liturgy['perikope']) ? 'bold' : 'normal' }"/>
                     </div>
                     <div class="col-2">
-                        <bible-reference v-for="n in 3" :liturgy="service.day.liturgy"
+                        <bible-reference v-for="n in 3" :liturgy="myService.liturgicalInfo"
                                          :liturgy-key="'litTextsPerikope'+(n+3)"
                                          :key="'litTextsPerikope'+(n+3)"
                                          :title="romanize(n+3)"
@@ -82,22 +88,44 @@
                 </div>
             </div>
         </div>
-        <funeral-info-pane v-for="funeral in service.funerals"
+        <card v-else>
+            <card-body>
+                <div class="row">
+                    <div class="col-md-8">
+                        Für {{ moment(myService.day.date).locale('de').format('dddd, DD.MM.YYYY') }} sind keine
+                        liturgischen Informationen vorhanden.
+                    </div>
+                    <div class="col-md-4 text-right">
+                        <div class="text-left">
+                            <form-date-picker v-model="myService.alt_liturgy_date"
+                                              label="Informationen für abweichendes Datum anzeigen"
+                                              @input="setAlternativeDate"/>
+                        </div>
+                    </div>
+                </div>
+            </card-body>
+        </card>
+        <funeral-info-pane v-for="funeral in myService.funerals"
                            :key="'funeral_info_'+funeral.id"
-                           :funeral="funeral" :service="service" />
+                           :funeral="funeral" :service="service"/>
     </div>
 </template>
 
 <script>
 import BibleReference from "../Elements/BibleReference";
 import FuneralInfoPane from "./FuneralInfoPane";
+import CardBody from "../../Ui/cards/cardBody";
+import Card from "../../Ui/cards/card";
+import FormDatePicker from "../../Ui/forms/FormDatePicker";
 
 export default {
     name: "InfoPane",
-    components: {FuneralInfoPane, BibleReference},
+    components: {FormDatePicker, Card, CardBody, FuneralInfoPane, BibleReference},
     data() {
         return {
-            liturgy: this.service.day.liturgy,
+            myService: this.service,
+            liturgy: this.service.liturgicalInfo,
+            originalAltDate: this.service.alt_liturgy_date,
         };
     },
     props: ['service'],
@@ -120,6 +148,16 @@ export default {
                 roman = (key[+digits.pop() + (i * 10)] || "") + roman;
             return Array(+digits.join("") + 1).join("M") + roman;
         },
+        setAlternativeDate(e) {
+            if (e != moment(this.myService.liturgicalInfoDate).format('DD.MM.YYYY')) {
+                let record = this.myService;
+                delete record.participants;
+                axios.patch(route('service.update', {service: this.myService.slug, format: 'json'}), record)
+                    .then(response => {
+                        window.location.reload();
+                    });
+            }
+        }
     }
 }
 </script>

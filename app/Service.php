@@ -192,6 +192,7 @@ class Service extends Model
         'communiapp_listing_start',
         'slug',
         'controlled_access',
+        'alt_liturgy_date',
     ];
 
     /**
@@ -217,6 +218,8 @@ class Service extends Model
         'titleText',
         'liveDashboardUrl',
         'datetime',
+        'liturgicalInfoDate',
+        'liturgicalInfo',
     ];
 
     /**
@@ -237,6 +240,7 @@ class Service extends Model
         'registration_online_start',
         'registration_online_end',
         'communiapp_listing_start',
+        'alt_liturgy_date',
     ];
     /** @var AbstractSeatFinder */
     protected $seatFinder = null;
@@ -1530,5 +1534,15 @@ class Service extends Model
         return $this->dateTime()->format('Ymd-Hi')
             .($this->city ? '-'.Str::slug($this->city->name) : '')
             .'-'.Str::slug($this->locationText());
+    }
+
+    public function getLiturgicalInfoAttribute()
+    {
+        return $this->alt_liturgy_date ? (new Day(['date' => $this->alt_liturgy_date]))->liturgy : $this->day->liturgy;
+    }
+
+    public function getLiturgicalInfoDateAttribute()
+    {
+        return $this->alt_liturgy_date ?: $this->day->date;
     }
 }

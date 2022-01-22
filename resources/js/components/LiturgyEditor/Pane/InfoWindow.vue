@@ -56,7 +56,7 @@ export default {
     props: ['service'],
     data() {
         return {
-            liturgy: this.service.day.liturgy,
+            liturgy: this.service.liturgicalInfo,
         }
     },
 }
