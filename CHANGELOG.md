@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.103.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.103.1...v1.103.3) (2022-01-26)
+
+
+### Bug Fixes
+
+* alt_liturgy_date sometimes has wrong format in requests ([1e9ffb6](https://github.com/pfarrplaner/pfarrplaner/commits/1e9ffb6ca72e20772133176877adfbeab8490f6c))
+
+### [1.103.2](https://github.com/pfarrplaner/pfarrplaner/compare/v1.103.1...v1.103.2) (2022-01-26)
+
 ### [1.103.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.103.0...v1.103.1) (2022-01-26)
 
 
