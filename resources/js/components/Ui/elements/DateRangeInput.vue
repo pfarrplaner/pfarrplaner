@@ -53,13 +53,13 @@ export default {
             myDatePickerConfig1: {
                 locale: 'de',
                 format: 'DD.MM.YYYY',
-                maxDate: this.to,
+//              maxDate: this.to,
             },
             myDatePickerConfig2: {
                 locale: 'de',
                 format: 'DD.MM.YYYY',
                 useCurrent: false,
-                minDate: this.from,
+//              minDate: this.from,
             },
             myFrom: this.from.length > 10 ? moment(this.from).format('DD.MM.YYYY') : this.from,
             myTo: this.to.length > 10 ? moment(this.to).format('DD.MM.YYYY') : this.to,
@@ -68,12 +68,12 @@ export default {
     methods: {
         setFrom(e) {
             this.myFrom = e;
-            this.myDatePickerConfig2.minDate = e ? moment(e, 'DD.MM.YYYY') : moment().format('DD.MM.YYYY');
+//            this.myDatePickerConfig2.minDate = e ? moment(e, 'DD.MM.YYYY') : moment().format('DD.MM.YYYY');
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);
         },
         setTo(e) {
             this.myTo = e;
-            this.myDatePickerConfig1.maxDate = e ? moment(e, 'DD.MM.YYYY') : moment().addYears(5).format('DD.MM.YYYY');
+//            this.myDatePickerConfig1.maxDate = e ? moment(e, 'DD.MM.YYYY') : moment().addYears(5).format('DD.MM.YYYY');
             this.$emit('input', [moment(this.myFrom, 'DD.MM.YYYY'), moment(this.myTo, 'DD.MM.YYYY')]);
         }
     }
