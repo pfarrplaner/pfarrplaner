@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.103.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.103.0...v1.103.1) (2022-01-26)
+
+
+### Bug Fixes
+
+* DateRangeInput refuses certain dates ([6f0e072](https://github.com/pfarrplaner/pfarrplaner/commits/6f0e072ec3af34b3ef3562e24b775c479ebd80d9))
+
 ## [1.103.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.102.0...v1.103.0) (2022-01-22)
 
 
