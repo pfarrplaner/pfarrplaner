@@ -197,6 +197,7 @@ name: "serviceEditor",
             // build a request record:
             var record = {
                 ...this.editedService,
+                alt_liturgy_date: this.editedService.alt_liturgy_date ? moment(this.editedService.alt_liturgy_date).format('DD.MM.YYYY') : null,
                 participants: {
                     P:  this.extractParticipants(this.editedService.pastors),
                     O:  this.extractParticipants(this.editedService.organists),
