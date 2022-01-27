@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.104.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.103.3...v1.104.0) (2022-01-27)
+
+
+### Features
+
+* Grant appropriate permissions when replacing another person ([9815752](https://github.com/pfarrplaner/pfarrplaner/commits/9815752d3d33468d18d269e95a1b6e38203d8ae3)), closes [#196](https://github.com/pfarrplaner/pfarrplaner/issues/196)
+
 ### [1.103.3](https://github.com/pfarrplaner/pfarrplaner/compare/v1.103.1...v1.103.3) (2022-01-26)
 
 
