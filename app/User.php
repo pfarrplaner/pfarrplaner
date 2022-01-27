@@ -192,7 +192,26 @@ class User extends Authenticatable
         if ((!Auth::guest()) && Auth::user()->hasRole(AuthServiceProvider::SUPER)) {
             return City::all();
         }
-        return $this->writableCities()->get();
+        $writableCities = $this->writableCities()->get();
+        $replacements = $this->currentReplacements();
+        if (null !== $replacements) {
+            foreach ($replacements as $replacement) {
+                foreach ($replacement->absence->user->writableCities as $city) $writableCities->push($city);
+            }
+        }
+        return $writableCities->unique();
+    }
+
+
+    public function currentReplacements()
+    {
+        return Replacement::with('absence')
+            ->whereHas('users', function($query) {
+                $query->where('user_id', $this->id);
+            })
+            ->where('from', '<=', Carbon::now())
+            ->where('to', '>=', Carbon::now())
+            ->get();
     }
 
     /**

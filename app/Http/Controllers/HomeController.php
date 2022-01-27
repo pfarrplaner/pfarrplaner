@@ -88,16 +88,7 @@ class HomeController extends Controller
         $user->ensureDefaultSettings();
         $settings = Settings::all($user);
 
-        $replacements = [];
-        if ($settings['homeScreenConfig']['showReplacements'] ?? false) {
-            $replacements = Replacement::with('absence')
-                ->whereHas('users', function($query) {
-                $query->where('user_id', Auth::user()->id);
-            })
-                ->where('from', '<=', Carbon::now())
-                ->where('to', '>=', Carbon::now())
-                ->get();
-        };
+        $replacements = ($settings['homeScreenConfig']['showReplacements'] ?? false) ? $user->currentReplacements() : [];
 
         return Inertia::render('HomeScreen', compact('user', 'settings', 'activeTab', 'replacements'));
     }
