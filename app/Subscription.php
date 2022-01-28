@@ -78,6 +78,9 @@ class Subscription extends Model
      */
     public static function send(Service $service, $mailClass, $data = [], $additionalSubscribers = null, $isNew = false)
     {
+        // do not send mail when nothing has changed.
+        if (0 == count($service->changed)) return;
+
         $subscribers = User::subscribedTo($service, $isNew)->get();
 
         // add additional subscribers
