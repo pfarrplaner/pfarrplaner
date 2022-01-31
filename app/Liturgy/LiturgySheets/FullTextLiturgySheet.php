@@ -33,6 +33,7 @@ namespace App\Liturgy\LiturgySheets;
 
 use App\Documents\Word\DefaultA5WordDocument;
 use App\Documents\Word\DefaultWordDocument;
+use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Liturgy\Bible\BibleText;
 use App\Liturgy\Bible\ReferenceParser;
 use App\Liturgy\Item;
@@ -43,6 +44,7 @@ use App\Liturgy\Replacement\Replacement;
 use App\Service;
 use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Element\TextRun;
+use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Shared\Html;
 
 class FullTextLiturgySheet extends AbstractLiturgySheet
@@ -59,6 +61,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
     protected $defaultConfig = [
         'includeSongTexts' => 1,
         'includeFullReadings' => 1,
+        'includeQR' => 1,
     ];
 
     public function __construct()
@@ -90,6 +93,23 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
                 }
             }
         }
+
+        if ($this->config['includeQR'] && (!empty($this->service->konfiapp_event_qr))) {
+            $doc->getSection()->addPageBreak();
+            $doc->getSection()->addTitle('QR-Code für die KonfiApp', 1);
+            $types = KonfiAppIntegration::get($service->city)->listEventTypes();
+            $text = '';
+            foreach ($types as $type) {
+                if ($type->id == $service->konfiapp_event_type) $text = $type->punktzahl.' '.($type->punktzahl == 1 ? 'Punkt' : 'Punkte').' in der Kategorie "'.$type->name.'"';
+            }
+            if ($text) $doc->renderNormalText($text);
+            $doc->renderNormalText('Gültig nur am '.$service->dateTime->formatLocalized('%A, %d. %B %Y')
+                                   .' von '.$service->dateTime->format('H:i')
+                                   .' bis '.$service->dateTime->copy()->addHours(3)->format('H:i').' Uhr.');
+            $doc->getSection()->addImage(route('qr', $this->service->konfiapp_event_qr), ['width' => Converter::cmToPoint(11.5)]);
+        }
+
+
         $filename = $service->dateTime()->format('Ymd-Hi') . ' ' . $this->getFileTitle();
         $doc->sendToBrowser($filename);
     }
@@ -150,6 +170,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
     protected function renderPsalmItem(DefaultWordDocument $doc, Item $item)
     {
+        if (!isset($item->data['psalm'])) return;
         if (!$item->data['psalm']['text']) return;
         /** @var PsalmItemHelper $helper */
         $helper = $item->getHelper();

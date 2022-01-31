@@ -34,6 +34,8 @@
             <legend>Folgende Inhalte mit einschließen:</legend>
             <form-check label="Komplette Liedtexte" v-model="myConfig.includeSongTexts" name="config[includeSongTexts]"/>
             <form-check label="Komplette Schriftlesungen" v-model="myConfig.includeFullReadings" name="config[includeFullReadings]"/>
+            <form-check v-if="service.city.konfiapp_apikey && service.konfiapp_event_qr"
+                        label="QR-Code für KonfiApp" v-model="myConfig.includeFullReadings" name="config[includeQR]"/>
         </fieldset>
     </liturgy-sheet-configuration-layout>
 </template>

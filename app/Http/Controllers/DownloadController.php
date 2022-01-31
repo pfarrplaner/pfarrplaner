@@ -49,7 +49,7 @@ class DownloadController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth')->except(['storage', 'file', 'image']);
+        $this->middleware('auth')->except(['storage', 'file', 'image', 'qr']);
     }
 
     /**
