@@ -29,35 +29,37 @@
 
 <template>
     <liturgy-sheet-configuration-form :service="service" :sheet="sheet">
-        <fieldset>
-            <legend>Farbschema</legend>
-            <input type="hidden" name="config[backgroundColor]" v-model="myConfig.backgroundColor" />
-            <form-selectize label="Hintergrundfarbe für Folien mit Text" v-model="myConfig.backgroundColor"
-                            :options="myColorOptions" />
-            <input type="hidden" name="config[backgroundColorEmpty]" v-model="myConfig.backgroundColorEmpty" />
-            <form-selectize label="Hintergrundfarbe für Folien ohne Text" v-model="myConfig.backgroundColorEmpty"
-                            :options="myColorOptions" />
-            <input type="hidden" name="config[textColor]" v-model="myConfig.textColor" />
-            <form-selectize label="Textfarbe" v-model="myConfig.textColor"
-                            :options="myColorOptions" />
-            <input type="hidden" name="config[verticalAlignment]" v-model="myConfig.verticalAlignment" />
-        </fieldset>
-        <fieldset>
-            <legend>Layout</legend>
-            <form-selectize label="Vertikale Ausrichtung der Texte" v-model="myConfig.verticalAlignment"
-                            :options="myAlignmentOptions" />
-            <form-input label="Schrifgröße" type="number" v-model="myConfig.fontSize" />
-        </fieldset>
-        <fieldset>
-            <legend>Inhaltsoptionen</legend>
-            <form-check label="Leere Folien zwischen den Elementen" v-model="myConfig.includeEmpty" name="config[includeEmpty]"/>
-            <form-check label="Platzhalter für Jingle, Intro, ..." v-model="myConfig.includeJingleAndIntro" name="config[includeJingleAndIntro]"/>
-            <form-check label="Mitwirkende anzeigen" v-model="myConfig.includeCredits" name="config[includeCredits]"/>
-        </fieldset>
-        <fieldset>
-            <legend>Lieder</legend>
-            <form-check label="Wo möglich, Noten statt Text verwenden" v-model="myConfig.renderMusic" name="config[renderMusic]" />
-        </fieldset>
+        <tab-headers>
+            <tab-header id="colorscheme" active="1" title="Farbschema" />
+            <tab-header id="layout" title="Layout" />
+            <tab-header id="content" title="Inhalte" />
+        </tab-headers>
+        <tabs>
+            <tab id="colorscheme" active="1">
+                <input type="hidden" name="config[backgroundColor]" v-model="myConfig.backgroundColor" />
+                <form-selectize label="Hintergrundfarbe für Folien mit Text" v-model="myConfig.backgroundColor"
+                                :options="myColorOptions" />
+                <input type="hidden" name="config[backgroundColorEmpty]" v-model="myConfig.backgroundColorEmpty" />
+                <form-selectize label="Hintergrundfarbe für Folien ohne Text" v-model="myConfig.backgroundColorEmpty"
+                                :options="myColorOptions" />
+                <input type="hidden" name="config[textColor]" v-model="myConfig.textColor" />
+                <form-selectize label="Textfarbe" v-model="myConfig.textColor"
+                                :options="myColorOptions" />
+                <input type="hidden" name="config[verticalAlignment]" v-model="myConfig.verticalAlignment" />
+            </tab>
+            <tab id="layout">
+                <form-selectize label="Vertikale Ausrichtung der Texte" v-model="myConfig.verticalAlignment"
+                                :options="myAlignmentOptions" />
+                <form-input label="Schrifgröße" type="number" v-model="myConfig.fontSize" />
+            </tab>
+            <tab id="content">
+                <form-check label="Leere Folien zwischen den Elementen" v-model="myConfig.includeEmpty" name="config[includeEmpty]"/>
+                <form-check label="Platzhalter für Jingle, Intro, ..." v-model="myConfig.includeJingleAndIntro" name="config[includeJingleAndIntro]"/>
+                <form-check label="Mitwirkende anzeigen" v-model="myConfig.includeCredits" name="config[includeCredits]"/>
+                <hr />
+                <form-check label="Wo möglich, Noten statt Text verwenden" v-model="myConfig.renderMusic" name="config[renderMusic]" />
+            </tab>
+        </tabs>
     </liturgy-sheet-configuration-form>
 </template>
 
@@ -66,9 +68,13 @@ import LiturgySheetConfigurationForm from "./LiturgySheetConfigurationForm";
 import FormCheck from "../../Ui/forms/FormCheck";
 import FormSelectize from "../../Ui/forms/FormSelectize";
 import FormInput from "../../Ui/forms/FormInput";
+import Tabs from "../../Ui/tabs/tabs";
+import Tab from "../../Ui/tabs/tab";
+import TabHeaders from "../../Ui/tabs/tabHeaders";
+import TabHeader from "../../Ui/tabs/tabHeader";
 export default {
     name: "SongPPTLiturgySheetConfiguration",
-    components: {FormInput, FormSelectize, FormCheck, LiturgySheetConfigurationForm},
+    components: {TabHeader, TabHeaders, Tab, Tabs, FormInput, FormSelectize, FormCheck, LiturgySheetConfigurationForm},
     props: ['service', 'sheet'],
     data() {
         return {
