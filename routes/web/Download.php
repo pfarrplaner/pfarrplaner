@@ -41,9 +41,10 @@
 
 
 
-use App\Http\Controllers\DownloadController; 
+use App\Http\Controllers\DownloadController;
 
 Route::get('download/{storage}/{code}/{prettyName?}', [DownloadController::class, 'download'])->name('download');
 Route::get('attachment/{attachment}', [DownloadController::class, 'attachment'])->name('attachment');
 Route::get('files/{path}/{prettyName?}', [DownloadController::class, 'storage'])->name('storage');
 Route::get('image/{path}/{prettyName?}', [DownloadController::class, 'image'])->name('image');
+Route::get('qrcode/{value}', [DownloadController::class, 'qr'])->name('qr');

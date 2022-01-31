@@ -36,6 +36,8 @@ use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Matrix\Decomposition\QR;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
@@ -141,4 +143,16 @@ class DownloadController extends Controller
     }
 
 
+    /**
+     * @param $value
+     * @param string $prettyName
+     */
+    public function qr($value, $prettyName = '') {
+        $file = tempnam('/tmp', 'pfp-qr').'.png';
+        $command = 'qrencode -l H -m 0 -o '.escapeshellarg($file).' '.escapeshellarg($value);
+        exec($command);
+        $png = file_get_contents($file);
+        unlink($file);
+        return response($png)->header('Content-Type', 'image/png');
+    }
 }
