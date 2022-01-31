@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.105.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.104.0...v1.105.0) (2022-01-31)
+
+
+### Features
+
+* Generate QR code images on-the-fly ([ae84b81](https://github.com/pfarrplaner/pfarrplaner/commits/ae84b81fd6dd9cdd85a49d4de07194cea5bdfa6e))
+* Include QR code in FullText ([9e0df99](https://github.com/pfarrplaner/pfarrplaner/commits/9e0df99e7bcb99c58cab489363c796dedb77661f)), closes [#197](https://github.com/pfarrplaner/pfarrplaner/issues/197)
+
+
+### Bug Fixes
+
+* PPTSongSheet configuration overflows screen size on some screens ([109c76e](https://github.com/pfarrplaner/pfarrplaner/commits/109c76e3106bb84c6bb016ae67e510fbcd460913))
+* Raise storage limit for backups ([a9925fd](https://github.com/pfarrplaner/pfarrplaner/commits/a9925fda5a1ce53c839b64341c004a785528c280))
+* Update mail is sent even when there are no changes to report ([822fe13](https://github.com/pfarrplaner/pfarrplaner/commits/822fe13dd8bc318bcd1ccb264879ba9c32562174))
+
 ## [1.104.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.103.3...v1.104.0) (2022-01-27)
 
 
