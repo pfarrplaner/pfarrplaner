@@ -33,7 +33,7 @@
             <div ref="container">
                 <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
                            :value="myValue" multiple @input="changed" @blur="editing = false" :settings="settings"
-                           :options="people" />
+                           :options="people" :disabled="disabled" />
                 <small class="form-text text-muted">Eine oder mehrere Personen (keine Anmerkungen, Notizen,
                     usw.)</small>
             </div>
@@ -75,6 +75,7 @@ export default {
         error: String,
         people: Array,
         includeTeamsFromCity: Object,
+        disabled: Boolean,
         teams: {
             type: Array,
             default() { return [] },
