@@ -31,10 +31,10 @@
     <form-group :label="label" :help="help" :is-checked-item="isCheckedItem" :pre-label="preLabel">
         <div class="row">
             <div class="col-md-6">
-                <date-picker v-model="myFrom" :config="myDatePickerConfig1" @input="setFrom"/>
+                <date-picker v-model="myFrom" :config="myDatePickerConfig1" @input="setFrom" :disabled="disabled"/>
             </div>
             <div class="col-md-6">
-                <date-picker v-model="myTo" :config="myDatePickerConfig2" @input="setTo"/>
+                <date-picker v-model="myTo" :config="myDatePickerConfig2" @input="setTo" :disabled="disabled"/>
             </div>
         </div>
     </form-group>
@@ -45,21 +45,19 @@ import FormGroup from "../forms/FormGroup";
 export default {
     name: "DateRangeInput",
     components: {FormGroup},
-    props: ['from', 'to', 'label', 'preLabel', 'help', 'isCheckedItem'],
+    props: ['from', 'to', 'label', 'preLabel', 'help', 'isCheckedItem', 'disabled'],
     data() {
         this.from = this.from || moment().format('DD.MM.YYYY');
-        this.from = this.to || moment().addYears(5).format('DD.MM.YYYY');
+        this.to = this.to || moment().addYears(5).format('DD.MM.YYYY');
         return {
             myDatePickerConfig1: {
                 locale: 'de',
                 format: 'DD.MM.YYYY',
-//              maxDate: this.to,
             },
             myDatePickerConfig2: {
                 locale: 'de',
                 format: 'DD.MM.YYYY',
                 useCurrent: false,
-//              minDate: this.from,
             },
             myFrom: this.from.length > 10 ? moment(this.from).format('DD.MM.YYYY') : this.from,
             myTo: this.to.length > 10 ? moment(this.to).format('DD.MM.YYYY') : this.to,
