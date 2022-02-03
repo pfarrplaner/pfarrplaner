@@ -232,10 +232,19 @@ export default {
             this.saveAbsence();
         },
         deleteAbsence() {
-            this.$inertia.delete(route('absence.destroy', {absence: this.myAbsence.id, year: this.year, month: this.month}));
+            this.$inertia.delete(route('absence.destroy', {
+                absence: this.myAbsence.id,
+                year: moment(this.myAbsence.from).format('YYYY'),
+                month: moment(this.myAbsence.from).format('MM')
+            }));
         },
         rejectAbsence() {
-            this.$inertia.delete(route('absence.destroy', {absence: this.myAbsence.id, year: this.year, month: this.month, sendRejectionMail: true}));
+            this.$inertia.delete(route('absence.destroy', {
+                absence: this.myAbsence.id,
+                year: moment(this.myAbsence.from).format('YYYY'),
+                month: moment(this.myAbsence.from).format('MM'),
+                sendRejectionMail: true,
+            }));
         },
         leaveRequestForm() {
             window.location.href = route('reports.render.get', {report: 'leaveRequestForm', absence: this.myAbsence.id});

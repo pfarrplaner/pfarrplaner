@@ -272,7 +272,7 @@ class AbsenceController extends Controller
         $absence->delete();
         return redirect()->route(
             'absences.index',
-            ['month' => $request->get('month'), 'year' => $request->get('year')]
+            ['month' => $request->get('month', Carbon::now()->month), 'year' => $request->get('year', Carbon::now()->year)]
         );
     }
 
