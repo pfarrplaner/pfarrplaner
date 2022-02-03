@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.106.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.105.0...v1.106.0) (2022-02-03)
+
+
+### Features
+
+* Add AbsenceRequestsTab to HomeScreenTabs ([6ec98dc](https://github.com/pfarrplaner/pfarrplaner/commits/6ec98dc6d936db38f9d80df66f429537788a43d1))
+* Further configuration for managing absences for a user ([52b6839](https://github.com/pfarrplaner/pfarrplaner/commits/52b683958b012fd4413545ef5abf152b4d0e3256))
+* New system for checking/approving absences ([aad5799](https://github.com/pfarrplaner/pfarrplaner/commits/aad57998b253889839e191a155ea65e0be1246dd))
+
+
+### Bug Fixes
+
+* AbsenceController uses obsolete route name ([3ca2898](https://github.com/pfarrplaner/pfarrplaner/commits/3ca2898f802ca86805de80279c7168633b6c3c82))
+* AbsenceRequest.php uses Auth facade to get current user ([4dfc052](https://github.com/pfarrplaner/pfarrplaner/commits/4dfc0528bc8f1e398e781447369ab5c3fd1f319a))
+* Better redirect when absence is rejected/deleted ([02f2025](https://github.com/pfarrplaner/pfarrplaner/commits/02f2025406d64d6161f7816090792f874b600daa))
+* DateRangeInput has wrong start date and cannot be disabled ([af40d40](https://github.com/pfarrplaner/pfarrplaner/commits/af40d40ce7b887dbaa910542c4d95086fe7f6beb))
+* duplicate route name ([cd35252](https://github.com/pfarrplaner/pfarrplaner/commits/cd352525b68dd7bbd854c1107171b23ab3acd30f))
+* Edge recognizes site language as English ([b7e47dd](https://github.com/pfarrplaner/pfarrplaner/commits/b7e47dd6cc48dbf947d47309df5eb286479f6cd5))
+* FuneralWizard fails with Exception ([705ba25](https://github.com/pfarrplaner/pfarrplaner/commits/705ba257fa8064f81e5d716f1f84861eb0c15dee))
+* Obsolete absences.* route ([7b66852](https://github.com/pfarrplaner/pfarrplaner/commits/7b66852c6c8581b99db3cb4439bcf6d261e3a503))
+* Obsolete absences.* route names ([13970ce](https://github.com/pfarrplaner/pfarrplaner/commits/13970ceacec78801ff67bb0a3242f391daade072))
+* PeopleSelect cannot be disabled ([23c8def](https://github.com/pfarrplaner/pfarrplaner/commits/23c8deffd40c4dfe4d0720d77f11219dda7014b6))
+
 ## [1.105.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.104.0...v1.105.0) (2022-01-31)
 
 

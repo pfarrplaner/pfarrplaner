@@ -3,7 +3,7 @@
     "type": "project",
     "description": "Service and vacation planning for a district of Lutheran churches",
     "license": "GPL-3.0-or-later",
-    "version": "1.105.0",
+    "version": "1.106.0",
     "repositories": [
         {
             "type": "vcs",
@@ -12,6 +12,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/potofcoffee/PHPWord"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/potofcoffee/PHPPresentation"
         }
     ],
     "require": {
@@ -35,7 +39,7 @@
         "nesbot/carbon": "^2.44",
         "niklasravnsborg/laravel-pdf": "^4.0",
         "php-ews/php-ews": "^1.0",
-        "phpoffice/phppresentation": "dev-master",
+        "phpoffice/phppresentation": "dev-fix-video",
         "phpoffice/phpspreadsheet": "^1.8",
         "phpoffice/phpword": "dev-develop",
         "predis/predis": "^1.1",
