@@ -60,6 +60,7 @@ class AbsenceRequest extends FormRequest
                         Absence::STATUS_SELF_ADMINISTERED_AND_APPROVED
                     ]
                 );
+            $rules['approved_at'] = 'nullable|date_format:d.m.Y';
         } else {
             $mayCheck = $this->absence->user->vacationAdmins->pluck('id')->contains($this->user()->id);
             $mayApprove = $this->absence->user->vacationApprovers->pluck('id')->contains($this->user()->id);
@@ -98,13 +99,26 @@ class AbsenceRequest extends FormRequest
         $data['from'] = Carbon::createFromFormat('d.m.Y', $data['from'])->setTime(0, 0, 0);
         $data['to'] = Carbon::createFromFormat('d.m.Y', $data['to'])->setTime(23, 59, 59);
 
+        if (isset($data['approved_at'])) {
+            if (strlen($data['approved_at']) == 10) $data['approved_at'] .= ' 0:00:00';
+            $data['approved_at'] = Carbon::parse($data['approved_at']);
+        }
+
         // check if admin/approver id needs to be set
         if (isset($data['workflow_status']) && ($this->absence->workflow_status != $data['workflow_status'])) {
+            if ($data['workflow_status'] == Absence::STATUS_NEW) {
+                $data['admin_id'] = null;
+                $data['approver_id_id'] = null;
+                $data['checked_at'] = null;
+                $data['approved_at'] = null;
+            }
             if ($data['workflow_status'] >= Absence::STATUS_CHECKED && (null === $this->absence->admin_id)) {
                 $data['admin_id'] = $this->user()->id;
+                $data['checked_at'] = Carbon::now();
             }
             if ($data['workflow_status'] == Absence::STATUS_APPROVED && (null === $this->absence->approver_id)) {
                 $data['approver_id'] = $this->user()->id;
+                $data['approved_at'] = Carbon::now();
             }
         }
         return $data;

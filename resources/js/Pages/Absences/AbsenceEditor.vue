@@ -73,14 +73,22 @@
         <div v-if="myAbsence.workflow_status < 10" class="alert" :class="setApproved ? 'alert-success' : 'alert-danger'">
             <checked-process-item :check="myAbsence.workflow_status > 0"
                                   :negative="needsCheckText(myAbsence.user.vacation_admins, 'überprüft')">
-                <template slot="positive">Der Urlaubsantrag wurde <span v-if="myAbsence.checked_by">von {{ myAbsence.checked_by.name }}</span> überprüft und zur Genehmigung weitergeleitet.</template>
+                <template slot="positive">Der Urlaubsantrag wurde
+                    <span v-if="myAbsence.checked_at">am {{ moment(myAbsence.checked_at).locale('de').format('DD.MM.YYYY') }} um {{ moment(myAbsence.checked_at).locale('de').format('HH:MM') }} Uhr</span>
+                    <span v-if="myAbsence.checked_by">von {{ myAbsence.checked_by.name }}</span>
+                    überprüft und zur Genehmigung weitergeleitet.
+                </template>
             </checked-process-item>
             <div v-if="myAbsence.admin_notes && (role=='approver')"><div class="text-bold">Bemerkungen zur Überprüfung:</div><nl2br class="text-small">{{ myAbsence.admin_notes }}</nl2br></div>
             <form-textarea v-if="(myAbsence.workflow_status == 0) && (role=='admin')" name="admin_notes"
                            label="Bemerkungen zur Überprüfung" v-model="myAbsence.admin_notes" />
             <checked-process-item :check="myAbsence.workflow_status > 1"
                                   :negative="needsCheckText(myAbsence.user.vacation_approvers, 'genehmigt')">
-                <template slot="positive">Der Urlaubsantrag wurde von <span v-if="myAbsence.approved_by">{{ myAbsence.approved_by.name }}</span> genehmigt.</template>
+                <template slot="positive">Der Urlaubsantrag wurde
+                    <span v-if="myAbsence.approved_at">am {{ moment(myAbsence.approved_at).locale('de').format('DD.MM.YYYY') }} um {{ moment(myAbsence.approved_at).locale('de').format('HH:MM') }} Uhr</span>
+                    <span v-if="myAbsence.approved_by">von {{ myAbsence.approved_by.name }}</span>
+                    genehmigt.
+                </template>
             </checked-process-item>
             <div v-if="(role != 'approver') && myAbsence.approver_notes"><div class="text-bold">Bemerkungen zur Genehmigung:</div><nl2br class="text-small">{{ myAbsence.approver_notes }}</nl2br></div>
             <form-textarea v-if="role == 'approver'" label="Bemerkungen zur Genehmigung" v-model="myAbsence.approver_notes" name="approver_notes" />
@@ -116,7 +124,14 @@
                 </div>
                 <hr />
                 <form-textarea label="Notizen für die Vertretung" v-model="myAbsence.replacement_notes" name="replacement_notes"  :disabled="!mayEdit"/>
-                <form-check v-if="role == 'self-editor'" label="Von der zuständigen Stelle genehmigt" v-model="setApproved" :is-checked-item="true"/>
+                <div class="row" v-if="role == 'self-editor'">
+                    <div class="col-md-6">
+                        <form-check label="Von der zuständigen Stelle genehmigt" v-model="setApproved" :is-checked-item="true"/>
+                    </div>
+                    <div class="col-md-6" v-if="setApproved">
+                        <form-date-picker label="Datum der Genehmigung" v-model="absence.approved_at" :is-checked-item="true" />
+                    </div>
+                </div>
             </card-body>
         </card>
     </admin-layout>
@@ -133,10 +148,12 @@ import PeopleSelect from "../../components/Ui/elements/PeopleSelect";
 import FormTextarea from "../../components/Ui/forms/FormTextarea";
 import CheckedProcessItem from "../../components/Ui/elements/CheckedProcessItem";
 import FormCheck from "../../components/Ui/forms/FormCheck";
+import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 
 export default {
     name: "AbsenceEditor",
     components: {
+        FormDatePicker,
         FormCheck,
         CheckedProcessItem,
         FormTextarea, PeopleSelect, FakeTable, DateRangeInput, CardBody, FormInput, Card, CardHeader},
@@ -188,7 +205,10 @@ export default {
             if (!this.maySelfAdminister) {
                 record.workflow_status = 0;
                 if (this.setChecked) record.workflow_status = 1;
-                if (this.setApproved) record.workflow_status = 2;
+                if (this.setApproved) {
+                    record.workflow_status = 2;
+                    record.approved_at = record.approved_at || moment();
+                }
             } else {
                 record.workflow_status = 10;
                 if (this.setApproved) record.workflow_status = 11;

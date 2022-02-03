@@ -67,6 +67,8 @@ class Absence extends Model
         'approver_notes',
         'admin_id',
         'approver_id',
+        'checked_at',
+        'approved_at',
     ];
 
     /**
@@ -74,7 +76,9 @@ class Absence extends Model
      */
     protected $dates = [
         'from',
-        'to'
+        'to',
+        'checked_at',
+        'approved_at',
     ];
 
     protected $appends = [

@@ -19,6 +19,11 @@ class AddStatusToAbsences extends Migration
             $table->text('approver_notes')->nullable();
             $table->unsignedBigInteger('admin_id')->nullable();
             $table->unsignedBigInteger('approver_id')->nullable();
+            $table->dateTime('checked_at')->nullable();
+            $table->dateTime('approved_at')->nullable();
+
+            // remove unused fields
+            $table->dropColumn('status');
         });
     }
 
@@ -35,6 +40,8 @@ class AddStatusToAbsences extends Migration
             $table->dropColumn('approver_notes');
             $table->dropColumn('admin_id');
             $table->dropColumn('approver_id');
+            $table->dropColumn('checked_at');
+            $table->dropColumn('approved_at');
         });
     }
 }
