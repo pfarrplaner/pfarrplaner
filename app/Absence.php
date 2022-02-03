@@ -30,6 +30,7 @@
 
 namespace App;
 
+use App\Services\CalendarService;
 use App\Tools\StringTool;
 use Carbon\Carbon;
 use Exception;
@@ -45,6 +46,13 @@ use Illuminate\Support\Collection;
  */
 class Absence extends Model
 {
+    public const STATUS_NEW = 0;
+    public const STATUS_CHECKED = 1;
+    public const STATUS_APPROVED = 2;
+    public const STATUS_SELF_ADMINISTERED = 10;
+    public const STATUS_SELF_ADMINISTERED_AND_APPROVED = 11;
+
+
     /**
      * @var string[]
      */
@@ -54,6 +62,11 @@ class Absence extends Model
         'user_id',
         'reason',
         'replacement_notes',
+        'workflow_status',
+        'admin_notes',
+        'approver_notes',
+        'admin_id',
+        'approver_id',
     ];
 
     /**
@@ -71,6 +84,16 @@ class Absence extends Model
     protected $with = [
         'user', 'replacements'
     ];
+
+    public function checkedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'admin_id');
+    }
+
+    public function approvedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'approver_id');
+    }
 
 // ACCESSORS
     public function getReplacementTextAttribute()
@@ -254,4 +277,59 @@ class Absence extends Model
     {
         return ($date >= $this->from) && ($date <= $this->to);
     }
+
+
+    /**
+     * Get an array of displayable dates for the AbsencePlanner
+     * @param Carbon $start Start of displayed month
+     * @return array Day data
+     */
+    public static function getDaysForPlanner(Carbon $start)
+    {
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+        $holidays = CalendarService::getHolidays($start, $end);
+        $days = [];
+        while ($start <= $end) {
+            $day = ['day' => $start->day, 'holiday' => false, 'date' => $start->copy()];
+            foreach ($holidays as $holiday) {
+                $day['holiday'] = $day['holiday'] || (($start >= $holiday['start']) && ($start <= $holiday['end']));
+            }
+            $days[$start->day] = $day;
+            $start->addDay(1);
+        }
+        return $days;
+    }
+
+    /**
+     * @param $data
+     */
+    public function setupReplacements($data)
+    {
+        $this->load('replacements');
+        if (count($this->replacements)) {
+            foreach ($this->replacements as $replacement) {
+                $replacement->delete();
+            }
+        }
+        foreach ($data as $replacementData) {
+            $replacement = new Replacement(
+                [
+                    'absence_id' => $this->id,
+                    'from' => max(Carbon::createFromFormat('d.m.Y', $replacementData['from']), $this->from),
+                    'to' => min(Carbon::createFromFormat('d.m.Y', $replacementData['to']), $this->to),
+                ]
+            );
+            $replacement->save();
+            if (isset($replacementData['users'])) {
+                foreach ($replacementData['users'] as $id => $userData) {
+                    $replacementData['users'][$id] = $userData['id'];
+                }
+                $replacement->users()->sync($replacementData['users']);
+            }
+            $replacementIds[] = $replacement->id;
+        }
+    }
+
+
+
 }

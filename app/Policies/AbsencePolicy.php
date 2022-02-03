@@ -54,10 +54,20 @@ class AbsencePolicy
 
     /**
      * @param User $user
+     * @param Absence $absence
      * @return bool
      */
-    public function create(User $user)
+    public function view(User $user, Absence $absence) {
+        return $this->update($user, $absence);
+    }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function create(User $user, Absence $absence = null)
     {
+        if ((null !== $absence) && $this->update($user, $absence)) return true;
         return $user->manage_absences || $user->hasPermissionTo('fremden-urlaub-bearbeiten');
     }
 
@@ -71,15 +81,47 @@ class AbsencePolicy
         if ($user->id == $absence->user->id) {
             return true;
         }
+
+        // via permission
         if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {
             $cityIds = $absence->user->cities->pluck('id');
             foreach ($user->writableCities as $city) {
-                if ($cityIds->contains($city->id)) {
+                if ($cityIds->contains($city->id) && (!$absence->user->hasRole('Pfarrer*in'))) {
                     return true;
                 }
             }
         }
+
+        // via workflow
+        if ($absence->user->vacationAdmins->pluck('id')->contains($user->id)) return true;
+        if (($absence->workflow_status > 0) && $absence->user->vacationApprovers->pluck('id')->contains($user->id)) return true;
+
         return false;
     }
+
+    /**
+     * @param User $user
+     * @param Absence $absence
+     * @return bool
+     */
+    public function delete(User $user, Absence $absence)
+    {
+        return $this->update($user, $absence);
+    }
+
+
+    /**
+     * Check if the user can manage his own vacation entries
+     * @param User $user
+     * @return bool
+     */
+    public function selfAdminister(User $user, Absence $absence = null)
+    {
+        if ((null !== $absence) && ($absence->user->id != $user->id)) return false;
+        return ((0 == $user->vacationAdmins->count()) && (0 == $user->vacationApprovers->count()));
+    }
+
+
+
 
 }

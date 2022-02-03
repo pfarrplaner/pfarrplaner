@@ -43,7 +43,6 @@ Route::resource('locations', 'LocationController')->middleware('auth');
 Route::resource('days', 'DayController')->middleware('auth');
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
-Route::resource('absences', 'AbsenceController')->except(['index', 'create'])->middleware('auth');
 Route::resource('tags', 'TagController')->middleware('auth');
 Route::resource('parishes', 'ParishController')->middleware('auth');
 Route::resource('seatingSection', 'SeatingSectionController');

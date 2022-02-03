@@ -169,7 +169,8 @@ class UserController extends Controller
             }
         }
         $user->syncRoles($request->get('roles') ?: []);
-        $user->approvers()->sync($request->get('approvers') ?: []);
+        $user->syncRelatedUsers('vacationAdmins', 'vacation_admin', $request->get('vacationAdmins', []));
+        $user->syncRelatedUsers('vacationApprovers', 'vacation_approver', $request->get('vacationApprovers', []));
 
         // set subscriptions
         $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
@@ -310,6 +311,10 @@ class UserController extends Controller
             $user->homeCities()->sync($request->get('homeCities') ?: []);
             $user->parishes()->sync($request->get('parishes') ?: []);
             $user->approvers()->sync($request->get('approvers') ?: []);
+
+            $user->syncRelatedUsers('vacationAdmins', 'vacation_admin', $request->get('vacationAdmins', []));
+            $user->syncRelatedUsers('vacationApprovers', 'vacation_approver', $request->get('vacationApprovers', []));
+
             // assign roles
             $roles = $request->get('roles');
             if (is_array($roles) && count($roles)) {

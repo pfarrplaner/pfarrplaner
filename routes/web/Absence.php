@@ -30,12 +30,28 @@
 
 use App\Http\Controllers\AbsenceController;
 
-Route::resource('absences', 'AbsenceController')->except(['index', 'create'])->middleware('auth');
-Route::get('planner/users', [AbsenceController::class, 'users'])->name('planner.users');
-Route::get('planner/days/{date}/{user}', [AbsenceController::class, 'days'])->name('planner.days');
-Route::get('absences/{year?}/{month?}', [AbsenceController::class, 'index'])->name('absences.index');
-Route::get('absences/create/{year}/{month}/{user}/{day?}', [AbsenceController::class, 'create'])->name('absences.create');
-Route::get('absence/{absence}/approve', [AbsenceController::class, 'approve'])->name('absence.approve');
-Route::get('absence/{absence}/reject', [AbsenceController::class, 'approve'])->name('absence.reject');
+Route::get('urlaubsplan/{year?}/{month?}', [AbsenceController::class, 'index'])
+    ->name('absences.index');
+Route::get('urlaubsplan/neu/{year}/{month}/{user}/{day?}', [AbsenceController::class, 'create'])
+    ->name('absence.create')
+    ->middleware('can:create,App\Absence');
+
+
+Route::get('urlaub/{absence}', [AbsenceController::class, 'edit'])
+    ->name('absence.edit')
+    ->middleware('can:update,absence');
+Route::patch('urlaub/{absence}', [AbsenceController::class, 'update'])
+    ->name('absence.update')
+    ->middleware('can:update,absence');
+Route::delete('urlaub/{absence}', [AbsenceController::class, 'destroy'])
+    ->name('absence.destroy')
+    ->middleware('can:delete,absence');
+
+Route::get('planner/users', [AbsenceController::class, 'users'])
+    ->name('planner.users');
+Route::get('planner/days/{date}/{user}', [AbsenceController::class, 'days'])
+    ->name('planner.days');
+
+
 
 

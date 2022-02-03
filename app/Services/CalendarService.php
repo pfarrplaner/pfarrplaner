@@ -98,4 +98,46 @@ class CalendarService
     }
 
 
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return array
+     * @throws Exception
+     */
+    public static function getHolidays(Carbon $start, Carbon $end)
+    {
+        try {
+            $raw = json_decode(file_get_contents('https://ferien-api.de/api/v1/holidays/BW'), true);
+        } catch (Exception $e) {
+            return [];
+        }
+        $holidays = [];
+        foreach ($raw as $holiday) {
+            $holiday['start'] = new Carbon($holiday['start']);
+            $holiday['end'] = (new Carbon($holiday['end']))->subSecond(1);
+            $holiday['name'] = ucfirst($holiday['name']);
+            if (($holiday['start'] <= $end) && ($holiday['end'] >= $start)) {
+                $holidays[] = $holiday;
+            }
+        }
+        return $holidays;
+    }
+
+    /**
+     * Get the start of a year or month as Carbon object
+     * @param Carbon|int $year Year
+     * @param null|int $month Month
+     * @return Carbon Start of year/month
+     */
+    public static function getStartOfPeriod($year, $month = null)
+    {
+        if (is_a($year, Carbon::class)) return $year->setDay(1)->setTime(0,0,0);
+        if (!$month) {
+            list($year, $month) = explode('-', $year);
+        }
+        return new Carbon($year . '-' . $month . '-01 0:00:00');
+    }
+
+
+
 }

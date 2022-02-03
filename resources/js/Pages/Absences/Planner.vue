@@ -49,13 +49,13 @@
                     <tr v-for="user in users" v-if="userDays[user.id]">
                         <th>{{ user.name }}
                             <a v-if="user.canEdit" class="btn btn-sm btn-success"
-                               :href="route('absences.create', {year: year, month: month, user: user.id})"><span
+                               :href="route('absence.create', {year: year, month: month, user: user.id})"><span
                                 class="fa fa-plus"></span></a>
                         </th>
                         <td v-for="(day,index,key) in myDays" :key="key" :index="index"
                             class="cal-cell" :class="userDays[user.id][day.day].duration ? absenceClass(user, day) : dayClass(user, day)"
                             v-if="userDays[user.id][day.day].show"
-                            :title="userDays[user.id][day.day].duration ? absenceTitle(user, userDays[user.id][day.day].absence) : (user.canEdit ? 'Klicken, um neuen Eintrag anzulegen' : '')"
+                            :title="userDays[user.id][day.day].duration ? absenceTitle(user, userDays[user.id][day.day].absence) : (user.canEdit   ? 'Klicken, um neuen Eintrag anzulegen' : '')"
                             :colspan="colspan(user,day)"
                             @click="edit(user,day,userDays[user.id][day.day].absence)" >
                             <div v-if="userDays[user.id][day.day].duration"
@@ -114,22 +114,29 @@ export default {
             return prefix+'day'
         },
         edit(user, day, absence) {
-            if (user.canEdit) {
+            if (user.canEdit || absence.canEdit) {
                 if (absence) {
-                    this.$inertia.visit(route('absences.edit', {absence: absence.id}));
+                    this.$inertia.visit(route('absence.edit', {absence: absence.id}));
                 } else {
-                    this.$inertia.visit(route('absences.create', {year: this.year, month: this.month, day: day.day, user:user.id}));
+                    this.$inertia.visit(route('absence.create', {year: this.year, month: this.month, day: day.day, user:user.id}));
                 }
             }
         },
         absenceClass(user, day) {
-            if (this.userDays[user.id][day.day].absence.replacing) return 'replacing';
-            if (user.canEdit) return 'absent editable';
-            return 'absent';
+            let absenceStatus = ' absence-status-'+this.userDays[user.id][day.day].absence.workflow_status;
+            let editable = ' not-editable';
+            if (user.canEdit) editable = ' editable';
+            if (this.userDays[user.id][day.day].absence.canEdit) editable = ' editable';
+            if (this.userDays[user.id][day.day].absence.replacing) return 'replacing'+editable;
+            return 'absent'+absenceStatus+editable;
         },
         absenceTitle(user, absence) {
+            let statusText = '';
+            if (absence.workflow_status == 0) statusText = ' Status: Warte auf Überprüfung. ';
+            if (absence.workflow_status == 1) statusText = ' Status: Warte auf Genehmigung. ';
+            if (absence.workflow_status == 10) statusText = ' Status: Warte auf Genehmigung. ';
             return absence.reason+' ('+moment(absence.from).format('DD.MM.YYYY')+' - '
-                +moment(absence.to).format('DD.MM.YYYY')+') V:'+absence.replacementText+(user.canEdit ? ' --> Klicken, um zu bearbeiten' : '');
+                +moment(absence.to).format('DD.MM.YYYY')+') V:'+statusText+absence.replacementText+(user.canEdit ? ' --> Klicken, um zu bearbeiten' : '');
         },
         colspan(user, day) {
             if(undefined == this.userDays[user.id]) return 31;
@@ -143,6 +150,14 @@ export default {
     .absent {
         background-color: orange;
     }
+
+    .tbl-absences .cal-cell.absent.absence-status-0,
+    .tbl-absences .cal-cell.absent.absence-status-1,
+    .tbl-absences .cal-cell.absent.absence-status-10
+    {
+        background-color: papayawhip !important;
+    }
+
     .replacing {
         background-color: lightblue;
     }
@@ -152,6 +167,9 @@ export default {
     }
     .vacation {
         background-color: #e9fce9;
+    }
+    .not-editable {
+        cursor: not-allowed;
     }
     .editable {
         cursor: pointer;

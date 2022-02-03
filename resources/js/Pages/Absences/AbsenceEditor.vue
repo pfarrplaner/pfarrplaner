@@ -30,15 +30,35 @@
 <template>
     <admin-layout title="Urlaub bearbeiten">
         <template slot="navbar-left">
-            <button @click="saveAbsence" class="btn btn-primary"  title="Urlaubseintrag speichern">
+            <button v-if="role == 'editor'" @click="saveAbsence" class="btn btn-primary"  title="Urlaubseintrag speichern  und zur Überprüfung absenden">
+                <span class="d-inline d-md-none fa fa-save"></span>
+                <span class="d-none d-md-inline">Zur Überprüfung absenden</span>
+            </button>
+            <button v-if="role == 'self-editor'" @click="saveAbsence" class="btn btn-primary"  title="Urlaubseintrag speichern">
                 <span class="d-inline d-md-none fa fa-save"></span>
                 <span class="d-none d-md-inline">Speichern</span>
             </button>
-            <button @click="deleteAbsence" class="btn btn-danger ml-1" title="Urlaubseintrag löschen">
+            <button v-if="role == 'admin'" @click="checkAndSave()" class="btn btn-success"  title="Urlaubseintrag als überprüft markieren und zur Genehmigung weiterleiten">
+                <span class="d-inline d-md-none fa fa-save"></span>
+                <span class="d-none d-md-inline">Zur Genehmigung weiterleiten</span>
+            </button>
+            <button v-if="role == 'approver'" @click="approveAndSave()" class="btn btn-success"  title="Urlaubseintrag genehmigen">
+                <span class="d-inline d-md-none fa fa-save"></span>
+                <span class="d-none d-md-inline">Genehmigen</span>
+            </button>
+            <button v-if="role == 'approver'" @click="returnAndSave()" class="btn btn-warning ml-1"  title="Urlaubseintrag zurück zur Überprüfung verweisen">
+                <span class="d-inline d-md-none fa fa-save"></span>
+                <span class="d-none d-md-inline">Erneut überprüfen lassen</span>
+            </button>
+            <button v-if="(role == 'editor') && (role == 'self-editor')" @click="deleteAbsence" class="btn btn-danger ml-1" title="Urlaubseintrag löschen">
                 <span class="d-inline d-md-none fa fa-trash"></span>
                 <span class="d-none d-md-inline">Löschen</span>
             </button>
-            <div class="dropdown">
+            <button v-if="(role == 'admin') || (role=='approver')" @click="rejectAbsence" class="btn btn-danger ml-1" title="Urlaubsantrag ablehnen">
+                <span class="d-inline d-md-none fa fa-trash"></span>
+                <span class="d-none d-md-inline">Ablehnen</span>
+            </button>
+            <div class="dropdown" v-if="role == 'self-editor'">
                 <button class="btn btn-light dropdown-toggle m-1" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         title="Dokumente herunterladen">
@@ -50,37 +70,53 @@
                 </div>
             </div>
         </template>
+        <div v-if="myAbsence.workflow_status < 10" class="alert" :class="setApproved ? 'alert-success' : 'alert-danger'">
+            <checked-process-item :check="myAbsence.workflow_status > 0"
+                                  :negative="needsCheckText(myAbsence.user.vacation_admins, 'überprüft')">
+                <template slot="positive">Der Urlaubsantrag wurde <span v-if="myAbsence.checked_by">von {{ myAbsence.checked_by.name }}</span> überprüft und zur Genehmigung weitergeleitet.</template>
+            </checked-process-item>
+            <div v-if="myAbsence.admin_notes && (role=='approver')"><div class="text-bold">Bemerkungen zur Überprüfung:</div><nl2br class="text-small">{{ myAbsence.admin_notes }}</nl2br></div>
+            <form-textarea v-if="(myAbsence.workflow_status == 0) && (role=='admin')" name="admin_notes"
+                           label="Bemerkungen zur Überprüfung" v-model="myAbsence.admin_notes" />
+            <checked-process-item :check="myAbsence.workflow_status > 1"
+                                  :negative="needsCheckText(myAbsence.user.vacation_approvers, 'genehmigt')">
+                <template slot="positive">Der Urlaubsantrag wurde von <span v-if="myAbsence.approved_by">{{ myAbsence.approved_by.name }}</span> genehmigt.</template>
+            </checked-process-item>
+            <div v-if="(role != 'approver') && myAbsence.approver_notes"><div class="text-bold">Bemerkungen zur Genehmigung:</div><nl2br class="text-small">{{ myAbsence.approver_notes }}</nl2br></div>
+            <form-textarea v-if="role == 'approver'" label="Bemerkungen zur Genehmigung" v-model="myAbsence.approver_notes" name="approver_notes" />
+        </div>
         <card>
             <card-header>Informationen zum Urlaub</card-header>
             <card-body>
-                <date-range-input label="Zeitraum" :from="absence.from" :to="absence.to"
-                                  @input="setDateRange"
+                <date-range-input label="Zeitraum" :from="myAbsence.from" :to="myAbsence.to"
+                                  @input="setDateRange" :disabled="!mayEdit"
                 />
                 <form-input label="Beschreibung" help="Grund der Abwesenheit" name="reason"
-                            placeholder="z.B. Urlaub" v-model="absence.reason"/>
+                            placeholder="z.B. Urlaub" v-model="myAbsence.reason" :disabled="!mayEdit"/>
                 <fake-table :columns="[5,6,1]" :headers="['Vertreter:in', 'Zeitraum', '']"
                             collapsed-header="Vertreter:innen" class="mt-3" :key="myAbsence.replacements.length">
                     <div class="row py-1 fake-table-row"
                          v-for="(replacement, replacementKey, replacementIndex) in myAbsence.replacements">
                         <div class="col-md-5">
-                            <people-select :people="users" v-model="replacement.users"/>
+                            <people-select :people="users" v-model="replacement.users"  :disabled="!mayEdit"/>
                         </div>
                         <div class="col-md-6">
-                            <date-range-input :from="replacement.from" :to="replacement.to" @input="setReplacementDateRange(replacement, $event)"/>
+                            <date-range-input :from="replacement.from" :to="replacement.to" @input="setReplacementDateRange(replacement, $event)"  :disabled="!mayEdit"/>
                         </div>
                         <div class="col-md-1 text-right">
                             <button class="btn btn-danger" @click.prevent="deleteReplacement(replacementKey)"
-                                    title="Vertretung entfernen">
+                                    title="Vertretung entfernen"  :disabled="!mayEdit">
                                 <span class="fa fa-trash"></span>
                             </button>
                         </div>
                     </div>
                 </fake-table>
                 <div>
-                    <button class="btn btn-light" @click.prevent="addReplacement">Vertretung hinzufügen</button>
+                    <button class="btn btn-light" @click.prevent="addReplacement"  :disabled="!mayEdit">Vertretung hinzufügen</button>
                 </div>
                 <hr />
-                <form-textarea label="Notizen für die Vertretung" v-model="absence.replacement_notes" name="replacement_notes"/>
+                <form-textarea label="Notizen für die Vertretung" v-model="myAbsence.replacement_notes" name="replacement_notes"  :disabled="!mayEdit"/>
+                <form-check v-if="role == 'self-editor'" label="Von der zuständigen Stelle genehmigt" v-model="setApproved" :is-checked-item="true"/>
             </card-body>
         </card>
     </admin-layout>
@@ -95,14 +131,33 @@ import DateRangeInput from "../../components/Ui/elements/DateRangeInput";
 import FakeTable from "../../components/Ui/FakeTable";
 import PeopleSelect from "../../components/Ui/elements/PeopleSelect";
 import FormTextarea from "../../components/Ui/forms/FormTextarea";
+import CheckedProcessItem from "../../components/Ui/elements/CheckedProcessItem";
+import FormCheck from "../../components/Ui/forms/FormCheck";
 
 export default {
     name: "AbsenceEditor",
-    components: {FormTextarea, PeopleSelect, FakeTable, DateRangeInput, CardBody, FormInput, Card, CardHeader},
-    props: ['absence', 'month', 'year', 'users'],
+    components: {
+        FormCheck,
+        CheckedProcessItem,
+        FormTextarea, PeopleSelect, FakeTable, DateRangeInput, CardBody, FormInput, Card, CardHeader},
+    props: ['absence', 'month', 'year', 'users', 'mayCheck', 'mayApprove', 'maySelfAdminister'],
     data() {
+        let role = 'readonly';
+        let mayEdit = (this.mayCheck && this.absence.workflow_status == 0) || (this.mayApprove && this.absence.workflow_status == 1) || (this.absence.workflow_status <= 0);
+        if (mayEdit) role = 'editor';
+        if (mayEdit && this.mayCheck) role = 'admin';
+        if (mayEdit && this.mayApprove) role = 'approver';
+        if (this.maySelfAdminister && this.absence.workflow_status >= 10) {
+            mayEdit = true;
+            role = 'self-editor';
+        }
+
         return {
             myAbsence: this.absence,
+            setChecked: (this.absence.workflow_status == 1) || (this.absence.workflow_status == 2),
+            setApproved: (this.absence.workflow_status == 2) || (this.absence.workflow_status == 11),
+            mayEdit: mayEdit,
+            role: role,
         }
     },
     methods: {
@@ -129,18 +184,53 @@ export default {
                 replacement.from = moment(replacement.from).format('DD.MM.YYYY');
                 replacement.to = moment(replacement.to).format('DD.MM.YYYY');
             });
-            this.$inertia.patch(route('absences.update', {absence: this.absence.id}), record);
+
+            if (!this.maySelfAdminister) {
+                record.workflow_status = 0;
+                if (this.setChecked) record.workflow_status = 1;
+                if (this.setApproved) record.workflow_status = 2;
+            } else {
+                record.workflow_status = 10;
+                if (this.setApproved) record.workflow_status = 11;
+            }
+            this.$inertia.patch(route('absence.update', {absence: this.absence.id}), record);
+        },
+        returnAndSave() {
+            this.setChecked = false;
+            this.setApproved = false;
+            this.admin_id = null;
+            this.approver_id = null;
+            this.saveAbsence();
+        },
+        checkAndSave() {
+            this.setChecked = true;
+            this.saveAbsence();
+        },
+        approveAndSave() {
+            this.setChecked = true;
+            this.setApproved = true;
+            this.saveAbsence();
         },
         deleteAbsence() {
-            this.$inertia.delete(route('absences.destroy', {absence: this.myAbsence.id}, {
-                year: this.year, month: this.month
-            }));
+            this.$inertia.delete(route('absence.destroy', {absence: this.myAbsence.id, year: this.year, month: this.month}));
+        },
+        rejectAbsence() {
+            this.$inertia.delete(route('absence.destroy', {absence: this.myAbsence.id, year: this.year, month: this.month, sendRejectionMail: true}));
         },
         leaveRequestForm() {
             window.location.href = route('reports.render.get', {report: 'leaveRequestForm', absence: this.myAbsence.id});
         },
         travelRequestForm() {
             window.location.href = route('reports.render.get', {report: 'travelRequestForm', absence: this.myAbsence.id});
+        },
+        needsCheckText(people, step) {
+            if (people.length == 1) {
+                return 'Der Urlaubsantrag muss noch von '+people[0].name+' '+step+' werden.';
+            } else {
+                let p = [];
+                people.forEach(person => {p.push(person.name)});
+                return 'Der Urlaubsantrag muss noch von einer der folgenden Personen '+step+' werden: '+p.join(', ');
+            }
         }
     }
 }

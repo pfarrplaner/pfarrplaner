@@ -150,7 +150,8 @@
                 @if ($user->administeredBy(Auth::user()) || ($user->password==''))
                     @tab(['id' => 'absences'])
                         @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten', 'value' => $user->manage_absences])
-                        @peopleselect(['name' => 'approvers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->approvers])
+                        @peopleselect(['name' => 'vacationAdmins[]', 'label' => 'Urlaub muss durch folgende Personen geprüft werden:', 'people' => $users, 'value' => $user->vacationAdmins])
+                        @peopleselect(['name' => 'vacationApprovers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->vacationApprovers])
                     @endtab
                 @endif
             @endtabs

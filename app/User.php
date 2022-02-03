@@ -431,6 +431,27 @@ class User extends Authenticatable
     }
 
     /**
+     * @return BelongsToMany
+     */
+    public function relatedUsers() {
+        return $this->belongsToMany(User::class, 'user_user', 'user_id', 'related_user_id')->withPivot('relation');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function vacationAdmins() {
+        return $this->belongsToMany(User::class, 'user_user', 'user_id', 'related_user_id')->wherePivot('relation', '=', 'vacation_admin');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function vacationApprovers() {
+        return $this->belongsToMany(User::class, 'user_user', 'user_id', 'related_user_id')->wherePivot('relation', 'vacation_approver');
+    }
+
+    /**
      * @return HasMany
      */
     public function calendarConnections() {
@@ -1011,4 +1032,19 @@ class User extends Authenticatable
             $replacement->update(['user_id' => $user->id]);
         }
     }
+
+    /**
+     * Sync related users list for a specific kind of relation
+     * @param $relation Kind of relation
+     * @param $relationString Relation pivot string
+     * @param $userIds User ids
+     */
+    public function syncRelatedUsers($relation, $relationString, $userIds)
+    {
+        $this->$relation()->sync([]);
+        foreach ($userIds as $userId) {
+            $this->$relation()->attach([$userId => ['relation' => $relationString]]);
+        }
+    }
+
 }
