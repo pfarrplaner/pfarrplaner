@@ -326,7 +326,7 @@ class Absence extends Model
             $replacement->save();
             if (isset($replacementData['users'])) {
                 foreach ($replacementData['users'] as $id => $userData) {
-                    $replacementData['users'][$id] = $userData['id'];
+                    $replacementData['users'][$id] = $userData['id'] ?? $userData;
                 }
                 $replacement->users()->sync($replacementData['users']);
             }
