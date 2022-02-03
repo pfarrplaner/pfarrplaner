@@ -202,7 +202,7 @@ class FuneralController extends Controller
         } else {
             $sync = [];
             foreach ($data['pastor'] as $person) {
-                $sync[$person['id']] = ['category' => 'P'];
+                $sync[($person['id'] ?? $person)] = ['category' => 'P'];
             }
             $service->pastors()->sync($sync);
         }

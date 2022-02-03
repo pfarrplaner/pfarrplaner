@@ -79,6 +79,7 @@ class CalController extends Controller
         $absences = Absence::getByDays(
             Absence::with('user')->byPeriod($date, $monthEnd)
                 ->visibleForUser(Auth::user())
+                ->showInCalendar()
                 ->get(),
             $days
         );

@@ -532,6 +532,8 @@ class UserController extends Controller
             'own_podcast_url' => 'nullable|string|url',
             'own_podcast_spotify' => 'nullable|checkbox',
             'own_podcast_itunes' => 'nullable|checkbox',
+            'show_vacations_with_services' => 'nullable|checkbox',
+            'needs_replacement' => 'nullable|checkbox',
         ];
 
         // special treatment if the submitter is a local admin

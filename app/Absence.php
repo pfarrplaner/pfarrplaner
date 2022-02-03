@@ -89,22 +89,7 @@ class Absence extends Model
         'user', 'replacements'
     ];
 
-    public function checkedBy()
-    {
-        return $this->hasOne(User::class, 'id', 'admin_id');
-    }
-
-    public function approvedBy()
-    {
-        return $this->hasOne(User::class, 'id', 'approver_id');
-    }
-
 // ACCESSORS
-    public function getReplacementTextAttribute()
-    {
-        return $this->replacementText();
-    }
-
     public function getDurationTextAttribute()
     {
         return $this->durationText();
@@ -117,9 +102,64 @@ class Absence extends Model
     {
         return StringTool::durationText($this->from, $this->to);
     }
+
+    public function getReplacementTextAttribute()
+    {
+        return $this->replacementText();
+    }
+
+    /**
+     * @param string $prefix
+     * @return string
+     */
+    public function replacementText($prefix = '')
+    {
+        $prefix = $prefix ? $prefix . ' ' : '';
+        $r = [];
+        /** @var Replacement $replacement */
+        foreach ($this->replacements as $replacement) {
+            $r[] = $replacement->toText();
+        }
+        return $prefix . join('; ', $r);
+    }
 // END ACCESSORS
 
 // SCOPES
+    /**
+     * @param Builder $query
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return Builder
+     */
+    public function scopeByPeriod(Builder $query, Carbon $start, Carbon $end)
+    {
+        return $query->where('from', '<=', $end)
+            ->where('to', '>=', $start);
+    }
+
+    /**
+     * @param Builder $query
+     * @param User $user
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return mixed
+     */
+    public function scopeByUserAndPeriod(Builder $query, User $user, Carbon $start, Carbon $end)
+    {
+        return $query->where('user_id', $user->id)
+            ->where('from', '<=', $end)
+            ->where('to', '>=', $start);
+    }
+
+    /**
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeShowInCalendar(Builder $query)
+    {
+        return $query->whereHas('user', function($q) { $q->where('show_vacations_with_services', 1); });
+    }
+
     /**
      * @param $query
      * @param $user
@@ -142,28 +182,9 @@ class Absence extends Model
                 }
             );
     }
-
-    public function scopeByPeriod(Builder $query, Carbon $start, Carbon $end)
-    {
-        return $query->where('from', '<=', $end)
-            ->where('to', '>=', $start);
-    }
-
-    /**
-     * @param $query
-     * @param User $user
-     * @param Carbon $start
-     * @param Carbon $end
-     * @return mixed
-     */
-    public function scopeByUserAndPeriod($query, User $user, Carbon $start, Carbon $end)
-    {
-        return $query->where('user_id', $user->id)
-            ->where('from', '<=', $end)
-            ->where('to', '>=', $start);
-    }
 // END SCOPES
 
+// SETTERS
 // SETTERS
 // SETTERS
     /**
@@ -186,19 +207,24 @@ class Absence extends Model
     }
 
     /**
-     * @return HasMany
+     * Get an array of displayable dates for the AbsencePlanner
+     * @param Carbon $start Start of displayed month
+     * @return array Day data
      */
-    public function replacements()
+    public static function getDaysForPlanner(Carbon $start)
     {
-        return $this->hasMany(Replacement::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+        $holidays = CalendarService::getHolidays($start, $end);
+        $days = [];
+        while ($start <= $end) {
+            $day = ['day' => $start->day, 'holiday' => false, 'date' => $start->copy()];
+            foreach ($holidays as $holiday) {
+                $day['holiday'] = $day['holiday'] || (($start >= $holiday['start']) && ($start <= $holiday['end']));
+            }
+            $days[$start->day] = $day;
+            $start->addDay(1);
+        }
+        return $days;
     }
 
     /**
@@ -207,6 +233,45 @@ class Absence extends Model
     public function approvals()
     {
         return $this->hasMany(Approval::class);
+    }
+
+    public function approvedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'approver_id');
+    }
+
+    public function checkedBy()
+    {
+        return $this->hasOne(User::class, 'id', 'admin_id');
+    }
+
+    public function containsDate(Carbon $date)
+    {
+        return ($date >= $this->from) && ($date <= $this->to);
+    }
+
+    /**
+     * @return bool|null
+     * @throws Exception
+     */
+    public function delete()
+    {
+        foreach ($this->replacements as $replacement) {
+            $replacement->delete();
+        }
+        return parent::delete();
+    }
+
+    /**
+     * @return string
+     */
+    public function fullDescription()
+    {
+        $t = $this->replacementText();
+        if ($t) {
+            $t = ' [V: ' . $t . ']';
+        }
+        return $this->user->fullName() . ' (' . $this->reason . ')' . $t;
     }
 
     /**
@@ -226,82 +291,11 @@ class Absence extends Model
     }
 
     /**
-     * @return string
+     * @return HasMany
      */
-    public function fullDescription()
+    public function replacements()
     {
-        $t = $this->replacementText();
-        if ($t) {
-            $t = ' [V: ' . $t . ']';
-        }
-        return $this->user->fullName() . ' (' . $this->reason . ')' . $t;
-    }
-
-    /**
-     * @param string $prefix
-     * @return string
-     */
-    public function replacementText($prefix = '')
-    {
-        $prefix = $prefix ? $prefix . ' ' : '';
-        $r = [];
-        /** @var Replacement $replacement */
-        foreach ($this->replacements as $replacement) {
-            $r[] = $replacement->toText();
-        }
-        return $prefix . join('; ', $r);
-    }
-
-    /**
-     * Calculate, how many days of this absence fall into a certain period
-     * This is used for the colspans in calendar view
-     * @param Carbon $start Start date
-     * @param Carbon $end End date
-     */
-    public function showableDays($start, $end)
-    {
-        $myFrom = max($start, $this->from);
-        $myTo = min($end, $this->to);
-        return $myTo->diffInDays($myFrom) + 1;
-    }
-
-    /**
-     * @return bool|null
-     * @throws Exception
-     */
-    public function delete()
-    {
-        foreach ($this->replacements as $replacement) {
-            $replacement->delete();
-        }
-        return parent::delete();
-    }
-
-    public function containsDate(Carbon $date)
-    {
-        return ($date >= $this->from) && ($date <= $this->to);
-    }
-
-
-    /**
-     * Get an array of displayable dates for the AbsencePlanner
-     * @param Carbon $start Start of displayed month
-     * @return array Day data
-     */
-    public static function getDaysForPlanner(Carbon $start)
-    {
-        $end = $start->copy()->addMonth(1)->subSecond(1);
-        $holidays = CalendarService::getHolidays($start, $end);
-        $days = [];
-        while ($start <= $end) {
-            $day = ['day' => $start->day, 'holiday' => false, 'date' => $start->copy()];
-            foreach ($holidays as $holiday) {
-                $day['holiday'] = $day['holiday'] || (($start >= $holiday['start']) && ($start <= $holiday['end']));
-            }
-            $days[$start->day] = $day;
-            $start->addDay(1);
-        }
-        return $days;
+        return $this->hasMany(Replacement::class);
     }
 
     /**
@@ -332,6 +326,27 @@ class Absence extends Model
             }
             $replacementIds[] = $replacement->id;
         }
+    }
+
+    /**
+     * Calculate, how many days of this absence fall into a certain period
+     * This is used for the colspans in calendar view
+     * @param Carbon $start Start date
+     * @param Carbon $end End date
+     */
+    public function showableDays($start, $end)
+    {
+        $myFrom = max($start, $this->from);
+        $myTo = min($end, $this->to);
+        return $myTo->diffInDays($myFrom) + 1;
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
 

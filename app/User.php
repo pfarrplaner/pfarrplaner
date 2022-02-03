@@ -101,6 +101,8 @@ class User extends Authenticatable
         'own_podcast_url',
         'own_podcast_spotify',
         'own_podcast_itunes',
+        'show_vacations_with_services',
+        'needs_replacement',
     ];
 
     /**

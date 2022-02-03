@@ -152,6 +152,8 @@
                         @checkbox(['name' => 'manage_absences', 'label' => 'Urlaub für diesen Benutzer verwalten', 'value' => $user->manage_absences])
                         @peopleselect(['name' => 'vacationAdmins[]', 'label' => 'Urlaub muss durch folgende Personen geprüft werden:', 'people' => $users, 'value' => $user->vacationAdmins])
                         @peopleselect(['name' => 'vacationApprovers[]', 'label' => 'Urlaub muss durch folgende Personen genehmigt werden:', 'people' => $users, 'value' => $user->vacationApprovers])
+                        @checkbox(['name' => 'show_vacations_with_services', 'label' => 'Urlaub im Gottesdienstplaner anzeigen', 'value' => $user->show_vacations_with_services])
+                        @checkbox(['name' => 'needs_replacement', 'label' => 'Urlaubsvertretung benötigt', 'value' => $user->needs_replacement])
                     @endtab
                 @endif
             @endtabs
