@@ -27,7 +27,7 @@ class AbsenceRequest extends FormRequest
         if (null === $this->absence) {
             $this->absence = Absence::find($this->get('id'));
         }
-        return Auth::user()->can('update', $this->absence);
+        return $this->user()->can('update', $this->absence);
     }
 
     /**
@@ -52,7 +52,7 @@ class AbsenceRequest extends FormRequest
             $this->absence = Absence::find($this->get('id'));
         }
         // self-administrator?
-        if (Auth::user()->can('selfAdminister', $this->absence)) {
+        if ($this->user()->can('selfAdminister', $this->absence)) {
             $rules['workflow_status'] = 'nullable|int|in:' . join(
                     ',',
                     [
@@ -61,8 +61,8 @@ class AbsenceRequest extends FormRequest
                     ]
                 );
         } else {
-            $mayCheck = $this->absence->user->vacationAdmins->pluck('id')->contains(Auth::user()->id);
-            $mayApprove = $this->absence->user->vacationApprovers->pluck('id')->contains(Auth::user()->id);
+            $mayCheck = $this->absence->user->vacationAdmins->pluck('id')->contains($this->user()->id);
+            $mayApprove = $this->absence->user->vacationApprovers->pluck('id')->contains($this->user()->id);
             if ($mayCheck) {
                 $rules['workflow_status'] = 'nullable|int|in:' . join(
                         ',',
@@ -101,10 +101,10 @@ class AbsenceRequest extends FormRequest
         // check if admin/approver id needs to be set
         if (isset($data['workflow_status']) && ($this->absence->workflow_status != $data['workflow_status'])) {
             if ($data['workflow_status'] >= Absence::STATUS_CHECKED && (null === $this->absence->admin_id)) {
-                $data['admin_id'] = Auth::user()->id;
+                $data['admin_id'] = $this->user()->id;
             }
             if ($data['workflow_status'] == Absence::STATUS_APPROVED && (null === $this->absence->approver_id)) {
-                $data['approver_id'] = Auth::user()->id;
+                $data['approver_id'] = $this->user()->id;
             }
         }
         return $data;
