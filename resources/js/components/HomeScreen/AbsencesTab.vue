@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div class="col-md-3 text-right">
-                        <a class="btn btn-primary" :href="route('absences.edit', absence.id)" title="Eintrag bearbeiten">
+                        <a class="btn btn-primary" :href="route('absence.edit', absence.id)" title="Eintrag bearbeiten">
                             <span class="fa fa-edit"></span>
                         </a>
                         <div class="dropdown">
