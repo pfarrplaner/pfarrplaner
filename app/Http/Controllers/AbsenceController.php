@@ -103,7 +103,7 @@ class AbsenceController extends Controller
                 'workflow_status' => $workflowStatus,
             ]
         );
-        return redirect()->route('absences.edit', $absence->id);
+        return redirect()->route('absence.edit', $absence->id);
     }
 
 
