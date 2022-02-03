@@ -10,7 +10,7 @@ Urlaubsantrag: Bitte überprüfen
 {{ $absence->from->formatLocalized('%A, %d.%m.%Y') }} bis {{ $absence->from->formatLocalized('%A, %d.%m.%Y') }}
 @endcomponent
 
-@component('mail::button', ['url' => route('absences.edit', $absence->id)])
+@component('mail::button', ['url' => route('absence.edit', $absence->id)])
     Urlaubsantrag prüfen
 @endcomponent
 

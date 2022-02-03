@@ -13,7 +13,7 @@ Urlaubsantrag: Bitte um Genehmigung
 Der Antrag wurde am {{ \Carbon\Carbon::now()->formatLocalized('%A, %d.%m.%Y, um %H:%M Uhr') }} von
 {{ $absence->checkedBy->name }} überprüft und zur Genehmigung weitergeleitet.
 
-@component('mail::button', ['url' => route('absences.edit', $absence->id)])
+@component('mail::button', ['url' => route('absence.edit', $absence->id)])
     Urlaubsantrag im Pfarrplaner öffnen
 @endcomponent
 
