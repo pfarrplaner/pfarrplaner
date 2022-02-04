@@ -28,16 +28,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Composers;
+namespace App\Services;
 
-use App\Services\PackageService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\App;
 
-class DefaultComposer
+class PackageService
 {
-    public function compose($view)
-    {
-        $view->with('package', PackageService::info());
+
+    /**
+     * Get general app info
+     * @return array
+     */
+    public static function info(): array {
+        $package = [
+            'info' => json_decode(file_get_contents(base_path('package.json')), true),
+            'date' => (new Carbon(filemtime(base_path('package.json'))))->setTimeZone(
+                'Europe/Berlin'
+            ),
+            'env' => App::environment(),
+        ];
+        $package['versionString'] = $package['info']['version'].'-'.$package['env'].', '.$package['date']->formatLocalized('%A, %d. %B %Y %H:%M');
+        return $package;
     }
+
 }
