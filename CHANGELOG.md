@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.107.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.106.0...v1.107.0) (2022-02-04)
+
+
+### Features
+
+* Better nav buttons in AbsenceEditor ([932d7e2](https://github.com/pfarrplaner/pfarrplaner/commits/932d7e2a7bf55f74238ed83c2a0e6e5edc46042f))
+* Better planner layout ([e963011](https://github.com/pfarrplaner/pfarrplaner/commits/e96301135a756fe67a74c74779bd3d7d6ac56737))
+* Display correct version string in Blade-rendered views ([e713684](https://github.com/pfarrplaner/pfarrplaner/commits/e71368457bc3567827f0291c16e4bbbd713f21ff))
+* More improvements to DemoBuilder ([f5acf0c](https://github.com/pfarrplaner/pfarrplaner/commits/f5acf0c06ba150d184ed31fbfdbea9158bdbdb81))
+* PackageService returns additional info ([48fba44](https://github.com/pfarrplaner/pfarrplaner/commits/48fba44a145b57f0776bf8f2c110b6d94951a573))
+* Show absence details only to qualified users ([492efb0](https://github.com/pfarrplaner/pfarrplaner/commits/492efb056ba77172f4e4b5d153f19ccf42ea9846))
+* Show new landing page for demo ([ff853d9](https://github.com/pfarrplaner/pfarrplaner/commits/ff853d9124bf1f117960894d8cf79b10a5beffa2))
+
+
+### Bug Fixes
+
+* AbsenceController tries to send mail to users without email address ([78a5acc](https://github.com/pfarrplaner/pfarrplaner/commits/78a5acc2aebf96bec46fe5939eb218ef60bbf057))
+* DemoBuilder produces English faker data ([cbc5ad2](https://github.com/pfarrplaner/pfarrplaner/commits/cbc5ad267d71aca825ccd5a0b1dade30ec9c1f21))
+* Minor layout fix to demo login ([016f48c](https://github.com/pfarrplaner/pfarrplaner/commits/016f48c1bd097c2dc2ced604bda264279b696259))
+* Multiple fixes in DemoBuilder ([5bcfaed](https://github.com/pfarrplaner/pfarrplaner/commits/5bcfaede60b0c0189924e2bbf6e5409f89ee7d07))
+
 ## [1.106.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.105.0...v1.106.0) (2022-02-03)
 
 
