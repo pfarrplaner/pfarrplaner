@@ -93,7 +93,7 @@ class DemoBuilder extends Command
         }
 
 
-        $this->faker = Factory::create();
+        $this->faker = Factory::create('de_DE');
 
 
         foreach (
