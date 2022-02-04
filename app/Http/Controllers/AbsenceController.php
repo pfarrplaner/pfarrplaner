@@ -91,7 +91,9 @@ class AbsenceController extends Controller
         $users = User::all();
         $workflowStatus = 0;
         if (Auth::user()->id == $user->id) {
-            if (Auth::user()->can('selfAdminister', Absence::class)) $workflowStatus = 10;
+            if (Auth::user()->can('selfAdminister', Absence::class)) {
+                $workflowStatus = 10;
+            }
         }
 
         $absence = Absence::create(
@@ -105,7 +107,6 @@ class AbsenceController extends Controller
         );
         return redirect()->route('absence.edit', $absence->id);
     }
-
 
 
     /**
@@ -241,9 +242,15 @@ class AbsenceController extends Controller
                 Mail::to($absence->user->vacationApprovers)->send(new AbsenceChecked($absence));
                 break;
             case Absence::STATUS_APPROVED:
-                Mail::to(collect([$absence->user])
-                             ->merge($absence->user->vacationAdmins)
-                             ->merge($absence->user->vacationApprovers))
+                Mail::to(
+                    collect([$absence->user])
+                        ->merge($absence->user->vacationAdmins)
+                        ->merge($absence->user->vacationApprovers)
+                        ->reject(function ($user) {
+                            // filter out users without email address
+                            return empty($user->email);
+                        })
+                )
                     ->send(new \App\Mail\Absence\AbsenceApproved($absence));
                 break;
         }
@@ -265,14 +272,21 @@ class AbsenceController extends Controller
         if ($request->get('sendRejectionMail', false)) {
             $recipients = collect([$absence->user]);
             $recipients = $recipients->merge($absence->user->vacationAdmins);
-            if ($absence->workflow_status >0) $recipients = $recipients->merge($absence->user->vacationApprovers);
+            if ($absence->workflow_status > 0) {
+                $recipients = $recipients->merge($absence->user->vacationApprovers);
+            }
+            // filter out users without email address
+            $recipients->reject(function ($user) { return empty($user->email); });
             Mail::to($recipients)->send(new \App\Mail\Absence\AbsenceRejected($absence, Auth::user()));
         }
 
         $absence->delete();
         return redirect()->route(
             'absences.index',
-            ['month' => $request->get('month', Carbon::now()->month), 'year' => $request->get('year', Carbon::now()->year)]
+            [
+                'month' => $request->get('month', Carbon::now()->month),
+                'year' => $request->get('year', Carbon::now()->year)
+            ]
         );
     }
 
@@ -318,8 +332,6 @@ class AbsenceController extends Controller
 
         return redirect()->route($route, $data);
     }
-
-
 
 
 }
