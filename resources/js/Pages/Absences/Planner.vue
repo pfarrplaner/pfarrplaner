@@ -30,10 +30,14 @@
 <template>
     <admin-layout :title="'Urlaubsplaner '+moment(start).locale('de').format('MMMM YYYY')">
         <template #navbar-left>
-            <absence-nav :year="year" :month="month" :years="years" />
+            <absence-nav :year="year" :month="month" :years="years"/>
         </template>
-        <div v-if="loadingUsers" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade anzuzeigende Benutzer...</div>
-        <div v-if="loadingDates" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade Einträge für {{ loadingDates }} Benutzer...</div>
+        <div v-if="loadingUsers" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade anzuzeigende
+            Benutzer...
+        </div>
+        <div v-if="loadingDates" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade Einträge für
+            {{ loadingDates }} Benutzer...
+        </div>
         <div class="table-responsive tbl-absences">
             <table class="table table-bordered">
                 <thead>
@@ -46,25 +50,31 @@
                     </th>
                 </tr>
                 </thead>
-                    <tr v-for="user in users" v-if="userDays[user.id]">
-                        <th>{{ user.name }}
-                            <a v-if="user.canEdit" class="btn btn-sm btn-success"
-                               :href="route('absence.create', {year: year, month: month, user: user.id})"><span
-                                class="fa fa-plus"></span></a>
-                        </th>
-                        <td v-for="(day,index,key) in myDays" :key="key" :index="index"
-                            class="cal-cell" :class="userDays[user.id][day.day].duration ? absenceClass(user, day) : dayClass(user, day)"
-                            v-if="userDays[user.id][day.day].show"
-                            :title="userDays[user.id][day.day].duration ? absenceTitle(user, userDays[user.id][day.day].absence) : (user.canEdit   ? 'Klicken, um neuen Eintrag anzulegen' : '')"
-                            :colspan="colspan(user,day)"
-                            @click="edit(user,day,userDays[user.id][day.day].absence)" >
-                            <div v-if="userDays[user.id][day.day].duration"
-                                class="absence" :class="{editable: user.canEdit}">
-                                <b>{{ userDays[user.id][day.day].absence.user.name }}</b> ({{ userDays[user.id][day.day].absence.reason }})<br />
-                                <small v-if="userDays[user.id][day.day].absence.replacementText">V: {{ userDays[user.id][day.day].absence.replacementText }}</small>
-                            </div>
-                        </td>
-                    </tr>
+                <tr v-for="user in users" v-if="userDays[user.id]">
+                    <th class="user-name"><span v-if="user.first_name && user.last_name"><span class="text-bold">{{ user.last_name}}</span>, {{ user.first_name}}</span>
+                        <span v-else>{{ user.name }}</span>
+                        <a v-if="user.canEdit" class="btn btn-sm btn-success"
+                           :href="route('absence.create', {year: year, month: month, user: user.id})"><span
+                            class="fa fa-plus"></span></a>
+                    </th>
+                    <td v-for="(day,index,key) in myDays" :key="key" :index="index"
+                        class="cal-cell"
+                        :class="userDays[user.id][day.day].duration ? absenceClass(user, day) : dayClass(user, day)"
+                        v-if="userDays[user.id][day.day].show"
+                        :title="userDays[user.id][day.day].duration ? absenceTitle(user, userDays[user.id][day.day].absence) : (user.canEdit   ? 'Klicken, um neuen Eintrag anzulegen' : '')"
+                        :colspan="colspan(user,day)"
+                        @click="edit(user,day,userDays[user.id][day.day].absence)">
+                        <div v-if="userDays[user.id][day.day].duration"
+                             class="absence" :class="{editable: user.canEdit}">
+                                <b>{{ userDays[user.id][day.day].absence.user.name }}</b>
+                            <span v-if="user.canEdit || userDays[user.id][day.day].absence.canEdit || userDays[user.id][day.day].absence.replacing">
+                                ({{ userDays[user.id][day.day].absence.reason }})<br/>
+                                <small v-if="userDays[user.id][day.day].absence.replacementText">
+                                    V: {{ userDays[user.id][day.day].absence.replacementText }}</small>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
                 <tbody>
                 </tbody>
             </table>
@@ -75,6 +85,7 @@
 
 <script>
 import AbsenceNav from "./AbsenceNav";
+
 export default {
     name: "Planner",
     components: {AbsenceNav},
@@ -87,10 +98,10 @@ export default {
             users.forEach(user => {
                 this.loadingDates++;
                 axios.get(route('planner.days', {user: user.id, date: moment(this.start).format('YYYY-MM')}))
-                .then(response => {
-                    this.userDays[user.id] = response.data;
-                    this.loadingDates--;
-                });
+                    .then(response => {
+                        this.userDays[user.id] = response.data;
+                        this.loadingDates--;
+                    });
             });
             this.users = users;
         });
@@ -109,37 +120,44 @@ export default {
     methods: {
         dayClass(user, day) {
             var prefix = user.canEdit ? 'editable ' : '';
-            if (moment(day.date).isoWeekday() == 7) return prefix+'sunday';
-            if (day.holiday) return prefix+'vacation';
-            return prefix+'day'
+            if (moment(day.date).isoWeekday() == 7) return prefix + 'sunday';
+            if (day.holiday) return prefix + 'vacation';
+            return prefix + 'day'
         },
         edit(user, day, absence) {
             if (user.canEdit || absence.canEdit) {
                 if (absence) {
                     this.$inertia.visit(route('absence.edit', {absence: absence.id}));
                 } else {
-                    this.$inertia.visit(route('absence.create', {year: this.year, month: this.month, day: day.day, user:user.id}));
+                    this.$inertia.visit(route('absence.create', {
+                        year: this.year,
+                        month: this.month,
+                        day: day.day,
+                        user: user.id
+                    }));
                 }
             }
         },
         absenceClass(user, day) {
-            let absenceStatus = ' absence-status-'+this.userDays[user.id][day.day].absence.workflow_status;
+            let absenceStatus = ' absence-status-' + this.userDays[user.id][day.day].absence.workflow_status;
             let editable = ' not-editable';
             if (user.canEdit) editable = ' editable';
             if (this.userDays[user.id][day.day].absence.canEdit) editable = ' editable';
-            if (this.userDays[user.id][day.day].absence.replacing) return 'replacing'+editable;
-            return 'absent'+absenceStatus+editable;
+            if (this.userDays[user.id][day.day].absence.replacing) return 'replacing' + editable;
+            return 'absent' + absenceStatus + editable;
         },
         absenceTitle(user, absence) {
+            if ((!user.canEdit) && (!absence.canEdit) && (!absence.replacing)) return absence.user.name + ' (' + moment(absence.from).format('DD.MM.YYYY') + ' - '
+                + moment(absence.to).format('DD.MM.YYYY') + ')';
             let statusText = '';
             if (absence.workflow_status == 0) statusText = ' Status: Warte auf Überprüfung. ';
             if (absence.workflow_status == 1) statusText = ' Status: Warte auf Genehmigung. ';
             if (absence.workflow_status == 10) statusText = ' Status: Warte auf Genehmigung. ';
-            return absence.reason+' ('+moment(absence.from).format('DD.MM.YYYY')+' - '
-                +moment(absence.to).format('DD.MM.YYYY')+') V:'+statusText+absence.replacementText+(user.canEdit ? ' --> Klicken, um zu bearbeiten' : '');
+            return absence.reason + ' (' + moment(absence.from).format('DD.MM.YYYY') + ' - '
+                + moment(absence.to).format('DD.MM.YYYY') + ') V:' + statusText + absence.replacementText + (user.canEdit ? ' --> Klicken, um zu bearbeiten' : '');
         },
         colspan(user, day) {
-            if(undefined == this.userDays[user.id]) return 31;
+            if (undefined == this.userDays[user.id]) return 31;
             return this.userDays[user.id][day.day].duration || 1;
         },
     }
@@ -147,38 +165,55 @@ export default {
 </script>
 
 <style scoped>
-    .absent {
-        background-color: orange;
-    }
+.absent {
+    background-color: orange;
+}
 
-    .tbl-absences .cal-cell.absent.absence-status-0,
-    .tbl-absences .cal-cell.absent.absence-status-1,
-    .tbl-absences .cal-cell.absent.absence-status-10
-    {
-        background-color: papayawhip !important;
-    }
+.tbl-absences .table th,
+.tbl-absences .table td {
+    padding: 1px;
+}
 
-    .replacing {
-        background-color: lightblue;
-    }
-    .sunday {
-        background-color: lightpink;
-        color: red;
-    }
-    .vacation {
-        background-color: #e9fce9;
-    }
-    .not-editable {
-        cursor: not-allowed;
-    }
-    .editable {
-        cursor: pointer;
-        height: 100%;
-    }
-    .editable:hover {
-        background-color: darkorange;
-    }
-    .day.editable:hover, .sunday.editable:hover, .vacation.editable:hover {
-        background-color: #218838;
-    }
+.tbl-absences .table th.user-name {
+    padding-left: .25rem;
+    font-size: .9em;
+    font-weight: normal;
+}
+
+
+.tbl-absences .cal-cell.absent.absence-status-0,
+.tbl-absences .cal-cell.absent.absence-status-1,
+.tbl-absences .cal-cell.absent.absence-status-10 {
+    background-color: papayawhip !important;
+}
+
+.replacing {
+    background-color: lightblue;
+}
+
+.sunday {
+    background-color: lightpink;
+    color: red;
+}
+
+.vacation {
+    background-color: #e9fce9;
+}
+
+.not-editable {
+    cursor: not-allowed;
+}
+
+.editable {
+    cursor: pointer;
+    height: 100%;
+}
+
+.editable:hover {
+    background-color: darkorange;
+}
+
+.day.editable:hover, .sunday.editable:hover, .vacation.editable:hover {
+    background-color: #218838;
+}
 </style>
