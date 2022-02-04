@@ -30,41 +30,19 @@
 <template>
     <admin-layout title="Urlaub bearbeiten">
         <template slot="navbar-left">
-            <button v-if="role == 'editor'" @click="saveAbsence" class="btn btn-primary"
-                    title="Urlaubseintrag speichern  und zur Überprüfung absenden">
-                <span class="d-inline d-md-none fa fa-save"></span>
-                <span class="d-none d-md-inline">Zur Überprüfung absenden</span>
-            </button>
-            <button v-if="role == 'self-editor'" @click="saveAbsence" class="btn btn-primary"
-                    title="Urlaubseintrag speichern">
-                <span class="d-inline d-md-none fa fa-save"></span>
-                <span class="d-none d-md-inline">Speichern</span>
-            </button>
-            <button v-if="role == 'admin'" @click="checkAndSave()" class="btn btn-success"
-                    title="Urlaubseintrag als überprüft markieren und zur Genehmigung weiterleiten">
-                <span class="d-inline d-md-none fa fa-save"></span>
-                <span class="d-none d-md-inline">Zur Genehmigung weiterleiten</span>
-            </button>
-            <button v-if="role == 'approver'" @click="approveAndSave()" class="btn btn-success"
-                    title="Urlaubseintrag genehmigen">
-                <span class="d-inline d-md-none fa fa-save"></span>
-                <span class="d-none d-md-inline">Genehmigen</span>
-            </button>
-            <button v-if="role == 'approver'" @click="returnAndSave()" class="btn btn-warning ml-1"
-                    title="Urlaubseintrag zurück zur Überprüfung verweisen">
-                <span class="d-inline d-md-none fa fa-save"></span>
-                <span class="d-none d-md-inline">Erneut überprüfen lassen</span>
-            </button>
-            <button v-if="(role == 'editor') && (role == 'self-editor')" @click="deleteAbsence"
-                    class="btn btn-danger ml-1" title="Urlaubseintrag löschen">
-                <span class="d-inline d-md-none fa fa-trash"></span>
-                <span class="d-none d-md-inline">Löschen</span>
-            </button>
-            <button v-if="(role == 'admin') || (role=='approver')" @click="rejectAbsence" class="btn btn-danger ml-1"
-                    title="Urlaubsantrag ablehnen">
-                <span class="d-inline d-md-none fa fa-trash"></span>
-                <span class="d-none d-md-inline">Ablehnen</span>
-            </button>
+            <nav-button v-if="role == 'editor'" @click="saveAbsence" type="primary" icon="save" force-icon
+                    title="Urlaubseintrag speichern  und zur Überprüfung absenden">Zur Überprüfung absenden</nav-button>
+            <save-button v-if="role == 'self-editor'" @click="saveAbsence" class="btn btn-primary" title="Urlaubseintrag speichern" />
+            <nav-button v-if="role == 'admin'" @click="checkAndSave()" type="success" icon="check" force-icon
+                    title="Urlaubseintrag als überprüft markieren und zur Genehmigung weiterleiten">Zur Genehmigung weiterleiten</nav-button>
+            <nav-button v-if="role == 'approver'" @click="approveAndSave()" type="success" icon="check" force-icon
+                    title="Urlaubseintrag genehmigen">Genehmigen</nav-button>
+            <nav-button v-if="role == 'approver'" @click="returnAndSave()" class="ml-1" type="warning" icon="undo" force-icon
+                    title="Urlaubseintrag zurück zur Überprüfung verweisen">Erneut überprüfen lassen</nav-button>
+            <nav-button v-if="(role == 'admin') || (role=='approver')" @click="rejectAbsence" class="ml-1"
+                    title="Urlaubsantrag ablehnen" type="danger" icon="times" force-icon>Ablehnen</nav-button>
+            <nav-button v-if="mayDelete" @click="deleteAbsence" type="danger" icon="trash"
+                        class="ml-1" title="Urlaubseintrag löschen" force-icon>Löschen</nav-button>
             <div class="dropdown" v-if="role == 'self-editor'">
                 <button class="btn btn-light dropdown-toggle m-1" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -177,10 +155,14 @@ import FormTextarea from "../../components/Ui/forms/FormTextarea";
 import CheckedProcessItem from "../../components/Ui/elements/CheckedProcessItem";
 import FormCheck from "../../components/Ui/forms/FormCheck";
 import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
+import NavButton from "../../components/Ui/buttons/NavButton";
+import SaveButton from "../../components/Ui/buttons/SaveButton";
 
 export default {
     name: "AbsenceEditor",
     components: {
+        SaveButton,
+        NavButton,
         FormDatePicker,
         FormCheck,
         CheckedProcessItem,
@@ -204,6 +186,8 @@ export default {
             setApproved: (this.absence.workflow_status == 2) || (this.absence.workflow_status == 11),
             mayEdit: mayEdit,
             role: role,
+            editingUser: this.$page.props.currentUser.data.id,
+            isForeignEditor: this.hasPermission('fremden-urlaub-bearbeiten') && (this.$page.props.currentUser.data.id != this.absence.user.id),
         }
     },
     methods: {
@@ -261,7 +245,7 @@ export default {
             this.saveAbsence();
         },
         deleteAbsence() {
-            this.$inertia.delete(route('absence.destroy', {
+            if (this.confirmDelete()) this.$inertia.delete(route('absence.destroy', {
                 absence: this.myAbsence.id,
                 year: moment(this.myAbsence.from).format('YYYY'),
                 month: moment(this.myAbsence.from).format('MM')
@@ -289,7 +273,7 @@ export default {
         },
         needsCheckText(people, step) {
             if (people.length == 1) {
-                return 'Der Urlaubsantrag muss noch von ' + people[0].name + ' ' + step + ' werden.';
+                return 'Der Urlaubsantrag muss noch von ' + (people[0].id == this.editingUser ? 'dir' : people[0].name) + ' ' + step + ' werden.';
             } else {
                 let p = [];
                 people.forEach(person => {
@@ -297,6 +281,18 @@ export default {
                 });
                 return 'Der Urlaubsantrag muss noch von einer der folgenden Personen ' + step + ' werden: ' + p.join(', ');
             }
+        },
+        mayDelete() {
+            return ((this.role == 'editor') && this.absence.workflow_status == 0)
+                || (this.role == 'self-editor')
+                || (this.isForeignEditor && (this.absence.workflow_status == 0))
+                || (this.mayCheck) || (this.mayApprove);
+        },
+        confirmDelete() {
+            if (this.absence.workflow_status > 0) {
+                return confirm('Diese Aktion löscht den Abwesenheitseintrag komplett, ohne irgendjemanden zu benachrichtigen. Wenn eine Benachrichtigung versandt werden soll, benutze die Schaltfläche "Ablehnen".');
+            }
+            return true;
         }
     }
 }
