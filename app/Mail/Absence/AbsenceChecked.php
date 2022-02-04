@@ -34,7 +34,7 @@ class AbsenceChecked extends Mailable
     public function build()
     {
         Log::debug('AbsenceChecked mailing: build');
-        return $this->subject('Urlaubsantrag: Bitte um Genehmigung')
+        return $this->subject('Abwesenheitsantrag: Bitte um Genehmigung')
             ->markdown('absences.mail.checked', ['absence' => $this->absence]);
     }
 }

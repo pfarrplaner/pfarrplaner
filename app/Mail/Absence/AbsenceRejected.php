@@ -39,7 +39,7 @@ class AbsenceRejected extends Mailable
     public function build()
     {
         Log::debug('AbsenceRejected mailing: build');
-        return $this->subject('Urlaubsantrag abgelehnt')
+        return $this->subject('Antrag abgelehnt')
             ->markdown('absences.mail.rejected', ['absence' => $this->absence, 'author' => $this->author]);
     }
 }

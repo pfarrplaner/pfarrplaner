@@ -1,16 +1,16 @@
 @component('mail::message')
-Urlaubsantrag abgelehnt
-=======================
+Antrag abgelehnt
+================
 
 Hallo {{ $absence->user->first_name }},
 
-Der folgende Urlaubsantrag wurde am {{ \Carbon\Carbon::now()->formatLocalized('%A, %d.%m.%Y, um %H:%M Uhr') }} von
+Der folgende Abwesenheitsantrag wurde am {{ \Carbon\Carbon::now()->formatLocalized('%A, %d.%m.%Y, um %H:%M Uhr') }} von
 {{ $author->name }} abgelehnt.
 
 @component('mail::panel')
 **{{ $absence->reason }}**
 
-{{ $absence->from->formatLocalized('%A, %d.%m.%Y') }} bis {{ $absence->from->formatLocalized('%A, %d.%m.%Y') }}
+{{ $absence->from->formatLocalized('%A, %d.%m.%Y') }} bis {{ $absence->to->formatLocalized('%A, %d.%m.%Y') }}
 @endcomponent
 
 @if($absence->admin_notes)

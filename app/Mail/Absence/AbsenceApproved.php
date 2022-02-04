@@ -34,7 +34,7 @@ class AbsenceApproved extends Mailable
     public function build()
     {
         Log::debug('AbsenceApproved mailing: build');
-        return $this->subject('Urlaubsantrag genehmigt')
+        return $this->subject('Antrag genehmigt')
             ->markdown('absences.mail.approved', ['absence' => $this->absence]);
     }
 }

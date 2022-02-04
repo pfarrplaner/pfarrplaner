@@ -34,7 +34,7 @@ class AbsenceRequested extends Mailable
     public function build()
     {
         Log::debug('AbsenceRequested mailing: build');
-        return $this->subject('Urlaubsantrag: Bitte um Prüfung')
+        return $this->subject('Abwesenheitsantrag: Bitte um Prüfung')
             ->markdown('absences.mail.requested', ['absence' => $this->absence]);
     }
 }
