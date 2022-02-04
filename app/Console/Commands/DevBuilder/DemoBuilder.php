@@ -38,9 +38,12 @@ use App\Comment;
 use App\Funeral;
 use App\Location;
 use App\Parish;
+use App\Service;
+use App\Services\PackageService;
 use App\StreetRange;
 use App\User;
 use App\Wedding;
+use Carbon\Carbon;
 use Faker\Factory;
 use Faker\Generator;
 use Illuminate\Console\Command;
@@ -48,6 +51,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Console\Output\Output;
 
 /**
  * Class DemoBuilder
@@ -78,21 +82,23 @@ class DemoBuilder extends Command
      */
     public function handle()
     {
-        $dbName = Config::get('database.connections.' . Config::get('database.default') . '.database');
-        $this->line('Demo builder, using database "' . $dbName . '"');
-        if (!env('DEMO_MODE')) {
-            $this->error('Demo builder requires DEMO_MODE=1 to be set in .env, aborting.');
+        $this->output->title('DemoBuilder');
+        $this->line(str_pad('Pfarrplaner app version: ', 30) . PackageService::info()['buildVersion']);
+        $this->line(str_pad('Source build date: ', 30) . PackageService::info()['date']->format('Y-m-d H:i'));
+        $this->line(str_pad('Demo build date: ', 30) . Carbon::now()->format('Y-m-d H:i'));
+
+        $this->output->section('Pre-flight checks');
+        if (!$this->checkRequirements()) {
             return;
         }
-        if (!str_contains($dbName, 'demo')) {
-            $this->error('Demo builder requires database name to contain "demo", aborting.');
-            return;
-        }
-        $this->info('Passed all demo checks.');
-        $this->faker = Factory::create('de_DE');
+
+
+        $this->faker = Factory::create();
+
 
         foreach (
             [
+                'services' => Service::class,
                 'users' => User::class,
                 'cities' => City::class,
                 'absences' => Absence::class,
@@ -107,26 +113,61 @@ class DemoBuilder extends Command
         ) {
             $methodName = 'handle' . ucfirst($unit);
             $prepMethodName = 'prep' . ucfirst($unit);
+            $this->output->section('Anonymizing ' . $unit);
             if (method_exists($this, $prepMethodName)) {
-                $this->$prepMethodName();
+                if (!$this->writeResult('Preparing environment for demo '.$unit, $this->$prepMethodName())) return;
             }
             if (class_exists($model)) {
                 if (method_exists($this, $methodName)) {
-                    $records = $model::all();
-                    $this->comment('Anonymizing ' . $unit . '... ');
-                    $bar = $this->output->createProgressBar(count($records));
-                    foreach ($records as $record) {
+                    $count = $model::query()->count();
+                    $bar = $this->output->createProgressBar($count);
+                    foreach ($model::cursor() as $record) {
                         $this->$methodName($record);
                         $bar->advance();
                     }
-                    $bar->finish();
-                    $this->newLine();
-                    $this->info(count($records) . ' ' . $unit . ' anonymized.');
+                    $bar->clear();
+                    $this->writeResult($count . ' ' . $unit . ' anonymized.', true);
                 }
             } else {
-                throw new \Exception('Model '.$model.' not found');
+                return $this->writeResult('Model ' . $model . ' not found', false);
             }
         }
+    }
+
+    protected function writeDelayedResult($title, $resultCallBack) {
+        $this->output->write(str_pad($title, 60), false);
+        $result = $resultCallBack();
+        $this->output->writeln($result ? '      [<info>OK</info>]' : '  [<error>FAILED</error>]');
+        return $result;
+    }
+
+    protected function writeResult($title, $result)
+    {
+        $this->output->write(str_pad($title, 60), false);
+        $this->output->writeln($result ? '      [<info>OK</info>]' : '  [<error>FAILED</error>]');
+        return $result;
+    }
+
+    protected function checkRequirement($title, $examinedValue, $compareTo = true, $individualMethod = false)
+    {
+        return $this->writeResult('Check: ' . $title . ' => ' . (string)$examinedValue, ($individualMethod || ($examinedValue == $compareTo)));
+    }
+
+    protected function checkRequirements()
+    {
+        $totalChecks = $this->checkRequirement('DEMO_MODE set in .env', env('DEMO_MODE'))
+            && $this->checkRequirement('Environment is demo', app()->environment(), 'demo')
+            && $this->checkRequirement(
+                'Database name contains _demo',
+                Config::get('database.connections.' . Config::get('database.default') . '.database'),
+                true,
+                str_contains(
+                    Config::get('database.connections.' . Config::get('database.default') . '.database'),
+                    '_demo'
+                ),
+            );
+
+        return $totalChecks;
     }
 
     protected function handleAbsences(Absence $absence)
@@ -141,8 +182,13 @@ class DemoBuilder extends Command
     protected function prepAttachments()
     {
         Storage::makeDirectory('demo');
-        copy(public_path('demo/demo.jpg'), storage_path('app/demo/demo.jpg'));
-        copy(public_path('demo/demo.pdf'), storage_path('app/demo/demo.pdf'));
+        try {
+            copy(public_path('demo/demo.jpg'), storage_path('app/demo/demo.jpg'));
+            copy(public_path('demo/demo.pdf'), storage_path('app/demo/demo.pdf'));
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     protected function handleAttachments(Attachment $attachment)
@@ -280,6 +326,21 @@ class DemoBuilder extends Command
                         ]);
     }
 
+    protected function handleServices(Service $service)
+    {
+        $data = [
+            'internal_remarks' => ''
+        ];
+        if ($service->special_location) {
+            if (str_contains($service->special_location, 'kirche')) {
+                $data['special_location'] = 'Allerheiligenkirche '.$service->city->name;
+            } else {
+                $data['special_location'] = 'Auf der grünen Wiese';
+            }
+        }
+        $service->update($data);
+    }
+
     protected function handleStreetRanges(StreetRange $streetRange)
     {
         $streetRange->delete();
@@ -288,13 +349,18 @@ class DemoBuilder extends Command
     protected function prepUsers()
     {
         // allow non-unique api_token
-        Schema::table('users', function (Blueprint $table) {
-            $indexesFound = Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes('users');
-            if (array_key_exists('users_api_token_unique', $indexesFound)) {
-                $table->string('api_token')->change();
-                $table->dropUnique('users_api_token_unique');
-            }
-        });
+        try {
+            Schema::table('users', function (Blueprint $table) {
+                $indexesFound = Schema::getConnection()->getDoctrineSchemaManager()->listTableIndexes('users');
+                if (array_key_exists('users_api_token_unique', $indexesFound)) {
+                    $table->string('api_token')->change();
+                    $table->dropUnique('users_api_token_unique');
+                }
+            });
+        } catch (\Exception $e) {
+            return false;
+        }
+        return true;
     }
 
     protected function handleUsers(User $user)
@@ -311,7 +377,7 @@ class DemoBuilder extends Command
                 'own_podcast_title' => $this->faker->sentence,
                 'own_podcast_url' => $this->faker->url,
             ];
-            $data['name'] = $data['first_name'].' '.$data['last_name'];
+            $data['name'] = $data['first_name'] . ' ' . $data['last_name'];
             $data['email'] = strtolower($data['first_name'] . '.' . $data['last_name']) . '@demo.pfarrplaner.de';
             if ($user->password != '') {
                 $data['password'] = 'test';
