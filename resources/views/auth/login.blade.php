@@ -633,9 +633,7 @@
                         item.cities.forEach(city => {
                             element += '<span class="badge" style="background-color: lightgray; color: darkgray; margin-right: 1px; font-size: .8em;">' + escape(city) + '</span>'
                         });
-                        element += '</div>'
-                            + '<div style="font-size: .6em;">Kirchengemeinden:' + escape(item.cities) + '</div>'
-                            + '</div>';
+                        element += '</div></div>';
                         return element;
                     }
                 }
