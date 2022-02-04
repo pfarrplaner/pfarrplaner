@@ -82,7 +82,7 @@
     <aside class="main-sidebar sidebar-dark-primary elevation-4"
            @if(config('app.dev')) style="background-color: orangered; "@endif>
         <!-- Brand Logo -->
-        <a href="{{ route('home') }}" class="brand-link" style="margin-left: 5px;" title="Startseite (Pfarrplaner {{ $package['versionString'] }})">
+        <a href="{{ route('home') }}" class="brand-link" style="margin-left: 5px;" title="Startseite">
             <img src="{{ asset('img/logo/pfarrplaner.png') }}" width="22" height="22" class="brand-image"
                  style="opacity: .8; margin-top: 7px;"/>
             <span class="brand-text font-weight-light">{{ config('app.name', 'Pfarrplaner') }}</span>
@@ -186,7 +186,7 @@
                 {{ \Carbon\Carbon::now()->format('Y-m-d H:i:s') }} &middot;
                 <a href="{{ config('app.build_repository') }}" target="_blank">Pfarrplaner</a> &middot;
                 &copy; 2018-{{ \Carbon\Carbon::now()->format('Y') }} Christoph Fischer
-                &middot; v{{ $package['versionString'] }} &middot; Session läuft
+                &middot; Session läuft
                 um {{ \Carbon\Carbon::now()->addMinutes(config('session.lifetime'))->setTimezone('Europe/Berlin')->format('H:i:s') }}
                 Uhr ab.
             </div>
