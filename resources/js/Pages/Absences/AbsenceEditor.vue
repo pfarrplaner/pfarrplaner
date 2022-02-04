@@ -28,21 +28,21 @@
   -->
 
 <template>
-    <admin-layout title="Urlaub bearbeiten">
+    <admin-layout title="Abwesenheit bearbeiten">
         <template slot="navbar-left">
             <nav-button v-if="role == 'editor'" @click="saveAbsence" type="primary" icon="save" force-icon
-                    title="Urlaubseintrag speichern  und zur Überprüfung absenden">Zur Überprüfung absenden</nav-button>
-            <save-button v-if="role == 'self-editor'" @click="saveAbsence" class="btn btn-primary" title="Urlaubseintrag speichern" />
+                    title="Abwesenheitseintrag speichern  und zur Überprüfung absenden">Zur Überprüfung absenden</nav-button>
+            <save-button v-if="role == 'self-editor'" @click="saveAbsence" class="btn btn-primary" title="Abwesenheitseintrag speichern" />
             <nav-button v-if="role == 'admin'" @click="checkAndSave()" type="success" icon="check" force-icon
-                    title="Urlaubseintrag als überprüft markieren und zur Genehmigung weiterleiten">Zur Genehmigung weiterleiten</nav-button>
+                    title="Antrag als überprüft markieren und zur Genehmigung weiterleiten">Zur Genehmigung weiterleiten</nav-button>
             <nav-button v-if="role == 'approver'" @click="approveAndSave()" type="success" icon="check" force-icon
-                    title="Urlaubseintrag genehmigen">Genehmigen</nav-button>
+                    title="Antrag genehmigen">Genehmigen</nav-button>
             <nav-button v-if="role == 'approver'" @click="returnAndSave()" class="ml-1" type="warning" icon="undo" force-icon
-                    title="Urlaubseintrag zurück zur Überprüfung verweisen">Erneut überprüfen lassen</nav-button>
+                    title="Abwesenheitseintrag zurück zur Überprüfung verweisen">Erneut überprüfen lassen</nav-button>
             <nav-button v-if="(role == 'admin') || (role=='approver')" @click="rejectAbsence" class="ml-1"
-                    title="Urlaubsantrag ablehnen" type="danger" icon="times" force-icon>Ablehnen</nav-button>
+                    title="Antrag ablehnen" type="danger" icon="times" force-icon>Ablehnen</nav-button>
             <nav-button v-if="mayDelete" @click="deleteAbsence" type="danger" icon="trash"
-                        class="ml-1" title="Urlaubseintrag löschen" force-icon>Löschen</nav-button>
+                        class="ml-1" title="Abwesenheitseintrag löschen" force-icon>Löschen</nav-button>
             <div class="dropdown" v-if="role == 'self-editor'">
                 <button class="btn btn-light dropdown-toggle m-1" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
@@ -98,6 +98,7 @@
                 />
                 <form-input label="Beschreibung" help="Grund der Abwesenheit" name="reason"
                             placeholder="z.B. Urlaub" v-model="myAbsence.reason" :disabled="!mayEdit"/>
+                <form-check label="Es handelt sich um eine Krankmeldung" name="sick_days" v-model="myAbsence.sick_days" :disabled="!mayEdit" />
                 <div v-if="myAbsence.user.needs_replacement">
                     <fake-table :columns="[5,6,1]" :headers="['Vertreter:in', 'Zeitraum', '']"
                                 collapsed-header="Vertreter:innen" class="mt-3" :key="myAbsence.replacements.length">
@@ -128,6 +129,9 @@
                     <form-textarea label="Notizen für die Vertretung" v-model="myAbsence.replacement_notes"
                                    name="replacement_notes" :disabled="!mayEdit"/>
                 </div>
+                <hr/>
+                <form-textarea label="Interne Anmerkungen" v-model="myAbsence.internal_notes"
+                               name="internal_notes" :disabled="!mayEdit"/>
                 <div class="row" v-if="role == 'self-editor'">
                     <div class="col-md-6">
                         <form-check label="Von der zuständigen Stelle genehmigt" v-model="setApproved"
@@ -220,12 +224,22 @@ export default {
                 if (this.setChecked) record.workflow_status = 1;
                 if (this.setApproved) {
                     record.workflow_status = 2;
-                    record.approved_at = record.approved_at || moment();
+                    if (record.approved_at && (record.approved_at.length != 10)) {
+                        record.approved_at = moment(record.approved_at).format('DD.MM.YYYY')
+                    } else {
+                        record.approved_at = record.approved_at || moment().format('DD.MM.YYYY');
+                    }
                 }
             } else {
                 record.workflow_status = 10;
                 if (this.setApproved) record.workflow_status = 11;
+                if (record.approved_at && (record.approved_at.length != 10)) {
+                    record.approved_at = moment(record.approved_at).format('DD.MM.YYYY')
+                } else {
+                    record.approved_at = record.approved_at || null;
+                }
             }
+            if (record.sick_days && (record.reason == 'Urlaub')) record.reason = 'Krankheit';
             this.$inertia.patch(route('absence.update', {absence: this.absence.id}), record);
         },
         returnAndSave() {

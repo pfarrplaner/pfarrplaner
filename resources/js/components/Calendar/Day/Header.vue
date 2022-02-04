@@ -30,7 +30,10 @@
         </div>
         <div v-if="hasPermission('urlaub-lesen')">
         <div class="vacation mr-1" v-for="absence in absences" :absence="absence"
-             :title="absence.user.name+': '+absence.reason+' ('+absence.durationText+') '+replacementText(absence)">
+             :title="absence.user.name+': '
+             +absenceReasonText(absence)
+             +' ('+absence.durationText+') '
+             +replacementText(absence)">
             <span class="fa fa-globe-europe"></span> {{ absence.user.last_name }}</div>
         </div>
     </th>
@@ -57,6 +60,7 @@ export default {
         return {
             limited: this.day.day_type == 1,
             scrollToMe,
+            currentUser: this.$page.props.currentUser.data.id,
         }
     },
     methods: {
@@ -71,8 +75,13 @@ export default {
             this.$forceUpdate();
         },
         replacementText: function (absence) {
+            if (this.currentUser != absence.user.id) return '';
             return absence.replacementText ? '[V: '+absence.replacementText+']' : '';
         },
+        absenceReasonText(absence) {
+            if (this.currentUser == absence.user.id) return absence.reason;
+            return '';
+        }
     },
 }
 </script>

@@ -143,6 +143,7 @@ export default {
             let editable = ' not-editable';
             if (user.canEdit) editable = ' editable';
             if (this.userDays[user.id][day.day].absence.canEdit) editable = ' editable';
+            if (this.userDays[user.id][day.day].absence.sick_days && (this.userDays[user.id][day.day].absence.canEdit || user.canEdit) ) editable = ' sick editable';
             if (this.userDays[user.id][day.day].absence.replacing) return 'replacing' + editable;
             return 'absent' + absenceStatus + editable;
         },
@@ -208,6 +209,16 @@ export default {
     cursor: pointer;
     height: 100%;
 }
+
+.sick.editable {
+    background-color: lightcoral;
+}
+
+.sick.replacing {
+    background-color: lightblue;
+}
+
+
 
 .editable:hover {
     background-color: darkorange;

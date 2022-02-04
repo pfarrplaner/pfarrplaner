@@ -115,7 +115,9 @@ class DemoBuilder extends Command
             $prepMethodName = 'prep' . ucfirst($unit);
             $this->output->section('Anonymizing ' . $unit);
             if (method_exists($this, $prepMethodName)) {
-                if (!$this->writeResult('Preparing environment for demo '.$unit, $this->$prepMethodName())) return;
+                if (!$this->writeResult('Preparing environment for demo ' . $unit, $this->$prepMethodName())) {
+                    return;
+                }
             }
             if (class_exists($model)) {
                 if (method_exists($this, $methodName)) {
@@ -134,7 +136,8 @@ class DemoBuilder extends Command
         }
     }
 
-    protected function writeDelayedResult($title, $resultCallBack) {
+    protected function writeDelayedResult($title, $resultCallBack)
+    {
         $this->output->write(str_pad($title, 60), false);
         $result = $resultCallBack();
         $this->output->writeln($result ? '      [<info>OK</info>]' : '  [<error>FAILED</error>]');
@@ -150,7 +153,10 @@ class DemoBuilder extends Command
 
     protected function checkRequirement($title, $examinedValue, $compareTo = true, $individualMethod = false)
     {
-        return $this->writeResult('Check: ' . $title . ' => ' . (string)$examinedValue, ($individualMethod || ($examinedValue == $compareTo)));
+        return $this->writeResult(
+            'Check: ' . $title . ' => ' . (string)$examinedValue,
+            ($individualMethod || ($examinedValue == $compareTo))
+        );
     }
 
     protected function checkRequirements()
@@ -176,6 +182,7 @@ class DemoBuilder extends Command
                              'admin_notes' => $this->faker->text(),
                              'approver_notes' => $this->faker->text(),
                              'replacement_notes' => $this->faker->text(),
+                             'internal_notes' => $this->faker->text(),
                          ]);
     }
 
@@ -333,7 +340,7 @@ class DemoBuilder extends Command
         ];
         if ($service->special_location) {
             if (str_contains($service->special_location, 'kirche')) {
-                $data['special_location'] = 'Allerheiligenkirche '.$service->city->name;
+                $data['special_location'] = 'Allerheiligenkirche ' . $service->city->name;
             } else {
                 $data['special_location'] = 'Auf der grünen Wiese';
             }

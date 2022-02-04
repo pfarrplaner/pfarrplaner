@@ -69,6 +69,8 @@ class Absence extends Model
         'approver_id',
         'checked_at',
         'approved_at',
+        'sick_days',
+        'internal_notes',
     ];
 
     /**
