@@ -74,7 +74,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except(['logout','keepTokenAlive']);
+        $this->middleware('guest')->except(['logout', 'keepTokenAlive']);
     }
 
     /**
@@ -84,42 +84,41 @@ class LoginController extends Controller
     {
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        if (env('DEMO_MODE')) {
-            $users = User::with('roles', 'homeCities')->get();
-            return view('demo.login', compact('users'));
-        } else {
-            $blog = null;
-            if ($url = (config('blog.blog_feed', false))) {
-                $blog = simplexml_load_file($url);
+        $demo = (app()->environment() == 'demo');
+        $users = $demo ? User::with('roles', 'homeCities')->where('password', '!=', '')->orderBy('id')->get() : [];
+        $blog = null;
+        if ($url = (config('blog.blog_feed', false))) {
+            $blog = simplexml_load_file($url);
 
-                if (count($blog->channel->item) > 3) $columns = 3;
+            if (count($blog->channel->item) > 3) {
+                $columns = 3;
             }
-
-            $ytFeed = (array) simplexml_load_file(config('support.youtube_channel_feed'));
-            $videos = [];
-            foreach ($ytFeed['entry'] as $video) {
-                $videos[(string)$video->title] = str_replace(
-                    'https://www.youtube.com/watch?v=',
-                    'https://www.youtube.com/embed/',
-                    (string)$video->link->attributes()->href
-                );
-            }
-
-            $count = [
-                'cities' => City::count(),
-                'users' => User::where('password', '!=', '')->count(),
-                'services' => Service::count(),
-            ];
-
-            $packageConfig = json_decode(file_get_contents(base_path('package.json')), true);
-            $version = $packageConfig['version'];
-
-            return view('auth.login', compact('blog', 'videos', 'count', 'version'));
         }
+
+        $ytFeed = (array)simplexml_load_file(config('support.youtube_channel_feed'));
+        $videos = [];
+        foreach ($ytFeed['entry'] as $video) {
+            $videos[(string)$video->title] = str_replace(
+                'https://www.youtube.com/watch?v=',
+                'https://www.youtube.com/embed/',
+                (string)$video->link->attributes()->href
+            );
+        }
+
+        $count = [
+            'cities' => City::count(),
+            'users' => User::where('password', '!=', '')->count(),
+            'services' => Service::count(),
+        ];
+
+        $packageConfig = json_decode(file_get_contents(base_path('package.json')), true);
+        $version = $packageConfig['version'];
+
+        return view('auth.login', compact('blog', 'videos', 'count', 'version', 'demo', 'users'));
     }
 
-    public function setInitialPassword() {
-
+    public function setInitialPassword()
+    {
     }
 
     public function keepTokenAlive()

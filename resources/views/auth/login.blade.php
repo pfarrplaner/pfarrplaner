@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de" translate="no">
 
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Willkommen :: Pfarrplaner</title>
+    <title>Willkommen :: Pfarrplaner{{ $demo ? ' DEMO' : ''}}</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
+    <meta content="notranslate" name="google">
 
     <!-- Favicons -->
     <link href="/landing/assets/img/favicon.png" rel="icon">
@@ -49,6 +50,22 @@
     * Author: BootstrapMade.com
     * License: https://bootstrapmade.com/license/
     ======================================================== -->
+
+@if($demo)
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/js/standalone/selectize.min.js" integrity="sha512-pF+DNRwavWMukUv/LyzDyDMn8U2uvqYQdJN0Zvilr6DDo/56xPDZdDoyPDYZRSL4aOKO/FGKXTpzDyQJ8je8Qw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.13.3/css/selectize.bootstrap4.min.css" integrity="sha512-MMojOrCQrqLg4Iarid2YMYyZ7pzjPeXKRvhW9nZqLo6kPBBTuvNET9DBVWptAo/Q20Fy11EIHM5ig4WlIrJfQw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        .selectize-dropdown.single.form-control {
+            z-index: 9000;
+        }
+
+        .selectize-dropdown-content {
+            z-index: 9001;
+        }
+    </style>
+@endif
 </head>
 
 <body>
@@ -88,9 +105,17 @@
                 <div data-aos="zoom-out">
                     <h1>Kirche gemeinsam planen mit dem <span>Pfarrplaner</span></h1>
                     <h2>Tools, die deine Kirchengemeinde braucht</h2>
+                    @if($demo)
+                        <div class="py-3 text-white text-small">
+                            Dies ist die Demoversion des Pfarrplaners. Eine Anmeldung ist hier auch ohne Passwort möglich.
+                            Die Daten werden jede Nacht automatisch mit anonymisierten Daten aus der realen kirchlichen
+                            Arbeitswelt aktualisiert
+                        </div>
+                    @endif
                     <form method="POST" action="{{ route('login') }}">
                         <div class="login-form">
                             @csrf
+                            @if(!$demo)
                             <div class="row">
                                 <div class="col-md-6">
                                     @input(['name' => 'email', 'label' => '', 'placeholder' => 'deine@email.de', 'value' => old('email'), 'type' => 'email', 'id' => 'email', 'autofocus' => true])
@@ -99,6 +124,16 @@
                                     @input(['name' => 'password', 'label' => '', 'placeholder' => 'Dein Passwort', 'type' => 'password'])
                                 </div>
                             </div>
+                            @else
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <select id="users" name="email" class="form-control" value="{{ $users[0]->email }}"></select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        @input(['name' => 'password', 'label' => '', 'placeholder' => 'Dein Passwort', 'type' => 'password', 'value' => 'test'])
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <div class="text-center text-lg-start mt-3">
                             <button type="submit" class="btn-get-started">
@@ -568,6 +603,49 @@
 
 <!-- Template Main JS File -->
 <script src="/landing/assets/js/main.js"></script>
+
+@if($demo)
+    <script>
+        $(document).ready(function() {
+            let $select = $('#users').selectize({
+                options: [
+                        @foreach ($users as $user)
+                    {
+                        name: '{{ $user->name }}',
+                        email: '{{ $user->email }}',
+                        roles: [@foreach ($user->roles as $role) '{{ $role->name }}', @endforeach ],
+                        cities: [@foreach ($user->homeCities as $city) '{{ $city->name }}', @endforeach ],
+                    },
+                    @endforeach
+                ],
+                valueField: 'email',
+                labelField: 'email',
+                searchFields: ['name', 'email', 'roles', 'cities'],
+                allowEmptyOption: false,
+                render: {
+                    option: function (item, escape) {
+                        let element = '<div style="padding: 2px;"><div style="font-weight: bold;">' + escape(item.name) + '</div>'
+                            + '<div>';
+                        item.roles.forEach(role => {
+                            element += '<span class="badge" style="background-color: blue; margin-right: 1px; font-size: .8em;">' + escape(role) + '</span>'
+                        });
+                        element += '</div><div>';
+                        item.cities.forEach(city => {
+                            element += '<span class="badge" style="background-color: lightgray; color: darkgray; margin-right: 1px; font-size: .8em;">' + escape(city) + '</span>'
+                        });
+                        element += '</div>'
+                            + '<div style="font-size: .6em;">Kirchengemeinden:' + escape(item.cities) + '</div>'
+                            + '</div>';
+                        return element;
+                    }
+                }
+            });
+            $select[0].selectize.setValue('{{ $users[0]->email }}');
+            $('.selectize-dropdown').css('z-index',9000);
+            $('.selectize-dropdown-content').css('z-index',9001);
+        });
+    </script>
+@endif
 
 </body>
 </html>
