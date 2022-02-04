@@ -30,18 +30,20 @@
 
 namespace App\Console\Commands\DevBuilder;
 
+use App\Absence;
 use App\Baptism;
 use App\City;
 use App\Comment;
 use App\Funeral;
 use App\Location;
 use App\Parish;
+use App\StreetRange;
 use App\User;
 use App\Wedding;
 use Faker\Factory;
+use Faker\Generator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
 
 /**
  * Class DemoBuilder
@@ -54,7 +56,7 @@ class DemoBuilder extends Command
      *
      * @var string
      */
-    protected $signature = 'demo:build';
+    protected string $signature = 'demo:build';
 
     /**
      * The console command description.
@@ -63,134 +65,282 @@ class DemoBuilder extends Command
      */
     protected $description = 'Build a new demo site';
 
+    /** @var Generator */
+    protected Generator $faker;
+
     /**
      * Execute the console command.
      *
-     * @return mixed
      */
     public function handle()
     {
-        $universalPassword = 'test';
-
         $dbName = Config::get('database.connections.' . Config::get('database.default') . '.database');
         $this->line('Demo builder, using database "' . $dbName . '"');
         if (!env('DEMO_MODE')) {
             $this->error('Demo builder requires DEMO_MODE=1 to be set in .env, aborting.');
             return;
         }
-        if (false === strpos($dbName, 'demo')) {
+        if (!str_contains($dbName, 'demo')) {
             $this->error('Demo builder requires database name to contain "demo", aborting.');
             return;
         }
         $this->info('Passed all demo checks.');
-        $faker = Factory::create('de_DE');
+        $this->faker = Factory::create('de_DE');
 
-
-        $this->line('Creating cities...');
-        $cities = City::all();
-        foreach ($cities as $city) {
-            $oldName = $city->name;
-            $city->name = $faker->city;
-            $city->public_events_calendar_url = $city->op_domain = $city->op_customer_key = $city->op_customer_token = '';
-            $city->konfiapp_apikey = '';
-            $city->save();
-            $locations = Location::where('city_id', $city->id)->get();
-            /** @var Location $location */
-            foreach ($locations as $location) {
-                $location->name = str_replace($oldName, $city->name, $location->name);
-                $location->save();
+        foreach (
+            [
+                'users',
+                'cities',
+                'absences',
+                'baptisms',
+                'comments',
+                'funerals',
+                'parishes',
+                'streetRanges',
+                'weddings'
+            ] as $unit
+        ) {
+            $methodName = 'handle' . ucfirst($unit);
+            if (method_exists($this, $methodName)) {
+                $this->$methodName();
             }
         }
-        $this->info(count($cities) . ' cities created.');
+    }
 
-        $this->line('Creating users...');
-        $users = User::all();
-        foreach ($users as $user) {
-            if ($user->name != 'Admin') {
-                $user->first_name = $faker->firstName;
-                $user->last_name = $faker->lastName;
-                $user->name = $user->first_name . ' ' . $user->last_name;
-                $user->address = $faker->address;
-                $user->phone = $faker->phoneNumber;
-                if ($user->password != '') {
-                    $user->password = $universalPassword;
-                }
-                $user->email = strtolower($user->first_name . '.' . $user->last_name) . '@demo.pfarrplaner.de';
-            } else {
-                $user->password = 'admin';
-            }
-            $user->save();
+    protected function handleAbsences()
+    {
+        $this->line('Creating absences...');
+        $absences = Absence::all();
+        foreach ($absences as $absence) {
+            $absence->update([
+                                 'admin_notes' => $this->faker->text(),
+                                 'approver_notes' => $this->faker->text(),
+                                 'replacement_notes' => $this->faker->text(),
+                             ]);
         }
-        $this->info(count($users) . ' users created.');
+        $this->info(count($absences) . ' absences created.');
+    }
 
+    protected function handleBaptisms()
+    {
         $this->line('Creating baptisms...');
         $baptisms = Baptism::all();
         /** @var Baptism $baptism */
         foreach ($baptisms as $baptism) {
-            $baptism->candidate_name = $faker->name;
-            $baptism->candidate_address = $faker->streetAddress;
-            $baptism->candidate_zip = $faker->postcode;
-            $baptism->candidate_city = $faker->city;
-            $baptism->candidate_phone = $faker->phoneNumber;
-            $baptism->candidate_email = $faker->email;
-            $baptism->first_contact_with = $faker->name;
-            $baptism->save();
+            $baptism->update([
+                                 'candidate_name' => $this->faker->name,
+                                 'candidate_address' => $this->faker->streetAddress,
+                                 'candidate_zip' => $this->faker->postcode,
+                                 'candidate_city' => $this->faker->city,
+                                 'candidate_phone' => $this->faker->phoneNumber,
+                                 'candidate_email' => $this->faker->email,
+                                 'first_contact_with' => $this->faker->name,
+                                 'notes' => $this->faker->text(),
+                                 'dimissorial_issuer' => 'Pfarramt ' . $this->faker->city,
+                                 'dimissorial_requested',
+                                 'dimissorial_received',
+                             ]);
         }
         $this->info(count($baptisms) . ' baptisms created.');
+    }
 
-        $this->line('Creating weddings...');
-        $weddings = Wedding::all();
-        /** @var Wedding $wedding */
-        foreach ($weddings as $wedding) {
-            $wedding->spouse1_name = $faker->name('male');
-            $wedding->spouse1_phone = $faker->phoneNumber;
-            $wedding->spouse1_email = $faker->email;
-            if ($wedding->spouse1_birth_name != '') {
-                $wedding->spouse1_birth_name = $faker->lastName;
+    protected function handleCities()
+    {
+        $this->line('Creating cities...');
+        $cities = City::all();
+        foreach ($cities as $city) {
+            $oldName = $city->name;
+            $newName = $this->faker->city;
+
+            $city->update([
+                              'name' => $newName,
+                              'public_events_calendar_url' => '',
+                              'op_domain' => '',
+                              'op_customer_key' => '',
+                              'op_customer_token' => '',
+                              'podcast_title' => '',
+                              'podcast_logo' => '',
+                              'sermon_default_image' => '',
+                              'homepage' => '',
+                              'podcast_owner_name' => '',
+                              'podcast_owner_email' => '',
+                              'google_auth_code' => '',
+                              'google_access_token' => '',
+                              'google_refresh_token' => '',
+                              'youtube_channel_url' => '',
+                              'konfiapp_apikey' => '',
+                              'youtube_active_stream_id' => '',
+                              'youtube_passive_stream_id' => '',
+                              'youtube_auto_startstop' => '',
+                              'youtube_cutoff_days' => '',
+                              'default_offering_url' => '',
+                              'communiapp_url' => '',
+                              'communiapp_token' => '',
+                              'communiapp_default_group_id' => '',
+                              'konfiapp_default_type' => '',
+                              'official_name' => 'Evangelische Kirchengemeinde ' . $newName,
+                              'logo' => '',
+                          ]);
+
+            $locations = Location::where('city_id', $city->id)->get();
+            /** @var Location $location */
+            foreach ($locations as $location) {
+                $location->update(['name' => str_replace($oldName, $newName, $location->name)]);
             }
-            $wedding->spouse2_name = $faker->name('female');
-            $wedding->spouse2_phone = $faker->phoneNumber;
-            $wedding->spouse2_email = $faker->email;
-            if ($wedding->spouse2_birth_name != '') {
-                $wedding->spouse2_birth_name = $faker->lastName;
-            }
-            $wedding->save();
         }
-        $this->info(count($weddings) . ' weddings created.');
+        $this->info(count($cities) . ' cities created.');
+    }
 
+    protected function handleComments()
+    {
+        Comment::query()->delete();
+        $this->info('All comments deleted');
+    }
+
+    protected function handleFunerals()
+    {
         $this->line('Creating funerals...');
         $funerals = Funeral::all();
         /** @var Funeral $funeral */
         foreach ($funerals as $funeral) {
-            $funeral->buried_name = $faker->name;
-            $funeral->buried_address = $faker->streetAddress;
-            $funeral->buried_zip = $faker->postcode;
-            $funeral->buried_city = $faker->city;
-            $funeral->relative_name = $faker->name;
-            $funeral->relative_address = $faker->streetAddress;
-            $funeral->relative_zip = $faker->postcode;
-            $funeral->relative_city = $faker->city;
-            $funeral->save();
+            $funeral->update([
+                                 'buried_name' => $this->faker->name,
+                                 'buried_address' => $this->faker->streetAddress,
+                                 'buried_zip' => $this->faker->postcode,
+                                 'buried_city' => $this->faker->city,
+                                 'relative_name' => $this->faker->name,
+                                 'relative_address' => $this->faker->streetAddress,
+                                 'relative_zip' => $this->faker->zip,
+                                 'relative_city' => $this->faker->city,
+                                 'relative_contact_data' => $this->faker->phoneNumber,
+                                 'appointment',
+                                 'dob',
+                                 'dod',
+                                 'spouse' => $this->faker->name,
+                                 'parents' => $this->faker->name('male') . ' / ' . $this->faker->name('female'),
+                                 'children' => join(', ', [$this->faker->name, $this->faker->name, $this->faker->name]),
+                                 'further_family' => join(', ', [$this->faker->name, $this->faker->name]),
+                                 'baptism' => '',
+                                 'confirmation' => '',
+                                 'undertaker' => $this->faker->name . ' (' . $this->faker->phoneNumber . ')',
+                                 'eulogies' => '',
+                                 'notes' => $this->faker->text(),
+                                 'announcements' => $this->faker->text(),
+                                 'childhood' => $this->faker->text(),
+                                 'profession' => '',
+                                 'family' => $this->faker->text(),
+                                 'further_life' => $this->faker->text(),
+                                 'faith' => $this->faker->text(),
+                                 'events' => $this->faker->text(),
+                                 'character' => $this->faker->text(),
+                                 'death' => $this->faker->text(),
+                                 'life' => $this->faker->text(),
+                                 'attending' => join(', ', [$this->faker->name, $this->faker->name, $this->faker->name]
+                                 ),
+                                 'quotes' => $this->faker->text(),
+                                 'spoken_name' => '',
+                                 'professional_life' => $this->faker->text(),
+                                 'birth_place' => $this->faker->city,
+                                 'death_place' => $this->faker->city,
+                                 'dimissorial_issuer' => 'Pfarramt ' . $this->faker->city,
+                                 'birth_name' => $this->faker->lastName,
+                                 'appointment_address' => $this->faker->address,
+                             ]);
         }
         $this->info(count($funerals) . ' funerals created.');
+    }
 
+    protected function handleParishes()
+    {
         $this->line('Creating parishes...');
         $parishes = Parish::with('owningCity')->get();
         /** @var Parish $parish */
         foreach ($parishes as $parish) {
             $name = str_replace('Pfarramt ', '', $parish->name);
-            $parish->code = $parish->owningCity->name . ' ' . $name;
-            $parish->address = $faker->streetAddress;
-            $parish->zip = $faker->postcode;
-            $parish->city = $parish->owningCity->name;
-            $parish->phone = $faker->phoneNumber;
-            $parish->email = $faker->email;
-            $parish->save();
+            $parish->update([
+                                'code' => trim('Pfarramt ' . $parish->owningCity->name . ' ' . $name),
+                                'address' => $this->faker->streetAddress,
+                                'zip' => $this->faker->postcode,
+                                'city' => $parish->owningCity->name,
+                                'phone' => $this->faker->phoneNumber,
+                                'email' => $this->faker->email,
+                            ]);
         }
         $this->info(count($parishes) . ' parishes created.');
-
-        Comment::query()->delete();
-        $this->info('All comments deleted');
-        return;
     }
+
+    protected function handleStreetRanges()
+    {
+        StreetRange::query()->delete();
+        $this->info('All street ranges deleted');
+    }
+
+    protected function handleUsers()
+    {
+        $universalPassword = 'test';
+        $this->line('Creating users...');
+        $users = User::all();
+        foreach ($users as $user) {
+            if ($user->name != 'Admin') {
+                $data = [
+                    'first_name' => $this->faker->firstName,
+                    'last_name' => $this->faker->lastName,
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                    'address' => $this->faker->address,
+                    'phone' => $this->faker->phoneNumber,
+                    'email' => strtolower('first_name . ' . ' . ' . $user->last_name) . '@demo.pfarrplaner.de',
+                    'office' => '',
+                    'api_token' => '',
+                    'own_website' => $this->faker->url,
+                    'own_podcast_title' => $this->faker->sentence,
+                    'own_podcast_url' => $this->faker->url,
+                    'own_podcast_spotify' => $this->faker->url,
+                    'own_podcast_itunes' => $this->faker->url,
+                ];
+                if ($user->password != '') {
+                    $data['password'] = $universalPassword;
+                }
+            } else {
+                $data['password'] = 'admin';
+            }
+            $user->update($data);
+            $user->calendarConnections()->delete();
+        }
+        $this->info(count($users) . ' users created.');
+    }
+
+    protected function handleWeddings()
+    {
+        $this->line('Creating weddings...');
+        $weddings = Wedding::all();
+        /** @var Wedding $wedding */
+        foreach ($weddings as $wedding) {
+            $wedding->update([
+                                 'spouse1_name' => $this->faker->name('male'),
+                                 'spouse1_phone' => $this->faker->phoneNumber,
+                                 'spouse1_email' => $this->faker->email,
+                                 'spouse1_birth_name' => $this->faker->lastName,
+                                 'spouse2_name' => $this->faker->name('female'),
+                                 'spouse2_phone' => $this->faker->phoneNumber,
+                                 'spouse2_email' => $this->faker->email,
+                                 'spouse2_birth_name' => $this->faker->lastName,
+                                 'spouse1_dob' => $this->faker->date(),
+                                 'spouse1_address' => $this->faker->streetAddress,
+                                 'spouse1_zip' => $this->faker->postcode,
+                                 'spouse1_city' => $this->faker->city,
+                                 'spouse1_dimissorial_issuer' => 'Pfarramt ' . $this->faker->city,
+                                 'spouse2_dob' => $this->faker->date(),
+                                 'spouse2_address' => $this->faker->streetAddress,
+                                 'spouse2_zip' => $this->faker->postcode,
+                                 'spouse2_city' => $this->faker->city,
+                                 'spouse2_dimissorial_issuer' => 'Pfarramt ' . $this->faker->city,
+                                 'notes' => $this->faker->text(),
+                                 'music' => $this->faker->text(),
+                                 'gift' => $this->faker->text(),
+                                 'flowers' => $this->faker->text(),
+                             ]);
+        }
+        $this->info(count($weddings) . ' weddings created.');
+    }
+
 }
