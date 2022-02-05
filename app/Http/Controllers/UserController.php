@@ -71,28 +71,35 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function index()
     {
+        $users = User::with(['homeCities', 'cities', 'writableCities', 'adminCities', 'roles', 'roles.permissions'])
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->orderBy('email')
+            ->get();
+
+
+        $userQuery = User::with(['homeCities', 'cities', 'writableCities', 'adminCities', 'roles', 'roles.permissions'])
+            ->orderBy('last_name')
+            ->orderBy('first_name')
+            ->orderBy('email');
+
         if (Auth::user()->can('benutzer-bearbeiten')) {
-            $users = User::where('password', '!=', '')->orderBy('email')->get();
+            $userQuery->where('password', '!=', '');
         } elseif (Auth::user()->can('benutzerliste-lokal-sehen')) {
             $cityIds = Auth::user()->writableCities->pluck('id');
-            $users = User::where('password', '!=', '')
-                ->select('users.*')
-                ->whereHas(
-                    'cities',
-                    function ($query) use ($cityIds) {
-                        $query->whereIn('cities.id', $cityIds);
-                    }
-                )
-                ->orderBy('email')->get();
+            $userQuery->whereHas('cities', function ($q) use ($cityIds) { $q->whereIn('cities.id', $cityIds); });
         } else {
-            return redirect()->route('home');
+            abort(403);
         }
-        $otherPeople = User::where('password', '')->orWhereNull('password')->orderBy('name')->get();
-        return view('users.index', compact('users', 'otherPeople'));
+
+        $canCreate = Auth::user()->can('create', User::class);
+
+        return Inertia::render('Admin/User/Index', ['users' => $userQuery->get(), 'canCreate' => $canCreate]);
+
     }
 
     /**
@@ -475,6 +482,7 @@ class UserController extends Controller
         }
         Auth::logout();
         Auth::login($user);
+        // save switch in session!
         return redirect()->route('home');
     }
 

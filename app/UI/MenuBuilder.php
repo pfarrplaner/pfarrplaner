@@ -166,7 +166,7 @@ class MenuBuilder
                 'icon' => 'fa fa-users',
                 'url' => route('users.index'),
                 'active' => $route == 'users.index',
-                'inertia' => false,
+                'inertia' => true,
             ];
             $adminActive |= ($route == 'users.index');
         }

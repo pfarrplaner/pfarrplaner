@@ -124,6 +124,9 @@ class User extends Authenticatable
 
     protected $appends = [
         'isOfficialUser',
+        'isAdmin',
+        'isLocalAdmin',
+        'sortName',
     ];
 
     /**
@@ -1049,4 +1052,9 @@ class User extends Authenticatable
         }
     }
 
+
+    public function getSortNameAttribute()
+    {
+        return ($this->last_name && $this->first_name) ? $this->last_name.', '.$this->first_name : $this->name;
+    }
 }

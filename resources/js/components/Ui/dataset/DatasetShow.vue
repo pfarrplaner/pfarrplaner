@@ -3,7 +3,7 @@
   -
   - @package Pfarrplaner
   - @author Christoph Fischer <chris@toph.de>
-  - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+  - @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
   - @version git: $Id$
@@ -28,29 +28,44 @@
   -->
 
 <template>
-    <button class="btn" :class="'btn-'+type" :title="title" @click="$emit('click')" :disabled="disabled">
-        <span v-if="icon" :class="forceIcon ? 'fa fa-'+icon : 'd-inline d-md-none fa fa-'+icon"></span>
-        <span v-if="!forceNoText" :class="icon ? 'd-none d-md-inline' : ''"><slot /></span>
-    </button>
+    <div class="form-inline">
+        <label>Zeige</label>
+        <select :value="dsShowEntries" class="form-control mr-1 ml-1" @change="change">
+            <option v-for="option in dsShowEntriesLovs" :key="option.value" :value="option.value">
+                {{ option.text }}
+            </option>
+        </select>
+        <label>Datensätze</label>
+    </div>
 </template>
 
 <script>
 export default {
-    name: "NavButton",
+    inject: ['showEntries'],
     props: {
-        type: {
-            type: String,
-            default: 'light',
+        dsShowEntries: {
+            type: Number,
+            default: 10
         },
-        icon: String,
-        title: String,
-        disabled: Boolean,
-        forceIcon: Boolean,
-        forceNoText: Boolean,
+        dsShowEntriesLovs: {
+            type: Array,
+            default: () => [
+                { value: 5, text: 5 },
+                { value: 10, text: 10 },
+                { value: 25, text: 25 },
+                { value: 50, text: 50 },
+                { value: 100, text: 100 }
+            ]
+        }
     },
+    created() {
+        this.showEntries(Number(this.dsShowEntries))
+    },
+    methods: {
+        change(e) {
+            this.$emit('changed', Number(e.target.value))
+            this.showEntries(Number(e.target.value))
+        }
+    }
 }
 </script>
-
-<style scoped>
-
-</style>

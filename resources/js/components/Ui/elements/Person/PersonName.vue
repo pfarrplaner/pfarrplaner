@@ -3,7 +3,7 @@
   -
   - @package Pfarrplaner
   - @author Christoph Fischer <chris@toph.de>
-  - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+  - @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
   - @version git: $Id$
@@ -28,26 +28,22 @@
   -->
 
 <template>
-    <button class="btn" :class="'btn-'+type" :title="title" @click="$emit('click')" :disabled="disabled">
-        <span v-if="icon" :class="forceIcon ? 'fa fa-'+icon : 'd-inline d-md-none fa fa-'+icon"></span>
-        <span v-if="!forceNoText" :class="icon ? 'd-none d-md-inline' : ''"><slot /></span>
-    </button>
+    <span>
+        <span v-if="lastFirst"><span :class="lastBold ? 'text-bold' : ''">{{ last }}</span>, {{ first }}</span>
+        <span v-else>{{ first }} <span :class="lastBold ? 'text-bold' : ''">{{ last }}</span></span>
+    </span>
 </template>
 
 <script>
 export default {
-    name: "NavButton",
-    props: {
-        type: {
-            type: String,
-            default: 'light',
-        },
-        icon: String,
-        title: String,
-        disabled: Boolean,
-        forceIcon: Boolean,
-        forceNoText: Boolean,
-    },
+    name: "PersonName",
+    props: ['person', 'lastFirst', 'lastBold'],
+    data() {
+        return {
+            first: this.person.first_name || this.person.name.split(' ')[0],
+            last: this.person.last_name  || this.person.name.split(' ')[1],
+        }
+    }
 }
 </script>
 

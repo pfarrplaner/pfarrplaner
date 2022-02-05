@@ -27,6 +27,9 @@ class User extends JsonResource
             'hiddenCities' => $this->cities->reject(function($item) use ($sortedCities) {
                 return $sortedCities->contains($item->id);
             }),
+            'isOfficialUser' => $this->isOfficialUser,
+            'isLocalAdmin' => $this->isLocalAdmin,
+            'isAdmin' => $this->isAdmin,
         ];
     }
 }

@@ -3,7 +3,7 @@
   -
   - @package Pfarrplaner
   - @author Christoph Fischer <chris@toph.de>
-  - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+  - @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
   - @version git: $Id$
@@ -28,29 +28,31 @@
   -->
 
 <template>
-    <button class="btn" :class="'btn-'+type" :title="title" @click="$emit('click')" :disabled="disabled">
-        <span v-if="icon" :class="forceIcon ? 'fa fa-'+icon : 'd-inline d-md-none fa fa-'+icon"></span>
-        <span v-if="!forceNoText" :class="icon ? 'd-none d-md-inline' : ''"><slot /></span>
-    </button>
+    <div>
+        Datensätze {{ showing }} bis {{ showingTo }} von {{ dsResultsNumber }}
+    </div>
 </template>
 
 <script>
 export default {
-    name: "NavButton",
-    props: {
-        type: {
-            type: String,
-            default: 'light',
+    inject: ['datasetI18n', 'rdsResultsNumber', 'rdsFrom', 'rdsTo'],
+    computed: {
+        showing() {
+            return this.dsResultsNumber !== 0 ? this.dsFrom + 1 : 0
         },
-        icon: String,
-        title: String,
-        disabled: Boolean,
-        forceIcon: Boolean,
-        forceNoText: Boolean,
-    },
+        showingTo() {
+            return this.dsTo >= this.dsResultsNumber ? this.dsResultsNumber : this.dsTo
+        },
+        /* Setup reactive injects */
+        dsResultsNumber() {
+            return this.rdsResultsNumber()
+        },
+        dsFrom() {
+            return this.rdsFrom()
+        },
+        dsTo() {
+            return this.rdsTo()
+        }
+    }
 }
 </script>
-
-<style scoped>
-
-</style>
