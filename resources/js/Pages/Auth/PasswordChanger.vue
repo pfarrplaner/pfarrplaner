@@ -32,7 +32,8 @@
         <template slot="navbar-left">
             <save-button @click="savePassword" />
         </template>
-        <div v-if="originalPassword" class="alert alert-warning">Du verwendest noch das Originalpasswort, das du von deinem Administrator bekommen hast. Bitte wähle ein neues, eigenes Passwort, das nur du selbst kennst.</div>
+        <div v-if="mustChange" class="alert alert-warning">Dein Benutzerpasswort muss geändert werden. Vielleicht verwendest du noch das Originalpasswort, das du von deinem Administrator bekommen hast?
+            Bitte wähle ein neues, eigenes Passwort, das nur du selbst kennst.</div>
         <card>
             <card-header>Passwort ändern</card-header>
             <card-body>
@@ -59,7 +60,7 @@ import CardBody from "../../components/Ui/cards/cardBody";
 import FormInput from "../../components/Ui/forms/FormInput";
 export default {
     name: "PasswordChanger",
-    props: ['originalPassword'],
+    props: ['originalPassword', 'mustChange'],
     components: {FormInput, CardBody, SaveButton, CardFooter, CardHeader, Card},
     data() {
         return {

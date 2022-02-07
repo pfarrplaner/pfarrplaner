@@ -104,6 +104,7 @@ class User extends Authenticatable
         'show_vacations_with_services',
         'needs_replacement',
         'image',
+        'must_change_password',
     ];
 
     /**

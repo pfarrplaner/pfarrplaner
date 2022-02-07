@@ -80,7 +80,7 @@ class HomeController extends Controller
         }
         RedirectorService::saveCurrentRoute();
         // check if the user still has a temp password
-        if (Hash::check('testtest', Auth::user()->password)) {
+        if (Hash::check('testtest', Auth::user()->password) || Auth::user()->must_change_password) {
             return redirect()->route('password.edit', ['from' => 'home']);
         }
 
@@ -99,7 +99,8 @@ class HomeController extends Controller
     public function showChangePassword()
     {
         $originalPassword = Hash::check('testtest', Auth::user()->password);
-        return Inertia::render('Auth/PasswordChanger', compact('originalPassword'));
+        $mustChange = Hash::check('testtest', Auth::user()->password) || Auth::user()->must_change_password;
+        return Inertia::render('Auth/PasswordChanger', compact('originalPassword', 'mustChange'));
     }
 
     /**
@@ -119,7 +120,7 @@ class HomeController extends Controller
         }
         $validatedData = $request->validate($rules);
         //Change Password
-        Auth::user()->update(['password' => $validatedData['new_password']]);
+        Auth::user()->update(['password' => $validatedData['new_password'], 'must_change_password' => 0]);
         return redirect()->route('home')->with("success", "Dein Passwort wurde geändert.");
     }
 

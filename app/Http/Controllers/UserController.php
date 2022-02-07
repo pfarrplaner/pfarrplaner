@@ -36,10 +36,12 @@ use App\Facades\Settings;
 use App\HomeScreen\Tabs\HomeScreenTabFactory;
 use App\Http\Requests\UserRequest;
 use App\Location;
+use App\Mail\User\AccountData;
 use App\Ministry;
 use App\Parish;
 use App\Rules\CreatedInLocalAdminDomainRule;
 use App\Service;
+use App\Services\PasswordService;
 use App\Subscription;
 use App\Traits\HandlesAttachedImageTrait;
 use App\Traits\HandlesAttachmentsTrait;
@@ -53,6 +55,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -85,27 +89,33 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with(['homeCities', 'cities', 'writableCities', 'adminCities', 'roles', 'roles.permissions'])
-            ->orderBy('last_name')
-            ->orderBy('first_name')
-            ->orderBy('email')
-            ->get();
-
-
         $userQuery = User::with(['homeCities', 'cities', 'writableCities', 'adminCities', 'roles', 'roles.permissions'])
             ->orderBy('last_name')
             ->orderBy('first_name')
             ->orderBy('email');
 
-        if (Auth::user()->can('benutzer-bearbeiten')) {
-            $userQuery->where('password', '!=', '');
-        } elseif (Auth::user()->can('benutzerliste-lokal-sehen')) {
-            $cityIds = Auth::user()->writableCities->pluck('id');
-            $userQuery->whereHas('cities', function ($q) use ($cityIds) {
-                $q->whereIn('cities.id', $cityIds);
-            });
-        } else {
-            abort(403);
+        if (!Auth::user()->isAdmin) {
+            if (Auth::user()->adminCities->count()) {
+                // Local admin: can see anyone from his/her admin'd cities and people without homeCities
+                $userQuery->where(function($q) {
+                    $q->whereHas('homeCities', function ($q2) {
+                        $q2->whereIn('cities.id', Auth::user()->homeCities->pluck('id'));
+                    });
+                })->orWhere(function ($q) {
+                   $q->whereDoesntHave('homeCities');
+                });
+            } elseif (Auth::user()->can('benutzer-bearbeiten')) {
+                // Clerk: Can only see users
+                $userQuery->where('password', '!=', '');
+            } elseif (Auth::user()->can('benutzerliste-lokal-sehen')) {
+                // Local clerk: Can only see users from own cities
+                $cityIds = Auth::user()->writableCities->pluck('id');
+                $userQuery->whereHas('cities', function ($q) use ($cityIds) {
+                    $q->whereIn('cities.id', $cityIds);
+                });
+            } else {
+                abort(403);
+            }
         }
 
         $canCreate = Auth::user()->can('create', User::class);
@@ -121,15 +131,15 @@ class UserController extends Controller
     public function create()
     {
         $user = (new User())->load([
-                        'homeCities',
-                        'parishes',
-                        'roles',
-                        'cities',
-                        'writableCities',
-                        'adminCities',
-                        'vacationAdmins',
-                        'vacationApprovers',
-                    ]);
+                                       'homeCities',
+                                       'parishes',
+                                       'roles',
+                                       'cities',
+                                       'writableCities',
+                                       'adminCities',
+                                       'vacationAdmins',
+                                       'vacationApprovers',
+                                   ]);
 
         $cities = City::orderBy('name')->get();
 
@@ -157,7 +167,6 @@ class UserController extends Controller
                 'ministries' => Ministry::all(),
             ]
         );
-
 
 
         $cities = City::all();
@@ -387,6 +396,11 @@ class UserController extends Controller
         $user->setSubscriptionsFromArray($request->get('subscriptions') ?: []);
         $user->updateCityPermissions($request->get('cityPermission') ?: []);
 
+        if ($request->get('createAccount', false)) {
+            $password = PasswordService::randomPassword();
+            $user->update(['password' => Hash::make($password), 'must_change_password' => 1]);
+            Mail::to($user->email)->send(new AccountData($user, $request->user(), $password));
+        }
     }
 
     /**

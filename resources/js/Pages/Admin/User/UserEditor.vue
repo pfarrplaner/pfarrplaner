@@ -73,6 +73,7 @@
                                 <form-input name="phone" label="Telefonnummer"
                                             help="Nur Zahlen und Leerzeichen erlaubt" v-model="myUser.phone"/>
                                 <form-input type="email" name="email" label="E-Mailadresse" v-model="myUser.email"
+                                            :key="user.email"
                                             :required="Boolean(myUser.isOfficialUser)"/>
                             </div>
                             <div class="col-md-5">
@@ -97,7 +98,8 @@
                                         v-model="myUser.isOfficialUser" @input="createUserAccount"/>
                         </div>
                         <div v-else>
-                            <form-input type="email" name="email" required
+                            <form-input type="email" name="email" :required="true"
+                                        :key="user.email"
                                         label="E-Mailadresse"
                                         help="Die E-Mailadresse ist auch der Benutzername zur Anmeldung."
                                         v-model="myUser.email"/>
@@ -334,6 +336,7 @@ export default {
                 cityPermissions: this.cityPermissions,
                 vacation_admins: this.reduceToIds(this.myUser.vacation_admins),
                 vacation_approvers: this.reduceToIds(this.myUser.vacation_approvers),
+                createAccount: this.justCreated ? 1 : 0,
                 permissions,
                 subscriptions,
             };

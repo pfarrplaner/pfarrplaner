@@ -14,6 +14,9 @@
                 <p>Du verwendest noch das Originalpasswort, das du von deinem Administrator bekommen hast. Bitte wähle ein neues, eigenes Passwort, das nur du selbst kennst.
                 </p>
             @else
+                @if(Auth::user()->must_change_password)
+                    <p>Dein Benutzerpasswort muss geändert werden. Bitte wähle ein neues, eigenes Passwort, das nur du selbst kennst.</p>
+                @endif
                 @input(['name' => 'current_password', 'label' => 'Aktuelles Passwort', 'type' => 'password'])
             @endif
             @input(['name' => 'new_password', 'label' => 'Neues Passwort', 'type' => 'password'])
