@@ -134,30 +134,6 @@ class AppServiceProvider extends ServiceProvider
         QueryLog::register();
 
         Inertia::setRootView('inertia-app');
-        Inertia::share(['dev' => config('app.dev') ? true:  false]);
-        Inertia::share(
-            [
-                'errors' => function () {
-                    return Session::get('errors')
-                        ? Session::get('errors')->getBag('default')->getMessages()
-                        : (object)[];
-                }
-            ]
-        );
-        Inertia::share(['package' =>  PackageService::info()]);
-        Inertia::share(
-            [
-                'flash' => function () {
-                    return [
-                        'success' => Session::get('success'),
-                        'info'  => Session::get('info'),
-                    ];
-                }
-            ]
-        );
-        Inertia::share(['route' => function() {
-            return Route::currentRouteName();
-        }]);
 
         /**
          * Pass array or string of key column names to remove

@@ -32,10 +32,13 @@ namespace App\Http\Middleware;
 
 use App\Facades\Settings;
 use App\Http\Resources\User as UserResource;
+use App\Services\PackageService;
 use App\UI\MenuBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
+use Inertia\Inertia;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
@@ -69,13 +72,28 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
-        $data = array_merge(parent::share($request), [
-            'appName' => config('app.name'),
-        ]);
-
         $packageConfig = json_decode(file_get_contents(base_path('package.json')), true);
         $version = $packageConfig['version'];
 
+        $data = array_merge(parent::share($request), [
+            'appName' => config('app.name'),
+            'flash' => [
+                'message' => fn () => $request->session()->get('message'),
+                'success' => fn () => $request->session()->get('success'),
+                'info' => fn () => $request->session()->get('info'),
+                'warning' => fn () => $request->session()->get('warning'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
+            'dev' => config('app.dev') ? true:  false,
+            'demo' => config('demo_mode') ? true:  false,
+            'errors' => fn() => Session::get('errors')
+                ? Session::get('errors')->getBag('default')->getMessages()
+                : (object)[],
+            'package' =>  fn() => PackageService::info(),
+            'route' => fn() => Route::currentRouteName(),
+            'currentRoute' => fn() => Route::currentRouteName(),
+            'version' => $version,
+        ]);
 
         if (!Auth::guest()) {
             $data = array_merge($data, [
@@ -83,9 +101,7 @@ class HandleInertiaRequests extends Middleware
                     ? new UserResource($request->user())
                     : null,
                 'menu' => fn() => MenuBuilder::sidebar(),
-                'currentRoute' => fn() => Route::currentRouteName(),
                 'settings' => fn() => Settings::all(Auth::user()),
-                'version' => $version,
             ]);
         }
 
