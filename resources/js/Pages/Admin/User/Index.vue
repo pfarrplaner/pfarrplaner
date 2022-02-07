@@ -93,8 +93,11 @@
                                             <nav-button type="light" icon="object-group" title="Personen zusammenführen"
                                                         class="btn-sm" v-if="canEdit(row)"
                                                         force-icon force-no-text @click="mergeUser(row)"/>
+                                            <nav-button type="light" icon="key" title="Passwort zurücksetzen"
+                                                        class="btn-sm" v-if="canEdit(row) && row.isOfficialUser"
+                                                        force-icon force-no-text @click="resetPassword(row)"/>
                                             <nav-button type="light" icon="sign-in-alt" title="Als diese Person anmelden"
-                                                        v-if="isAdmin && (currentUser.id != row.id)"
+                                                        v-if="isAdmin && (currentUser.id != row.id) && row.isOfficialUser"
                                                         class="btn-sm"
                                                         force-icon force-no-text @click="loginAsUser(row)"/>
                                             <nav-button type="danger" icon="trash" title="Person löschen" class="btn-sm"
@@ -195,12 +198,23 @@ export default {
             this.$inertia.get(route('user.edit', user.id));
         },
         deleteUser(user) {
+            if (confirm('Möchtest du '+user.name+' wirklich endgültig und unwiderruflich löschen?')) {
+                this.$inertia.delete(route('user.destroy', user.id));
+            }
         },
         loginAsUser(user) {
             window.location.href = route('user.switch', user.id);
         },
         mergeUser(user) {
+            window.location.href = route('user.join', user.id);
         },
+        resetPassword(user) {
+            if (confirm('Willst du das Passwort für '+user.name+' wirklich zurücksetzen? '
+                +(user.first_name || user.name)+' erhält dann eine E-Mail mit neuen Zugangsdaten. Das bisherige Passwort '
+                +'ist dann ab sofort ungültig.')) {
+                this.$inertia.post(route('user.password.reset', user.id), { preserveState: false });
+            }
+        }
     }
 }
 </script>
