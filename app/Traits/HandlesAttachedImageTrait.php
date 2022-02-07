@@ -48,7 +48,8 @@ trait HandlesAttachedImageTrait
                 $fullPath = $file->store('attachments');
                 $modelObject->update([$imageField => $fullPath]);
                 $path = basename($fullPath);
-                return response()->json(['url' => route('image', compact('path')), 'image' => $fullPath]);
+                return response()->json(['url' => route('image', compact('path')), 'image' => $fullPath,
+                                            'model' => $modelObject, 'id' => $model, 'field' => $imageField]);
             }
         }
 

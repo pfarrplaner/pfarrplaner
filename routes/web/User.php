@@ -59,6 +59,8 @@ Route::get('/benutzer/neu', [UserController::class, 'create'])->name('user.creat
 Route::get('/benutzer/{user}', [UserController::class, 'edit'])->name('user.edit');
 Route::patch('/benutzer/{user}', [UserController::class, 'update'])->name('user.update');
 Route::delete('/benutzer/{user}', [UserController::class, 'destroy'])->name('user.destroy');
+Route::post('/benutzer/{model}/attach', [UserController::class, 'attachImage'])->name('user.attach');
+Route::delete('/benutzer/{model}/detach', [UserController::class, 'detachImage'])->name('user.detach');
 
 // additional user routes
 Route::get('/profil', [UserController::class, 'profile'])->name('user.profile');

@@ -34,11 +34,15 @@ use App\CalendarConnection;
 use App\City;
 use App\Facades\Settings;
 use App\HomeScreen\Tabs\HomeScreenTabFactory;
+use App\Http\Requests\UserRequest;
 use App\Location;
 use App\Ministry;
 use App\Parish;
 use App\Rules\CreatedInLocalAdminDomainRule;
 use App\Service;
+use App\Subscription;
+use App\Traits\HandlesAttachedImageTrait;
+use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
@@ -62,6 +66,12 @@ use Spatie\Permission\Models\Role;
  */
 class UserController extends Controller
 {
+
+    use HandlesAttachmentsTrait;
+    use HandlesAttachedImageTrait;
+
+    protected $model = User::class;
+
 
     public function __construct()
     {
@@ -91,7 +101,9 @@ class UserController extends Controller
             $userQuery->where('password', '!=', '');
         } elseif (Auth::user()->can('benutzerliste-lokal-sehen')) {
             $cityIds = Auth::user()->writableCities->pluck('id');
-            $userQuery->whereHas('cities', function ($q) use ($cityIds) { $q->whereIn('cities.id', $cityIds); });
+            $userQuery->whereHas('cities', function ($q) use ($cityIds) {
+                $q->whereIn('cities.id', $cityIds);
+            });
         } else {
             abort(403);
         }
@@ -99,16 +111,55 @@ class UserController extends Controller
         $canCreate = Auth::user()->can('create', User::class);
 
         return Inertia::render('Admin/User/Index', ['users' => $userQuery->get(), 'canCreate' => $canCreate]);
-
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function create()
     {
+        $user = (new User())->load([
+                        'homeCities',
+                        'parishes',
+                        'roles',
+                        'cities',
+                        'writableCities',
+                        'adminCities',
+                        'vacationAdmins',
+                        'vacationApprovers',
+                    ]);
+
+        $cities = City::orderBy('name')->get();
+
+        $adminCities = [];
+        foreach ($cities as $city) {
+            if ($city->administeredBy(Auth::user())) {
+                $adminCities[] = $city;
+            }
+        }
+
+        return Inertia::render(
+            'Admin/User/UserEditor',
+            [
+                'user' => $user,
+                'cities' => $cities,
+                'adminCities' => $adminCities,
+                'roles' => Role::all(),
+                'parishes' => Parish::all(),
+                'users' => User::all(),
+                'activeTab' => 'home',
+                'subscriptions' => [],
+                'settings' => [],
+                'availableTabs' => HomeScreenTabFactory::available(),
+                'locations' => Location::inCities(Auth::user()->cities->pluck('id'))->get(),
+                'ministries' => Ministry::all(),
+            ]
+        );
+
+
+
         $cities = City::all();
         $parishes = Parish::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $users = User::all();
@@ -132,60 +183,14 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param UserRequest $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $user = User::create($this->validateRequest($request));
-
-        if ($request->hasFile('image')) {
-            $user->update(['image' => $request->file('image')->store('user-images', 'public')]);
-        }
-
-        // api_token
-
-        $user->save();
-
-
-        $user->updateCityPermissions($request->get('cityPermission') ?: []);
-        $user->parishes()->sync($request->get('parishes') ?: []);
-
-        $user->homeCities()->sync($request->get('homeCities') ?: []);
-
-        if (count($user->homeCities) == 0) {
-            if (count(Auth::user()->adminCities)) {
-                $user->homeCities()->attach(Auth::user()->adminCities->first()->id);
-            }
-        }
-
-
-        // assign roles
-        $roles = $request->get('roles');
-        if (is_array($roles) && count($roles)) {
-            $key = array_search('Super-Administrator*in', $roles);
-            if (($key !== false)
-                && (!$user->hasRole('Superadmininistrator*in'))) {
-                unset($roles[$key]);
-            }
-            $key = array_search('Administrator*in', $roles);
-            if (($key !== false)
-                && (!$user->hasRole('Superadmininistrator*in'))
-                && (!$user->hasRole('Administrator*in'))) {
-                unset($roles[$key]);
-            }
-        }
-        $user->syncRoles($request->get('roles') ?: []);
-        $user->syncRelatedUsers('vacationAdmins', 'vacation_admin', $request->get('vacationAdmins', []));
-        $user->syncRelatedUsers('vacationApprovers', 'vacation_approver', $request->get('vacationApprovers', []));
-
-        // set subscriptions
-        $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
-
-
-        if ($request->get('homescreen')) {
-            $user->setSetting('homeScreen', $request->get('homescreen'));
-        }
+        $data = $request->validated();
+        $user = User::create($data);
+        $this->updateUserDataFromRequest($request, $user);
 
         return redirect()->route('users.index')->with('success', 'Der neue Benutzer wurde angelegt.');
     }
@@ -193,18 +198,65 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
-     * @return Response
+     * @param User $user
+     * @return \Inertia\Response
      */
-    public function edit($id, Request $request)
+    public function edit(User $user, Request $request)
     {
-        $user = User::find($id);
-        $cities = City::all();
+        $user->load([
+                        'homeCities',
+                        'parishes',
+                        'roles',
+                        'cities',
+                        'writableCities',
+                        'adminCities',
+                        'vacationAdmins',
+                        'vacationApprovers',
+                    ]);
+        $cities = City::orderBy('name')->get();
+        $adminCities = [];
+        $adminCityIds = [];
+        foreach ($cities as $city) {
+            if ($city->administeredBy(Auth::user())) {
+                $adminCities[] = $city;
+                $adminCityIds[] = $city->id;
+            }
+        }
         $roles = Role::all()->sortBy('name');
         $parishes = Parish::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $homescreen = $user->getSetting('homeScreen', 'route:calendar');
         $users = User::all();
-        return view('users.edit', compact('user', 'cities', 'homescreen', 'roles', 'parishes', 'users'));
+        $subscriptions = Subscription::where('user_id', $user->id)
+            ->whereIn('city_id', $adminCityIds)
+            ->get();
+
+        $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig') ?? [];
+        $settings = Settings::all($user);
+        $availableTabs = HomeScreenTabFactory::available();
+        $locations = Location::inCities(Auth::user()->cities->pluck('id'))->get();
+        $ministries = Ministry::all();
+
+
+        $activeTab = $request->get('tab', 'home');
+
+        return Inertia::render(
+            'Admin/User/UserEditor',
+            compact(
+                'user',
+                'cities',
+                'adminCities',
+                'homescreen',
+                'roles',
+                'parishes',
+                'users',
+                'activeTab',
+                'subscriptions',
+                'settings',
+                'availableTabs',
+                'locations',
+                'ministries',
+            )
+        );
     }
 
 
@@ -228,7 +280,6 @@ class UserController extends Controller
         // homeScreenTabs
         $homeScreenTabsConfig = $user->getSetting('homeScreenTabsConfig') ?? [];
         $settings = Settings::all($user);
-
         $availableTabs = HomeScreenTabFactory::available();
 
         $calendarConnections = CalendarConnection::where('user_id', $user->id)->get();
@@ -267,10 +318,10 @@ class UserController extends Controller
         // change password?
         if ($request->has('new_password')) {
             $passwordData = $request->validate([
-                'current_password' => 'required|hash:' . Auth::user()->password,
-                'new_password' => 'required|string|min:6|confirmed|not_current_password|notIn:testtest',
-                'new_password_confirmation' => 'required',
-            ]);
+                                                   'current_password' => 'required|hash:' . Auth::user()->password,
+                                                   'new_password' => 'required|string|min:6|confirmed|not_current_password|notIn:testtest',
+                                                   'new_password_confirmation' => 'required',
+                                               ]);
             $user->update(['password' => $passwordData['new_password']]);
         }
 
@@ -289,7 +340,6 @@ class UserController extends Controller
         }
 
 
-
         return redirect()->route('home')->with('success', 'Die Änderungen wurden gespeichert.');
     }
 
@@ -301,65 +351,42 @@ class UserController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
-        if ($user->administeredBy(Auth::user())) {
-            $user->update($this->validateRequest($request, $user));
-            if ($request->hasFile('image') || ($request->get('removeAttachment') == 1)) {
-                if ($user->image != '') {
-                    Storage::delete($user->image);
-                }
-                $user->update(['image' => '']);
-            }
-            if ($request->hasFile('image')) {
-                $user->update(['image' => $request->file('image')->store('user-images', 'public')]);
-            }
-
-            $user->homeCities()->sync($request->get('homeCities') ?: []);
-            $user->parishes()->sync($request->get('parishes') ?: []);
-            $user->approvers()->sync($request->get('approvers') ?: []);
-
-            $user->syncRelatedUsers('vacationAdmins', 'vacation_admin', $request->get('vacationAdmins', []));
-            $user->syncRelatedUsers('vacationApprovers', 'vacation_approver', $request->get('vacationApprovers', []));
-
-            // assign roles
-            $roles = $request->get('roles');
-            if (is_array($roles) && count($roles)) {
-                $key = array_search('Super-Administrator*in', $roles);
-                if (($key !== false)
-                    && (!$user->hasRole('Superadmininistrator*in'))) {
-                    unset($roles[$key]);
-                }
-                $key = array_search('Administrator*in', $roles);
-                if (($key !== false)
-                    && (!$user->hasRole('Superadmininistrator*in'))
-                    && (!$user->hasRole('Administrator*in'))) {
-                    unset($roles[$key]);
-                }
-            }
-            $user->syncRoles($request->get('roles') ?: []);
-
-            // set subscriptions
-            $user->setSubscriptionsFromArray($request->get('subscribe') ?: []);
-        } else {
-            $password = $request->get('password');
-            if ($password != '') {
-                $user->update(['password' => $password]);
-                if (count($user->homeCities) == 0) {
-                    if (count(Auth::user()->adminCities)) {
-                        $user->homeCities()->attach(Auth::user()->adminCities->first()->id);
-                    }
-                }
-            }
-        }
-
-        $user->updateCityPermissions($request->get('cityPermission') ?: []);
-
-        if ($request->get('homescreen')) {
-            $user->setSetting('homeScreen', $request->get('homescreen'));
-        }
+        $data = $request->validated();
+        $user->update($data);
+        $this->updateUserDataFromRequest($request, $user);
 
         return redirect()->route('users.index')->with('success', 'Die Änderungen wurden gespeichert.');
+    }
+
+    /**
+     * Update all user record relations from the request data
+     * @param UserRequest $request
+     * @param User $user
+     */
+    protected function updateUserDataFromRequest(UserRequest $request, User $user)
+    {
+        $user->homeCities()->sync($request->getRelationIdsForSync('home_cities', 'cities'));
+        $user->parishes()->sync($request->getRelationIdsForSync('parishes'));
+        $user->syncRelatedUsers(
+            'vacationAdmins',
+            'vacation_admin',
+            $request->getRelationIdsForSync('vacation_admins', 'users')
+        );
+        $user->syncRelatedUsers(
+            'vacationApprovers',
+            'vacation_approver',
+            $request->getRelationIdsForSync('vacation_approvers', 'users')
+        );
+        $user->roles()->sync($request->getRoles());
+
+        foreach ($request->get('settings', []) as $key => $setting) {
+            $user->setSetting($key, $setting);
+        }
+        $user->setSubscriptionsFromArray($request->get('subscriptions') ?: []);
+        $user->updateCityPermissions($request->get('cityPermission') ?: []);
+
     }
 
     /**
@@ -525,14 +552,13 @@ class UserController extends Controller
             'first_name' => 'nullable|string',
             'last_name' => 'nullable|string',
             'title' => 'nullable|string',
-            'email' => 'nullable|string|email|max:255|unique:users,email'.($user ? ','.$user->id : ''),
+            'email' => 'nullable|string|email|max:255|unique:users,email' . ($user ? ',' . $user->id : ''),
             'password' => 'nullable|string',
-            'notifications' => 'nullable|string',
             'office' => 'nullable|string',
             'address' => 'nullable|string',
             'phone' => 'nullable|phone_number',
             'preference_cities' => 'nullable|string',
-            'manage_absences' => 'nullable|string',
+            'manage_absences' => 'nullable|checkbox',
             'homeCities' => 'nullable',
             'homeCities.*' => 'int|exists:cities,id',
             'own_website' => 'nullable|string',
@@ -586,7 +612,7 @@ class UserController extends Controller
         $possibleDuplicates = [];
         $withoutDuplicates = [];
 
-        foreach($allUsers as $user) {
+        foreach ($allUsers as $user) {
             $usersWithSameName = User::with('homeCities')
                 ->where('name', $user->name)
                 ->where('id', '!=', $user->id)
@@ -597,9 +623,11 @@ class UserController extends Controller
                     if (isset($possibleDuplicates[$thisUser->name])) {
                         $alreadyListed = true;
                         if ($thisUser->isOfficialUser && (!$possibleDuplicates[$thisUser->name]->isOfficialUser)) {
-                            $thisUser->duplicates = $possibleDuplicates[$thisUser->name]->duplicates->reject(function ($item) use ($thisUser) {
-                                return $item->id == $thisUser->id;
-                            });
+                            $thisUser->duplicates = $possibleDuplicates[$thisUser->name]->duplicates->reject(
+                                function ($item) use ($thisUser) {
+                                    return $item->id == $thisUser->id;
+                                }
+                            );
                             $possibleDuplicates[$thisUser->name]->duplicates = collect();
                             $thisUser->duplicates->push($possibleDuplicates[$thisUser->name]);
                             $possibleDuplicates[$thisUser->name] = $thisUser;

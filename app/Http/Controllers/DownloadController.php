@@ -125,11 +125,12 @@ class DownloadController extends Controller
 
 
     /**
+     * @param Request $request
      * @param $path
      * @param string $prettyName
      * @return StreamedResponse
      */
-    public function image($path, $prettyName = '')
+    public function image(Request $request, $path, $prettyName = '')
     {
         if (substr($path, 0, 12) == 'attachments/') $path = substr($path, 12);
         if ((pathinfo($path, PATHINFO_EXTENSION) == '') && (pathinfo($prettyName, PATHINFO_EXTENSION) != '')) {
@@ -137,7 +138,7 @@ class DownloadController extends Controller
         }
         $prettyName = $prettyName ? FileHelper::normalizeFilename($prettyName) : basename($path);
         if (Storage::exists('attachments/' . $path)) {
-            return Storage::response('attachments/' . $path);
+            return $request->get('download', false ) ? Storage::download('attachments/'.$path) : Storage::response('attachments/' . $path);
         }
         abort(404);
     }

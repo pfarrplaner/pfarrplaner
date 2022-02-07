@@ -32,7 +32,7 @@
         <div class="mb-3 p-1">
             <form-check label="Schaltflächen für das schnelle Erstellen von Kasualien anzeigen"
                         v-model="settings.homeScreenConfig.wizardButtons" />
-            <form-check label="Aktuell von mir vertretene Kollegen anzeigen"
+            <form-check :label="thirdParty ? 'Aktuell von dieser Person vertretene Kollegen anzeigen' : 'Aktuell von mir vertretene Kollegen anzeigen'"
                         v-model="settings.homeScreenConfig.showReplacements" />
         </div>
         <div class="row">
@@ -105,7 +105,7 @@ export default {
         StreamingTabConfig,
         WeddingsTabConfig,
     },
-    props: ['availableTabs', 'homeScreenTabsConfig', 'cities', 'locations', 'ministries', 'settings'],
+    props: ['availableTabs', 'homeScreenTabsConfig', 'cities', 'locations', 'ministries', 'settings', 'thirdParty'],
     created() {
         if (!this.settings.homeScreenConfig) this.settings.homeScreenConfig = {};
         if (!this.settings.homeScreenConfig.wizardButtons) this.settings.homeScreenConfig.wizardButtons = false;

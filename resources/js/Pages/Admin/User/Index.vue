@@ -189,7 +189,7 @@ export default {
             || this.hasPermission('benutzer-bearbeiten');
         },
         createUser() {
-
+            this.$inertia.get(route('user.create'));
         },
         editUser(user) {
             this.$inertia.get(route('user.edit', user.id));

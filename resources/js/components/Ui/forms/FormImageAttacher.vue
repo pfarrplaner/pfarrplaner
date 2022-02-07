@@ -34,7 +34,7 @@
         <div v-if="myValue">
             <img class="img-fluid" :src="route('image', myValue.replace('attachments/', ''))" />
             <div>
-                <a class="btn btn-light btn-sm" title="Bild herunterladen" :href="route('image', myValue.replace('attachments/', ''))">
+                <a class="btn btn-light btn-sm" title="Bild herunterladen" :href="route('image', {path: myValue.replace('attachments/', ''), download: 1})">
                     <span class="fa fa-download"></span> Herunterladen
                 </a>
                 <button class="btn btn-danger btn-sm" title="Bild entfernen" @click="detachImage"><span class="fa fa-trash"></span> Bild entfernen</button>

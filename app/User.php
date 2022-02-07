@@ -103,6 +103,7 @@ class User extends Authenticatable
         'own_podcast_itunes',
         'show_vacations_with_services',
         'needs_replacement',
+        'image',
     ];
 
     /**
@@ -1056,5 +1057,10 @@ class User extends Authenticatable
     public function getSortNameAttribute()
     {
         return ($this->last_name && $this->first_name) ? $this->last_name.', '.$this->first_name : $this->name;
+    }
+
+    public function getImageField()
+    {
+        return 'image';
     }
 }
