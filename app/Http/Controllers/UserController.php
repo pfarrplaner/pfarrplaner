@@ -397,9 +397,7 @@ class UserController extends Controller
         $user->updateCityPermissions($request->get('cityPermission') ?: []);
 
         if ($request->get('createAccount', false)) {
-            $password = PasswordService::randomPassword();
-            $user->update(['password' => Hash::make($password), 'must_change_password' => 1]);
-            Mail::to($user->email)->send(new AccountData($user, $request->user(), $password));
+            $user->resetAccount();
         }
     }
 
@@ -685,5 +683,12 @@ class UserController extends Controller
             }
         }
         return redirect()->route('users.duplicates');
+    }
+
+    public function resetPassword(Request $request, User $user)
+    {
+        if (!$request->user()->can('update', $user)) abort(403);
+        $user->resetAccount();
+        return redirect()->route('users.index')->with('success', 'Das Benutzerpasswort für '.$user->name.' wurde zurückgesetzt. Eine E-Mail mit neuen Zugangsdaten wurde an '.$user->email.' versandt.');
     }
 }

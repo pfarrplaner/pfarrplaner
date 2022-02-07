@@ -19,6 +19,6 @@ Mit den folgenden Anmeldedaten kannst du dich am **Pfarrplaner** anmelden:
     Jetzt anmelden
 @endcomponent
 
-*Bitte beachte*: Das Passwort muss bei der ersten Anmeldung geändert werden.
+*Bitte beachte*: Das Passwort muss bei der nächsten Anmeldung geändert werden.
 
 @endcomponent

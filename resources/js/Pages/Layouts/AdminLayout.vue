@@ -156,6 +156,13 @@
             <div class="content">
                 <div class="container-fluid">
                     <!-- flash messages here -->
+                    <div v-if="(layout.errors.length > 0) || layout.flash.error" class="alert alert-danger">
+                        <span v-if="layout.flash.error">{{ layout.flash.error }}</span>
+                        <span v-else>Dein Formular enthält {{ layout.errors.length }} Fehler. Bitte überprüfe deine Eingaben.</span>
+                    </div>
+                    <div v-for="flashType in ['success','info']">
+                        <div v-if="layout.flash[flashType]" class="alert" :class="'alert-'+flashType">{{ layout.flash[flashType] }}</div>
+                    </div>
                     <slot/>
                 </div>
                 <div class="footer">

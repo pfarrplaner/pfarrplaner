@@ -31,7 +31,9 @@
 namespace App;
 
 use App\HomeScreens\AbstractHomeScreen;
+use App\Mail\User\AccountData;
 use App\Providers\AuthServiceProvider;
+use App\Services\PasswordService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,6 +46,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\HasApiTokens;
 use Shetabit\Visitor\Traits\Visitable;
 use Shetabit\Visitor\Traits\Visitor;
@@ -1063,5 +1066,15 @@ class User extends Authenticatable
     public function getImageField()
     {
         return 'image';
+    }
+
+    /**
+     * Reset password and send AccountData mail to user
+     */
+    public function resetAccount()
+    {
+        $password = PasswordService::randomPassword();
+        $this->update(['password' => Hash::make($password), 'must_change_password' => 1]);
+        Mail::to($this->email)->send(new AccountData($this, Auth::user(), $password));
     }
 }

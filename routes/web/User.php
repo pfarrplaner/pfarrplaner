@@ -61,6 +61,7 @@ Route::patch('/benutzer/{user}', [UserController::class, 'update'])->name('user.
 Route::delete('/benutzer/{user}', [UserController::class, 'destroy'])->name('user.destroy');
 Route::post('/benutzer/{model}/attach', [UserController::class, 'attachImage'])->name('user.attach');
 Route::delete('/benutzer/{model}/detach', [UserController::class, 'detachImage'])->name('user.detach');
+Route::post('/benutzer/{user}/passwort-zuruecksetzen', [UserController::class, 'resetPassword'])->name('user.password.reset');
 
 // additional user routes
 Route::get('/profil', [UserController::class, 'profile'])->name('user.profile');

@@ -36,6 +36,8 @@
                         @click="resetUserPassword" class="ml-1"
                         type="light" icon="key">Passwort zurücksetzen
             </nav-button>
+            <nav-button type="danger" icon="trash" title="Benutzer löschen" class="ml-1"
+                        @click="deleteUser">Löschen</nav-button>
         </template>
         <card>
             <card-header>
@@ -318,6 +320,11 @@ export default {
             }
         },
         resetUserPassword() {
+            if (confirm('Willst du das Passwort für '+this.user.name+' wirklich zurücksetzen? '
+                +(this.user.first_name || this.user.name)+' erhält dann eine E-Mail mit neuen Zugangsdaten. Das bisherige Passwort '
+                +'ist dann ab sofort ungültig.')) {
+                this.$inertia.post(route('user.password.reset', this.user.id));
+            }
         },
         saveUser() {
             let permissions = {};
@@ -344,6 +351,11 @@ export default {
                 this.$inertia.patch(route('user.update', this.myUser.id), record);
             } else {
                 this.$inertia.post(route('user.store'), record);
+            }
+        },
+        deleteUser() {
+            if (confirm('Möchtest du '+this.user.name+' wirklich endgültig und unwiderruflich löschen?')) {
+                this.$inertia.delete(route('user.destroy', this.user.id));
             }
         },
         reduceToIds(records) {
