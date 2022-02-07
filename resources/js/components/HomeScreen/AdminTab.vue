@@ -34,7 +34,7 @@
                 <form-selectize label="Schnellauswahl Benutzer" :options="people" v-model="selectedPerson" />
             </div>
             <div class="col-md-2 text-right pt-md-4" v-if="selectedPerson">
-                <a class="btn btn-sm btn-primary mt-md-2" :href="route('user.edit', {user: selectedPerson})"><span class="fa fa-edit"></span></a>
+                <inertia-link class="btn btn-sm btn-primary mt-md-2" :href="route('user.edit', {user: selectedPerson})"><span class="fa fa-edit"></span></inertia-link>
                 <a class="btn btn-sm btn-light mt-md-2" :href="route('user.switch', {user: selectedPerson})"><span class="fa fa-sign-in-alt"></span></a>
             </div>
         </div>
