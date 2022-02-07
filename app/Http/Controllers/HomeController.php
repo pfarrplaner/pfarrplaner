@@ -78,6 +78,12 @@ class HomeController extends Controller
         if (!Auth::user()) {
             return redirect()->route('login');
         }
+
+        $homeScreenSetting = Auth::user()->getSetting('homeScreen', 'homescreen:configurable');
+        if (substr($homeScreenSetting, 0, 6) == 'route:') {
+            return redirect()->route(substr($homeScreenSetting, 6));
+        }
+
         RedirectorService::saveCurrentRoute();
         // check if the user still has a temp password
         if (Hash::check('testtest', Auth::user()->password) || Auth::user()->must_change_password) {
