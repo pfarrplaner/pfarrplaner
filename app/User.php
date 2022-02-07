@@ -1074,7 +1074,7 @@ class User extends Authenticatable
     public function resetAccount()
     {
         $password = PasswordService::randomPassword();
-        $this->update(['password' => Hash::make($password), 'must_change_password' => 1]);
+        $this->update(['password' => $password, 'must_change_password' => 1]);
         Mail::to($this->email)->send(new AccountData($this, Auth::user(), $password));
     }
 }
