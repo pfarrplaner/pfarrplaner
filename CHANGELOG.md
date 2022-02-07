@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.108.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.107.0...v1.108.0) (2022-02-07)
+
+
+### Features
+
+* Adapt mailing titles for absence notifications ([05e4615](https://github.com/pfarrplaner/pfarrplaner/commits/05e46151a4c969d7bb88d9f4396fb9859817de79))
+* Create new user accounts with random password ([d8fdeba](https://github.com/pfarrplaner/pfarrplaner/commits/d8fdebade31eb1b93c82d21f42c669db67583b85))
+* More functionality for new user administration ([0c31aea](https://github.com/pfarrplaner/pfarrplaner/commits/0c31aea6499c24fc2f3f7ac6307e15475984c94b))
+* More functionality for new user administration ([4beaa78](https://github.com/pfarrplaner/pfarrplaner/commits/4beaa78e13bce79df90418c611940bf6a1ef882a))
+* New index view for user admin ([5f475c2](https://github.com/pfarrplaner/pfarrplaner/commits/5f475c2df1b30ae111a5110f1c604e46cc16e9a1))
+* New UserEditor ([9a0e6fc](https://github.com/pfarrplaner/pfarrplaner/commits/9a0e6fcf1828223d62912d4e421d3359765214c0))
+
+
+### Bug Fixes
+
+* AdminTab uses non-Inertia link to UserEditor ([1dd3847](https://github.com/pfarrplaner/pfarrplaner/commits/1dd38478d0d30fe794f5d4b3c893780c018b1e63))
+* Inertia does not send flash messages ([fe4219b](https://github.com/pfarrplaner/pfarrplaner/commits/fe4219bfa61ff985c6930c38196cd3f22c61cd7b))
+* User passwords hashed twice ([89681f2](https://github.com/pfarrplaner/pfarrplaner/commits/89681f24742b5b8a6dab92c759094407e9a39f9d))
+
 ## [1.107.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.106.0...v1.107.0) (2022-02-04)
 
 
