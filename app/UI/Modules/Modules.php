@@ -48,6 +48,7 @@ class Modules
                     'title' => $module->getTitle(),
                     'icon' => $module->getIcon(),
                     'color' => $module->getColor(),
+                    'defaultRoute' => $module->getDefaultRoute(),
                 ];
             }
         }

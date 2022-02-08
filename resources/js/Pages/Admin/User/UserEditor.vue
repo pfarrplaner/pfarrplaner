@@ -163,7 +163,7 @@
                         <home-screen-configuration-tab :available-tabs="availableTabs" :cities="cities"
                                                        :home-screen-tabs-config="mySettings.homeScreenTabsConfig"
                                                        :locations="locations" :ministries="ministries"
-                                                       :settings="settings" third-party="1"/>
+                                                       :settings="settings" third-party="1" :module-groups="modules"/>
                     </tab>
                     <tab v-if="myUser.isOfficialUser" id="settings" :active-tab="activeTab">
                         <div v-if="!riskTaker" class="alert alert-warning">

@@ -37,6 +37,8 @@ class OutlookExportModule extends AbstractModule
 {
     protected $title = 'Outlook-Export';
     protected $icon = 'calendar-alt';
+    protected $defaultRoute = 'ical.connect';
+
 
     public function addItems(array $items): array
     {

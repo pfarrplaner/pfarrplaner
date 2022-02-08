@@ -28,14 +28,29 @@
   -->
 
 <template>
-    <div class="homescreen-configruation-tab">
+    <div class="homescreen-configuration-tab">
         <div class="mb-3 p-1">
+            <div v-if="thirdParty">
+                <form-group name="homeScreen" label="Startseite für diese Person">
+                    <select name="homeScreen" class="form-control" v-model="settings.homeScreen">
+                        <option value="homescreen:configurable">Konfigurierbare Startseite (Standard)</option>
+                        <optgroup v-for="(group,groupKey,groupIndex) in moduleGroups" :label="(groupKey == 'default') ? 'Oberste Menügruppe' : 'Menügruppe '+groupKey">
+                            <option v-for="module in group" :value="'route:'+module.defaultRoute" v-if="module.defaultRoute">
+                                Startseite deaktivieren und direkt zum Modul "{{ module.title}}" gehen
+                            </option>
+                        </optgroup>
+                    </select>
+                </form-group>
+            </div>
+        </div>
+        <div class="mb-3 p-1" v-if="settings.homeScreen == 'homescreen:configurable'">
+            <hr />
             <form-check label="Schaltflächen für das schnelle Erstellen von Kasualien anzeigen"
                         v-model="settings.homeScreenConfig.wizardButtons" />
             <form-check :label="thirdParty ? 'Aktuell von dieser Person vertretene Kollegen anzeigen' : 'Aktuell von mir vertretene Kollegen anzeigen'"
                         v-model="settings.homeScreenConfig.showReplacements" />
         </div>
-        <div class="row">
+        <div class="row" v-if="settings.homeScreen == 'homescreen:configurable'">
             <div class="col-md-9 pl-3">
                 <h3>Angezeigte Reiter</h3>
                 <draggable :list="myTabs" group="tabs">
@@ -91,10 +106,12 @@ import MissingEntriesTabConfig from "../TabConfig/MissingEntriesTabConfig";
 import StreamingTabConfig from "../TabConfig/StreamingTabConfig";
 import WeddingsTabConfig from "../TabConfig/WeddingsTabConfig";
 import FormCheck from "../../Ui/forms/FormCheck";
+import FormGroup from "../../Ui/forms/FormGroup";
 
 export default {
     name: "homeScreenConfigurationTab",
     components: {
+        FormGroup,
         FormCheck,
         draggable,
         NextServicesTabConfig,
@@ -105,8 +122,9 @@ export default {
         StreamingTabConfig,
         WeddingsTabConfig,
     },
-    props: ['availableTabs', 'homeScreenTabsConfig', 'cities', 'locations', 'ministries', 'settings', 'thirdParty'],
+    props: ['availableTabs', 'homeScreenTabsConfig', 'cities', 'locations', 'ministries', 'settings', 'thirdParty', 'moduleGroups'],
     created() {
+        if (!this.settings.homeScreen) this.settings.homeScreen = 'homescreen:configurable';
         if (!this.settings.homeScreenConfig) this.settings.homeScreenConfig = {};
         if (!this.settings.homeScreenConfig.wizardButtons) this.settings.homeScreenConfig.wizardButtons = false;
         if (!this.settings.homeScreenConfig.showReplacements) this.settings.homeScreenConfig.showReplacements = false;

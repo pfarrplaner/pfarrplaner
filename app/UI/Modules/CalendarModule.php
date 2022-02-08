@@ -35,6 +35,7 @@ class CalendarModule extends AbstractModule
     protected $title = 'Kalender';
     protected $icon = 'calendar';
     protected $color = 'blue';
+    protected $defaultRoute = 'calendar';
 
     public function addItems(array $items): array
     {

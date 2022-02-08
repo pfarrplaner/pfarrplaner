@@ -36,6 +36,7 @@ class ProfileModule extends AbstractModule
 {
     protected $title = 'Profil';
     protected $icon = 'user';
+    protected $defaultRoute = 'user.profile';
 
 
     public function addItems(array $items): array

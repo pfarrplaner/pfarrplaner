@@ -37,6 +37,7 @@ class AbstractModule
     protected $icon = 'puzzle';
     protected $color = 'black';
     protected $config = [];
+    protected $defaultRoute = '';
 
     public function __construct(array $config) {
         $this->config = $config;
@@ -106,6 +107,38 @@ class AbstractModule
     public function getKey(): string
     {
         return strtolower(str_replace('App\\UI\\s\\', '', str_replace('Module', '', get_called_class())));
+    }
+
+    /**
+     * @return array
+     */
+    public function getConfig(): array
+    {
+        return $this->config;
+    }
+
+    /**
+     * @param array $config
+     */
+    public function setConfig(array $config): void
+    {
+        $this->config = $config;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDefaultRoute(): string
+    {
+        return $this->defaultRoute;
+    }
+
+    /**
+     * @param string $defaultRoute
+     */
+    public function setDefaultRoute(string $defaultRoute): void
+    {
+        $this->defaultRoute = $defaultRoute;
     }
 
 

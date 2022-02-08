@@ -35,6 +35,8 @@ class AbsencesModule extends AbstractModule
     protected $title = 'Urlaub';
     protected $icon = 'globe-europe';
     protected $color = 'orange';
+    protected $defaultRoute = 'absences.index';
+
 
     public function addItems(array $items): array
     {

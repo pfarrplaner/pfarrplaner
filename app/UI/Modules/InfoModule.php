@@ -37,6 +37,7 @@ class InfoModule extends AbstractModule
 {
     protected $title = 'Über Pfarrplaner';
     protected $icon = 'info';
+    protected $defaultRoute = 'about';
 
     public function addItems(array $items): array
     {

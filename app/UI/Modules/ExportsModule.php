@@ -37,6 +37,7 @@ class ExportsModule extends AbstractModule
 {
     protected $title = 'Ausgabeformate';
     protected $icon = 'print';
+    protected $defaultRoute = 'reports.list';
 
     public function addItems(array $items): array
     {
