@@ -80,6 +80,7 @@ class HomeController extends Controller
         }
 
         $homeScreenSetting = Auth::user()->getSetting('homeScreen', 'homescreen:configurable');
+        if (is_array($homeScreenSetting)) $homeScreenSetting = $homeScreenSetting[0];
         if (substr($homeScreenSetting, 0, 6) == 'route:') {
             return redirect()->route(substr($homeScreenSetting, 6));
         }

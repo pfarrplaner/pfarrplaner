@@ -81,14 +81,6 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                         data-accordion="false">
-                        <li class="nav-item">
-                            <inertia-link :href="route('user.profile')"
-                               class="nav-link"
-                               :class="{active: layout.currentRoute == 'user.profile'}">
-                                <i class="nav-icon fa fa-user"></i>
-                                <p>{{ layout.currentUser.data.name }}</p>
-                            </inertia-link>
-                        </li>
                         <li v-for="item in layout.menu" :class="{
                             'nav-header': (item.text == undefined) ,
                             'nav-item': (item.text != undefined),

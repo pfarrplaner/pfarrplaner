@@ -45,6 +45,7 @@ use App\Services\PasswordService;
 use App\Subscription;
 use App\Traits\HandlesAttachedImageTrait;
 use App\Traits\HandlesAttachmentsTrait;
+use App\UI\Modules\Modules;
 use App\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
@@ -165,6 +166,7 @@ class UserController extends Controller
                 'availableTabs' => HomeScreenTabFactory::available(),
                 'locations' => Location::inCities(Auth::user()->cities->pluck('id'))->get(),
                 'ministries' => Ministry::all(),
+                'modules' => Modules::tree(),
             ]
         );
 
@@ -244,6 +246,7 @@ class UserController extends Controller
         $availableTabs = HomeScreenTabFactory::available();
         $locations = Location::inCities(Auth::user()->cities->pluck('id'))->get();
         $ministries = Ministry::all();
+        $modules = Modules::tree();
 
 
         $activeTab = $request->get('tab', 'home');
@@ -264,6 +267,7 @@ class UserController extends Controller
                 'availableTabs',
                 'locations',
                 'ministries',
+                'modules',
             )
         );
     }

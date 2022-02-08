@@ -46,6 +46,8 @@
                     <tab-header id="account" :active-tab="activeTab" title="Benutzerkonto"/>
                     <tab-header v-if="myUser.isOfficialUser" id="permissions" :active-tab="activeTab"
                                 title="Berechtigungen"/>
+                    <tab-header v-if="myUser.isOfficialUser" id="menu" :active-tab="activeTab"
+                                title="Menü"/>
                     <tab-header v-if="myUser.isOfficialUser" id="homescreen" :active-tab="activeTab"
                                 title="Startseite"/>
                     <tab-header v-if="myUser.isOfficialUser" id="settings" :active-tab="activeTab"
@@ -140,6 +142,22 @@
                                 </div>
                             </div>
                         </fake-table>
+                    </tab>
+                    <tab v-if="myUser.isOfficialUser" id="menu" :active-tab="activeTab">
+                        <p>Hier können im Menü für diese Person einzelne Module an und abgeschaltet werden.</p>
+                        <div v-for="(moduleGroup,moduleGroupTitle,moduleGroupIndex) in modules" class="border-bottom">
+                            <div class="text-bold py-3 border-top mt-3" v-if="moduleGroupTitle != 'default'" >{{ moduleGroupTitle }}</div>
+                            <div v-for="(module,moduleIndex) in moduleGroup" class="row module-row p-2" :class="moduleIndex % 2 ? 'odd' : 'even'">
+                                <div class="col-md-1">
+                                    <form-check label="" :name="'settings[modules]['+module.key+']'"
+                                                v-model="mySettings.modules[module.key]" />
+                                </div>
+                                <div class="col-md-11">
+                                    <span class="fa" :class="'fa-'+module.icon" :style="{color: module.color}"></span>
+                                    <span>{{ module.title }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </tab>
                     <tab v-if="myUser.isOfficialUser" id="homescreen" :active-tab="activeTab">
                         <home-screen-configuration-tab :available-tabs="availableTabs" :cities="cities"
@@ -243,6 +261,7 @@ export default {
         'availableTabs',
         'locations',
         'ministries',
+        'modules',
     ],
     components: {
         HomeScreenConfigurationTab,
@@ -277,6 +296,16 @@ export default {
 
         // create empty settings for new users
         this.settings.homeScreenTabsConfig = this.settings.homeScreenTabsConfig || { tabs: []}
+
+        // create empty modules setting
+        if (!this.settings.modules) {
+            this.settings.modules = {};
+            for (const group in this.modules) {
+                this.modules[group].forEach(module => {
+                    this.settings.modules[module.key] = 1;
+                });
+            }
+        }
 
         let cityPermission = {};
         this.adminCities.forEach(city => {
@@ -383,6 +412,14 @@ export default {
 ul.nav.nav-tabs {
     margin-bottom: 0;
     border-bottom-width: 0;
+}
+
+.module-row {
+    width: 100%;
+}
+
+.module-row.even {
+    background-color: lightgray;
 }
 
 </style>
