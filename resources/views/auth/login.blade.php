@@ -44,6 +44,9 @@
     <meta name="msapplication-config" content="/img/favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 
+    <!-- refresh every 10 Minutes to minimize session timeouts -->
+    <meta http-equiv="refresh" content="600">
+
     <!-- =======================================================
     * Template Name: Bootslander - v4.7.0
     * Template URL: https://bootstrapmade.com/bootslander-free-bootstrap-landing-page-template/
