@@ -390,7 +390,7 @@ export default {
         reduceToIds(records) {
             let ids = [];
             records.forEach(record => {
-                ids.push(record.id);
+                if (record && record.id) ids.push(record.id);
             });
             return ids;
         },
