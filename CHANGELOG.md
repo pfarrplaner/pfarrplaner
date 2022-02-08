@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.110.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.109.0...v1.110.0) (2022-02-08)
+
+
+### Features
+
+* Adopt new year-based versioning schema ([06de6d4](https://github.com/pfarrplaner/pfarrplaner/commits/06de6d4d02cc975b5e9ef81b4648f1f9c433a66f))
+
 ## [1.109.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.108.0...v1.109.0) (2022-02-08)
 
 
