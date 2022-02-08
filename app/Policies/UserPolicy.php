@@ -31,6 +31,7 @@
 namespace App\Policies;
 
 use App\Providers\AuthServiceProvider;
+use App\Services\RoleService;
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -48,9 +49,13 @@ class UserPolicy
      */
     public function index(User $user)
     {
-        if ($user->hasRole('Administrator*in')) {
+        if ($user->hasRole(RoleService::ROLE_SUPER_ADMIN)) {
             return true;
         }
+        if ($user->hasRole(RoleService::ROLE_ADMIN)) {
+            return true;
+        }
+        if ($user->adminCities->count() > 0) return true;
         return $user->hasPermissionTo('benutzerliste-lokal-sehen') || $user->hasPermissionTo('benutzer-bearbeiten');
     }
 
