@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.111.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.111.0...v2022.111.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* Errors produced by empty records ([905d9a9](https://github.com/pfarrplaner/pfarrplaner/commits/905d9a9cb1b12f3d2af93072bb4069aa3d65344f))
+* Missing permissions for UserPolicy::index ([349ba4f](https://github.com/pfarrplaner/pfarrplaner/commits/349ba4f7863e28dcf2f4ed7f5193d138cd6c8463))
+
 ## [2022.111.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.110.1...v2022.111.0) (2022-02-08)
 
 
