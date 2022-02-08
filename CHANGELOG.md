@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.111.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.110.1...v2022.111.0) (2022-02-08)
+
+
+### Features
+
+* Configure alternate home route in UserEditor ([d348502](https://github.com/pfarrplaner/pfarrplaner/commits/d348502224a596c6198c28de45c25e11d2408bb6))
+
+
+### Bug Fixes
+
+* Old Blade-rendered views show profile menu item twice ([5139fac](https://github.com/pfarrplaner/pfarrplaner/commits/5139facc8d8f68d8467cdc8bf9333bb1edd31265))
+* Users with alternate home route are not forced to change initial password ([f4b6348](https://github.com/pfarrplaner/pfarrplaner/commits/f4b6348f2580ae4bd3923c410f0c529fbeda0065))
+
 ### [2022.110.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.110.0...v2022.110.1) (2022-02-08)
 
 
