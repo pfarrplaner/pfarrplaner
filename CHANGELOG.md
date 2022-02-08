@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.109.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.108.0...v1.109.0) (2022-02-08)
+
+
+### Features
+
+* Configure a user's menu items in UserEditor ([510b6b6](https://github.com/pfarrplaner/pfarrplaner/commits/510b6b681254883d95badda1f778340941ffc0b0))
+* Permit skipping HomeScreen entirely ([383c568](https://github.com/pfarrplaner/pfarrplaner/commits/383c568513302ae40bbc20518628f0403a33e752))
+
+
+### Bug Fixes
+
+* landing-page logins often fail due to expired tokens ([59d7ccf](https://github.com/pfarrplaner/pfarrplaner/commits/59d7ccf1a7f74cb4f4e13787dc63dcd082323790))
+
 ## [1.108.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.107.0...v1.108.0) (2022-02-07)
 
 
