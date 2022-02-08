@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.111.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.111.1...v2022.111.2) (2022-02-08)
+
+
+### Bug Fixes
+
+* Duplicate service slugs ([e3f8f8b](https://github.com/pfarrplaner/pfarrplaner/commits/e3f8f8b80c269adbc20a51b9637b3f09c879bb69))
+
 ### [2022.111.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.111.0...v2022.111.1) (2022-02-08)
 
 
