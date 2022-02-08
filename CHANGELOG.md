@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.110.1](https://github.com/pfarrplaner/pfarrplaner/compare/v1.110.0...v2022.110.1) (2022-02-08)
+
+
+### Bug Fixes
+
+* New version not reflected in package.json ([63981c9](https://github.com/pfarrplaner/pfarrplaner/commits/63981c93ec2eaacdc5cc27fa21cfbf86510e30f2))
+
 ## [1.110.0](https://github.com/pfarrplaner/pfarrplaner/compare/v1.109.0...v1.110.0) (2022-02-08)
 
 
