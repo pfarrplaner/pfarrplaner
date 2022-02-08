@@ -79,17 +79,19 @@ class HomeController extends Controller
             return redirect()->route('login');
         }
 
+        RedirectorService::saveCurrentRoute();
+        // check if the user still has a temp password
+        if (Hash::check('testtest', Auth::user()->password) || Auth::user()->must_change_password) {
+            return redirect()->route('password.edit', ['from' => 'home']);
+        }
+
         $homeScreenSetting = Auth::user()->getSetting('homeScreen', 'homescreen:configurable');
         if (is_array($homeScreenSetting)) $homeScreenSetting = $homeScreenSetting[0];
         if (substr($homeScreenSetting, 0, 6) == 'route:') {
             return redirect()->route(substr($homeScreenSetting, 6));
         }
 
-        RedirectorService::saveCurrentRoute();
-        // check if the user still has a temp password
-        if (Hash::check('testtest', Auth::user()->password) || Auth::user()->must_change_password) {
-            return redirect()->route('password.edit', ['from' => 'home']);
-        }
+
 
         $user = Auth::user()->load(['userSettings', 'roles', 'permissions']);
         $user->ensureDefaultSettings();
