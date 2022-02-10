@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <div class="attachment btn btn-light" @click.prevent="download" :title="title + ' herunterladen'">
+    <div class="attachment btn btn-light" @click="download" :title="title + ' herunterladen'">
         <b><span class="fa" :class="icon"></span> {{ title }}</b><br/>
         <small>.{{ extension }}, {{ size }}</small>
         <span class="float-right fa fa-download"></span>
@@ -40,8 +40,14 @@ export default {
     name: "FakeAttachment",
     props: ['title', 'icon', 'extension', 'size', 'href'],
     methods: {
-        download() {
-            window.location.href = this.href;
+        download(e) {
+            console.log('FakeAttachment::click')
+            if (this.href) {
+                e.preventDefault();
+                window.location.href = this.href;
+            } else {
+                this.$emit('download');
+            }
         },
         /**
          * Get human-readable file size
