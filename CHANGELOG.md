@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.113.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.113.0...v2022.113.1) (2022-02-10)
+
+
+### Bug Fixes
+
+* All users are self-editors in AbsenceEditor ([64bcd58](https://github.com/pfarrplaner/pfarrplaner/commits/64bcd581bf4355f02f04d56b7f41189fa8abf69e))
+
 ## [2022.113.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.112.2...v2022.113.0) (2022-02-10)
 
 
