@@ -32,6 +32,7 @@ namespace App;
 
 use App\Services\CalendarService;
 use App\Tools\StringTool;
+use App\Traits\HasAttachmentsTrait;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,6 +52,8 @@ class Absence extends Model
     public const STATUS_APPROVED = 2;
     public const STATUS_SELF_ADMINISTERED = 10;
     public const STATUS_SELF_ADMINISTERED_AND_APPROVED = 11;
+
+    use HasAttachmentsTrait;
 
 
     /**
@@ -88,7 +91,7 @@ class Absence extends Model
     ];
 
     protected $with = [
-        'user', 'replacements'
+        'user', 'replacements', 'attachments'
     ];
 
 // ACCESSORS

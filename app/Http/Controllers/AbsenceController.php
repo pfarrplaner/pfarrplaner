@@ -32,15 +32,18 @@ namespace App\Http\Controllers;
 
 use App\Absence;
 use App\Approval;
+use App\Attachment;
 use App\Events\AbsenceApproved;
 use App\Events\AbsenceDemanded;
 use App\Events\AbsenceRejected;
+use App\Funeral;
 use App\Http\Requests\AbsenceRequest;
 use App\Mail\Absence\AbsenceChecked;
 use App\Mail\Absence\AbsenceRequested;
 use App\Replacement;
 use App\Service;
 use App\Services\CalendarService;
+use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Carbon\Carbon;
 use Exception;
@@ -51,6 +54,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 /**
@@ -59,6 +63,8 @@ use Inertia\Inertia;
  */
 class AbsenceController extends Controller
 {
+    use HandlesAttachmentsTrait;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -339,6 +345,36 @@ class AbsenceController extends Controller
         }
 
         return redirect()->route($route, $data);
+    }
+
+
+    /**
+     * @param Request $request
+     * @param Absence $absence
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function attach(Request $request, Absence $absence)
+    {
+        $this->handleAttachments($request, $absence);
+        $absence->refresh();
+        return response()->json($absence->attachments);
+    }
+
+    /**
+     * @param Request $request
+     * @param Absence $absence
+     * @param Attachment $attachment
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Exception
+     */
+    public function detach(Request $request, Absence $absence, Attachment $attachment)
+    {
+        $file = $attachment->file;
+        $absence->attachments()->where('id', $attachment->id)->delete();
+        Storage::delete($file);
+        $attachment->delete();
+        $absence->refresh();
+        return response()->json($absence->attachments);
     }
 
 

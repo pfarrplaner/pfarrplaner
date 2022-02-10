@@ -47,6 +47,10 @@ Route::delete('urlaub/{absence}', [AbsenceController::class, 'destroy'])
     ->name('absence.destroy')
     ->middleware('can:delete,absence');
 
+Route::post('urlaub/{absence}/attachment', [AbsenceController::class, 'attach'])->name('absence.attach');
+Route::delete('urlaub/{absence}/attachment/{attachment}', [AbsenceController::class, 'detach'])->name('absence.detach');
+
+
 Route::get('planner/users', [AbsenceController::class, 'users'])
     ->name('planner.users');
 Route::get('planner/days/{date}/{user}', [AbsenceController::class, 'days'])

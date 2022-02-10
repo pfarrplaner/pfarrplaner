@@ -133,14 +133,17 @@
             <!-- Content Header (Page header) -->
             <div class="content-header border-bottom pb-0 mb-0" v-if="(title) && (!noContentHeader)">
                 <div class="container-fluid mb-0 pb-0">
-                    <div class="row mb-2">
-                        <div class="col-sm-6">
-                            <h1 class="m-0 text-dark">{{ title }}</h1>
-                        </div><!-- /.col -->
-                        <div class="col-sm-6">
-                            <!-- breadcrumbs here -->
-                        </div><!-- /.col -->
-                    </div><!-- /.row -->
+                    <h1 class="m-0 mb-4 text-dark">{{ title }}</h1>
+                    <!-- flash messages here -->
+                    <slot name="before-flash" />
+                    <div v-if="(layout.errors.length > 0) || layout.flash.error" class="alert alert-danger">
+                        <span v-if="layout.flash.error">{{ layout.flash.error }}</span>
+                        <span v-else>Dein Formular enthält {{ layout.errors.length }} Fehler. Bitte überprüfe deine Eingaben.</span>
+                    </div>
+                    <div v-for="flashType in ['success','info']">
+                        <div v-if="layout.flash[flashType]" class="alert" :class="'alert-'+flashType">{{ layout.flash[flashType] }}</div>
+                    </div>
+                    <slot name="after-flash" />
                     <div class="slot-tab-headers mb-0 pb-0">
                         <slot name="tab-headers" />
                     </div>
@@ -150,14 +153,6 @@
             <!-- Main content -->
             <div class="content pt-3">
                 <div class="container-fluid">
-                    <!-- flash messages here -->
-                    <div v-if="(layout.errors.length > 0) || layout.flash.error" class="alert alert-danger">
-                        <span v-if="layout.flash.error">{{ layout.flash.error }}</span>
-                        <span v-else>Dein Formular enthält {{ layout.errors.length }} Fehler. Bitte überprüfe deine Eingaben.</span>
-                    </div>
-                    <div v-for="flashType in ['success','info']">
-                        <div v-if="layout.flash[flashType]" class="alert" :class="'alert-'+flashType">{{ layout.flash[flashType] }}</div>
-                    </div>
                     <slot/>
                 </div>
                 <div class="footer">

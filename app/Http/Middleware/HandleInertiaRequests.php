@@ -93,6 +93,7 @@ class HandleInertiaRequests extends Middleware
             'route' => fn() => Route::currentRouteName(),
             'currentRoute' => fn() => Route::currentRouteName(),
             'version' => $version,
+            'activeTab' => request()->get('tab', 'home'),
         ]);
 
         if (!Auth::guest()) {
