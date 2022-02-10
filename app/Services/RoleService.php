@@ -36,4 +36,6 @@ class RoleService
     public const ROLE_SUPER_ADMIN = 'Super-Administrator*in';
     public const ROLE_ADMIN = 'Administrator*in';
 
+    public const ROLE_PASTOR = 'Pfarrer*in';
+
 }

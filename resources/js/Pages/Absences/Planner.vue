@@ -50,9 +50,24 @@
                     </th>
                 </tr>
                 </thead>
-                <tr v-for="user in users" v-if="userDays[user.id]">
-                    <th class="user-name"><span v-if="user.first_name && user.last_name"><span class="text-bold">{{ user.last_name}}</span>, {{ user.first_name}}</span>
+                <tbody v-for="(category,categoryIndex) in sections">
+                <tr v-if="categoryIndex > 0" @click="toggleRow(category)" class="category-header">
+                    <th :colspan="1+myDays.length" class="p-1">
+                        <span class="fa" :class="openSections[category] ? 'fa-chevron-down' : 'fa-chevron-right'"/>
+                        <span class="fa fa-users"></span>
+                        {{ category }}
+                    </th>
+                </tr>
+                <tr v-for="(user,userIndex) in users[category]" v-if="openSections[category] && userDays[user.id]"
+                    :key="category+userIndex+'_'+(openSections['category'] ? 'show' : 'hide')">
+                    <th class="user-name pl-2"><span v-if="user.first_name && user.last_name"><span
+                        class="text-bold">{{ user.last_name }}</span>, {{ user.first_name }}</span>
                         <span v-else>{{ user.name }}</span>
+                        <span v-if="category == 'Mitarbeitende' || category == 'Ausgeblendete Mitarbeitende'"
+                              class="fa eye-toggle" :class="user.pinned ? 'fa-eye' : 'fa-eye-slash'"
+                              :title="user.pinned ? 'Klicken, wenn diese Person ausgeblendet werden soll' : 'Klicken, wenn diese Person immer angezeigt werden soll'"
+                              @click="togglePinned(user)"
+                        />
                         <a v-if="user.canEdit" class="btn btn-sm btn-success"
                            :href="route('absence.create', {year: year, month: month, user: user.id})"><span
                             class="fa fa-plus"></span></a>
@@ -66,8 +81,9 @@
                         @click="edit(user,day,userDays[user.id][day.day].absence)">
                         <div v-if="userDays[user.id][day.day].duration"
                              class="absence" :class="{editable: user.canEdit}">
-                                <b>{{ userDays[user.id][day.day].absence.user.name }}</b>
-                            <span v-if="user.canEdit || userDays[user.id][day.day].absence.canEdit || userDays[user.id][day.day].absence.replacing">
+                            <b>{{ userDays[user.id][day.day].absence.user.name }}</b>
+                            <span
+                                v-if="user.canEdit || userDays[user.id][day.day].absence.canEdit || userDays[user.id][day.day].absence.replacing">
                                 ({{ userDays[user.id][day.day].absence.reason }})<br/>
                                 <small v-if="userDays[user.id][day.day].absence.replacementText">
                                     V: {{ userDays[user.id][day.day].absence.replacementText }}</small>
@@ -75,7 +91,6 @@
                         </div>
                     </td>
                 </tr>
-                <tbody>
                 </tbody>
             </table>
         </div>
@@ -89,32 +104,43 @@ import AbsenceNav from "./AbsenceNav";
 export default {
     name: "Planner",
     components: {AbsenceNav},
-    props: ['start', 'end', 'year', 'month', 'months', 'years', 'now', 'holidays', 'days'],
+    props: ['start', 'end', 'year', 'month', 'months', 'years', 'now', 'holidays', 'days', 'sectionConfig', 'pinList'],
     mounted() {
         axios.get(route('planner.users')).then(response => {
-            var users = response.data;
+            var users = this.sortUsers(response.data);
             this.loadingUsers = false;
             this.$forceUpdate();
-            users.forEach(user => {
-                this.loadingDates++;
-                axios.get(route('planner.days', {user: user.id, date: moment(this.start).format('YYYY-MM')}))
-                    .then(response => {
-                        this.userDays[user.id] = response.data;
-                        this.loadingDates--;
-                    });
-            });
+            for (const category in users) {
+                users[category].forEach(user => {
+                    this.loadingDates++;
+                    axios.get(route('planner.days', {user: user.id, date: moment(this.start).format('YYYY-MM')}))
+                        .then(response => {
+                            this.userDays[user.id] = response.data;
+                            this.loadingDates--;
+                        });
+                });
+            }
             this.users = users;
         });
     },
     data() {
         var myDays = [];
         Object.entries(this.days).forEach(day => myDays.push(day[1]));
+
         return {
-            myDays: myDays,
-            users: [],
+            myDays,
+            users: {},
             userDays: [],
             loadingUsers: true,
             loadingDates: 0,
+            sections: [],
+            openSections: this.sectionConfig || {
+                'Eigenes Konto': true,
+                'Pfarrer*innen': true,
+                'Mitarbeitende': true,
+                'Ausgeblendete Mitarbeitende': false,
+            },
+            pinnedUsers: this.pinList,
         }
     },
     methods: {
@@ -143,7 +169,7 @@ export default {
             let editable = ' not-editable';
             if (user.canEdit) editable = ' editable';
             if (this.userDays[user.id][day.day].absence.canEdit) editable = ' editable';
-            if (this.userDays[user.id][day.day].absence.sick_days && (this.userDays[user.id][day.day].absence.canEdit || user.canEdit) ) editable = ' sick editable';
+            if (this.userDays[user.id][day.day].absence.sick_days && (this.userDays[user.id][day.day].absence.canEdit || user.canEdit)) editable = ' sick editable';
             if (this.userDays[user.id][day.day].absence.replacing) return 'replacing' + editable;
             return 'absent' + absenceStatus + editable;
         },
@@ -161,6 +187,97 @@ export default {
             if (undefined == this.userDays[user.id]) return 31;
             return this.userDays[user.id][day.day].duration || 1;
         },
+        sortUsers(users) {
+            let sortedUsers = {};
+            let usedIds = [];
+            let key = '';
+            let pinStatus = true;
+
+            // first: own user
+            users.forEach(user => {
+                if (user.id == this.$page.props.currentUser.data.id) {
+                    sortedUsers['Eigenes Konto'] = [];
+                    this.sections.push('Eigenes Konto');
+                    sortedUsers['Eigenes Konto'].push(user);
+                    usedIds.push(user.id);
+                }
+            });
+
+            if (this.$page.props.currentUser.data.isPastor) {
+                sortedUsers['Pfarrer:innen'] = [];
+                this.sections.push('Pfarrer:innen');
+                users.forEach(user => {
+                    if (usedIds.includes(user.id)) return;
+                    if (user.isPastor) {
+                        sortedUsers['Pfarrer:innen'].push(user);
+                        usedIds.push(user.id);
+                    }
+                    ;
+                });
+                sortedUsers['Mitarbeitende'] = [];
+                this.sections.push('Mitarbeitende');
+                users.forEach(user => {
+                    if (usedIds.includes(user.id)) return;
+                    if (user.show_absences_with_services || this.pinnedUsers.includes(String(user.id))) {
+                        user.pinned = true;
+                        sortedUsers['Mitarbeitende'].push(user);
+                        usedIds.push(user.id);
+                    }
+                });
+                key = 'Ausgeblendete Mitarbeitende';
+                sortedUsers[key] = [];
+                this.sections.push(key);
+                pinStatus = false;
+            } else {
+                sortedUsers['Mitarbeitende'] = [];
+                key = 'Mitarbeitende';
+
+            }
+
+            users.forEach(user => {
+                if (usedIds.includes(user.id)) return;
+                user.pinned = pinStatus;
+                sortedUsers[key].push(user);
+            });
+
+
+            return sortedUsers;
+        },
+        toggleRow(category) {
+            this.openSections[category] = !this.openSections[category];
+            this.$forceUpdate();
+            // save setting
+            axios.post(route('setting.set', {
+                user: this.$page.props.currentUser.data.id,
+                key: 'planner_open_sections',
+                value: this.openSections,
+            }));
+        },
+        togglePinned(user) {
+            user.pinned = !user.pinned;
+            if (user.pinned) {
+                this.users['Ausgeblendete Mitarbeitende'] = this.users['Ausgeblendete Mitarbeitende'].filter((x) => x.id !== user.id);
+                this.pinnedUsers.push(user.id);
+                this.users['Mitarbeitende'].push(user);
+                this.users['Mitarbeitende'].sort(function (a, b) {
+                    return a.sortName < b.sortName ? -1 : 1;
+                });
+            } else {
+                this.users['Mitarbeitende'] = this.users['Mitarbeitende'].filter((x) => x.id !== user.id);
+                this.pinnedUsers = this.pinnedUsers.filter((x) => x.id !== user.id);
+                this.users['Ausgeblendete Mitarbeitende'].push(user);
+                this.users['Ausgeblendete Mitarbeitende'].sort(function (a, b) {
+                    return a.sortName < b.sortName ? -1 : 1;
+                });
+            }
+            this.$forceUpdate();
+            // save setting
+            axios.post(route('setting.set', {
+                user: this.$page.props.currentUser.data.id,
+                key: 'planner_pinned_users',
+                value: this.pinnedUsers,
+            }));
+        }
     }
 }
 </script>
@@ -219,7 +336,6 @@ export default {
 }
 
 
-
 .editable:hover {
     background-color: darkorange;
 }
@@ -227,4 +343,22 @@ export default {
 .day.editable:hover, .sunday.editable:hover, .vacation.editable:hover {
     background-color: #218838;
 }
+
+tr.category-header,
+tr.category-header th {
+    cursor: pointer;
+}
+
+.fa.fa-eye {
+    color: gray;
+}
+
+.fa.fa-eye-slash {
+    color: lightgray;
+}
+
+.fa.eye-toggle {
+    cursor: pointer;
+}
+
 </style>

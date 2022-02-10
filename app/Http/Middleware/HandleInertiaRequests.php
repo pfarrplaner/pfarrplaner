@@ -31,7 +31,7 @@
 namespace App\Http\Middleware;
 
 use App\Facades\Settings;
-use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UserResource;
 use App\Services\PackageService;
 use App\UI\MenuBuilder;
 use Illuminate\Http\Request;

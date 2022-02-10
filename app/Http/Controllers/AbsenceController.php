@@ -78,8 +78,11 @@ class AbsenceController extends Controller
         $start = CalendarService::getStartOfPeriod($year, $month);
         $days = Absence::getDaysForPlanner($start->copy());
         $years = Absence::select(DB::raw('YEAR(absences.from) as year'))->distinct()->get()->pluck('year')->sort();
+        $pinList = $request->user()->getSetting('planner_pinned_users', []);
+        $sectionConfig = $request->user()->getSetting('planner_open_sections', null);
 
-        return Inertia::render('Absences/Planner', compact('start', 'days', 'year', 'month', 'years'));
+        return Inertia::render('Absences/Planner',
+                               compact('start', 'days', 'year', 'month', 'years', 'pinList', 'sectionConfig'));
     }
 
     /**
