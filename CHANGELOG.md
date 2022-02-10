@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.112.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.112.0...v2022.112.1) (2022-02-10)
+
+
+### Bug Fixes
+
+* Admins who are not pastors only see their own absences in Planner ([cc7008b](https://github.com/pfarrplaner/pfarrplaner/commits/cc7008b8b3ddfbc3fe8c268ee0b40e6540c98bfb))
+
 ## [2022.112.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.111.2...v2022.112.0) (2022-02-10)
 
 
