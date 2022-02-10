@@ -131,8 +131,8 @@
 
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <div class="content-header" v-if="(title) && (!noContentHeader)">
-                <div class="container-fluid">
+            <div class="content-header border-bottom pb-0 mb-0" v-if="(title) && (!noContentHeader)">
+                <div class="container-fluid mb-0 pb-0">
                     <div class="row mb-2">
                         <div class="col-sm-6">
                             <h1 class="m-0 text-dark">{{ title }}</h1>
@@ -141,11 +141,14 @@
                             <!-- breadcrumbs here -->
                         </div><!-- /.col -->
                     </div><!-- /.row -->
+                    <div class="slot-tab-headers mb-0 pb-0">
+                        <slot name="tab-headers" />
+                    </div>
                 </div><!-- /.container-fluid -->
             </div>
 
             <!-- Main content -->
-            <div class="content">
+            <div class="content pt-3">
                 <div class="container-fluid">
                     <!-- flash messages here -->
                     <div v-if="(layout.errors.length > 0) || layout.flash.error" class="alert alert-danger">
@@ -240,5 +243,22 @@ a.brand-link-anchor:hover span.brand-text {
 .mobile-menu-handle {
     float: right;
     margin-right: 5px;
+}
+
+.slot-tab-headers /deep/ ul {
+    margin-bottom: 0;
+    border-bottom: 0;
+}
+
+.content-wrapper {
+    background-color: #fff;
+}
+
+.content-header {
+    background-color: #f4f6f9;
+}
+
+.content {
+    background-color: #fff;
 }
 </style>
