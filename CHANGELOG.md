@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.112.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.111.2...v2022.112.0) (2022-02-10)
+
+
+### Features
+
+* Group users in absences.index ([b30c520](https://github.com/pfarrplaner/pfarrplaner/commits/b30c520a828c5f612ccc023d719294a43e837890)), closes [#199](https://github.com/pfarrplaner/pfarrplaner/issues/199)
+
+
+### Bug Fixes
+
+* Deleting a user throws Exception ([61de159](https://github.com/pfarrplaner/pfarrplaner/commits/61de159c07b341792e67141e6ea321f582147247)), closes [#200](https://github.com/pfarrplaner/pfarrplaner/issues/200)
+* LeaveRequestFormReport/TravelRequestFormReport have wrong ->to date ([6293368](https://github.com/pfarrplaner/pfarrplaner/commits/6293368f5e5b9a4eb5b058cdb1666a666e973aa5)), closes [#201](https://github.com/pfarrplaner/pfarrplaner/issues/201)
+
 ### [2022.111.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.111.1...v2022.111.2) (2022-02-08)
 
 
