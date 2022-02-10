@@ -239,7 +239,7 @@ export default {
     computed: {
         fileCount() {
             let count = this.myAbsence.attachments.length;
-            if (this.role = 'self-editor') count +=2;
+            if (this.role == 'self-editor') count +=2;
             return count;
         },
         visibleTo() {
@@ -252,7 +252,7 @@ export default {
         if (mayEdit) role = 'editor';
         if (mayEdit && this.mayCheck) role = 'admin';
         if (mayEdit && this.mayApprove) role = 'approver';
-        if (this.maySelfAdminister && this.absence.workflow_status >= 10) {
+        if (this.maySelfAdminister && (this.absence.workflow_status >= 10)) {
             mayEdit = true;
             role = 'self-editor';
         }
