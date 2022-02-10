@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.112.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.112.1...v2022.112.2) (2022-02-10)
+
+
+### Bug Fixes
+
+* Admins who are not pastors see "eye" icons, even when they cannot hide users ([6c66306](https://github.com/pfarrplaner/pfarrplaner/commits/6c6630669a8eaa756c0e2b5bb33ff119c77e4147))
+
 ### [2022.112.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.112.0...v2022.112.1) (2022-02-10)
 
 
