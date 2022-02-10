@@ -161,6 +161,7 @@ import FormCheck from "../../components/Ui/forms/FormCheck";
 import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 import NavButton from "../../components/Ui/buttons/NavButton";
 import SaveButton from "../../components/Ui/buttons/SaveButton";
+import {clone} from "lodash"
 
 export default {
     name: "AbsenceEditor",
@@ -210,13 +211,16 @@ export default {
         deleteReplacement(index) {
             this.myAbsence.replacements.splice(index, 1);
         },
-        saveAbsence() {
-            var record = this.myAbsence;
-            record.from = moment(this.myAbsence.from).format('DD.MM.YYYY');
-            record.to = moment(this.myAbsence.to).format('DD.MM.YYYY');
+        getDMYDate(d) {
+            return d.length == 10 ? d : moment(d).format('DD.MM.YYYY');
+        },
+        getUpdateRecord() {
+            var record = clone(this.myAbsence);
+            record.from = this.getDMYDate(record.from);
+            record.to = this.getDMYDate(record.to);
             record.replacements.forEach(replacement => {
-                replacement.from = moment(replacement.from).format('DD.MM.YYYY');
-                replacement.to = moment(replacement.to).format('DD.MM.YYYY');
+                replacement.from = this.getDMYDate(replacement.from);
+                replacement.to = this.getDMYDate(replacement.to);
             });
 
             if (!this.maySelfAdminister) {
@@ -240,7 +244,10 @@ export default {
                 }
             }
             if (record.sick_days && (record.reason == 'Urlaub')) record.reason = 'Krankheit';
-            this.$inertia.patch(route('absence.update', {absence: this.absence.id}), record);
+            return record;
+        },
+        saveAbsence() {
+            this.$inertia.patch(route('absence.update', {absence: this.absence.id}), this.getUpdateRecord());
         },
         returnAndSave() {
             this.setChecked = false;
@@ -274,16 +281,24 @@ export default {
             }));
         },
         leaveRequestForm() {
-            window.location.href = route('reports.render.get', {
-                report: 'leaveRequestForm',
-                absence: this.myAbsence.id
-            });
+            if (!confirm('Deine Eingaben werden gespeichert, bevor das Antragsformular heruntergeladen wird.')) return;
+            this.$inertia.patch(route('absence.update', {
+                absence: this.absence.id,
+                redirectTo: route('reports.render.get', {
+                    report: 'leaveRequestForm',
+                    absence: this.myAbsence.id
+                })
+            }), this.getUpdateRecord());
         },
         travelRequestForm() {
-            window.location.href = route('reports.render.get', {
-                report: 'travelRequestForm',
-                absence: this.myAbsence.id
-            });
+            if (!confirm('Deine Eingaben werden gespeichert, bevor das Antragsformular heruntergeladen wird.')) return;
+            this.$inertia.patch(route('absence.update', {
+                absence: this.absence.id,
+                redirectTo: route('reports.render.get', {
+                    report: 'travelRequestForm',
+                    absence: this.myAbsence.id
+                })
+            }), this.getUpdateRecord());
         },
         needsCheckText(people, step) {
             if (people.length == 1) {

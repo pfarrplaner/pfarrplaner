@@ -44,6 +44,7 @@ use App\Services\CalendarService;
 use App\User;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -192,7 +193,7 @@ class AbsenceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Absence $absence
-     * @return Response
+     * @return \Inertia\Response
      */
     public function edit(Request $request, Absence $absence)
     {
@@ -226,7 +227,7 @@ class AbsenceController extends Controller
      *
      * @param Request $request
      * @param Absence $absence
-     * @return Response
+     * @return JsonResponse|RedirectResponse
      */
     public function update(AbsenceRequest $request, Absence $absence)
     {
@@ -255,6 +256,10 @@ class AbsenceController extends Controller
                 break;
         }
 
+        if ($request->get('noRedirect', false)) return response()->json();
+        if ($url = $request->get('redirectTo', false)) {
+            return Inertia::location($url);
+        }
         return redirect()->route(
             'absences.index',
             ['month' => $absence->from->format('m'), 'year' => $absence->from->format('Y')]
