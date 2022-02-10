@@ -63,7 +63,7 @@
                     <th class="user-name pl-2"><span v-if="user.first_name && user.last_name"><span
                         class="text-bold">{{ user.last_name }}</span>, {{ user.first_name }}</span>
                         <span v-else>{{ user.name }}</span>
-                        <span v-if="category == 'Mitarbeitende' || category == 'Ausgeblendete Mitarbeitende'"
+                        <span v-if="(category == 'Mitarbeitende' || category == 'Ausgeblendete Mitarbeitende') && (!user.show_vacations_with_services)"
                               class="fa eye-toggle" :class="user.pinned ? 'fa-eye' : 'fa-eye-slash'"
                               :title="user.pinned ? 'Klicken, wenn diese Person ausgeblendet werden soll' : 'Klicken, wenn diese Person immer angezeigt werden soll'"
                               @click="togglePinned(user)"
@@ -141,6 +141,7 @@ export default {
                 'Ausgeblendete Mitarbeitende': false,
             },
             pinnedUsers: this.pinList,
+            isPastor: this.$page.props.currentUser.data.isPastor,
         }
     },
     methods: {
@@ -229,9 +230,9 @@ export default {
                 this.sections.push(key);
                 pinStatus = false;
             } else {
+                this.sections.push('Mitarbeitende');
                 sortedUsers['Mitarbeitende'] = [];
                 key = 'Mitarbeitende';
-
             }
 
             users.forEach(user => {
