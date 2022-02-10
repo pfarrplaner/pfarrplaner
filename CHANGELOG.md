@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.113.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.112.2...v2022.113.0) (2022-02-10)
+
+
+### Features
+
+* allow FakeAttachment with custom download action ([a8738c0](https://github.com/pfarrplaner/pfarrplaner/commits/a8738c0328713bc243cd4c7b3925cbd6cd010a75))
+* allow suppressing empty list message in AttachmentList ([57d365a](https://github.com/pfarrplaner/pfarrplaner/commits/57d365ac8d1ebbd4d4da130d0937d181fcffc7d9))
+* file attachments for absences ([ed4f2e6](https://github.com/pfarrplaner/pfarrplaner/commits/ed4f2e690e1af36a50d682f807a9f877fed72d03))
+* New card-less base layout ([6806a27](https://github.com/pfarrplaner/pfarrplaner/commits/6806a27911093e3df31e640351644ff00d3c9383))
+
 ### [2022.112.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.112.1...v2022.112.2) (2022-02-10)
 
 
