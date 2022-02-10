@@ -28,19 +28,25 @@
   -->
 
 <template>
-    <div v-if="attachments.length > 0">
-        <attachment v-for="(attachment,attachmentKey,index) in attachments" :key="attachmentKey" :attachment="attachment"
-                    @delete-attachment="deleteAttachment(attachment, attachmentKey)" allow-delete />
+    <div class="attachment-list">
+        <div v-if="attachments.length > 0">
+            <attachment v-for="(attachment,attachmentKey,index) in attachments" :key="attachmentKey"
+                        :attachment="attachment"
+                        @delete-attachment="deleteAttachment(attachment, attachmentKey)" allow-delete/>
+        </div>
+        <div v-if="!(attachments.length || preventEmptyListMessage)" class="alert alert-info">
+            {{ emptyMessage || 'Es sind noch keine Dateianhänge vorhanden.' }}
+        </div>
     </div>
-    <div v-else class="alert alert-info">{{ emptyMessage || 'Es sind noch keine Dateianhänge vorhanden.'}}</div>
 </template>
 
 <script>
 import Attachment from "./Attachment";
+
 export default {
     name: "AttachmentList",
     components: {Attachment},
-    props: ['value', 'deleteRouteName', 'emptyMessage', 'parentType', 'parentObject'],
+    props: ['value', 'deleteRouteName', 'emptyMessage', 'parentType', 'parentObject', 'preventEmptyListMessage'],
     data() {
         return {
             attachments: this.value || [],
@@ -48,9 +54,8 @@ export default {
     },
     methods: {
         deleteAttachment(attachment) {
-            let config = { attachment: attachment.id };
+            let config = {attachment: attachment.id};
             config[this.parentType] = this.parentObject.id;
-            console.log(config);
             axios.delete(route(this.deleteRouteName, config))
                 .then(response => {
                     this.$emit('input', response.data);
