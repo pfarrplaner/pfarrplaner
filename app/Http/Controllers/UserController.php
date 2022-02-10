@@ -408,12 +408,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param User $user
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::find($id);
         $user->delete();
         return redirect()->route('users.index')->with('success', 'Der Benutzer wurde gelöscht.');
     }
