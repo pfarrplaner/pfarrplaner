@@ -151,8 +151,8 @@
             </div>
 
             <!-- Main content -->
-            <div class="content pt-3">
-                <div class="container-fluid">
+            <div class="content" :class="{'p-0': noPadding, 'pt-3': !noPadding}">
+                <div class="container-fluid" :class="{'p-0': noPadding}">
                     <slot/>
                 </div>
                 <div class="footer">
@@ -185,6 +185,7 @@ export default {
             default: '',
         },
         noContentHeader: Boolean,
+        noPadding: Boolean,
     },
     mounted() {
         if (this.title != '') document.title = this.title + ' :: ' + this.layout.appName;
