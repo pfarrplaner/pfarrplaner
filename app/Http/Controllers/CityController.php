@@ -68,16 +68,16 @@ class CityController extends Controller
     public function index(Request $request)
     {
         if (Auth::user()->is_admin) {
-            $cities = City::all();
+            $cities = City::orderBy('name')->get();
         } else {
-            $cities = Auth::user()->cities;
+            $cities = Auth::user()->cities->sortBy('name');
         }
-
         foreach ($cities as $cityKey => $city) {
             $cities[$cityKey]['canEdit'] = Auth::user()->can('update', $city);
             $cities[$cityKey]['canDelete'] = Auth::user()->can('delete', $city);
         }
-        return Inertia::render('Admin/City/CityIndex', compact('cities'));
+
+        return Inertia::render('Admin/City/CityIndex', ['cities' => array_values($cities->all())]);
     }
 
 
