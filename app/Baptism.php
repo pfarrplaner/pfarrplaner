@@ -75,6 +75,8 @@ class Baptism extends Model
         'dimissorial_issuer',
         'dimissorial_requested',
         'dimissorial_received',
+        'dob',
+        'birth_place'
     ];
 
     /**
@@ -94,7 +96,8 @@ class Baptism extends Model
         'candidate_city',
         'candidate_email',
         'candidate_phone',
-        'text'
+        'text',
+        'birth_place',
     ];
 
     protected $with = ['attachments'];

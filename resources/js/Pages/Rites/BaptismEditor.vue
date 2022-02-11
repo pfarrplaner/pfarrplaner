@@ -85,6 +85,18 @@
                             </form-group>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form-group label="Geburtsdatum" :value="myBaptism.dob"
+                                        name="dob">
+                                <date-picker v-model="myBaptism.dob" :config="myDatePickerConfig"/>
+                            </form-group>
+                        </div>
+                        <div class="col-md-6">
+                            <form-input label="Geburtsort" name="birth_place"
+                                        v-model="myBaptism.birth_place" />
+                        </div>
+                    </div>
                     <form-input label="Adresse" v-model="myBaptism.candidate_address"/>
                     <div class="row">
                         <div class="col-md-6">
@@ -209,6 +221,7 @@ export default {
     props: ['baptism', 'services', 'cities', 'pronounSets'],
     data() {
         var myBaptism = this.baptism;
+        myBaptism.dob = myBaptism.dob ? moment(myBaptism.dob).format('DD.MM.YYYY') : null;
         myBaptism.first_contact_on = myBaptism.first_contact_on ? moment(myBaptism.first_contact_on).format('DD.MM.YYYY') : null;
         myBaptism.appointment = myBaptism.appointment ? moment(myBaptism.appointment).format('DD.MM.YYYY HH:mm') : null;
         return {
