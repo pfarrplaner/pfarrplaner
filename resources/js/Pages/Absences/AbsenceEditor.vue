@@ -162,10 +162,12 @@
                                  :parent-object="myAbsence" parent-type="absence"
                                  :prevent-empty-list-message="fileCount > 0"
                                  :key="myAbsence.attachments.length"/>
-                <fake-attachment @download="leaveRequestForm"
+                <fake-attachment v-if="role == 'self-editor'"
+                                 @download="leaveRequestForm"
                                  title="Urlaubsantrag" extension="pdf"
                                  icon="fa-file-pdf" size="ca. 120 kB"/>
                 <fake-attachment @download="travelRequestForm"
+                                 v-if="role == 'self-editor'"
                                  title="Dienstreiseantrag" extension="pdf"
                                  icon="fa-file-pdf" size="ca. 120 kB"/>
 
