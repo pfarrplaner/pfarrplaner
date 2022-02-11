@@ -33,18 +33,18 @@
             <template slot="navbar-left">
                 <button class="btn btn-primary" @click.prevent="saveSermon">Speichern</button>&nbsp;
             </template>
-            <div v-if="services.length > 0">
-                <table class="table table-hover table-striped">
-                    <tbody>
-                    <tr v-for="service in services">
-                        <td valign="top">
+            <form @submit.prevent="saveSermon" id="formSermon">
+                <div v-if="services.length >0" class="mb-3">
+                    <div class="row py-1 border-bottom mb-1" v-for="service in services">
+                        <div class="col-md-8">
                             {{ service.titleText }} am {{ moment(service.day.date).format('DD.MM.YYYY') }},
                             {{ service.timeText }}, {{ service.locationText }}
-                        </td>
-                        <td valign="top" class="text-right">
+                        </div>
+                        <div class="col-md-4 text-right">
                             <inertia-link class="btn btn-sm btn-light"
                                           :href="route('service.edit', {service: service.slug})"
-                                          title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst
+                                          title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span>
+                                Gottesdienst
                             </inertia-link>
                             <inertia-link class="btn btn-sm btn-light"
                                           :href="route('liturgy.editor', {service: service.slug})"
@@ -63,144 +63,136 @@
                                     <span class="fa fa-trash"></span>
                                 </button>
                             </span>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <form @submit.prevent="saveSermon" id="formSermon">
-                <div class="card">
-                    <div class="card-header">Predigt bearbeiten</div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Titel</label>
-                                    <input class="form-control" type="text" v-model="editedSermon.title" v-focus/>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Untertitel</label>
-                                    <input class="form-control" type="text" v-model="editedSermon.subtitle"/>
-                                </div>
-                            </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Predigttext</label>
-                                    <input class="form-control" type="text" v-model="editedSermon.reference"
-                                           :key="referenceCopied"/>
-                                    <div v-for="service in services" class="mt-1">
-                                        <button class="btn btn-light btn-sm"
-                                                v-if="undefined != service.liturgicalInfo.title"
-                                                @click.prevent.stop="setSermonReference(service.liturgicalInfo.currentPerikope)"
-                                                :title="'Perikope für '+service.liturgicalInfo.title+' übernehmen ('+service.liturgicalInfo.currentPerikope+')'">
-                                            Perikope für {{ service.liturgicalInfo.title }} übernehmen
-                                        </button>
-                                        <button class="btn btn-light btn-sm"
-                                                v-for="funeral in service.funerals"
-                                                @click.prevent.stop="setSermonReference(funeral.text)"
-                                                :title="'Von Beerdigung ('+funeral.buried_name+') übernehmen ('+funeral.text+')'">
-                                            Von Beerdigung ({{ funeral.buried_name }}) übernehmen
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Reihe</label>
-                                    <input class="form-control" type="text" v-model="editedSermon.series"/>
-                                </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label>Zusammenfassung</label>
-                            <textarea class="form-control" v-model="editedSermon.summary"/>
+                            <label>Titel</label>
+                            <input class="form-control" type="text" v-model="editedSermon.title" v-focus/>
                         </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label>Text der Predigt</label>
-                            <!-- HERE --->
+                            <label>Untertitel</label>
+                            <input class="form-control" type="text" v-model="editedSermon.subtitle"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Predigttext</label>
+                            <input class="form-control" type="text" v-model="editedSermon.reference"
+                                   :key="referenceCopied"/>
+                            <div v-for="service in services" class="mt-1">
+                                <button class="btn btn-light btn-sm"
+                                        v-if="undefined != service.liturgicalInfo.title"
+                                        @click.prevent.stop="setSermonReference(service.liturgicalInfo.currentPerikope)"
+                                        :title="'Perikope für '+service.liturgicalInfo.title+' übernehmen ('+service.liturgicalInfo.currentPerikope+')'">
+                                    Perikope für {{ service.liturgicalInfo.title }} übernehmen
+                                </button>
+                                <button class="btn btn-light btn-sm"
+                                        v-for="funeral in service.funerals"
+                                        @click.prevent.stop="setSermonReference(funeral.text)"
+                                        :title="'Von Beerdigung ('+funeral.buried_name+') übernehmen ('+funeral.text+')'">
+                                    Von Beerdigung ({{ funeral.buried_name }}) übernehmen
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Reihe</label>
+                            <input class="form-control" type="text" v-model="editedSermon.series"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Zusammenfassung</label>
+                    <textarea class="form-control" v-model="editedSermon.summary"/>
+                </div>
+                <div class="form-group">
+                    <label>Text der Predigt</label>
+                    <!-- HERE --->
 
-                            <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
-                                          v-model="editedSermon.text"
-                                          :options="editorOption" @focus="textEditorActive = true"
-                                          @blur="textEditorActive = false">
-                                <div id="toolbar" slot="toolbar">
-                                    <button class="ql-bold"></button>
-                                    <button class="ql-italic"></button>
-                                    <button class="ql-underline mr-2"></button>
-                                    <button class="ql-header" value="1"></button>
-                                    <button class="ql-blockquote mr-2"></button>
-                                    <span class="ql-formats mr-2">
+                    <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
+                                  v-model="editedSermon.text"
+                                  :options="editorOption" @focus="textEditorActive = true"
+                                  @blur="textEditorActive = false">
+                        <div id="toolbar" slot="toolbar">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline mr-2"></button>
+                            <button class="ql-header" value="1"></button>
+                            <button class="ql-blockquote mr-2"></button>
+                            <span class="ql-formats mr-2">
                                                     <button class="ql-list" value="ordered"></button>
                                                     <button class="ql-list" value="bullet"></button>
                                                     <button class="ql-indent" value="-1"></button>
                                                     <button class="ql-indent" value="+1"></button>
                                                 </span>
-                                    <button class="ql-clean mr-2"></button>
-                                    <button class="ql-insertbible quill-fa-button" title="Bibeltext hinzufügen"><span
-                                        class="fa fa-bible"></span></button>
-                                </div>
-                            </quill-editor>
-
-                            <text-stats :text="editedSermon.text"/>
-
+                            <button class="ql-clean mr-2"></button>
+                            <button class="ql-insertbible quill-fa-button" title="Bibeltext hinzufügen"><span
+                                class="fa fa-bible"></span></button>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>Überschrift für die Hauptpunkte</label>
-                                    <input class="form-control" type="text" v-model="editedSermon.notes_header"/>
-                                </div>
-                                <div class="form-group">
-                                    <label>Hauptpunkte</label>
-                                    <textarea class="form-control" v-model="editedSermon.key_points"
-                                              aria-describedBy="helpKeyPoints"/>
-                                    <small id="helpKeyPoints" class="form-text text-muted">Ein Hauptpunkt pro Zeile,
-                                        Lücken für Lückentext mit [ ] markieren</small>
-                                </div>
-                                <div class="form-group">
-                                    <label>Fragen für die Zuhörer</label>
-                                    <textarea class="form-control" v-model="editedSermon.questions" rows="6"
-                                              aria-describedby="helpQuestions"/>
-                                    <small id="helpQuestions" class="form-text text-muted">Eine Frage pro Zeile</small>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="inputCCLicense"
-                                           v-model="editedSermon.cc_license" value="1"/>
-                                    <label class="form-check-label" for="inputCCLicense">Predigt und Materialien unter
-                                        der CC-BY-SA 4.0 Lizenz freigeben</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="inputPermitHandouts"
-                                           v-model="editedSermon.permit_handouts" value="1"/>
-                                    <label class="form-check-label" for="inputPermitHandouts">Handouts freigeben</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div v-if="!(editedSermon.id)" class="alert alert-info">
-                                    Du musst die Predigt erst einmal speichern, um ein Bild hinzufügen zu können.
-                                </div>
-                                <div v-else>
-                                    <form-image-attacher
-                                        :attach-route="route('sermon.image.attach', {model: editedSermon.id})"
-                                        :detach-route="route('sermon.image.detach', {model: editedSermon.id})"
-                                        label="Bild zur Predigt" :handle-paste="true"
-                                        v-model="editedSermon.image"
-                                    />
-                                </div>
-                            </div>
+                    </quill-editor>
+
+                    <text-stats :text="editedSermon.text"/>
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Überschrift für die Hauptpunkte</label>
+                            <input class="form-control" type="text" v-model="editedSermon.notes_header"/>
                         </div>
                         <div class="form-group">
-                            <label>Literaturhinweise</label>
-                            <quill-editor :class="{focused: literatureEditorActive}" ref="literatureEditor"
-                                          v-model="editedSermon.literature"
-                                          :options="editorOptionListOnly" @focus="literatureEditorActive = true"
-                                          @blur="literatureEditorActive = false"/>
+                            <label>Hauptpunkte</label>
+                            <textarea class="form-control" v-model="editedSermon.key_points"
+                                      aria-describedBy="helpKeyPoints"/>
+                            <small id="helpKeyPoints" class="form-text text-muted">Ein Hauptpunkt pro Zeile,
+                                Lücken für Lückentext mit [ ] markieren</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Fragen für die Zuhörer</label>
+                            <textarea class="form-control" v-model="editedSermon.questions" rows="6"
+                                      aria-describedby="helpQuestions"/>
+                            <small id="helpQuestions" class="form-text text-muted">Eine Frage pro Zeile</small>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="inputCCLicense"
+                                   v-model="editedSermon.cc_license" value="1"/>
+                            <label class="form-check-label" for="inputCCLicense">Predigt und Materialien unter
+                                der CC-BY-SA 4.0 Lizenz freigeben</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="inputPermitHandouts"
+                                   v-model="editedSermon.permit_handouts" value="1"/>
+                            <label class="form-check-label" for="inputPermitHandouts">Handouts freigeben</label>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div v-if="!(editedSermon.id)" class="alert alert-info">
+                            Du musst die Predigt erst einmal speichern, um ein Bild hinzufügen zu können.
+                        </div>
+                        <div v-else>
+                            <form-image-attacher
+                                :attach-route="route('sermon.image.attach', {model: editedSermon.id})"
+                                :detach-route="route('sermon.image.detach', {model: editedSermon.id})"
+                                label="Bild zur Predigt" :handle-paste="true"
+                                v-model="editedSermon.image"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Literaturhinweise</label>
+                    <quill-editor :class="{focused: literatureEditorActive}" ref="literatureEditor"
+                                  v-model="editedSermon.literature"
+                                  :options="editorOptionListOnly" @focus="literatureEditorActive = true"
+                                  @blur="literatureEditorActive = false"/>
                 </div>
             </form>
         </admin-layout>
@@ -217,10 +209,14 @@ import {quillEditor} from 'vue-quill-editor';
 import FormFileUploader from "../components/Ui/forms/FormFileUploader";
 import FormImageAttacher from "../components/Ui/forms/FormImageAttacher";
 import TextStats from "../components/LiturgyEditor/Elements/TextStats";
+import Card from "../components/Ui/cards/card";
+import CardBody from "../components/Ui/cards/cardBody";
 
 export default {
     name: "sermonEditor",
     components: {
+        CardBody,
+        Card,
         TextStats,
         FormImageAttacher,
         FormFileUploader,

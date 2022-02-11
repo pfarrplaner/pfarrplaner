@@ -31,39 +31,35 @@
     <admin-layout title="Bestattung hinzufügen">
         <template slot="navbar-left">
             <button class="btn btn-primary" @click.prevent="createFuneral"
-                    :disabled="!(funeral.city && funeral.location && funeral.date && funeral.name)">Erstellen</button>
+                    :disabled="!(funeral.city && funeral.location && funeral.date && funeral.name)">Erstellen
+            </button>
         </template>
-        <card>
-            <card-body>
-                <form-group label="Datum">
-                    <date-picker :config="myDatePickerConfig" v-model="funeral.date" />
-                </form-group>
-                <form-selectize v-model="funeral.city" :options="cities" name="city"
-                                id-key="id" title-key="name"
-                                label="Kirchengemeinde" />
-                <location-select v-model="funeral.location" :locations="locations" name="location"
-                                label="Ort" @set-location="setLocation" />
-                <form-input label="Verstorbene:r" placeholder="Nachname, Vorname" name="name"
-                            v-model="funeral.name" />
-                <form-group label="Pfarrer*in">
-                    <people-select :people="people" v-model="funeral.pastor" />
-                </form-group>
-            </card-body>
-        </card>
+        <form-group label="Datum">
+            <date-picker :config="myDatePickerConfig" v-model="funeral.date"/>
+        </form-group>
+        <form-selectize v-model="funeral.city" :options="cities" name="city"
+                        id-key="id" title-key="name"
+                        label="Kirchengemeinde"/>
+        <location-select v-model="funeral.location" :locations="locations" name="location"
+                         label="Ort" @set-location="setLocation"/>
+        <form-input label="Verstorbene:r" placeholder="Nachname, Vorname" name="name"
+                    v-model="funeral.name"/>
+        <form-group label="Pfarrer*in">
+            <people-select :people="people" v-model="funeral.pastor"/>
+        </form-group>
     </admin-layout>
 </template>
 
 <script>
-import Card from "../../components/Ui/cards/card";
-import CardBody from "../../components/Ui/cards/cardBody";
 import FormSelectize from "../../components/Ui/forms/FormSelectize";
 import FormGroup from "../../components/Ui/forms/FormGroup";
 import LocationSelect from "../../components/Ui/elements/LocationSelect";
 import FormInput from "../../components/Ui/forms/FormInput";
 import PeopleSelect from "../../components/Ui/elements/PeopleSelect";
+
 export default {
     name: "FuneralWizard",
-    components: {PeopleSelect, FormInput, LocationSelect, FormGroup, FormSelectize, CardBody, Card},
+    components: {PeopleSelect, FormInput, LocationSelect, FormGroup, FormSelectize},
     props: ['cities', 'locations', 'people', 'user'],
     data() {
         return {

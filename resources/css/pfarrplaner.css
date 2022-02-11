@@ -89,7 +89,7 @@ body.calendar .content-header {
 }
 
 .calendar-month {
-    padding: 0 5px;
+    padding: 0;
 }
 
 .calendar-month h1 {

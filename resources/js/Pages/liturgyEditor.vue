@@ -1,25 +1,31 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(service)">
         <template slot="navbar-left">
-            <inertia-link class="btn btn-light" :href="route('service.edit', service.slug)" title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst</inertia-link>&nbsp;
-            <inertia-link class="btn btn-light" :href="route('service.sermon.editor', service.slug)" title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span> Predigt</inertia-link>&nbsp;
+            <inertia-link class="btn btn-light" :href="route('service.edit', service.slug)"
+                          title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst
+            </inertia-link>&nbsp;
+            <inertia-link class="btn btn-light" :href="route('service.sermon.editor', service.slug)"
+                          title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span>
+                Predigt
+            </inertia-link>&nbsp;
+            <slot name="toolbar" />
         </template>
         <template slot="control-sidebar">
-            <form-check label="Zeitangaben runden" v-model="$page.props.settings.liturgy_times_rounded" @input="setLiturgyTimesRounded"/>
-            <form-input class="mt-2" label="Sprechgeschwindigkeit" v-model="$page.props.settings.wpm" @input="setWPM" help="Wörter pro Minute"/>
+            <form-check label="Zeitangaben runden" v-model="$page.props.settings.liturgy_times_rounded"
+                        @input="setLiturgyTimesRounded"/>
+            <form-input class="mt-2" label="Sprechgeschwindigkeit" v-model="$page.props.settings.wpm" @input="setWPM"
+                        help="Wörter pro Minute"/>
             <button class="btn btn-sm btn-primary" @click.prevent.stop="reloadPage">Anwenden</button>
         </template>
-        <info-pane v-if="!agendaMode" :service="service" @info="infoWindow = true" />
-        <agenda-info-pane v-if="agendaMode" :agenda="service"/>
-        <div class="row">
-            <div class="col-12">
-                <liturgy-tree :service="service" :sheets="agendaMode ? {} : liturgySheets" :agenda-mode="agendaMode"
-                              :auto-focus-block="autoFocusBlock" :auto-focus-item="autoFocusItem"
-                              :ministries="ministries" :markers="markers"
-                               @update-focus="updateFocus"/>
-            </div>
-        </div>
-        <info-window v-if="infoWindow" @close="infoWindow = false" :service="service" />
+        <template slot="after-flash">
+            <info-pane v-if="!agendaMode" :service="service" @info="infoWindow = true"/>
+            <agenda-info-pane v-if="agendaMode" :agenda="service"/>
+        </template>
+        <liturgy-tree :service="service" :sheets="agendaMode ? {} : liturgySheets" :agenda-mode="agendaMode"
+                      :auto-focus-block="autoFocusBlock" :auto-focus-item="autoFocusItem"
+                      :ministries="ministries" :markers="markers"
+                      @update-focus="updateFocus"/>
+        <info-window v-if="infoWindow" @close="infoWindow = false" :service="service"/>
     </admin-layout>
 </template>
 
@@ -87,14 +93,17 @@ export default {
         },
         setLiturgyTimesRounded() {
             this.$forceUpdate();
-            this.$inertia.post(route('setting.set', {user: this.$page.props.currentUser.data.id , key: 'liturgy_times_rounded'}), {
+            this.$inertia.post(route('setting.set', {
+                user: this.$page.props.currentUser.data.id,
+                key: 'liturgy_times_rounded'
+            }), {
                 value: this.$page.props.settings.liturgy_times_rounded,
             });
             window.location.reload();
         },
         setWPM() {
             this.$forceUpdate();
-            this.$inertia.post(route('setting.set', {user: this.$page.props.currentUser.data.id , key: 'wpm'}), {
+            this.$inertia.post(route('setting.set', {user: this.$page.props.currentUser.data.id, key: 'wpm'}), {
                 value: this.$page.props.settings.wpm,
             });
         },

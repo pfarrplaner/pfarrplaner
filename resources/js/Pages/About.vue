@@ -29,26 +29,20 @@
 
 <template>
     <admin-layout title="Über Pfarrplaner">
-        <card>
-            <card-header>Informationen zur App</card-header>
-            <card-body>
-                <div>
-                <h3>Pfarrplaner</h3><br />
-                v.{{ version }}-{{ env }} vom {{ moment(date).locale('DE').format('LLLL')}}<br />
-                    Laravel {{ laravelVersion }} auf PHP {{ phpVersion}}
-                </div>
-                <p>Gehostet auf einem Server des <a href="https://wwww.kirchenbezirk-balingen.de/" target="_blank">Evangelischen Kirchenbezirks Balingen</a>.</p>
-                <p>Der Quellcode von Pfarrplaner ist als Open Source auf <a href="https://github.com/pfarrplaner/pfarrplaner" target="_blank">GitHub</a> verfügbar und steht unter
-                    der <a href="https://github.com/pfarrplaner/pfarrplaner/blob/master/LICENSE" target="_blank">GNU General Public License (GPL) 3.0</a> oder höher.
-                </p>
-            </card-body>
-        </card>
-        <card>
-            <card-header>Changelog</card-header>
-            <card-body>
-                <vue-markdown :source="changelog"/>
-            </card-body>
-        </card>
+        <div>
+            <h2>Pfarrplaner</h2><br/>
+            v.{{ version }}-{{ env }} vom {{ moment(date).locale('DE').format('LLLL') }}<br/>
+            Laravel {{ laravelVersion }} auf PHP {{ phpVersion }}
+        </div>
+        <p>Gehostet auf einem Server des <a href="https://wwww.kirchenbezirk-balingen.de/" target="_blank">Evangelischen
+            Kirchenbezirks Balingen</a>.</p>
+        <p>Der Quellcode von Pfarrplaner ist als Open Source auf <a href="https://github.com/pfarrplaner/pfarrplaner"
+                                                                    target="_blank">GitHub</a> verfügbar und steht unter
+            der <a href="https://github.com/pfarrplaner/pfarrplaner/blob/master/LICENSE" target="_blank">GNU General
+                Public License (GPL) 3.0</a> oder höher.
+        </p>
+        <hr class="my-3"/>
+        <vue-markdown class="changelog" :source="changelog"/>
     </admin-layout>
 </template>
 
@@ -67,8 +61,12 @@ export default {
 </script>
 
 <style scoped>
-    /deep/ h1, /deep/ h2, /deep/ h3 {
-        font-size: 1em;
-        font-weight: bold;
-    }
+.changelog /deep/ h1 {
+    font-size: 2rem;
+}
+
+.changelog /deep/ h2, .changelog /deep/ h3 {
+    font-size: 1em;
+    font-weight: bold;
+}
 </style>

@@ -37,151 +37,150 @@
                 <span class="d-inline d-md-none fa fa-trash"></span> <span class="d-none d-md-inline">Löschen</span>
             </button>
         </template>
-        <card>
-            <card-header>
-                <tab-headers>
-                    <tab-header title="Allgemeines" id="home" :active-tab="activeTab" :is-checked-item="true"
-                                :check-value="(!myBaptism.needs_dimissorial) || (myBaptism.dimissorial_received)"/>
-                    <tab-header title="Vorbereitung" id="prep" :active-tab="activeTab" :is-checked-item="true"
-                                :check-value="prepChecks()"/>
-                    <tab-header title="Dateien" id="attachments" :active-tab="activeTab"
-                                :count="myBaptism.attachments.length"/>
-                </tab-headers>
-            </card-header>
-            <card-body>
-                <tabs>
-                    <tab id="home" :active-tab="activeTab">
-                        <fieldset>
-                            <legend>Gottesdienst</legend>
-                            <form-selectize label="Taufgottesdienst"
-                                            name="service_id"
-                                            :options="services"
-                                            id-key="id" title-key="name"
-                                            help="Leer lassen, um dies als Taufanfrage einzuordnen"
-                                            :settings="myServicePickerConfig"
-                                            v-model="myBaptism.service_id" />
-                            <form-selectize label="Kirchengemeinde" :options="cities" v-model="myBaptism.city_id"
-                                            id-key="id" title-key="name"
-                                            name="city_id" />
-                        </fieldset>
-                        <fieldset>
-                            <legend>Täufling</legend>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form-input name="candidate_name"
+        <template slot="tab-headers">
+            <tab-headers>
+                <tab-header title="Allgemeines" id="home" :active-tab="activeTab" :is-checked-item="true"
+                            :check-value="(!myBaptism.needs_dimissorial) || (myBaptism.dimissorial_received)"/>
+                <tab-header title="Vorbereitung" id="prep" :active-tab="activeTab" :is-checked-item="true"
+                            :check-value="prepChecks()"/>
+                <tab-header title="Dateien" id="attachments" :active-tab="activeTab"
+                            :count="myBaptism.attachments.length"/>
+            </tab-headers>
+        </template>
+        <tabs>
+            <tab id="home" :active-tab="activeTab">
+                <fieldset>
+                    <legend>Gottesdienst</legend>
+                    <form-selectize label="Taufgottesdienst"
+                                    name="service_id"
+                                    :options="services"
+                                    id-key="id" title-key="name"
+                                    help="Leer lassen, um dies als Taufanfrage einzuordnen"
+                                    :settings="myServicePickerConfig"
+                                    v-model="myBaptism.service_id"/>
+                    <form-selectize label="Kirchengemeinde" :options="cities" v-model="myBaptism.city_id"
+                                    id-key="id" title-key="name"
+                                    name="city_id"/>
+                </fieldset>
+                <fieldset>
+                    <legend>Täufling</legend>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form-input name="candidate_name"
                                         label="Name des Täuflings" v-model="myBaptism.candidate_name"/>
+                        </div>
+                        <div class="col-md-6">
+                            <form-group label="Zu verwendendes Pronomen">
+                                <div>
+                                    <div class="form-check-inline"
+                                         v-for="(pronounSet, pronounSetIndex) in pronounSets"
+                                         :key="'pronouns_'+pronounSet.key">
+                                        <label class="form-check-label">
+                                            <input type="radio" class="form-check-input"
+                                                   v-model="myBaptism.pronoun_set"
+                                                   :value="pronounSet.key">{{ pronounSet.label }}
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <form-group label="Zu verwendendes Pronomen">
-                                        <div>
-                                            <div class="form-check-inline"
-                                                 v-for="(pronounSet, pronounSetIndex) in pronounSets"
-                                                 :key="'pronouns_'+pronounSet.key">
-                                                <label class="form-check-label">
-                                                    <input type="radio" class="form-check-input"
-                                                           v-model="myBaptism.pronoun_set"
-                                                           :value="pronounSet.key">{{ pronounSet.label }}
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </form-group>
-                                </div>
-                            </div>
-                            <form-input label="Adresse" v-model="myBaptism.candidate_address"/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form-input name="candidate_zip" label="PLZ" v-model="myBaptism.candidate_zip"/>
-                                </div>
-                                <div class="col-md-6">
-                                    <form-input name="candidate_city" label="Ort" v-model="myBaptism.candidate_city"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form-input name="candidate_phone" label="Telefon" v-model="myBaptism.candidate_phone"/>
-                                </div>
-                                <div class="col-md-6">
-                                    <form-input name="candidate_email" label="E-Mailadresse" v-model="myBaptism.candidate_email" type="email"/>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <dimissorial-form-part :parent="myBaptism" />
-                    </tab>
-                    <tab id="prep" :active-tab="activeTab">
-                        <fieldset id="fsPrep">
-                            <legend>Erstkontakt</legend>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <form-input name="first_contact_with"
-                                                label="Erstkontakt mit" v-model="myBaptism.first_contact_with"
+                            </form-group>
+                        </div>
+                    </div>
+                    <form-input label="Adresse" v-model="myBaptism.candidate_address"/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form-input name="candidate_zip" label="PLZ" v-model="myBaptism.candidate_zip"/>
+                        </div>
+                        <div class="col-md-6">
+                            <form-input name="candidate_city" label="Ort" v-model="myBaptism.candidate_city"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <form-input name="candidate_phone" label="Telefon" v-model="myBaptism.candidate_phone"/>
+                        </div>
+                        <div class="col-md-6">
+                            <form-input name="candidate_email" label="E-Mailadresse" v-model="myBaptism.candidate_email"
+                                        type="email"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <dimissorial-form-part :parent="myBaptism"/>
+            </tab>
+            <tab id="prep" :active-tab="activeTab">
+                <fieldset id="fsPrep">
+                    <legend>Erstkontakt</legend>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <form-input name="first_contact_with"
+                                        label="Erstkontakt mit" v-model="myBaptism.first_contact_with"
                                         is-checked-item="1"/>
-                                </div>
-                                <div class="col-md-4">
-                                    <form-group label="Datum" is-checked-item="1" :value="myBaptism.first_contact_on" name="first_contact_on" >
-                                        <date-picker v-model="myBaptism.first_contact_on" :config="myDatePickerConfig"/>
-                                    </form-group>
-                                </div>
-                                <div class="col-md-4">
-                                    <form-group label="Taufgespräch" is-checked-item="1" :value="myBaptism.appointment" name="candidate_appointment" >
-                                        <date-picker v-model="myBaptism.appointment" :config="myDateTimePickerConfig"/>
-                                    </form-group>
-                                </div>
-                            </div>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Wichtige Informationen</legend>
-                            <form-input name="text" label="Taufspruch" v-model="myBaptism.text" is-checked-item="1" />
-                            <form-textarea name="notes" label="Notizen aus dem Taufgespräch" v-model="myBaptism.notes" />
-                        </fieldset>
-                        <fieldset>
-                            <legend>Unterlagen</legend>
-                            <div v-if="!hasRegistrationForm" class="mb-3">
-                                <p>Wenn das Anmeldeformular in AHAS Online erstellt wurde, kannst du es hier hochladen:</p>
-                                <form-file-uploader :parent="myBaptism"
-                                                    :upload-route="route('baptism.attach', this.myBaptism.id)"
-                                                    title="Anmeldeformular"
-                                                    v-model="myBaptism.attachments"/>
-                            </div>
-                            <div v-else>
-                                <checked-process-item check="1" positive="Anmeldedaten aufgenommen und Anmeldeformular erstellt" />
-                                <form-check label="Anmeldung unterschrieben" v-model="myBaptism.signed" name="signed"
-                                            is-checked-item="1"/>
-                                <form-check label="Urkunden erstellt" v-model="myBaptism.docs_ready" name="ready"
-                                            is-checked-item="1"/>
-                                <form-input label="Urkunden hinterlegt" v-model="myBaptism.docs_where" name="docs_where"
-                                            class="mt-3"
-                                            help="Wo sind die Unterlagen hinterlegt?"
-                                            is-checked-item="1"/>
-                            </div>
-                            <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myBaptism.processed" is-checked-item/>
-                        </fieldset>
-                    </tab>
-                    <tab id="attachments" :active-tab="activeTab">
-                        <fieldset>
-                            <legend>Angehängte Dateien</legend>
-                            <attachment-list v-model="myBaptism.attachments" delete-route-name="baptism.detach"
-                                             :parent-object="myBaptism" parent-type="baptism"
-                                             :key="myBaptism.attachments.length"/>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Dateien hinzufügen</legend>
-                            <form-file-uploader :parent="myBaptism"
-                                                :upload-route="route('baptism.attach', this.myBaptism.id)"
-                                                v-model="myBaptism.attachments"/>
-                            <div class="mt-2"><small>Das Anmeldeformular zur Taufe bitte nicht hier, sondern im Register "Vorbereitung" hochladen.</small></div>
-                        </fieldset>
-                    </tab>
-                </tabs>
-            </card-body>
-        </card>
+                        </div>
+                        <div class="col-md-4">
+                            <form-group label="Datum" is-checked-item="1" :value="myBaptism.first_contact_on"
+                                        name="first_contact_on">
+                                <date-picker v-model="myBaptism.first_contact_on" :config="myDatePickerConfig"/>
+                            </form-group>
+                        </div>
+                        <div class="col-md-4">
+                            <form-group label="Taufgespräch" is-checked-item="1" :value="myBaptism.appointment"
+                                        name="candidate_appointment">
+                                <date-picker v-model="myBaptism.appointment" :config="myDateTimePickerConfig"/>
+                            </form-group>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Wichtige Informationen</legend>
+                    <form-input name="text" label="Taufspruch" v-model="myBaptism.text" is-checked-item="1"/>
+                    <form-textarea name="notes" label="Notizen aus dem Taufgespräch" v-model="myBaptism.notes"/>
+                </fieldset>
+                <fieldset>
+                    <legend>Unterlagen</legend>
+                    <div v-if="!hasRegistrationForm" class="mb-3">
+                        <p>Wenn das Anmeldeformular in AHAS Online erstellt wurde, kannst du es hier hochladen:</p>
+                        <form-file-uploader :parent="myBaptism"
+                                            :upload-route="route('baptism.attach', this.myBaptism.id)"
+                                            title="Anmeldeformular"
+                                            v-model="myBaptism.attachments"/>
+                    </div>
+                    <div v-else>
+                        <checked-process-item check="1"
+                                              positive="Anmeldedaten aufgenommen und Anmeldeformular erstellt"/>
+                        <form-check label="Anmeldung unterschrieben" v-model="myBaptism.signed" name="signed"
+                                    is-checked-item="1"/>
+                        <form-check label="Urkunden erstellt" v-model="myBaptism.docs_ready" name="ready"
+                                    is-checked-item="1"/>
+                        <form-input label="Urkunden hinterlegt" v-model="myBaptism.docs_where" name="docs_where"
+                                    class="mt-3"
+                                    help="Wo sind die Unterlagen hinterlegt?"
+                                    is-checked-item="1"/>
+                    </div>
+                    <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myBaptism.processed"
+                                is-checked-item/>
+                </fieldset>
+            </tab>
+            <tab id="attachments" :active-tab="activeTab">
+                <fieldset>
+                    <legend>Angehängte Dateien</legend>
+                    <attachment-list v-model="myBaptism.attachments" delete-route-name="baptism.detach"
+                                     :parent-object="myBaptism" parent-type="baptism"
+                                     :key="myBaptism.attachments.length"/>
+                </fieldset>
+                <fieldset>
+                    <legend>Dateien hinzufügen</legend>
+                    <form-file-uploader :parent="myBaptism"
+                                        :upload-route="route('baptism.attach', this.myBaptism.id)"
+                                        v-model="myBaptism.attachments"/>
+                    <div class="mt-2"><small>Das Anmeldeformular zur Taufe bitte nicht hier, sondern im Register
+                        "Vorbereitung" hochladen.</small></div>
+                </fieldset>
+            </tab>
+        </tabs>
     </admin-layout>
 
 </template>
 
 <script>
-import Card from "../../components/Ui/cards/card";
-import CardHeader from "../../components/Ui/cards/cardHeader";
-import CardBody from "../../components/Ui/cards/cardBody";
 import TabHeaders from "../../components/Ui/tabs/tabHeaders";
 import TabHeader from "../../components/Ui/tabs/tabHeader";
 import FormGroup from "../../components/Ui/forms/FormGroup";
@@ -205,7 +204,7 @@ export default {
         FormFileUploader,
         AttachmentList,
         FormSelectize,
-        FormCheck, Tabs, Tab, FormInput, FormGroup, TabHeader, TabHeaders, CardBody, CardHeader, Card
+        FormCheck, Tabs, Tab, FormInput, FormGroup, TabHeader, TabHeaders,
     },
     props: ['baptism', 'services', 'cities', 'pronounSets'],
     data() {

@@ -29,11 +29,13 @@
 
 <template>
     <admin-layout title="Planungstabelle">
-        <div v-if="(serviceSlugs.length - serviceLoaded) > 0" class="alert alert-info">
-            Daten für {{ serviceSlugs.length - serviceLoaded }} Gottesdienste werden geladen...
-        </div>
-        <div v-if="saving" class="alert alert-warning">Änderungen werden gespeichert ... <span class="fa fa-spin fa-spinner"></span></div>
-        <div v-if="saved" class="alert alert-success"><span class="fa fa-check"></span> Änderungen wurden automatisch gespeichert.</div>
+        <template slot="after-flash">
+            <div v-if="(serviceSlugs.length - serviceLoaded) > 0" class="alert alert-info">
+                Daten für {{ serviceSlugs.length - serviceLoaded }} Gottesdienste werden geladen...
+            </div>
+            <div v-if="saving" class="alert alert-warning">Änderungen werden gespeichert ... <span class="fa fa-spin fa-spinner"></span></div>
+            <div v-if="saved" class="alert alert-success"><span class="fa fa-check"></span> Änderungen wurden automatisch gespeichert.</div>
+        </template>
         <fake-table :columns="[3, 9]" collapsed-header="Gottesdienste"
                     :headers="['Gottesdienst', 'Diensteinteilung']"></fake-table>
         <div v-for="serviceSlug in serviceSlugs" class="row">

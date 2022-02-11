@@ -1,12 +1,14 @@
 <template>
-    <admin-layout enable-control-sidebar="true" :title="title(date)">
+    <admin-layout enable-control-sidebar="true" :title="title(date)" no-padding>
         <template #navbar-left>
             <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse" :orientation="orientation"></calendar-nav-top>
         </template>
         <template #control-sidebar>
             <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities"/>
         </template>
-        <div class="alert alert-info" v-if="loading > 0"><span class="fa fa-spin fa-spinner"></span> Daten für {{ loading }} Orte werden geladen ...</div>
+        <template slot="after-flash">
+            <div class="alert alert-info" v-if="loading > 0"><span class="fa fa-spin fa-spinner"></span> Daten für {{ loading }} Orte werden geladen ...</div>
+        </template>
         <div class="d-none d-md-inline calendar-full-container">
             <calendar-pane-horizontal v-if="orientation == 'horizontal'"
                                       :date="date" :days="myDays" :cities="cityList" :services="services" :years="years"

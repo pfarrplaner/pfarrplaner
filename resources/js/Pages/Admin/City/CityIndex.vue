@@ -29,23 +29,61 @@
 
 <template>
     <admin-layout title="Kirchengemeinden">
-        <card>
-            <card-body>
-                <fake-table :columns="[10,2]" :headers="['Kirchengemeinde', '']" collapsed-header="Kirchengemeinde" striped="1">
-                    <div class="row pt-1 pb-1" v-for="(city,cityIndex) in cities" :class="{ even: cityIndex % 2 != 0}">
-                        <div class="col-md-10">{{ city.name }}</div>
-                        <div class="col-md-2 text-right">
-                                <inertia-link v-if="city.canEdit" class="btn btn-primary" title="Kirchengemeinde bearbeiten" :href="route('city.edit', {city: city.name})">
-                                    <span class="fa fa-edit"></span>
-                                </inertia-link>
-                                <button v-if="city.canDelete" class="btn btn-danger" title="Kirchengemeinde löschen" @click="deleteCity(city)">
-                                    <span class="fa fa-trash"></span>
-                                </button>
-                        </div>
+        <dataset v-slot="{ ds }"
+                 :ds-data="cities"
+                 ds-sort-by="name"
+                 :ds-search-in="['name']">
+            <div class="row mb-3" :data-page-count="ds.dsPagecount">
+                <div class="col-md-6 mb-2 mb-md-0">
+                    <dataset-search ds-search-placeholder="Suchen..." ref="search" autofocus />
+                </div>
+                <div class="col-md-1 mb-2 mb-md-0">
+                    <label v-for="checkbox in checkboxes" class="mt-1" :title="checkbox.title" v-if="checkbox.condition">
+                        <input type="checkbox" v-model="checkbox.value" :title="checkbox.title" />
+                        <span v-if="checkbox.icon" class="fa" :class="checkbox.icon"></span>
+                        <span v-if="checkbox.label">{{ checkbox.label }}</span>
+                    </label>
+                </div>
+                <div class="col-md-5 text-right">
+                    <dataset-show class="float-right" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover d-md-table">
+                            <thead>
+                            <tr>
+                                <th>Kirchengemeinde(n)</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <dataset-item tag="tbody">
+                                <template #default="{ row, rowIndex }">
+                                    <tr>
+                                        <td>{{ row.name }}</td>
+                                        <td class="text-right">
+                                            <inertia-link v-if="row.canEdit" class="btn btn-sm btn-primary" title="Kirchengemeinde bearbeiten"
+                                                          :href="route('city.edit', {city: row.name})">
+                                                <span class="fa fa-edit"></span>
+                                            </inertia-link>
+                                            <button v-if="row.canDelete" class="btn  btn-sm btn-danger ml-1" title="Kirchengemeinde löschen"
+                                                    @click="deleteCity(row)">
+                                                <span class="fa fa-trash"></span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </dataset-item>
+                        </table>
                     </div>
-                </fake-table>
-            </card-body>
-        </card>
+                </div>
+            </div>
+            <div class="d-flex flex-md-row flex-column justify-content-between align-items-center border-top pt-2">
+                <dataset-info class="mb-2 mb-md-0"/>
+                <dataset-pager/>
+            </div>
+        </dataset>
     </admin-layout>
 </template>
 
@@ -53,9 +91,26 @@
 import Card from "../../../components/Ui/cards/card";
 import CardBody from "../../../components/Ui/cards/cardBody";
 import FakeTable from "../../../components/Ui/FakeTable";
+import {
+    Dataset,
+    DatasetItem,
+    DatasetSearch,
+} from 'vue-dataset';
+import DatasetInfo from "../../../components/Ui/dataset/DatasetInfo";
+import DatasetShow from "../../../components/Ui/dataset/DatasetShow";
+import DatasetPager from "../../../components/Ui/dataset/DatasetPager";
+
+
 export default {
     name: "CityIndex",
-    components: {FakeTable, CardBody, Card},
+    components: {FakeTable, CardBody, Card,
+        Dataset,
+        DatasetItem,
+        DatasetInfo,
+        DatasetPager,
+        DatasetSearch,
+        DatasetShow
+    },
     props: ['cities'],
     methods: {
         deleteCity(city) {
@@ -68,7 +123,7 @@ export default {
 </script>
 
 <style scoped>
-    .row.even {
-        background-color: #ececec;
-    }
+.row.even {
+    background-color: #ececec;
+}
 </style>

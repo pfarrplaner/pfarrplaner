@@ -37,178 +37,172 @@
                 <span class="d-inline d-md-none fa fa-trash"></span> <span class="d-none d-md-inline">Löschen</span>
             </button>
         </template>
-        <card>
-            <card-header>
-                <tab-headers>
-                    <tab-header title="Brautpaar" id="home" :active-tab="activeTab" :is-checked-item="true"
-                                :check-value="permissionChecks()"/>
-                    <tab-header title="Vorbereitung" id="prep" :active-tab="activeTab" :is-checked-item="true"
-                                :check-value="prepChecks()"/>
-                    <tab-header title="Dateien" id="attachments" :active-tab="activeTab"
-                                :count="myWedding.attachments.length"/>
-                </tab-headers>
-            </card-header>
-            <card-body>
-                <tabs>
-                    <tab id="home" :active-tab="activeTab">
-                        <div class="row">
-                            <div v-for="spouseIndex in [1,2]" class="col-md-6">
-                                <form-input :name="spouseKey(spouseIndex, 'name')" label="Name"
-                                            v-model="wedding[spouseKey(spouseIndex, 'name')]"/>
-                                <form-group label="Zu verwendendes Pronomen">
-                                    <div>
-                                        <div class="form-check-inline"
-                                             v-for="(pronounSet, pronounSetIndex) in pronounSets"
-                                             :key="'pronouns_'+pronounSet.key">
-                                            <label class="form-check-label">
-                                                <input type="radio" class="form-check-input"
-                                                       v-model="myWedding['pronoun_set'+spouseIndex]"
-                                                       :value="pronounSet.key">{{ pronounSet.label }}
-                                            </label>
-                                        </div>
-                                    </div>
-                                </form-group>
-                                <form-input :name="spouseKey(spouseIndex, 'birth_name')"
-                                            label="Evtl. Geburtsname"
-                                            v-model="wedding[spouseKey(spouseIndex, 'birth_name')]"/>
-                                <form-input :name="spouseKey(spouseIndex, 'phone')"
-                                            label="Telefon"
-                                            v-model="wedding[spouseKey(spouseIndex, 'phone')]"/>
-                                <form-input :name="spouseKey(spouseIndex, 'email')"
-                                            label="E-Mailadresse"
-                                            v-model="wedding[spouseKey(spouseIndex, 'email')]"/>
-                                <form-check :name="spouseKey(spouseIndex, 'needs_dimissorial')"
-                                            label="Dimissoriale benötigt"
-                                            v-model="wedding[spouseKey(spouseIndex, 'needs_dimissorial')]"/>
-                                <div v-if="wedding[spouseKey(spouseIndex, 'needs_dimissorial')]">
-                                    <form-input :name="spouseKey(spouseIndex, 'dimissorial_issuer')"
-                                                label="Zuständiges Pfarramt"
-                                                :is-checked-item="true"
-                                                v-model="wedding[spouseKey(spouseIndex, 'dimissorial_issuer')]"/>
-                                    <form-date-picker :name="spouseKey(spouseIndex, 'dimissorial_requested')"
-                                                      v-model="wedding[spouseKey(spouseIndex, 'dimissorial_requested')]"
-                                                      :is-checked-item="true"
-                                                      label="Dimissoriale beantragt am"/>
-                                    <form-date-picker :name="spouseKey(spouseIndex, 'dimissorial_received')"
-                                                      v-model="wedding[spouseKey(spouseIndex, 'dimissorial_received')]"
-                                                      :is-checked-item="true"
-                                                      label="Dimissoriale erhalten am"/>
-                                    <div>
-                                        <dimissorial-url :url="wedding['spouse'+spouseIndex+'DimissorialUrl']" />
-                                    </div>
+        <template slot="tab-headers">
+            <tab-headers>
+                <tab-header title="Brautpaar" id="home" :active-tab="activeTab" :is-checked-item="true"
+                            :check-value="permissionChecks()"/>
+                <tab-header title="Vorbereitung" id="prep" :active-tab="activeTab" :is-checked-item="true"
+                            :check-value="prepChecks()"/>
+                <tab-header title="Dateien" id="attachments" :active-tab="activeTab"
+                            :count="myWedding.attachments.length"/>
+            </tab-headers>
+        </template>
+        <tabs>
+            <tab id="home" :active-tab="activeTab">
+                <div class="row">
+                    <div v-for="spouseIndex in [1,2]" class="col-md-6">
+                        <form-input :name="spouseKey(spouseIndex, 'name')" label="Name"
+                                    v-model="wedding[spouseKey(spouseIndex, 'name')]"/>
+                        <form-group label="Zu verwendendes Pronomen">
+                            <div>
+                                <div class="form-check-inline"
+                                     v-for="(pronounSet, pronounSetIndex) in pronounSets"
+                                     :key="'pronouns_'+pronounSet.key">
+                                    <label class="form-check-label">
+                                        <input type="radio" class="form-check-input"
+                                               v-model="myWedding['pronoun_set'+spouseIndex]"
+                                               :value="pronounSet.key">{{ pronounSet.label }}
+                                    </label>
                                 </div>
+                            </div>
+                        </form-group>
+                        <form-input :name="spouseKey(spouseIndex, 'birth_name')"
+                                    label="Evtl. Geburtsname"
+                                    v-model="wedding[spouseKey(spouseIndex, 'birth_name')]"/>
+                        <form-input :name="spouseKey(spouseIndex, 'phone')"
+                                    label="Telefon"
+                                    v-model="wedding[spouseKey(spouseIndex, 'phone')]"/>
+                        <form-input :name="spouseKey(spouseIndex, 'email')"
+                                    label="E-Mailadresse"
+                                    v-model="wedding[spouseKey(spouseIndex, 'email')]"/>
+                        <form-check :name="spouseKey(spouseIndex, 'needs_dimissorial')"
+                                    label="Dimissoriale benötigt"
+                                    v-model="wedding[spouseKey(spouseIndex, 'needs_dimissorial')]"/>
+                        <div v-if="wedding[spouseKey(spouseIndex, 'needs_dimissorial')]">
+                            <form-input :name="spouseKey(spouseIndex, 'dimissorial_issuer')"
+                                        label="Zuständiges Pfarramt"
+                                        :is-checked-item="true"
+                                        v-model="wedding[spouseKey(spouseIndex, 'dimissorial_issuer')]"/>
+                            <form-date-picker :name="spouseKey(spouseIndex, 'dimissorial_requested')"
+                                              v-model="wedding[spouseKey(spouseIndex, 'dimissorial_requested')]"
+                                              :is-checked-item="true"
+                                              label="Dimissoriale beantragt am"/>
+                            <form-date-picker :name="spouseKey(spouseIndex, 'dimissorial_received')"
+                                              v-model="wedding[spouseKey(spouseIndex, 'dimissorial_received')]"
+                                              :is-checked-item="true"
+                                              label="Dimissoriale erhalten am"/>
+                            <div>
+                                <dimissorial-url :url="wedding['spouse'+spouseIndex+'DimissorialUrl']"/>
                             </div>
                         </div>
-                        <fieldset>
-                            <legend>Genehmigung</legend>
-                            <form-selectize name="needs_permission" v-model="permissionState"
-                                            :options="permissionItems" :settings="{searchField: ['name']}"/>
-                            <div v-if="permissionState != 0" class="row" :key="permissionState">
-                                <div class="col-md-6">
-                                    <form-date-picker name="permission_requested"
-                                                      v-model="myWedding.permission_requested"
-                                                      :is-checked-item="true"
-                                                      label="Genehmigung beantragt"/>
-                                </div>
-                                <div class="col-md-6">
-                                    <form-date-picker name="permission_received" v-model="myWedding.permission_received"
-                                                      :is-checked-item="true"
-                                                      label="Genehmigung erhalten"/>
-                                </div>
+                    </div>
+                </div>
+                <fieldset>
+                    <legend>Genehmigung</legend>
+                    <form-selectize name="needs_permission" v-model="permissionState"
+                                    :options="permissionItems" :settings="{searchField: ['name']}"/>
+                    <div v-if="permissionState != 0" class="row" :key="permissionState">
+                        <div class="col-md-6">
+                            <form-date-picker name="permission_requested"
+                                              v-model="myWedding.permission_requested"
+                                              :is-checked-item="true"
+                                              label="Genehmigung beantragt"/>
+                        </div>
+                        <div class="col-md-6">
+                            <form-date-picker name="permission_received" v-model="myWedding.permission_received"
+                                              :is-checked-item="true"
+                                              label="Genehmigung erhalten"/>
+                        </div>
+                    </div>
+                </fieldset>
+            </tab>
+            <tab id="prep" :active-tab="activeTab">
+                <fieldset id="fsPrep">
+                    <legend>Traugespräch</legend>
+                    <form-group label="Traugespräch" :is-checked-item="true" :value="myWedding.appointment"
+                                name="candidate_appointment">
+                        <date-picker v-model="myWedding.appointment" :config="myDateTimePickerConfig"/>
+                    </form-group>
+                    <form-input name="text" label="Trautext" v-model="myWedding.text" :is-checked-item="true"/>
+                    <form-textarea name="notes" label="Notizen aus dem Traugespräch" v-model="myWedding.notes"/>
+                </fieldset>
+                <fieldset>
+                    <legend>Trauung</legend>
+                    <form-textarea name="music" label="Musikalische Wünsche" v-model="myWedding.music"/>
+                    <form-input name="gift" label="Bibel/Buchgabe" v-model="myWedding.gift"/>
+                    <form-textarea name="flowers" label="Blumenschmuck" v-model="myWedding.flowers"/>
+                </fieldset>
+                <fieldset>
+                    <legend>Unterlagen</legend>
+                    <form-group label="Format der Urkunde">
+                        <div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           v-model="myWedding.docs_format"
+                                           value="0"> Urkunde klein (für Familienstammbuch)
+                                </label>
                             </div>
-                        </fieldset>
-                    </tab>
-                    <tab id="prep" :active-tab="activeTab">
-                        <fieldset id="fsPrep">
-                            <legend>Traugespräch</legend>
-                            <form-group label="Traugespräch" :is-checked-item="true" :value="myWedding.appointment"
-                                        name="candidate_appointment">
-                                <date-picker v-model="myWedding.appointment" :config="myDateTimePickerConfig"/>
-                            </form-group>
-                            <form-input name="text" label="Trautext" v-model="myWedding.text" :is-checked-item="true"/>
-                            <form-textarea name="notes" label="Notizen aus dem Traugespräch" v-model="myWedding.notes"/>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Trauung</legend>
-                            <form-textarea name="music" label="Musikalische Wünsche" v-model="myWedding.music"/>
-                            <form-input name="gift" label="Bibel/Buchgabe" v-model="myWedding.gift"/>
-                            <form-textarea name="flowers" label="Blumenschmuck" v-model="myWedding.flowers"/>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Unterlagen</legend>
-                            <form-group label="Format der Urkunde">
-                                <div>
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input"
-                                                   v-model="myWedding.docs_format"
-                                                   value="0"> Urkunde klein (für Familienstammbuch)
-                                        </label>
-                                    </div>
-                                    <div class="form-check-inline">
-                                        <label class="form-check-label">
-                                            <input type="radio" class="form-check-input"
-                                                   v-model="myWedding.docs_format"
-                                                   value="1"> Urkunde A4
-                                        </label>
-                                    </div>
-                                </div>
-                            </form-group>
-                            <div v-if="!hasRegistrationForm" class="mb-3">
-                                <p>Wenn das Anmeldeformular in AHAS Online erstellt wurde, kannst du es hier
-                                    hochladen:</p>
-                                <form-file-uploader :parent="myWedding"
-                                                    :upload-route="route('wedding.attach', this.myWedding.id)"
-                                                    title="Anmeldeformular"
-                                                    v-model="myWedding.attachments"/>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input"
+                                           v-model="myWedding.docs_format"
+                                           value="1"> Urkunde A4
+                                </label>
                             </div>
-                            <div v-else>
-                                <checked-process-item check="1"
-                                                      positive="Anmeldedaten aufgenommen und Anmeldeformular erstellt"/>
-                                <form-check label="Anmeldung unterschrieben" v-model="myWedding.signed" name="signed"
-                                            :is-checked-item="true"/>
-                                <form-check label="Urkunden erstellt" v-model="myWedding.docs_ready" name="ready"
-                                            :is-checked-item="true"/>
-                                <form-input label="Urkunden hinterlegt" v-model="myWedding.docs_where" name="docs_where"
-                                            class="mt-3"
-                                            help="Wo sind die Unterlagen hinterlegt?"
-                                            :is-checked-item="true"/>
-                            </div>
+                        </div>
+                    </form-group>
+                    <div v-if="!hasRegistrationForm" class="mb-3">
+                        <p>Wenn das Anmeldeformular in AHAS Online erstellt wurde, kannst du es hier
+                            hochladen:</p>
+                        <form-file-uploader :parent="myWedding"
+                                            :upload-route="route('wedding.attach', this.myWedding.id)"
+                                            title="Anmeldeformular"
+                                            v-model="myWedding.attachments"/>
+                    </div>
+                    <div v-else>
+                        <checked-process-item check="1"
+                                              positive="Anmeldedaten aufgenommen und Anmeldeformular erstellt"/>
+                        <form-check label="Anmeldung unterschrieben" v-model="myWedding.signed" name="signed"
+                                    :is-checked-item="true"/>
+                        <form-check label="Urkunden erstellt" v-model="myWedding.docs_ready" name="ready"
+                                    :is-checked-item="true"/>
+                        <form-input label="Urkunden hinterlegt" v-model="myWedding.docs_where" name="docs_where"
+                                    class="mt-3"
+                                    help="Wo sind die Unterlagen hinterlegt?"
+                                    :is-checked-item="true"/>
+                    </div>
 
-                            <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myWedding.processed" is-checked-item />
-                        </fieldset>
-                    </tab>
-                    <tab id="attachments" :active-tab="activeTab">
-                        <fieldset>
-                            <legend>Angehängte Dateien</legend>
-                            <attachment-list v-model="myWedding.attachments" delete-route-name="wedding.detach"
-                                             :parent-object="myWedding" parent-type="wedding"
-                                             :key="myWedding.attachments.length"/>
-                        </fieldset>
-                        <fieldset>
-                            <legend>Dateien hinzufügen</legend>
-                            <form-file-uploader :parent="myWedding"
-                                                :upload-route="route('wedding.attach', this.myWedding.id)"
-                                                v-model="myWedding.attachments"/>
-                            <div class="mt-2"><small>Das Anmeldeformular zur Trauung bitte nicht hier, sondern im
-                                Register
-                                "Vorbereitung" hochladen.</small></div>
-                        </fieldset>
-                    </tab>
-                </tabs>
-            </card-body>
-        </card>
+                    <form-check name="processed" label="Kirchenbucheintrag abgeschlossen" v-model="myWedding.processed"
+                                is-checked-item/>
+                </fieldset>
+            </tab>
+            <tab id="attachments" :active-tab="activeTab">
+                <fieldset>
+                    <legend>Angehängte Dateien</legend>
+                    <attachment-list v-model="myWedding.attachments" delete-route-name="wedding.detach"
+                                     :parent-object="myWedding" parent-type="wedding"
+                                     :key="myWedding.attachments.length"/>
+                </fieldset>
+                <fieldset>
+                    <legend>Dateien hinzufügen</legend>
+                    <form-file-uploader :parent="myWedding"
+                                        :upload-route="route('wedding.attach', this.myWedding.id)"
+                                        v-model="myWedding.attachments"/>
+                    <div class="mt-2"><small>Das Anmeldeformular zur Trauung bitte nicht hier, sondern im
+                        Register
+                        "Vorbereitung" hochladen.</small></div>
+                </fieldset>
+            </tab>
+        </tabs>
     </admin-layout>
 </template>
 
 <script>
-import CardHeader from "../../components/Ui/cards/cardHeader";
 import Tab from '../../components/Ui/tabs/tab';
 import Tabs from "../../components/Ui/tabs/tabs";
 import TabHeaders from "../../components/Ui/tabs/tabHeaders";
 import TabHeader from "../../components/Ui/tabs/tabHeader";
-import CardBody from "../../components/Ui/cards/cardBody";
-import Card from "../../components/Ui/cards/card";
 import FormInput from "../../components/Ui/forms/FormInput";
 import FormGroup from "../../components/Ui/forms/FormGroup";
 import AttachmentList from "../../components/Ui/elements/AttachmentList";
@@ -232,7 +226,7 @@ export default {
         FormTextarea,
         FormCheck,
         FormFileUploader,
-        AttachmentList, FormGroup, FormInput, Card, Tab, CardBody, TabHeader, TabHeaders, Tabs, CardHeader
+        AttachmentList, FormGroup, FormInput, Tab,  TabHeader, TabHeaders, Tabs,
     },
     created() {
         this.wedding.docs_format = this.wedding.docs_format || 0;
@@ -320,7 +314,7 @@ export default {
             var result = this.myWedding;
             result.needs_permission = this.permissionState;
 
-            [   'permission_requested',
+            ['permission_requested',
                 'permission_received',
                 'spouse1_dimissorial_requested',
                 'spouse1_dimissorial_received',

@@ -32,9 +32,12 @@
         <admin-layout title="Gottesdienst bearbeiten">
             <template slot="navbar-left">
                 <div class="btn-group mr-1">
-                    <button type="button" class="btn btn-primary" @click.prevent="saveService(true)" title="Speichern und schließen">
-                        <span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span></button>
-                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-primary" @click.prevent="saveService(true)"
+                            title="Speichern und schließen">
+                        <span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span>
+                    </button>
+                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <span class="sr-only">Weitere Optionen aufklappen</span>
                     </button>
                     <div class="dropdown-menu">
@@ -46,71 +49,79 @@
                         </inertia-link>
                     </div>
                 </div>
-                <button class="btn btn-danger" @click.prevent="deleteService"><span class="fa fa-trash d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
+                <button class="btn btn-danger" @click.prevent="deleteService"><span
+                    class="fa fa-trash d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
                 <div class="dropdown show">
-                    <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Weitere Aktionen
                     </a>
 
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                        <a class="dropdown-item" :href="route('service.ical', {service: service.slug})">In Outlook übernehmen</a>
-                        <a class="dropdown-item" :href="route('reports.setup', {report: 'regulatory', service: service.id})">Meldung an das Ordnungsamt</a>
+                        <a class="dropdown-item" :href="route('service.ical', {service: service.slug})">In Outlook
+                            übernehmen</a>
+                        <a class="dropdown-item"
+                           :href="route('reports.setup', {report: 'regulatory', service: service.id})">Meldung an das
+                            Ordnungsamt</a>
                     </div>
                 </div>
-                <a class="btn btn-light" :href="route('liturgy.editor', service.slug)" title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
-                <a class="btn btn-light" :href="route('service.sermon.editor', service.slug)"  title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span class="d-none d-md-inline"> Predigt</span></a>&nbsp;
+                <a class="btn btn-light" :href="route('liturgy.editor', service.slug)"
+                   title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span
+                    class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
+                <a class="btn btn-light" :href="route('service.sermon.editor', service.slug)"
+                   title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span
+                    class="d-none d-md-inline"> Predigt</span></a>&nbsp;
+            </template>
+            <template slot="tab-headers">
+                <tab-headers>
+                    <tab-header id="home" title="Allgemeines" :active-tab="activeTab"/>
+                    <tab-header id="people" title="Mitwirkende" :active-tab="activeTab" :count="peopleCount"/>
+                    <tab-header id="offerings" title="Opfer" :active-tab="activeTab"/>
+                    <tab-header id="rites" title="Kasualien" :active-tab="activeTab"
+                                :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
+                    <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab"/>
+                    <tab-header id="streaming" title="Streaming" :active-tab="activeTab" v-if="hasStreaming"/>
+                    <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"
+                                :count="service.seating.count"/>
+                    <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="countAttachments()"/>
+                    <tab-header id="comments" title="Kommentare" :active-tab="activeTab"
+                                :count="service.comments.length"/>
+                </tab-headers>
             </template>
             <form @submit.prevent="saveService" id="formSermon">
-                <card>
-                    <card-header>
-                        <tab-headers>
-                            <tab-header id="home" title="Allgemeines" :active-tab="activeTab" />
-                            <tab-header id="people" title="Mitwirkende" :active-tab="activeTab" :count="peopleCount" />
-                            <tab-header id="offerings" title="Opfer" :active-tab="activeTab" />
-                            <tab-header id="rites" title="Kasualien" :active-tab="activeTab" :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
-                            <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab" />
-                            <tab-header id="streaming" title="Streaming" :active-tab="activeTab"  v-if="hasStreaming" />
-                            <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"  :count="service.seating.count"/>
-                            <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="countAttachments()"/>
-                            <tab-header id="comments" title="Kommentare" :active-tab="activeTab" :count="service.comments.length"/>
-                        </tab-headers>
-                    </card-header>
-                    <card-body>
-                        <tabs>
-                            <tab id="home" :active-tab="activeTab">
-                                <home-tab :service="editedService" :locations="locations"
-                                          :days="days"
-                                          :tags="tags" :service-groups="serviceGroups"/>
-                            </tab>
-                            <tab id="people" :active-tab="activeTab">
-                                <people-tab :service="service" :teams="teams"
-                                            :people="users" :ministries="ministries"
-                                            @count="updatePeopleCounter" />
-                            </tab>
-                            <tab id="offerings" :active-tab="activeTab">
-                                <offerings-tab :service="service" />
-                            </tab>
-                            <tab id="rites" :active-tab="activeTab">
-                                <rites-tab :service="service" />
-                            </tab>
-                            <tab id="cc" :active-tab="activeTab">
-                                <c-c-tab :service="service" />
-                            </tab>
-                            <tab id="streaming" :active-tab="activeTab" v-if="hasStreaming">
-                                <streaming-tab :service="service" />
-                            </tab>
-                            <tab id="registrations" :active-tab="activeTab">
-                                <registrations-tab :service="service" />
-                            </tab>
-                            <tab id="attachments" :active-tab="activeTab">
-                                <attachments-tab :service="service" :liturgy-sheets="liturgySheets" :files="files"/>
-                            </tab>
-                            <tab id="comments" :active-tab="activeTab">
-                                <comments-tab :service="service" />
-                            </tab>
-                        </tabs>
-                    </card-body>
-                </card>
+                <tabs>
+                    <tab id="home" :active-tab="activeTab">
+                        <home-tab :service="editedService" :locations="locations"
+                                  :days="days"
+                                  :tags="tags" :service-groups="serviceGroups"/>
+                    </tab>
+                    <tab id="people" :active-tab="activeTab">
+                        <people-tab :service="service" :teams="teams"
+                                    :people="users" :ministries="ministries"
+                                    @count="updatePeopleCounter"/>
+                    </tab>
+                    <tab id="offerings" :active-tab="activeTab">
+                        <offerings-tab :service="service"/>
+                    </tab>
+                    <tab id="rites" :active-tab="activeTab">
+                        <rites-tab :service="service"/>
+                    </tab>
+                    <tab id="cc" :active-tab="activeTab">
+                        <c-c-tab :service="service"/>
+                    </tab>
+                    <tab id="streaming" :active-tab="activeTab" v-if="hasStreaming">
+                        <streaming-tab :service="service"/>
+                    </tab>
+                    <tab id="registrations" :active-tab="activeTab">
+                        <registrations-tab :service="service"/>
+                    </tab>
+                    <tab id="attachments" :active-tab="activeTab">
+                        <attachments-tab :service="service" :liturgy-sheets="liturgySheets" :files="files"/>
+                    </tab>
+                    <tab id="comments" :active-tab="activeTab">
+                        <comments-tab :service="service"/>
+                    </tab>
+                </tabs>
             </form>
         </admin-layout>
     </div>
@@ -133,8 +144,9 @@ import AttachmentsTab from "../components/ServiceEditor/tabs/AttachmentsTab";
 import PeopleTab from "../components/ServiceEditor/tabs/PeopleTab";
 import CommentsTab from "../components/ServiceEditor/tabs/CommentsTab";
 import RegistrationsTab from "../components/ServiceEditor/tabs/RegistrationsTab";
+
 export default {
-name: "serviceEditor",
+    name: "serviceEditor",
     components: {
         RegistrationsTab,
         CommentsTab,
@@ -142,7 +154,8 @@ name: "serviceEditor",
         AttachmentsTab,
         RitesTab,
         StreamingTab,
-        CCTab, CardBody, CardHeader, Card, OfferingsTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders},
+        CCTab, CardBody, CardHeader, Card, OfferingsTab, HomeTab, Tab, Tabs, TabHeader, TabHeaders
+    },
     props: {
         service: Object,
         tab: String,
@@ -169,7 +182,7 @@ name: "serviceEditor",
         return {
             activeTab: this.tab,
             editedService: this.service,
-            files: { attachments: [null], attachment_text: [''] },
+            files: {attachments: [null], attachment_text: ['']},
             counted: 0,
             peopleCount: 0,
         };
@@ -199,9 +212,9 @@ name: "serviceEditor",
                 ...this.editedService,
                 alt_liturgy_date: this.editedService.alt_liturgy_date ? moment(this.editedService.alt_liturgy_date).format('DD.MM.YYYY') : null,
                 participants: {
-                    P:  this.extractParticipants(this.editedService.pastors),
-                    O:  this.extractParticipants(this.editedService.organists),
-                    M:  this.extractParticipants(this.editedService.sacristans),
+                    P: this.extractParticipants(this.editedService.pastors),
+                    O: this.extractParticipants(this.editedService.organists),
+                    M: this.extractParticipants(this.editedService.sacristans),
                 },
                 ministries: {},
                 tags: [],
@@ -210,12 +223,18 @@ name: "serviceEditor",
             };
             var ct = 0;
             Object.keys(this.editedService.ministriesByCategory).forEach(key => {
-                record.ministries[ct] = { description: key, people: [] };
-                this.editedService.ministriesByCategory[key].forEach(person => { if (person) record.ministries[ct].people.push(person.id) });
+                record.ministries[ct] = {description: key, people: []};
+                this.editedService.ministriesByCategory[key].forEach(person => {
+                    if (person) record.ministries[ct].people.push(person.id)
+                });
                 ct++;
             });
-            this.editedService.tags.forEach(tag => {record.tags.push(tag.id); });
-            this.editedService.service_groups.forEach(group => {record.serviceGroups.push(group.id); });
+            this.editedService.tags.forEach(tag => {
+                record.tags.push(tag.id);
+            });
+            this.editedService.service_groups.forEach(group => {
+                record.serviceGroups.push(group.id);
+            });
 
             record.closeAfterSaving = closeAfterSaving ? 1 : 0;
 
@@ -230,7 +249,7 @@ name: "serviceEditor",
             });
         },
         deleteService() {
-            this.$inertia.delete(route('service.destroy', this.editedService.slug), {}, { preserveState: false});
+            this.$inertia.delete(route('service.destroy', this.editedService.slug), {}, {preserveState: false});
         },
         extractParticipants(e) {
             var items = [];
@@ -269,13 +288,4 @@ name: "serviceEditor",
 </script>
 
 <style scoped>
-    .card-header {
-        padding-bottom: 0 !important;
-        background-color: #fcfcfc;
-    }
-
-    ul.nav.nav-tabs {
-        margin-bottom: 0;
-        border-bottom-width: 0;
-    }
 </style>

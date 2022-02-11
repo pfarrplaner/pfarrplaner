@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <admin-layout :title="'Urlaubsplaner '+moment(start).locale('de').format('MMMM YYYY')">
+    <admin-layout :title="'Urlaubsplaner '+moment(start).locale('de').format('MMMM YYYY')" no-content-header>
         <template #navbar-left>
             <absence-nav :year="year" :month="month" :years="years"/>
         </template>

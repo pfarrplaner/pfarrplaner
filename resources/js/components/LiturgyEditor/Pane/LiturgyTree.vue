@@ -28,169 +28,174 @@
   -->
 
 <template>
-    <div class="card">
-        <div class="card-header">
-            <div class="row" title="Klicken, um zu bearbeiten. Ziehen, um das Element im Plan zu verschieben.">
-                <div class="col-8">Ablauf der Liturgie</div>
-                <div class="col-4 text-right">
-                    <div class="dropdown" v-if="hasDownload">
-                        <button class="btn btn-sm btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                                title="Dokumente herunterladen">
-                            <span class="fa fa-download"></span> Herunterladen
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <div v-for="sheet in sheets">
-                                <liturgy-sheet-link :service="service" :sheet="sheet" @open="dialogs[sheet.key] = true"/>
-                            </div>
+    <div class="liturgy-tree pb-4">
+        <template slot="toolbar">
+        </template>
+        <div class="row py-2 border-bottom mb-2">
+            <div class="col-md-6">
+                <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt
+                    hinzufügen...
+                </button>
+                <button class="btn btn-light" @click.prevent="modalOpen = true">Ablaufelemente importieren...
+                </button>
+            </div>
+            <div class="col-md-6 text-right">
+                <div class="dropdown" v-if="hasDownload">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            title="Dokumente herunterladen">
+                        <span class="fa fa-download"></span> Herunterladen
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <div v-for="sheet in sheets">
+                            <liturgy-sheet-link :service="service" :sheet="sheet" @open="dialogs[sheet.key] = true"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="card-body">
-            <draggable :list="blocks" group="blocks" v-bind:class="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
-                       @start="focusOff" @end="saveState" :disabled="!editable" handle=".handle">
-                <div v-for="block,blockIndex in blocks" class="liturgy-block"
-                     :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
-                     @click="focusBlock(blockIndex)">
-                    <div class="row">
-                        <div class="col-11 liturgy-block-title">
-                            <span class="fa fa-bars handle mr-1" title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
-                            <span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ block.title }}
-                        </div>
-                        <div class="col-1 text-right" v-if="editable">
-                            <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
-                                    title="Abschnitt löschen">
-                                <span class="fa fa-trash"></span>
-                            </button>
-                        </div>
+        <draggable :list="blocks" group="blocks" v-bind:class="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
+                   @start="focusOff" @end="saveState" :disabled="!editable" handle=".handle">
+            <div v-for="block,blockIndex in blocks" class="liturgy-block"
+                 :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
+                 @click="focusBlock(blockIndex)">
+                <div class="row">
+                    <div class="col-11 liturgy-block-title">
+                        <span class="fa fa-bars handle mr-1"
+                              title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
+                        <span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ block.title }}
                     </div>
-                    <div class="row" v-if="editable">
-                        <div class="col-12">
-                            <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light"
-                                    title="Freitext hinzufügen"><span class="fa fa-file"></span>
-                            </button>
-                            <button @click.stop="addItem(blockIndex, 'Psalm')" class="btn btn-sm btn-light"
-                                    title="Psalm hinzufügen"><span class="fa fa-praying-hands"></span>
-                            </button>
-                            <button @click.stop="addItem(blockIndex, 'Reading')" class="btn btn-sm btn-light"
-                                    title="Schriftlesung hinzufügen"><span class="fa fa-bible"></span>
-                            </button>
-                            <button @click.stop="addItem(blockIndex, 'Sermon')" class="btn btn-sm btn-light"
-                                    title="Predigt hinzufügen"><span
-                                class="fa fa-microphone-alt"></span></button>
-                            <button @click.stop="addItem(blockIndex, 'Song')" class="btn btn-sm btn-light"
-                                    title="Lied hinzufügen"><span class="fa fa-music"></span></button>
-                            <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light"
-                                    title="Liturgischen Text hinzufügen"><span
-                                class="fa fa-file-alt"></span></button>
-                        </div>
+                    <div class="col-1 text-right" v-if="editable">
+                        <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
+                                title="Abschnitt löschen">
+                            <span class="fa fa-trash"></span>
+                        </button>
                     </div>
-                    <details-pane v-if="block.editing == true" :service="service" :element="block"
-                                  :agenda-mode="agendaMode" :markers="markers"/>
+                </div>
+                <div class="row" v-if="editable">
+                    <div class="col-12">
+                        <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light"
+                                title="Freitext hinzufügen"><span class="fa fa-file"></span>
+                        </button>
+                        <button @click.stop="addItem(blockIndex, 'Psalm')" class="btn btn-sm btn-light"
+                                title="Psalm hinzufügen"><span class="fa fa-praying-hands"></span>
+                        </button>
+                        <button @click.stop="addItem(blockIndex, 'Reading')" class="btn btn-sm btn-light"
+                                title="Schriftlesung hinzufügen"><span class="fa fa-bible"></span>
+                        </button>
+                        <button @click.stop="addItem(blockIndex, 'Sermon')" class="btn btn-sm btn-light"
+                                title="Predigt hinzufügen"><span
+                            class="fa fa-microphone-alt"></span></button>
+                        <button @click.stop="addItem(blockIndex, 'Song')" class="btn btn-sm btn-light"
+                                title="Lied hinzufügen"><span class="fa fa-music"></span></button>
+                        <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light"
+                                title="Liturgischen Text hinzufügen"><span
+                            class="fa fa-file-alt"></span></button>
+                    </div>
+                </div>
+                <details-pane v-if="block.editing == true" :service="service" :element="block"
+                              :agenda-mode="agendaMode" :markers="markers"/>
 
-                    <draggable :list="block.items" group="items" class="liturgy-items-list" handle=".handle"
-                               v-bind:class="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
-                               :disabled="!editable">
-                        <div v-for="item,itemIndex in block.items" class="liturgy-item"
-                             @click.stop="focusItem(blockIndex, itemIndex)"
-                             :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}"
-                             :data-block-index="blockIndex" :data-item-index="itemIndex">
-                            <div class="row item"
-                                 title="Klicken, um zu bearbeiten.">
-                                <div class="col-sm-3 item-title">
+                <draggable :list="block.items" group="items" class="liturgy-items-list" handle=".handle"
+                           v-bind:class="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
+                           :disabled="!editable">
+                    <div v-for="item,itemIndex in block.items" class="liturgy-item"
+                         @click.stop="focusItem(blockIndex, itemIndex)"
+                         :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}"
+                         :data-block-index="blockIndex" :data-item-index="itemIndex">
+                        <div class="row item"
+                             title="Klicken, um zu bearbeiten.">
+                            <div class="col-sm-3 item-title">
                                     <span class="fa data-type-icon handle mr-1" :class="icons[item.data_type]"
                                           title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
-                                    <span class="fa fa-chevron-circle-right"
-                                                                       style="display: none;"></span> {{ item.title }}
+                                <span class="fa fa-chevron-circle-right"
+                                      style="display: none;"></span> {{ item.title }}
+                            </div>
+                            <div class="col-sm-4" v-if="item.data_type == 'sermon'">
+                                <div v-if="service.sermon === null">
+                                    <form-selectize v-if="sermons.length > 0" :options="sermons" id-key="id"
+                                                    title-key="title"
+                                                    label="Bestehende Predigt auswählen"
+                                                    :settings="sermonSelectizeSettings"
+                                                    @input="setSermon($event, item)"/>
+                                    <inertia-link :href="route('service.sermon.editor', {service: service.slug})"
+                                                  @click.stop=""
+                                                  class="btn btn-success"
+                                                  title="Hier klicken, um die Predigt jetzt anzulegen">
+                                        Neue Predigt anlegen
+                                    </inertia-link>
                                 </div>
-                                <div class="col-sm-4" v-if="item.data_type == 'sermon'">
-                                    <div v-if="service.sermon === null">
-                                        <form-selectize v-if="sermons.length > 0" :options="sermons" id-key="id" title-key="title"
-                                        label="Bestehende Predigt auswählen" :settings="sermonSelectizeSettings" @input="setSermon($event, item)"/>
-                                        <inertia-link :href="route('service.sermon.editor', {service: service.slug})"
-                                                      @click.stop=""
-                                                      class="btn btn-success"
-                                                      title="Hier klicken, um die Predigt jetzt anzulegen">
-                                            Neue Predigt anlegen
-                                        </inertia-link>
-                                    </div>
-                                    <div v-else>
-                                        <inertia-link :href="route('sermon.editor', {sermon: service.sermon.id})"
-                                                      @click.stop="" title="Hier klicken, um die Predigt zu bearbeiten">
-                                            {{ service.sermon.title }}<span
-                                            v-if="service.sermon.subtitle">: {{ service.sermon.subtitle }}</span>
-                                        </inertia-link>
-                                        <button class="btn btn-sm btn-light ml-1" @click="setSermon(null, item)"
-                                                title="Verknüpfung mit dieser Predigt aufheben">
-                                            <span class="fa fa-unlink"></span>
-                                        </button>
-                                        <br/>
-                                        <small>{{ service.sermon.reference }}</small>
-                                    </div>
-                                </div>
-                                <div class="col-sm-4" v-else>{{ itemDescription(item) }}
-                                    <span v-if="item.data.needs_replacement" class="badge" :class="dataReplacerClass(item)">
-                                        <span class="fa fa-user" :title="dataReplacerTitle(item)"></span>
-                                    </span>
-                                    <span v-if="(item.data_type=='song') && item.data.song && item.data.song.notation" class="fa fa-music text-success"
-                                        title="Zu diesem Lied sind Noten vorhanden."/>
-                                </div>
-                                <div class="col-sm-2 responsible-list"
-                                     @click="editResponsibles(blockIndex, itemIndex, item)">
-                                    <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
-                                                 :ministries="ministries"/>
-                                    <div v-else>
-                                        <div v-if="item.data.responsible.length > 0">
-                                            <span class="badge badge-light" v-for="record in item.data.responsible"
-                                                  v-html="displayResponsible(record)"/>
-                                        </div>
-                                        <div v-else>
-                                            <div v-if="editable">
-                                                <span class="fa fa-users"></span> Hier klicken, um Verantwortliche
-                                                auszuwählen.
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <div class="row">
-                                        <item-starting-time class="col-6" :item="item" :service="service" />
-                                        <item-text-stats class="col-6" :item="item" :service="service" />
-                                    </div>
-                                </div>
-                                <div class="col-1 text-right" v-if="editable">
-                                    <button @click.stop="deleteItem(blockIndex, itemIndex)"
-                                            class="btn btn-sm btn-danger" title="Element löschen">
-                                        <span class="fa fa-trash"></span>
+                                <div v-else>
+                                    <inertia-link :href="route('sermon.editor', {sermon: service.sermon.id})"
+                                                  @click.stop="" title="Hier klicken, um die Predigt zu bearbeiten">
+                                        {{ service.sermon.title }}<span
+                                        v-if="service.sermon.subtitle">: {{ service.sermon.subtitle }}</span>
+                                    </inertia-link>
+                                    <button class="btn btn-sm btn-light ml-1" @click="setSermon(null, item)"
+                                            title="Verknüpfung mit dieser Predigt aufheben">
+                                        <span class="fa fa-unlink"></span>
                                     </button>
+                                    <br/>
+                                    <small>{{ service.sermon.reference }}</small>
                                 </div>
                             </div>
-                            <details-pane v-if="item.editing == true" :service="service" :element="item"
-                                          :agenda-mode="agendaMode" :markers="markers" />
+                            <div class="col-sm-4" v-else>{{ itemDescription(item) }}
+                                <span v-if="item.data.needs_replacement" class="badge" :class="dataReplacerClass(item)">
+                                        <span class="fa fa-user" :title="dataReplacerTitle(item)"></span>
+                                    </span>
+                                <span v-if="(item.data_type=='song') && item.data.song && item.data.song.notation"
+                                      class="fa fa-music text-success"
+                                      title="Zu diesem Lied sind Noten vorhanden."/>
+                            </div>
+                            <div class="col-sm-2 responsible-list"
+                                 @click="editResponsibles(blockIndex, itemIndex, item)">
+                                <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
+                                             :ministries="ministries"/>
+                                <div v-else>
+                                    <div v-if="item.data.responsible.length > 0">
+                                            <span class="badge badge-light" v-for="record in item.data.responsible"
+                                                  v-html="displayResponsible(record)"/>
+                                    </div>
+                                    <div v-else>
+                                        <div v-if="editable">
+                                            <span class="fa fa-users"></span> Hier klicken, um Verantwortliche
+                                            auszuwählen.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="row">
+                                    <item-starting-time class="col-6" :item="item" :service="service"/>
+                                    <item-text-stats class="col-6" :item="item" :service="service"/>
+                                </div>
+                            </div>
+                            <div class="col-1 text-right" v-if="editable">
+                                <button @click.stop="deleteItem(blockIndex, itemIndex)"
+                                        class="btn btn-sm btn-danger" title="Element löschen">
+                                    <span class="fa fa-trash"></span>
+                                </button>
+                            </div>
                         </div>
-                    </draggable>
-                </div>
-            </draggable>
-            <div class="row">
-                <div class="col-sm-7"></div>
-                <div class="col-sm-2" style="border-top: solid 1px lightgray;">
-                    <small>Berechnetes Ende:</small>
-                </div>
-                <div class="col-sm-2">
-                    <div class="row">
-                        <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}" :service="service" />
-                        <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}" :service="service" start="00:00"/>
+                        <details-pane v-if="item.editing == true" :service="service" :element="item"
+                                      :agenda-mode="agendaMode" :markers="markers"/>
                     </div>
+                </draggable>
+            </div>
+        </draggable>
+        <div class="row" v-if="blocks.length > 0">
+            <div class="col-sm-7"></div>
+            <div class="col-sm-2" style="border-top: solid 1px lightgray;">
+                <small>Berechnetes Ende:</small>
+            </div>
+            <div class="col-sm-2">
+                <div class="row">
+                    <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}"
+                                        :service="service"/>
+                    <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}"
+                                        :service="service" start="00:00"/>
                 </div>
             </div>
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt
-                hinzufügen...
-            </button>
-            <button class="btn btn-secondary" @click.prevent="modalOpen = true">Ablaufelemente importieren...</button>
         </div>
         <modal title="Elemente importieren" v-if="modalOpen" min-height="50vh"
                @close="importElements" @cancel="modalOpen = false;"
@@ -220,7 +225,7 @@
                @close="downloadConfiguredSheet(sheet)"
                @cancel="dialogs[sheet.key] = false"
                close-button-label="Herunterladen" cancel-button-label="Abbrechen">
-                <component :is="sheet.configurationComponent" :service="service" :sheet="sheet" />
+            <component :is="sheet.configurationComponent" :service="service" :sheet="sheet"/>
         </modal>
     </div>
 </template>
@@ -240,10 +245,12 @@ import SongPPTLiturgySheetConfiguration from "../LiturgySheets/SongPPTLiturgyShe
 import SongSheetLiturgySheetConfiguration from "../LiturgySheets/SongSheetLiturgySheetConfiguration";
 import ItemTextStats from "../Elements/ItemTextStats";
 import ItemStartingTime from "../Elements/ItemStartingTime";
+import NavButton from "../../Ui/buttons/NavButton";
 
 export default {
     name: "LiturgyTree",
     components: {
+        NavButton,
         ItemStartingTime,
         ItemTextStats,
         FormSelectize,
@@ -578,7 +585,7 @@ export default {
                 }
                 return "<span class=\"fa fa-users\"></span> " + tmp[1];
             } else {
-                return '<span class="fa fa-user-times"></span> '+tmp[1];
+                return '<span class="fa fa-user-times"></span> ' + tmp[1];
             }
         },
         importElements() {
@@ -588,7 +595,7 @@ export default {
             })
         },
         downloadConfiguredSheet(sheet) {
-            document.getElementById('frm'+sheet.key).submit();
+            document.getElementById('frm' + sheet.key).submit();
             this.dialogs[sheet.key] = false;
         },
         dataReplacerTitle(item) {
@@ -596,7 +603,7 @@ export default {
             var t = 'Dieses Element wird mit Hilfe von persönlichen Daten ';
             var error = '';
             var replacerObject = null;
-            this.service[item.data.needs_replacement+'s'].forEach(obj => {
+            this.service[item.data.needs_replacement + 's'].forEach(obj => {
                 if (obj.id == item.data.replacement) replacerObject = obj;
             })
             switch (item.data.needs_replacement) {
@@ -606,7 +613,7 @@ export default {
                         error = 'Es ist noch keine Bestattung ausgewählt!';
                         if (this.service.funerals.length == 0) error += ' Dem Gottesdienst sind keine Bestattungen zugeordnet!';
                     } else {
-                        t +=' ('+replacerObject.buried_name+')';
+                        t += ' (' + replacerObject.buried_name + ')';
                     }
                     break;
                 case 'baptism':
@@ -615,7 +622,7 @@ export default {
                         error = 'Es ist noch keine Taufe ausgewählt!';
                         if (this.service.baptisms.length == 0) error += ' Dem Gottesdienst sind keine Taufen zugeordnet!';
                     } else {
-                        t +=' ('+replacerObject.candidate_name+')';
+                        t += ' (' + replacerObject.candidate_name + ')';
                     }
                     break;
                 case 'wedding':
@@ -624,11 +631,12 @@ export default {
                         error = 'Es ist noch keine Trauung ausgewählt!';
                         if (this.service.weddings.length == 0) error += ' Dem Gottesdienst sind keine Trauungen zugeordnet!';
                     } else {
-                        t +=' ('+replacerObject.spouse1_name+' / '+replacerObject.spouse2_name+')';
+                        t += ' (' + replacerObject.spouse1_name + ' / ' + replacerObject.spouse2_name + ')';
                     }
                     break;
-            };
-            t += ' angepasst.'+(error ? ' '+error : '');
+            }
+            ;
+            t += ' angepasst.' + (error ? ' ' + error : '');
             return (t)
         },
         dataReplacerClass(item) {

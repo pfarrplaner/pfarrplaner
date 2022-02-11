@@ -30,62 +30,70 @@
 <template>
     <admin-layout :title="'Willkommen, '+(user.first_name ? user.first_name : user.name)+'!'">
         <template slot="navbar-left">
-            <a class="btn btn-primary" :href="route('calendar')"><span class="fa fa-calendar"></span> <span class="d-none d-md-inline">Zum Kalender</span></a>&nbsp;
-            <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('baptisms.create')"><span class="fa fa-water"></span>
+            <a class="btn btn-primary" :href="route('calendar')"><span class="fa fa-calendar"></span> <span
+                class="d-none d-md-inline">Zum Kalender</span></a>&nbsp;
+            <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('baptisms.create')">
+                <span class="fa fa-water"></span>
                 <span class="d-none d-md-inline">Taufe anlegen...</span></inertia-link>&nbsp;
-            <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('funerals.wizard')"><span class="fa fa-cross"></span>
+            <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('funerals.wizard')">
+                <span class="fa fa-cross"></span>
                 <span class="d-none d-md-inline">Beerdigung anlegen...</span></inertia-link>&nbsp;
-            <a v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('weddings.wizard')"><span class="fa fa-ring"></span>
+            <a v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('weddings.wizard')"><span
+                class="fa fa-ring"></span>
                 <span class="d-none d-md-inline">Trauung anlegen...</span></a>&nbsp;
         </template>
-        <div v-if="settings.homeScreenConfig.showReplacements && (replacements.length > 0)" class="alert alert-info">
-            <div class="text-bold">Du vertrittst aktuell:</div>
-            <ul>
-                <li v-for="(replacement,replacementIndex) in replacements">
-                    {{ replacement.absence.user.name }} ({{ replacement.absence.reason }}, {{ moment(replacement.from).format('DD.MM.YYYY') }} - {{ moment(replacement.to).format('DD.MM.YYYY') }})
-                    <div v-if="replacement.absence.replacement_notes"><small><span class="text-bold">Hinweis: </span>{{ replacement.absence.replacement_notes }}</small></div>
-                </li>
-            </ul>
-        </div>
-        <card>
-            <card-header>
-                <tab-headers>
-                    <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key" :active-tab="myActiveTab"
-                                :count="tab.count" :badge-type="tab.badgeType" :class="'tabheader-'+tab.type"/>
-                    <div class="ml-auto d-inline tab-setup">
-                        <a :href="route('user.profile', {tab: 'homeScreenConfiguration'})" class="p-2 pl-3 tab-setup ml-auto"
-                           title="Angezeigte Reiter konfigurieren"><span class="fa fa-cog"></span>
-                            <span class="d-none d-md-inline">Anzeige</span>
-                        </a>
-                    </div>
-                </tab-headers>
-            </card-header>
-            <card-body>
-                <div v-if="myTabsConfig.tabs.length == 0" class="alert alert-info">
-                    Dieser Startbildschirm ist noch ziemlich leer. In deinem Profil kannst du einstellen, was du hier sehen möchtest.
-                    <div>
-                        <a class="btn btn-primary" :href="route('user.profile', {tab: 'homeScreenConfiguration'})">Profil bearbeiten</a>
-                    </div>
+        <template slot="before-flash">
+            <div v-if="settings.homeScreenConfig.showReplacements && (replacements.length > 0)"
+                 class="alert alert-info">
+                <div class="text-bold">Du vertrittst aktuell:</div>
+                <ul>
+                    <li v-for="(replacement,replacementIndex) in replacements">
+                        {{ replacement.absence.user.name }} ({{ replacement.absence.reason }},
+                        {{ moment(replacement.from).format('DD.MM.YYYY') }} -
+                        {{ moment(replacement.to).format('DD.MM.YYYY') }})
+                        <div v-if="replacement.absence.replacement_notes"><small><span
+                            class="text-bold">Hinweis: </span>{{ replacement.absence.replacement_notes }}</small></div>
+                    </li>
+                </ul>
+            </div>
+        </template>
+        <template slot="tab-headers">
+            <tab-headers>
+                <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key"
+                            :active-tab="myActiveTab"
+                            :count="tab.count" :badge-type="tab.badgeType" :class="'tabheader-'+tab.type"/>
+                <div class="ml-auto d-inline tab-setup">
+                    <a :href="route('user.profile', {tab: 'homeScreenConfiguration'})"
+                       class="p-2 pl-3 tab-setup ml-auto"
+                       title="Angezeigte Reiter konfigurieren"><span class="fa fa-cog"></span>
+                        <span class="d-none d-md-inline">Anzeige</span>
+                    </a>
                 </div>
-                <tabs>
-                    <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key"  :active-tab="myActiveTab" >
-                        <component v-if="tab.filled" :is="tabComponent(tab)" v-bind="tab"
-                                   :user="user" :settings="settings" :config="settings.homeScreenTabsConfig.tabs[tab.index].config"/>
-                    </tab>
-                </tabs>
-            </card-body>
-        </card>
+            </tab-headers>
+        </template>
+        <div v-if="myTabsConfig.tabs.length == 0" class="alert alert-info">
+            Dieser Startbildschirm ist noch ziemlich leer. In deinem Profil kannst du einstellen, was du hier sehen
+            möchtest.
+            <div>
+                <a class="btn btn-primary" :href="route('user.profile', {tab: 'homeScreenConfiguration'})">Profil
+                    bearbeiten</a>
+            </div>
+        </div>
+        <tabs>
+            <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key" :active-tab="myActiveTab">
+                <component v-if="tab.filled" :is="tabComponent(tab)" v-bind="tab"
+                           :user="user" :settings="settings"
+                           :config="settings.homeScreenTabsConfig.tabs[tab.index].config"/>
+            </tab>
+        </tabs>
     </admin-layout>
 </template>
 
 <script>
-import Card from "../components/Ui/cards/card";
-import CardBody from "../components/Ui/cards/cardBody";
 import TabHeaders from "../components/Ui/tabs/tabHeaders";
 import TabHeader from "../components/Ui/tabs/tabHeader";
 import Tabs from "../components/Ui/tabs/tabs";
 import Tab from "../components/Ui/tabs/tab";
-import CardHeader from "../components/Ui/cards/cardHeader";
 import AdminTab from "../components/HomeScreen/AdminTab";
 import AbsencesTab from "../components/HomeScreen/AbsencesTab";
 import AbsenceRequestsTab from "../components/HomeScreen/AbsenceRequestsTab";
@@ -98,17 +106,38 @@ import NextServicesTab from "../components/HomeScreen/NextServicesTab";
 import RegistrationsTab from "../components/HomeScreen/RegistrationsTab";
 import StreamingTab from "../components/HomeScreen/StreamingTab";
 import WeddingsTab from "../components/HomeScreen/WeddingsTab";
+
 export default {
     name: "HomeScreen",
-    components: {CardHeader, TabHeader, TabHeaders, Tabs, Tab, CardBody, Card,
-        AdminTab, AbsencesTab, AbsenceRequestsTab, BaptismsTab, CasesTab, FuneralsTab, MissingEntriesTab, NextOfferingsTab, NextServicesTab,
-        RegistrationsTab, StreamingTab, WeddingsTab,
+    components: {
+        TabHeader,
+        TabHeaders,
+        Tabs,
+        Tab,
+        AdminTab,
+        AbsencesTab,
+        AbsenceRequestsTab,
+        BaptismsTab,
+        CasesTab,
+        FuneralsTab,
+        MissingEntriesTab,
+        NextOfferingsTab,
+        NextServicesTab,
+        RegistrationsTab,
+        StreamingTab,
+        WeddingsTab,
     },
     props: ['user', 'settings', 'activeTab', 'replacements'],
     beforeMount() {
         var index = 0;
         this.myTabsConfig.tabs.forEach(function (tab, tabIndex) {
-            this.myTabs[tab.type+tabIndex] = { title: '', key: tab.type+tabIndex, description: '', count: 0, tabObject: tab}
+            this.myTabs[tab.type + tabIndex] = {
+                title: '',
+                key: tab.type + tabIndex,
+                description: '',
+                count: 0,
+                tabObject: tab
+            }
             axios.get(route('tab', tabIndex)).then(response => {
                 tab = response.data;
                 this.myTabs[tab.key] = tab;
@@ -124,12 +153,12 @@ export default {
             myTabNames: myTabNames,
             myTabsConfig: this.settings.homeScreenTabsConfig,
             myTabs: {},
-            myActiveTab: this.activeTab || (this.settings.homeScreenTabsConfig.tabs[0] ? this.settings.homeScreenTabsConfig.tabs[0].type+'0' : null),
+            myActiveTab: this.activeTab || (this.settings.homeScreenTabsConfig.tabs[0] ? this.settings.homeScreenTabsConfig.tabs[0].type + '0' : null),
         }
     },
     methods: {
         tabComponent(tab) {
-            return tab.type.charAt(0).toUpperCase() + tab.type.slice(1)+'Tab';
+            return tab.type.charAt(0).toUpperCase() + tab.type.slice(1) + 'Tab';
         }
     }
 }
@@ -146,7 +175,7 @@ ul.nav.nav-tabs {
     border-bottom-width: 0;
 }
 
-.tab-setup a{
+.tab-setup a {
     font-size: .7em;
     color: #c3c3c3 !important;
 }

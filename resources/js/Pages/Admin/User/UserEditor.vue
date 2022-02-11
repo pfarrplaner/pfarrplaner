@@ -37,185 +37,189 @@
                         type="light" icon="key">Passwort zurücksetzen
             </nav-button>
             <nav-button type="danger" icon="trash" title="Benutzer löschen" class="ml-1"
-                        @click="deleteUser">Löschen</nav-button>
+                        @click="deleteUser">Löschen
+            </nav-button>
         </template>
-        <card>
-            <card-header>
-                <tab-headers>
-                    <tab-header id="home" :active-tab="activeTab" title="Person"/>
-                    <tab-header id="account" :active-tab="activeTab" title="Benutzerkonto"/>
-                    <tab-header v-if="myUser.isOfficialUser" id="permissions" :active-tab="activeTab"
-                                title="Berechtigungen"/>
-                    <tab-header v-if="myUser.isOfficialUser" id="menu" :active-tab="activeTab"
-                                title="Menü"/>
-                    <tab-header v-if="myUser.isOfficialUser" id="homescreen" :active-tab="activeTab"
-                                title="Startseite"/>
-                    <tab-header v-if="myUser.isOfficialUser" id="settings" :active-tab="activeTab"
-                                title="Alle Einstellungen"/>
-                    <tab-header id="absences" :active-tab="activeTab" title="Urlaub"/>
-                </tab-headers>
-            </card-header>
-            <card-body>
-                <tabs>
-                    <tab id="home" :active-tab="activeTab">
-                        <form-input name="name" label="Name" v-model="myUser.name"/>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <form-input name="title" label="Titel" v-model="myUser.title"/>
-                            </div>
-                            <div class="col-md-5">
-                                <form-input name="first_name" label="Vorname" v-model="myUser.first_name"/>
-                            </div>
-                            <div class="col-md-5">
-                                <form-input name="last_name" label="Nachname" v-model="myUser.last_name"/>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7">
-                                <form-input name="office" label="Dienststelle" v-model="myUser.office"/>
-                                <form-textarea name="address" label="Adresse" v-model="myUser.address"/>
-                                <form-input name="phone" label="Telefonnummer"
-                                            help="Nur Zahlen und Leerzeichen erlaubt" v-model="myUser.phone"/>
-                                <form-input type="email" name="email" label="E-Mailadresse" v-model="myUser.email"
-                                            :key="user.email"
-                                            :required="Boolean(myUser.isOfficialUser)"/>
-                            </div>
-                            <div class="col-md-5">
-                                <form-image-attacher v-if="myUser.id"
-                                                     name="image" v-model="myUser.image"
-                                                     label="Benutzerbild"
-                                                     :attach-route="route('user.attach', {model: myUser.id})"
-                                                     :detach-route="route('user.detach', {model: myUser.id})"/>
-                                <div v-else>
-                                    <label>Benutzerbild</label>
-                                    <div class="alert alert-info">Die Person muss zuerst einmal gespeichert werden,
-                                        bevor ein Bild angehängt werden kann.</div>
-                                </div>
+        <template slot="tab-headers">
+            <tab-headers>
+                <tab-header id="home" :active-tab="activeTab" title="Person"/>
+                <tab-header id="account" :active-tab="activeTab" title="Benutzerkonto"/>
+                <tab-header v-if="myUser.isOfficialUser" id="permissions" :active-tab="activeTab"
+                            title="Berechtigungen"/>
+                <tab-header v-if="myUser.isOfficialUser" id="menu" :active-tab="activeTab"
+                            title="Menü"/>
+                <tab-header v-if="myUser.isOfficialUser" id="homescreen" :active-tab="activeTab"
+                            title="Startseite"/>
+                <tab-header v-if="myUser.isOfficialUser" id="settings" :active-tab="activeTab"
+                            title="Alle Einstellungen"/>
+                <tab-header id="absences" :active-tab="activeTab" title="Urlaub"/>
+            </tab-headers>
+        </template>
+        <tabs>
+            <tab id="home" :active-tab="activeTab">
+                <form-input name="name" label="Name" v-model="myUser.name"/>
+                <div class="row">
+                    <div class="col-md-2">
+                        <form-input name="title" label="Titel" v-model="myUser.title"/>
+                    </div>
+                    <div class="col-md-5">
+                        <form-input name="first_name" label="Vorname" v-model="myUser.first_name"/>
+                    </div>
+                    <div class="col-md-5">
+                        <form-input name="last_name" label="Nachname" v-model="myUser.last_name"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-7">
+                        <form-input name="office" label="Dienststelle" v-model="myUser.office"/>
+                        <form-textarea name="address" label="Adresse" v-model="myUser.address"/>
+                        <form-input name="phone" label="Telefonnummer"
+                                    help="Nur Zahlen und Leerzeichen erlaubt" v-model="myUser.phone"/>
+                        <form-input type="email" name="email" label="E-Mailadresse" v-model="myUser.email"
+                                    :key="user.email"
+                                    :required="Boolean(myUser.isOfficialUser)"/>
+                    </div>
+                    <div class="col-md-5">
+                        <form-image-attacher v-if="myUser.id"
+                                             name="image" v-model="myUser.image"
+                                             label="Benutzerbild"
+                                             :attach-route="route('user.attach', {model: myUser.id})"
+                                             :detach-route="route('user.detach', {model: myUser.id})"/>
+                        <div v-else>
+                            <label>Benutzerbild</label>
+                            <div class="alert alert-info">Die Person muss zuerst einmal gespeichert werden,
+                                bevor ein Bild angehängt werden kann.
                             </div>
                         </div>
-                    </tab>
-                    <tab id="account" :active-tab="activeTab">
-                        <div v-if="!myUser.isOfficialUser" class="alert alert-warning">
+                    </div>
+                </div>
+            </tab>
+            <tab id="account" :active-tab="activeTab">
+                <div v-if="!myUser.isOfficialUser" class="alert alert-warning">
                             <span
                                 class="text-bold">Für diese Person wurde bisher noch kein Benutzerkonto angelegt.</span>
-                            <form-check label="Benutzerkonto anlegen und Willkommensnachricht mit Kontodaten versenden"
-                                        v-model="myUser.isOfficialUser" @input="createUserAccount"/>
+                    <form-check label="Benutzerkonto anlegen und Willkommensnachricht mit Kontodaten versenden"
+                                v-model="myUser.isOfficialUser" @input="createUserAccount"/>
+                </div>
+                <div v-else>
+                    <form-input type="email" name="email" :required="true"
+                                :key="user.email"
+                                label="E-Mailadresse"
+                                help="Die E-Mailadresse ist auch der Benutzername zur Anmeldung."
+                                v-model="myUser.email"/>
+                    <form-selectize name="homeCities[]" v-model="myUser.home_cities" multiple
+                                    label="Diese Person gehört zu folgenden Kirchengemeinden"
+                                    :options="cities"
+                                    :settings="{ labelField: 'name', searchFields: ['name']}"/>
+                    <form-selectize name="parishes[]" v-model="myUser.parishes" multiple
+                                    label="Diese Person hat folgende Pfarrämter inne"
+                                    :options="parishes"
+                                    :settings="{ labelField: 'name', searchFields: ['name']}"/>
+                </div>
+            </tab>
+            <tab v-if="myUser.isOfficialUser" id="permissions" :active-tab="activeTab">
+                <form-selectize name="roles[]" v-model="myUser.roles" multiple
+                                label="Benutzerrollen"
+                                :options="Object.values(roles)"
+                                :settings="{ labelField: 'name', searchFields: ['name']}"/>
+                <hr/>
+                <fake-table :columns="[4,4,4]" :headers="['Kirchengemeinde', 'Rechte', 'Benachrichtungen']"
+                            collapsed-header="Kirchengemeinden" class="border-bottom">
+                    <div class="row p-1 mb-3 border-top" v-for="city in adminCities">
+                        <div class="col-md-4">{{ city.name }}</div>
+                        <div class="col-md-4">
+                            <city-permission-toggle v-model="cityPermission[city.id].permission"/>
                         </div>
-                        <div v-else>
-                            <form-input type="email" name="email" :required="true"
-                                        :key="user.email"
-                                        label="E-Mailadresse"
-                                        help="Die E-Mailadresse ist auch der Benutzername zur Anmeldung."
-                                        v-model="myUser.email"/>
-                            <form-selectize name="homeCities[]" v-model="myUser.home_cities" multiple
-                                            label="Diese Person gehört zu folgenden Kirchengemeinden"
-                                            :options="cities"
-                                            :settings="{ labelField: 'name', searchFields: ['name']}"/>
-                            <form-selectize name="parishes[]" v-model="myUser.parishes" multiple
-                                            label="Diese Person hat folgende Pfarrämter inne"
-                                            :options="parishes"
-                                            :settings="{ labelField: 'name', searchFields: ['name']}"/>
-                        </div>
-                    </tab>
-                    <tab v-if="myUser.isOfficialUser" id="permissions" :active-tab="activeTab">
-                        <form-selectize name="roles[]" v-model="myUser.roles" multiple
-                                        label="Benutzerrollen"
-                                        :options="Object.values(roles)"
-                                        :settings="{ labelField: 'name', searchFields: ['name']}"/>
-                        <hr/>
-                        <fake-table :columns="[4,4,4]" :headers="['Kirchengemeinde', 'Rechte', 'Benachrichtungen']"
-                                    collapsed-header="Kirchengemeinden" class="border-bottom">
-                            <div class="row p-1 mb-3 border-top" v-for="city in adminCities">
-                                <div class="col-md-4">{{ city.name }}</div>
-                                <div class="col-md-4">
-                                    <city-permission-toggle v-model="cityPermission[city.id].permission"/>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <select v-model="mySubscriptions[city.id].subscription_type"
-                                                class="form-control">
-                                            <option value="0">keine Benachrichtigungen</option>
-                                            <option value="1">bei Änderungen an eigenen Gottesdiensten</option>
-                                            <option value="2">bei Änderungen an allen Gottesdiensten</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </fake-table>
-                    </tab>
-                    <tab v-if="myUser.isOfficialUser" id="menu" :active-tab="activeTab">
-                        <p>Hier können im Menü für diese Person einzelne Module an und abgeschaltet werden.</p>
-                        <div v-for="(moduleGroup,moduleGroupTitle,moduleGroupIndex) in modules" class="border-bottom">
-                            <div class="text-bold py-3 border-top mt-3" v-if="moduleGroupTitle != 'default'" >{{ moduleGroupTitle }}</div>
-                            <div v-for="(module,moduleIndex) in moduleGroup" class="row module-row p-2" :class="moduleIndex % 2 ? 'odd' : 'even'">
-                                <div class="col-md-1">
-                                    <form-check label="" :name="'settings[modules]['+module.key+']'"
-                                                v-model="mySettings.modules[module.key]" />
-                                </div>
-                                <div class="col-md-11">
-                                    <span class="fa" :class="'fa-'+module.icon" :style="{color: module.color}"></span>
-                                    <span>{{ module.title }}</span>
-                                </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <select v-model="mySubscriptions[city.id].subscription_type"
+                                        class="form-control">
+                                    <option value="0">keine Benachrichtigungen</option>
+                                    <option value="1">bei Änderungen an eigenen Gottesdiensten</option>
+                                    <option value="2">bei Änderungen an allen Gottesdiensten</option>
+                                </select>
                             </div>
                         </div>
-                    </tab>
-                    <tab v-if="myUser.isOfficialUser" id="homescreen" :active-tab="activeTab">
-                        <home-screen-configuration-tab :available-tabs="availableTabs" :cities="cities"
-                                                       :home-screen-tabs-config="mySettings.homeScreenTabsConfig"
-                                                       :locations="locations" :ministries="ministries"
-                                                       :settings="settings" third-party="1" :module-groups="modules"/>
-                    </tab>
-                    <tab v-if="myUser.isOfficialUser" id="settings" :active-tab="activeTab">
-                        <div v-if="!riskTaker" class="alert alert-warning">
-                            <p>Auf dieser Seite können <u>alle</u> Benutzereinstellungen bearbeitet werden. Das solltest
-                                du nur tun, wenn du wirklich weißt, was du tust.</p>
-                            <form-check v-model="riskTaker" label="Verstanden, ich weiß, was ich da tue."/>
+                    </div>
+                </fake-table>
+            </tab>
+            <tab v-if="myUser.isOfficialUser" id="menu" :active-tab="activeTab">
+                <p>Hier können im Menü für diese Person einzelne Module an und abgeschaltet werden.</p>
+                <div v-for="(moduleGroup,moduleGroupTitle,moduleGroupIndex) in modules" class="border-bottom">
+                    <div class="text-bold py-3 border-top mt-3" v-if="moduleGroupTitle != 'default'">{{
+                            moduleGroupTitle
+                        }}
+                    </div>
+                    <div v-for="(module,moduleIndex) in moduleGroup" class="row module-row p-2"
+                         :class="moduleIndex % 2 ? 'odd' : 'even'">
+                        <div class="col-md-1">
+                            <form-check label="" :name="'settings[modules]['+module.key+']'"
+                                        v-model="mySettings.modules[module.key]"/>
                         </div>
-                        <div v-if="riskTaker" :key="Object.keys(mySettings).length">
-                            <fake-table :columns="[3,8,1]" :headers="['Einstellung', 'Inhalt', '']"
-                                        collapsed-header="Benutzereinstellungen" class="border-bottom">
-                                <div v-for="settingKey in Object.keys(mySettings).sort()" class="row p-1 mb-3 border-top" v-if="mySettings[settingKey]">
-                                    <div class="col-md-3"><code class="text-bold">{{ settingKey }}</code></div>
-                                    <div class="col-md-7">
-                                        <div v-if="editSetting == settingKey">
-                                            <json-editor :data-input="mySettings[settingKey]"
-                                                         @data-output="(data) => (mySettings[settingKey] = data)" />
-                                        </div>
-                                        <vue-json-pretty v-else @click="editSetting = settingKey" :data="mySettings[settingKey]" />
-                                    </div>
-                                    <div class="col-md-1 text-right">
-                                        <nav-button type="danger" icon="trash" force-no-text force-icon
-                                                    class="btn-sm pull-right"
-                                                    title="Einstellung löschen" @click="mySettings[settingKey] = null" />
-                                    </div>
+                        <div class="col-md-11">
+                            <span class="fa" :class="'fa-'+module.icon" :style="{color: module.color}"></span>
+                            <span>{{ module.title }}</span>
+                        </div>
+                    </div>
+                </div>
+            </tab>
+            <tab v-if="myUser.isOfficialUser" id="homescreen" :active-tab="activeTab">
+                <home-screen-configuration-tab :available-tabs="availableTabs" :cities="cities"
+                                               :home-screen-tabs-config="mySettings.homeScreenTabsConfig"
+                                               :locations="locations" :ministries="ministries"
+                                               :settings="settings" third-party="1" :module-groups="modules"/>
+            </tab>
+            <tab v-if="myUser.isOfficialUser" id="settings" :active-tab="activeTab">
+                <div v-if="!riskTaker" class="alert alert-warning">
+                    <p>Auf dieser Seite können <u>alle</u> Benutzereinstellungen bearbeitet werden. Das solltest
+                        du nur tun, wenn du wirklich weißt, was du tust.</p>
+                    <form-check v-model="riskTaker" label="Verstanden, ich weiß, was ich da tue."/>
+                </div>
+                <div v-if="riskTaker" :key="Object.keys(mySettings).length">
+                    <fake-table :columns="[3,8,1]" :headers="['Einstellung', 'Inhalt', '']"
+                                collapsed-header="Benutzereinstellungen" class="border-bottom">
+                        <div v-for="settingKey in Object.keys(mySettings).sort()" class="row p-1 mb-3 border-top"
+                             v-if="mySettings[settingKey]">
+                            <div class="col-md-3"><code class="text-bold">{{ settingKey }}</code></div>
+                            <div class="col-md-7">
+                                <div v-if="editSetting == settingKey">
+                                    <json-editor :data-input="mySettings[settingKey]"
+                                                 @data-output="(data) => (mySettings[settingKey] = data)"/>
                                 </div>
-                            </fake-table>
+                                <vue-json-pretty v-else @click="editSetting = settingKey"
+                                                 :data="mySettings[settingKey]"/>
+                            </div>
+                            <div class="col-md-1 text-right">
+                                <nav-button type="danger" icon="trash" force-no-text force-icon
+                                            class="btn-sm pull-right"
+                                            title="Einstellung löschen" @click="mySettings[settingKey] = null"/>
+                            </div>
                         </div>
+                    </fake-table>
+                </div>
 
-                    </tab>
-                    <tab id="absences" :active-tab="activeTab">
-                        <form-check name="manage_absences" label="Urlaub für diesen Benutzer verwalten"
-                                    v-model="myUser.manage_absences"/>
-                        <div v-if="myUser.manage_absences">
-                            <form-check name="show_absences_with_services" label="Urlaub im Gottesdienstplaner anzeigen"
-                                        v-model="myUser.show_vacations_with_services"/>
-                            <form-check name="needs_replacement" label="Urlaubsvertretung benötigt"
-                                        v-model="myUser.needs_replacement"/>
-                            <hr/>
-                            <legend>Genehmigungsprozess</legend>
-                            <p>Wenn die folgenden Felder ausgefüllt sind, durchläuft ein Abwesenheitsantrag dieser
-                                Person
-                                zuerst <a href="/media/manual/media/documents/Urlaubsanträge im Pfarrplaner.pdf"
-                                          target="_blank">einen Genehmigungsprozess</a>.</p>
-                            <people-select label="Urlaub muss durch eine der folgenden Personen geprüft werden"
-                                           :people="users" v-model="myUser.vacation_admins"/>
-                            <people-select label="Urlaub muss durch eine der folgenden Personen genehmigt werden"
-                                           :people="users" v-model="myUser.vacation_approvers"/>
-                        </div>
-                    </tab>
-                </tabs>
-            </card-body>
-        </card>
+            </tab>
+            <tab id="absences" :active-tab="activeTab">
+                <form-check name="manage_absences" label="Urlaub für diesen Benutzer verwalten"
+                            v-model="myUser.manage_absences"/>
+                <div v-if="myUser.manage_absences">
+                    <form-check name="show_absences_with_services" label="Urlaub im Gottesdienstplaner anzeigen"
+                                v-model="myUser.show_vacations_with_services"/>
+                    <form-check name="needs_replacement" label="Urlaubsvertretung benötigt"
+                                v-model="myUser.needs_replacement"/>
+                    <hr/>
+                    <legend>Genehmigungsprozess</legend>
+                    <p>Wenn die folgenden Felder ausgefüllt sind, durchläuft ein Abwesenheitsantrag dieser
+                        Person
+                        zuerst <a href="/media/manual/media/documents/Urlaubsanträge im Pfarrplaner.pdf"
+                                  target="_blank">einen Genehmigungsprozess</a>.</p>
+                    <people-select label="Urlaub muss durch eine der folgenden Personen geprüft werden"
+                                   :people="users" v-model="myUser.vacation_admins"/>
+                    <people-select label="Urlaub muss durch eine der folgenden Personen genehmigt werden"
+                                   :people="users" v-model="myUser.vacation_approvers"/>
+                </div>
+            </tab>
+        </tabs>
     </admin-layout>
 </template>
 
@@ -295,7 +299,7 @@ export default {
         myUser.vacation_approvers = this.reduceToIds(myUser.vacation_approvers);
 
         // create empty settings for new users
-        this.settings.homeScreenTabsConfig = this.settings.homeScreenTabsConfig || { tabs: []}
+        this.settings.homeScreenTabsConfig = this.settings.homeScreenTabsConfig || {tabs: []}
 
         // create empty modules setting
         if (!this.settings.modules) {
@@ -328,7 +332,7 @@ export default {
         });
 
         this.adminCities.forEach(city => {
-            mySubscriptions[city.id] = mySubscriptions[city.id] || { subscription_type: 0 };
+            mySubscriptions[city.id] = mySubscriptions[city.id] || {subscription_type: 0};
         })
 
         return {
@@ -349,9 +353,9 @@ export default {
             }
         },
         resetUserPassword() {
-            if (confirm('Willst du das Passwort für '+this.user.name+' wirklich zurücksetzen? '
-                +(this.user.first_name || this.user.name)+' erhält dann eine E-Mail mit neuen Zugangsdaten. Das bisherige Passwort '
-                +'ist dann ab sofort ungültig.')) {
+            if (confirm('Willst du das Passwort für ' + this.user.name + ' wirklich zurücksetzen? '
+                + (this.user.first_name || this.user.name) + ' erhält dann eine E-Mail mit neuen Zugangsdaten. Das bisherige Passwort '
+                + 'ist dann ab sofort ungültig.')) {
                 this.$inertia.post(route('user.password.reset', this.user.id));
             }
         },
@@ -383,7 +387,7 @@ export default {
             }
         },
         deleteUser() {
-            if (confirm('Möchtest du '+this.user.name+' wirklich endgültig und unwiderruflich löschen?')) {
+            if (confirm('Möchtest du ' + this.user.name + ' wirklich endgültig und unwiderruflich löschen?')) {
                 this.$inertia.delete(route('user.destroy', this.user.id));
             }
         },

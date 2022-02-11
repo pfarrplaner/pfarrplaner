@@ -34,46 +34,42 @@
                 <span class="d-inline d-md-none fa fa-save"></span> <span class="d-none d-md-inline">Speichern</span>
             </button>
         </template>
-        <card>
-            <card-header>
-                <tab-headers>
-                    <tab-header title="Profil" id="profile" :active-tab="activeTab"/>
-                    <tab-header title="Sicherheit" id="security" :active-tab="activeTab"/>
-                    <tab-header title="E-Mailbenachrichtigungen" id="subscriptions" :active-tab="activeTab"/>
-                    <tab-header title="Startseite" id="homeScreenConfiguration" :active-tab="activeTab"/>
-                    <tab-header title="Verbundene Kalender" id="calendars" :active-tab="activeTab"
-                                :count="calendarConnections.length"
-                                :disabled="user.email.slice(-8) != '@elkw.de'"
-                                disabled-title="Diese Funktion ist nur für Benutzer mit einem ELKW-Konto verfügbar."/>
-                    <tab-header title="Externe Inhalte" id="externalContent" :active-tab="activeTab" />
-                </tab-headers>
-            </card-header>
-            <card-body>
-                <tabs>
-                    <tab id="profile" :active-tab="activeTab">
-                        <profile-tab :user="user"/>
-                    </tab>
-                    <tab id="security" :active-tab="activeTab">
-                        <security-tab :user="user" :password="password"/>
-                    </tab>
-                    <tab id="subscriptions" :active-tab="activeTab">
-                        <subscriptions-tab :cities="cities" :subscriptions="subscriptions"/>
-                    </tab>
-                    <tab id="homeScreenConfiguration" :active-tab="activeTab">
-                        <home-screen-configuration-tab :available-tabs="availableTabs" :cities="cities"
-                                                       :home-screen-tabs-config="homeScreenTabsConfig"
-                                                       :locations="locations" :ministries="ministries"
-                                                       :settings="settings" />
-                    </tab>
-                    <tab id="calendars" :active-tab="activeTab">
-                        <calendar-connections-tab :user="user" :calendar-connections="calendarConnections"/>
-                    </tab>
-                    <tab id="externalContent" :active-tab="activeTab">
-                        <external-content-tab :user="editedUser" />
-                    </tab>
-                </tabs>
-            </card-body>
-        </card>
+        <template slot="tab-headers">
+            <tab-headers>
+                <tab-header title="Profil" id="profile" :active-tab="activeTab"/>
+                <tab-header title="Sicherheit" id="security" :active-tab="activeTab"/>
+                <tab-header title="E-Mailbenachrichtigungen" id="subscriptions" :active-tab="activeTab"/>
+                <tab-header title="Startseite" id="homeScreenConfiguration" :active-tab="activeTab"/>
+                <tab-header title="Verbundene Kalender" id="calendars" :active-tab="activeTab"
+                            :count="calendarConnections.length"
+                            :disabled="user.email.slice(-8) != '@elkw.de'"
+                            disabled-title="Diese Funktion ist nur für Benutzer mit einem ELKW-Konto verfügbar."/>
+                <tab-header title="Externe Inhalte" id="externalContent" :active-tab="activeTab"/>
+            </tab-headers>
+        </template>
+        <tabs>
+            <tab id="profile" :active-tab="activeTab">
+                <profile-tab :user="user"/>
+            </tab>
+            <tab id="security" :active-tab="activeTab">
+                <security-tab :user="user" :password="password"/>
+            </tab>
+            <tab id="subscriptions" :active-tab="activeTab">
+                <subscriptions-tab :cities="cities" :subscriptions="subscriptions"/>
+            </tab>
+            <tab id="homeScreenConfiguration" :active-tab="activeTab">
+                <home-screen-configuration-tab :available-tabs="availableTabs" :cities="cities"
+                                               :home-screen-tabs-config="homeScreenTabsConfig"
+                                               :locations="locations" :ministries="ministries"
+                                               :settings="settings"/>
+            </tab>
+            <tab id="calendars" :active-tab="activeTab">
+                <calendar-connections-tab :user="user" :calendar-connections="calendarConnections"/>
+            </tab>
+            <tab id="externalContent" :active-tab="activeTab">
+                <external-content-tab :user="editedUser"/>
+            </tab>
+        </tabs>
     </admin-layout>
 </template>
 
@@ -101,7 +97,7 @@ export default {
         HomeScreenConfigurationTab,
         SubscriptionsTab,
         CalendarConnectionsTab,
-        SecurityTab, ProfileTab, Tab, Tabs, CardBody, TabHeader, TabHeaders, CardHeader, Card
+        SecurityTab, ProfileTab, Tab, Tabs,  TabHeader, TabHeaders,
     },
     data() {
         return {
@@ -139,13 +135,4 @@ export default {
 </script>
 
 <style scoped>
-.card-header {
-    padding-bottom: 0 !important;
-    background-color: #fcfcfc;
-}
-
-ul.nav.nav-tabs {
-    margin-bottom: 0;
-    border-bottom-width: 0;
-}
 </style>
