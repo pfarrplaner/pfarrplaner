@@ -76,7 +76,6 @@
                         <form-input name="phone" label="Telefonnummer"
                                     help="Nur Zahlen und Leerzeichen erlaubt" v-model="myUser.phone"/>
                         <form-input type="email" name="email" label="E-Mailadresse" v-model="myUser.email"
-                                    :key="user.email"
                                     :required="Boolean(myUser.isOfficialUser)"/>
                     </div>
                     <div class="col-md-5">
@@ -102,11 +101,12 @@
                                 v-model="myUser.isOfficialUser" @input="createUserAccount"/>
                 </div>
                 <div v-else>
-                    <form-input type="email" name="email" :required="true"
-                                :key="user.email"
-                                label="E-Mailadresse"
-                                help="Die E-Mailadresse ist auch der Benutzername zur Anmeldung."
-                                v-model="myUser.email"/>
+                    <form-group label="E-Mailadresse"
+                                help="Die E-Mailadresse ist zugleich auch der Benutzername zur Anmeldung.">
+                        <div>
+                            <code :key="myUser.email">{{ myUser.email }}</code>
+                        </div>
+                    </form-group>
                     <form-selectize name="homeCities[]" v-model="myUser.home_cities" multiple
                                     label="Diese Person gehört zu folgenden Kirchengemeinden"
                                     :options="cities"
@@ -278,7 +278,7 @@ export default {
         SaveButton,
         FormCheck,
         FormImageAttacher,
-        FormTextarea, FormInput, Tab, Tabs, TabHeader, TabHeaders, CardBody, CardHeader, Card,
+        FormTextarea, FormInput, Tab, Tabs, TabHeader, TabHeaders,
         JsonEditor,
         VueJsonPretty,
     },
@@ -343,6 +343,7 @@ export default {
             riskTaker: false,
             mySettings: this.settings,
             editSetting: null,
+            emailChanged: 0,
         }
     },
     methods: {
