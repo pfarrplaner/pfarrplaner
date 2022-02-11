@@ -3,7 +3,7 @@
     "type": "project",
     "description": "Service and vacation planning for a district of Lutheran churches",
     "license": "GPL-3.0-or-later",
-    "version": "2022.114.0",
+    "version": "2022.115.0",
     "repositories": [
         {
             "type": "vcs",

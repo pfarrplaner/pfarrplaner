@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.115.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.114.0...v2022.115.0) (2022-02-11)
+
+
+### Features
+
+* Even more fields and age calculations for FuneralEditor ([d7cf263](https://github.com/pfarrplaner/pfarrplaner/commits/d7cf263101ed025a569df43530afdeb9a195ec77))
+
+
+### Bug Fixes
+
+* Email field only accepts one character at a time ([08060b1](https://github.com/pfarrplaner/pfarrplaner/commits/08060b142d5ff068b77ca99491c8563f106b844e))
+
 ## [2022.114.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.113.1...v2022.114.0) (2022-02-11)
 
 
