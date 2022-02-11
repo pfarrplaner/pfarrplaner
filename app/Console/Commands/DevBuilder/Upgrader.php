@@ -106,13 +106,10 @@ class Upgrader extends Command
             return;
         }
 
-        $this->output->section('Database upgrades');
-        $migrations = $this->hasMigrations();
-        if ($migrations) {
-            $this->writeDelayedResult('Running '.$migrations.' new migrations', function () {
-                Artisan::call('migrate');
-                return true;
-            });
+        if ($this->hasMigrations()) {
+            $this->output->section('Database upgrades');
+            $result = shell_exec('php artisan migrate');
+            $this->writeResult('Migrated database', $result);
         } else {
             $this->writeResult('No new migrations to be run', true);
         }
@@ -125,16 +122,14 @@ class Upgrader extends Command
         $result = shell_exec('npm install');
         $this->writeResult('NPM depencency build', $result);
 
-        $this->output->section('Webpack');
-        $result = shell_exec('npm run dev');
+        $environment = app()->environment() == 'production' ? 'prod' : 'dev';
+        $this->output->section('Webpack ('.$environment.')');
+        $result = shell_exec('npm run '.$environment);
         $this->writeResult('Webpack build', $result);
 
         $this->output->section('Cache & cleanup');
-        $this->writeDelayedResult('Running optimizations', function () {
-            Artisan::call('optimize');
-            return true;
-        });
-
+        $result = shell_exec('php artisan optimize');
+        $this->writeResult('App optimized', $result);
 
     }
 
