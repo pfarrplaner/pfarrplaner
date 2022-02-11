@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.114.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.113.1...v2022.114.0) (2022-02-11)
+
+
+### Features
+
+* Add birth-related fields to Baptism ([9c27877](https://github.com/pfarrplaner/pfarrplaner/commits/9c27877a5fe92fae44129748d8e216dba000d965))
+* Add no-padding in AdminLayout ([98856c1](https://github.com/pfarrplaner/pfarrplaner/commits/98856c1a9b128e7426f6324ce418c5ee4b09dff7))
+* New artisan upgrade command to facilitate new version installs ([4965c81](https://github.com/pfarrplaner/pfarrplaner/commits/4965c81fb29cee15cd1c516340b14a45ea5808d1))
+* New, cleaner, card-less layout in Vue-based forms ([ea9e50b](https://github.com/pfarrplaner/pfarrplaner/commits/ea9e50b9efcfa1c74b0e14934180d7c16aa89738))
+
+
+### Bug Fixes
+
+* InfoPane is not fluid ([884adc6](https://github.com/pfarrplaner/pfarrplaner/commits/884adc6e3aa1de6cb2fcb663c3efc1ddf68d1fca)), closes [#202](https://github.com/pfarrplaner/pfarrplaner/issues/202)
+* Only show fake attachments for self-editors ([529ace0](https://github.com/pfarrplaner/pfarrplaner/commits/529ace059b2a7a7a08dc09f9f6eff6ce7a2f020c))
+* Prevent empty attachment list message ([750dd74](https://github.com/pfarrplaner/pfarrplaner/commits/750dd7420c98b9ee7103974abafa55f2bd7ffaa1))
+* Sort cities by name ([d1984c8](https://github.com/pfarrplaner/pfarrplaner/commits/d1984c85bdf51025a3c230108e4502871ae33e6e))
+* typo ([82a9c2f](https://github.com/pfarrplaner/pfarrplaner/commits/82a9c2f0e64915727a55957c5e03a1ab2b0669bf))
+
 ### [2022.113.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.113.0...v2022.113.1) (2022-02-10)
 
 
