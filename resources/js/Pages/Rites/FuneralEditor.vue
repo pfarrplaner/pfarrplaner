@@ -327,7 +327,7 @@
             <tab id="attachments" :active-tab="activeTab">
                 <h3>Angehängte Dateien</h3>
                 <attachment-list v-model="myFuneral.attachments" delete-route-name="funeral.detach"
-                                 :parent-object="myFuneral" parent-type="funeral"
+                                 :parent-object="myFuneral" parent-type="funeral" :prevent-empty-list-message="true"
                                  :key="myFuneral.attachments.length"/>
                 <fake-attachment :href="route('funeral.form', {funeral: this.myFuneral.id})"
                                  title="Formular für Kirchenregisteramt" extension="pdf"
