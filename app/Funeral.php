@@ -104,6 +104,12 @@ class Funeral extends Model
         'dimissorial_received',
         'birth_name',
         'appointment_address',
+        'baptism_date',
+        'confirmation_date',
+        'confirmation_text',
+        'wedding_date',
+        'wedding_text',
+        'dod_spouse',
     ];
 
     /**
@@ -117,6 +123,10 @@ class Funeral extends Model
         'dod',
         'dimissorial_requested',
         'dimissorial_received',
+        'baptism_date',
+        'confirmation_date',
+        'wedding_date',
+        'dod_spouse',
     ];
 
     /** @var array */

@@ -88,16 +88,39 @@ class FuneralStoreRequest extends FormRequest
                 'death',
                 'birth_name',
                 'appointment_address',
-                ] as $key
+                'baptism_date',
+                'confirmation_date',
+                'confirmation_text',
+                'wedding_date',
+                'wedding_text',
+            ] as $key
         ) {
             $data[$key] = $data[$key] ?? '';
         }
 
-        $data['dimissorial_requested'] ? $data['dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_requested']) : $data['dimissorial_requested'] = null;
-        $data['dimissorial_received'] ? $data['dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_received']) : $data['dimissorial_received'] = null;
+        foreach (
+            [
+                'dimissorial_requested',
+                'dimissorial_received',
+                'baptism_date',
+                'confirmation_date',
+                'wedding_date',
+                'dod_spouse'
+            ] as $dateField
+        ) {
+            if(isset($data[$dateField]) && (!empty($data[$dateField]))) {
+                $data[$dateField] = Carbon::createFromFormat(
+                'd.m.Y',
+                $data[$dateField]);
+            } else {
+                $data[$dateField] = null;
+            }
+        }
 
         if (isset($data['appointment'])) {
-            $data['appointment'] = Carbon::parse($data['appointment'], 'Europe/Berlin')->setTimezone('UTC')->format('d.m.Y H:i');
+            $data['appointment'] = Carbon::parse($data['appointment'], 'Europe/Berlin')->setTimezone('UTC')->format(
+                'd.m.Y H:i'
+            );
         }
 
         return $data;
@@ -163,6 +186,12 @@ class FuneralStoreRequest extends FormRequest
             'dimissorial_received' => 'nullable|date_format:d.m.Y',
             'birth_name' => 'nullable|string',
             'appointment_address' => 'nullable|string',
+            'baptism_date' => 'nullable|date_format:d.m.Y',
+            'confirmation_date' => 'nullable|date_format:d.m.Y',
+            'confirmation_text' => 'nullable|string',
+            'wedding_date' => 'nullable|date_format:d.m.Y',
+            'wedding' => 'nullable|string',
+            'dod_spouse' => 'nullable|date_format:d.m.Y',
         ];
     }
 }

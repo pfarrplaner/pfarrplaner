@@ -247,18 +247,36 @@
                     <hr/>
                 </div>
                 <div class="row">
-                    <div class="col-lg-4">
+                    <div class="col-12 text-right">
+                        <button v-if="!showStoryEditor" class="btn btn-light" @click="showStoryEditor = true">
+                            <span class="fa fa-chevron-left"></span> Editor für Lebenslauf einblenden
+                        </button>
+                        <button v-else class="btn btn-light" @click="showStoryEditor = false">
+                            <span class="fa fa-chevron-right"></span> Editor für Lebenslauf ausblenden
+                        </button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div :class="showStoryEditor ? 'col-lg-4': 'col-md-6'">
                         <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents"
                                        name="parents"/>
-                        <form-textarea label="Ehepartner" v-model="funeral.spouse" name="spouse"/>
+                        <form-textarea label="Ehepartner:in" v-model="funeral.spouse" name="spouse"/>
+                        <form-date-picker label="Heiratsdatum" v-model="funeral.wedding_date" name="wedding_date"
+                                          :help="myFuneral.wedding_date ? ageText(myFuneral.dod_spouse || myFuneral.dod, myFuneral.wedding_date, '', ' verheiratet') : ''"/>
+                        <form-date-picker label="Sterbedatum Ehepartner:in" v-model="funeral.dod_spouse" name="dod_spouse"
+                                        :help="myFuneral.dod_spouse ? ageText(moment().format('DD.MM.YYYY'), myFuneral.dod_spouse, 'vor ', 'n') : ''" />
                         <form-textarea label="Kinder" v-model="funeral.children" name="children"/>
                         <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family"
                                        name="further_family"/>
                         <hr/>
                         <form-textarea label="Taufe" v-model="funeral.baptism" name="baptism"/>
-                        <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation"/>
+                        <form-date-picker label="Taufdatum" v-model="myFuneral.baptism_date" name="baptism_date"
+                                        :help="ageText(myFuneral.baptism_date, myFuneral.dob, 'mit ', 'n')"/>
+                        <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation" />
+                        <form-date-picker label="Datum der Konfirmation" v-model="funeral.confirmation_date" name="confirmation_date"
+                                          :help="ageText(myFuneral.confirmation_date, myFuneral.dob, 'mit ', 'n')" />
                     </div>
-                    <div class="col-lg-4">
+                    <div :class="showStoryEditor ? 'col-lg-4': 'col-md-6'">
                         <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood" name="childhood"/>
                         <form-input label="Beruf" v-model="myFuneral.profession" name="profession"/>
                         <form-textarea label="Ausbildung, Beruf" v-model="funeral.professional_life"
@@ -276,7 +294,7 @@
                         <hr/>
                         <form-textarea label="Zitate" v-model="funeral.quotes" name="quotes"/>
                     </div>
-                    <div class="col-lg-4">
+                    <div v-if="showStoryEditor" class="col-lg-4">
                         <div class="form-group">
                             <label>Lebenslauf</label>
                             <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
@@ -368,11 +386,15 @@ import RelativeDate from "../../libraries/RelativeDate";
 import FormCheck from "../../components/Ui/forms/FormCheck";
 import DimissorialFormPart from "../../components/RiteEditors/DimissorialFormPart";
 import TextStats from "../../components/LiturgyEditor/Elements/TextStats";
+import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
+import NavButton from "../../components/Ui/buttons/NavButton";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        NavButton,
+        FormDatePicker,
         TextStats,
         DimissorialFormPart,
         FormCheck,
@@ -387,7 +409,7 @@ export default {
         FakeTable,
         BasicInfo, FormGroup, FormInput, TabHeader, TabHeaders, Tabs, Tab,
     },
-    props: ['funeral', 'pronounSets'],
+    props: ['funeral', 'pronounSets', 'activeTab'],
     computed: {
         age() {
             if ((!this.myFuneral.dod) || (!this.myFuneral.dob)) return null;
@@ -402,9 +424,12 @@ export default {
         },
         endOfLifeText() {
             let parts = [];
-            if (this.myFuneral.dod) parts.push(this.myFuneral.dod);
+            let dod = this.myFuneral.dod ? this.dateFromString(this.myFuneral.dod) : null;
+            let dob = this.myFuneral.dob ? this.dateFromString(this.myFuneral.dob) : null;
+            if (this.myFuneral.dod) parts.push(dod.locale('de').format('dddd, DD.MM.YYYY'));
             if (this.myFuneral.death_place) parts.push(this.myFuneral.death_place);
-            if (this.myFuneral.dod) parts.push(this.age);
+            if (this.myFuneral.dod) parts.push(String(this.age)+' Jahre alt');
+            if (this.myFuneral.dob && this.myFuneral.dod) parts.push(dod.diff(dob, 'days').toLocaleString('de-DE')+' Lebenstage');
             if (parts.length == 0) return '';
             return 'Gestorben: ' + parts.join(', ');
         }
@@ -432,9 +457,9 @@ export default {
                 format: 'DD.MM.YYYY HH:mm',
                 showClear: true,
             },
+            showStoryEditor: false,
             myFuneral: myFuneral,
             copied: 0,
-            activeTab: 'home',
             textEditorActive: false,
             editorOption: {
                 placeholder: 'Hier kannst du einen Textentwurf für den Lebenslauf schreiben...',
@@ -506,21 +531,29 @@ export default {
         setFuneralText(t) {
             this.myFuneral.text = t;
             this.referenceCopied++;
+        },
+        dateFromString(s) {
+            if (!s) return false;
+            if (s.length != 10) return false;
+            return moment(s.substr(6, 4)+'-'+s.substr(3,2)+'-'+s.substr(0,2));
+        },
+        ageText(date, startDate, prefix, suffix) {
+            startDate = this.dateFromString(startDate || this.myFuneral.dob);
+            date = this.dateFromString(date);
+            if (!(startDate && date)) return '';
+            suffix = suffix || '';
+            let dayDiff = date.diff(startDate, 'days');
+            if (dayDiff < 14) return prefix+String(dayDiff)+' Tage'+suffix;
+            if (dayDiff < 60) return prefix+'ca. '+String(Math.floor(dayDiff/7))+' Wochen';
+            if (dayDiff < 365) return prefix+'ca. '+String(date.diff(startDate, 'months'))+' Monate'+suffix;
+            return prefix+String(date.diff(startDate, 'years'))+' Jahre'+suffix;
+            console.log('ageText', date, startDate, dayDiff);
         }
     }
 }
 </script>
 
 <style scoped>
-.card-header {
-    padding-bottom: 0 !important;
-    background-color: #fcfcfc;
-}
-
-ul.nav.nav-tabs {
-    margin-bottom: 0;
-    border-bottom-width: 0;
-}
 
 .attachment {
     width: 100%;
