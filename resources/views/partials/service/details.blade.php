@@ -33,7 +33,7 @@
 <div class="service-description">
 @canany(['gd-kasualien-nur-statistik', 'gd-kasualien-lesen', 'gd-kasualien-barbeiten'])
 @if($service->baptisms->count())
-        @if($service->baptisms->count()) <span class="fa fa-water" title="@canany(['gd-kasualien-lesen', 'gd-kasualien-barbeiten']){{ $service->baptismsText(true) }}" @endcanany></span> {{ $service->baptisms->count() }} @endif
+        @if($service->baptisms->count()) <span class="fa fa-droplet" title="@canany(['gd-kasualien-lesen', 'gd-kasualien-barbeiten']){{ $service->baptismsText(true) }}" @endcanany></span> {{ $service->baptisms->count() }} @endif
 @endif
 @endcanany
 @can('edit', $service)

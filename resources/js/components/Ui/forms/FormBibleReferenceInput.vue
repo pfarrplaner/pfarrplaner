@@ -6,7 +6,7 @@
   - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
-  - @version git: $Id$
+  - @version git: $Id: 0b0fd8f37c4667ae007bba5c24b1b3519bda2bc9
   -
   - Sponsored by: Evangelischer Kirchenbezirk Balingen, https://www.kirchenbezirk-balingen.de
   -
@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel" :required="required"
+    <form-group :id="myId" :label="label" :help="help" :name="name" pre-label="book-bible" :required="required"
                 :value="value" :is-checked-item="isCheckedItem">
         <input class="form-control" :class="{'is-invalid': $page.props.errors[name], 'checked-input': isCheckedItem}" :type="type" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :autofocus="autofocus"
@@ -69,7 +69,6 @@ export default {
         },
         help: String,
         placeholder: String,
-        preLabel: String,
         autofocus: Boolean,
         disabled: {
             type: Boolean,

@@ -55,7 +55,7 @@
         @canany(['gd-kasualien-lesen', 'gd-kasualien-nur-statistik'])
             @if($service->baptisms->count())
                 <div class="service-description">
-                    @if($service->baptisms->count()) <span class="fa fa-water" @can('gd-kasualien-lesen') @if(Auth::user()->cities->contains($city)) title="{{ $service->baptismsText(true) }}" @endif @endcan ></span> {{ $service->baptisms->count() }} @endif
+                    @if($service->baptisms->count()) <span class="fa fa-droplet" @can('gd-kasualien-lesen') @if(Auth::user()->cities->contains($city)) title="{{ $service->baptismsText(true) }}" @endif @endcan ></span> {{ $service->baptisms->count() }} @endif
                 </div>
             @endif
         @endcanany

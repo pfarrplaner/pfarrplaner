@@ -272,7 +272,7 @@
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="400">
-                        <i class="fa fa-water" style="color: #4233ff;"></i>
+                        <i class="fa fa-droplet" style="color: #4233ff;"></i>
                         <h3>Taufen und Taufanfragen</h3>
                     </div>
                 </div>

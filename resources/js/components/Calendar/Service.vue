@@ -70,7 +70,7 @@
                                        :participants="participants" :category="ministry" :predicant="0" />
         <div v-if="hasPermission('gd-kasualien-lesen') || hasPermission('gd-kasualien-nur-statistik')">
             <div class="service-description" v-if="service.baptisms.length > 0">
-                <span class="fa fa-water" :title="hasPermission('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
+                <span class="fa fa-droplet" :title="hasPermission('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
             </div>
         </div>
     </div>

@@ -62,7 +62,7 @@
         <div class="service-description" v-html="service.descriptionText"></div>
         <div class="service-description">
             <span v-if="service.baptisms.length > 0" :title="service.baptismsText"><span
-                class="fa fa-water"></span>{{ service.baptims.length }}</span>
+                class="fa fa-droplet"></span>{{ service.baptims.length }}</span>
         </div>
     </div>
 </template>

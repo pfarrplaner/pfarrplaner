@@ -33,7 +33,7 @@
             <a class="btn btn-primary" :href="route('calendar')"><span class="fa fa-calendar"></span> <span
                 class="d-none d-md-inline">Zum Kalender</span></a>&nbsp;
             <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('baptisms.create')">
-                <span class="fa fa-water"></span>
+                <span class="fa fa-droplet"></span>
                 <span class="d-none d-md-inline">Taufe anlegen...</span></inertia-link>&nbsp;
             <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('funerals.wizard')">
                 <span class="fa fa-cross"></span>
