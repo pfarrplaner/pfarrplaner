@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.116.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.115.0...v2022.116.0) (2022-02-16)
+
+
+### Features
+
+* Save confirmation and wedding texts with Funeral ([b6b1342](https://github.com/pfarrplaner/pfarrplaner/commits/b6b13422b996842d9cac27e72b6d0923272b2143))
+
 ## [2022.115.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.114.0...v2022.115.0) (2022-02-11)
 
 
