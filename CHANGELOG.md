@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.116.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.0...v2022.116.1) (2022-02-16)
+
+
+### Bug Fixes
+
+* AbsencePolicy checks User->cities instead of User->homeCities ([6b55504](https://github.com/pfarrplaner/pfarrplaner/commits/6b555040a1a5c9feaa35fb27e0b900953aef91aa))
+* FuneralWizard still fails on certain conditions ([64cc11a](https://github.com/pfarrplaner/pfarrplaner/commits/64cc11a7c29992c73ab77a85b1c058014cb7b832))
+
 ## [2022.116.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.115.0...v2022.116.0) (2022-02-16)
 
 
