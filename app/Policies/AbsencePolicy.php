@@ -84,7 +84,7 @@ class AbsencePolicy
 
         // via permission
         if ($user->hasPermissionTo('fremden-urlaub-bearbeiten')) {
-            $cityIds = $absence->user->cities->pluck('id');
+            $cityIds = $absence->user->homeCities->pluck('id');
             foreach ($user->writableCities as $city) {
                 if ($cityIds->contains($city->id) && (!$absence->user->hasRole('Pfarrer*in'))) {
                     return true;
