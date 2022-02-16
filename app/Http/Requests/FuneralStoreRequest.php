@@ -190,7 +190,7 @@ class FuneralStoreRequest extends FormRequest
             'confirmation_date' => 'nullable|date_format:d.m.Y',
             'confirmation_text' => 'nullable|string',
             'wedding_date' => 'nullable|date_format:d.m.Y',
-            'wedding' => 'nullable|string',
+            'wedding_text' => 'nullable|string',
             'dod_spouse' => 'nullable|date_format:d.m.Y',
         ];
     }

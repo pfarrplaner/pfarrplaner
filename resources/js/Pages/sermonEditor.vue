@@ -99,6 +99,20 @@
                                         :title="'Von Beerdigung ('+funeral.buried_name+') übernehmen ('+funeral.text+')'">
                                     Von Beerdigung ({{ funeral.buried_name }}) übernehmen
                                 </button>
+                                <button class="btn btn-light btn-sm"
+                                        v-for="funeral in service.funerals"
+                                        v-if="funeral.confirmation_text"
+                                        @click.prevent.stop="setSermonReference(funeral.confirmation_text)"
+                                        :title="'Von Denkspruch ('+funeral.buried_name+') übernehmen ('+funeral.confirmation_text+')'">
+                                    Von Denkspruch ({{ funeral.buried_name }}) übernehmen
+                                </button>
+                                <button class="btn btn-light btn-sm"
+                                        v-for="funeral in service.funerals"
+                                        v-if="funeral.wedding_text"
+                                        @click.prevent.stop="setSermonReference(funeral.wedding_text)"
+                                        :title="'Von Trauspruch ('+funeral.buried_name+') übernehmen ('+funeral.wedding_text+')'">
+                                    Von Trauspruch ({{ funeral.buried_name }}) übernehmen
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -168,6 +168,16 @@
                         :title="'Von Predigt übernehmen ('+funeral.service.sermon.reference+')'"
                         @click="setFuneralText(funeral.service.sermon.reference)">Von Predigt übernehmen
                 </button>
+                <button v-if="funeral.confirmation_text"
+                        class="btn btn-sm btn-light"
+                        :title="'Von Denkspruch übernehmen ('+funeral.confirmation_text+')'"
+                        @click="setFuneralText(funeral.confirmation_text)">Von Denkspruch übernehmen
+                </button>
+                <button v-if="funeral.wedding_text"
+                        class="btn btn-sm btn-light"
+                        :title="'Von Trauspruch übernehmen ('+funeral.wedding_text+')'"
+                        @click="setFuneralText(funeral.wedding_text)">Von Trauspruch übernehmen
+                </button>
                 <form-group label="Bestattungsart">
                     <select v-model="myFuneral.type" class="form-control" name="type">
                         <option>Erdbestattung</option>
@@ -263,6 +273,7 @@
                         <form-textarea label="Ehepartner:in" v-model="funeral.spouse" name="spouse"/>
                         <form-date-picker label="Heiratsdatum" v-model="funeral.wedding_date" name="wedding_date"
                                           :help="myFuneral.wedding_date ? ageText(myFuneral.dod_spouse || myFuneral.dod, myFuneral.wedding_date, '', ' verheiratet') : ''"/>
+                        <form-bible-reference-input label="Trauspruch" v-model="myFuneral.wedding_text" name="wedding_text" />
                         <form-date-picker label="Sterbedatum Ehepartner:in" v-model="funeral.dod_spouse" name="dod_spouse"
                                         :help="myFuneral.dod_spouse ? ageText(moment().format('DD.MM.YYYY'), myFuneral.dod_spouse, 'vor ', 'n') : ''" />
                         <form-textarea label="Kinder" v-model="funeral.children" name="children"/>
@@ -275,6 +286,7 @@
                         <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation" />
                         <form-date-picker label="Datum der Konfirmation" v-model="funeral.confirmation_date" name="confirmation_date"
                                           :help="ageText(myFuneral.confirmation_date, myFuneral.dob, 'mit ', 'n')" />
+                        <form-bible-reference-input label="Denkspruch" v-model="myFuneral.confirmation_text" name="confirmation_text" />
                     </div>
                     <div :class="showStoryEditor ? 'col-lg-4': 'col-md-6'">
                         <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood" name="childhood"/>
@@ -388,11 +400,14 @@ import DimissorialFormPart from "../../components/RiteEditors/DimissorialFormPar
 import TextStats from "../../components/LiturgyEditor/Elements/TextStats";
 import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 import NavButton from "../../components/Ui/buttons/NavButton";
+import FormBibleReferenceInput from "../../components/Ui/forms/FormBibleReferenceInput";
+import __ from 'lodash';
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        FormBibleReferenceInput,
         NavButton,
         FormDatePicker,
         TextStats,
@@ -495,7 +510,12 @@ export default {
             this.myFuneral.appointment_address = this.myFuneral.relative_address + ', ' + this.myFuneral.relative_zip + ' ' + this.myFuneral.relative_city;
         },
         saveFuneral() {
-            this.$inertia.patch(route('funerals.update', this.myFuneral.id), this.myFuneral, {
+            let record = __.clone(this.myFuneral);
+            ['baptism_date', 'confirmation_date', 'wedding_date'].forEach(key => {
+                if (record[key] && (record[key].length != 10)) record[key] = moment(record[key]).format('DD.MM.YYYY');
+                if (record[key]) console.log(record, key, record[key], record[key].length);
+            });
+            this.$inertia.patch(route('funerals.update', this.myFuneral.id), record, {
                 preserveState: false,
             });
         },
