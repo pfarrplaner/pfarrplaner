@@ -25,6 +25,7 @@
     <link href="/landing/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="/landing/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.5.95/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="/landing/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
     <link href="/landing/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="/landing/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
@@ -191,21 +192,21 @@
                         Kirchengemeinde der Evangelischen Landeskirche in Württemberg.</p>
 
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="100">
-                        <div class="icon"><i class="fa fa-calendar"></i></div>
+                        <div class="icon"><i class="mdi mdi-calendar"></i></div>
                         <h4 class="title"><a href="">Gottesdienstplanung über Gemeindegrenzen hinweg</a></h4>
                         <p class="description">Gegenseitige Vertretung, Zusammenarbeit im Distrikt, Urlaube,
                             Vakaturen,... Mit dem Pfarrplaner behältst du mehr als eine Gemeinde im Blick.</p>
                     </div>
 
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="200">
-                        <div class="icon"><i class="fa fa-cross"></i></div>
+                        <div class="icon"><i class="mdi mdi-cross"></i></div>
                         <h4 class="title"><a href="">Kasualien perfekt im Griff</a></h4>
                         <p class="description">Vom Erstgespräch am Telefon bis zum Eintrag im Kirchenbuch -- mit dem
                             Pfarrplaner behältst du den Überblick über alle anstehenden Kasualien.</p>
                     </div>
 
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="300">
-                        <div class="icon"><i class="fa fa-th-list"></i></div>
+                        <div class="icon"><i class="mdi mdi-view-list"></i></div>
                         <h4 class="title"><a href="">Liturgie auf Mausklick</a></h4>
                         <p class="description">Glocken, Orgelspiel, Psalm &amp; Predigt... Der Pfarrplaner hilft dir,
                             deine Liturgien und Abläufe zu planen und mit den richtigen Leuten im richtigen Format zu
@@ -230,79 +231,79 @@
             <div class="row" data-aos="fade-left">
                 <div class="col-lg-3 col-md-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="50">
-                        <i class="fa fa-calendar" style="color: #ffbb2c;"></i>
+                        <i class="mdi mdi-calendar" style="color: #ffbb2c;"></i>
                         <h3>Dienstplan</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="100">
-                        <i class="fa fa-globe" style="color: #5578ff;"></i>
+                        <i class="mdi mdi-earth" style="color: #5578ff;"></i>
                         <h3>Urlaubsplan</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4 mt-md-0">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="150">
-                        <i class="fa fa-th-list" style="color: #e80368;"></i>
+                        <i class="mdi mdi-view-list" style="color: #e80368;"></i>
                         <h3>Liturgieeditor</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4 mt-lg-0">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="200">
-                        <i class="fa fa-file-code" style="color: #e361ff;"></i>
+                        <i class="mdi mdi-application-brackets-outline" style="color: #e361ff;"></i>
                         <h3>Integration in die eigene Homepage</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="250">
-                        <i class="fa fa-microphone-alt" style="color: #47aeff;"></i>
+                        <i class="mdi mdi-microphone" style="color: #47aeff;"></i>
                         <h3>Predigteditor</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="300">
-                        <i class="fa fa-calendar-alt" style="color: #ffa76e;"></i>
+                        <i class="mdi mdi-calendar-sync" style="color: #ffa76e;"></i>
                         <h3>Synchronisierung mit Outlook</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="350">
-                        <i class="fa fa-ticket-alt" style="color: #11dbcf;"></i>
+                        <i class="mdi mdi-ticket" style="color: #11dbcf;"></i>
                         <h3>Anmeldesystem mit Sitzplan</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="400">
-                        <i class="fa fa-droplet" style="color: #4233ff;"></i>
+                        <i class="mdi mdi-water" style="color: #4233ff;"></i>
                         <h3>Taufen und Taufanfragen</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="450">
-                        <i class="fa fa-cross" style="color: #b2904f;"></i>
+                        <i class="mdi mdi-grave-stone" style="color: #b2904f;"></i>
                         <h3>Beerdigungen</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="500">
-                        <i class="fa fa-ring" style="color: #b20969;"></i>
+                        <i class="mdi mdi-ring" style="color: #b20969;"></i>
                         <h3>Trauungen</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="550">
-                        <i class="fa fa-users" style="color: #ff5828;"></i>
+                        <i class="mdi mdi-account-multiple" style="color: #ff5828;"></i>
                         <h3>Detaillierte Benutzerverwaltung</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="600">
-                        <i class="fa fa-print" style="color: #29cc61;"></i>
+                        <i class="mdi mdi-printer" style="color: #29cc61;"></i>
                         <h3>Viele praktische Ausgabeformate</h3>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="600">
-                        <i class="fab fa-youtube" style="color: red;"></i>
+                        <i class="mdi mdi-youtube" style="color: red;"></i>
                         <h3>Integration mit YouTube-Livestreaming</h3>
                     </div>
                 </div>
@@ -320,7 +321,7 @@
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="600">
-                        <i class="fa fa-code" style="color: darkgray;"></i>
+                        <i class="mdi mdi-application-braces" style="color: darkgray;"></i>
                         <h3>Ständige Weiterentwicklung</h3>
                     </div>
                 </div>
@@ -337,7 +338,7 @@
 
                 <div class="col-lg-3 col-md-6">
                     <div class="count-box">
-                        <i class="fa fa-church"></i>
+                        <i class="mdi mdi-church"></i>
                         <span data-purecounter-start="0" data-purecounter-end="{{ $count['cities'] }}" data-purecounter-duration="1"
                               class="purecounter"></span>
                         <p>Kirchengemeinden</p>
@@ -346,7 +347,7 @@
 
                 <div class="col-lg-3 col-md-6 mt-5 mt-md-0">
                     <div class="count-box">
-                        <i class="fa fa-users"></i>
+                        <i class="mdi mdi-account-multiple"></i>
                         <span data-purecounter-start="0" data-purecounter-end="{{ $count['users'] }}" data-purecounter-duration="1"
                               class="purecounter"></span>
                         <p>Benutzer</p>
@@ -355,7 +356,7 @@
 
                 <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
                     <div class="count-box">
-                        <i class="fa fa-calendar-day"></i>
+                        <i class="mdi mdi-calendar-today"></i>
                         <span data-purecounter-start="0" data-purecounter-end="{{ $count['services'] }}" data-purecounter-duration="1"
                               class="purecounter"></span>
                         <p>Gottesdienste</p>
@@ -364,7 +365,7 @@
 
                 <div class="col-lg-3 col-md-6 mt-5 mt-lg-0">
                     <div class="count-box">
-                        <i class="fa fa-laptop-code"></i>
+                        <i class="mdi mdi-application-braces"></i>
                         <span>{{ $version }}</span>
                         <p>Aktuelle Version</p>
                     </div>
