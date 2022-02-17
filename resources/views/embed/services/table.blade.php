@@ -60,7 +60,7 @@
                     @endif
                     <td>{{ $service->timeText() }}</td>
                     @if (!isset($locationIds) || count($locationIds) >1)
-                        <td>{{ $service->locationText() }}</td>
+                        <td>{{ in_array($service->city->id, $ids) ? $service->locationText() : (str_contains($service->locationText(), $service->city->name) ? $service->locationText() : $service->locationText().' '.$service->city->name)}}</td>
                     @endif
                     <td>
                         @if($service->liturgicalInfo)

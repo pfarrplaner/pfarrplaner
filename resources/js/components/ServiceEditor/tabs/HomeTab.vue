@@ -72,6 +72,10 @@
                 <form-date-picker name="alt_liturgy_date" label="Datum für Liturgische Informationen " v-model="service.alt_liturgy_date"
                 help="Zeigt liturgische Information für ein abweichendes Datum an."/>
             </div>
+            <div class="col-md-4">
+                <form-selectize name="related_cities[]" label="Auch in folgenden Kirchengemeinden anzeigen" v-model="service.related_cities"
+                                :options="cities" multiple />
+            </div>
         </div>
         <hr/>
         <form-check name="hidden" label="Diesen Gottesdienst in öffentlichen Listen nicht anzeigen."
@@ -147,6 +151,7 @@ export default {
         days: Array,
         tags: Array,
         serviceGroups: Array,
+        cities: Array,
     },
     computed: {
         hasAnnouncements() {

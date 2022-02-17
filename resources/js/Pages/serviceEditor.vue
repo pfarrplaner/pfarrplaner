@@ -92,7 +92,7 @@
                 <tabs>
                     <tab id="home" :active-tab="activeTab">
                         <home-tab :service="editedService" :locations="locations"
-                                  :days="days"
+                                  :days="days" :cities="availableCities"
                                   :tags="tags" :service-groups="serviceGroups"/>
                     </tab>
                     <tab id="people" :active-tab="activeTab">
@@ -168,6 +168,7 @@ export default {
         liturgySheets: Object,
         backRoute: String,
         teams: Array,
+        availableCities: Array,
     },
     computed: {
         hasAnnouncements() {
@@ -179,6 +180,10 @@ export default {
         },
     },
     data() {
+        for (const relatedCityId in this.service.related_cities) {
+            this.service.related_cities[relatedCityId] = this.service.related_cities[relatedCityId].id;
+        }
+
         return {
             activeTab: this.tab,
             editedService: this.service,

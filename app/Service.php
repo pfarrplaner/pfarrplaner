@@ -49,6 +49,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -862,7 +863,14 @@ class Service extends Model
         if ((!is_array($cities)) && (is_object($cities->first()))) {
             $cities = $cities->pluck('id');
         }
-        return $query->whereIn('city_id', $cities);
+        return $query->where(function($q) use ($cities) {
+            $q->whereIn('city_id', $cities);
+            $q->orWhereHas('relatedCities', function ($q2) use ($cities) {
+                $q2->whereIn('cities.id', $cities);
+            });
+        });
+
+
     }
 
     /**
@@ -1153,6 +1161,14 @@ class Service extends Model
     public function audit($field, $originalRecords, $newIds)
     {
         $originalIds = $originalRecords->pluck('id')->toArray();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function relatedCities()
+    {
+        return $this->belongsToMany(City::class);
     }
 
     /**
@@ -1561,5 +1577,20 @@ class Service extends Model
     public function weddings()
     {
         return $this->hasMany(Wedding::class);
+    }
+
+    public function updateRelatedCitiesFromRequest(Request $request)
+    {
+        $cityIds = $request->get('related_cities', []);
+        if (!is_array($cityIds)) return;
+        $existing = $this->relatedCities->pluck('id');
+        $result = $existing->filter(function ($item) use ($cityIds) {
+            if (!Auth::user()->cities->pluck('id')->contains($item)) return true;
+            if (in_array($item, $cityIds)) return true;
+        });
+        foreach ($cityIds as $cityId) {
+            if (!$result->contains($cityId)) $result->push($cityId);
+        }
+        $this->relatedCities()->sync($result);
     }
 }

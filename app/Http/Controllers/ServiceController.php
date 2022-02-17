@@ -88,6 +88,7 @@ class ServiceController extends Controller
 
         $service->tags()->sync($request->get('tags') ?: []);
         $service->serviceGroups()->sync(ServiceGroup::createIfMissing($request->get('serviceGroups') ?: []));
+        $service->updateRelatedCitiesFromRequest($request);
     }
 
     /**
@@ -101,7 +102,7 @@ class ServiceController extends Controller
     public function edit(Request $request, Service $service, $tab = 'home')
     {
         $tab = $request->get('tab', 'home');
-        $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups']);
+        $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups', 'relatedCities']);
         $service->setAppends(
             [
                 'pastors',
@@ -137,8 +138,7 @@ class ServiceController extends Controller
 
         $ministries = DB::table('service_user')->select('category')->distinct()->get();
 
-        $availableCities = Auth::user()->cities->pluck('id');
-        if (!$availableCities->contains($service->city_id)) $availableCities->push($service->city_id);
+        $availableCities = Auth::user()->cities;
 
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $liturgySheets = LiturgySheets::all();
@@ -164,6 +164,7 @@ class ServiceController extends Controller
                 'liturgySheets',
                 'backRoute',
                 'teams',
+                'availableCities',
             )
         );
     }
