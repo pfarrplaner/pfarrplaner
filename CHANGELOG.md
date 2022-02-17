@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.116.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.1...v2022.116.2) (2022-02-17)
+
+
+### Features
+
+* Accordion layout in FuneralEditor ([8ad593f](https://github.com/pfarrplaner/pfarrplaner/commits/8ad593f3f0f52c50b324cd83bf384f1181d17b4d))
+
 ### [2022.116.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.0...v2022.116.1) (2022-02-16)
 
 
