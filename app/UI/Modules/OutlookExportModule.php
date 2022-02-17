@@ -36,7 +36,7 @@ use App\Inputs\Inputs;
 class OutlookExportModule extends AbstractModule
 {
     protected $title = 'Outlook-Export';
-    protected $icon = 'calendar-alt';
+    protected $icon = 'mdi mdi-calendar-export';
     protected $defaultRoute = 'ical.connect';
 
 

@@ -43,7 +43,7 @@ class InfoModule extends AbstractModule
     {
         $items[] = [
             'text' => 'Über Pfarrplaner',
-            'icon' => 'fa fa-info',
+            'icon' => 'mdi mdi-information',
             'url' => route('about'),
             'active' => request()->is(['about']),
             'inertia' => true,

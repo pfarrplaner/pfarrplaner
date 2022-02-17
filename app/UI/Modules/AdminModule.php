@@ -45,7 +45,7 @@ use Spatie\Permission\Models\Role;
 class AdminModule extends AbstractModule
 {
     protected $title = 'Administration';
-    protected $icon = 'user-shield';
+    protected $icon = 'mdi mdi-account-tie-hat';
 
     public function addItems(array $items): array
     {
@@ -57,7 +57,7 @@ class AdminModule extends AbstractModule
         if ($user->can('index', User::class)) {
             $adminMenu[] = [
                 'text' => 'Benutzer',
-                'icon' => 'fa fa-users',
+                'icon' => 'mdi mdi-account',
                 'url' => route('users.index'),
                 'active' => $route == 'users.index',
                 'inertia' => true,
@@ -67,7 +67,7 @@ class AdminModule extends AbstractModule
         if ($user->can('index', Team::class)) {
             $adminMenu[] = [
                 'text' => 'Teams',
-                'icon' => 'fa fa-users',
+                'icon' => 'mdi mdi-account-multiple',
                 'url' => route('teams.index'),
                 'active' => $route == 'teams.index',
                 'inertia' => true,
@@ -77,7 +77,7 @@ class AdminModule extends AbstractModule
         if ($user->can('index', Role::class)) {
             $adminMenu[] = [
                 'text' => 'Benutzerrollen',
-                'icon' => 'fa fa-user-tag',
+                'icon' => 'mdi mdi-badge-account',
                 'url' => route('roles.index'),
                 'active' => $route == 'roles.index',
                 'inertia' => false,
@@ -87,7 +87,7 @@ class AdminModule extends AbstractModule
         if ($user->can('index', City::class)) {
             $adminMenu[] = [
                 'text' => 'Kirchengemeinden',
-                'icon' => 'fa fa-church',
+                'icon' => 'mdi mdi-church',
                 'url' => route('cities.index'),
                 'active' => $route == 'cities.index',
                 'inertia' => true,
@@ -97,7 +97,7 @@ class AdminModule extends AbstractModule
         if ($user->can('index', Location::class)) {
             $adminMenu[] = [
                 'text' => 'Kirche / GD-Orte',
-                'icon' => 'fa fa-map-marker',
+                'icon' => 'mdi mdi-map-marker',
                 'url' => route('locations.index'),
                 'active' => $route == 'locations.index',
                 'inertia' => false,
@@ -107,7 +107,7 @@ class AdminModule extends AbstractModule
         if ($user->can('index', Tag::class)) {
             $adminMenu[] = [
                 'text' => 'Kennzeichnungen',
-                'icon' => 'fa fa-tag',
+                'icon' => 'mdi mdi-tag',
                 'url' => route('tags.index'),
                 'active' => $route == 'tags.index',
                 'inertia' => false,
@@ -117,7 +117,7 @@ class AdminModule extends AbstractModule
         if ($user->can('index', Parish::class)) {
             $adminMenu[] = [
                 'text' => 'Pfarrämter',
-                'icon' => 'fa fa-building',
+                'icon' => 'mdi mdi-home-variant-outline',
                 'url' => route('parishes.index'),
                 'active' => $route == 'parishes.index',
                 'inertia' => false,
@@ -127,7 +127,7 @@ class AdminModule extends AbstractModule
         if (count($adminMenu)) {
             $items[] = [
                 'text' => 'Administration',
-                'icon' => 'fa fa-user-shield',
+                'icon' => 'mdi mdi-shield-account',
                 'url' => '#',
                 'submenu' => $adminMenu,
                 'active' => $adminActive,

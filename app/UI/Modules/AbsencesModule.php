@@ -33,7 +33,7 @@ namespace App\UI\Modules;
 class AbsencesModule extends AbstractModule
 {
     protected $title = 'Urlaub';
-    protected $icon = 'globe-europe';
+    protected $icon = 'mdi mdi-earth';
     protected $color = 'orange';
     protected $defaultRoute = 'absences.index';
 

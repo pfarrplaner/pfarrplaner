@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Auth;
 class ProfileModule extends AbstractModule
 {
     protected $title = 'Profil';
-    protected $icon = 'user';
+    protected $icon = 'mdi mdi-account-settings';
     protected $defaultRoute = 'user.profile';
 
 

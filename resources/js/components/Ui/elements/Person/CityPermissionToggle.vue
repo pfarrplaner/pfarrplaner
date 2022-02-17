@@ -39,7 +39,7 @@
             <input type="radio" v-model="rights" value="w" @input="changed"  title="Schreibrecht"> <span class="mdi mdi-pencil"></span> Schreiben
         </label>
         <label class="btn btn-light btn-sm rights-admin" :class="{active: rights == 'a'}">
-            <input type="radio" v-model="rights" value="a" @input="changed"  title="Administrator"> <span class="mdi mdi-account-cowboy-hat"></span> Administrator
+            <input type="radio" v-model="rights" value="a" @input="changed"  title="Administrator"> <span class="mdi mdi-account-tie-hat"></span> Administrator
         </label>
     </div>
 </template>

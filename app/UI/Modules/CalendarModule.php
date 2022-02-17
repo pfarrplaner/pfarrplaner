@@ -33,7 +33,7 @@ namespace App\UI\Modules;
 class CalendarModule extends AbstractModule
 {
     protected $title = 'Kalender';
-    protected $icon = 'calendar';
+    protected $icon = 'mdi mdi-calendar';
     protected $color = 'blue';
     protected $defaultRoute = 'calendar';
 

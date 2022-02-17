@@ -37,7 +37,7 @@ class InputsModule extends AbstractModule
 {
 
     protected $title = 'Sammeleingaben';
-    protected $icon = 'keyboard';
+    protected $icon = 'mdi mdi-keyboard';
 
 
     public function addItems(array $items): array
@@ -47,7 +47,7 @@ class InputsModule extends AbstractModule
         foreach (Inputs::all() as $input) {
             $inputMenu[] = [
                 'text' => $input->title,
-                'icon' => 'fa fa-keyboard',
+                'icon' => 'mdi mdi-keyboard',
                 'url' => route('inputs.setup', $input->getKey()),
                 'inertia' => false,
             ];
@@ -56,7 +56,7 @@ class InputsModule extends AbstractModule
         if (count($inputMenu)) {
             $items[] = [
                 'text' => 'Sammeleingaben',
-                'icon' => 'fa fa-keyboard',
+                'icon' => 'mdi mdi-keyboard',
                 'url' => '#',
                 'submenu' => $inputMenu,
                 'active' => request()->is(['input*']),

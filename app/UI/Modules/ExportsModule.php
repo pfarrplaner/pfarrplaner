@@ -36,7 +36,7 @@ use App\Inputs\Inputs;
 class ExportsModule extends AbstractModule
 {
     protected $title = 'Ausgabeformate';
-    protected $icon = 'print';
+    protected $icon = 'mdi mdi-printer';
     protected $defaultRoute = 'reports.list';
 
     public function addItems(array $items): array
