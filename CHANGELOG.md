@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.117.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.4...v2022.117.0) (2022-02-17)
+
+
+### Features
+
+* Allow showing service in other cities as well ([bdb9dee](https://github.com/pfarrplaner/pfarrplaner/commits/bdb9deed766be751b0dad41363ce02dcf4b08bc8)), closes [#207](https://github.com/pfarrplaner/pfarrplaner/issues/207)
+* Show liturgical day in embedded view ([e25c948](https://github.com/pfarrplaner/pfarrplaner/commits/e25c9483a581dfda1959ccfe882c126c6b78255b)), closes [#210](https://github.com/pfarrplaner/pfarrplaner/issues/210)
+
+
+### Bug Fixes
+
+* increase MDI icon font size ([5f8c993](https://github.com/pfarrplaner/pfarrplaner/commits/5f8c99343fb940aa33eaac697ab5a7c94d75dab2))
+
 ### [2022.116.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.3...v2022.116.4) (2022-02-17)
 
 ### [2022.116.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.2...v2022.116.3) (2022-02-17)
