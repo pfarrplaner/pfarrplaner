@@ -246,21 +246,5 @@ export default {
 </script>
 
 <style scoped>
-.btn.accordion-button:focus {
-    box-shadow: none;
-}
-
-.btn.accordion-button:before {
-    content: "\f078";
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    float: left;
-    margin-right: .25em;
-}
-
-.btn.accordion-button.collapsed:before {
-    content: "\f054";
-}
-
 
 </style>

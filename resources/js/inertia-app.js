@@ -52,6 +52,8 @@ import CalendarControlCitySort from './components/Calendar/Control/CitySort';
 import datePicker from 'vue-bootstrap-datetimepicker';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'pc-bootstrap4-datetimepicker/build/css/bootstrap-datetimepicker.css';
+import "@mdi/font/css/materialdesignicons.min.css"
+
 //import $ from 'jquery';
 
 

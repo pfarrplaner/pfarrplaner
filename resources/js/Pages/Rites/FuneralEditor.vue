@@ -270,23 +270,37 @@
                     <div :class="showStoryEditor ? 'col-lg-4': 'col-md-6'">
                         <form-textarea label="Eltern, Herkunftsfamilie" v-model="funeral.parents"
                                        name="parents"/>
-                        <form-textarea label="Ehepartner:in" v-model="funeral.spouse" name="spouse"/>
-                        <form-date-picker label="Heiratsdatum" v-model="funeral.wedding_date" name="wedding_date"
-                                          :help="myFuneral.wedding_date ? ageText(myFuneral.dod_spouse || myFuneral.dod, myFuneral.wedding_date, '', ' verheiratet') : ''"/>
-                        <form-bible-reference-input label="Trauspruch" v-model="myFuneral.wedding_text" name="wedding_text" />
-                        <form-date-picker label="Sterbedatum Ehepartner:in" v-model="funeral.dod_spouse" name="dod_spouse"
-                                        :help="myFuneral.dod_spouse ? ageText(moment().format('DD.MM.YYYY'), myFuneral.dod_spouse, 'vor ', 'n') : ''" />
-                        <form-textarea label="Kinder" v-model="funeral.children" name="children"/>
-                        <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family"
-                                       name="further_family"/>
+
+                        <accordion id="casesAccordion">
+                            <accordion-element title="Taufe" icon="mdi mdi-water">
+                                <form-textarea label="Taufe" v-model="funeral.baptism" name="baptism"/>
+                                <form-date-picker label="Taufdatum" v-model="myFuneral.baptism_date" name="baptism_date"
+                                                  :help="ageText(myFuneral.baptism_date, myFuneral.dob, 'mit ', 'n')"/>
+                            </accordion-element>
+                            <accordion-element title="Konfirmation" icon="mdi mdi-cross-outline">
+                                <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation" />
+                                <form-date-picker label="Datum der Konfirmation" v-model="funeral.confirmation_date" name="confirmation_date"
+                                                  :help="ageText(myFuneral.confirmation_date, myFuneral.dob, 'mit ', 'n')" />
+                                <form-bible-reference-input label="Denkspruch" v-model="myFuneral.confirmation_text" name="confirmation_text" />
+                            </accordion-element>
+                            <accordion-element title="Heirat" icon="mdi mdi-ring">
+                                <form-textarea label="Ehepartner:in" v-model="funeral.spouse" name="spouse"/>
+                                <form-date-picker label="Heiratsdatum" v-model="funeral.wedding_date" name="wedding_date"
+                                                  :help="myFuneral.wedding_date ? ageText(myFuneral.dod_spouse || myFuneral.dod, myFuneral.wedding_date, '', ' verheiratet') : ''"/>
+                                <form-bible-reference-input label="Trauspruch" v-model="myFuneral.wedding_text" name="wedding_text" />
+                                <form-date-picker label="Sterbedatum Ehepartner:in" v-model="funeral.dod_spouse" name="dod_spouse"
+                                                  :help="myFuneral.dod_spouse ? ageText(moment().format('DD.MM.YYYY'), myFuneral.dod_spouse, 'vor ', 'n') : ''" />
+                            </accordion-element>
+                            <accordion-element title="Familie" icon="mdi mdi-human-male-female-child">
+                                <form-textarea label="Kinder" v-model="funeral.children" name="children"/>
+                                <form-textarea label="Weitere Hinterbliebene" v-model="funeral.further_family"
+                                               name="further_family"/>
+                            </accordion-element>
+                        </accordion>
+
+
+
                         <hr/>
-                        <form-textarea label="Taufe" v-model="funeral.baptism" name="baptism"/>
-                        <form-date-picker label="Taufdatum" v-model="myFuneral.baptism_date" name="baptism_date"
-                                        :help="ageText(myFuneral.baptism_date, myFuneral.dob, 'mit ', 'n')"/>
-                        <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation" />
-                        <form-date-picker label="Datum der Konfirmation" v-model="funeral.confirmation_date" name="confirmation_date"
-                                          :help="ageText(myFuneral.confirmation_date, myFuneral.dob, 'mit ', 'n')" />
-                        <form-bible-reference-input label="Denkspruch" v-model="myFuneral.confirmation_text" name="confirmation_text" />
                     </div>
                     <div :class="showStoryEditor ? 'col-lg-4': 'col-md-6'">
                         <form-textarea label="Kindheit, Jugend" v-model="funeral.childhood" name="childhood"/>
@@ -402,11 +416,15 @@ import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 import NavButton from "../../components/Ui/buttons/NavButton";
 import FormBibleReferenceInput from "../../components/Ui/forms/FormBibleReferenceInput";
 import __ from 'lodash';
+import Accordion from "../../components/Ui/accordion/Accordion";
+import AccordionElement from "../../components/Ui/accordion/AccordionElement";
 
 
 export default {
     name: "FuneralEditor",
     components: {
+        AccordionElement,
+        Accordion,
         FormBibleReferenceInput,
         NavButton,
         FormDatePicker,
