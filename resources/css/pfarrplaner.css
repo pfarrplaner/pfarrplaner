@@ -795,3 +795,7 @@ tr.changed, tr.changed td, tr.changed th {
 .ql-toolbar .quill-fa-button {
     padding-top: 1px;
 }
+
+.mdi {
+    font-size: 1.1em;
+}
