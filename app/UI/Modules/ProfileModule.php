@@ -43,7 +43,7 @@ class ProfileModule extends AbstractModule
     {
         $items[] = [
             'text' => Auth::user()->name,
-            'icon' => 'fa fa-user',
+            'icon' => 'mdi mdi-account-settings',
             'url' => route('user.profile'),
             'active' => request()->is(['user.profile']),
             'inertia' => true,
