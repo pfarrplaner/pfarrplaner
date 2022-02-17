@@ -41,7 +41,7 @@ class CalendarModule extends AbstractModule
     {
         $items[] = [
             'text' => 'Kalender',
-            'icon' => 'fa fa-calendar',
+            'icon' => 'mdi mdi-calendar',
             'url' => route('calendar'),
             'icon_color' => 'blue',
             'active' => request()->is(['calendar*', 'service*', 'cal*']),

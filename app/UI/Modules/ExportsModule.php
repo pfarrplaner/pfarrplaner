@@ -43,7 +43,7 @@ class ExportsModule extends AbstractModule
     {
         $items[] = [
             'text' => 'Ausgabeformate',
-            'icon' => 'fa fa-print',
+            'icon' => 'mdi mdi-printer',
             'url' => route('reports.list'),
             'active' => request()->is(['report*']),
             'inertia' => false,

@@ -36,7 +36,7 @@ use App\Inputs\Inputs;
 class InfoModule extends AbstractModule
 {
     protected $title = 'Über Pfarrplaner';
-    protected $icon = 'info';
+    protected $icon = 'mdi mdi-information';
     protected $defaultRoute = 'about';
 
     public function addItems(array $items): array

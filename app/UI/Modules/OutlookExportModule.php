@@ -44,7 +44,7 @@ class OutlookExportModule extends AbstractModule
     {
         $items[] = [
             'text' => 'Outlook-Export',
-            'icon' => 'fa fa-calendar-alt',
+            'icon' => 'mdi mdi-calendar-export',
             'url' => route('ical.connect'),
             'active' => request()->is(['ical*']),
             'inertia' => false,

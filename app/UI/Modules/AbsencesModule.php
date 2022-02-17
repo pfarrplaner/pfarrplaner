@@ -42,7 +42,7 @@ class AbsencesModule extends AbstractModule
     {
         $items[] = [
             'text' => 'Urlaub',
-            'icon' => 'fa fa-globe-europe',
+            'icon' => 'mdi mdi-earth',
             'url' => route('absences.index'),
             'icon_color' => 'orange',
             'active' => request()->is(['absences*', 'approvals*']),
