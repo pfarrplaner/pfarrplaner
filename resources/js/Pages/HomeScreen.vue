@@ -30,16 +30,16 @@
 <template>
     <admin-layout :title="'Willkommen, '+(user.first_name ? user.first_name : user.name)+'!'">
         <template slot="navbar-left">
-            <a class="btn btn-primary" :href="route('calendar')"><span class="fa fa-calendar"></span> <span
+            <a class="btn btn-primary" :href="route('calendar')"><span class="mdi mdi-calendar"></span> <span
                 class="d-none d-md-inline">Zum Kalender</span></a>&nbsp;
             <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('baptisms.create')">
-                <span class="fa fa-droplet"></span>
+                <span class="mdi mdi-water"></span>
                 <span class="d-none d-md-inline">Taufe anlegen...</span></inertia-link>&nbsp;
             <inertia-link v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('funerals.wizard')">
-                <span class="fa fa-cross"></span>
+                <span class="mdi mdi-grave-stone"></span>
                 <span class="d-none d-md-inline">Beerdigung anlegen...</span></inertia-link>&nbsp;
             <a v-if="config.wizardButtons == '1'" class="btn btn-light" :href="route('weddings.wizard')"><span
-                class="fa fa-ring"></span>
+                class="mdi mdi-ring"></span>
                 <span class="d-none d-md-inline">Trauung anlegen...</span></a>&nbsp;
         </template>
         <template slot="before-flash">
@@ -65,7 +65,7 @@
                 <div class="ml-auto d-inline tab-setup">
                     <a :href="route('user.profile', {tab: 'homeScreenConfiguration'})"
                        class="p-2 pl-3 tab-setup ml-auto"
-                       title="Angezeigte Reiter konfigurieren"><span class="fa fa-cog"></span>
+                       title="Angezeigte Reiter konfigurieren"><span class="mdi mdi-cog"></span>
                         <span class="d-none d-md-inline">Anzeige</span>
                     </a>
                 </div>

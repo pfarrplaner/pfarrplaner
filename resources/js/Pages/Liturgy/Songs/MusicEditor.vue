@@ -97,7 +97,7 @@
                             <h5 class="mb-0">
                                 <button class="btn btn-link collapsed" type="button" data-toggle="collapse" :data-target="'#verseBody'+verseIndex"
                                         aria-expanded="true" :aria-controls="'verseBody'+verseIndex">
-                                    <span class="fa toggle-visibility mr-1" :class="verseVisible[verse.number] ? 'fa-eye' : 'fa-eye-slash'"
+                                    <span class="toggle-visibility mr-1" :class="verseVisible[verse.number] ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
                                           @click.prevent.stop="verseVisible[verse.number] = !verseVisible[verse.number]"></span>
                                     Strophe {{ verse.number }} -- {{ verse.text.substr(0,40) }}...
                                 </button>

@@ -32,7 +32,7 @@
         <div v-if="(!(myService.youtube_url)) && (!creatingStream)" class="alert alert-info">
             Diesem Gottesdienst ist noch kein Livestream zugeordnet.
             <div v-if="myService.city.google_access_token" class="form-class">
-                <button class="btn btn-light" @click.prevent="createLivestream"><span class="fab fa-youtube"></span> Jetzt auf YouTube anlegen</button>
+                <button class="btn btn-light" @click.prevent="createLivestream"><span class="mdi mdi-youtube"></span> Jetzt auf YouTube anlegen</button>
             </div>
             <hr />
             <form-input label="YouTube-Adresse" help="Möglichkeit zur manuellen Eingabe eines YouTube-Links"
@@ -40,7 +40,7 @@
                         v-model="myService.youtube_url" />
         </div>
         <div v-if="creatingStream">
-            <div class="alert alert-info"><span class="fa fa-spinner fa-spin"></span> Ein Livestream wird angelegt. Bitte warten...</div>
+            <div class="alert alert-info"><span class="mdi mdi-spin mdi-loading"></span> Ein Livestream wird angelegt. Bitte warten...</div>
         </div>
         <div v-if="myService.youtube_url">
             <div class="row">
@@ -56,8 +56,8 @@
                     <div class="form-group" v-if="service.youtube_url">
                         <iframe width="560" height="315" :src="embedUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br />
                         <form-group>
-                            <a class="btn btn-light" :href="myService.youtube_url" title="Öffnet das YouTube-Video in einem neuen Fenster" target="_blank"><span class="fab fa-youtube"></span> Zum Video</a>
-                            <a v-if="myService.city.google_access_token" class="btn btn-light" :href="dashboardUrl" title="Öffnet das  Live-Dashboard zum Stream in einem neuen Fenster" target="_blank"><span class="fa fa-video"></span> Zum Live-Dashboard</a>
+                            <a class="btn btn-light" :href="myService.youtube_url" title="Öffnet das YouTube-Video in einem neuen Fenster" target="_blank"><span class="mdi mdi-youtube"></span> Zum Video</a>
+                            <a v-if="myService.city.google_access_token" class="btn btn-light" :href="dashboardUrl" title="Öffnet das  Live-Dashboard zum Stream in einem neuen Fenster" target="_blank"><span class="mdi mdi-video"></span> Zum Live-Dashboard</a>
                         </form-group>
                     </div>
                 </div>
@@ -143,7 +143,7 @@ export default {
 </script>
 
 <style scoped>
-    span.fab.fa-youtube {
+    span.mdi.mdi-youtube {
         color: red;
     }
 </style>

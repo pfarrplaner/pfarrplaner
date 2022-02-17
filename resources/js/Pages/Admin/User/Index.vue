@@ -70,7 +70,7 @@
                                     <tr>
                                         <td>
                                             <div>
-                                                <span  :class="row.isOfficialUser ? 'mdi mdi-account-check' : 'mdi mdi-account-alert-outline'"></span>
+                                                <span  :class="row.isOfficialUser ? 'mdi mdi-account-check' : 'mdi mdi-account-question-outline'"></span>
                                                 <span v-if="row.last_name && row.first_name">
                                                     <b>{{ row.last_name }}</b>, {{ row.first_name }}
                                                 </span>
@@ -228,7 +228,7 @@ export default {
     margin-right: 1px;
 }
 
-.fa.fa-user-times {
+.mdi.mdi-account-question-outline {
     color: darkgray;
 }
 </style>

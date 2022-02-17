@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <div v-if="loading"><span class="fa fa-spin fa-spinner"></span></div>
+    <div v-if="loading"><span class="mdi mdi-spin mdi-loading"></span></div>
     <div v-else class="service-entry editable" style="cursor: pointer;"
          title="Klicken, um diesen Eintrag zu bearbeiten" onclick="">
         <template v-if="null != service.special_location">
@@ -62,7 +62,7 @@
         <div class="service-description" v-html="service.descriptionText"></div>
         <div class="service-description">
             <span v-if="service.baptisms.length > 0" :title="service.baptismsText"><span
-                class="fa fa-droplet"></span>{{ service.baptims.length }}</span>
+                class="mdi mdi-water"></span>{{ service.baptims.length }}</span>
         </div>
     </div>
 </template>

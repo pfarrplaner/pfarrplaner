@@ -33,18 +33,18 @@
             <b>{{ service.titleText }}</b>
         </div>
         <div class="service-description" v-if="service.weddings.length > 0">
-            <span class="fa fa-ring"></span>
+            <span class="mdi mdi-ring"></span>
             <calendar-service-wedding v-if="$can('gd-kasualien-lesen') || $can('gd-kasualien-barbeiten')"
                                       v-for="(wedding,index) in service.weddings" :key="wedding.id" :wedding="wedding" trailer=", " :trail="index > 0"/>
         </div>
         <div class="service-description" v-if="service.funerals.length > 0">
-            <span class="fa fa-cross"></span>
+            <span class="mdi mdi-grave-stone"></span>
             <calendar-service-funeral v-if="$can('gd-kasualien-lesen') || $can('gd-kasualien-barbeiten')"
                                       v-for="(wedding,index) in service.weddings" :key="wedding.id" :wedding="wedding" trailer=", " :trail="index > 0"/>
         </div>
         <div class="service-description" v-html="service.descriptionText"></div>
         <div class="service-description" v-if="service.internal_remarks">
-            <span class="fa fa-eye-slash" title="Anmerkung nur für den internen Gebrauch"></span> {{ service.internal_remarks }}
+            <span class="mdi mdi-eye-off" title="Anmerkung nur für den internen Gebrauch"></span> {{ service.internal_remarks }}
         </div>
 
         <calendar-service-participants :participants="service.pastors" category="P" :predicant="service.need_predicant" />
@@ -54,7 +54,7 @@
                                        :participants="participants" :category="ministry" :predicant="0" />
         <div v-if="$can('gd-kasualien-lesen') || $can('gd-kasualien-nur-statistik')">
             <div class="service-description" v-if="service.baptisms.length > 0">
-                <span class="fa fa-droplet" :title="$can('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
+                <span class="mdi mdi-water" :title="$can('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
             </div>
         </div>
     </div>

@@ -31,7 +31,7 @@
     <div class="attachment btn btn-light" @click="download" :title="title + ' herunterladen'">
         <b><span class="fa" :class="icon"></span> {{ title }}</b><br/>
         <small>.{{ extension }}, {{ size }}</small>
-        <span class="float-right fa fa-download"></span>
+        <span class="float-right mdi mdi-download"></span>
     </div>
 </template>
 
@@ -79,7 +79,7 @@ export default {
     .btn-danger {
         margin-top: -.3rem;
     }
-    .fa-download {
+    .mdi-download {
         color: gray;
     }
 </style>

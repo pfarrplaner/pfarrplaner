@@ -79,7 +79,7 @@
         </div>
         <hr/>
         <a class="btn btn-success" :href="route('seatfinder', myService.id)">Neue Anmeldung</a>
-        <a class="btn btn-light" :href="route('booking.finalize', myService.id)"><span class="fa fa-file-pdf"></span>
+        <a class="btn btn-light" :href="route('booking.finalize', myService.id)"><span class="mdi mdi-file-pdf-box"></span>
             Anmeldeliste</a>
         <div class="bookings mt-3">
             <div class="alert alert-info" v-if="service.bookings.length == 0">
@@ -114,18 +114,18 @@
                             <seat :seat="service.seating.grid[service.seating.list[booking.code]]" :booking="booking"/>
                             <button v-if="!booking.fixed_seat" class="btn btn-sm btn-light" title="Platz festlegen"
                                     @click.prevent="pinToSeat(booking)">
-                                <span class="fa fa-thumbtack"></span>
+                                <span class="mdi mdi-pin"></span>
                             </button>
                             </div>
                         </td>
                         <td>
                             <a class="btn btn-sm btn-light" title="Buchung bearbeiten"
                                :href="route('booking.edit', booking.id)">
-                                <span class="fa fa-edit"></span>
+                                <span class="mdi mdi-pencil"></span>
                             </a>
                             <button class="btn btn-sm btn-danger" title="Buchung löschen"
                                     @click.prevent="deleteBooking(booking, bookingKey)">
-                                <span class="fa fa-trash"></span>
+                                <span class="mdi mdi-delete"></span>
                             </button>
                         </td>
                     </tr>

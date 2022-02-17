@@ -43,24 +43,24 @@
                         <div class="col-md-4 text-right">
                             <inertia-link class="btn btn-sm btn-light"
                                           :href="route('service.edit', {service: service.slug})"
-                                          title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span>
+                                          title="Gottesdienst bearbeiten"><span class="mdi mdi-pencil"></span>
                                 Gottesdienst
                             </inertia-link>
                             <inertia-link class="btn btn-sm btn-light"
                                           :href="route('liturgy.editor', {service: service.slug})"
                                           title="Liturgie bearbeiten">
-                                <span class="fa fa-th-list"></span> Liturgie
+                                <span class="mdi mdi-view-list"></span> Liturgie
                             </inertia-link>
                             <span v-if="undefined != editedSermon.id">
                                 <button v-if="services.length > 1" class="btn btn-sm btn-secondary"
                                         @click.prevent.stop="uncoupleService(service)"
                                         title="Gottesdienst entkoppeln">
-                                    <span class="fa fa-unlink"></span>
+                                    <span class="mdi mdi-link-off"></span>
                                 </button>
                                 <button v-else class="btn btn-sm btn-danger"
                                         @click.prevent.stop="uncoupleService(service)"
                                         title="Predigt entfernen">
-                                    <span class="fa fa-trash"></span>
+                                    <span class="mdi mdi-delete"></span>
                                 </button>
                             </span>
                         </div>
@@ -148,8 +148,8 @@
                                                     <button class="ql-indent" value="+1"></button>
                                                 </span>
                             <button class="ql-clean mr-2"></button>
-                            <button class="ql-insertbible quill-fa-button" title="Bibeltext hinzufügen"><span
-                                class="fa fa-bible"></span></button>
+                            <button class="ql-insertbible quill-mdi-button" title="Bibeltext hinzufügen"><span
+                                class="mdi mdi-book-open-variant"></span></button>
                         </div>
                     </quill-editor>
 
@@ -375,7 +375,7 @@ export default {
 </script>
 
 <style scoped>
-.ql-toolbar .quill-fa-button {
+.ql-toolbar .quill-mdi-button {
     padding-top: 1px;
 }
 </style>

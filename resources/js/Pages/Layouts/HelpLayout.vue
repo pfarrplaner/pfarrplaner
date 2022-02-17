@@ -34,7 +34,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <inertia-link class="nav-link btn btn-light" :href="route('manual', 'index')">
-                    <span class="fa fa-home"></span>
+                    <span class="mdi mdi-home"></span>
                     <span class="d-none d-md-inline">Inhaltsverzeichnis</span>
                 </inertia-link>
                 <slot name="navbar-left"/>

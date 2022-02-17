@@ -51,17 +51,17 @@
                     </a>
                     <div v-else>
                         <a class="btn btn-light" :href="service.youtube_url" target="_blank"
-                           title="Gehe zum Livestream auf YouTube"><span class="fab fa-youtube"></span>
+                           title="Gehe zum Livestream auf YouTube"><span class="mdi mdi--youtube"></span>
                             <span class="d-none d-md-inline">Video</span>
                         </a>
                         <a class="btn btn-light" v-if="dashboardUrl(service)" :href="dashboardUrl(service)" target="_blank"
-                           title="Gehe zum Live Dashboard auf YouTube"><span class="fa fa-video"></span>
+                           title="Gehe zum Live Dashboard auf YouTube"><span class="mdi mdi--video"></span>
                         </a>
                         <a class="btn btn-light" :href="route('broadcast.refresh', service.id)"
-                           title="Beschreibung auf YouTube erneuern"><span class="fa fa-sync"></span>
+                           title="Beschreibung auf YouTube erneuern"><span class="mdi mdi-sync"></span>
                         </a>
                         <button class="btn btn-danger" @click.prevent="deleteBroadcast(service)"
-                                title="Livestream löschen"><span class="fa fa-trash"></span></button>
+                                title="Livestream löschen"><span class="mdi mdi-delete"></span></button>
                     </div>
                 </div>
             </div>
@@ -94,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-    .fab.fa-youtube {
+    .mdi.mdi-youtube {
         color: red;
     }
 </style>

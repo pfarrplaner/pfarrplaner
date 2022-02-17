@@ -35,7 +35,7 @@
         <draggable :list="people" group="users" handle=".handle" @end="dragged">
             <div v-for="user in people" class="row user-item my-3 p-2 border rounded rounded-lg">
                 <div class="col-md-3">
-                    <span class="fa handle" :class="user.isOfficialUser ? 'fa-user-check' : 'fa-user'"></span>
+                    <span class="handle" :class="user.isOfficialUser ? 'mdi mdi-account-check' : 'mdi mdi-account-question-outline'"></span>
                     <span class="text-bold">{{ user.fullNameText || user.name }}</span>
                     <span class="badge badge-info">{{ user.duplicates.length }}</span><br />
                     <small>
@@ -49,7 +49,7 @@
                     <draggable :list="user.duplicates" group="users" handle=".handle" @end="dragged" class="duplicates-drop"
                         :class="user.duplicates.length ? 'has-duplicates' : 'no-duplicates'" :emptyInsertThreshold="100">
                         <div v-for="duplicateUser in user.duplicates" class="user-item my-3 p-2 border rounded rounded-lg">
-                            <span class="fa handle" :class="duplicateUser.isOfficialUser ? 'fa-user-check' : 'fa-user'"></span>
+                            <span class="handle" :class="duplicateUser.isOfficialUser ? 'mdi mdi-account-check' : 'mdi mdi-account-question-outline'"></span>
                             <span class="text-bold">{{ duplicateUser.fullNameText || duplicateUser.name }}</span>
                             <div v-if="user.email">{{ user.email }}</div>
                             <div v-if="duplicateUser.home_cities">
@@ -127,7 +127,7 @@ export default {
         background-color: white;
     }
 
-    .fa-user-check {
+    .mdi-account-check {
         color: blue;
     }
 

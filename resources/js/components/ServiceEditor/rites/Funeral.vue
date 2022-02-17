@@ -52,7 +52,7 @@
                 <checked-process-item :check="(funeral.appointment)" negative="Trauergespräch noch nicht vereinbart">
                     <template slot="positive">
                         <a :href="route('funeral.appointment.ical', funeral)" title="In den Kalender übernehmen">
-                            <span class="fa fa-calendar"></span> Trauergespräch am
+                            <span class="mdi mdi-calendar"></span> Trauergespräch am
                             {{ DateTime.fromISO(funeral.appointment).setZone('Europe/Berlin' , {keepLocalTime: true}).setLocale('de').toLocaleString(DateTime.DATETIME_SHORT) }} Uhr
                         </a>
                     </template>
@@ -82,14 +82,14 @@
                                 :attachment="attachment"/>
                     <fake-attachment :href="route('funeral.form', {funeral: funeral.id})"
                                      title="Formular für Kirchenregisteramt" extension="pdf"
-                                     icon="fa-file-pdf" size="ca. 135 kB"/>
+                                     icon="mdi mdi-file-pdf-box" size="ca. 135 kB"/>
             </file-drag-receiver>
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Bestattung bearbeiten"
-               :href="route('funerals.edit', {funeral: funeral.id})"><span class="fa fa-edit"></span></a>
+               :href="route('funerals.edit', {funeral: funeral.id})"><span class="mdi mdi-pencil"></span></a>
             <button class="btn btn-sm btn-danger" title="Bestattung löschen"
-                    @click.prevent="deleteFuneral"><span class="fa fa-trash"></span></button>
+                    @click.prevent="deleteFuneral"><span class="mdi mdi-delete"></span></button>
         </div>
     </div>
 
@@ -148,7 +148,7 @@ export default {
     vertical-align: middle;
 }
 
-.fa-download {
+.mdi-download {
     margin-right: 20px;
     color: gray;
 }

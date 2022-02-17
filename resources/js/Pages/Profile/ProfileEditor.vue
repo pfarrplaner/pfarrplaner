@@ -31,7 +31,7 @@
     <admin-layout title="Mein Profil">
         <template slot="navbar-left">
             <button class="btn btn-primary" title="Profil speichern" @click="saveProfile">
-                <span class="d-inline d-md-none fa fa-save"></span> <span class="d-none d-md-inline">Speichern</span>
+                <span class="d-inline d-md-none mdi mdi-content-save"></span> <span class="d-none d-md-inline">Speichern</span>
             </button>
         </template>
         <template slot="tab-headers">

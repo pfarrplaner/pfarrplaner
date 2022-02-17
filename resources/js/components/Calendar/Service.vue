@@ -48,19 +48,19 @@
         </div>
         <img v-if="service.cc" src="/img/cc.png" :title="ccTitle(service)">
         <span v-if="service.youtube_url">
-            <a :href="service.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span class="fab fa-youtube"></span></a>
-            <a v-if="service.city.youtube_channel_url" :href="service.liveDashboardUrl" target="_blank" class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="fa fa-video"></span></a>
+            <a :href="service.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span class="mdi mdi-youtube"></span></a>
+            <a v-if="service.city.youtube_channel_url" :href="service.liveDashboardUrl" target="_blank" class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="mdi mdi-video"></span></a>
         </span>
         <controlled-access v-if="service.controlled_access" :service="service" />
         <div v-if="(service.titleText != 'Gottesdienst') && (service.titleText != 'GD') && (service.funerals.length == 0)" class="service-description">{{ service.titleText }}</div>
 
         <div class="service-description" v-if="service.funerals.length > 0">
-            <span class="fa fa-cross"></span>
+            <span class="mdi mdi-grave-stone"></span>
             <calendar-service-funeral v-for="(funeral, index) in service.funerals" :key="funeral.id" :funeral="funeral" trailer=", " :trail="index > 0"/>
         </div>
         <div class="service-description" v-html="service.descriptionText"></div>
         <div class="service-description" v-if="service.internal_remarks">
-            <span class="fa fa-eye-slash" title="Anmerkung nur für den internen Gebrauch"></span> {{ service.internal_remarks }}
+            <span class="mdi mdi-eye-off" title="Anmerkung nur für den internen Gebrauch"></span> {{ service.internal_remarks }}
         </div>
 
         <calendar-service-participants :participants="service.pastors" category="P" :predicant="service.need_predicant" />
@@ -70,7 +70,7 @@
                                        :participants="participants" :category="ministry" :predicant="0" />
         <div v-if="hasPermission('gd-kasualien-lesen') || hasPermission('gd-kasualien-nur-statistik')">
             <div class="service-description" v-if="service.baptisms.length > 0">
-                <span class="fa fa-droplet" :title="hasPermission('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
+                <span class="mdi mdi-water" :title="hasPermission('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
             </div>
         </div>
     </div>

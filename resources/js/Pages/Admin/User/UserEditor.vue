@@ -157,7 +157,7 @@
                                         v-model="mySettings.modules[module.key]"/>
                         </div>
                         <div class="col-md-11">
-                            <span class="fa" :class="'fa-'+module.icon" :style="{color: module.color}"></span>
+                            <span :class="module.icon" :style="{color: module.color}"></span>
                             <span>{{ module.title }}</span>
                         </div>
                     </div>

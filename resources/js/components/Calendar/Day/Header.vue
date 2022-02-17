@@ -34,7 +34,7 @@
              +absenceReasonText(absence)
              +' ('+absence.durationText+') '
              +replacementText(absence)">
-            <span class="fa fa-globe-europe"></span> {{ absence.user.last_name }}</div>
+            <span class="mdi mdi-earth"></span> {{ absence.user.last_name }}</div>
         </div>
     </th>
 </template>

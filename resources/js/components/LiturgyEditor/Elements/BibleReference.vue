@@ -32,8 +32,8 @@
         <div v-if="liturgy[liturgyKey]" :key="liturgyKey+'Text__'+text">
             <span v-if="title">{{ title }} </span><a v-if="liturgy[liturgyKey+'Link']" :href="liturgy[liturgyKey+'Link']"
                    target="_blank">{{ liturgy[liturgyKey] }}</a><span v-else>{{ liturgy[liturgyKey]}} </span>
-            <span v-if="loading" class="fa fa-spin fa-spinner"></span>
-            <span v-if="!loading" class="fa fa-copy" @click.prevent.stop="copyToClipboard"
+            <span v-if="loading" class="mdi mdi-spin mdi-loading"></span>
+            <span v-if="!loading" class="mdi mdi-content-copy" @click.prevent.stop="copyToClipboard"
                   title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
         </div>
     </div>
@@ -72,18 +72,18 @@ export default {
         display: inline;
     }
 
-    .fa-spinner {
+    .mdi.mdi-spin {
         color: lightgray;
     }
-    .fa-copy {
+    .mdi-content-copy {
         color: lightgray;
         display: none;
     }
-    .fa-copy:hover {
+    .mdi-content-copy:hover {
         color: gray;
     }
 
-    .bible-reference:hover .fa-copy {
+    .bible-reference:hover .mdi-content-copy {
         display: inline;
     }
 </style>

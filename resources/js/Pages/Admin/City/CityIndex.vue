@@ -65,11 +65,11 @@
                                         <td class="text-right">
                                             <inertia-link v-if="row.canEdit" class="btn btn-sm btn-primary" title="Kirchengemeinde bearbeiten"
                                                           :href="route('city.edit', {city: row.name})">
-                                                <span class="fa fa-edit"></span>
+                                                <span class="mdi mdi-pencil"></span>
                                             </inertia-link>
                                             <button v-if="row.canDelete" class="btn  btn-sm btn-danger ml-1" title="Kirchengemeinde löschen"
                                                     @click="deleteCity(row)">
-                                                <span class="fa fa-trash"></span>
+                                                <span class="mdi mdi-delete"></span>
                                             </button>
                                         </td>
                                     </tr>

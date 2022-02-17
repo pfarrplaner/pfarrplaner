@@ -29,7 +29,7 @@
 
 <template>
     <div class="form-file-uploader">
-        <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
+        <div v-if="uploading">Datei wird hochgeladen... <span class="mdi mdi-spin mdi-loading"></span></div>
         <form-file-upload @input="upload" multiple="1" />
     </div>
 </template>

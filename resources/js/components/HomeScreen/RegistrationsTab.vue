@@ -44,16 +44,16 @@
             <div class="col-md-2">{{ service.freeSeatsText}}</div>
             <div class="col-md-4 text-right">
                 <a :href="route('seatfinder', service.id)" title="Anmeldung hinzufügen"
-                   class="btn btn-success"><span class="fa fa-ticket-alt"></span>
+                   class="btn btn-success"><span class="mdi mdi-ticket"></span>
                     <span class="d-none d-md-inline">Neue Anmeldung</span>
                 </a>
                 <a :href="route('service.bookings', service.id)" title="Anmeldungen anzeigen"
-                   class="btn btn-light"><span class="fa fa-ticket-alt"></span>
+                   class="btn btn-light"><span class="mdi mdi-ticket"></span>
                     <span class="d-none d-md-inline">Anmeldungen</span>
                     <span v-if="service.bookings.length > 0" class="badge badge-info">{{ service.bookings.length }}</span>
                 </a>
                 <a :href="route('booking.finalize', service.id)" title="Anmeldeliste ausgeben"
-                   class="btn btn-light"><span class="fa fa-clipboard-check"></span>
+                   class="btn btn-light"><span class="mdi mdi-clipboard-check"></span>
                     <span class="d-none d-md-inline">Anmeldeliste</span>
                 </a>
             </div>

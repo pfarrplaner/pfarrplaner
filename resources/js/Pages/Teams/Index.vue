@@ -31,7 +31,7 @@
     <admin-layout title="Teams">
         <template slot="navbar-left">
             <a class="btn btn-success" :href="route('teams.create')">
-                <span class="d-inline d-md-none fa fa-plus"></span>
+                <span class="d-inline d-md-none mdi mdi-account-multiple-plus"></span>
                 <span class="d-none d-md-inline">Team hinzufügen</span>
             </a>
         </template>
@@ -49,10 +49,10 @@
                             <div class="col-md-2 text-right">
                                 <div v-if="team.writable">
                                     <a class="btn btn-light" :href="route('team.edit', team.id)" title="Team bearbeiten">
-                                        <span class="fa fa-edit"></span>
+                                        <span class="mdi mdi-pencil"></span>
                                     </a>
                                     <button class="btn btn-danger" @click="deleteTeam(team)" title="Team löschen">
-                                        <span class="fa fa-trash"></span>
+                                        <span class="mdi mdi-account-multiple-minus"></span>
                                     </button>
                                 </div>
                             </div>

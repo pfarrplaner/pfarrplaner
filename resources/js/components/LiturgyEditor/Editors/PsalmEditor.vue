@@ -77,7 +77,7 @@
                     <div class="form-group">
                         <button class="btn btn-sm btn-light" @click.prevent="saveText" v-if="!editPsalm">Als neuen Psalm speichern</button>
                         <button class="btn btn-sm btn-light" @click.prevent="updateText" v-if="editPsalm" :title="psalmIsDirty ? 'Es existieren ungespeicherte Änderungen am Lied.' : ''">
-                            <span v-if="psalmIsDirty" class="fa fa-exclamation-triangle" style="color:red;"></span>
+                            <span v-if="psalmIsDirty" class="mdi mdi-alert" style="color:red;"></span>
                             Änderungen am Psalm speichern
                         </button>
                     </div>

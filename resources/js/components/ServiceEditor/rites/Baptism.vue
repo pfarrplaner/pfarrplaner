@@ -89,9 +89,9 @@
         </div>
         <div class="col-md-1 text-right">
             <inertia-link class="btn btn-sm btn-light" title="Taufe bearbeiten"
-               :href="route('baptisms.edit', {baptism: baptism.id})"><span class="fa fa-edit"></span></inertia-link>
+               :href="route('baptisms.edit', {baptism: baptism.id})"><span class="mdi mdi-pencil"></span></inertia-link>
             <button class="btn btn-sm btn-danger" title="Taufe löschen"
-                    @click.prevent="deleteBaptism"><span class="fa fa-trash"></span></button>
+                    @click.prevent="deleteBaptism"><span class="mdi mdi-delete"></span></button>
         </div>
     </div>
 

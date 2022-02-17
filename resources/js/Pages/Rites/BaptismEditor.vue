@@ -31,10 +31,10 @@
     <admin-layout :title="'Taufe von '+baptism.candidate_name">
         <template slot="navbar-left">
             <button class="btn btn-primary" @click.prevent="saveBaptism" title="Speichern">
-                <span class="d-inline d-md-none fa fa-save"></span> <span class="d-none d-md-inline">Speichern</span>
+                <span class="d-inline d-md-none mdi mdi-content-save"></span> <span class="d-none d-md-inline">Speichern</span>
             </button>&nbsp;
             <button class="btn btn-danger" @click.prevent="deleteBaptism" title="Löschen">
-                <span class="d-inline d-md-none fa fa-trash"></span> <span class="d-none d-md-inline">Löschen</span>
+                <span class="d-inline d-md-none mdi mdi-delete"></span> <span class="d-none d-md-inline">Löschen</span>
             </button>
         </template>
         <template slot="tab-headers">

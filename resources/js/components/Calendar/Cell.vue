@@ -43,7 +43,7 @@
             <a v-if="canCreate && user.writableCities.includes(city.id)"
                class="btn btn-light btn-sm btn-add-day m-1"
                title="Neuen Gottesdienst hinzufügen"
-               :href="route('services.add', {date: day.id, city: city.id})"><span class="fa fa-plus"></span></a>
+               :href="route('services.add', {date: day.id, city: city.id})"><span class="mdi mdi-plus"></span></a>
         </div>
     </td>
 </template>

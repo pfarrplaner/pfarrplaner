@@ -31,11 +31,11 @@
     <admin-layout :title="title + ' einrichten'">
         <template slot="navbar-left">
             <button class="btn btn-primary" @click="submit">
-                <span class="d-inline d-md-none fa fa-download"></span>
+                <span class="d-inline d-md-none mdi mdi-download"></span>
                 <span class="d-none d-md-inline">Herunterladen</span>
             </button>
             <button class="btn btn-light ml-1" @click="back">
-                <span class="d-inline d-md-none fa fa-arrow-left"></span>
+                <span class="d-inline d-md-none mdi mdi-chevron-left"></span>
                 <span class="d-none d-md-inline">Zurück</span>
             </button>
         </template>

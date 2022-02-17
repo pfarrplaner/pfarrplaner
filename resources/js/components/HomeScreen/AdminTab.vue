@@ -34,8 +34,8 @@
                 <form-selectize label="Schnellauswahl Benutzer" :options="people" v-model="selectedPerson" />
             </div>
             <div class="col-md-2 text-right pt-md-4" v-if="selectedPerson">
-                <inertia-link class="btn btn-sm btn-primary mt-md-2" :href="route('user.edit', {user: selectedPerson})"><span class="fa fa-edit"></span></inertia-link>
-                <a class="btn btn-sm btn-light mt-md-2" :href="route('user.switch', {user: selectedPerson})"><span class="fa fa-sign-in-alt"></span></a>
+                <inertia-link class="btn btn-sm btn-primary mt-md-2" :href="route('user.edit', {user: selectedPerson})"><span class="mdi mdi-pencil"></span></inertia-link>
+                <a class="btn btn-sm btn-light mt-md-2" :href="route('user.switch', {user: selectedPerson})"><span class="mdi mdi-account-switch"></span></a>
             </div>
         </div>
         <a :href="route('users.duplicates')" class="btn btn-sm btn-light">Duplikate suchen</a>

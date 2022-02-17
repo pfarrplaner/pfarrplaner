@@ -34,7 +34,7 @@
                 <div class="btn-group mr-1">
                     <button type="button" class="btn btn-primary" @click.prevent="saveService(true)"
                             title="Speichern und schließen">
-                        <span class="fa fa-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span>
+                        <span class="mdi mdi-content-save d-md-none"></span><span class="d-none d-md-inline"> Speichern</span>
                     </button>
                     <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -42,15 +42,15 @@
                     </button>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" @click.prevent="saveService(false)">
-                            <span class="fa fa-save "></span> Speichern, ohne zu schließen
+                            <span class="mdi mdi-content-save"></span> Speichern, ohne zu schließen
                         </a>
                         <inertia-link class="dropdown-item" @click.prevent="cancelEdit">
-                            <span class="fa fa-times"></span> Schließen, ohne zu speichern
+                            <span class="mdi mdi-cancel"></span> Schließen, ohne zu speichern
                         </inertia-link>
                     </div>
                 </div>
                 <button class="btn btn-danger" @click.prevent="deleteService"><span
-                    class="fa fa-trash d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
+                    class="mdi mdi-delete d-md-none"></span><span class="d-none d-md-inline"> Löschen</span></button>&nbsp;
                 <div class="dropdown show">
                     <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -66,10 +66,10 @@
                     </div>
                 </div>
                 <a class="btn btn-light" :href="route('liturgy.editor', service.slug)"
-                   title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="fa fa-th-list"></span><span
+                   title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-view-list"></span><span
                     class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
                 <a class="btn btn-light" :href="route('service.sermon.editor', service.slug)"
-                   title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span><span
+                   title="Predigt zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-microphone"></span><span
                     class="d-none d-md-inline"> Predigt</span></a>&nbsp;
             </template>
             <template slot="tab-headers">

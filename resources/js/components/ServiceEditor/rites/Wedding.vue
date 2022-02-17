@@ -111,9 +111,9 @@
         </div>
         <div class="col-md-1 text-right">
             <a class="btn btn-sm btn-light" title="Trauung bearbeiten"
-               :href="route('weddings.edit', {wedding: wedding.id})"><span class="fa fa-edit"></span></a>
+               :href="route('weddings.edit', {wedding: wedding.id})"><span class="mdi mdi-pencil"></span></a>
             <button class="btn btn-sm btn-danger" title="Trauung löschen"
-                    @click.prevent="deleteWedding"><span class="fa fa-trash"></span></button>
+                    @click.prevent="deleteWedding"><span class="mdi mdi-delete"></span></button>
         </div>
     </div>
 

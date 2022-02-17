@@ -31,7 +31,7 @@
     <div class="mb-2">
         <hr/>
         <small @click="open = !open">
-            <span class="text-bold fa" :class="open ? 'fa-chevron-circle-down' : 'fa-chevron-circle-right'"></span> Zusätzliche Zeitangaben</small>
+            <span class="text-bold" :class="open ? 'mdi mdi-chevron-down-circle' : 'mdi mdi-chevron-right-circle'"></span> Zusätzliche Zeitangaben</small>
         <div v-if="open" class="row">
             <div class="col-sm-6">
                 <form-input label="Benötigte Zeit" v-model="editedElement.data.time" placeholder="MM:SS" />

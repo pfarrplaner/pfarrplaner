@@ -44,7 +44,7 @@ export default {
         return {
             color: ['', 'yellow', 'green', 'greenyellow', 'dodgerblue', 'lightskyblue', 'red'][this.service.controlled_access],
             description: ['', '3G', '2G', '2G+', 'Test nötig', 'Test empfohlen', 'Geschlossene Gruppe'][this.service.controlled_access],
-            icon: ['', '', '', '', 'fa fa-vial', 'fa fa-vial', ''][this.service.controlled_access]
+            icon: ['', '', '', '', 'mdi mdi-virus-off', 'mdi mdi-virus-off', ''][this.service.controlled_access]
         }
     },
 }

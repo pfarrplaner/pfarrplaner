@@ -29,7 +29,7 @@
 
 <template>
     <li :id="id+'Tab'" class="nav-item" :title="disabled ? disabledTitle : ''">
-        <span v-if="(!title) && (!icon)" class="nav-link fa fa-spin fa-spinner"></span>
+        <span v-if="(!title) && (!icon)" class="nav-link mdi mdi-spin mdi-loading"></span>
         <a v-else class="nav-link" :class="{active: (active || (activeTab == id)) && !disabled, disabled: disabled}" :href="href || ('#'+id)" role="tab" data-toggle="tab">
             <span v-if="icon" :class="icon"></span>
             {{ title }}

@@ -34,10 +34,10 @@
                           v-if="numericDate > 201801"
                           :href="route('calendar', { date: moment(date).subtract(1, 'months').format('YYYY-MM') })"
                           title="Einen Monat zurück">
-                <span class="fa fa-backward"></span>
+                <span class="mdi mdi-chevron-left"></span>
             </inertia-link>
             <button class="btn btn-default" @click="today">
-                <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute </span>
+                <span class="mdi mdi-calendar-today"></span><span class="d-none d-md-inline"> Gehe zu Heute </span>
             </button>
 
             <!-- TODO month / year dropdown -->
@@ -77,7 +77,7 @@
             <inertia-link class="btn btn-default"
                           :href="route('calendar', { date: moment(date).add(1, 'months').format('YYYY-MM') })"
                           title="Einen Monat weiter">
-                <span class="fa fa-forward"></span>
+                <span class="mdi mdi-chevron-right"></span>
             </inertia-link>
         </div>
         <div class="btn-group mr-2 d-none d-md-block" role="group" v-if="!slave">
@@ -85,19 +85,19 @@
                @click.prevent="toggleColumns"
                title="Alle ausgeblendeten Tage einblenden"><span
                 :class="{
-                   'fa': true,
-                   'fa-square': !allColumnsOpen,
-                   'fa-check-square': allColumnsOpen,
+                   'mdi': true,
+                   'mdi-checkbox-blank-outline': !allColumnsOpen,
+                   'mdi-checkbox-marked-outline': allColumnsOpen,
                 }"></span></a>
         </div>
         <div class="btn-group mr-2" role="group">
             <a class="btn btn-success"
                :href="route('days.add', {year: date.getFullYear(), month: date.getMonth()+1})"
                title="Angezeigte Tage ändern"><span
-                class="fa fa-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
+                class="mdi mdi-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
         </div>
         <a class="btn btn-default" :href="route('reports.setup', {report: 'ministryRequest'})"
-           title="Dienstanfrage per E-Mail senden"><span class="fa fa-envelope"></span> <span class="d-none d-md-inline">Anfrage senden...</span></a>
+           title="Dienstanfrage per E-Mail senden"><span class="mdi mdi-email"></span> <span class="d-none d-md-inline">Anfrage senden...</span></a>
 
     </div>
 

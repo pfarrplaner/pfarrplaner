@@ -35,7 +35,7 @@
             })"
                target="_blank"
                title="Öffnet ein weiteres Fenster mit einer Kalenderansicht, die der hier dargestellten automatisch folgt.">
-                <span class="fa fa-desktop"></span> 2. Bildschirm anzeigen
+                <span class="mdi mdi-monitor"></span> 2. Bildschirm anzeigen
             </a>
         </div>
         <hr class="mb-2">

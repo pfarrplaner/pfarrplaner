@@ -34,12 +34,12 @@
                           v-if="numericDate > 201801"
                           :href="route('absences.index', { year: moment(date).subtract(1, 'months').format('YYYY'), month: moment(date).subtract(1, 'months').format('MM') })"
                           title="Einen Monat zurück">
-                <span class="fa fa-backward"></span>
+                <span class="mdi mdi-chevron-left"></span>
             </inertia-link>
             <inertia-link class="btn btn-default"
                           :href="route('absences.index', { year: new Date().getFullYear(), month: new Date().getMonth()+1 })"
                           title="Gehe zum aktuellen Monat">
-                <span class="fa fa-calendar-day"></span><span class="d-none d-md-inline"> Gehe zu Heute </span>
+                <span class="mdi mdi-calendar-today"></span><span class="d-none d-md-inline"> Gehe zu Heute </span>
             </inertia-link>
 
             <!-- TODO month / year dropdown -->
@@ -79,7 +79,7 @@
             <inertia-link class="btn btn-default"
                           :href="route('absences.index', { year: moment(date).add(1, 'months').format('YYYY'), month: moment(date).add(1, 'months').format('MM') })"
                           title="Einen Monat weiter">
-                <span class="fa fa-forward"></span>
+                <span class="mdi mdi-chevron-right"></span>
             </inertia-link>
         </div>
     </div>

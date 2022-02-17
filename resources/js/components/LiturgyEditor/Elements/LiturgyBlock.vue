@@ -32,19 +32,19 @@
         <div class="row">
             <div class="col-6 liturgy-block-title" @click="changeTitle">{{ block.title }}</div>
             <div class="col-6 text-right">
-                <button @click="addItem" class="btn btn-sm btn-light" title="Freitext hinzufügen"><span class="fa fa-file"></span>
+                <button @click="addItem" class="btn btn-sm btn-light" title="Freitext hinzufügen"><span class="mdi mdi-text"></span>
                 </button>
-                <button @click="addItem" class="btn btn-sm btn-light" title="Psalm hinzufügen"><span class="fa fa-praying-hands"></span>
+                <button @click="addItem" class="btn btn-sm btn-light" title="Psalm hinzufügen"><span class="mdi mdi-hands-pray"></span>
                 </button>
-                <button @click="addItem" class="btn btn-sm btn-light" title="Schriftlesung hinzufügen"><span class="fa fa-bible"></span>
+                <button @click="addItem" class="btn btn-sm btn-light" title="Schriftlesung hinzufügen"><span class="mdi mdi-book-open-variant"></span>
                 </button>
                 <button @click="addItem" class="btn btn-sm btn-light" title="Predigt hinzufügen"><span
-                    class="fa fa-microphone-alt"></span></button>
-                <button @click="addItem" class="btn btn-sm btn-light" title="Lied hinzufügen"><span class="fa fa-music"></span></button>
+                    class="mdi mdi-microphone"></span></button>
+                <button @click="addItem" class="btn btn-sm btn-light" title="Lied hinzufügen"><span class="mdi mdi-music"></span></button>
                 <button @click="addItem" class="btn btn-sm btn-light" title="Vorderfinierten Text hinzufügen"><span
-                    class="fa fa-file-alt"></span></button>
+                    class="mdi mdi-text-box"></span></button>
                 <button class="btn btn-sm btn-danger" title="Abschnitt löschen"
-                        @click="deleteBlock"><span class="fa fa-trash"></span>
+                        @click="deleteBlock"><span class="mdi mdi-delete"></span>
                 </button>
             </div>
         </div>

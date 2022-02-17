@@ -29,7 +29,7 @@
 
 <template>
     <div>
-        <small><span class="fa fa-stopwatch"></span> <span :class="speechTime == '00:00' ? 'warning' : ''">{{ speechTime }}</span></small>
+        <small><span class="mdi mdi-timer"></span> <span :class="speechTime == '00:00' ? 'warning' : ''">{{ speechTime }}</span></small>
     </div>
 </template>
 

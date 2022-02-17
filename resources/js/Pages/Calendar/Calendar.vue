@@ -7,7 +7,7 @@
             <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities"/>
         </template>
         <template slot="after-flash">
-            <div class="alert alert-info" v-if="loading > 0"><span class="fa fa-spin fa-spinner"></span> Daten für {{ loading }} Orte werden geladen ...</div>
+            <div class="alert alert-info" v-if="loading > 0"><span class="mdi mdi-spin mdi-loading"></span> Daten für {{ loading }} Orte werden geladen ...</div>
         </template>
         <div class="d-none d-md-inline calendar-full-container">
             <calendar-pane-horizontal v-if="orientation == 'horizontal'"

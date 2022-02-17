@@ -31,10 +31,10 @@
     <admin-layout :title="'Beerdigung von '+funeral.buried_name">
         <template slot="navbar-left">
             <button class="btn btn-primary" @click.prevent="saveFuneral" title="Speichern">
-                <span class="d-inline d-md-none fa fa-save"></span> <span class="d-none d-md-inline">Speichern</span>
+                <span class="d-inline d-md-none mdi mdi-content-save"></span> <span class="d-none d-md-inline">Speichern</span>
             </button>&nbsp;
             <button class="btn btn-danger" @click.prevent="deleteFuneral" title="Löschen">
-                <span class="d-inline d-md-none fa fa-trash"></span> <span class="d-none d-md-inline">Löschen</span>
+                <span class="d-inline d-md-none mdi mdi-delete"></span> <span class="d-none d-md-inline">Löschen</span>
             </button>
         </template>
         <template slot="tab-headers">
@@ -142,19 +142,19 @@
                             <inertia-link :href="route('service.edit', funeral.service.slug)"
                                           title="Gottesdienst bearbeiten"
                                           class="btn btn-light">
-                                <span class="fa fa-edit"></span> <span
+                                <span class="mdi mdi-pencil"></span> <span
                                 class="d-none d-md-inline">Gottesdienst</span>
                             </inertia-link>
                             <inertia-link :href="route('liturgy.editor', funeral.service.slug)"
                                           title="Liturgie bearbeiten"
                                           class="btn btn-light">
-                                <span class="fa fa-th-list"></span> <span
+                                <span class="mdi mdi-view-list"></span> <span
                                 class="d-none d-md-inline">Liturgie</span>
                             </inertia-link>
                             <inertia-link :href="route('service.sermon.editor', funeral.service.slug)"
                                           title="Predigt bearbeiten"
                                           class="btn btn-light">
-                                <span class="fa fa-microphone"></span> <span
+                                <span class="mdi mdi-microphone"></span> <span
                                 class="d-none d-md-inline">Predigt</span>
                             </inertia-link>
                         </div>
@@ -209,7 +209,7 @@
                             label="Name" placeholder="Nachname, Vorname"/>
                 <div class="mb-3">
                     <button @click.prevent="copyAddress" class="btn btn-light">
-                        <span class="fa fa-copy"></span> Adresse übernehmen
+                        <span class="mdi mdi-content-copy"></span> Adresse übernehmen
                     </button>
                 </div>
                 <form-input v-model="myFuneral.relative_address" name="relative_address" :key="copied"
@@ -259,10 +259,10 @@
                 <div class="row">
                     <div class="col-12 text-right">
                         <button v-if="!showStoryEditor" class="btn btn-light" @click="showStoryEditor = true">
-                            <span class="fa fa-chevron-left"></span> Editor für Lebenslauf einblenden
+                            <span class="mdi mdi-chevron-left"></span> Editor für Lebenslauf einblenden
                         </button>
                         <button v-else class="btn btn-light" @click="showStoryEditor = false">
-                            <span class="fa fa-chevron-right"></span> Editor für Lebenslauf ausblenden
+                            <span class="mdi mdi-chevron-right"></span> Editor für Lebenslauf ausblenden
                         </button>
                     </div>
                 </div>
@@ -375,7 +375,7 @@
                                  :key="myFuneral.attachments.length"/>
                 <fake-attachment :href="route('funeral.form', {funeral: this.myFuneral.id})"
                                  title="Formular für Kirchenregisteramt" extension="pdf"
-                                 icon="fa-file-pdf" size="ca. 135 kB"/>
+                                 icon="mdi mdi-file-pdf-box" size="ca. 135 kB"/>
 
                 <hr/>
                 <h3>Dateien hinzufügen.</h3>
@@ -600,7 +600,7 @@ export default {
     vertical-align: middle;
 }
 
-.fa-download {
+.mdi-download {
     margin-right: 20px;
     color: gray !important;
 }

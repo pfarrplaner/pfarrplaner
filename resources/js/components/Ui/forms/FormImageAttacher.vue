@@ -30,14 +30,14 @@
 <template>
     <div class="form-image-attacher">
         <form-group :label="label" :help="help" :is-checked-item="isCheckedItem">
-        <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
+        <div v-if="uploading">Datei wird hochgeladen... <span class="mdi mdi-spin mdi-loading"></span></div>
         <div v-if="myValue">
             <img class="img-fluid" :src="route('image', myValue.replace('attachments/', ''))" />
             <div>
                 <a class="btn btn-light btn-sm" title="Bild herunterladen" :href="route('image', {path: myValue.replace('attachments/', ''), download: 1})">
-                    <span class="fa fa-download"></span> Herunterladen
+                    <span class="mdi mdi-download"></span> Herunterladen
                 </a>
-                <button class="btn btn-danger btn-sm" title="Bild entfernen" @click="detachImage"><span class="fa fa-trash"></span> Bild entfernen</button>
+                <button class="btn btn-danger btn-sm" title="Bild entfernen" @click="detachImage"><span class="mdi mdi-delete"></span> Bild entfernen</button>
             </div>
         </div>
         <div v-else>

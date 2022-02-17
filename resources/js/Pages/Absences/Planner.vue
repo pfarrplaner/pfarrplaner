@@ -32,10 +32,10 @@
         <template #navbar-left>
             <absence-nav :year="year" :month="month" :years="years"/>
         </template>
-        <div v-if="loadingUsers" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade anzuzeigende
+        <div v-if="loadingUsers" class="alert alert-info"><span class="mdi mdi-spin mdi-loading"></span> Lade anzuzeigende
             Benutzer...
         </div>
-        <div v-if="loadingDates" class="alert alert-info"><span class="fa fa-spin fa-spinner"></span> Lade Einträge für
+        <div v-if="loadingDates" class="alert alert-info"><span class="mdi mdi-spin mdi-loading"></span> Lade Einträge für
             {{ loadingDates }} Benutzer...
         </div>
         <div class="table-responsive tbl-absences">
@@ -53,8 +53,8 @@
                 <tbody v-for="(category,categoryIndex) in sections">
                 <tr v-if="categoryIndex > 0" @click="toggleRow(category)" class="category-header">
                     <th :colspan="1+myDays.length" class="p-1">
-                        <span class="fa" :class="openSections[category] ? 'fa-chevron-down' : 'fa-chevron-right'"/>
-                        <span class="fa fa-users"></span>
+                        <span :class="openSections[category] ? 'mdi mdi-chevron-down' : 'mdi mdi-chevron-right'"/>
+                        <span class="mdi mdi-account-multiple"></span>
                         {{ category }}
                     </th>
                 </tr>
@@ -64,13 +64,13 @@
                         class="text-bold">{{ user.last_name }}</span>, {{ user.first_name }}</span>
                         <span v-else>{{ user.name }}</span>
                         <span v-if="(category == 'Mitarbeitende' || category == 'Ausgeblendete Mitarbeitende') && (!user.show_vacations_with_services) && isPastor"
-                              class="fa eye-toggle" :class="user.pinned ? 'fa-eye' : 'fa-eye-slash'"
+                              class="eye-toggle" :class="user.pinned ? 'mdi mdi-eye' : 'mdi mdi-eye-off'"
                               :title="user.pinned ? 'Klicken, wenn diese Person ausgeblendet werden soll' : 'Klicken, wenn diese Person immer angezeigt werden soll'"
                               @click="togglePinned(user)"
                         />
                         <a v-if="user.canEdit" class="btn btn-sm btn-success"
                            :href="route('absence.create', {year: year, month: month, user: user.id})"><span
-                            class="fa fa-plus"></span></a>
+                            class="mdi mdi-briefcase-plus"></span></a>
                     </th>
                     <td v-for="(day,index,key) in myDays" :key="key" :index="index"
                         class="cal-cell"
@@ -350,15 +350,15 @@ tr.category-header th {
     cursor: pointer;
 }
 
-.fa.fa-eye {
+.mdi.mdi-eye {
     color: gray;
 }
 
-.fa.fa-eye-slash {
+.mdi.mdi-eye-off {
     color: lightgray;
 }
 
-.fa.eye-toggle {
+.mdi.eye-toggle {
     cursor: pointer;
 }
 

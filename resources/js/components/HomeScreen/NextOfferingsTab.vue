@@ -53,11 +53,11 @@
                 <div class="col-md-2 text-right">
                     <inertia-link class="btn btn-light" title="Im Kalender ansehen"
                                   :href="route('calendar', moment(service.day.date).format('YYYY-MM'))">
-                        <span class="fa fa-calendar"></span>
+                        <span class="mdi mdi-calendar"></span>
                     </inertia-link>
                     <inertia-link class="btn btn-primary" title="Gottesdienst bearbeiten"
                                   :href="route('service.edit', service.slug)">
-                        <span class="fa fa-edit"></span>
+                        <span class="mdi mdi-pencil"></span>
                     </inertia-link>
                 </div>
             </div>

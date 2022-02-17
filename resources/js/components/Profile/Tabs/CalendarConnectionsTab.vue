@@ -33,7 +33,7 @@
         <div class="mb-2">
             <inertia-link class="btn btn-light" title="Neuen Kalender verbinden"
                           :href="route('calendarConnection.create')">
-                <span class="d-inline d-md-none fa fa-plus"></span><span class="d-none d-md-inline">Neue Verbindung anlegen</span>
+                <span class="d-inline d-md-none mdi mdi-calendar-plus"></span><span class="d-none d-md-inline">Neue Verbindung anlegen</span>
             </inertia-link>
         </div>
         <fake-table v-if="calendarConnections.length >0"
@@ -45,11 +45,11 @@
                 <div class="col-md-2 text-right">
                     <button class="btn btn-light" @click="editConnection(calendarConnection)"
                             title="Verbindung bearbeiten">
-                        <span class="fa fa-edit"></span>
+                        <span class="mdi mdi-pencil"></span>
                     </button>
                     <button class="btn btn-danger" @click="deleteConnection(calendarConnection)"
                             title="Verbindung löschen">
-                        <span class="fa fa-trash"></span>
+                        <span class="mdi mdi-delete"></span>
                     </button>
                 </div>
             </div>

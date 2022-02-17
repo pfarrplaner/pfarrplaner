@@ -4,7 +4,7 @@
             <thead>
             <tr>
                 <th class="no-print text-left city-title"><!-- // TODO: slave mode --></th>
-                <th v-for="city in cities" class="city-title"><span class="fa fa-arrow-alt-circle-down pr-2"></span>{{ city.name }}</th>
+                <th v-for="city in cities" class="city-title"><span class="mdi mdi-arrow-down-circle pr-2"></span>{{ city.name }}</th>
             </tr>
             </thead>
             <tbody>

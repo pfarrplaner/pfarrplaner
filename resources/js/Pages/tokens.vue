@@ -46,7 +46,7 @@
                         <td>{{ moment(token.created_at).locale('de-DE').format('LLLL')}}</td>
                         <td class="text-right">
                             <button class="btn btn-sm btn-danger" title="Token löschen" @click.prevent="deleteToken(token)">
-                                <span class="fa fa-trash"></span>
+                                <span class="mdi mdi-delete"></span>
                             </button>
                         </td>
                     </tr>

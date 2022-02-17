@@ -48,22 +48,22 @@
                 <div class="col-md-2 text-right">
                     <inertia-link class="btn btn-light" title="Im Kalender ansehen"
                                   :href="route('calendar', moment(service.day.date).format('YYYY-MM'))">
-                        <span class="fa fa-calendar"></span>
+                        <span class="mdi mdi-calendar"></span>
                     </inertia-link>
                     <inertia-link v-if="service.isEditable"
                                   class="btn btn-primary" title="Gottesdienst bearbeiten"
                                   :href="route('service.edit', service.slug)">
-                        <span class="fa fa-edit"></span>
+                        <span class="mdi mdi-pencil"></span>
                     </inertia-link>
                     <inertia-link v-if="service.isEditable"
                                   class="btn btn-light" title="Liturgie bearbeiten"
                                   :href="route('liturgy.editor', service.slug)">
-                        <span class="fa fa-th-list"></span>
+                        <span class="mdi mdi-view-list"></span>
                     </inertia-link>
                     <inertia-link v-if="service.isEditable"
                                   class="btn btn-light" title="Predigt bearbeiten"
                                   :href="route('service.sermon.editor', service.slug)">
-                        <span class="fa fa-microphone"></span>
+                        <span class="mdi mdi-microphone"></span>
                     </inertia-link>
                 </div>
             </div>

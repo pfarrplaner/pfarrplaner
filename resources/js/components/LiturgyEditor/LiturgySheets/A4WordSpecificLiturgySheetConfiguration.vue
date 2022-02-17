@@ -32,7 +32,7 @@
         <p>Zusätzlich zur Tabelle mit dem Ablauf können die Texte für bestimmte Benutzer mit ausgegeben werden.</p>
         <fieldset>
             <div v-if="recipients.length == 0">
-                Bitte warten, die Liste wird geladen... <span class="fa fa-spin fa-spinner"></span>
+                Bitte warten, die Liste wird geladen... <span class="mdi mdi-spin mdi-loading"></span>
             </div>
             <input type="hidden" v-for="(recipient,recipientIndex) in myConfig.recipients" name="config[recipients][]" :value="recipient" />
             <form-selectize v-if="recipients.length > 0" multiple name="config[recipients][]"

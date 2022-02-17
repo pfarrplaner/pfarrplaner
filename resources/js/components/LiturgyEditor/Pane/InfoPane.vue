@@ -58,7 +58,7 @@
                             <div class="col-3 col-md-12 text-right text-md-left">
                                 <button class="btn btn-sm btn-light" @click.prevent="$emit('info')"
                                         title="Weitere Informationen">
-                                    <span class="fa fa-info"></span> <span class="d-none d-md-inline">Weitere Infos</span>
+                                    <span class="mdi mdi-information"></span> <span class="d-none d-md-inline">Weitere Infos</span>
                                 </button>
                             </div>
                         </div>

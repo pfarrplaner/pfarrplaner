@@ -55,7 +55,7 @@ export default {
     },
     methods: {
         renderOption(item, escape) {
-            return '<div class="item" style="padding-left: 3px;"><span class="fa fa-tag"></span> '+escape(item.name)+'</div>';
+            return '<div class="item" style="padding-left: 3px;"><span class="mdi mdi-tag"></span> '+escape(item.name)+'</div>';
         },
         handleInput(e) {
             var items = [];

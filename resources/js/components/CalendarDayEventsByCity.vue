@@ -28,11 +28,11 @@
   -->
 
 <template>
-    <div v-if="loading"><span class="fa fa-spin fa-spinner"></span></div>
+    <div v-if="loading"><span class="mdi mdi-spin mdi-loading"></span></div>
     <div v-else>
         <calendar-service v-for="service in services" v-bind:key="service" :serviceId="service"></calendar-service>
         <a class="btn btn-success btn-sm btn-add-day" title="Neuen Gottesdiensteintrag hinzufügen"
-           :href="serviceAddRoute()"><span class="fa fa-plus"></span></a>
+           :href="serviceAddRoute()"><span class="mdi mdi-plus"></span></a>
 
     </div>
 </template>

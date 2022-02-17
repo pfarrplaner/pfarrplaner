@@ -33,7 +33,7 @@
         </template>
         <div class="row py-2 border-bottom mb-2">
             <div class="col-md-6">
-                <button class="btn btn-success" @click="addBlock"><span class="fa fa-paragraph"></span> Abschnitt
+                <button class="btn btn-success" @click="addBlock"><span class="mdi mdi-format-section"></span> Abschnitt
                     hinzufügen...
                 </button>
                 <button class="btn btn-light" @click.prevent="modalOpen = true">Ablaufelemente importieren...
@@ -44,7 +44,7 @@
                     <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                             title="Dokumente herunterladen">
-                        <span class="fa fa-download"></span> Herunterladen
+                        <span class="mdi mdi-download"></span> Herunterladen
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <div v-for="sheet in sheets">
@@ -61,36 +61,36 @@
                  @click="focusBlock(blockIndex)">
                 <div class="row">
                     <div class="col-11 liturgy-block-title">
-                        <span class="fa fa-bars handle mr-1"
+                        <span class="mdi mdi-drag-horizontal handle mr-1"
                               title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
-                        <span class="fa fa-chevron-circle-right" style="display: none;"></span> {{ block.title }}
+                        <span class="mdi mdi-chevron-right-circle" style="display: none;"></span> {{ block.title }}
                     </div>
                     <div class="col-1 text-right" v-if="editable">
                         <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
                                 title="Abschnitt löschen">
-                            <span class="fa fa-trash"></span>
+                            <span class="mdi mdi-delete"></span>
                         </button>
                     </div>
                 </div>
                 <div class="row" v-if="editable">
                     <div class="col-12">
                         <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light"
-                                title="Freitext hinzufügen"><span class="fa fa-file"></span>
+                                title="Freitext hinzufügen"><span class="mdi mdi-text"></span>
                         </button>
                         <button @click.stop="addItem(blockIndex, 'Psalm')" class="btn btn-sm btn-light"
-                                title="Psalm hinzufügen"><span class="fa fa-praying-hands"></span>
+                                title="Psalm hinzufügen"><span class="mdi mdi-hands-pray"></span>
                         </button>
                         <button @click.stop="addItem(blockIndex, 'Reading')" class="btn btn-sm btn-light"
-                                title="Schriftlesung hinzufügen"><span class="fa fa-bible"></span>
+                                title="Schriftlesung hinzufügen"><span class="mdi mdi-book-open-variant"></span>
                         </button>
                         <button @click.stop="addItem(blockIndex, 'Sermon')" class="btn btn-sm btn-light"
                                 title="Predigt hinzufügen"><span
-                            class="fa fa-microphone-alt"></span></button>
+                            class="mdi mdi-microphone"></span></button>
                         <button @click.stop="addItem(blockIndex, 'Song')" class="btn btn-sm btn-light"
-                                title="Lied hinzufügen"><span class="fa fa-music"></span></button>
+                                title="Lied hinzufügen"><span class="mdi mdi-music"></span></button>
                         <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light"
                                 title="Liturgischen Text hinzufügen"><span
-                            class="fa fa-file-alt"></span></button>
+                            class="mdi mdi-text-box"></span></button>
                     </div>
                 </div>
                 <details-pane v-if="block.editing == true" :service="service" :element="block"
@@ -108,7 +108,7 @@
                             <div class="col-sm-3 item-title">
                                     <span class="fa data-type-icon handle mr-1" :class="icons[item.data_type]"
                                           title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
-                                <span class="fa fa-chevron-circle-right"
+                                <span class="mdi mdi-chevron-right-circle"
                                       style="display: none;"></span> {{ item.title }}
                             </div>
                             <div class="col-sm-4" v-if="item.data_type == 'sermon'">
@@ -133,7 +133,7 @@
                                     </inertia-link>
                                     <button class="btn btn-sm btn-light ml-1" @click="setSermon(null, item)"
                                             title="Verknüpfung mit dieser Predigt aufheben">
-                                        <span class="fa fa-unlink"></span>
+                                        <span class="mdi mdi-link-off"></span>
                                     </button>
                                     <br/>
                                     <small>{{ service.sermon.reference }}</small>
@@ -141,10 +141,10 @@
                             </div>
                             <div class="col-sm-4" v-else>{{ itemDescription(item) }}
                                 <span v-if="item.data.needs_replacement" class="badge" :class="dataReplacerClass(item)">
-                                        <span class="fa fa-user" :title="dataReplacerTitle(item)"></span>
+                                        <span class="mdi mdi-account" :title="dataReplacerTitle(item)"></span>
                                     </span>
                                 <span v-if="(item.data_type=='song') && item.data.song && item.data.song.notation"
-                                      class="fa fa-music text-success"
+                                      class="mdi mdi-music text-success"
                                       title="Zu diesem Lied sind Noten vorhanden."/>
                             </div>
                             <div class="col-sm-2 responsible-list"
@@ -158,7 +158,7 @@
                                     </div>
                                     <div v-else>
                                         <div v-if="editable">
-                                            <span class="fa fa-users"></span> Hier klicken, um Verantwortliche
+                                            <span class="mdi mdi-account-multiple"></span> Hier klicken, um Verantwortliche
                                             auszuwählen.
                                         </div>
                                     </div>
@@ -173,7 +173,7 @@
                             <div class="col-1 text-right" v-if="editable">
                                 <button @click.stop="deleteItem(blockIndex, itemIndex)"
                                         class="btn btn-sm btn-danger" title="Element löschen">
-                                    <span class="fa fa-trash"></span>
+                                    <span class="mdi mdi-delete"></span>
                                 </button>
                             </div>
                         </div>
@@ -217,7 +217,7 @@
                 </selectize>
             </div>
             <div v-else class="text-align: right; width: 100%; color: darkgray;">
-                Importmöglichquellen werden geladen... <span class="fa fa-spin fa-spinner"></span>
+                Importmöglichquellen werden geladen... <span class="mdi mdi-spin mdi-loading"></span>
             </div>
         </modal>
         <modal v-for="(sheet,sheetKey) in sheets" v-if="dialogs[sheet.key]" :title="sheet.title + ' herunterladen'"
@@ -358,12 +358,12 @@ export default {
 
         return {
             icons: {
-                freetext: 'fa-file',
-                psalm: 'fa-praying-hands',
-                reading: 'fa-bible',
-                sermon: 'fa-microphone-alt',
-                song: 'fa-music',
-                liturgic: 'fa-file-alt',
+                freetext: 'mdi mdi-text',
+                psalm: 'mdi mdi-hands-pray',
+                reading: 'mdi mdi-book-open-variant',
+                sermon: 'mdi mdi-microphone',
+                song: 'mdi mdi-music',
+                liturgic: 'mdi mdi-text-box',
             },
             blocks: myBlocks,
             focusedBlock: null,
@@ -571,21 +571,21 @@ export default {
             var tmp = record.split(':');
             if (tmp[0] == 'user') {
                 this.service.participants.forEach(function (person) {
-                    if (person.id == tmp[1]) title = '<span class="fa fa-user-check"></span> ' + person.name;
+                    if (person.id == tmp[1]) title = '<span class="mdi mdi-account-check"></span> ' + person.name;
                 });
                 return title;
             } else if (tmp[0] == 'ministry') {
                 switch (tmp[1]) {
                     case 'pastors':
-                        return '<span class="fa fa-users"></span> Pfarrer*in';
+                        return '<span class="mdi mdi-account-multiple"></span> Pfarrer*in';
                     case 'organists':
-                        return '<span class="fa fa-users"></span> Organist*in';
+                        return '<span class="mdi mdi-account-multiple"></span> Organist*in';
                     case 'sacristans':
-                        return '<span class="fa fa-users"></span> Mesner*in';
+                        return '<span class="mdi mdi-account-multiple"></span> Mesner*in';
                 }
-                return "<span class=\"fa fa-users\"></span> " + tmp[1];
+                return "<span class=\"mdi mdi-account-multiple\"></span> " + tmp[1];
             } else {
-                return '<span class="fa fa-user-times"></span> ' + tmp[1];
+                return '<span class="mdi mdi-account-question"></span> ' + tmp[1];
             }
         },
         importElements() {

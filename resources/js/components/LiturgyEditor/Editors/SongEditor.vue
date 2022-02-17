@@ -61,7 +61,7 @@
                             </button>
                             <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
                                     title="Lied im Noteneditor bearbeiten" @click.prevent="editMusic">
-                                <span class="fa fa-music"></span> Lied im Noteneditor bearbeiten
+                                <span class="mdi mdi-music"></span> Lied im Noteneditor bearbeiten
                             </button>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="col-1 text-right" style="margin-top: 2em;">
                         <button class="btn btn-sm btn-danger" @click.prevent="deleteVerse(verseKey)">
-                            <span class="fa fa-trash"></span>
+                            <span class="mdi mdi-delete"></span>
                         </button>
                     </div>
                 </div>

@@ -37,20 +37,20 @@
                      v-if="!sheet.isNotAFile">
                     <b><span :class="sheet.icon"></span> {{ sheet.title }}</b><br/>
                     <small>.{{ sheet.extension }}, Größe unbekannt</small>
-                    <span class="float-right fa fa-download"></span>
+                    <span class="float-right mdi mdi-download"></span>
                 </div>
             </div>
             <div v-if="myService.konfiapp_event_qr">
                 <div class="liturgy-sheet btn btn-light" @click.prevent="downloadQR">
-                    <b><span class="fa fa-file-pdf"></span> QR-Code für Konfis</b><br/>
+                    <b><span class="mdi mdi-file-pdf-box"></span> QR-Code für Konfis</b><br/>
                     <small>.pdf, ca. 50 kB</small>
-                    <span class="float-right fa fa-download"></span>
+                    <span class="float-right mdi mdi-download"></span>
                 </div>
             </div>
             <div v-if="!hasAnnouncements" class="liturgy-sheet btn btn-light" @click.prevent="downloadAnnouncements">
-                <b><span class="fa fa-file-word"></span> Bekanntgaben</b><br/>
+                <b><span class="mdi mdi-file-word-box"></span> Bekanntgaben</b><br/>
                 <small>.docx, ca. 20 kB</small>
-                <span class="float-right fa fa-download"></span>
+                <span class="float-right mdi mdi-download"></span>
             </div>
             <div v-if="service.attachments.length > 0">
                 <attachment v-for="(attachment,key,index) in service.attachments" :key="key" :attachment="attachment"
@@ -60,7 +60,7 @@
         <div v-else class="alert alert-info">Zu diesem Gottesdienst gibt es keine Dateianhänge.</div>
         <hr/>
         <h3>Dateien hinzufügen</h3>
-        <div v-if="uploading">Datei wird hochgeladen... <span class="fa fa-spinner fa-spin"></span></div>
+        <div v-if="uploading">Datei wird hochgeladen... <span class="mdi mdi-spin mdi-loading"></span></div>
         <form-file-uploader :parent="myService"
                             :upload-route="route('service.attach', this.myService.slug)"
                             v-model="myService.attachments"/>
@@ -198,7 +198,7 @@ export default {
     padding-left: 15px;
 }
 
-.fa-download {
+.mdi-download {
     color: gray;
 }
 

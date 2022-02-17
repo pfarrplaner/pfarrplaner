@@ -31,13 +31,13 @@
     <div class="mb-1">
         <h6>Reihenfolge</h6>
         <draggable :list="list1" group="cities" @start="drag=true" @end="drag=false" class="sortable-cities" @change="handleChange">
-            <div v-for="city in list1" :key="city.id" class="sortable-city"><span class="fa fa-church"></span>
+            <div v-for="city in list1" :key="city.id" class="sortable-city"><span class="mdi mdi-church"></span>
                 {{ city.name }}
             </div>
         </draggable>
         Nicht anzeigen:<br/>
         <draggable :list="list2" group="cities" @start="drag=true" @end="drag=false" class="sortable-cities">
-            <div v-for="city in list2" :key="city.id" class="sortable-city"><span class="fa fa-church"></span>
+            <div v-for="city in list2" :key="city.id" class="sortable-city"><span class="mdi mdi-church"></span>
                 {{ city.name }}
             </div>
         </draggable>

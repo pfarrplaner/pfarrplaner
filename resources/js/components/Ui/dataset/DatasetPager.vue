@@ -38,7 +38,7 @@
                 :aria-disabled="disabledPrevious && 'true'"
                 @click.prevent="setActive(dsPage !== 1 && dsPagecount !== 0 ? dsPage - 1 : dsPage)"
             >
-                <span class="fa fa-chevron-left"></span>
+                <span class="mdi mdi-chevron-left"></span>
             </a>
         </li>
         <template v-for="(item, index) in dsPages">
@@ -60,7 +60,7 @@
                 :aria-disabled="disabledNext && 'true'"
                 @click.prevent="setActive(dsPage !== dsPagecount && dsPagecount !== 0 ? dsPage + 1 : dsPage)"
             >
-                <span class="fa fa-chevron-right"></span>
+                <span class="mdi mdi-chevron-right"></span>
             </a>
         </li>
     </ul>

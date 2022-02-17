@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-md-2 text-right">
                     <inertia-link class="btn btn-primary" :href="route('service.edit', service.slug)"
-                       title="Eintrag bearbeiten"><span class="fa fa-edit"></span></inertia-link>
+                       title="Eintrag bearbeiten"><span class="mdi mdi-pencil"></span></inertia-link>
                 </div>
             </div>
         </fake-table>

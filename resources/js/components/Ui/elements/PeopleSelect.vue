@@ -29,7 +29,7 @@
 
 <template>
     <div class="peopleselect">
-        <form-group :id="myId" :name="name" :label="label" :help="help" pre-label="fa fa-user">
+        <form-group :id="myId" :name="name" :label="label" :help="help" pre-label="mdi mdi-account">
             <div ref="container">
                 <selectize class="form-control" :class="{'is-invalid': error}" :name="name" :id="myId+'Input'"
                            :value="myValue" multiple @input="changed" @blur="editing = false" :settings="settings"
@@ -96,14 +96,14 @@ export default {
 
         myPeople.forEach(person => {
             myPeopleReference[person.id] = person;
-            person.type = person.type || 'user';
+            person.type = person.type || 'mdi mdi-account';
             person.category = person.category || 'Personen';
             person.userString = person.userString || '';
         });
 
         this.teams.forEach(team => {
             myTeamReference[team.id] = team;
-            let tempTeam = {name: team.name, id: 'team:'+team.id, type: 'users', category: 'Teams', users: team.users, userString: ''};
+            let tempTeam = {name: team.name, id: 'team:'+team.id, type: 'mdi mdi-account-multiple', category: 'Teams', users: team.users, userString: ''};
             tempTeam.users.forEach(user => tempTeam.userString += user.name+' ');
             myPeople.push(tempTeam);
         });
@@ -142,20 +142,20 @@ export default {
                         return '<div class="create">Neue Person anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
                     },
                     item: function (item, escape) {
-                        if (item.type == 'user') {
-                            return '<div><span class="fa fa-user"></span> '+escape(item.name)+'</div>';
+                        if (item.type == 'mdi mdi-account') {
+                            return '<div><span class="mdi mdi-account"></span> '+escape(item.name)+'</div>';
                         } else {
                             let users = [];
                             item.users.forEach(user => {
                                 users.push(user.name);
                             });
-                            return '<div><span class="fa fa-users"></span> '+escape(item.name)+': '+escape(users.join(', '))+'</div>';
+                            return '<div><span class="mdi mdi-account-multiple"></span> '+escape(item.name)+': '+escape(users.join(', '))+'</div>';
                         }
                     },
                     option: function (item, escape) {
-                        var t= '<div><span class="ml-1 fa fa-'+item.type+'"></span> '+escape(item.name);
+                        var t= '<div><span class="ml-1 '+item.type+'"></span> '+escape(item.name);
 
-                        if (item.type == 'users') {
+                        if (item.type == 'mdi mdi-account-multiple') {
                             t += '<span class="ml-1 badge badge-dark">'+item.users.length+'</span>'
                             if (item.users.length > 0) t += '<div>';
                             item.users.forEach(user => {
@@ -204,7 +204,7 @@ export default {
                     return response.data;
                 })
                 .then(data => {
-                    data.type='user';
+                    data.type='mdi mdi-account';
                     data.category='Personen';
                     data.userString = '';
 

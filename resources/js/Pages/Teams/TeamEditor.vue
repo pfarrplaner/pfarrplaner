@@ -31,11 +31,11 @@
     <admin-layout :title="team.name">
         <template slot="navbar-left">
             <button class="btn btn-primary" @click="saveTeam">
-                <span class="d-inline d-md-none fa fa-save"></span>
+                <span class="d-inline d-md-none mdi mdi-content-save"></span>
                 <span class="d-none d-md-inline">Speichern</span>
             </button>
             <button class="btn btn-danger ml-1" @click="deleteTeam">
-                <span class="d-inline d-md-none fa fa-save"></span>
+                <span class="d-inline d-md-none mdi mdi-account-multiple-minus"></span>
                 <span class="d-none d-md-inline">Löschen</span>
             </button>
         </template>

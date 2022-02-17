@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr v-for="city in cities">
-                    <th class="city-title"><span class="pt-2">{{ city.name }}</span><span class="fa fa-arrow-alt-circle-down pt-2"></span></th>
+                    <th class="city-title"><span class="pt-2">{{ city.name }}</span><span class="mdi mdi-arrow-down-circle pt-2"></span></th>
                     <calendar-cell v-for="(day,index) in myDays" :day="day"
                                    :key="'day_'+day.id+'_'+(day.collapsed ? 'closed' : 'open')"
                                    :index="index" :services="getServices(city,day)"

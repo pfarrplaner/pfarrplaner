@@ -92,10 +92,10 @@ export default {
         renderItem(item, escape) {
             var icon = '';
             if (item.icon == 'couch') {
-                icon = '<span class="fa fa-couch"></span>';
+                icon = '<span class="mdi mdi-sofa"></span>';
             } else {
                 for (var i=0; i<item.seats; i++) {
-                    icon += '<span class="fa fa-chair"></span>';
+                    icon += '<span class="mdi mdi-sofa-single"></span>';
                 }
             }
             return '<div class="item" style="padding-left: 3px; background-color: '+item.color+'"><div>'

@@ -30,16 +30,16 @@
 <template>
     <div class="btn-group btn-group-toggle" data-toggle="buttons">
         <label class="btn btn-light btn-sm no-rights" :class="{active: rights == 'n'}">
-            <input type="radio" v-model="rights" value="n" @input="changed" title="Keine Rechte"> <span class="fa fa-eye-slash"></span> Keine
+            <input type="radio" v-model="rights" value="n" @input="changed" title="Keine Rechte"> <span class="mdi mdi-eye-off"></span> Keine
         </label>
         <label class="btn btn-light btn-sm rights-read" :class="{active: rights == 'r'}">
-            <input type="radio" v-model="rights" value="r" @input="changed"  title="Leserecht"> <span class="fa fa-eye"></span> Lesen
+            <input type="radio" v-model="rights" value="r" @input="changed"  title="Leserecht"> <span class="mdi mdi-eye"></span> Lesen
         </label>
         <label class="btn btn-light btn-sm rights-write" :class="{active: rights == 'w'}">
-            <input type="radio" v-model="rights" value="w" @input="changed"  title="Schreibrecht"> <span class="fa fa-edit"></span> Schreiben
+            <input type="radio" v-model="rights" value="w" @input="changed"  title="Schreibrecht"> <span class="mdi mdi-pencil"></span> Schreiben
         </label>
         <label class="btn btn-light btn-sm rights-admin" :class="{active: rights == 'a'}">
-            <input type="radio" v-model="rights" value="a" @input="changed"  title="Administrator"> <span class="fa fa-user-shield"></span> Administrator
+            <input type="radio" v-model="rights" value="a" @input="changed"  title="Administrator"> <span class="mdi mdi-account-cowboy-hat"></span> Administrator
         </label>
     </div>
 </template>

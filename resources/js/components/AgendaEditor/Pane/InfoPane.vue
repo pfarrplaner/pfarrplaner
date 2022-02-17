@@ -36,7 +36,7 @@
                         <h1>{{ agenda.title }}</h1>
                     </div>
                     <div class="col-sm-4 text-right">
-                        <button class="btn btn-light" @click="editAgendaInfo"><span class="fa fa-edit"></span>
+                        <button class="btn btn-light" @click="editAgendaInfo"><span class="mdi mdi-pencil"></span>
                             Bearbeiten
                         </button>
                         <inertia-link :href="route('liturgy.agenda.index')" class="btn btn-light">Zur Liste</inertia-link>

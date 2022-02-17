@@ -46,11 +46,11 @@ export default {
         negative: String,
         iconPositive: {
             type: String,
-            default: 'fa fa-check-circle',
+            default: 'mdi mdi-check-circle',
         },
         iconNegative: {
             type: String,
-            default: 'fa fa-times-circle',
+            default: 'mdi mdi-close-circle',
         },
         colorPositive: {
             type: String,

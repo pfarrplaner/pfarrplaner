@@ -30,7 +30,7 @@
 <template>
     <div class="seat" :style="{
         backgroundColor: seat.color,
-        padding: (icon == 'fa-couch') ? '1px 30px 1px 30px' : '1px 3px',
+        padding: (icon == 'mdi mdi-sofa') ? '1px 30px 1px 30px' : '1px 3px',
         fontWeight: booking.fixed_seat ? 'bold' : 'normal',
         fontStyle: booking.fixed_seat ? 'normal' : 'italic',
     }">
@@ -44,7 +44,7 @@ export default {
     props: ['seat', 'booking'],
     computed: {
         icon() {
-            return (!isNaN(this.seat.title)) && (this.seat.seats > 1) ? 'fa-couch' : 'fa-chair';
+            return (!isNaN(this.seat.title)) && (this.seat.seats > 1) ? 'mdi mdi-sofa' : 'mdi mdi-sofa-single';
         }
     }
 }

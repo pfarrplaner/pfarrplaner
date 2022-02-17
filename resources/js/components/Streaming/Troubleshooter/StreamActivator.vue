@@ -44,7 +44,7 @@
                 </td>
                 <td>
                     <button class="btn btn-success" @click="activateBroadcast(broadcast)" title="Diesen Livestream aktivieren">
-                        <span class="fa fa-check"></span> Aktivieren
+                        <span class="mdi mdi-check"></span> Aktivieren
                     </button>
                 </td>
             </tr>

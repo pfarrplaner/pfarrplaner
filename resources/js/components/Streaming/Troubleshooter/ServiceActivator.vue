@@ -42,7 +42,7 @@
                     {{ service.locationText }}</td>
                 <td>
                     <button class="btn btn-success" @click="activateServiceStream(service)" title="Diesen Gottesdienst aktivieren">
-                        <span class="fa fa-check"></span> Aktivieren
+                        <span class="mdi mdi-check"></span> Aktivieren
                     </button>
                 </td>
             </tr>

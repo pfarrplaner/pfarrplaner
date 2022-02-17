@@ -31,7 +31,7 @@
     <admin-layout :title="today.format('ddd, DD. MMMM YYYY')+' ('+city.name+')'" no-content-header>
         <template slot="navbar-left">
             <a class="btn btn-light" :href="route('calendar', {date: today.format('YYYY-MM')})">
-                <span class="fa fa-calendar"></span> {{ today.format('MMMM YYYY') }}
+                <span class="mdi mdi-calendar"></span> {{ today.format('MMMM YYYY') }}
             </a>
         </template>
         <table class="table calendar-month">
@@ -65,7 +65,7 @@
                     <div v-if="(absences.length) && $can('urlaub-lesen')" class="my-1">
                         <div class="vacation mr-1" v-for="absence in absences" :absence="absence"
                              :title="absence.user.name+': '+absence.reason+' ('+absence.durationText+') '+replacementText(absence)">
-                            <span class="fa fa-globe-europe"></span> {{ absence.user.last_name }}</div>
+                            <span class="mdi mdi-earth"></span> {{ absence.user.last_name }}</div>
                     </div>
                 </th>
             </tr>

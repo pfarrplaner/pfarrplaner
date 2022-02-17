@@ -30,7 +30,7 @@
 <template>
     <div class="dimissorial-url">
         <b>Link zum automatischen Erteilen des Dimissoriale:</b> <a :href="url" target="_blank">{{ url }}</a>
-        <span class="fa fa-copy" @click.prevent.stop="copyToClipboard"
+        <span class="mdi mdi-content-copy" @click.prevent.stop="copyToClipboard"
               title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
     </div>
 </template>
@@ -49,15 +49,15 @@ export default {
 </script>
 
 <style scoped>
-.fa-copy {
+.mdi-content-copy {
     color: lightgray;
     display: none;
 }
-.fa-copy:hover {
+.mdi-content-copy:hover {
     color: gray;
 }
 
-.dimissorial-url:hover .fa-copy {
+.dimissorial-url:hover .mdi-content-copy {
     display: inline;
 }
 

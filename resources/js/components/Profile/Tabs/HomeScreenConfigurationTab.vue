@@ -57,7 +57,7 @@
                     <div v-for="(tab,tabIndex) in myTabs" class="tab-block p-1 m-1 rounded-sm">
                         <div class="row">
                             <div class="col-1">
-                                <span class="fa fa-arrows-alt-v"></span>
+                                <span class="mdi mdi-drag-horizontal"></span>
                             </div>
                             <div class="col-9">
                                 <div class="text-bold">{{ tab.config.title || availableTabs[tab.type].title }}</div>
@@ -72,10 +72,10 @@
                                 <button v-if="Object.entries(tab.config).length" class="btn btn-light btn-sm"
                                         @click="toggleConfig(tabIndex)"
                                     :title="tab.configVisible ? 'Konfiguration einklappen' : 'Dieser Reiter kann weiter konfiguriert werden'">
-                                    <span class="fa" :class="tab.configVisible ? 'fa-chevron-up' : 'fa-chevron-down'"></span>
+                                    <span :class="tab.configVisible ? 'mdi mdi-chevron-down' : 'mdi mdi-chevron-right'"></span>
                                 </button>
                                 <button class="btn btn-sm btn-danger" @click="deleteTab(tabIndex)" title="Reiter entfernen">
-                                    <span class="fa fa-trash"></span>
+                                    <span class="mdi mdi-delete"></span>
                                 </button>
                             </div>
                         </div>
@@ -87,7 +87,7 @@
                 <div class="available-tab btn btn-light mb-1 text-left" v-for="(tab,tabIndex) in availableTabs"
                     @click="addTab(tab.type)">
                     <div class="text-bold">
-                        <span class="fa fa-puzzle-piece"></span> {{ tab.title }}
+                        <span class="mdi mdi-toy-brick"></span> {{ tab.title }}
                     </div>
                     <div>{{ tab.description }}</div>
                 </div>

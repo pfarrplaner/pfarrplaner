@@ -50,7 +50,7 @@
             </div>
         </div>
         <hr/>
-        <div><label><span class="fa fa-users"></span> Weitere Dienste</label></div>
+        <div><label><span class="mdi mdi-account-multiple"></span> Weitere Dienste</label></div>
         <div class="row">
             <div class="col-md-6"><label>Dienstbeschreibung</label></div>
             <div class="col-md-6"><label>Eingeteilte Personen</label></div>
@@ -65,7 +65,7 @@
         <hr>
         <div>
             <button class="btn btn-light" title="Liste der Beteiligten ('Credits') kopieren" @click.prevent="copyCredits">
-                <span class="fa fa-copy"></span> <span class="d-none d-md-inline">Liste der Beteiligten ("Credits") kopieren</span></button>
+                <span class="mdi mdi-content-copy"></span> <span class="d-none d-md-inline">Liste der Beteiligten ("Credits") kopieren</span></button>
             <div v-if="creditsCopied" class="alert alert-info alert-dismissible fade show mt-2">Die Liste der Beteiligten wurde in die Zwischenablage kopiert.
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

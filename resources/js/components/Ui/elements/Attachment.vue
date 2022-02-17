@@ -33,14 +33,14 @@
         <small>.{{ attachment.extension }}, {{ fileSize(attachment.size) }}</small>
         <button v-if="allowDelete" class="float-right btn btn-xs btn-danger" title="Anhang löschen"
                 @click.prevent.stop="deleteAttachment($event)">
-            <span class="fa fa-trash"></span>
+            <span class="mdi mdi-delete"></span>
         </button>
-        <span class="float-right fa fa-download" :class="allowDelete ? 'mr-3 mt-1' : ''"></span>
+        <span class="float-right mdi mdi-download" :class="allowDelete ? 'mr-3 mt-1' : ''"></span>
         <img v-if="isImage" class="float-right preview mr-4" :src="imageRoute()" @click.stop="showLightBox = true"/>
         <div v-if="isImage && showLightBox" class="lightbox-backdrop"
              @click.stop="showLightBox = false"
              @keydown.esc="showLightBox = false">
-            <div class="btn btn-dark lightbox-close" title="Vorschau schließen"><span class="fa fa-times"></span></div>
+            <div class="btn btn-dark lightbox-close" title="Vorschau schließen"><span class="mdi mdi-close"></span></div>
             <div class="lightbox" @keydown.esc="showLightBox = false">
                 <img class="img-fluid" :src="imageRoute()" @keydown.esc="showLightBox = false"/>
                 <div class="mt-2" @keydown.esc="showLightBox = false">
@@ -105,7 +105,7 @@ small {
     margin-top: -.3rem;
 }
 
-.fa-download {
+.mdi-download {
     color: gray !important;
 }
 

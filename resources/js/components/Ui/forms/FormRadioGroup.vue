@@ -29,7 +29,7 @@
 
 <template>
     <div class="form-group">
-        <div v-if="label || preLabel"><span v-if="preLabel"><span :class="['fa', 'fa-'+preLabel]"></span> </span><label>{{ label }}</label></div>
+        <div v-if="label || preLabel"><span v-if="preLabel"><span :class="preLabel"></span> </span><label>{{ label }}</label></div>
         <div>
             <div class="form-check" :class="{'form-check-inline': inline}" v-for="(subLabel,subValue,index) in items" :key="subValue">
                 <input class="form-check-input"

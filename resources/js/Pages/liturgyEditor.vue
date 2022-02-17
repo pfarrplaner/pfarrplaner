@@ -2,10 +2,10 @@
     <admin-layout enable-control-sidebar="true" :title="title(service)">
         <template slot="navbar-left">
             <inertia-link class="btn btn-light" :href="route('service.edit', service.slug)"
-                          title="Gottesdienst bearbeiten"><span class="fa fa-edit"></span> Gottesdienst
+                          title="Gottesdienst bearbeiten"><span class="mdi mdi-pencil"></span> Gottesdienst
             </inertia-link>&nbsp;
             <inertia-link class="btn btn-light" :href="route('service.sermon.editor', service.slug)"
-                          title="Predigt zu diesem Gottesdienst bearbeiten"><span class="fa fa-microphone"></span>
+                          title="Predigt zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-microphone"></span>
                 Predigt
             </inertia-link>&nbsp;
             <slot name="toolbar" />

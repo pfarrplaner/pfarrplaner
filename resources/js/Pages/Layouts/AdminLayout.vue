@@ -34,7 +34,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav">
                 <li class="nav-item" v-if="!noNavBar">
-                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#"><i class="mdi mdi-menu"></i></a>
                 </li>
                 <slot name="navbar-left"/>
             </ul>
@@ -45,16 +45,16 @@
                 <!-- Notifications Dropdown Menu -->
                 <li class="nav-item" id="toggleControlSidebar" v-if="enableControlSidebar">
                     <a class="nav-link" data-widget="control-sidebar" data-slide="true" href="#"><i
-                        class="fas fa-cogs"></i></a>
+                        class="mdi mdi-cog"></i></a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-navbar btn-light mr-1" :href="route('manual', layout.route)" target="_blank" title="Benutzerhandbuch">
-                        <i class="fa fa-question"></i>
+                        <i class="mdi mdi-help-circle"></i>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="btn btn-navbar" :href="route('logout')">
-                        <i class="fa fa-power-off"></i><span class="d-none d-md-inline"> Abmelden</span>
+                        <i class="mdi mdi-logout"></i><span class="d-none d-md-inline"> Abmelden</span>
                     </a>
                 </li>
             </ul>
@@ -70,7 +70,7 @@
                          style="opacity: .8; margin-top: 7px;"/>
                     <span class="brand-text font-weight-light">Pfarrplaner</span>
                 </inertia-link>
-                <a class="mobile-menu-handle d-md-none" data-widget="pushmenu" href="#" title="Menüleiste schließen"><i class="fas fa-chevron-circle-left"></i></a>
+                <a class="mobile-menu-handle d-md-none" data-widget="pushmenu" href="#" title="Menüleiste schließen"><i class="mdi mdi-chevron-left-circle"></i></a>
             </div>
 
 
@@ -90,12 +90,12 @@
                             <inertia-link v-if="(item.text != undefined) && (item.inertia == true)" class="nav-link" :class="{ active: item.active }" :href="item.url">
                                 <i v-if="item.icon" class="nav-icon" :class="item.icon"  :style="{ color: item.icon_color || 'inherit'}"></i>
                                 <p>{{ item.text }}
-                                    <i v-if="item.submenu" class="right fas fa-angle-left"></i></p>
+                                    <i v-if="item.submenu" class="right mdi mdi-chevron-left"></i></p>
                             </inertia-link>
                             <a v-if="(item.text != undefined) && (item.inertia == false)" class="nav-link" :class="{ active: item.active }" @click="clickUrl(item.url)">
                                 <i v-if="item.icon" class="nav-icon" :class="item.icon"  :style="{ color: item.icon_color || 'inherit'}"></i>
                                 <p>{{ item.text }}
-                                    <i v-if="item.submenu" class="right fas fa-angle-left"></i></p></a>
+                                    <i v-if="item.submenu" class="right mdi mdi-chevron-left"></i></p></a>
                             <ul class="nav nav-treeview" style="display: none;" v-if="item.submenu != undefined">
                                 <li class="nav-item" v-for="subitem in item.submenu">
                                     <inertia-link v-if="subitem.inertia" class="nav-link" :class="{active: subitem.active}"

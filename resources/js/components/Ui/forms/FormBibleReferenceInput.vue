@@ -35,9 +35,9 @@
                @input="bibleText(component); $emit('input', $event.target.value);" :disabled="disabled"
                :required="required" :aria-required="required"/>
         <small class="form-text text-muted":title="myBibleText">
-            <span v-if="myBibleTextLoading" class="fa fa-spin fa-spinner" title="Bibeltext wird geladen..."></span>
+            <span v-if="myBibleTextLoading" class="mdi mdi-spin mdi-loading" title="Bibeltext wird geladen..."></span>
             <span v-else>{{ myBibleText }}</span>
-            <span v-if="(!myBibleTextLoading) && (myBibleText)" class="fa fa-copy" @click.prevent.stop="copyToClipboard"
+            <span v-if="(!myBibleTextLoading) && (myBibleText)" class="mdi mdi-content-copy" @click.prevent.stop="copyToClipboard"
                                                        title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
         </small>
     </form-group>

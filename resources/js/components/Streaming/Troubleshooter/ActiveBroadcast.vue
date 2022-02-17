@@ -90,7 +90,7 @@
             </checked-process-item>
         </div>
         <div v-else>
-            <checked-process-item :check="false" color-negative="#ffc107" icon-negative="fa fa-exclamation-triangle">
+            <checked-process-item :check="false" color-negative="#ffc107" icon-negative="mdi mdi-alert">
                 <template slot="negative">
                     Dieser Stream wurde nicht über den Pfarrplaner angelegt und ist auch keinem Gottesdienst zugeordnet.
                     Eventuell handelt es sich um eine besondere Veranstaltung. Wenn nicht, solltest du überprüfen, ob
@@ -134,11 +134,11 @@
         <hr/>
         <a class="btn btn-secondary" title="Zum Youtube-Video" target="_blank"
            :href="'https://youtu.be/'+broadcast.id">
-            <span class="fab fa-youtube"></span> YouTube
+            <span class="mdi mdi-youtube"></span> YouTube
         </a>
         <a class="btn btn-secondary" title="Zum Live Control Room (Zugangsdaten benötigt!)" target="_blank"
            :href="'https://studio.youtube.com/video/'+broadcast.id+'/livestreaming'">
-            <span class="fa fa-video"></span> Live Control Room
+            <span class="mdi mdi-video"></span> Live Control Room
         </a>
         <div style="font-size: 0.8em;">
             Der Zugang zum Live Control Room ist nur mit entsprechenden Zugangsdaten (Benutzername, Passwort) möglich.
@@ -313,7 +313,7 @@ export default {
     height: 100%;
 }
 
-.fab.fa-youtube {
+.mdi.mdi-youtube {
     color: red;
 }
 </style>

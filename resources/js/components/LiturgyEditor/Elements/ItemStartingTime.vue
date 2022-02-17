@@ -29,7 +29,7 @@
 
 <template>
     <div>
-        <small><span class="fa fa-clock" :class="(start == '00:00') ? 'fa-stopwatch' : 'fa-clock'"></span>
+        <small><span class="mdi" :class="(start == '00:00') ? 'mdi-timer' : 'mdi-clock'"></span>
             {{ formatTime(startingTime(), (start == '00:00')) }} {{ (start == '00:00') ? '' : 'Uhr' }}
         </small>
     </div>

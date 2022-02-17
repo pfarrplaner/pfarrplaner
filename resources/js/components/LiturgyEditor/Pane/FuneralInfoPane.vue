@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="col-md-2">Geboren: {{ moment(funeral.dob).locale('de').format('LL') }}</div>
                 <div class="col-md-5">Verstorben: {{ dodString }}
-                    <span class="fa fa-copy" @click.prevent.stop="copyToClipboard"
+                    <span class="mdi mdi-content-copy" @click.prevent.stop="copyToClipboard"
                           title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
                 </div>
                 <div class="col-md-2">
@@ -45,7 +45,7 @@
                 <div class="col-md-3 text-right">
                     <inertia-link class="btn btn-light btn-sm"
                                   :href="route('funerals.edit', funeral.id)"
-                                  title="Beerdigung bearbeiten"><span class="fa fa-edit"></span></inertia-link>
+                                  title="Beerdigung bearbeiten"><span class="mdi mdi-pencil"></span></inertia-link>
                 </div>
             </div>
         </div>
@@ -88,10 +88,10 @@ export default {
 </script>
 
 <style scoped>
-.fa-copy {
+.mdi-content-copy {
     color: lightgray;
 }
-.fa-copy:hover {
+.mdi-content-copy:hover {
     color: gray;
 }
 

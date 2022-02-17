@@ -141,7 +141,7 @@
                         <div class="col-md-1 text-right">
                             <button class="btn btn-danger" @click.prevent="deleteReplacement(replacementKey)"
                                     title="Vertretung entfernen" :disabled="!mayEdit">
-                                <span class="fa fa-trash"></span>
+                                <span class="mdi mdi-delete"></span>
                             </button>
                         </div>
                     </div>
@@ -165,11 +165,11 @@
                 <fake-attachment v-if="role == 'self-editor'"
                                  @download="leaveRequestForm"
                                  title="Urlaubsantrag" extension="pdf"
-                                 icon="fa-file-pdf" size="ca. 120 kB"/>
+                                 icon="mdi mdi-file-pdf-box" size="ca. 120 kB"/>
                 <fake-attachment @download="travelRequestForm"
                                  v-if="role == 'self-editor'"
                                  title="Dienstreiseantrag" extension="pdf"
-                                 icon="fa-file-pdf" size="ca. 120 kB"/>
+                                 icon="mdi mdi-file-pdf-box" size="ca. 120 kB"/>
 
                 <hr/>
                 <h3>Dateien hinzufügen.</h3>
@@ -182,7 +182,7 @@
         </tabs>
 
         <div class="alert alert-light text-small">
-            <div class="text-bold"><span class="fa fa-info"></span> Datenschutzhinweis</div>
+            <div class="text-bold"><span class="mdi mdi-information"></span> Datenschutzhinweis</div>
             <div v-if="visibleTo.length == 1">
                 Auf die Informationen in diesem Formular und die angehängten Dateien kannst nur du zugreifen.
             </div>

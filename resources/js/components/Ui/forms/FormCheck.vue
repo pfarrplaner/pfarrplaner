@@ -33,7 +33,7 @@
         <input type="checkbox" class="form-check-input" :class="{'is-invalid': $page.props.errors[name]}" :id="myId+'Input'" :name="name"
                :checked="isChecked" @input="handleInput" value="1" :disabled="disabled"/>
         <label class="form-check-label" v-if="label" :for="id+'Input'">{{ label }}</label>
-        <span v-if="isCheckedItem" class="fa" :class="myValue ? 'fa-check-circle' : 'fa-times-circle'" :key="myValue"></span>
+        <span v-if="isCheckedItem"  :class="myValue ? 'mdi mdi-check-circle' : 'mdi mdi-close-circle'" :key="myValue"></span>
         <div v-if="$page.props.errors[name]" class="invalid-feedback">{{ $page.props.errors[name] }}</div>
         <div v-if="help" class="form-text text-muted">{{ help }}</div>
     </div>
@@ -84,10 +84,10 @@ export default {
 </script>
 
 <style scoped>
-    .fa-check-circle {
+    .mdi-check-circle {
         color: green;
     }
-    .fa-times-circle {
+    .mdi-close-circle {
         color: red;
     }
 </style>

@@ -51,13 +51,13 @@
                     </div>
                     <div class="col-md-3 text-right">
                         <a class="btn btn-primary" :href="route('absence.edit', absence.id)" title="Eintrag bearbeiten">
-                            <span class="fa fa-edit"></span>
+                            <span class="mdi mdi-pencil"></span>
                         </a>
                         <div class="dropdown">
                             <button class="btn btn-light dropdown-toggle m-1" type="button" id="dropdownMenuButton"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                                     title="Dokumente herunterladen">
-                                <span class="fa fa-download"></span>
+                                <span class="mdi mdi-download"></span>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <a class="dropdown-item" title="Urlaubsantrag erstellen"

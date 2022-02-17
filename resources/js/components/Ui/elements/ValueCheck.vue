@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <span class="fa" :class="'fa-'+(value ? 'check-circle' : 'times-circle')"></span>
+    <span :class="(value ? 'mdi mdi-check-circle' : 'mdi mdi-close-circle')"></span>
 </template>
 
 <script>
@@ -39,10 +39,10 @@ export default {
 </script>
 
 <style scoped>
-    .fa.fa-check-circle {
+    .mdi.mdi-check-circle {
         color: green;
     }
-    .fa.fa-times-circle {
+    .mdi.mdi-close-circle {
         color: red;
     }
 </style>
