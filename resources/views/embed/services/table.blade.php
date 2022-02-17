@@ -26,6 +26,17 @@
             border-radius: 3px;
             color: black;
             }
+            .fa-info-circle {
+                color: gray;
+            }
+            .fa-info-circle:hover {
+                color: black;
+            }
+            .liturgical-day {
+                margin: 0;
+                padding: 0;
+                font-style: italic;
+            }
         </template>
         <table class="ce-table service-list-table ">
             <thead>
@@ -51,7 +62,14 @@
                     @if (!isset($locationIds) || count($locationIds) >1)
                         <td>{{ $service->locationText() }}</td>
                     @endif
-                    <td>{{ $service->descriptionText() }}
+                    <td>
+                        @if($service->liturgicalInfo)
+                            <div class="liturgical-day">{{ $service->liturgicalInfo['title'] }}
+                                <span class="fas fa-info-circle" title="{{ $service->liturgicalInfo['title'] }}: {{ $service->liturgicalInfo['litProfileGist'] }}&#10;&#10;Klicken Sie, um weitere Information zu diesem Tag zu bekommen."
+                                      data-location="https://www.kirchenjahr-evangelisch.de/article.php#{{ $service->liturgicalInfo['dayId'] }}"></span>
+                            </div>
+                        @endif
+                        {{ $service->descriptionText() }}
                         @if($service->controlled_access)
                             @component('components.service.controlledAccess', ['service' => $service]) @endcomponent
                         @endif
@@ -87,6 +105,11 @@
             e.preventDefault();
             e.stopPropagation();
             if ($(this).attr('href')) window.open($(this).attr('href'));
+        });
+        $('.fa-info-circle').click(function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            if ($(this).data('location')) window.open($(this).data('location'));
         });
     </script>
 @endif
