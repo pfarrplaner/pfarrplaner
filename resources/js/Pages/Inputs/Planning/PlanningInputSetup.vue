@@ -30,7 +30,7 @@
 <template>
     <admin-layout title="Planungstabelle konfigurieren">
         <template slot="navbar-left">
-            <nav-button type="primary" title="Planungstabelle anzeigen" icon="table"
+            <nav-button type="primary" title="Planungstabelle anzeigen" icon="mdi mdi-table"
                         :disabled="setup.ministries.length == 0"
                         :title="setup.ministries.length ? 'Planungstabelle erstellen und anzeigen' : 'Du musst mindestens einen Dienst auswählen, um eine Planungstabelle erstellen zu können.'"
                         @click="showTable">Planungstabelle anzeigen</nav-button>

@@ -30,7 +30,7 @@
 <template>
     <admin-layout title="Benutzerverwaltung">
         <template slot="navbar-left">
-            <nav-button v-if="canCreate" type="success" icon="plus" title="Neue Person anlegen"
+            <nav-button v-if="canCreate" type="success" icon="mdi mdi-account-plus" title="Neue Person anlegen"
                         @click="createUser">Person hinzufügen</nav-button>
         </template>
         <dataset v-slot="{ ds }"
@@ -45,7 +45,7 @@
                 <div class="col-md-1 mb-2 mb-md-0">
                     <label v-for="checkbox in checkboxes" class="mt-1" :title="checkbox.title" v-if="checkbox.condition">
                         <input type="checkbox" v-model="checkbox.value" :title="checkbox.title" />
-                        <span v-if="checkbox.icon" class="fa" :class="checkbox.icon"></span>
+                        <span v-if="checkbox.icon" :class="checkbox.icon"></span>
                         <span v-if="checkbox.label">{{ checkbox.label }}</span>
                     </label>
                 </div>
@@ -70,7 +70,7 @@
                                     <tr>
                                         <td>
                                             <div>
-                                                <span class="fa" :class="row.isOfficialUser ? 'fa-user-check' : 'fa-user-times'"></span>
+                                                <span  :class="row.isOfficialUser ? 'mdi mdi-account-check' : 'mdi mdi-account-alert-outline'"></span>
                                                 <span v-if="row.last_name && row.first_name">
                                                     <b>{{ row.last_name }}</b>, {{ row.first_name }}
                                                 </span>
@@ -87,20 +87,20 @@
                                             <role-badge v-for="role in row.roles" :role="role" :key="role.name"/>
                                         </td>
                                         <td class="text-right">
-                                            <nav-button type="primary" icon="edit" title="Person bearbeiten"
+                                            <nav-button type="primary" icon="mdi mdi-account-edit" title="Person bearbeiten"
                                                         class="btn-sm" v-if="canEdit(row)"
                                                         force-icon force-no-text @click="editUser(row)"/>
-                                            <nav-button type="light" icon="object-group" title="Personen zusammenführen"
+                                            <nav-button type="light" icon="mdi mdi-call-merge" title="Personen zusammenführen"
                                                         class="btn-sm" v-if="canEdit(row)"
                                                         force-icon force-no-text @click="mergeUser(row)"/>
-                                            <nav-button type="light" icon="key" title="Passwort zurücksetzen"
+                                            <nav-button type="light" icon="mdi mdi-lock-reset" title="Passwort zurücksetzen"
                                                         class="btn-sm" v-if="canEdit(row) && row.isOfficialUser"
                                                         force-icon force-no-text @click="resetPassword(row)"/>
-                                            <nav-button type="light" icon="sign-in-alt" title="Als diese Person anmelden"
+                                            <nav-button type="light" icon="mdi mdi-account-switch" title="Als diese Person anmelden"
                                                         v-if="isAdmin && (currentUser.id != row.id) && row.isOfficialUser"
                                                         class="btn-sm"
                                                         force-icon force-no-text @click="loginAsUser(row)"/>
-                                            <nav-button type="danger" icon="trash" title="Person löschen" class="btn-sm"
+                                            <nav-button type="danger" icon="mdi mdi-account-remove" title="Person löschen" class="btn-sm"
                                                         v-if="canEdit(row)"
                                                         force-icon force-no-text @click="deleteUser(row)"/>
                                         </td>
@@ -161,7 +161,7 @@ export default {
                 {
                     name: 'isOfficialUser',
                     title: 'Nur Personen mit Benutzerkonto anzeigen',
-                    icon: 'fa-user-check',
+                    icon: 'mdi mdi-account-check',
                     label: '',
                     value: true,
                     condition: this.$page.props.currentUser.data.isLocalAdmin

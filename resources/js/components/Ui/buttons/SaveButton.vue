@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <nav-button type="primary" icon="save" title="Änderungen speichern" @click="$emit('click')">Speichern</nav-button>
+    <nav-button type="primary" icon="mdi mdi-content-save" title="Änderungen speichern" @click="$emit('click')">Speichern</nav-button>
 </template>
 
 <script>

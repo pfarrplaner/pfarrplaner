@@ -55,7 +55,7 @@
                         </div>
                         <div class="col-md-3"></div>
                         <div class="col-md-3 text-right">
-                            <nav-button type="primary" icon="edit" title="Zur Überprüfung des Antrags" force-icon
+                            <nav-button type="primary" icon="mdi mdi-pencil" title="Zur Überprüfung des Antrags" force-icon
                                         @click="editAbsence(absence)"/>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                             </checked-process-item>
                         </div>
                         <div class="col-md-3 text-right">
-                            <nav-button type="primary" icon="edit" title="Zur Genehmigung des Antrags" force-icon
+                            <nav-button type="primary" icon="mdi mdi-pencil" title="Zur Genehmigung des Antrags" force-icon
                                         @click="editAbsence(absence)"/>
                         </div>
                     </div>

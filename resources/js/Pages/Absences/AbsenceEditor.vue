@@ -30,26 +30,26 @@
 <template>
     <admin-layout title="Abwesenheit bearbeiten">
         <template slot="navbar-left">
-            <nav-button v-if="role == 'editor'" @click="saveAbsence" type="primary" icon="save" force-icon
+            <nav-button v-if="role == 'editor'" @click="saveAbsence" type="primary" icon="mdi mdi-content-save" force-icon
                         title="Abwesenheitseintrag speichern  und zur Überprüfung absenden">Zur Überprüfung absenden
             </nav-button>
             <save-button v-if="role == 'self-editor'" @click="saveAbsence" class="btn btn-primary"
                          title="Abwesenheitseintrag speichern"/>
-            <nav-button v-if="role == 'admin'" @click="checkAndSave()" type="success" icon="check" force-icon
+            <nav-button v-if="role == 'admin'" @click="checkAndSave()" type="success" icon="mdi mdi-check" force-icon
                         title="Antrag als überprüft markieren und zur Genehmigung weiterleiten">Zur Genehmigung
                 weiterleiten
             </nav-button>
-            <nav-button v-if="role == 'approver'" @click="approveAndSave()" type="success" icon="check" force-icon
+            <nav-button v-if="role == 'approver'" @click="approveAndSave()" type="success" icon="mdi mdi-check" force-icon
                         title="Antrag genehmigen">Genehmigen
             </nav-button>
-            <nav-button v-if="role == 'approver'" @click="returnAndSave()" class="ml-1" type="warning" icon="undo"
+            <nav-button v-if="role == 'approver'" @click="returnAndSave()" class="ml-1" type="warning" icon="mdi mdi-undo"
                         force-icon
                         title="Abwesenheitseintrag zurück zur Überprüfung verweisen">Erneut überprüfen lassen
             </nav-button>
             <nav-button v-if="(role == 'admin') || (role=='approver')" @click="rejectAbsence" class="ml-1"
-                        title="Antrag ablehnen" type="danger" icon="times" force-icon>Ablehnen
+                        title="Antrag ablehnen" type="danger" icon="mdi mdi-close-octagon" force-icon>Ablehnen
             </nav-button>
-            <nav-button v-if="mayDelete" @click="deleteAbsence" type="danger" icon="trash"
+            <nav-button v-if="mayDelete" @click="deleteAbsence" type="danger" icon="mdi mdi-delete"
                         class="ml-1" title="Abwesenheitseintrag löschen" force-icon>Löschen
             </nav-button>
         </template>

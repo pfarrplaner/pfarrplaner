@@ -29,7 +29,7 @@
 
 <template>
     <button class="btn" :class="'btn-'+type" :title="title" @click="$emit('click')" :disabled="disabled">
-        <span v-if="icon" :class="forceIcon ? 'fa fa-'+icon : 'd-inline d-md-none fa fa-'+icon"></span>
+        <span v-if="icon" :class="forceIcon ? icon : 'd-inline d-md-none '+icon"></span>
         <span v-if="!forceNoText" :class="icon ? 'd-none d-md-inline' : ''"><slot /></span>
     </button>
 </template>

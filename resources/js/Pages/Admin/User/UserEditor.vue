@@ -34,9 +34,9 @@
             <nav-button v-if="myUser.isOfficialUser && (!justCreated)"
                         title="Passwort zurücksetzen und Nachricht versenden"
                         @click="resetUserPassword" class="ml-1"
-                        type="light" icon="key">Passwort zurücksetzen
+                        type="light" icon="mdi mdi-lock-reset">Passwort zurücksetzen
             </nav-button>
-            <nav-button type="danger" icon="trash" title="Benutzer löschen" class="ml-1"
+            <nav-button type="danger" icon="mdi mdi-account-remove" title="Benutzer löschen" class="ml-1"
                         @click="deleteUser">Löschen
             </nav-button>
         </template>
@@ -190,7 +190,7 @@
                                                  :data="mySettings[settingKey]"/>
                             </div>
                             <div class="col-md-1 text-right">
-                                <nav-button type="danger" icon="trash" force-no-text force-icon
+                                <nav-button type="danger" icon="mdi mdi-delete" force-no-text force-icon
                                             class="btn-sm pull-right"
                                             title="Einstellung löschen" @click="mySettings[settingKey] = null"/>
                             </div>
