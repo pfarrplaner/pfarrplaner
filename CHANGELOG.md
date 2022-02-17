@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.116.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.3...v2022.116.4) (2022-02-17)
+
 ### [2022.116.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.2...v2022.116.3) (2022-02-17)
 
 ### [2022.116.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.1...v2022.116.2) (2022-02-17)
