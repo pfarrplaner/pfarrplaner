@@ -89,7 +89,14 @@ class FuneralsHomeScreenTab extends AbstractHomeScreenTab
             ->join('services', 'services.id', 'funerals.service_id')
             ->join('days', 'days.id', 'services.day_id')
             ->whereHas('service', function($service) {
-                $service->startingFrom(Carbon::now()->subWeeks(2));
+                if (!$this->config['excludeProcessed']) {
+                    $service->startingFrom(Carbon::now()->subWeeks(2));
+                } else {
+                    $service->where(function ($q) {
+                        $q->startingFrom(Carbon::now());
+                        $q->orWhere('funerals.processed', '!=', 1);
+                    });
+                }
                 if ($this->config['mine']) {
                     $service->whereHas(
                         'participants',
@@ -102,9 +109,6 @@ class FuneralsHomeScreenTab extends AbstractHomeScreenTab
                 }
             })->orderBy('days.date', $order)
             ->orderBy('time', $order);
-
-        if ($this->config['excludeProcessed']) $query->where('processed', '!=', 1);
-
         return $query;
     }
 

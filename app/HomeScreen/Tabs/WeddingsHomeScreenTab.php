@@ -89,7 +89,14 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
             ->join('services', 'services.id', 'weddings.service_id')
             ->join('days', 'days.id', 'services.day_id')
             ->whereHas('service', function($service) {
-                $service->startingFrom(Carbon::now()->subWeeks(2));
+                if (!$this->config['excludeProcessed']) {
+                    $service->startingFrom(Carbon::now()->subWeeks(2));
+                } else {
+                    $service->where(function ($q) {
+                        $q->startingFrom(Carbon::now());
+                        $q->orWhere('weddings.processed', '!=', 1);
+                    });
+                }
                 if ($this->config['mine']) {
                     $service->whereHas(
                         'participants',
