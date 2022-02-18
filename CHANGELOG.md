@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.117.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.117.0...v2022.117.1) (2022-02-18)
+
+
+### Bug Fixes
+
+* first contacts not filled in automatically in Baptisms ([ff86677](https://github.com/pfarrplaner/pfarrplaner/commits/ff866779a99d60527d69e00d1bee0831e5fce77f))
+* New menu icons not shown in Blade-rendered views ([506f68e](https://github.com/pfarrplaner/pfarrplaner/commits/506f68e2e6a748539c1687143ecabe2a99b6730f))
+
 ## [2022.117.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.116.4...v2022.117.0) (2022-02-17)
 
 
