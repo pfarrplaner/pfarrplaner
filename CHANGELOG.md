@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.119.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.118.0...v2022.119.0) (2022-02-18)
+
+
+### Features
+
+* Change background when hovering over item row in LiturgyTree ([0689d1a](https://github.com/pfarrplaner/pfarrplaner/commits/0689d1abc111b83d5f84c29f4081ca588a91b0c9)), closes [#203](https://github.com/pfarrplaner/pfarrplaner/issues/203)
+* Show unprocessed baptisms/funerals/weddings even when they are older than two weeks ([52fede5](https://github.com/pfarrplaner/pfarrplaner/commits/52fede56ebb92dfc00b5bcc55bdc7d5ecbbcd36f))
+* TeamIndex has new admin list view ([a3dd48e](https://github.com/pfarrplaner/pfarrplaner/commits/a3dd48e6c42b2881a13e1abfaea736a7418295da))
+
+
+### Bug Fixes
+
+* Unwanted time shift when sync'ing prep appointments with Exchange calendars ([da7b622](https://github.com/pfarrplaner/pfarrplaner/commits/da7b622ce73caf53c52f8da33780f162f8568994))
+
 ## [2022.118.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.117.1...v2022.118.0) (2022-02-18)
 
 
