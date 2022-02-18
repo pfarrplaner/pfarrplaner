@@ -35,35 +35,54 @@
                 <span class="d-none d-md-inline">Team hinzufügen</span>
             </a>
         </template>
-        <card>
-            <card-body>
-                <div class="teams-index">
-                    <fake-table v-if="teams.length > 0" :columns="[3,3,4,2]" :headers="['Team', 'Kirchengemeinde', 'Mitglieder', '']"
-                                collapsed-header="Teams">
-                        <div class="row mt-1" v-for="(team,teamIndex) in teams">
-                            <div class="col-md-3">{{ team.name }}</div>
-                            <div class="col-md-3">{{ team.city.name }}</div>
-                            <div class="col-md-4">
-                                <span v-for="user in team.users" class="badge badge-light">{{ user.name }}</span>
-                            </div>
-                            <div class="col-md-2 text-right">
-                                <div v-if="team.writable">
-                                    <a class="btn btn-light" :href="route('team.edit', team.id)" title="Team bearbeiten">
-                                        <span class="mdi mdi-pencil"></span>
-                                    </a>
-                                    <button class="btn btn-danger" @click="deleteTeam(team)" title="Team löschen">
-                                        <span class="mdi mdi-account-multiple-minus"></span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </fake-table>
-                    <div v-else class="alert alert-info">
-                        Zur Zeit sind noch keine Teams vorhanden.
+        <dataset v-slot="{ ds }"
+                 :ds-data="teams"
+                 ds-sort-by="name"
+                 :ds-search-in="['name', 'city', 'users']"
+                 :ds-search-as="{
+                    city: searchAsCity,
+                    users: searchMembers,
+                 }">
+            <dataset-search ds-search-placeholder="Suchen..." ref="search" autofocus/>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover d-md-table">
+                            <thead>
+                            <tr>
+                                <th>Team</th>
+                                <th>Kirchengemeinde</th>
+                                <th>Mitglieder</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <dataset-item tag="tbody">
+                                <template #default="{ row, rowIndex }">
+                                    <tr>
+                                        <td>{{ row.name }}</td>
+                                        <td>{{ row.city.name }}</td>
+                                        <td><span v-for="user in row.users" class="badge badge-light">{{
+                                                user.name
+                                            }}</span></td>
+                                        <td>
+                                            <nav-button type="light" icon="mdi mdi-pencil" title="Team bearbeiten"
+                                                        @click="editTeam(row)" force-icon force-no-text/>
+                                            <nav-button type="danger" icon="mdi mdi-account-multiple-minus"
+                                                        title="Team bearbeiten"
+                                                        @click="deleteTeam(row)" force-icon force-no-text/>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </dataset-item>
+                        </table>
                     </div>
                 </div>
-            </card-body>
-        </card>
+            </div>
+            <div class="d-flex flex-md-row flex-column justify-content-between align-items-center border-top pt-2">
+                <dataset-info class="mb-2 mb-md-0"/>
+                <dataset-pager/>
+            </div>
+        </dataset>
     </admin-layout>
 </template>
 
@@ -71,15 +90,41 @@
 import FakeTable from "../../components/Ui/FakeTable";
 import CardBody from "../../components/Ui/cards/cardBody";
 import Card from "../../components/Ui/cards/card";
+import {Dataset, DatasetItem, DatasetSearch} from "vue-dataset";
+import DatasetInfo from "../../components/Ui/dataset/DatasetInfo";
+import DatasetPager from "../../components/Ui/dataset/DatasetPager";
+import DatasetShow from "../../components/Ui/dataset/DatasetShow";
+import NavButton from "../../components/Ui/buttons/NavButton";
 
 export default {
-    components: {Card, CardBody, FakeTable},
+    components: {
+        NavButton, Card, CardBody, FakeTable,
+        Dataset,
+        DatasetItem,
+        DatasetInfo,
+        DatasetPager,
+        DatasetSearch,
+        DatasetShow
+    },
     props: ['teams'],
     methods: {
+        editTeam(team) {
+            this.$inertia.get(route('team.edit', team.id));
+        },
         deleteTeam(team) {
             if (confirm('Willst du dieses Team wirklich löschen?'))
                 this.$inertia.delete(route('team.destroy', team.id));
-        }
+        },
+        searchAsCity(value, searchString, rowData) {
+            return rowData.city.name.toLowerCase().includes(searchString);
+        },
+        searchMembers(value, searchString, rowData) {
+            let found = false;
+            rowData.users.forEach(user => {
+                if (user.name.toLowerCase().includes(searchString)) found = true;
+            })
+            return found;
+        },
     }
 }
 </script>
