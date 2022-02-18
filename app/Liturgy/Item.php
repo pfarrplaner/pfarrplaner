@@ -148,7 +148,7 @@ class Item extends Model
         if ($this->data_type != 'reading') return;
         $data = $this->data;
         $bible = new BibleText();
-        $bibleText = $bible->get(ReferenceParser::getInstance()->parse($this->data['reference']));
+        $bibleText = $this->data['reference'] ? $bible->get(ReferenceParser::getInstance()->parse($this->data['reference'])) : [];
         $text = '';
         foreach ($bibleText as $textSection) {
             foreach ($textSection['text'] as $verse) {
