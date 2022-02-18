@@ -123,7 +123,7 @@
                                 name="candidate_appointment">
                         <date-picker v-model="myWedding.appointment" :config="myDateTimePickerConfig"/>
                     </form-group>
-                    <form-input name="text" label="Trautext" v-model="myWedding.text" :is-checked-item="true"/>
+                    <form-bible-reference-input name="text" label="Trautext" v-model="myWedding.text" :is-checked-item="true"/>
                     <form-textarea name="notes" label="Notizen aus dem Traugespräch" v-model="myWedding.notes"/>
                 </fieldset>
                 <fieldset>
@@ -214,10 +214,12 @@ import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 import FormRadioGroup from "../../components/Ui/forms/FormRadioGroup";
 import FormSelectize from "../../components/Ui/forms/FormSelectize";
 import DimissorialUrl from "../../components/RiteEditors/DimissorialUrl";
+import FormBibleReferenceInput from "../../components/Ui/forms/FormBibleReferenceInput";
 
 export default {
     name: "WeddingEditor",
     components: {
+        FormBibleReferenceInput,
         DimissorialUrl,
         FormSelectize,
         FormRadioGroup,

@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
+    <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel" :is-checked-item="isCheckedItem">
         <selectize class="form-control" :class="{'is-invalid': $page.props.errors[name]}" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled" :name="name"
                @input="changed" :settings="mySettings" :multiple="multiple" v-if="options.length == 0">
@@ -91,6 +91,9 @@ export default {
         },
         optionRenderer: {
             type: null,
+        },
+        isCheckedItem: {
+            type: Boolean,
         }
     },
     mounted() {

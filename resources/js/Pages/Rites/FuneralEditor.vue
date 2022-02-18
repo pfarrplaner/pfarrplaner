@@ -161,22 +161,12 @@
                     </div>
                 </fake-table>
                 <hr/>
-                <form-input label="Predigttext" v-model="myFuneral.text" :is-checked-item="true"
-                            :key="referenceCopied"/>
+                <form-bible-reference-input label="Predigttext" v-model="myFuneral.text" :is-checked-item="true"
+                            :key="referenceCopied" :sources="textSources" />
                 <button v-if="funeral.service.sermon && funeral.service.sermon.reference"
                         class="btn btn-sm btn-light"
                         :title="'Von Predigt übernehmen ('+funeral.service.sermon.reference+')'"
                         @click="setFuneralText(funeral.service.sermon.reference)">Von Predigt übernehmen
-                </button>
-                <button v-if="funeral.confirmation_text"
-                        class="btn btn-sm btn-light"
-                        :title="'Von Denkspruch übernehmen ('+funeral.confirmation_text+')'"
-                        @click="setFuneralText(funeral.confirmation_text)">Von Denkspruch übernehmen
-                </button>
-                <button v-if="funeral.wedding_text"
-                        class="btn btn-sm btn-light"
-                        :title="'Von Trauspruch übernehmen ('+funeral.wedding_text+')'"
-                        @click="setFuneralText(funeral.wedding_text)">Von Trauspruch übernehmen
                 </button>
                 <form-group label="Bestattungsart">
                     <select v-model="myFuneral.type" class="form-control" name="type">
@@ -465,6 +455,13 @@ export default {
             if (this.myFuneral.dob && this.myFuneral.dod) parts.push(dod.diff(dob, 'days').toLocaleString('de-DE')+' Lebenstage');
             if (parts.length == 0) return '';
             return 'Gestorben: ' + parts.join(', ');
+        },
+        textSources() {
+            let sources = {};
+            if (this.myFuneral.service.sermon && this.myFuneral.service.sermon.text) sources['Predigttext'] = this.myFuneral.service.sermon.text;
+            if (this.myFuneral.confirmation_text) sources['Denkspruch'] = this.myFuneral.confirmation_text;
+            if (this.myFuneral.wedding_text) sources['Trauspruch'] = this.myFuneral.wedding_text;
+            return sources;
         }
     },
     created() {

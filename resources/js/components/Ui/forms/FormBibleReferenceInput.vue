@@ -28,19 +28,21 @@
   -->
 
 <template>
-    <form-group :id="myId" :label="label" :help="help" :name="name" pre-label="book-bible" :required="required"
-                :value="value" :is-checked-item="isCheckedItem">
-        <input class="form-control" :class="{'is-invalid': $page.props.errors[name], 'checked-input': isCheckedItem}" :type="type" v-model="myValue" :id="myId+'Input'"
-               :placeholder="placeholder" :aria-placeholder="placeholder" :autofocus="autofocus"
-               @input="bibleText(component); $emit('input', $event.target.value);" :disabled="disabled"
-               :required="required" :aria-required="required"/>
-        <small class="form-text text-muted":title="myBibleText">
+    <div class="form-bible-reference-input">
+        <form-input v-if="Object.keys(sources).length == 0"
+                    :id="myId" :label="label" :help="help" :name="name" pre-label="book-bible" :required="required"
+                    :value="value" :is-checked-item="isCheckedItem" @input="handleInput" class="mb-0" />
+        <form-selectize v-else
+            :id="myId" :label="label" :help="help" :name="name" pre-label="book-bible" :required="required"
+            :value="value" :is-checked-item="isCheckedItem" :options="myOptions" :settings="mySettings"
+            @input="handleInput" class="mb-0" />
+        <small class="form-text text-muted mt-0 p-0" :title="myBibleText">
             <span v-if="myBibleTextLoading" class="mdi mdi-spin mdi-loading" title="Bibeltext wird geladen..."></span>
             <span v-else>{{ myBibleText }}</span>
             <span v-if="(!myBibleTextLoading) && (myBibleText)" class="mdi mdi-content-copy" @click.prevent.stop="copyToClipboard"
                                                        title="Klicken, um den Text in die Zwischenablage zu kopieren"></span>
         </small>
-    </form-group>
+    </div>
 </template>
 
 <script>
@@ -48,10 +50,12 @@ import FormGroup from "./FormGroup";
 import ValueCheck from "../elements/ValueCheck";
 import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 import __ from 'lodash';
+import FormSelectize from "./FormSelectize";
+import FormInput from "./FormInput";
 
 export default {
     name: "FormBibleReferenceInput",
-    components: {BibleReference, ValueCheck, FormGroup},
+    components: {FormInput, FormSelectize, BibleReference, ValueCheck, FormGroup},
     props: {
         label: String,
         id: String,
@@ -74,16 +78,31 @@ export default {
             type: Boolean,
             default: false,
         },
-        handleInput: Object,
         isCheckedItem: {
             type: null,
             default: false,
+        },
+        sources: {
+            type: Object,
+            default() { return {}; },
         },
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
+        this.sources = this.sources || {};
+
+        let myOptions = [];
+        let foundInSources = false;
+        for (const sourceKey in this.sources) {
+            if (this.sources[sourceKey] == this.value) foundInSources = true;
+        }
+        if (!foundInSources) myOptions.push({ id: this.value, name: this.value });
+        for (const sourceKey in this.sources) {
+            myOptions.push({ id: this.sources[sourceKey], name: sourceKey+': '+this.sources[sourceKey]});
+        }
+
         return {
             errors: this.$page.props.errors,
             error: this.$page.props.errors[this.name] || false,
@@ -92,6 +111,18 @@ export default {
             myBibleText: '',
             myBibleTextLoading: false,
             component: this,
+            myOptions,
+            mySettings: {
+                allowEmptyOption: true,
+                create: function(input) {
+                    return {id: input, name: input};
+                },
+                render: {
+                    option_create: function (data, escape) {
+                        return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip; übernehmen</div>';
+                    },
+                }
+            },
         }
     },
     watch: {
@@ -119,10 +150,19 @@ export default {
         copyToClipboard() {
             const cb = navigator.clipboard;
             cb.writeText(this.myBibleText+"\n("+this.myValue+')').then(result => {});
+        },
+        handleInput(e) {
+            console.log('handleInput', e);
+            this.myValue = e;
+            this.bibleText(this);
+            this.$emit('input', this.myValue);
         }
     },
 }
 </script>
 
 <style scoped>
+    .form-bible-reference-input {
+        margin-bottom: 1rem;
+    }
 </style>

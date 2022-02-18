@@ -82,39 +82,9 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Predigttext</label>
-                            <input class="form-control" type="text" v-model="editedSermon.reference"
-                                   :key="referenceCopied"/>
-                            <div v-for="service in services" class="mt-1">
-                                <button class="btn btn-light btn-sm"
-                                        v-if="undefined != service.liturgicalInfo.title"
-                                        @click.prevent.stop="setSermonReference(service.liturgicalInfo.currentPerikope)"
-                                        :title="'Perikope für '+service.liturgicalInfo.title+' übernehmen ('+service.liturgicalInfo.currentPerikope+')'">
-                                    Perikope für {{ service.liturgicalInfo.title }} übernehmen
-                                </button>
-                                <button class="btn btn-light btn-sm"
-                                        v-for="funeral in service.funerals"
-                                        @click.prevent.stop="setSermonReference(funeral.text)"
-                                        :title="'Von Beerdigung ('+funeral.buried_name+') übernehmen ('+funeral.text+')'">
-                                    Von Beerdigung ({{ funeral.buried_name }}) übernehmen
-                                </button>
-                                <button class="btn btn-light btn-sm"
-                                        v-for="funeral in service.funerals"
-                                        v-if="funeral.confirmation_text"
-                                        @click.prevent.stop="setSermonReference(funeral.confirmation_text)"
-                                        :title="'Von Denkspruch ('+funeral.buried_name+') übernehmen ('+funeral.confirmation_text+')'">
-                                    Von Denkspruch ({{ funeral.buried_name }}) übernehmen
-                                </button>
-                                <button class="btn btn-light btn-sm"
-                                        v-for="funeral in service.funerals"
-                                        v-if="funeral.wedding_text"
-                                        @click.prevent.stop="setSermonReference(funeral.wedding_text)"
-                                        :title="'Von Trauspruch ('+funeral.buried_name+') übernehmen ('+funeral.wedding_text+')'">
-                                    Von Trauspruch ({{ funeral.buried_name }}) übernehmen
-                                </button>
-                            </div>
-                        </div>
+                        <form-bible-reference-input name="reference" :key="referenceCopied"
+                                                    label="Predigttext"
+                                                    v-model="editedSermon.reference" :sources="textSources" />
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
@@ -225,10 +195,12 @@ import FormImageAttacher from "../components/Ui/forms/FormImageAttacher";
 import TextStats from "../components/LiturgyEditor/Elements/TextStats";
 import Card from "../components/Ui/cards/card";
 import CardBody from "../components/Ui/cards/cardBody";
+import FormBibleReferenceInput from "../components/Ui/forms/FormBibleReferenceInput";
 
 export default {
     name: "sermonEditor",
     components: {
+        FormBibleReferenceInput,
         CardBody,
         Card,
         TextStats,
@@ -264,8 +236,30 @@ export default {
             permit_handouts: false,
         };
         var editedSermon = this.sermon ? this.sermon : emptySermon
-
         if (null === editedSermon.text) editedSermon.text = '';
+
+        let textSources = {};
+        if (undefined !== this.service.liturgicalInfo.title) {
+            textSources['Perikope für '+this.service.liturgicalInfo.title] = this.service.liturgicalInfo.currentPerikope;
+            for (let i=1; i<=6; i++) {
+                textSources[this.service.liturgicalInfo.title+' '+this.romanize(i)] = this.service.liturgicalInfo['litTextsPerikope'+i];
+            }
+            textSources[this.service.liturgicalInfo.title+' Psalm'] = this.service.liturgicalInfo['litTextsWeeklyPsalm'];
+            textSources[this.service.liturgicalInfo.title+' Wochenspruch'] = this.service.liturgicalInfo['litTextsWeeklyQuote'];
+        }
+        this.service.baptisms.forEach(baptism => {
+            if (baptism.text) textSources['Taufspruch '+baptism.candidate_name] = baptism.text;
+        });
+        this.service.funerals.forEach(funeral => {
+            if (funeral.text) textSources['Beerdigungstext '+funeral.buried_name] = funeral.text;
+            if (funeral.confirmation_text) textSources['Denkspruch '+funeral.buried_name] = funeral.confirmation_text;
+            if (funeral.wedding_text) textSources['Trauspruch '+funeral.buried_name] = funeral.wedding_text;
+        });
+        this.service.weddings.forEach(wedding => {
+            if (wedding.text) textSources['Trauspruch '+wedding.spouse1_name+' & '+wedding.spouse2_name] = wedding.text;
+        });
+
+
         return {
             referenceCopied: 0,
             textEditorActive: false,
@@ -301,6 +295,7 @@ export default {
             },
             fileUpload: null,
             removeImage: false,
+            textSources,
         }
     },
     methods: {
@@ -369,7 +364,25 @@ export default {
         setSermonReference(ref) {
             this.editedSermon.reference = ref;
             this.referenceCopied++;
-        }
+        },
+        /**
+         * @source http://blog.stevenlevithan.com/archives/javascript-roman-numeral-converter
+         * @param num
+         * @returns {string|number}
+         */
+        romanize(num) {
+            if (isNaN(num))
+                return NaN;
+            var digits = String(+num).split(""),
+                key = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM",
+                    "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC",
+                    "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
+                roman = "",
+                i = 3;
+            while (i--)
+                roman = (key[+digits.pop() + (i * 10)] || "") + roman;
+            return Array(+digits.join("") + 1).join("M") + roman;
+        },
     }
 }
 </script>

@@ -143,7 +143,8 @@
                 </fieldset>
                 <fieldset>
                     <legend>Wichtige Informationen</legend>
-                    <form-input name="text" label="Taufspruch" v-model="myBaptism.text" is-checked-item="1"/>
+                    <form-bible-reference-input name="text" label="Taufspruch" v-model="myBaptism.text" is-checked-item="1"
+                        :sources="{}"/>
                     <form-textarea name="notes" label="Notizen aus dem Taufgespräch" v-model="myBaptism.notes"/>
                 </fieldset>
                 <fieldset>
@@ -206,10 +207,12 @@ import FormFileUploader from "../../components/Ui/forms/FormFileUploader";
 import CheckedProcessItem from "../../components/Ui/elements/CheckedProcessItem";
 import FormTextarea from "../../components/Ui/forms/FormTextarea";
 import DimissorialFormPart from "../../components/RiteEditors/DimissorialFormPart";
+import FormBibleReferenceInput from "../../components/Ui/forms/FormBibleReferenceInput";
 
 export default {
     name: "BaptismEditor",
     components: {
+        FormBibleReferenceInput,
         DimissorialFormPart,
         FormTextarea,
         CheckedProcessItem,
