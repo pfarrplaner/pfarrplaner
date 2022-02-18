@@ -222,8 +222,9 @@ export default {
     data() {
         var myBaptism = this.baptism;
         myBaptism.dob = myBaptism.dob ? moment(myBaptism.dob).format('DD.MM.YYYY') : null;
-        myBaptism.first_contact_on = myBaptism.first_contact_on ? moment(myBaptism.first_contact_on).format('DD.MM.YYYY') : null;
+        myBaptism.first_contact_on = myBaptism.first_contact_on ? moment(myBaptism.first_contact_on).format('DD.MM.YYYY') : moment().format('DD.MM.YYYY');
         myBaptism.appointment = myBaptism.appointment ? moment(myBaptism.appointment).format('DD.MM.YYYY HH:mm') : null;
+        myBaptism.first_contact_with = myBaptism.first_contact_with || this.$page.props.currentUser.data.name;
         return {
             myDatePickerConfig: {
                 locale: 'de',

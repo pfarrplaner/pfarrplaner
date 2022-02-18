@@ -107,9 +107,14 @@ class StoreBaptismRequest extends FormRequest
 
         $data['dob'] ? $data['dob'] = Carbon::createFromFormat('d.m.Y', $data['dob']) : $data['dob'] = null;
         $data['first_contact_on'] ? $data['first_contact_on'] = Carbon::createFromFormat('d.m.Y', $data['first_contact_on']) : $data['first_contact_on'] = null;
-        $data['appointment'] ? $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment']) : $data['appointment'] = null;
         $data['dimissorial_requested'] ? $data['dimissorial_requested'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_requested']) : $data['dimissorial_requested'] = null;
         $data['dimissorial_received'] ? $data['dimissorial_received'] = Carbon::createFromFormat('d.m.Y', $data['dimissorial_received']) : $data['dimissorial_received'] = null;
+
+        if (isset($data['appointment'])) {
+            $data['appointment'] = Carbon::parse($data['appointment'], 'Europe/Berlin')->setTimezone('UTC')->format(
+                'd.m.Y H:i'
+            );
+        }
 
         return $data;
     }

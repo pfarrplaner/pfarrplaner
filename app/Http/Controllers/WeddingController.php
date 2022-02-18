@@ -437,10 +437,11 @@ class WeddingController extends Controller
 
         // dates
         if (isset($data['appointment'])) {
-            $data['appointment'] = Carbon::createFromFormat('d.m.Y H:i', $data['appointment'])->shiftTimezone(
-                'Europe/Berlin'
-            )->setTimeZone('UTC');
+            $data['appointment'] = Carbon::parse($data['appointment'], 'Europe/Berlin')->setTimezone('UTC')->format(
+                'd.m.Y H:i'
+            );
         }
+
         if (isset($data['spouse1_dob'])) {
             $data['spouse1_dob'] = Carbon::createFromFormat('d.m.Y', $data['spouse1_dob']);
         }
