@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.118.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.117.1...v2022.118.0) (2022-02-18)
+
+
+### Features
+
+* Use FormBibleReferenceInput for all appropriate inputs ([9d31b0f](https://github.com/pfarrplaner/pfarrplaner/commits/9d31b0fdc4287e8b941ecaa58f81cdba5a3fb8f4))
+
+
+### Bug Fixes
+
+* handle empty reference gracefully ([76c8230](https://github.com/pfarrplaner/pfarrplaner/commits/76c8230a422ddb3d40b2cee0dec397ea0a987b37))
+
 ### [2022.117.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.117.0...v2022.117.1) (2022-02-18)
 
 
