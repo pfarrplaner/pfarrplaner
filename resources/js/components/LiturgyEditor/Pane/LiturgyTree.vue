@@ -743,4 +743,8 @@ export default {
     color: gray;
 }
 
+.row.item:hover {
+    background-color: rgb(248, 249, 250);
+}
+
 </style>
