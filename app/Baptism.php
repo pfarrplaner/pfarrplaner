@@ -139,8 +139,8 @@ class Baptism extends Model
         if ($this->candidate_email) $contacts[] = $this->candidate_email;
 
         $record = [
-            'startDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC'),
-            'endDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC')->addHour(1),
+            'startDate' => $this->appointment->copy(),
+            'endDate' => $this->appointment->copy()->addHour(1),
             'title' => 'Taufgespräch '.$this->candidate_name,
             'description' =>
                 '<p>Taufe am '.$this->service->day->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'

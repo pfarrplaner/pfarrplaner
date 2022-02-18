@@ -161,8 +161,8 @@ class Wedding extends Model
             .AbstractSyncEngine::AUTO_WARNING;
 
         $record = [
-            'startDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC'),
-            'endDate' => $this->appointment->copy()->shiftTimezone('Europe/Berlin')->setTimezone('UTC')->addHour(1),
+            'startDate' => $this->appointment->copy(),
+            'endDate' => $this->appointment->copy()->addHour(1),
             'title' => 'Traugespräch '.$this->spouse1_name.' / '.$this->spouse2_name,
             'description' => $description,
             'location' => '',
