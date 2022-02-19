@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.119.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.0...v2022.119.1) (2022-02-19)
+
+
+### Bug Fixes
+
+* Cannot delete services when relatedCities are set ([6771ef1](https://github.com/pfarrplaner/pfarrplaner/commits/6771ef1e61c3053d62be248119a913f06f5ee973))
+
 ## [2022.119.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.118.0...v2022.119.0) (2022-02-18)
 
 
