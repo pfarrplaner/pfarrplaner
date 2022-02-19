@@ -106,7 +106,7 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
             $doc->renderNormalText('Gültig nur am '.$service->dateTime->formatLocalized('%A, %d. %B %Y')
                                    .' von '.$service->dateTime->format('H:i')
                                    .' bis '.$service->dateTime->copy()->addHours(3)->format('H:i').' Uhr.');
-            $doc->getSection()->addImage(route('qr', $this->service->konfiapp_event_qr), ['width' => Converter::cmToPoint(11.5)]);
+            $doc->getSection()->addImage(route('qrcode', $this->service->konfiapp_event_qr), ['width' => Converter::cmToPoint(11.5)]);
         }
 
 
