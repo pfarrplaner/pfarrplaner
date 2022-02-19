@@ -238,25 +238,28 @@ export default {
         var editedSermon = this.sermon ? this.sermon : emptySermon
         if (null === editedSermon.text) editedSermon.text = '';
 
+        let allServices = this.services || [this.service];
         let textSources = {};
-        if (undefined !== this.service.liturgicalInfo.title) {
-            textSources['Perikope für '+this.service.liturgicalInfo.title] = this.service.liturgicalInfo.currentPerikope;
-            for (let i=1; i<=6; i++) {
-                textSources[this.service.liturgicalInfo.title+' '+this.romanize(i)] = this.service.liturgicalInfo['litTextsPerikope'+i];
+        allServices.forEach(thisService => {
+            if (undefined !== thisService.liturgicalInfo.title) {
+                textSources['Perikope für '+thisService.liturgicalInfo.title] = thisService.liturgicalInfo.currentPerikope;
+                for (let i=1; i<=6; i++) {
+                    textSources[thisService.liturgicalInfo.title+' '+this.romanize(i)] = thisService.liturgicalInfo['litTextsPerikope'+i];
+                }
+                textSources[thisService.liturgicalInfo.title+' Psalm'] = thisService.liturgicalInfo['litTextsWeeklyPsalm'];
+                textSources[thisService.liturgicalInfo.title+' Wochenspruch'] = thisService.liturgicalInfo['litTextsWeeklyQuote'];
             }
-            textSources[this.service.liturgicalInfo.title+' Psalm'] = this.service.liturgicalInfo['litTextsWeeklyPsalm'];
-            textSources[this.service.liturgicalInfo.title+' Wochenspruch'] = this.service.liturgicalInfo['litTextsWeeklyQuote'];
-        }
-        this.service.baptisms.forEach(baptism => {
-            if (baptism.text) textSources['Taufspruch '+baptism.candidate_name] = baptism.text;
-        });
-        this.service.funerals.forEach(funeral => {
-            if (funeral.text) textSources['Beerdigungstext '+funeral.buried_name] = funeral.text;
-            if (funeral.confirmation_text) textSources['Denkspruch '+funeral.buried_name] = funeral.confirmation_text;
-            if (funeral.wedding_text) textSources['Trauspruch '+funeral.buried_name] = funeral.wedding_text;
-        });
-        this.service.weddings.forEach(wedding => {
-            if (wedding.text) textSources['Trauspruch '+wedding.spouse1_name+' & '+wedding.spouse2_name] = wedding.text;
+            thisService.baptisms.forEach(baptism => {
+                if (baptism.text) textSources['Taufspruch '+baptism.candidate_name] = baptism.text;
+            });
+            thisService.funerals.forEach(funeral => {
+                if (funeral.text) textSources['Beerdigungstext '+funeral.buried_name] = funeral.text;
+                if (funeral.confirmation_text) textSources['Denkspruch '+funeral.buried_name] = funeral.confirmation_text;
+                if (funeral.wedding_text) textSources['Trauspruch '+funeral.buried_name] = funeral.wedding_text;
+            });
+            thisService.weddings.forEach(wedding => {
+                if (wedding.text) textSources['Trauspruch '+wedding.spouse1_name+' & '+wedding.spouse2_name] = wedding.text;
+            });
         });
 
 
