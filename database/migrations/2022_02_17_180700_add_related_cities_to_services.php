@@ -17,8 +17,8 @@ return new class extends Migration {
             $table->unsignedInteger('city_id');
             $table->unsignedInteger('service_id');
 
-            $table->foreign('city_id')->references('id')->on('cities');
-            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('city_id')->references('id')->on('cities')->cascadeOnDelete();
+            $table->foreign('service_id')->references('id')->on('services')->cascadeOnDelete();
         });
     }
 
