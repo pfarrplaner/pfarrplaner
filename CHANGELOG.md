@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.119.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.1...v2022.119.2) (2022-02-19)
+
+
+### Bug Fixes
+
+* Blank page after saving sermon ([dd67900](https://github.com/pfarrplaner/pfarrplaner/commits/dd679000091bc32686eca04e8e8d40e1f930fdbf))
+* service qr code fails in FullTextLiturgySheet ([9b1a1a2](https://github.com/pfarrplaner/pfarrplaner/commits/9b1a1a2e66e8c9cc7e18bd7bd365ab9d13b2720e)), closes [#213](https://github.com/pfarrplaner/pfarrplaner/issues/213)
+
 ### [2022.119.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.0...v2022.119.1) (2022-02-19)
 
 
