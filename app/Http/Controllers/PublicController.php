@@ -261,7 +261,7 @@ class PublicController extends Controller
         return redirect($service->youtube_url);
     }
 
-    public function ministryRequest(Request $request, $ministry, $user, $services, $sender = null)
+    public function ministryRequest(Request $request, $ministry, User $user, $services, $sender = null)
     {
         if (!$request->hasValidSignature()) abort(401);
         $services = Service::select('services.*')
@@ -270,7 +270,6 @@ class PublicController extends Controller
             ->orderBy('days.date')
             ->orderBy('time')
             ->get();
-        $user = User::findOrFail($user);
         $report = 'ministryRequest';
         return view(
             'reports.ministryrequest.request',
