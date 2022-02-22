@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.119.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.2...v2022.119.3) (2022-02-22)
+
+
+### Bug Fixes
+
+* Duplicate field name in LeaveRequestForm ([4ace79e](https://github.com/pfarrplaner/pfarrplaner/commits/4ace79e83a4822afae2a073696ea9cdaf0d1f310))
+* MinistryRequest response fails because $user is already resolved to a model ([e4bee6c](https://github.com/pfarrplaner/pfarrplaner/commits/e4bee6c1c54789c0341b4fec3f1cbed6843ff904))
+
 ### [2022.119.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.1...v2022.119.2) (2022-02-19)
 
 
