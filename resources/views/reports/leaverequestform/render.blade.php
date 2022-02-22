@@ -225,7 +225,7 @@
             <td style="width: 38mm;">Im Religionsunterricht:</td>
             <td style="width: 106mm; padding-bottom: 2px;">
                 <div class="input-wrapper" style="width: 106mm; height: 3em;">
-                    <input type="text" style="width: 106mm;" name="gd" />
+                    <input type="text" style="width: 106mm;" name="ru" />
                 </div>
             </td>
         </tr>
