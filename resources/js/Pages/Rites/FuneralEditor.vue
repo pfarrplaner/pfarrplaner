@@ -526,7 +526,7 @@ export default {
         },
         saveFuneral() {
             let record = __.clone(this.myFuneral);
-            ['baptism_date', 'confirmation_date', 'wedding_date'].forEach(key => {
+            ['baptism_date', 'confirmation_date', 'wedding_date', 'dod_spouse'].forEach(key => {
                 if (record[key] && (record[key].length != 10)) record[key] = moment(record[key]).format('DD.MM.YYYY');
                 if (record[key]) console.log(record, key, record[key], record[key].length);
             });
