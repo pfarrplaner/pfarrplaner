@@ -209,7 +209,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
                 ->setWidth(950)
                 ->setHeight(30)
                 ->setOffsetX(10)
-                ->setOffsetY(505);
+                ->setOffsetY(($text == '') ? 485: 505);
             $paragraph = $shape->getActiveParagraph();
             $paragraph->getAlignment()->setHorizontal(Alignment::HORIZONTAL_RIGHT);
             $paragraph->getFont()->setBold(false)->setSize(10)->setColor($color)->setName('Calibri');
