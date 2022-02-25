@@ -145,7 +145,7 @@ class PublicController extends Controller
             return redirect()->route('home');
         }
 
-        $minDate = Carbon::now();
+        $minDate = Carbon::now()->subDays(1);
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first()->date;
 
         $days = Day::where('date', '>=', $minDate)
@@ -326,7 +326,7 @@ class PublicController extends Controller
                     return $q->whereIn('category', $ministries);
                 }
             )
-            ->startingFrom(Carbon::now())
+            ->startingFrom(Carbon::now()->subDays(1))
             ->ordered()
             ->get();
 
