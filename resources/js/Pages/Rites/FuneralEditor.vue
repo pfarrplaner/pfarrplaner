@@ -458,7 +458,7 @@ export default {
         },
         textSources() {
             let sources = {};
-            if (this.myFuneral.service.sermon && this.myFuneral.service.sermon.text) sources['Predigttext'] = this.myFuneral.service.sermon.text;
+            if (this.myFuneral.service.sermon && this.myFuneral.service.sermon.reference) sources['Predigttext'] = this.myFuneral.service.sermon.reference;
             if (this.myFuneral.confirmation_text) sources['Denkspruch'] = this.myFuneral.confirmation_text;
             if (this.myFuneral.wedding_text) sources['Trauspruch'] = this.myFuneral.wedding_text;
             return sources;
