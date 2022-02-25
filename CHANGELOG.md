@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.119.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.3...v2022.119.4) (2022-02-25)
+
+
+### Bug Fixes
+
+* dod_spouse field has formatting errors ([f54f156](https://github.com/pfarrplaner/pfarrplaner/commits/f54f156e4e98fa1bdad18d1db1d1ec8d29490f6a)), closes [#221](https://github.com/pfarrplaner/pfarrplaner/issues/221)
+* Enlarge lower border on participants slide ([aac07c1](https://github.com/pfarrplaner/pfarrplaner/commits/aac07c17beb9bf8fe46c28a39e01f7c18615dd58)), closes [#218](https://github.com/pfarrplaner/pfarrplaner/issues/218)
+* FuneralEditor uses sermon.text instead of sermon.reference ([e147f62](https://github.com/pfarrplaner/pfarrplaner/commits/e147f629e020e0f5be8054934180fa6cdcde5052)), closes [#222](https://github.com/pfarrplaner/pfarrplaner/issues/222)
+* Plan entries disappear one day too early ([a1bafad](https://github.com/pfarrplaner/pfarrplaner/commits/a1bafadb57b158bd8a74c857a040250792f7cd8f)), closes [#219](https://github.com/pfarrplaner/pfarrplaner/issues/219)
+
 ### [2022.119.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.2...v2022.119.3) (2022-02-22)
 
 
