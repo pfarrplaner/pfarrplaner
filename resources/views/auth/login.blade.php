@@ -488,7 +488,11 @@
 
             <div class="row no-gutters" data-aos="fade-left">
 
-
+                @if (count($videos) == 0)
+                    Leider kann die Vorschau der Tutorial-Videos im Moment aus technischen Gründen nicht angezeigt werden.
+                    Du findest alle Videos weiterhin direkt auf unserem <a href="https://www.youtube.com/channel/UCLRinVsLiYMJtN56bynCPEw"
+                                                                           target="_blank">YouTube-Kanal</a>.
+                @endif
                 @foreach($videos as $videoTitle => $videoUrl)
                     <div class="col-lg-3 col-md-4">
                         <div class="gallery-item" data-aos="zoom-in" data-aos-delay="100">

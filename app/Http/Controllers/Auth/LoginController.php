@@ -95,15 +95,20 @@ class LoginController extends Controller
             }
         }
 
-        $ytFeed = (array)simplexml_load_file(config('support.youtube_channel_feed'));
-        $videos = [];
-        foreach ($ytFeed['entry'] as $video) {
-            $videos[(string)$video->title] = str_replace(
-                'https://www.youtube.com/watch?v=',
-                'https://www.youtube.com/embed/',
-                (string)$video->link->attributes()->href
-            );
+        try {
+            $ytFeed = (array)simplexml_load_file(config('support.youtube_channel_feed'));
+            $videos = [];
+            foreach ($ytFeed['entry'] as $video) {
+                $videos[(string)$video->title] = str_replace(
+                    'https://www.youtube.com/watch?v=',
+                    'https://www.youtube.com/embed/',
+                    (string)$video->link->attributes()->href
+                );
+            }
+        } catch (\Exception $exception) {
+            $videos = [];
         }
+
 
         $count = [
             'cities' => City::count(),
