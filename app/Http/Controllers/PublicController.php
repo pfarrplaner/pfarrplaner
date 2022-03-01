@@ -263,6 +263,7 @@ class PublicController extends Controller
 
     public function ministryRequest(Request $request, $ministry, User $user, $services, $sender = null)
     {
+        if (is_numeric($user)) $user = User::findOrFail($user);
         if (!$request->hasValidSignature()) abort(401);
         $services = Service::select('services.*')
             ->join('days', 'days.id', 'services.day_id')
@@ -277,10 +278,9 @@ class PublicController extends Controller
         );
     }
 
-    public function ministryRequestFilled(Request $request, $ministry, $user, $sender = null)
+    public function ministryRequestFilled(Request $request, $ministry, User $user, $sender = null)
     {
-        dump ($sender);
-        $user = User::findOrFail($user);
+        if (is_numeric($user)) $user = User::findOrFail($user);
         $services = [];
         foreach($request->get('services', []) as $key => $service) {
             if ($service) $services[] = $key;
