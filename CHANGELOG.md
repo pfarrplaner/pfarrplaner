@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.119.5](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.4...v2022.119.5) (2022-03-03)
+
+
+### Bug Fixes
+
+* FormBibleReferenceInput does not always allow input ([acded66](https://github.com/pfarrplaner/pfarrplaner/commits/acded660f2bc83dcafe702fe70f6316324d692d4))
+* Login page displays exception when YouTube feed fails ([f6d8f76](https://github.com/pfarrplaner/pfarrplaner/commits/f6d8f761147cd37404d0170459e5167679337079))
+* Problems saving ministry request responses ([2cf5b8f](https://github.com/pfarrplaner/pfarrplaner/commits/2cf5b8f8cacd95b73d76830b2afefe09ba6eb77d))
+
 ### [2022.119.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.3...v2022.119.4) (2022-02-25)
 
 
