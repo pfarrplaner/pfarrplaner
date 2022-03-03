@@ -29,13 +29,17 @@
 
 <template>
     <div class="form-bible-reference-input">
-        <form-input v-if="Object.keys(sources).length == 0"
-                    :id="myId" :label="label" :help="help" :name="name" pre-label="book-bible" :required="required"
-                    :value="value" :is-checked-item="isCheckedItem" @input="handleInput" class="mb-0" />
-        <form-selectize v-else
-            :id="myId" :label="label" :help="help" :name="name" pre-label="book-bible" :required="required"
-            :value="value" :is-checked-item="isCheckedItem" :options="myOptions" :settings="mySettings"
-            @input="handleInput" class="mb-0" />
+        <form-group :name="name" :id="myId" :label="label" :help="help" pre-label="book-bible" :required="required" :is-checked-item="isCheckedItem">
+            <div class="input-group mb-3">
+                <div v-if="Object.keys(myOptions).length > 0" class="input-group-prepend">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vorschläge</button>
+                    <div class="dropdown-menu">
+                        <a v-for="option in myOptions" class="dropdown-item" @click.prevent.stop="setTextFromList(option.id)">{{ option.name }}</a>
+                    </div>
+                </div>
+                <input type="text" class="form-control" :aria-label="label" :name="name" :value="myValue" @input="handleInput" :key="valueChanged">
+            </div>
+        </form-group>
         <small class="form-text text-muted mt-0 p-0" :title="myBibleText">
             <span v-if="myBibleTextLoading" class="mdi mdi-spin mdi-loading" title="Bibeltext wird geladen..."></span>
             <span v-else>{{ myBibleText }}</span>
@@ -52,10 +56,11 @@ import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 import __ from 'lodash';
 import FormSelectize from "./FormSelectize";
 import FormInput from "./FormInput";
+import Selectize from 'vue2-selectize';
 
 export default {
     name: "FormBibleReferenceInput",
-    components: {FormInput, FormSelectize, BibleReference, ValueCheck, FormGroup},
+    components: {FormInput, FormSelectize, BibleReference, ValueCheck, FormGroup, Selectize},
     props: {
         label: String,
         id: String,
@@ -89,6 +94,7 @@ export default {
     },
     mounted() {
         if (this.myId == '') this.myId = this._uid;
+        if (this.value) this.bibleText(this);
     },
     data() {
         this.sources = this.sources || {};
@@ -113,16 +119,15 @@ export default {
             component: this,
             myOptions,
             mySettings: {
-                allowEmptyOption: true,
                 create: function(input) {
                     return {id: input, name: input};
                 },
-                render: {
-                    option_create: function (data, escape) {
-                        return '<div class="create"><strong>' + escape(data.input) + '</strong>&hellip; übernehmen</div>';
-                    },
-                }
+                options: myOptions,
+                labelField: 'name',
+                valueField: 'id',
+                searchFields: ['name', 'id'],
             },
+            valueChanged: 0,
         }
     },
     watch: {
@@ -151,9 +156,15 @@ export default {
             const cb = navigator.clipboard;
             cb.writeText(this.myBibleText+"\n("+this.myValue+')').then(result => {});
         },
-        handleInput(e) {
-            console.log('handleInput', e);
+        setTextFromList(e) {
             this.myValue = e;
+            this.valueChanged++;
+            this.$emit('input', this.myValue);
+            this.bibleText(this);
+        },
+        handleInput(e) {
+            console.log('handleInput', e.target.value);
+            this.myValue = e.target.value;
             this.bibleText(this);
             this.$emit('input', this.myValue);
         }
