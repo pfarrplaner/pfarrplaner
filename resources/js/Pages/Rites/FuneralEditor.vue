@@ -496,6 +496,10 @@ export default {
         if (this.myFuneral.wake) this.myFuneral.wake = moment(this.myFuneral.wake).format('DD.MM.YYYY');
         if (this.myFuneral.appointment) this.myFuneral.appointment = moment(this.myFuneral.appointment).format('DD.MM.YYYY HH:mm');
     },
+    mounted() {
+        this.refreshKey++;
+        this.$forceUpdate();
+    },
     data() {
         var myFuneral = this.funeral;
         myFuneral.life = myFuneral.life || '';
@@ -546,18 +550,15 @@ export default {
             this.$forceUpdate();
         },
         copyBuriedAddress() {
-            console.log('address');
             this.myFuneral.appointment_address = this.myFuneral.buried_address + ', ' + this.myFuneral.buried_zip + ' ' + this.myFuneral.buried_city;
         },
         copyRelativeAddress() {
-            console.log('relative address');
             this.myFuneral.appointment_address = this.myFuneral.relative_address + ', ' + this.myFuneral.relative_zip + ' ' + this.myFuneral.relative_city;
         },
         saveFuneral() {
             let record = __.clone(this.myFuneral);
             ['baptism_date', 'confirmation_date', 'wedding_date', 'dod_spouse'].forEach(key => {
                 if (record[key] && (record[key].length != 10)) record[key] = moment(record[key]).format('DD.MM.YYYY');
-                if (record[key]) console.log(record, key, record[key], record[key].length);
             });
             this.$inertia.patch(route('funerals.update', this.myFuneral.id), record, {
                 preserveState: false,
@@ -598,7 +599,7 @@ export default {
         },
         dateFromString(s) {
             if (!s) return false;
-            if (s.length != 10) return false;
+            if (s.length != 10) return moment(s);
             return moment(s.substr(6, 4) + '-' + s.substr(3, 2) + '-' + s.substr(0, 2));
         },
         ageText(date, startDate, prefix, suffix) {
@@ -611,7 +612,6 @@ export default {
             if (dayDiff < 60) return prefix + 'ca. ' + String(Math.floor(dayDiff / 7)) + ' Wochen';
             if (dayDiff < 365) return prefix + 'ca. ' + String(date.diff(startDate, 'months')) + ' Monate' + suffix;
             return prefix + String(date.diff(startDate, 'years')) + ' Jahre' + suffix;
-            console.log('ageText', date, startDate, dayDiff);
         },
         downloadAsJson(exportObj, exportName) {
             var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.myFuneral));
