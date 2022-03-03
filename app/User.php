@@ -992,6 +992,10 @@ class User extends Authenticatable
      */
     public function updateCityPermissions($permissions)
     {
+        // change array format
+        foreach ($permissions as $cityId => $permission) {
+            $permissions[$cityId] = ['permission' => $permission];
+        }
         // check user rights, remove entries for cities without admin rights
         foreach ($permissions as $cityId => $permission) {
             $city = City::find($cityId);

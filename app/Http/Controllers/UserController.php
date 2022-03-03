@@ -398,7 +398,7 @@ class UserController extends Controller
             $user->setSetting($key, $setting);
         }
         $user->setSubscriptionsFromArray($request->get('subscriptions') ?: []);
-        $user->updateCityPermissions($request->get('cityPermission') ?: []);
+        $user->updateCityPermissions($request->get('permissions') ?: []);
 
         if ($request->get('createAccount', false)) {
             $user->resetAccount();
