@@ -28,14 +28,35 @@
   -->
 
 <template>
-    <admin-layout :title="'Beerdigung von '+funeral.buried_name">
+    <admin-layout :title="'Beerdigung von '+funeral.buried_name" :key="formKey">
         <template slot="navbar-left">
             <button class="btn btn-primary" @click.prevent="saveFuneral" title="Speichern">
-                <span class="d-inline d-md-none mdi mdi-content-save"></span> <span class="d-none d-md-inline">Speichern</span>
+                <span class="d-inline d-md-none mdi mdi-content-save"></span> <span
+                class="d-none d-md-inline">Speichern</span>
             </button>&nbsp;
             <button class="btn btn-danger" @click.prevent="deleteFuneral" title="Löschen">
                 <span class="d-inline d-md-none mdi mdi-delete"></span> <span class="d-none d-md-inline">Löschen</span>
             </button>
+            <div class="dropdown show">
+                <a class="btn btn-light dropdown-toggle ml-1" href="#" role="button" id="dropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Weitere Aktionen
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" @click.prevent.stop="saveInLocalStorage">Datenpaket im Browser sichern</a>
+                    <a class="dropdown-item" @click.prevent.stop="downloadAsJson">Datenpaket auf Festplatte sichern</a>
+                </div>
+            </div>
+        </template>
+        <template slot="after-flash">
+            <div v-if="inLocalStorage" class="alert alert-info">
+                <div>Eine Kopie dieses Datensatzes wurde im Browser zwischengespeichert. Willst du diese Kopie wiederherstellen?</div>
+                <div class="pull-right">
+                    <button class="btn btn-info btn-sm" @click.prevent.stop="loadFromLocalStorage">Wiederherstellen</button>
+                    <button class="btn btn-danger btn-sm" @click.prevent.stop="deleteFromLocalStorage">Löschen</button>
+                </div>
+            </div>
         </template>
         <template slot="tab-headers">
             <tab-headers>
@@ -162,7 +183,7 @@
                 </fake-table>
                 <hr/>
                 <form-bible-reference-input label="Predigttext" v-model="myFuneral.text" :is-checked-item="true"
-                            :key="referenceCopied" :sources="textSources" />
+                                            :key="referenceCopied" :sources="textSources"/>
                 <button v-if="funeral.service.sermon && funeral.service.sermon.reference"
                         class="btn btn-sm btn-light"
                         :title="'Von Predigt übernehmen ('+funeral.service.sermon.reference+')'"
@@ -268,18 +289,23 @@
                                                   :help="ageText(myFuneral.baptism_date, myFuneral.dob, 'mit ', 'n')"/>
                             </accordion-element>
                             <accordion-element title="Konfirmation" icon="mdi mdi-cross-outline">
-                                <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation" />
-                                <form-date-picker label="Datum der Konfirmation" v-model="funeral.confirmation_date" name="confirmation_date"
-                                                  :help="ageText(myFuneral.confirmation_date, myFuneral.dob, 'mit ', 'n')" />
-                                <form-bible-reference-input label="Denkspruch" v-model="myFuneral.confirmation_text" name="confirmation_text" />
+                                <form-textarea label="Konfirmation" v-model="funeral.confirmation" name="confirmation"/>
+                                <form-date-picker label="Datum der Konfirmation" v-model="funeral.confirmation_date"
+                                                  name="confirmation_date"
+                                                  :help="ageText(myFuneral.confirmation_date, myFuneral.dob, 'mit ', 'n')"/>
+                                <form-bible-reference-input label="Denkspruch" v-model="myFuneral.confirmation_text"
+                                                            name="confirmation_text"/>
                             </accordion-element>
                             <accordion-element title="Heirat" icon="mdi mdi-ring">
                                 <form-textarea label="Ehepartner:in" v-model="funeral.spouse" name="spouse"/>
-                                <form-date-picker label="Heiratsdatum" v-model="funeral.wedding_date" name="wedding_date"
+                                <form-date-picker label="Heiratsdatum" v-model="funeral.wedding_date"
+                                                  name="wedding_date"
                                                   :help="myFuneral.wedding_date ? ageText(myFuneral.dod_spouse || myFuneral.dod, myFuneral.wedding_date, '', ' verheiratet') : ''"/>
-                                <form-bible-reference-input label="Trauspruch" v-model="myFuneral.wedding_text" name="wedding_text" />
-                                <form-date-picker label="Sterbedatum Ehepartner:in" v-model="funeral.dod_spouse" name="dod_spouse"
-                                                  :help="myFuneral.dod_spouse ? ageText(moment().format('DD.MM.YYYY'), myFuneral.dod_spouse, 'vor ', 'n') : ''" />
+                                <form-bible-reference-input label="Trauspruch" v-model="myFuneral.wedding_text"
+                                                            name="wedding_text"/>
+                                <form-date-picker label="Sterbedatum Ehepartner:in" v-model="funeral.dod_spouse"
+                                                  name="dod_spouse"
+                                                  :help="myFuneral.dod_spouse ? ageText(moment().format('DD.MM.YYYY'), myFuneral.dod_spouse, 'vor ', 'n') : ''"/>
                             </accordion-element>
                             <accordion-element title="Familie" icon="mdi mdi-human-male-female-child">
                                 <form-textarea label="Kinder" v-model="funeral.children" name="children"/>
@@ -287,7 +313,6 @@
                                                name="further_family"/>
                             </accordion-element>
                         </accordion>
-
 
 
                         <hr/>
@@ -451,8 +476,8 @@ export default {
             let dob = this.myFuneral.dob ? this.dateFromString(this.myFuneral.dob) : null;
             if (this.myFuneral.dod) parts.push(dod.locale('de').format('dddd, DD.MM.YYYY'));
             if (this.myFuneral.death_place) parts.push(this.myFuneral.death_place);
-            if (this.myFuneral.dod) parts.push(String(this.age)+' Jahre alt');
-            if (this.myFuneral.dob && this.myFuneral.dod) parts.push(dod.diff(dob, 'days').toLocaleString('de-DE')+' Lebenstage');
+            if (this.myFuneral.dod) parts.push(String(this.age) + ' Jahre alt');
+            if (this.myFuneral.dob && this.myFuneral.dod) parts.push(dod.diff(dob, 'days').toLocaleString('de-DE') + ' Lebenstage');
             if (parts.length == 0) return '';
             return 'Gestorben: ' + parts.join(', ');
         },
@@ -475,7 +500,11 @@ export default {
         var myFuneral = this.funeral;
         myFuneral.life = myFuneral.life || '';
 
+        let ls = this.getLocalStorage();
+        let inLocalStorage = (undefined !== ls.funerals[this.funeral.id]);
+
         return {
+            formKey: 0,
             referenceCopied: 0,
             myDatePickerConfig: {
                 locale: 'de',
@@ -505,7 +534,7 @@ export default {
                     },
                 }
             },
-
+            inLocalStorage,
         }
     },
     methods: {
@@ -570,7 +599,7 @@ export default {
         dateFromString(s) {
             if (!s) return false;
             if (s.length != 10) return false;
-            return moment(s.substr(6, 4)+'-'+s.substr(3,2)+'-'+s.substr(0,2));
+            return moment(s.substr(6, 4) + '-' + s.substr(3, 2) + '-' + s.substr(0, 2));
         },
         ageText(date, startDate, prefix, suffix) {
             startDate = this.dateFromString(startDate || this.myFuneral.dob);
@@ -578,11 +607,46 @@ export default {
             if (!(startDate && date)) return '';
             suffix = suffix || '';
             let dayDiff = date.diff(startDate, 'days');
-            if (dayDiff < 14) return prefix+String(dayDiff)+' Tage'+suffix;
-            if (dayDiff < 60) return prefix+'ca. '+String(Math.floor(dayDiff/7))+' Wochen';
-            if (dayDiff < 365) return prefix+'ca. '+String(date.diff(startDate, 'months'))+' Monate'+suffix;
-            return prefix+String(date.diff(startDate, 'years'))+' Jahre'+suffix;
+            if (dayDiff < 14) return prefix + String(dayDiff) + ' Tage' + suffix;
+            if (dayDiff < 60) return prefix + 'ca. ' + String(Math.floor(dayDiff / 7)) + ' Wochen';
+            if (dayDiff < 365) return prefix + 'ca. ' + String(date.diff(startDate, 'months')) + ' Monate' + suffix;
+            return prefix + String(date.diff(startDate, 'years')) + ' Jahre' + suffix;
             console.log('ageText', date, startDate, dayDiff);
+        },
+        downloadAsJson(exportObj, exportName) {
+            var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.myFuneral));
+            var downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", exportName + ".json");
+            document.body.appendChild(downloadAnchorNode); // required for firefox
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        },
+        saveInLocalStorage() {
+            let ls = this.getLocalStorage();
+            ls.funerals[this.myFuneral.id] = this.myFuneral;
+            localStorage.pfarrplaner = JSON.stringify(ls);
+            this.inLocalStorage = true;
+        },
+        loadFromLocalStorage() {
+            let ls = this.getLocalStorage();
+            if (ls.funerals[this.myFuneral.id]) {
+                this.myFuneral = ls.funerals[this.myFuneral.id];
+                this.formKey++;
+                this.$forceUpdate();
+                this.deleteFromLocalStorage();
+            }
+        },
+        deleteFromLocalStorage() {
+            let ls = this.getLocalStorage();
+            if (ls.funerals[this.myFuneral.id]) delete ls.funerals[this.myFuneral.id];
+            localStorage.pfarrplaner = JSON.stringify(ls);
+            this.inLocalStorage = false;
+        },
+        getLocalStorage() {
+            let ls = JSON.parse(localStorage.getItem('pfarrplaner')) || {};
+            ls.funerals = ls.funerals || {};
+            return ls;
         }
     }
 }
