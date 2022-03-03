@@ -29,10 +29,10 @@
 
 <template>
     <div class="form-bible-reference-input">
-        <form-group :name="name" :id="myId" :label="label" :help="help" pre-label="book-bible" :required="required" :is-checked-item="isCheckedItem">
+        <form-group :name="name" :id="myId" :label="label" :help="help" pre-label="book-bible" :required="required" :is-checked-item="isCheckedItem" :value="myValue">
             <div class="input-group mb-3">
                 <div v-if="Object.keys(myOptions).length > 0" class="input-group-prepend">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Vorschläge</button>
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="mdi mdi-book-open-variant"></span></button>
                     <div class="dropdown-menu">
                         <a v-for="option in myOptions" class="dropdown-item" @click.prevent.stop="setTextFromList(option.id)">{{ option.name }}</a>
                     </div>
@@ -100,11 +100,6 @@ export default {
         this.sources = this.sources || {};
 
         let myOptions = [];
-        let foundInSources = false;
-        for (const sourceKey in this.sources) {
-            if (this.sources[sourceKey] == this.value) foundInSources = true;
-        }
-        if (!foundInSources) myOptions.push({ id: this.value, name: this.value });
         for (const sourceKey in this.sources) {
             myOptions.push({ id: this.sources[sourceKey], name: sourceKey+': '+this.sources[sourceKey]});
         }
@@ -175,5 +170,9 @@ export default {
 <style scoped>
     .form-bible-reference-input {
         margin-bottom: 1rem;
+    }
+
+    span.mdi-book-open-variant {
+        font-size: .9em;
     }
 </style>
