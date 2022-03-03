@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.120.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.5...v2022.120.0) (2022-03-03)
+
+
+### Features
+
+* Allow local storage of FuneralEditor data ([8dda0f0](https://github.com/pfarrplaner/pfarrplaner/commits/8dda0f0ee9bb302d44be0c0a41a119c72826d913))
+
+
+### Bug Fixes
+
+* After page reload, calculated fields do not show ([fcd86f3](https://github.com/pfarrplaner/pfarrplaner/commits/fcd86f3302b1c11932f3e14751475616e0832851))
+* Minor tweaks for FormBibleReferenceInput ([6e485af](https://github.com/pfarrplaner/pfarrplaner/commits/6e485af990fb9729ff341cdc1f04949576acf399))
+
 ### [2022.119.5](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.4...v2022.119.5) (2022-03-03)
 
 
