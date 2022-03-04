@@ -8,7 +8,7 @@ BEGIN:VEVENT
 UID:{{ $event->id }}{{ '@' }}{{ parse_url(env('APP_URL'), PHP_URL_HOST) }}
 LOCATION:{{ $event->locationText() }}
 SUMMARY:{{ $event->titleText().' P: '.$event->participantsText('P').' O: '.$event->participantsText('O').' M: '.$event->participantsText('M').($event->description ? ' ('.$event->description.')' : '') }}
-DESCRIPTION: {{ str_replace("\r\n", "\\n", wordwrap ($event->descriptionText(), 62, "\\n  ")) }} @if(isset($event->internal_remarks)) \n\nInterne Anmerkungen:\n {{ str_replace("\r\n", "\\n", $event->internal_remarks) }} @endif
+DESCRIPTION: {{ strtr(wordwrap ($event->descriptionText(), 62, "\\n  "), ["\r" =>'', "\n"=>'\\n']) }}
 
 CLASS:PUBLIC
 DTSTART:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->day->date->format('Y-m-d').' '.$event->timeText(false).':00', 'Europe/Berlin')->setTimezone('UTC')->format('Ymd\THis\Z') }}
@@ -20,8 +20,8 @@ DTSTAMP:{{ $event->updated_at->setTimezone('UTC')->format('Ymd\THis\Z') }}
 
     SUMMARY:{!! $event['title'] !!}
     @if(isset($event['description']))
-        DESCRIPTION: {!! strip_tags($event['description']) !!}
-        @if(isset($event['teaser']))X-ALT-DESC;FMTTYPE=text/html:<!DOCTYPE HTML><HTML><BODY>\n{!! $event['teaser'] !!}\n<HR />\n{!! $event['description'] !!}\n</BODY></HTML>
+        DESCRIPTION: {!! strtr(strip_tags($event['description']),["\r" => '', "\n" => '\\n']) !!}
+        @if(isset($event['teaser']))X-ALT-DESC;FMTTYPE=text/html:<!DOCTYPE HTML><HTML><BODY>\n{!! strtr(strip_tags($event['teaser']),["\r" => '', "\n" => '\\n']) !!}\n<HR />\n{!! strtr(strip_tags($event['description']),["\r" => '', "\n" => '\\n']) !!}\n</BODY></HTML>
         @endif
     @endif
     CLASS:PUBLIC
