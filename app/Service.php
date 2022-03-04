@@ -1039,7 +1039,7 @@ class Service extends Model
         foreach ($services as $service) {
             if (is_object($service->day)) {
                 if (($service->day->date <= $end) && ($service->day->date >= $start)) {
-                    $events[$service->trueDate()->format('YmdHis')][] = $service;
+                    $events[$service->dateTime()->format('YmdHis')][] = $service;
                 }
             }
         }
