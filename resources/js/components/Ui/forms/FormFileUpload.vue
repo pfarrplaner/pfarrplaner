@@ -28,29 +28,59 @@
   -->
 
 <template>
+    <div>
     <form-group :name="name" :label="label" :help="help">
-        <div class="upload-container">
+        <ul class="nav nav-pills mb-1">
+            <li class="nav-item">
+                <a class="nav-link" :class="{active: showTab == 0}" @click="showTab = 0">Lokale Dateien</a>
+            </li>
+            <li class="nav-item" v-if="!noUrl">
+                <a class="nav-link" :class="{active: showTab == 1}" @click="showTab = 1">Aus dem Internet</a>
+            </li>
+            <li class="nav-item" v-if="!noCamera">
+                <a class="nav-link" :class="{active: showTab == 2}" @click="showTab = 2">Von der Kamera</a>
+            </li>
+        </ul>
+        <div class="upload-container" v-if="showTab == 0">
             <div class="drop-target" :key="dragging" :class="{dragging: dragging}">
                 <input class="form-control-file"
                        type="file" :name="name" @change="handleInput" :multiple="multi"
-                       @dragenter="dragEnter" @dragleave="dragLeave"/>
+                       @dragenter="dragEnter" @dragleave="dragLeave" @drop="drop"/>
                 Hier klicken oder {{ multi ? 'Dateien' : 'Datei' }} hierher ziehen... {{ helpText || '' }}
             </div>
         </div>
+        <div v-if="showTab == 1">
+            <form-input label="Url der Datei" v-model="uploadUrl" />
+            <form-input label="Beschreibung" v-model="description" />
+            <nav-button icon="mdi-upload" @click="uploadFromUrl" :disabled="(!uploadUrl) && (!description)">Von URL laden</nav-button>
+        </div>
+        <div class="upload-container" v-if="showTab == 2">
+            <div class="drop-target" :key="dragging" :class="{dragging: dragging}">
+                <input class="form-control-file" accept="image/*" capture="camera"
+                       type="file" @change="handleInput" />
+                Hier klicken, um ein Bild mit der Kamera aufzunehmen
+            </div>
+        </div>
     </form-group>
+    </div>
 </template>
 
 <script>
 import FormGroup from "./FormGroup";
+import NavButton from "../buttons/NavButton";
+import FormInput from "./FormInput";
 
 export default {
     name: "FormFileUpload",
-    props: ['name', 'label', 'help', 'multiple', 'helpText'],
-    components: {FormGroup},
+    props: ['name', 'label', 'help', 'multiple', 'helpText', 'noCamera', 'noUrl'],
+    components: {FormInput, NavButton, FormGroup},
     data() {
         return {
             dragging: false,
             multi: this.multiple ? true : false,
+            showTab: 0,
+            uploadUrl: '',
+            description: '',
         }
     },
     methods: {
@@ -70,6 +100,14 @@ export default {
         dragLeave(e) {
             this.dragging = false;
         },
+        drop(e) {
+            console.log('drop', e);
+        },
+        uploadFromUrl() {
+            this.$emit('upload-url', {url: this.uploadUrl, description: this.description});
+            this.uploadUrl = '';
+            this.description = '';
+        }
     }
 }
 </script>
@@ -116,5 +154,9 @@ export default {
     top: 0;
     bottom: 0;
     width: 100%;
+}
+
+.nav-pills {
+    font-size: .8em;
 }
 </style>

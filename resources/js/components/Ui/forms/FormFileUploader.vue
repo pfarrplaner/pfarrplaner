@@ -30,7 +30,7 @@
 <template>
     <div class="form-file-uploader">
         <div v-if="uploading">Datei wird hochgeladen... <span class="mdi mdi-spin mdi-loading"></span></div>
-        <form-file-upload @input="upload" multiple="1" />
+        <form-file-upload @input="upload" @upload-url="uploadUrl" multiple="1" />
     </div>
 </template>
 
@@ -72,6 +72,14 @@ export default {
                 this.uploading = false;
             });
 
+        },
+        uploadUrl(data) {
+            this.uploading = true;
+            axios.post(this.uploadRoute, { uploadFromUrl: data.url, attachment_text: data.description })
+                .then(response => {
+                this.$emit('input', response.data);
+                this.uploading = false;
+            });
         }
 
     }

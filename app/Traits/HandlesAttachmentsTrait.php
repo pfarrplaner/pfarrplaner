@@ -34,6 +34,7 @@ namespace App\Traits;
 use App\Attachment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /**
  * Trait HandlesAttachmentsTrait
@@ -58,6 +59,11 @@ trait HandlesAttachmentsTrait
                 ));
                 $object->attachments()->create(['title' => $description, 'file' => $path]);
             }
+        } elseif ($request->has('uploadFromUrl')) {
+            $path = 'attachments/'.Str::random(32).'.'.pathinfo($request->get('uploadFromUrl'), PATHINFO_EXTENSION);
+            Storage::put($path, file_get_contents($request->get('uploadFromUrl')));
+            $description = $request->get('attachment_text') ?: 'ohne Beschreibung';
+            $object->attachments()->create(['title' => $description, 'file' => $path]);
         }
 
         $this->removeAttachments($request, $object);
