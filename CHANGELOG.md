@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.121.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.120.0...v2022.121.0) (2022-03-04)
+
+
+### Features
+
+* Allow image upload via URL or camera ([cfac44e](https://github.com/pfarrplaner/pfarrplaner/commits/cfac44ec644ff2c6580e30e2c4e98f50a20c1037)), closes [#224](https://github.com/pfarrplaner/pfarrplaner/issues/224) [#225](https://github.com/pfarrplaner/pfarrplaner/issues/225)
+
+
+### Bug Fixes
+
+* city permission not saved on update ([8cc0ec1](https://github.com/pfarrplaner/pfarrplaner/commits/8cc0ec1247239b5407eb126c4f5a8640f97bce0c))
+* CityEventsCalendarLink includes old events and funerals ([b3a0777](https://github.com/pfarrplaner/pfarrplaner/commits/b3a077742cabf36ca4c46750072cf3b2edb253f7))
+* using trueDate() throws errors when time is not set ([8ae5ffb](https://github.com/pfarrplaner/pfarrplaner/commits/8ae5ffb48e7a9c6adb5db6246c773fc5c9091a31))
+
 ## [2022.120.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.119.5...v2022.120.0) (2022-03-03)
 
 
