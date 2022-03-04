@@ -96,12 +96,14 @@ class CityEventsCalendarLink extends AbstractCalendarLink
         $events = [];
 
         $servicesQuery = Service::with(['day', 'location'])
+            ->startingFrom(Carbon::now()->subMonth(1))
+            ->whereDoesntHave('funerals')
             ->where('city_id', $city->id);
 
         if (!$request->get('includeHidden', 0)) $servicesQuery->notHidden();
         $services = $servicesQuery->get();
 
-        $start = Carbon::createFromDate(1970, 1, 1);
+        $start = Carbon::now()->subMonth(1);
         $end = Carbon::createFromDate(2070, 1, 1);
 
         if (isset($city->public_events_calendar_url)) {
