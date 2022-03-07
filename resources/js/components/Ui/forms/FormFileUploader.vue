@@ -52,7 +52,7 @@ import 'vue-advanced-cropper/dist/style.css';
 export default {
     name: "FormFileUploader",
     components: {Modal, FormFileUpload, Cropper},
-    props: ['parent', 'uploadRoute', 'title', 'cropperCanvas', 'cropperStencil', 'width', 'height'],
+    props: ['parent', 'uploadRoute', 'title', 'cropperCanvas', 'cropperStencil', 'width', 'height', 'noSource'],
     data() {
         let canvasSettings = this.cropperCanvas || {};
         let stencilSettings = this.cropperStencil || {};
@@ -72,6 +72,7 @@ export default {
             cropableAttachment: null,
             canvasSettings,
             stencilSettings,
+            info: null,
         }
     },
     methods: {
@@ -106,6 +107,7 @@ export default {
         },
         uploadUrl(data) {
             this.uploading = true;
+            this.info = data.info;
             axios.post(this.uploadRoute, {uploadFromUrl: data.url, attachment_text: data.description})
                 .then(response => {
                     let attachments = response.data;
@@ -127,17 +129,30 @@ export default {
         cropImage() {
             const {coordinates, canvas,} = this.$refs.cropper.getResult();
             if (canvas) {
+                if ((!this.noSource) && (this.info) && (this.info.user)) {
+                    let context = canvas.getContext('2d');
+                    context.save();
+                    context.translate( 10, canvas.height-10 );
+                    context.rotate( 3 * Math.PI / 2 );
+                    context.font = "10px sans-serif";
+                    context.fillStyle = "#ffffff";
+                    context.textAlign = "left";
+                    context.fillText( "Bild: pixabay / "+this.info.user, 0, 0 );
+                    context.restore();
+                }
                 this.modalCropperOpen = false;
                 const form = new FormData();
                 canvas.toBlob(blob => {
                     form.append('attachments[0]', blob);
                     form.append('attachment_text[0]', this.cropableAttachment.title);
+                    form.append('legalInfo', JSON.stringify(this.info));
                     this.uploading = true;
                     axios.post(route('attachment.update', this.cropableAttachment.id), form)
                         .then(response => {
                             let attachments = response.data;
                             this.$emit('input', attachments);
                             this.uploading = false;
+                            this.info = null;
                         });
                 }, 'image/jpeg');
             }

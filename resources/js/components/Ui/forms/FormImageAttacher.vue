@@ -71,7 +71,7 @@ import 'vue-advanced-cropper/dist/style.css';
 export default {
     name: "FormImageAttacher",
     components: {FormGroup, Modal, FormFileUpload, Cropper},
-    props: ['attachRoute', 'detachRoute', 'value', 'label', 'help', 'isCheckedItem', 'handlePaste', 'cropperCanvas', 'cropperStencil', 'width', 'height'],
+    props: ['attachRoute', 'detachRoute', 'value', 'label', 'help', 'isCheckedItem', 'handlePaste', 'cropperCanvas', 'cropperStencil', 'width', 'height', 'noSource'],
     created() {
         if (this.handlePaste) window.addEventListener('paste', this.attachFromClipboard);
     },
@@ -98,6 +98,7 @@ export default {
             cropableAttachment: null,
             canvasSettings,
             stencilSettings,
+            info: {},
         }
     },
     methods: {
@@ -120,6 +121,7 @@ export default {
         },
         uploadUrl(data) {
             this.uploading = true;
+            this.info = data.info;
             axios.post(this.attachRoute, {uploadFromUrl: data.url, attachment_text: data.description})
                 .then(response => {
                     this.myValue = response.data.image;
@@ -161,16 +163,29 @@ export default {
         cropImage() {
             const {coordinates, canvas,} = this.$refs.cropper.getResult();
             if (canvas) {
+                if ((!this.noSource) && (this.info) && (this.info.user)) {
+                    let context = canvas.getContext('2d');
+                    context.save();
+                    context.translate( 10, canvas.height-10 );
+                    context.rotate( 3 * Math.PI / 2 );
+                    context.font = "10px sans-serif";
+                    context.fillStyle = "#ffffff";
+                    context.textAlign = "left";
+                    context.fillText( "Bild: pixabay / "+this.info.user, 0, 0 );
+                    context.restore();
+                }
                 this.modalCropperOpen = false;
                 this.detachImage();
                 const form = new FormData();
                 canvas.toBlob(blob => {
                     form.append('attachments[0]', blob);
+                    form.append('legalInfo', JSON.stringify(this.info));
                     axios.post(this.attachRoute, form)
                         .then(response => {
                             this.myValue = response.data.image;
                             this.$emit('input', response.data.image.toString());
                             this.uploading = false;
+                            this.info = null;
                         });
                 }, 'image/jpeg');
             }

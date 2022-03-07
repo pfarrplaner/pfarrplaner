@@ -89,6 +89,7 @@ export default {
             showTab: 0,
             uploadUrl: '',
             description: '',
+            info: null,
         }
     },
     methods: {
@@ -112,11 +113,12 @@ export default {
             console.log('drop', e);
         },
         uploadFromUrl() {
-            this.$emit('upload-url', {url: this.uploadUrl, description: this.description});
+            this.$emit('upload-url', {url: this.uploadUrl, description: this.description, info: this.info});
         },
         uploadFromPixabay(e) {
             if (!this.noDescription) this.description = window.prompt('Bitte gib eine Beschreibung für die Bilddatei an.');
-            this.uploadUrl = e;
+            this.uploadUrl = e.fullHDURL;
+            this.info = e;
             this.uploadFromUrl();
         }
     }

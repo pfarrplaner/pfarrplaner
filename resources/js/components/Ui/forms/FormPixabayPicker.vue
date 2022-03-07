@@ -43,7 +43,7 @@
             <div :key="search+page">
                 <img class="pixabay-preview img-thumbnail" v-for="(result,resultKey) in results"
                      :src="result.previewURL" title="Klicken, um dieses Bild auszuwählen"
-                     @click="$emit('input', result.fullHDURL)"
+                     @click="$emit('input', result)"
                 />
             </div>
         </div>
