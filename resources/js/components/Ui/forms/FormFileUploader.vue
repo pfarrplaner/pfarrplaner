@@ -34,7 +34,10 @@
         <modal title="Bild zuschneiden" v-if="modalCropperOpen" min-height="50vh"
                @close="cropImage" @cancel="modalCropperOpen = false;"
                close-button-label="Zuschneiden" cancel-button-label="Original verwenden" max-width="800">
-            <cropper class="cropper" ref="cropper" :src="cropableImage" :canvas="canvasSettings" />
+            <div style="height: 40vh; !important">
+                <cropper class="cropper" ref="cropper" :src="cropableImage" :canvas="canvasSettings"
+                         :stencil-props="stencilSettings"/>
+            </div>
         </modal>
     </div>
 </template>
@@ -49,14 +52,26 @@ import 'vue-advanced-cropper/dist/style.css';
 export default {
     name: "FormFileUploader",
     components: {Modal, FormFileUpload, Cropper},
-    props: ['parent', 'uploadRoute', 'title', 'cropperCanvas'],
+    props: ['parent', 'uploadRoute', 'title', 'cropperCanvas', 'cropperStencil', 'width', 'height'],
     data() {
+        let canvasSettings = this.cropperCanvas || {};
+        let stencilSettings = this.cropperStencil || {};
+        if (this.width) {
+            canvasSettings['width'] = this.width;
+        }
+        if (this.height) {
+            canvasSettings['height'] = this.height;
+        }
+        if (this.width && this.height) {
+            stencilSettings['aspectRatio'] = this.width / this.height;
+        }
         return {
             uploading: false,
             modalCropperOpen: false,
             cropableImage: '',
             cropableAttachment: null,
-            canvasSettings: this.cropperCanvas || {},
+            canvasSettings,
+            stencilSettings,
         }
     },
     methods: {

@@ -166,7 +166,7 @@
                                 :attach-route="route('sermon.image.attach', {model: editedSermon.id})"
                                 :detach-route="route('sermon.image.detach', {model: editedSermon.id})"
                                 label="Bild zur Predigt" :handle-paste="true"
-                                v-model="editedSermon.image"
+                                v-model="editedSermon.image" width="1024" height="768"
                             />
                         </div>
                     </div>

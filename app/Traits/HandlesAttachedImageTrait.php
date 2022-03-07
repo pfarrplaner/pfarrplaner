@@ -33,6 +33,7 @@ namespace App\Traits;
 use App\Sermon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait HandlesAttachedImageTrait
 {
@@ -51,6 +52,13 @@ trait HandlesAttachedImageTrait
                 return response()->json(['url' => route('image', compact('path')), 'image' => $fullPath,
                                             'model' => $modelObject, 'id' => $model, 'field' => $imageField]);
             }
+        } elseif ($request->has('uploadFromUrl')) {
+            $fullPath = 'attachments/'.Str::random(32).'.'.pathinfo($request->get('uploadFromUrl'), PATHINFO_EXTENSION);
+            Storage::put($fullPath, file_get_contents($request->get('uploadFromUrl')));
+            $modelObject->update([$imageField => $fullPath]);
+            $path = basename($fullPath);
+            return response()->json(['url' => route('image', compact('path')), 'image' => $fullPath,
+                                        'model' => $modelObject, 'id' => $model, 'field' => $imageField]);
         }
 
     }

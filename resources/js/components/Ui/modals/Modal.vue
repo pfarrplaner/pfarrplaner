@@ -31,7 +31,7 @@
     <form @submit.prevent="closeModal">
         <div class="modal-mask">
             <div class="modal-wrapper">
-                <div class="modal-dialog" role="document" tabindex="-1" :style="{maxWidth: maxWidth, minHeight: minHeight || 'auto'}">
+                <div class="modal-dialog" role="document" tabindex="-1" :style="{maxWidth: maxWidth, minHeight: minHeight || 'auto', maxHeight: maxHeight || 'auto'}">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">{{ title }}</h5>
@@ -84,6 +84,7 @@ export default {
             default: '90vw',
         },
         minHeight: String,
+        maxHeight: String,
     },
     data() {
         return {

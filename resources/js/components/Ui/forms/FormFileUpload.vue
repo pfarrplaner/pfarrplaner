@@ -40,6 +40,9 @@
             <li class="nav-item" v-if="!noCamera">
                 <a class="nav-link" :class="{active: showTab == 2}" @click="showTab = 2">Von der Kamera</a>
             </li>
+            <li class="nav-item" v-if="!noPixabay">
+                <a class="nav-link" :class="{active: showTab == 3}" @click="showTab = 3">Von Pixabay</a>
+            </li>
         </ul>
         <div class="upload-container" v-if="showTab == 0">
             <div class="drop-target" :key="dragging" :class="{dragging: dragging}">
@@ -51,8 +54,8 @@
         </div>
         <div v-if="showTab == 1">
             <form-input label="Url der Datei" v-model="uploadUrl" />
-            <form-input label="Beschreibung" v-model="description" />
-            <nav-button icon="mdi-upload" @click="uploadFromUrl" :disabled="(!uploadUrl) && (!description)">Von URL laden</nav-button>
+            <form-input v-if="!noDescription" label="Beschreibung" v-model="description" />
+            <nav-button icon="mdi-upload" @click="uploadFromUrl" :disabled="(!uploadUrl)">Von URL laden</nav-button>
         </div>
         <div class="upload-container" v-if="showTab == 2">
             <div class="drop-target" :key="dragging" :class="{dragging: dragging}">
@@ -60,6 +63,9 @@
                        type="file" @change="handleInput" />
                 Hier klicken, um ein Bild mit der Kamera aufzunehmen
             </div>
+        </div>
+        <div  v-if="showTab == 3">
+            <form-pixabay-picker @input="uploadFromPixabay" />
         </div>
     </form-group>
     </div>
@@ -69,11 +75,13 @@
 import FormGroup from "./FormGroup";
 import NavButton from "../buttons/NavButton";
 import FormInput from "./FormInput";
+import FormPixabayPicker from "./FormPixabayPicker";
+import __ from 'lodash';
 
 export default {
     name: "FormFileUpload",
-    props: ['name', 'label', 'help', 'multiple', 'helpText', 'noCamera', 'noUrl'],
-    components: {FormInput, NavButton, FormGroup},
+    props: ['name', 'label', 'help', 'multiple', 'helpText', 'noCamera', 'noUrl', 'noPixabay', 'noDescription'],
+    components: {FormPixabayPicker, FormInput, NavButton, FormGroup},
     data() {
         return {
             dragging: false,
@@ -105,8 +113,11 @@ export default {
         },
         uploadFromUrl() {
             this.$emit('upload-url', {url: this.uploadUrl, description: this.description});
-            this.uploadUrl = '';
-            this.description = '';
+        },
+        uploadFromPixabay(e) {
+            if (!this.noDescription) this.description = window.prompt('Bitte gib eine Beschreibung für die Bilddatei an.');
+            this.uploadUrl = e;
+            this.uploadFromUrl();
         }
     }
 }

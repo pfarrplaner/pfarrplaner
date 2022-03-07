@@ -30,30 +30,48 @@
 <template>
     <div class="form-image-attacher">
         <form-group :label="label" :help="help" :is-checked-item="isCheckedItem">
-        <div v-if="uploading">Datei wird hochgeladen... <span class="mdi mdi-spin mdi-loading"></span></div>
-        <div v-if="myValue">
-            <img class="img-fluid" :src="route('image', myValue.replace('attachments/', ''))" />
-            <div>
-                <a class="btn btn-light btn-sm" title="Bild herunterladen" :href="route('image', {path: myValue.replace('attachments/', ''), download: 1})">
-                    <span class="mdi mdi-download"></span> Herunterladen
-                </a>
-                <button class="btn btn-danger btn-sm" title="Bild entfernen" @click="detachImage"><span class="mdi mdi-delete"></span> Bild entfernen</button>
+            <div v-if="uploading">Datei wird hochgeladen... <span class="mdi mdi-spin mdi-loading"></span></div>
+            <div v-else>
+                <div v-if="myValue">
+                    <img class="img-fluid" :src="route('image', myValue.replace('attachments/', ''))"/>
+                    <div>
+                        <a class="btn btn-light btn-sm" title="Bild herunterladen"
+                           :href="route('image', {path: myValue.replace('attachments/', ''), download: 1})">
+                            <span class="mdi mdi-download"></span> Herunterladen
+                        </a>
+                        <button class="btn btn-danger btn-sm" title="Bild entfernen" @click="detachImage"><span
+                            class="mdi mdi-delete"></span> Bild entfernen
+                        </button>
+                    </div>
+                </div>
+                <div v-else>
+                    <form-file-upload @input="upload" @upload-url="uploadUrl" :no-description="true"
+                                      :helpText="handlePaste ? 'Du kannst das Bild auch einfach mit Strg+V aus der Zwischenablage einfügen.' : ''"/>
+                </div>
             </div>
-        </div>
-        <div v-else>
-            <form-file-upload @input="upload" :helpText="handlePaste ? 'Du kannst das Bild auch einfach mit Strg+V aus der Zwischenablage einfügen.' : ''" />
-        </div>
         </form-group>
+        <modal title="Bild zuschneiden" v-if="modalCropperOpen" min-height="50vh" max-height="80vh"
+               @close="cropImage" @cancel="modalCropperOpen = false;"
+               close-button-label="Zuschneiden" cancel-button-label="Original verwenden" max-width="800">
+            <div style="height: 40vh; !important">
+                <cropper class="cropper" ref="cropper" :src="cropableImage" :canvas="canvasSettings"
+                         :stencil-props="stencilSettings"/>
+            </div>
+        </modal>
     </div>
 </template>
 
 <script>
 import FormFileUpload from "./FormFileUpload";
 import FormGroup from "./FormGroup";
+import Modal from "../modals/Modal";
+import {Cropper} from 'vue-advanced-cropper';
+import 'vue-advanced-cropper/dist/style.css';
+
 export default {
     name: "FormImageAttacher",
-    components: {FormGroup, FormFileUpload},
-    props: ['attachRoute', 'detachRoute', 'value', 'label', 'help', 'isCheckedItem', 'handlePaste'],
+    components: {FormGroup, Modal, FormFileUpload, Cropper},
+    props: ['attachRoute', 'detachRoute', 'value', 'label', 'help', 'isCheckedItem', 'handlePaste', 'cropperCanvas', 'cropperStencil', 'width', 'height'],
     created() {
         if (this.handlePaste) window.addEventListener('paste', this.attachFromClipboard);
     },
@@ -61,9 +79,25 @@ export default {
         if (this.handlePaste) window.removeEventListener('paste', this.attachFromClipboard);
     },
     data() {
+        let canvasSettings = this.cropperCanvas || {};
+        let stencilSettings = this.cropperStencil || {};
+        if (this.width) {
+            canvasSettings['width'] = this.width;
+        }
+        if (this.height) {
+            canvasSettings['height'] = this.height;
+        }
+        if (this.width && this.height) {
+            stencilSettings['aspectRatio'] = this.width / this.height;
+        }
         return {
             uploading: false,
             myValue: this.value,
+            modalCropperOpen: false,
+            cropableImage: '',
+            cropableAttachment: null,
+            canvasSettings,
+            stencilSettings,
         }
     },
     methods: {
@@ -80,8 +114,27 @@ export default {
                 this.myValue = response.data.image;
                 this.$emit('input', response.data.image.toString());
                 this.uploading = false;
+                this.allowCropping(response.data);
             });
 
+        },
+        uploadUrl(data) {
+            this.uploading = true;
+            axios.post(this.attachRoute, {uploadFromUrl: data.url, attachment_text: data.description})
+                .then(response => {
+                    this.myValue = response.data.image;
+                    this.$emit('input', response.data.image.toString());
+                    this.uploading = false;
+                    this.allowCropping(response.data);
+                });
+        },
+        imageRoute(image) {
+            return route('image', {path: image.replace('attachments/', '')});
+        },
+        allowCropping(data) {
+            this.modalCropperOpen = true;
+            this.cropableImage = this.imageRoute(data.image);
+            this.cropableAttachment = data;
         },
         detachImage() {
             axios.delete(this.detachRoute).then(response => {
@@ -105,6 +158,23 @@ export default {
                 event.preventDefault();
             }
         },
+        cropImage() {
+            const {coordinates, canvas,} = this.$refs.cropper.getResult();
+            if (canvas) {
+                this.modalCropperOpen = false;
+                this.detachImage();
+                const form = new FormData();
+                canvas.toBlob(blob => {
+                    form.append('attachments[0]', blob);
+                    axios.post(this.attachRoute, form)
+                        .then(response => {
+                            this.myValue = response.data.image;
+                            this.$emit('input', response.data.image.toString());
+                            this.uploading = false;
+                        });
+                }, 'image/jpeg');
+            }
+        }
     }
 
 }
