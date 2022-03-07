@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.122.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.121.0...v2022.122.0) (2022-03-07)
+
+
+### Features
+
+* Insert source text into Pixabay images ([26a8b68](https://github.com/pfarrplaner/pfarrplaner/commits/26a8b68fc302bf6cbfd48bbf3badc8a633a101bc))
+* Let the user crop uploaded images ([862fff1](https://github.com/pfarrplaner/pfarrplaner/commits/862fff116c13904d6b179be7d1d4e008a56f8d8f))
+* Pixabay import and cropping for image attachers ([f423af6](https://github.com/pfarrplaner/pfarrplaner/commits/f423af631adc34d33e6a9f03337d179f96c93b1f))
+
+
+### Bug Fixes
+
+* Line breaks cause invalid .ics file ([6b33d96](https://github.com/pfarrplaner/pfarrplaner/commits/6b33d966c24e17f1e5ec3b4a87adf4ef130472d4))
+* Pass api_token to vue ([065eb6f](https://github.com/pfarrplaner/pfarrplaner/commits/065eb6fcf6f5d2e206e53c56f4770b67bc022403))
+
 ## [2022.121.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.120.0...v2022.121.0) (2022-03-04)
 
 
