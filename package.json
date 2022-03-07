@@ -54,6 +54,7 @@
         "moment-timezone": "^0.5.33",
         "selectize": "^0.12.6",
         "tempusdominus-bootstrap-4": "^5.1.2",
+        "vue-advanced-cropper": "^1.10.1",
         "vue-bootstrap-datetimepicker": "^5.0.1",
         "vue-dataset": "^1.1.12",
         "vue-json-pretty": "^1.8.2",
