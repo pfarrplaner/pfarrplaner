@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.124.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.123.0...v2022.124.0) (2022-03-10)
+
+
+### Features
+
+* Rewritten parish admin ([94affdb](https://github.com/pfarrplaner/pfarrplaner/commits/94affdb905c7cdd3d64262ce130b08bccc30e9b5))
+
 ## [2022.123.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.122.0...v2022.123.0) (2022-03-10)
 
 
