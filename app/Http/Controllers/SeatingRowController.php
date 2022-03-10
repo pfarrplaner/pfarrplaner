@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Location;
 use App\SeatingRow;
 use App\SeatingSection;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SeatingRowController extends Controller
 {
@@ -23,10 +25,15 @@ class SeatingRowController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, Location $location)
     {
-        $seatingSection = SeatingSection::findOrFail($request->get('seatingSection', 0));
-        return view('seatingrows.create', compact('seatingSection'));
+        $seatingRow = (new SeatingRow([
+                                          'title' => '',
+                                          'seats' => '',
+                                          'split' => '',
+                                          'seating_section_id' => $location->seatingSections->first()->id
+                                      ]))->load('seatingSection');
+        return Inertia::render('Admin/Location/SeatingRowEditor', compact('seatingRow', 'location'));
     }
 
     /**
@@ -39,7 +46,7 @@ class SeatingRowController extends Controller
     {
         $seatingRow = SeatingRow::create($this->validateRequest($request));
         return redirect()->route(
-            'locations.edit',
+            'location.edit',
             ['location' => $seatingRow->seatingSection->location, 'tab' => 'seating']
         );
     }
@@ -59,11 +66,13 @@ class SeatingRowController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param \App\SeatingRow $seatingRow
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function edit(SeatingRow $seatingRow)
     {
-        return view('seatingrows.edit', compact('seatingRow'));
+        $seatingRow->load('seatingSection');
+        $location = $seatingRow->seatingSection->location;
+        return Inertia::render('Admin/Location/SeatingRowEditor', compact('seatingRow', 'location'));
     }
 
     /**
@@ -77,7 +86,7 @@ class SeatingRowController extends Controller
     {
         $seatingRow->update($this->validateRequest($request));
         return redirect()->route(
-            'locations.edit',
+            'location.edit',
             ['location' => $seatingRow->seatingSection->location, 'tab' => 'seating']
         );
     }
@@ -92,7 +101,7 @@ class SeatingRowController extends Controller
     {
         $seatingSection = $seatingRow->seatingSection;
         $seatingRow->delete();
-        return redirect()->route('locations.edit', ['location' => $seatingSection->location, 'tab' => 'seating']);
+        return redirect()->route('location.edit', ['location' => $seatingSection->location, 'tab' => 'seating']);
     }
 
     /**

@@ -3,7 +3,7 @@
   -
   - @package Pfarrplaner
   - @author Christoph Fischer <chris@toph.de>
-  - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+  - @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
   - @version git: $Id$
@@ -28,46 +28,26 @@
   -->
 
 <template>
-    <div class="section-select">
-        <form-selectize :value="myValue" :label="label" :help="help" :name="name" @input="handleInput"
-                        :options="myItems" :settings="mySelectizeSettings" title-key="title" :id-key="myValueKey"
-                        :multiple="multiple"
-        />
-    </div>
+    <span class="badge badge-light" :style="{backgroundColor: color}">{{ value.title }}</span>
 </template>
 
 <script>
-import FormSelectize from "../forms/FormSelectize";
 export default {
-    name: "SectionSelect",
-    props: ['location', 'value', 'label', 'help', 'name', 'multiple', 'valueKey'],
-    components: {FormSelectize},
+    name: "SeatingLabel",
+    props: ['value'],
     computed: {
-        myItems() {
-            if (!this.myLocation.seating_sections) this.myLocation.seating_sections = [];
-            return this.myLocation.seating_sections;
-        }
-    },
-    data() {
-        return {
-            myLocation: this.location,
-            mySelectizeSettings: {
-                labelField: 'title',
-                valueField: 'title',
-                searchField: ['title'],
-            },
-            myValue: this.multiple ? (this.value ? this.value.split(',') : []) : this.value,
-            myValueKey: this.valueKey || 'title',
-        }
-    },
-    methods: {
-        handleInput(e) {
-            this.$emit('input', this.multiple ? e.join(',') : e);
+        color() {
+            let color = this.value.color || null;
+            if ((null === color) && (undefined !== this.value.seating_section)) return this.value.seating_section.color;
+            return color;
         }
     }
 }
 </script>
 
 <style scoped>
-
+    .badge {
+        font-size: 1em;
+        font-weight: normal;
+    }
 </style>

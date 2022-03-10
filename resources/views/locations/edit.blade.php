@@ -14,7 +14,7 @@
             @endtabheaders
             @tabs
             @tab(['id' => 'home', 'active' => request()->get('tab', 'home') == 'home'])
-            <form id="form-location-edit" method="post" action="{{ route('locations.update', $location->id) }}">
+            <form id="form-location-edit" method="post" action="{{ route('location.update', $location->id) }}">
                 @method('PATCH')
                 @csrf
                 @input(['name' => 'name', 'label' => 'Name', 'value' => $location->name])

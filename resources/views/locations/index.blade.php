@@ -5,7 +5,7 @@
 @section('navbar-left')
     @can('kirche-bearbeiten')
         <li class="nav-item">
-            <a class="btn btn-success" href="{{ route('locations.create') }}">Neuen Ort hinzufügen</a>
+            <a class="btn btn-success" href="{{ route('location.create') }}">Neuen Ort hinzufügen</a>
         </li>
     @endcan
 @endsection
@@ -29,10 +29,10 @@
                     <td>@if($location->default_time){{\Carbon\Carbon::createFromTimeString($location->default_time)->format('H:i') }} Uhr @else -- @endif</td>
                     <td class="text-right" style="min-width: 100px;">
                         @if(Auth::user()->can('update', $location))
-                            <a href="{{ route('locations.edit',$location->id)}}" class="btn btn-primary  btn-sm" title="Bearbeiten"><span class="fa fa-edit"></span></a>
+                            <a href="{{ route('location.edit',$location->id)}}" class="btn btn-primary  btn-sm" title="Bearbeiten"><span class="fa fa-edit"></span></a>
                         @endif
                         @if(Auth::user()->can('delete', $location))
-                            <form action="{{ route('locations.destroy', $location->id)}}" method="post" style="display: inline-block;">
+                            <form action="{{ route('location.destroy', $location->id)}}" method="post" style="display: inline-block;">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm" type="submit" title="Löschen"><span class="fa fa-trash"></span></button>

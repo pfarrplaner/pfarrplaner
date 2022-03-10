@@ -3,7 +3,7 @@
   -
   - @package Pfarrplaner
   - @author Christoph Fischer <chris@toph.de>
-  - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+  - @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
   - @version git: $Id$
@@ -28,46 +28,42 @@
   -->
 
 <template>
-    <div class="section-select">
-        <form-selectize :value="myValue" :label="label" :help="help" :name="name" @input="handleInput"
-                        :options="myItems" :settings="mySelectizeSettings" title-key="title" :id-key="myValueKey"
-                        :multiple="multiple"
-        />
+    <div class="seating-split">
+        <table v-if="value" class="table table-bordered">
+            <tr>
+                <td :colspan="divisions.length">
+                    <span v-for="index in parseInt(value.seats)" class="mdi mdi-sofa-single"/> ({{ value.seats }})
+                </td>
+            </tr>
+            <tr class="split">
+                <td v-for="division in divisions">
+                    <span v-for="index in parseInt(division)" class="mdi mdi-sofa-single"/> ({{ division }})
+                </td>
+            </tr>
+        </table>
     </div>
 </template>
 
 <script>
-import FormSelectize from "../forms/FormSelectize";
 export default {
-    name: "SectionSelect",
-    props: ['location', 'value', 'label', 'help', 'name', 'multiple', 'valueKey'],
-    components: {FormSelectize},
+    name: "SeatingSplit",
+    props: ['value'],
     computed: {
-        myItems() {
-            if (!this.myLocation.seating_sections) this.myLocation.seating_sections = [];
-            return this.myLocation.seating_sections;
-        }
-    },
-    data() {
-        return {
-            myLocation: this.location,
-            mySelectizeSettings: {
-                labelField: 'title',
-                valueField: 'title',
-                searchField: ['title'],
-            },
-            myValue: this.multiple ? (this.value ? this.value.split(',') : []) : this.value,
-            myValueKey: this.valueKey || 'title',
-        }
-    },
-    methods: {
-        handleInput(e) {
-            this.$emit('input', this.multiple ? e.join(',') : e);
+        divisions() {
+            return String(this.value.split).split(',');
         }
     }
 }
 </script>
 
 <style scoped>
-
+    .table-bordered tr td {
+        text-align: center;
+    }
+    .table-bordered tr.split td:last-child {
+        text-align: right;
+    }
+    .table-bordered tr.split td:first-child {
+        text-align: left;
+    }
 </style>

@@ -106,7 +106,7 @@ class LocationTest extends TestCase
     {
         $location = factory(Location::class)->create(['name' => 'Pauluskirche']);
         $response = $this->patch(
-            route('locations.update', $location->id),
+            route('location.update', $location->id),
             factory(Location::class)->raw(['name' => 'Peterskirche'])
         );
         $response->assertStatus(302);
@@ -122,7 +122,7 @@ class LocationTest extends TestCase
     {
         $location = factory(Location::class)->create();
         $this->assertTrue($location->exists);
-        $response = $this->delete(route('locations.destroy', $location->id));
+        $response = $this->delete(route('location.destroy', $location->id));
         $response->assertStatus(302);
         $this->assertCount(0, Location::all());
     }

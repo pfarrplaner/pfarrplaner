@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Location;
+use App\Seating\RowBasedSeatingModel;
 use App\Seating\SeatingModels;
 use App\SeatingSection;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SeatingSectionController extends Controller
 {
@@ -24,10 +26,16 @@ class SeatingSectionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create(Request $request, Location $location)
     {
-        $location = Location::findOrFail($request->get('location', null));
-        return view('seatingsections.create', compact('location'));
+        $seatingSection = (new SeatingSection([
+                                                  'title' => '',
+                                                  'location' => $location->id,
+                                                  'seatingModel' => RowBasedSeatingModel::class,
+                                                  'priorität' => 1,
+                                                  'color' => '',
+                                              ]))->load('location');
+        return Inertia::render('Admin/Location/SeatingSectionEditor', compact('seatingSection'));
     }
 
     /**
@@ -40,29 +48,18 @@ class SeatingSectionController extends Controller
     {
         $data = $this->validateRequest($request);
         $seatingSection = SeatingSection::create($data);
-        return redirect()->route('locations.edit', ['location' => $seatingSection->location, 'tab' => 'seating']);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\SeatingSection $seatingSection
-     * @return \Illuminate\Http\Response
-     */
-    public function show(SeatingSection $seatingSection)
-    {
-        //
+        return redirect()->route('location.edit', ['location' => $seatingSection->location, 'tab' => 'seating']);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param \App\SeatingSection $seatingSection
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function edit(SeatingSection $seatingSection)
     {
-        return view('seatingsections.edit', compact('seatingSection'));
+        return Inertia::render('Admin/Location/SeatingSectionEditor', compact('seatingSection'));
     }
 
     /**
@@ -75,7 +72,7 @@ class SeatingSectionController extends Controller
     public function update(Request $request, SeatingSection $seatingSection)
     {
         $seatingSection->update($this->validateRequest($request));
-        return redirect()->route('locations.edit', ['location' => $seatingSection->location, 'tab' => 'seating']);
+        return redirect()->route('location.edit', ['location' => $seatingSection->location, 'tab' => 'seating']);
     }
 
     /**
@@ -88,7 +85,7 @@ class SeatingSectionController extends Controller
     {
         $location = $seatingSection->location;
         $seatingSection->delete();
-        return redirect()->route('locations.edit', ['location' => $location, 'tab' => 'seating']);
+        return redirect()->route('location.edit', ['location' => $location, 'tab' => 'seating']);
     }
 
     protected function validateRequest(Request $request)
@@ -97,12 +94,12 @@ class SeatingSectionController extends Controller
             [
                 'location_id' => 'required|int|exists:locations,id',
                 'title' => 'required',
-                'seating_model' => 'required',
                 'priority' => 'nullable|int',
                 'color' => 'nullable|string',
             ]
         );
-        $data['seating_model'] = get_class(SeatingModels::byTitle($data['seating_model']));
+        if (isset($data['seating_model'])) $data['seating_model'] = get_class(SeatingModels::byTitle($data['seating_model']));
+        if ($data['color'] == 'rgb(0,0,0)') $data['color'] = '';
         return $data;
     }
 }

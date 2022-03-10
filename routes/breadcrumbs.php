@@ -256,19 +256,19 @@ Breadcrumbs::for(
 );
 
 Breadcrumbs::for(
-    'locations.create',
+    'location.create',
     function (BreadcrumbsGenerator $trail) {
         $trail->parent('locations.index');
-        $trail->push('Neuer Ort', route('locations.create'));
+        $trail->push('Neuer Ort', route('location.create'));
     }
 );
 
 Breadcrumbs::for(
-    'locations.edit',
+    'location.edit',
     function (BreadcrumbsGenerator $trail, $location) {
         $location = \App\Location::find($location);
         $trail->parent('locations.index');
-        $trail->push($location->name, route('locations.edit', $location));
+        $trail->push($location->name, route('location.edit', $location));
     }
 );
 
@@ -485,7 +485,7 @@ Breadcrumbs::for(
     'seatingSection.create',
     function (BreadcrumbsGenerator $trail) {
         $location = request()->get('location');
-        $trail->parent('locations.edit', $location);
+        $trail->parent('location.edit', $location);
         $trail->push('Neue Zone', route('seatingSection.create'));
     }
 );
@@ -495,7 +495,7 @@ Breadcrumbs::for(
     function (BreadcrumbsGenerator $trail, $seatingSection) {
         if (!is_object($seatingSection)) $seatingSection = \App\SeatingSection::find($seatingSection);
         $location = request()->get('location');
-        $trail->parent('locations.edit', $seatingSection->location_id);
+        $trail->parent('location.edit', $seatingSection->location_id);
         $trail->push($seatingSection->title, route('seatingSection.edit', $seatingSection));
     }
 );

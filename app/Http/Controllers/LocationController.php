@@ -31,10 +31,12 @@
 namespace App\Http\Controllers;
 
 use App\Location;
+use App\SeatingRow;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 
 /**
  * Class LocationController
@@ -50,12 +52,12 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function index()
     {
         $locations = Location::whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
-        return view('locations.index', compact('locations'));
+        return Inertia::render('Admin/Location/Index', compact('locations'));
     }
 
     /**
@@ -67,7 +69,7 @@ class LocationController extends Controller
     {
         $cities = Auth::user()->writableCities;
         $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->get();
-        return view('locations.create', compact('cities', 'alternateLocations'));
+        return view('location.create', compact('cities', 'alternateLocations'));
     }
 
     /**
@@ -115,16 +117,21 @@ class LocationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param int $id
-     * @return Response
+     * @param Location $location
+     * @return \Inertia\Response
      */
-    public function edit($id)
+    public function edit(Location $location)
     {
+        $location->load('seatingSections');
         $cities = Auth::user()->writableCities;
-        $location = Location::find($id);
-        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->where('id', '!=', $location->id)->get(
-        );
-        return view('locations.edit', compact('cities', 'location', 'alternateLocations'));
+
+        $seatingRows = SeatingRow::with('seatingSection')
+            ->whereHas('seatingSection', function ($q) use ($location) {
+                $q->where( 'location_id', $location->id);
+            })->get();
+
+        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->where('id', '!=', $location->id)->get();
+        return Inertia::render('Admin/Location/LocationEditor', compact('cities', 'location', 'alternateLocations', 'seatingRows'));
     }
 
     /**
