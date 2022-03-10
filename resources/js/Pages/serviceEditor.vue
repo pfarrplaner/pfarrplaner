@@ -30,7 +30,7 @@
 <template>
     <div class="service-editor">
         <admin-layout title="Gottesdienst bearbeiten">
-            <template slot="navbar-left">
+            <template v-slot:navbar-left>
                 <div class="btn-group mr-1">
                     <button type="button" class="btn btn-primary" @click.prevent="saveService(true)"
                             title="Speichern und schließen">
@@ -72,7 +72,7 @@
                    title="Predigt zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-microphone"></span><span
                     class="d-none d-md-inline"> Predigt</span></a>&nbsp;
             </template>
-            <template slot="tab-headers">
+            <template v-slot:tab-headers>
                 <tab-headers>
                     <tab-header id="home" title="Allgemeines" :active-tab="activeTab"/>
                     <tab-header id="people" title="Mitwirkende" :active-tab="activeTab" :count="peopleCount"/>
