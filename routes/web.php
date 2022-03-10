@@ -43,7 +43,6 @@ Route::resource('days', 'DayController')->middleware('auth');
 Route::resource('roles', 'RoleController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
 Route::resource('tags', 'TagController')->middleware('auth');
-Route::resource('parishes', 'ParishController')->middleware('auth');
 Route::resource('booking', 'BookingController');
 Route::resource('calendarConnection', 'CalendarConnectionController');
 Route::resource('baptisms', 'BaptismController')->middleware('auth');

@@ -100,7 +100,7 @@ class AdminModule extends AbstractModule
                 'icon' => 'mdi mdi-map-marker',
                 'url' => route('locations.index'),
                 'active' => $route == 'locations.index',
-                'inertia' => false,
+                'inertia' => true,
             ];
             $adminActive |= ($route == 'locations.index');
         }
@@ -120,7 +120,7 @@ class AdminModule extends AbstractModule
                 'icon' => 'mdi mdi-home-variant-outline',
                 'url' => route('parishes.index'),
                 'active' => $route == 'parishes.index',
-                'inertia' => false,
+                'inertia' => true,
             ];
             $adminActive |= ($route == 'parishes.index');
         }

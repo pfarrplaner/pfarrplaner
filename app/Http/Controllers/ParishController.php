@@ -36,6 +36,7 @@ use App\StreetRange;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 /**
  * Class ParishController
@@ -43,15 +44,21 @@ use Illuminate\Support\Facades\Auth;
  */
 class ParishController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function index()
     {
         $parishes = Parish::with('owningCity')->whereIn('city_id', Auth::user()->adminCities->pluck('id'))->get();
-        return view('parishes.index', compact('parishes'));
+        return Inertia::render('Admin/Parish/Index', compact('parishes'));
     }
 
     /**
@@ -78,26 +85,15 @@ class ParishController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param Parish $parish
-     * @return Response
-     */
-    public function show(Parish $parish)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param Parish $parish
-     * @return Response
+     * @return \Inertia\Response
      */
     public function edit(Parish $parish)
     {
-        $cities = Auth::user()->cities;
-        return view('parishes.edit', compact('parish', 'cities'));
+        $cities = Auth::user()->writableCities;
+        return Inertia::render('Admin/Parish/ParishEditor', compact('parish','cities'));
     }
 
     /**
