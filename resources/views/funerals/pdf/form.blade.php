@@ -90,7 +90,7 @@
         <div class="label">Bestattung</div>
         <div class="input-area">
             <div class="input">
-                {{ $funeral->service->day->date->format('d.m.Y') }}
+                {{ $funeral->service->date->format('d.m.Y') }}
             </div>
             <div class="input">
                 @if(is_object($funeral->service->location)) {{ $funeral->service->location->city->name }} @endif

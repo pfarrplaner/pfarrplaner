@@ -1,5 +1,5 @@
-@if (isset($serviceList[$location->id][$day->date->format('Y-m-d')]))
-    <?php $service = $serviceList[$location->id][$day->date->format('Y-m-d')]->first() ?>
+@if (isset($serviceList[$location->id][$day]))
+    <?php $service = $serviceList[$location->id][$day]->first() ?>
     @if(is_object($service))
         {{ $service->participantsText('P', false, false, '|') }}
         @if(is_object($service->location)) @if ($service->time != $service->location->default_time)

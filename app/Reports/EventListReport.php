@@ -212,7 +212,7 @@ class EventListReport extends AbstractWordDocumentReport
                     $run = $this->renderParagraph(
                         self::DEFAULT,
                         [
-                            [$event->day->date->format('d.m.Y') . "\t", []],
+                            [$event->date->format('d.m.Y') . "\t", []],
                             [$event->timeText(true) . "\t", []],
                         ],
                         0

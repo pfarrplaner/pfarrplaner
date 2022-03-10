@@ -32,18 +32,11 @@
         class="calendar-cell"
         v-bind:class="{
             now: false, // TODO: next day
-            limited: limited, // DAY_TYPE_LIMITED
-            collapsed: this.day.collapsed,
-            'for-city': isForCity,
         }"
-        @click="clickHandler()"
     >
         <div class="celldata">
+            <div v-if="city.loading"><span class="mdi mdi-spin mdi-loading"></span></div>
             <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"/>
-            <a v-if="canCreate && user.writableCities.includes(city.id)"
-               class="btn btn-light btn-sm btn-add-day m-1"
-               title="Neuen Gottesdienst hinzufügen"
-               :href="route('services.add', {date: day.id, city: city.id})"><span class="mdi mdi-plus"></span></a>
         </div>
     </td>
 </template>
@@ -52,31 +45,7 @@ import EventBus from "../../plugins/EventBus";
 import { CalendarToggleDayColumnEvent} from "../../events/CalendarToggleDayColumnEvent";
 
 export default {
-    props: ['city', 'day', 'services', 'canCreate', 'uncollapsed'],
-    data: function() {
-        return {
-            user: window.vm.$children[0].page.props.currentUser.data,
-            limited: this.day.day_type == 1,
-        }
-    },
-    computed: {
-        isForCity() {
-            var found = false;
-            var city = this.city;
-            this.day.cities.forEach(function(thisCity){
-                if (thisCity.id == city.id) found = true;
-            });
-            return found;
-        },
-    },
-    methods: {
-        clickHandler: function() {
-            if (this.limited) {
-                this.$emit('collapse', {day: this.day, state: !this.day.collapsed});
-                this.$forceUpdate();
-            }
-        },
-    }
+    props: ['city', 'day', 'services'],
 }
 </script>
 <style scoped>

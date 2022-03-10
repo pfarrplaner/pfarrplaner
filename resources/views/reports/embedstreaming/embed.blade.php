@@ -6,7 +6,7 @@
             <?php $liturgy = \App\Liturgy::getDayInfo($nextService->day) ?>
             <li class="active">
                 <div class="collapsible-header">
-                    <span>Gottesdienst am {{ $nextService->day->date->format('d.m.Y') }}</span></div>
+                    <span>Gottesdienst am {{ $nextService->date->format('d.m.Y') }}</span></div>
                 <div class="collapsible-body" style="">
                     <div class="row ctype-text listtype-none showmobdesk-0">
                         <div id="{{ uniqid() }}" class="col s12 default ">
@@ -38,7 +38,7 @@
                                         <td valign="top">
                                             Zu diesem Gottesdienst gibt es Texte und Lieder zum Herunterladen.<br/>
                                             <a class="btn btn-secondary"
-                                               href="{{ route('storage', ['path' => pathinfo($nextService->songsheet, PATHINFO_FILENAME), 'prettyName' => $nextService->day->date->format('Ymd').'-Liedblatt.'.pathinfo($nextService->songsheet, PATHINFO_EXTENSION)]) }}">Liedblatt
+                                               href="{{ route('storage', ['path' => pathinfo($nextService->songsheet, PATHINFO_FILENAME), 'prettyName' => $nextService->date->format('Ymd').'-Liedblatt.'.pathinfo($nextService->songsheet, PATHINFO_EXTENSION)]) }}">Liedblatt
                                                 herunterladen</a>
                                         </td>
                                     </tr>
@@ -62,7 +62,7 @@
                                                               style="margin-left: -4px;"/></td>
                                         <td valign="top">
                                             Auch ein Kindergottesdienst wird
-                                            am {{ $nextService->day->date->format('d.m.Y') }}
+                                            am {{ $nextService->date->format('d.m.Y') }}
                                             um @if($nextService->cc_alt_time != '') {{ substr($nextService->cc_alt_time,0,5) }} @else {{ $nextService->timeText(false) }} @endif
                                             Uhr live übertragen.<br/>
                                             <a class="btn btn-secondary" href="{{ $nextService->cc_streaming_url }}"
@@ -113,7 +113,7 @@
                     <?php $liturgy = \App\Liturgy::getDayInfo($lastService->day) ?>
                     <li @if(($loop->index == 1) && ($nextService === null))class="active" @endif>
                         <div class="collapsible-header">
-                            <span>Gottesdienst vom {{ $lastService->day->date->format('d.m.Y') }} (Aufzeichnung)</span>
+                            <span>Gottesdienst vom {{ $lastService->date->format('d.m.Y') }} (Aufzeichnung)</span>
                         </div>
                         <div class="collapsible-body" style="">
                             <div class="row ctype-text listtype-none showmobdesk-0">
@@ -157,7 +157,7 @@
                                                         </audio>
                                                         <figcaption class="fontcol">
                                                             <p class="description"><em>Predigt
-                                                                    vom {{ $lastService->day->date->format('d.m.Y') }}
+                                                                    vom {{ $lastService->date->format('d.m.Y') }}
                                                                     , {{ $lastService->participantsText('P') }}</em></p>
                                                         </figcaption>
                                                     </figure>

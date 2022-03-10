@@ -27,13 +27,13 @@
 </head>
 <body>
 <div style="padding-top: 17mm; padding-left: 12mm; width: 97mm; height: 57mm;">
-    <b>Besucherliste für den Gottesdienst<br/>{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}
+    <b>Besucherliste für den Gottesdienst<br/>{{ $service->date->format('d.m.Y') }} um {{ $service->timeText() }}
         <br/>{{ $service->locationText() }}</b><br/><br/>
     Nach §8 Abs. 1 CoronaVO<br/>
     verwahren bis einschl. <br/>
-    <span style="color: red; font-weight: bold;">{{ $service->day->date->clone()->addWeek(4)->format('d.m.Y') }}</span>
+    <span style="color: red; font-weight: bold;">{{ $service->date->clone()->addWeek(4)->format('d.m.Y') }}</span>
 </div>
-<h1>Besucherliste für den Gottesdienst<br/>{{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}
+<h1>Besucherliste für den Gottesdienst<br/>{{ $service->date->format('d.m.Y') }} um {{ $service->timeText() }}
     , {{ $service->locationText() }}</h1>
 @php $i = 1; @endphp
 @if (count($list))

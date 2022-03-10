@@ -45,6 +45,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
 use NumberFormatter;
 use PhpOffice\PhpWord\Element\Section;
@@ -128,16 +130,9 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         $city = City::findOrFail($request->session()->get('city'));
         $services = Service::with(['day', 'location'])
             ->regularForCity($city)
-            ->select('services.*')
-            ->join('days', 'services.day_id', 'days.id')
             ->notHidden()
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now()->subHours(8));
-                }
-            )->orderBy('days.date')
-            ->orderBy('time')
+            ->startingFrom(Carbon::now()->subHours(8))
+            ->ordered()
             ->get();
 
         return $this->renderView('configure', compact('city', 'services'));
@@ -163,22 +158,23 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     public function postInput(Request $request)
     {
         $service = Service::findOrFail($request->session()->get('service'));
+        $city = City::findOrFail(Session::get('city'));
 
-        $lastDaysWithServices = Day::whereHas(
-            'services',
-            function ($query) use ($service) {
-                $query->regularForCity($service->city);
-            }
-        )->where('date', '<', $service->day->date)
-            ->orderBy('date', 'DESC')->limit(10)->get();
+        $lastDaysWithServices = Service::select(DB::raw('DISTINCT DATE(date) AS day'))
+            ->endingAt($service->date)
+            ->regularForCity($city)
+            ->orderBy('day', 'DESC')
+            ->limit(10)
+            ->get()
+            ->pluck('day');
 
         $fmt = new NumberFormatter('de_DE', NumberFormatter::CURRENCY);
 
         // add up all offerings for the day
         $offerings = [];
         foreach ($lastDaysWithServices as $day) {
-            $dayServices = Service::where('day_id', $day->id)
-                ->where('city_id', $service->city->id)
+            $dayServices = Service::whereDate('date', $day)
+                ->inCity($service->city)
                 ->notHidden()
                 ->get();
             $amount = 0;
@@ -188,7 +184,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             }
 
             //$offerings[$day->id] = trim(money_format('%=*^#0.2n', $amount));
-            $offerings[$day->id] = trim($fmt->formatCurrency($amount, 'EUR'));
+            $offerings[$day] = trim($fmt->formatCurrency($amount, 'EUR'));
         }
 
         return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
@@ -203,7 +199,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             ->orderedDesc()
             ->first();
         $this->renderReport([
-            'lastService' => $lastService->day->date->format('d.m.Y'),
+            'lastService' => $lastService->date->format('d.m.Y'),
             'offerings' => $lastService->offering_amount,
             'offering_text' => $service->offering_text,
             'service' => $service,
@@ -221,14 +217,14 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         $offerings = $data['offerings'];
         $offeringText = $data['offering_text'] ?? '';
 
-        $lastWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 last Sunday');
-        $nextWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 next Sunday');
+        $lastWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 last Sunday');
+        $nextWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 next Sunday')->setTime(23,59, 59);
 
-        $funerals = Funeral::where('announcement', $service->day->date->format('Y-m-d'))
+        $funerals = Funeral::where('announcement', $service->date->format('Y-m-d'))
             ->whereHas(
                 'service',
                 function ($query) use ($service) {
-                    $query->where('city_id', $service->city->id);
+                    $query->inCity($service->city);
                 }
             )
             ->get();
@@ -240,7 +236,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                     $query->notHidden()->whereHas(
                         'day',
                         function ($query2) use ($service, $nextWeek) {
-                            $query2->where('date', '>=', $service->day->date);
+                            $query2->where('date', '>=', $service->date);
                             $query2->where('date', '<=', $nextWeek);
                             $query2->where('city_id', $service->city->id);
                         }
@@ -256,7 +252,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                         ->whereHas(
                             'day',
                             function ($query2) use ($service, $nextWeek) {
-                                $query2->where('date', '>=', $service->day->date);
+                                $query2->where('date', '>=', $service->date);
                                 $query2->where('date', '<=', $nextWeek);
                                 $query2->where('city_id', $service->city->id);
                             }
@@ -265,31 +261,26 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             )->get();
 
 
-        $services = Service::with(['day', 'location'])
+        $services = Service::with(['location'])
             ->notHidden()
-            ->whereHas(
-                'day',
-                function ($query) use ($service, $nextWeek) {
-                    $query->where('date', '>=', $service->day->date);
-                    $query->where('date', '<=', $nextWeek);
-                    $query->where('city_id', $service->city->id);
-                    $query->where('id', '!=', $service->id);
-                }
-            )
+            ->between($service->date, $nextWeek)
+            ->inCity($service->city)
+            ->where('id', '!=', $service->id)
+            ->ordered()
             ->get();
 
         $events = [];
 
         if ($data['mix_outlook'] ?? false) {
             $calendar = new EventCalendarImport($city->public_events_calendar_url);
-            $events = $calendar->mix($events, $service->day->date, $nextWeek, true);
+            $events = $calendar->mix($events, $service->date, $nextWeek, true);
         }
 
-        $events = Service::mix($events, $services, $service->day->date, $nextWeek);
+        $events = Service::mix($events, $services, $service->date, $nextWeek);
 
         if ($data['mix_op'] ??  false) {
             $op = new OPEventsImport($city);
-            $events = $op->mix($events, $service->day->date, $nextWeek);
+            $events = $op->mix($events, $service->date, $nextWeek);
         }
 
         $this->section = $this->wordDocument->addSection(
@@ -330,7 +321,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
 
         $textRun = $this->section->addTextRun('Bekanntgaben');
         $textRun->addText(
-            'Bekanntgaben für ' . $service->day->date->formatLocalized('%A, %d. %B %Y'),
+            'Bekanntgaben für ' . $service->date->formatLocalized('%A, %d. %B %Y'),
             ['bold' => true]
         );
 
@@ -340,7 +331,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         $lastDay = $nextWeek->format('Ymd');
         foreach ($events as $eventsArray) {
             foreach ($eventsArray as $event) {
-                $eventStart = is_array($event) ? $event['start'] : $event->day->date;
+                $eventStart = is_array($event) ? $event['start'] : $event->date;
 
 
                 $dateFormat = $ctr ? '%A, %d. %B' : '%A, %d. %B %Y';
@@ -348,7 +339,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                 $done = false;
 
                 if (is_array($event)) {
-                    if ($service->day->date->format('Ymd') == $eventStart->format('Ymd')) {
+                    if ($service->date->format('Ymd') == $eventStart->format('Ymd')) {
                         if (isset($event['allDay']) && ($event['allDay'])) {
                             $textRun = $this->section->addTextRun('Bekanntgaben ohne Einrückung');
                             $textRun->addText($event['title']);
@@ -416,7 +407,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                             self::NO_INDENT,
                             [
                                 [
-                                    ($service->day->date->format('Ymd') == $eventStart->format('Ymd')) ?
+                                    ($service->date->format('Ymd') == $eventStart->format('Ymd')) ?
                                         'Heute' : strftime($dateFormat, $eventStart->getTimestamp()),
                                     self::BOLD_UNDERLINE,
                                 ]
@@ -471,7 +462,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                                     [
                                         Carbon::createFromFormat(
                                             'Y-m-d H:i',
-                                            $event->day->date->format('Y-m-d') . ' ' . ($event->cc_alt_time ?? $event->time)
+                                            $event->date->format('Y-m-d') . ' ' . ($event->cc_alt_time ?? $event->time)
                                         )->formatLocalized('%H.%M Uhr') . "\t",
                                         []
                                     ],
@@ -529,7 +520,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                             self::NO_INDENT,
                             [
                                 [
-                                    'Im Gottesdienst am ' . $baptism->service->day->date->format(
+                                    'Im Gottesdienst am ' . $baptism->service->date->format(
                                         'd.m.Y'
                                     ) . ' ' . $baptism->service->atText() . ' ' . (count(
                                         $baptisms
@@ -588,7 +579,7 @@ des Sohnes und des Heiligen Geistes.'
                             self::NO_INDENT,
                             [
                                 [
-                                    'Im Gottesdienst am ' . $wedding->service->day->date->format(
+                                    'Im Gottesdienst am ' . $wedding->service->date->format(
                                         'd.m.Y'
                                     ) . ' ' . $wedding->service->atText() . ' werden kirchlich getraut:',
                                     []
@@ -695,7 +686,7 @@ in guten und in schweren Tagen.'
                                 $this->renderName($funeral->buried_name) . ', '
                                 . $funeral->buried_address
                                 . ($funeral->age() ? ', ' . $funeral->age() . ' Jahre' : '')
-                                . '. Die ' . $mode . ' findet am ' . $funeral->service->day->date->formatLocalized(
+                                . '. Die ' . $mode . ' findet am ' . $funeral->service->date->formatLocalized(
                                     '%A, %d. %B'
                                 )
                                 . ' um ' . $funeral->service->timeText(true, '.')
@@ -731,7 +722,7 @@ Amen.'
         }
 
 
-        $filename = $service->day->date->format('Y_m_d') . ' Bekanntgaben';
+        $filename = $service->date->format('Y_m_d') . ' Bekanntgaben';
         $this->sendToBrowser($filename);
 
     }

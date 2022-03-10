@@ -86,30 +86,30 @@ class MultipleServicesInput extends AbstractInput
      */
     public function input(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'includeLocations' => 'required',
                 'from' => 'required',
                 'to' => 'required',
                 'rhythm' => 'required|int',
                 'title' => 'nullable|string',
+                'weekday' => 'required|string',
             ]
         );
 
-        $rhythm = $request->get('rhythm') ?: 1;
-        $title = $request->get('title') ?: '';
+        $rhythm = $data['rhythm'] ?? 1;
+        $title = $data['title'] ?? '';
 
         $services = [];
 
 
-        $locations = Location::whereIn('id', $request->get('includeLocations') ?: [])->get();
+        $locations = Location::whereIn('id', $data['includeLocations'] ?? [])->get();
 
         $from = Carbon::parse(Carbon::createFromFormat('d.m.Y', $request->get('from')));
-        while ($from->format('l') != $request->get('weekday')) {
+        while ($from->format('l') != $data['weekday']) {
             $from->addDay(1);
         }
         $to = Carbon::createFromFormat('d.m.Y', $request->get('to'));
-
 
         $today = $from->copy();
         $ctr = 0;
@@ -139,44 +139,31 @@ class MultipleServicesInput extends AbstractInput
         $firstDay = null;
 
         $data = $request->get('service') ?: [];
+        if (!count($data)) return redirect()->route('calendar');
+
         foreach ($data as $dayDate => $services) {
             $dayDate = Carbon::createFromFormat('d.m.Y', $dayDate);
-            // check if day already exists
-            $day = Day::where('date', $dayDate->format('Y-m-d'))->first();
-            if (null === $day) {
-                $type = $dayDate->dayOfWeek == 0 ? Day::DAY_TYPE_DEFAULT : Day::DAY_TYPE_LIMITED;
-                $day = Day::create(['date' => $dayDate, 'day_type' => $type, 'name' => '', 'description' => '']);
-            } else {
-                $type = $day->day_type;
-            }
-
-            if (null === $firstDay) {
-                $firstDay = $day;
-            }
-
             foreach ($services as $service) {
                 $location = Location::find($service['location']);
-                if ($type == Day::DAY_TYPE_LIMITED) {
-                    $day->cities()->attach($location->city);
-                }
 
-                $time = $service['time'];
+                $time = $service['time'] ?? '';
                 if (($time == '') || (!preg_match('/^[0-9]{2}:[0-9]{2}$/', $time))) {
                     $time = $location->default_time;
                 }
 
+                $serviceDate = Carbon::parse($dayDate->format('Y-m-d').' '.$time, 'Europe/Berlin')->setSeconds(0)->setTimezone('UTC');
+
                 // check if service already exists
                 $service = Service::select('services.*')
                     ->where('location_id', $service['location'])
-                    ->where('day_id', $day->id)
+                    ->where('date', $serviceDate)
                     ->first();
                 if (null == $service) {
                     $newService = new Service(
                         [
                             'location_id' => $location->id,
                             'city_id' => $location->city_id,
-                            'day_id' => $day->id,
-                            'time' => $time,
+                            'date' => $serviceDate,
                             'description' => '',
                             'need_predicant' => false,
                             'baptism' => false,
@@ -202,15 +189,16 @@ class MultipleServicesInput extends AbstractInput
 
 
         foreach ($serviceRecords as $key => $record) {
-            $serviceRecords[$key] = $record->load(['day', 'location']);
+            $serviceRecords[$key] = $record->load(['location']);
         }
 
         // use the first service created to create a mass notification
         $service = reset($serviceRecords);
         Subscription::send($service, ServiceCreatedMultiple::class, ['services' => $serviceRecords]);
 
+
         if ($ctrExisting) {
-            return redirect()->route('calendar', $firstDay->date->format('Y-m'))->with(
+            return redirect()->route('calendar')->with(
                 'warning',
                 sprintf(
                     '%d Gottesdienste wurden hinzugefügt. %d Gottesdienste waren bereits vorhanden.',
@@ -219,7 +207,7 @@ class MultipleServicesInput extends AbstractInput
                 )
             );
         } else {
-            return redirect()->route('calendar', $firstDay->date->format('Y-m'))->with(
+            return redirect()->route('calendar')->with(
                 'success',
                 sprintf('%d Gottesdienste wurden hinzugefügt.', $ctrAdded)
             );

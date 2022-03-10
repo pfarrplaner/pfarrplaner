@@ -8,15 +8,15 @@
         }"
         :ref="scrollToMe ? 'scrollToMe' : null"
         @click="clickHandler()"
-        :title="day.day_type == 1 ? today().format('DD.MM.YYYY')+' (Klicken, um Ansicht umzuschalten)' : ''"
+        :title="day.day_type == 1 ? today.format('DD.MM.YYYY')+' (Klicken, um Ansicht umzuschalten)' : ''"
         :data-day="day.id">
-        <div class="day-header-collapse-hover">{{ today().format('dddd, DD.') }}</div>
+        <div class="day-header-collapse-hover">{{ today.format('dddd, DD.') }}</div>
         <div class="card card-effect">
-            <div :class="{'card-header': 1, 'day-header-So': today().format('E') == 7}">
-                {{ today().format('dddd') }}
+            <div :class="{'card-header': 1, 'day-header-So': today.format('E') == 7}">
+                {{ today.format('dddd') }}
             </div>
             <div class="card-body">
-                {{ today().format('D') }}
+                {{ today.format('D') }}
             </div>
             <div class="liturgy">
                 <div class="liturgy-sermon" v-if="day.liturgy.perikope">
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div v-if="hasPermission('urlaub-lesen')">
-        <div class="vacation mr-1" v-for="absence in absences" :absence="absence"
+        <div class="vacation mr-1" v-for="(absence,absenceIndex,absenceKey) in absences" :absence="absence" :key="absenceKey"
              :title="absence.user.name+': '
              +absenceReasonText(absence)
              +' ('+absence.durationText+') '
@@ -48,10 +48,15 @@ import BibleReference from "../../LiturgyEditor/Elements/BibleReference";
 export default {
     components: {BibleReference},
     props: ['day', 'index', 'absences', 'scrollToDate'],
+    computed: {
+        today() {
+            return moment(this.day.date).locale('de-DE');
+        },
+    },
     data: function() {
         var scrollToMe = false;
         if (this.scrollToDate) {
-            if (moment(this.scrollToDate).format('YYYYMMDD') == moment(this.day.date).format('YYYYMMDD')) {
+            if (moment(this.scrollToDate).format('YYYYMMDD') == moment(this.date).format('YYYYMMDD')) {
                 scrollToMe = true;
             }
         }
@@ -64,12 +69,6 @@ export default {
         }
     },
     methods: {
-        moment: function (d) {
-            return moment(d).locale('de-DE');
-        },
-        today: function () {
-            return moment(this.day.date).locale('de-DE');
-        },
         clickHandler: function() {
             this.$emit('collapse', {day: this.day, state: !(this.day.collapsed)});
             this.$forceUpdate();

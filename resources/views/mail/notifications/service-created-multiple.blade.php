@@ -659,7 +659,7 @@
                                                                         angelegt</h4>
                                                                     <h5 class="text-muted text-center"
                                                                         style="margin-top: 0; margin-bottom: 0; font-weight: 500; color: #636c72; vertical-align: baseline; font-size: 20px; line-height: 24px;"
-                                                                        align="center">{{ strftime('%A, %d. %B %Y', $service->day->date->timestamp) }}
+                                                                        align="center">{{ strftime('%A, %d. %B %Y', $service->date->timestamp) }}
                                                                         , {{ $service->timeText() }}
                                                                         <br>{{ $service->locationText() }}</h5>
 

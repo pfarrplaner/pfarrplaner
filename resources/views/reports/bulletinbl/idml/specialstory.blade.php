@@ -42,7 +42,7 @@
                         <Properties>
                             <Leading type="unit">12</Leading>
                         </Properties>
-                        <Content>{{ $service->day->date->formatLocalized('%A, %d. %B') }}{!! ((!$group['options']['sameTime']) || (count($group['services']) == 1)) ? ', '.$service->timeText(true, '.', false, false) : '' !!}{{ ((!$group['options']['sameLocation']) && (trim($service->locationText()) != '')) ? ', '.$service->locationText() : ''  }}</Content>
+                        <Content>{{ $service->date->formatLocalized('%A, %d. %B') }}{!! ((!$group['options']['sameTime']) || (count($group['services']) == 1)) ? ', '.$service->timeText(true, '.', false, false) : '' !!}{{ ((!$group['options']['sameLocation']) && (trim($service->locationText()) != '')) ? ', '.$service->locationText() : ''  }}</Content>
                         <Br />
                     </CharacterStyleRange>
                 @endforeach

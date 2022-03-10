@@ -32,6 +32,7 @@ namespace App\Services;
 
 
 use App\Day;
+use App\Liturgy;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -139,5 +140,16 @@ class CalendarService
     }
 
 
+    public static function addMissingDefaultDays($date, $days) {
+        $currentDate = $date->copy()->setDay(1)->setTime(0,0,0);
+        $month = $currentDate->month;
+        $litInfo = Liturgy::getCompleteLiturgyInfoArray();
+
+        while ($month == $currentDate->month) {
+            if (isset($litInfo[$currentDate->format('d.m.Y')])) $days->push($currentDate->format('Y-m-d'));
+            $currentDate->addDay(1);
+        }
+        return $days->unique()->sort();
+    }
 
 }

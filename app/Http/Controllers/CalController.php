@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Absence;
 use App\City;
 use App\Day;
+use App\Liturgy;
 use App\Service;
 use App\Services\CalendarService;
 use App\Services\RedirectorService;
@@ -21,20 +22,20 @@ class CalController extends Controller
         $this->middleware('auth');
     }
 
-    public function singleDay(Day $day, City $city)
+    public function singleDay($day, City $city)
     {
+        $day = Carbon::parse($day)->setTime(0,0,0);
         $services = Service::setEagerLoads([])
             ->with(['day', 'baptisms', 'funerals', 'weddings', 'participants'])
-            ->where('day_id', $day->id)
+            ->whereDate('date', $day)
             ->inCities([$city->id])
             ->orderBy('time')
             ->get();
 
-        $day->load('cities');
         $canCreate = Auth::user()->can('create', Service::class);
 
         // absences
-        $absences = Absence::with('user')->byPeriod($day->date, $day->date)
+        $absences = Absence::with('user')->byPeriod($day, $day)
                 ->visibleForUser(Auth::user())
                 ->get();
 
@@ -51,25 +52,33 @@ class CalController extends Controller
         $date = ($date ? new Carbon ($date . '-01') : Carbon::now())->setTime(0, 0, 0);
         if ($date->format('Ym') < 201801) abort(404);
         $monthEnd = $date->copy()->addMonth(1)->subSecond(1);
-        $days = Day::with('cities')->inMonth($date)->orderBy('date')->get();
-        if (count($days) == 0) {
-            $days = CalendarService::initializeMonth($date->year, $date->month);
+
+        $dates = Service::select(DB::raw('DISTINCT DATE(services.date) as day'))
+            ->inCities(Auth::user()->visibleCities)
+            ->inMonthByDate($date)
+            ->orderBy('day', 'ASC')
+            ->get()->pluck('day');
+
+        $dates = CalendarService::addMissingDefaultDays($date, $dates);
+        $days = [];
+        foreach ($dates as $thisDate) {
+            $days[$thisDate] = ['date' => $thisDate, 'liturgy' => Liturgy::getDayInfo($thisDate)];
         }
+
+        $years = Service::select(DB::raw('DISTINCT YEAR(DATE(services.date)) as year'))
+            ->inCities(Auth::user()->visibleCities)
+            ->orderBy('year', 'ASC')
+            ->get()->pluck('year');
+
+
         $user = Auth::user();
         $cities = $user->cities;
 
-        $years = Day::select(DB::raw('YEAR(days.date) as year'))
-            ->where('days.date', '>=', '2018-01-01')
-            ->orderBy('date')
-            ->get()
-            ->pluck('year')
-            ->unique()
-            ->sort();
 
         $services = [];
         foreach ($cities as $city) {
-            foreach ($days as $day) {
-                $services[$city->id][$day->id] = [];
+            foreach ($dates as $day) {
+                $services[$city->id][$day] = [];
             }
         }
 
@@ -81,7 +90,7 @@ class CalController extends Controller
                 ->visibleForUser(Auth::user())
                 ->showInCalendar()
                 ->get(),
-            $days
+            $dates
         );
 
         $canCreate = $user->can('create', Service::class);
@@ -97,12 +106,12 @@ class CalController extends Controller
         if ($date->format('Ym') < 201801) abort(404);
 
         $services = Service::setEagerLoads([])
-            ->with(['day', 'baptisms', 'funerals', 'weddings', 'participants'])
+            ->with(['baptisms', 'funerals', 'weddings', 'participants'])
             ->inMonthByDate($date)
             ->inCities([$city->id])
-            ->orderBy('time')
+            ->ordered()
             ->get()
-            ->groupBy(['day_id']);
+            ->groupBy('keyDate');
 
         return response()->json($services);
     }

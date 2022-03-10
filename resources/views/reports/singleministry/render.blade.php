@@ -28,7 +28,7 @@
     <tbody>
     @foreach ($services as $service)
         <tr @if($loop->index % 2 == 0)class="even" @endif>
-            <td>{{ $service->day->date->format('d.m.Y') }}</td>
+            <td>{{ $service->date->format('d.m.Y') }}</td>
             <td>{{ $service->timeText() }}</td>
             <td>{{ $service->locationText() }}</td>
             <td valign="top"> {{ $service->participantsText($ministry) }} </td>

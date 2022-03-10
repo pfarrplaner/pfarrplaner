@@ -89,30 +89,26 @@ class ServiceTableReport extends AbstractExcelDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'city' => 'required|integer',
                 'year' => 'required|integer',
             ]
         );
 
-        $year = $request->get('year');
-        $days = Day::where('date', '>=', Carbon::createFromDate($year, 1, 1)->setTime(0, 0, 0))
-            ->where('date', '<=', Carbon::createFromDate($year, 12, 31)->setTime(23, 59, 59))
-            ->orderBy('date', 'ASC')
-            ->get();
 
-        $city = City::find($request->get('city'));
+        $serviceList = Service::between(
+            Carbon::createFromDate($data['year'], 1, 1),
+            Carbon::createFromDate($data['year'], 12, 31)->setTime(23, 59, 59),
+        )->notHidden()
+            ->where('city_id', $data['city'])
+            ->ordered()
+            ->get()
+            ->groupBy('key_date');
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
-                ->notHidden()
-                ->where('day_id', $day->id)
-                ->where('city_id', $city->id)
-                ->orderBy('time', 'ASC')
-                ->get();
-        }
+
+        $city = City::findOrFail($data['city']);
+
 
         $ministries = $request->get('ministries') ?? [];
         $nameFormat = $request->get('name_format') ?? User::NAME_FORMAT_DEFAULT;
@@ -164,10 +160,10 @@ class ServiceTableReport extends AbstractExcelDocumentReport
             ->setFooter(0);
         $sheet->getHeaderFooter()
             ->setOddHeader(
-                '&LEvangelische Kirchengemeinde ' . $city->name . '&RPlan für Gottesdienste ' . $year . ' - Blatt &P von &N'
+                '&LEvangelische Kirchengemeinde ' . $city->name . '&RPlan für Gottesdienste ' . $data['year'] . ' - Blatt &P von &N'
             )
             ->setEvenHeader(
-                '&LEvangelische Kirchengemeinde ' . $city->name . '&RPlan für Gottesdienste ' . $year . ' - Blatt &P von &N'
+                '&LEvangelische Kirchengemeinde ' . $city->name . '&RPlan für Gottesdienste ' . $data['year'] . ' - Blatt &P von &N'
             )
             ->setOddFooter('&CAusdruck vom &D, &T')
             ->setEvenFooter('&CAusdruck vom &D, &T');
@@ -181,7 +177,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         // title row
         $sheet->mergeCells("A1:{$lastColumn}1");
         $sheet->getRowDimension('1')->setRowHeight(21);
-        $style = $sheet->setCellValue('A1', 'Plan für Gottesdienste - Liturgischer Kalender für das Jahr ' . $year)
+        $style = $sheet->setCellValue('A1', 'Plan für Gottesdienste - Liturgischer Kalender für das Jahr ' . $data['year'])
             ->getStyle('A1');
         $style->getFill()
             ->setFillType(Fill::FILL_SOLID)
@@ -272,7 +268,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         $row = 3;
         foreach ($serviceList as $services) {
             foreach ($services as $service) {
-                $liturgy = Liturgy::getDayInfo($service->day, true);
+                $liturgy = Liturgy::getDayInfo($service->date, true);
 
                 $row += 2;
                 $row2 = $row + 1;
@@ -310,11 +306,11 @@ class ServiceTableReport extends AbstractExcelDocumentReport
 
 
                 $richtext = new RichText();
-                $textrun = $richtext->createTextRun(strftime('%A,', $service->day->date->getTimestamp()));
+                $textrun = $richtext->createTextRun(strftime('%A,', $service->date->getTimestamp()));
                 $textrun->getFont()->setName('Arial')->setSize(8)->setBold(true);
-                $richtext->createText("\n" . $service->day->date->format('d.m.Y'));
+                $richtext->createText("\n" . $service->date->format('d.m.Y'));
                 $sheet->getCell("A{$row}")->setValue($richtext);
-                $sheet->setCellValue("B{$row}", $service->day->name ?: $liturgy['title']);
+                $sheet->setCellValue("B{$row}", $liturgy['title'] ?: '');
                 $sheet->setCellValue("C{$row}", $service->descriptionText());
                 $sheet->setCellValue("D{$row}", $service->timeText(false));
                 $sheet->setCellValue("E{$row}", $service->locationText());
@@ -388,7 +384,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         }
 
         // output
-        $filename = $year . ' Plan für Gottesdienste ' . $city->name;
+        $filename = $data['year'] . ' Plan für Gottesdienste ' . $city->name;
         $this->sendToBrowser($filename);
     }
 

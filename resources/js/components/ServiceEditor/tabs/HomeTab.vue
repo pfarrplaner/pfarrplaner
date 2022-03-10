@@ -31,8 +31,7 @@
     <div class="home-tab">
         <div class="row">
             <div class="col-md-4">
-                <day-select name="day.id" label="Tag" v-model="myService.day" :city="myService.city"
-                            @input="myService.day_id = myService.day.id" :days="days"/>
+                <form-date-picker name="date" label="Datum und Uhrzeit" v-model="myService.date" :config="myDateTimePickerConfig" iso-date/>
             </div>
             <div class="col-md-4">
                 <location-select name="location_id" label="Ort" :value="myLocation" v-if="!locationUpdating"
@@ -41,7 +40,8 @@
                 />
             </div>
             <div class="col-md-4">
-                <form-input name="time" label="Uhrzeit" v-model="myService.time" placeholder="HH:MM"/>
+                <form-date-picker name="alt_liturgy_date" label="Datum für Liturgische Informationen " v-model="service.alt_liturgy_date"
+                                  help="Zeigt liturgische Information für ein abweichendes Datum an."/>
             </div>
         </div>
         <div class="row">
@@ -67,10 +67,6 @@
                 <label>Sakramente</label>
                 <form-check name="baptism" label="Dies ist ein Taufgottesdienst." v-model="service.baptism"/>
                 <form-check name="eucharist" label="Dies ist ein Abendmahlsgottesdienst." v-model="service.eucharist"/>
-            </div>
-            <div class="col-md-4">
-                <form-date-picker name="alt_liturgy_date" label="Datum für Liturgische Informationen " v-model="service.alt_liturgy_date"
-                help="Zeigt liturgische Information für ein abweichendes Datum an."/>
             </div>
             <div class="col-md-4">
                 <form-selectize name="related_cities[]" label="Auch in folgenden Kirchengemeinden anzeigen" v-model="service.related_cities"
@@ -183,7 +179,13 @@ export default {
                 { id: 4, name: 'Schnelltest für alle Besucher'},
                 { id: 5, name: 'Schnelltest empfohlen'},
                 { id: 6, name: 'Geschlossene Gruppe'},
-            ]
+            ],
+            myDateTimePickerConfig: {
+                locale: 'de',
+                format: 'DD.MM.YYYY HH:mm',
+                showClear: true,
+                sideBySide: true,
+            },
         }
     },
     methods: {

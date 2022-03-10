@@ -233,7 +233,7 @@
             <h1 >{{ $service->titleText(false) }}</h1>
         </td>
         <td valign="top" style="font-size: 8pt; text-align: right;">
-            {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }} <br />
+            {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }} <br />
         </td>
     </tr>
 

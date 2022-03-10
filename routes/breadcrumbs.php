@@ -549,7 +549,7 @@ Breadcrumbs::for(
         }
         $trail->push('Live Chat');
         $trail->push(
-            $service->title ?: 'Gottesdienst am ' . $service->day->date->format('d.m.Y') . ', ' . $service->timeText()
+            $service->title ?: 'Gottesdienst am ' . $service->date->format('d.m.Y') . ', ' . $service->timeText()
         );
     }
 );

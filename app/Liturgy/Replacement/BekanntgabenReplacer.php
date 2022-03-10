@@ -44,14 +44,14 @@ class BekanntgabenReplacer extends AbstractReplacer
     protected function getReplacementText(): string
     {
         $service = $this->service;
-        $lastWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 last Sunday');
-        $nextWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 next Sunday');
+        $lastWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 last Sunday');
+        $nextWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 next Sunday');
         $lastServices = Service::select('*')
             ->join('days', 'days.id', 'services.day_id')
             ->whereHas(
                 'day',
                 function ($query) use ($service) {
-                    $query->where('date', '<=', $service->day->date->format('Y-m-d'));
+                    $query->where('date', '<=', $service->date->format('Y-m-d'));
                 }
             )
             ->where('offering_amount', '!=', '')
@@ -63,9 +63,9 @@ class BekanntgabenReplacer extends AbstractReplacer
         $offeringAmount = 0;
         foreach ($lastServices as $lastService) {
             if ($lastServiceDate === null) {
-                $lastServiceDate = $lastService->day->date;
+                $lastServiceDate = $lastService->date;
             }
-            if ($lastServiceDate != $lastService->day->date) {
+            if ($lastServiceDate != $lastService->date) {
                 continue;
             }
             $x = trim(strtr((string)$lastService->offering_amount, [',' => '.', '€' => '']));
@@ -79,7 +79,7 @@ class BekanntgabenReplacer extends AbstractReplacer
             ->whereHas(
                 'day',
                 function ($query) use ($service, $nextWeek) {
-                    $query->where('date', '>=', $service->day->date);
+                    $query->where('date', '>=', $service->date);
                     $query->where('date', '<=', $nextWeek);
                     $query->where('city_id', $service->city->id);
                     $query->where('id', '!=', $service->id);
@@ -90,12 +90,12 @@ class BekanntgabenReplacer extends AbstractReplacer
         $events = [];
 
         $calendar = new EventCalendarImport($service->city->public_events_calendar_url);
-        $events = $calendar->mix($events, $service->day->date, $nextWeek, true);
+        $events = $calendar->mix($events, $service->date, $nextWeek, true);
 
-        $events = Service::mix($events, $services, $service->day->date, $nextWeek);
+        $events = Service::mix($events, $services, $service->date, $nextWeek);
 
         $op = new OPEventsImport($service->city);
-        $events = $op->mix($events, $service->day->date, $nextWeek);
+        $events = $op->mix($events, $service->date, $nextWeek);
 
 
         $fmt = new \NumberFormatter('de_DE', \NumberFormatter::CURRENCY);
@@ -112,12 +112,12 @@ class BekanntgabenReplacer extends AbstractReplacer
         $lastDay = $nextWeek->format('Ymd');
         foreach ($events as $eventsArray) {
             foreach ($eventsArray as $event) {
-                $eventStart = is_array($event) ? $event['start'] : $event->day->date;
+                $eventStart = is_array($event) ? $event['start'] : $event->date;
                 $dateFormat = $ctr ? '%A, %d. %B' : '%A, %d. %B %Y';
                 $done = false;
 
                 if (is_array($event)) {
-                    if ($service->day->date->format('Ymd') == $eventStart->format('Ymd')) {
+                    if ($service->date->format('Ymd') == $eventStart->format('Ymd')) {
                         if ($event['allDay']) {
                             $text .= $this->renderParagraph($event['title']);
                             $done = true;
@@ -133,7 +133,7 @@ class BekanntgabenReplacer extends AbstractReplacer
                         }
 
                         $text .= $this->renderParagraph(
-                            ($service->day->date->format('Ymd') == $eventStart->format('Ymd')) ?
+                            ($service->date->format('Ymd') == $eventStart->format('Ymd')) ?
                                 'Heute' : strftime($dateFormat, $eventStart->getTimestamp())
                         );
                     }
@@ -165,7 +165,7 @@ class BekanntgabenReplacer extends AbstractReplacer
                             $text .= $this->renderParagraph(
                                 Carbon::createFromFormat(
                                     'Y-m-d H:i',
-                                    $event->day->date->format(
+                                    $event->date->format(
                                         'Y-m-d'
                                     ) . ' ' . ($event->cc_alt_time ?? $event->time)
                                 )->formatLocalized(

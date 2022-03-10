@@ -49,12 +49,12 @@ class ServiceCreated extends AbstractServiceMailable
             'ical/ical',
             ['services' => [$this->service], 'token' => null, 'action' => null, 'key' => null]
         )->render();
-        $icsTitle = 'GD ' . $this->service->day->date->format('Ymd') . ' ' . $this->service->timeText(
+        $icsTitle = 'GD ' . $this->service->date->format('Ymd') . ' ' . $this->service->timeText(
                 false
             ) . ' ' . $this->service->locationText() . '.ics';
 
         return $this->subject(
-            'Neuer Gottesdienst am ' . $this->service->day->date->format('d.m.Y') . ', ' . $this->service->timeText(
+            'Neuer Gottesdienst am ' . $this->service->date->format('d.m.Y') . ', ' . $this->service->timeText(
             ) . ' (' . $this->service->locationText() . ')'
         )
             ->view('mail.notifications.service-created')->with(

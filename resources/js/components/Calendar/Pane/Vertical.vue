@@ -4,7 +4,13 @@
             <thead>
             <tr>
                 <th class="no-print text-left city-title"><!-- // TODO: slave mode --></th>
-                <th v-for="city in cities" class="city-title"><span class="mdi mdi-arrow-down-circle pr-2"></span>{{ city.name }}</th>
+                <th v-for="city in cities" class="city-title">
+                    <span class="mdi mdi-arrow-down-circle pr-2"></span>
+                    {{ city.name }}
+                    <nav-button class="btn-xs" type="success" force-no-text force-icon
+                                icon="mdi mdi-plus" :title="'Gottesdienst für '+city.name+' hinzufügen'"
+                                @click="addService(city)" />
+                </th>
             </tr>
             </thead>
             <tbody>
@@ -13,10 +19,10 @@
                         :day="day"
                         :key="day.id"
                         :scroll-to-date="scrollToDate"
-                        :absences="absences[day.id]" @collapse="changeCollapseState" />
+                        :absences="absences[day.id]"  />
                     <calendar-cell v-for="(city,index) in cities" :day="day" :key="city.id"
                                    :services="getServices(city,day)" :city="city" :can-create="canCreate"
-                                   @collapse="changeCollapseState" />
+                                    />
                 </tr>
             </tbody>
         </table>
@@ -25,20 +31,19 @@
 
 <script>
 
+import NavButton from "../../Ui/buttons/NavButton";
 export default {
+    components: {NavButton},
     props: ['date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate', 'collapseState'],
     data() {
         var myDays = this.days;
         var scrollToDate = null;
 
-        myDays.forEach((day,dayId) => {
-            myDays[dayId].collapsed = (day.day_type == 1 ? (this.collapseState == null ? true: !this.collapseState) : false);
+        for (let dayId in myDays) {
             myDays[dayId].index = dayId;
-            myDays[dayId].hasMine = false;
-            myDays[dayId].initalized = false;
+            if (moment(myDays[dayId].date) <= moment()) scrollToDate = myDays[dayId].date;
 
-            if (moment(day.date) <= moment()) scrollToDate = day.date;
-        });
+        }
 
         return {
             myDays: myDays,
@@ -52,29 +57,11 @@ export default {
         getServices(city, day) {
             if (this.services[city.id] == undefined) return [];
             if (this.services[city.id][day.id] == undefined) return [];
-            if (this.collapseState == null) {
-                if (this.services[city.id][day.id].length > 0) {
-                    var hasMine = false;
-                    this.services[city.id][day.id].forEach(service => {
-                        hasMine = hasMine || service.isMine;
-                    });
-                    this.myDays.forEach((aDay,aDayIndex) => {
-                        if (aDay.id == day.id) {
-                            this.myDays[aDayIndex].hasMine = true;
-                            if ((!aDay.initialized) && (aDay.day_type ==1)) {
-                                this.myDays[aDayIndex].collapsed = false;
-                                this.myDays[aDayIndex].initialized = true;
-                            }
-                        }
-                    });
-                }
-            }
             return this.services[city.id][day.id];
         },
-        changeCollapseState(e) {
-            this.myDays[e.day.index].collapsed = e.state;
-            this.$forceUpdate();
-        },
+        addService(city) {
+            this.$inertia.get(route('service.create', {city: city.id, date: moment(this.date).format('YYYY-MM-DD')}));
+        }
     }
 }
 </script>
@@ -84,4 +71,9 @@ export default {
         top: 58px;
         background-color: #f4f6f9;
     }
+
+    .btn-xs {
+        padding: 0.75em 1em;
+    }
+
 </style>

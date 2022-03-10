@@ -120,8 +120,8 @@ class CommuniAppIntegration extends AbstractIntegration
     }
 
     public function mayPublish(Service $service) {
-        if ($service->day->date <= Carbon::now()) return false;
-        if ((null === $service->communiapp_listing_start) && (Carbon::now() >= $service->day->date->subDay(8))) return true;
+        if ($service->date <= Carbon::now()) return false;
+        if ((null === $service->communiapp_listing_start) && (Carbon::now() >= $service->date->subDay(8))) return true;
         if ((null !== $service->communiapp_listing_start) && (Carbon::now() >= $service->communiapp_listing_start)) return true;
         return false;
     }

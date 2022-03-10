@@ -41,13 +41,15 @@
 
 
 
-use App\Http\Controllers\WeddingController; 
+use App\Http\Controllers\WeddingController;
 
-Route::get('/wedding/wizard', [WeddingController::class, 'wizardStep1'])->name('weddings.wizard');
-Route::post('/wedding/wizard/step2', [WeddingController::class, 'wizardStep2'])->name('weddings.wizard.step2');
-Route::post('/wedding/wizard/step3', [WeddingController::class, 'wizardStep3'])->name('weddings.wizard.step3');
 Route::post('/wedding/done/{wedding}', [WeddingController::class, 'done'])->name('wedding.done');
 Route::post('weddings/{wedding}/attachment', [WeddingController::class, 'attach'])->name('wedding.attach');
 Route::delete('weddings/{wedding}/attachment/{attachment}', [WeddingController::class, 'detach'])->name('wedding.detach');
 Route::get('/wedding/add/{service}', [WeddingController::class, 'create'])->name('wedding.add')->middleware('auth');
 Route::get('/wedding/destroy/{wedding}', [WeddingController::class, 'destroy'])->name('wedding.destroy');
+
+
+// Wizard
+Route::get('/wedding/wizard', [WeddingController::class, 'wizard'])->name('weddings.wizard');
+Route::post('/wedding/wizard', [WeddingController::class, 'wizardSave'])->name('weddings.wizard.save');

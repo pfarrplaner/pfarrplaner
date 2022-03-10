@@ -18,10 +18,10 @@
 </head>
 <body>
 <h1>Kinderkirche {{ $city->name }}</h1>
-<b>Von {{ $start->format('d.m.Y') }} bis {{ $end->format('d.m.Y') }}</b>
+<b>Von {{ \Carbon\Carbon::parse($start)->format('d.m.Y') }} bis {{ \Carbon\Carbon::parse($end)->format('d.m.Y') }}</b>
 <hr/>
-
-@if($count)
+{{ count($services) }}
+@if(count($services))
 
     <table class="table table-fluid table-striped" cellspacing="0" border="0">
         <thead></thead>
@@ -31,7 +31,7 @@
             @foreach ($dayServices as $service)
                 <?php $ct++; ?>
                 <tr @if($ct %2 == 1)style="background-color: lightgray;"@endif>
-                    <td valign="top" width="10%">{{ $service->day->date->format('d.m.Y') }}</td>
+                    <td valign="top" width="10%">{{ $service->date->format('d.m.Y') }}</td>
                     <td valign="top" width="10%">{{ $service->ccTimeText(false, true) }}</td>
                     <td valign="top" width="20%"
                         @if($service->hasNonStandardCCLocation()) style="color: red;" @endif>{{ $service->ccLocationText() }}</td>

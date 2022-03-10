@@ -24,7 +24,7 @@
                             @if (($service->titleText() != 'GD') && ($service->titleText()!='Gottesdienst'))
                                 <i>{{ $service->titleText() }}</i><br />
                             @endif
-                            {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}<br />
+                            {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }}<br />
                             {{ $service->locationText() }}
                         </td>
                         <td>

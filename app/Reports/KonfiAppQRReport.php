@@ -158,7 +158,7 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
         $types = KonfiAppIntegration::get($service->city)->listEventTypes();
         $copies = $request->get('copies', 1);
         return $this->sendToFile(
-            $service->day->date->format('Ymd') . ' QR-Code.pdf',
+            $service->date->format('Ymd') . ' QR-Code.pdf',
             [
                 'services' => $services,
                 'types' => $types,

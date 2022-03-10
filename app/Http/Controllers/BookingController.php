@@ -150,7 +150,7 @@ class BookingController extends Controller
             ]
         );
         return $pdf->download(
-            $service->day->date->format('Ymd') . '-' . $service->timeText(
+            $service->date->format('Ymd') . '-' . $service->timeText(
                 false,
                 '',
                 false,

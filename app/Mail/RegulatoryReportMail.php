@@ -41,7 +41,7 @@ class RegulatoryReportMail extends Mailable
             [
                 '###GOTTESDIENST###' => join(', ',
                                              [
-                                                 $service->day->date->format('d.m.Y'),
+                                                 $service->date->format('d.m.Y'),
                                                  $service->timeText(),
                                                  $service->city->name,
                                                  $service->locationText(),

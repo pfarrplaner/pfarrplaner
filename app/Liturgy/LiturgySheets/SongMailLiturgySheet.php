@@ -43,7 +43,7 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
 
     public function render(Service $service)
     {
-        $subject = $service->titleText(false).' am '.$service->day->date->format('d.m.Y').', '.$service->timeText().', '.$service->locationText();
+        $subject = $service->titleText(false).' am '.$service->date->format('d.m.Y').', '.$service->timeText().', '.$service->locationText();
 
         $body = 'Hier meine Liederliste für den o.g. Gottesdienst:'.PHP_EOL.PHP_EOL;
         foreach ($service->liturgyBlocks as $block) {

@@ -37,10 +37,9 @@
         'hidden': service.hidden}"
         :title="service.isEditable ? clickTitle(service) : null"
          @click.stop="service.isEditable ? edit(service) : null"
-        :data-day="service.day.id"
     >
         <div :class="{'service-time': 1,  'service-special-time': isSpecialTime(service)}">
-            {{ service.time }} Uhr
+            {{ service.timeText }}
         </div>
         <span class="separator">|</span>
         <div :class="{'service-location': 1, 'service-special-location': isSpecialLocation(service)}">

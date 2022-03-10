@@ -45,7 +45,7 @@ class ServiceUpdatedListener
     public function handle(ServiceUpdated $event)
     {
         // don't send notifications for past services
-        if ($event->service->day->date < Carbon::now()) return;
+        if ($event->service->date < Carbon::now()) return;
 
         // find participants who have been removed:
         $removed = new Collection();

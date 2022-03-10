@@ -32,6 +32,7 @@ namespace App;
 
 use App\Liturgy\Bible\BibleText;
 use App\Liturgy\Bible\ReferenceParser;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Storage;
 
@@ -75,17 +76,7 @@ class Liturgy
         return self::$instance;
     }
 
-    /**
-     * Get all the liturgical info for a given day
-     * @param string|Day $day
-     * @param bool $fallback
-     * @return array
-     */
-    public static function getDayInfo($day, $fallback = false): array
-    {
-        if (!is_object($day)) {
-            $day = new Day(['date' => $day]);
-        }
+    public static function getCompleteLiturgyInfoArray():array {
         if (!Cache::has('liturgicalDays')) {
             if (!Storage::exists('liturgy.json')) {
                 return [];
@@ -105,12 +96,28 @@ class Liturgy
         } else {
             $data = Cache::get('liturgicalDays');
         }
+        return $data ?: [];
+    }
+
+    /**
+     * Get all the liturgical info for a given day
+     * @param string|Carbon $day
+     * @param bool $fallback
+     * @return array
+     */
+    public static function getDayInfo($date, $fallback = false): array
+    {
+        // fallback for obsolete code that still uses Day objects
+        if (is_a($date, Day::class)) $date = $date->date;
+
+        if (is_string($date)) $date = Carbon::parse($date);
+        $data = self::getCompleteLiturgyInfoArray();
 
         $result = null;
-        if (isset($data[$day->date->format('d.m.Y')])) {
-            $result = $data[$day->date->format('d.m.Y')];
+        if (isset($data[$date->format('d.m.Y')])) {
+            $result = $data[$date->format('d.m.Y')];
         } elseif ($fallback) {
-            $date = $day->date;
+            $date = $date;
             while (!isset($data[$date->format('d.m.Y')])) {
                 $date = $date->subDays(1);
             }

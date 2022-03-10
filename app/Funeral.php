@@ -259,7 +259,7 @@ class Funeral extends Model
             'endDate' => $this->appointment->copy()->addHour(1),
             'title' => 'Trauergespräch '.$this->buried_name,
             'description' =>
-                '<p>'.$this->type.' am '.$this->service->day->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'
+                '<p>'.$this->type.' am '.$this->service->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'
                 .'<p><a href="'.route('funerals.edit', $this->id).'">Bestattung im Pfarrplaner öffnen</a></p>'
                 .'<p>Kontakt: '.nl2br($this->relative_contact_data).'</p>'
                 .AbstractSyncEngine::AUTO_WARNING,

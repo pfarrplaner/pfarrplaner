@@ -12,7 +12,7 @@
                     <select class="form-control" name="service">
                         @foreach ($services as $service)
                             <option value="{{ $service->id }}">
-                                {{$service->day->date->format('d.m.Y')}}, {{ $service->timeText() }}
+                                {{$service->date->format('d.m.Y')}}, {{ $service->timeText() }}
                                 , {{ $service->locationText() }}
                             </option>
                         @endforeach

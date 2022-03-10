@@ -194,7 +194,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
 
         $services = [];
         foreach ($tmpServices as $service) {
-            $services[$service->day->date->format('Ymd')][] = $service;
+            $services[$service->date->format('Ymd')][] = $service;
         }
 
 

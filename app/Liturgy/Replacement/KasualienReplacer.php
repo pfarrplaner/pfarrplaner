@@ -47,10 +47,10 @@ class KasualienReplacer extends AbstractReplacer
     protected function getReplacementText(): string
     {
         $service = $this->service;
-        $lastWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 last Sunday');
-        $nextWeek = Carbon::createFromTimeString($service->day->date->format('Y-m-d') . ' 0:00:00 next Sunday');
+        $lastWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 last Sunday');
+        $nextWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 next Sunday');
 
-        $funerals = Funeral::where('announcement', $service->day->date->format('Y-m-d'))
+        $funerals = Funeral::where('announcement', $service->date->format('Y-m-d'))
             ->whereHas(
                 'service',
                 function ($query) use ($service) {
@@ -66,7 +66,7 @@ class KasualienReplacer extends AbstractReplacer
                     $query->notHidden()->whereHas(
                         'day',
                         function ($query2) use ($service, $nextWeek) {
-                            $query2->where('date', '>=', $service->day->date);
+                            $query2->where('date', '>=', $service->date);
                             $query2->where('date', '<=', $nextWeek);
                             $query2->where('city_id', $service->city->id);
                         }
@@ -82,7 +82,7 @@ class KasualienReplacer extends AbstractReplacer
                         ->whereHas(
                             'day',
                             function ($query2) use ($service, $nextWeek) {
-                                $query2->where('date', '>=', $service->day->date);
+                                $query2->where('date', '>=', $service->date);
                                 $query2->where('date', '<=', $nextWeek);
                                 $query2->where('city_id', $service->city->id);
                             }
@@ -109,7 +109,7 @@ class KasualienReplacer extends AbstractReplacer
                                         $baptisms
                                     ) > 1 ? 'werden' : 'wird') . ' getauft:');
                     } else {
-                        $text .= $this->renderParagraph('Im Gottesdienst am ' . $baptism->service->day->date->format(
+                        $text .= $this->renderParagraph('Im Gottesdienst am ' . $baptism->service->date->format(
                                         'd.m.Y'
                                     ) . ' ' . $baptism->service->atText() . ' ' . (count(
                                         $baptisms
@@ -140,7 +140,7 @@ class KasualienReplacer extends AbstractReplacer
                         $text .= $this->renderParagraph('Im Gottesdienst heute ' . $wedding->service->atText(
                                     ) . ' werden kirchlich getraut:');
                     } else {
-                        $text .= $this->renderParagraph('Im Gottesdienst am ' . $wedding->service->day->date->format(
+                        $text .= $this->renderParagraph('Im Gottesdienst am ' . $wedding->service->date->format(
                                         'd.m.Y'
                                     ) . ' ' . $wedding->service->atText() . ' werden kirchlich getraut:');
                     }
@@ -199,7 +199,7 @@ class KasualienReplacer extends AbstractReplacer
                     $text .= $this->renderParagraph($this->renderName($funeral->buried_name) . ', '
                                 . $funeral->buried_address
                                 . ($funeral->age() ? ', ' . $funeral->age() . ' Jahre' : '')
-                                . '. Die ' . $mode . ' findet am ' . $funeral->service->day->date->formatLocalized(
+                                . '. Die ' . $mode . ' findet am ' . $funeral->service->date->formatLocalized(
                                     '%A, %d. %B'
                                 )
                                 . ' um ' . $funeral->service->timeText(true, '.')

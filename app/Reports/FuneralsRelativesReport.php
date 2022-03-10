@@ -143,7 +143,7 @@ class FuneralsRelativesReport extends AbstractExcelDocumentReport
         $row = 1;
         foreach ($funerals as $funeral) {
             $row++;
-            $sheet->setCellValue("A{$row}", $funeral->service->day->date->format('d.m.Y'));
+            $sheet->setCellValue("A{$row}", $funeral->service->date->format('d.m.Y'));
             $sheet->setCellValue("B{$row}", $funeral->buried_name);
             $sheet->setCellValue("C{$row}", $funeral->buried_address);
             $sheet->setCellValue("D{$row}", $funeral->buried_zip);

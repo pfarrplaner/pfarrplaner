@@ -33,7 +33,7 @@
             <b>Aktiver Stream:</b>
             <div v-if="broadcast.service">
                 {{ broadcast.service.titleText }}<br/>
-                {{ moment(broadcast.service.day.date).locale('de-DE').format('LL') }}, {{
+                {{ moment(broadcast.service.date).locale('de-DE').format('LL') }}, {{
                     broadcast.service.timeText
                 }}<br/>
                 {{ broadcast.service.locationText }}
@@ -60,7 +60,7 @@
             </template>
         </checked-process-item>
         <div v-if="broadcast.service">
-            <checked-process-item :check="moment(broadcast.snippet.scheduledStartTime).locale('de-DE').format('LL') == moment(broadcast.service.day.date).locale('de_DE').format('LL')"
+            <checked-process-item :check="moment(broadcast.snippet.scheduledStartTime).locale('de-DE').format('LL') == moment(broadcast.service.date).locale('de_DE').format('LL')"
                                   positive="Datum in Pfarrplaner und YouTube stimmt überein">
                 <template slot="negative">
                     Pfarrplaner und YouTube scheinen unterschiedliche Daten für diesen Gottesdienst zu haben.

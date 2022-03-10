@@ -72,14 +72,14 @@ class ExpireRegistrations extends Command
         $services = Service::with('day')->whereHas('bookings')->get();
         /** @var Service $service */
         foreach ($services as $service) {
-            $expiryDate = $service->day->date->copy()->addWeeks(5);
+            $expiryDate = $service->date->copy()->addWeeks(5);
             if ($expiryDate < $now) {
                 $bookingCount = count($service->bookings);
                 foreach ($service->bookings->pluck('id') as $bookingId) Booking::find($bookingId)->delete();
-                $this->line('Service #'.$service->id.' ('.$service->day->date->format('d.m.Y').' '.$service->timeText(false).') has '
+                $this->line('Service #'.$service->id.' ('.$service->date->format('d.m.Y').' '.$service->timeText(false).') has '
                             .$bookingCount.' bookings which expired on '.$expiryDate->format('d.m.Y').' --> deleted');
             } else {
-                $this->line('Service #'.$service->id.' ('.$service->day->date->format('d.m.Y').' '.$service->timeText(false).') has '
+                $this->line('Service #'.$service->id.' ('.$service->date->format('d.m.Y').' '.$service->timeText(false).') has '
                             .count($service->bookings).' bookings which will expire on '.$expiryDate->format('d.m.Y').' --> keeping');
 
             }

@@ -35,6 +35,7 @@ use App\FileFormats\IDML;
 use App\Liturgy;
 use App\Location;
 use App\Service;
+use App\ServiceGroup;
 use App\Tools\StringTool;
 use Carbon\Carbon;
 use Debugbar;
@@ -42,6 +43,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use PhpOffice\PhpWord\Exception\Exception;
 use Throwable;
@@ -178,17 +180,22 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         $includeCities = $request->get('includeCities');
 
         $empty = [];
-        // find empty spots:
-        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00'))
-            ->where('date', '<=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end') . ' 23:59:59'))
-            ->where('day_type', Day::DAY_TYPE_DEFAULT)
-            ->orderBy('date', 'ASC')
-            ->get();
-        foreach ($days as $day) {
+
+        $dates = Service::select(DB::raw('DISTINCT DATE(date) AS day'))
+        ->between(
+            Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00'),
+            Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end') . ' 23:59:59')
+        )->notHidden()
+            ->whereDoesntHave('funerals')
+            ->orderBy('day', 'ASC')
+            ->get()
+            ->pluck('day');
+
+        foreach ($dates as $day) {
             foreach ($locations as $location) {
                 $service = Service::where('location_id', $location->id)
                     ->notHidden()
-                    ->where('day_id', $day->id)
+                    ->whereDate('date', $day)
                     ->get();
                 if (!count($service)) {
                     // check if there is a replacement
@@ -196,7 +203,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
                     if (null !== $location->alternateLocation) {
                         $service = Service::where('location_id', $location->alternateLocation->id)
                             ->notHidden()
-                            ->where('day_id', $day->id)
+                            ->whereDate('date', $day)
                             ->get();
                         if (count($service)) {
                             $replacement = 'Gottesdienst ' . $service->first()->timeText(
@@ -207,24 +214,20 @@ class BulletinBLReport extends AbstractPDFDocumentReport
                         }
                     }
 
-                    $empty[$day->id]['day'] = $day;
-                    $empty[$day->id]['locations'][$location->id] = $replacement;
+                    $empty[$day][$location->id] = $replacement;
                 }
             }
         }
 
-        $dayList = [];
-        foreach ($days as $day) {
-            if (!isset($empty[$day->id])) {
-                $dayList[] = $day->id;
-            } else {
-                if (count($empty[$day->id]['locations']) != 4) {
-                    $dayList[] = $day->id;
-                } else {
-                    unset($empty[$day->id]);
-                }
-            }
-        }
+
+        $empty = $empty;
+        $dayList = $dates->reject(function ($item) use ($empty) {
+            if (!isset($empty[$item])) return false;
+            if (count($empty[$item]) != 4) return false;
+            unset($empty[$item]);
+            return true;
+        });
+
         return $this->renderView(
             'empty',
             compact(
@@ -247,7 +250,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'includeCities' => 'required',
                 'start' => 'required|date|date_format:d.m.Y',
@@ -261,30 +264,24 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         $end = $request->get('end');
         $empty = $request->get('empty');
 
-        $includeCities = $request->get('includeCities');
-        $dayIds = $request->get('dayList');
 
-        $days = Day::whereIn('id', $dayIds)
-            ->orderBy('date', 'ASC')
-            ->get();
+        $serviceList = Service::whereRaw('DATE(date) IN (\''.join("','",$data['dayList'])."'".')')
+            ->whereIn('location_id', $data['locations'])
+            ->notHidden()
+            ->whereDoesntHave('funerals')
+            ->whereDoesntHave('serviceGroups')
+            ->ordered()
+            ->get()
+            ->groupBy(['location_id', 'key_date']);
+
+        $includeCities = $request->get('includeCities');
+        $dayIds = $days = $request->get('dayList');
 
         $locationIds = $request->get('locations');
         $locations = Location::whereIn('id', $locationIds)
             ->orderByRaw('FIELD (id, ' . implode(', ', $locationIds) . ') ASC')
             ->get();
 
-        $serviceList = [];
-        foreach ($locations as $location) {
-            foreach ($days as $day) {
-                $serviceList[$location->id][$day->date->format('Y-m-d')] = Service::with(['location', 'day', 'tags'])
-                    ->notHidden()
-                    ->where('day_id', $day->id)
-                    ->whereIn('city_id', $includeCities)
-                    ->where('location_id', $location->id)
-                    ->orderBy('time', 'ASC')
-                    ->get();
-            }
-        }
 
 
         $specialDays = Day::with('cities')
@@ -300,20 +297,20 @@ class BulletinBLReport extends AbstractPDFDocumentReport
             ->get();
 
         $specialServices = [];
-        foreach ($specialDays as $day) {
-            $theseServices = Service::with('location', 'day', 'tags', 'serviceGroups')
+        foreach (ServiceGroup::all() as $group) {
+            $svc = Service::between(
+                Carbon::createFromFormat('d.m.Y', $data['start']),
+                Carbon::createFromFormat('d.m.Y', $data['end']),
+            )
+                ->whereIn('city_id', $data['includeCities'])
                 ->notHidden()
+                ->whereDoesntHave('funerals')
                 ->whereHas('serviceGroups')
-                ->where('day_id', $day->id)
-                ->whereIn('city_id', $includeCities)
-                ->orderBy('time', 'ASC')
+                ->ordered()
                 ->get();
-            foreach ($theseServices as $service) {
-                foreach ($service->serviceGroups as $group) {
-                    $specialServices[$group->name]['services'][] = $service;
-                }
-            }
+            if (count($svc)) $specialServices2[$group->name]['services'] = $svc;
         }
+
 
         // check for same times as locations
         foreach ($specialServices as $group => $data) {
@@ -396,9 +393,6 @@ class BulletinBLReport extends AbstractPDFDocumentReport
         foreach ($days as $day) {
             $rowCtr++;
             $liturgy = Liturgy::getDayInfo($day);
-            if ($day->name == '') {
-                $day->name = $liturgy['title'] ?? '';
-            }
 
             if ($rowCtr % 2 == 0) {
                 // even rows: render rectangles
@@ -423,7 +417,7 @@ class BulletinBLReport extends AbstractPDFDocumentReport
                 $spreadCode,
                 $y,
                 0,
-                $day->date->format('d.m.Y') . $this->idml->BR() . $day->name
+                Carbon::parse($day)->format('d.m.Y') . $this->idml->BR() . ($liturgy['title'] ?? '')
             );
 
 
@@ -432,24 +426,24 @@ class BulletinBLReport extends AbstractPDFDocumentReport
                 $col++;
                 $text = '';
                 $service = null;
-                if (isset($serviceList[$location->id][$day->date->format('Y-m-d')]) && count(
-                        $serviceList[$location->id][$day->date->format('Y-m-d')]
+                if (isset($serviceList[$location->id][$day]) && count(
+                        $serviceList[$location->id][$day]
                     )) {
-                    $service = $serviceList[$location->id][$day->date->format('Y-m-d')]->first();
+                    $service = $serviceList[$location->id][$day]->first();
                     $text = $service->participantsText('P', false, false, '|')
                         . ((is_object($service->location)) && (StringTool::timeString(
                                 $location->default_time,
                                 true,
                                 '.'
-                            ) != StringTool::timeString($service->time, true, '.')) ? ' ' . StringTool::timeString(
+                            ) != $service->timeText(true, '.')) ? ' ' . StringTool::timeString(
                                 $location->default_time,
                                 true,
                                 '.'
                             ) : '')
                         . $this->idml->BR()
                         . $service->description;
-                } elseif (isset($empty[$location->id][$day->id])) {
-                    $text = strtr($empty[$location->id][$day->id], ["\n" => $this->idml->BR(), "\r" => '']);
+                } elseif (isset($empty[$location->id][$day])) {
+                    $text = strtr($empty[$location->id][$day], ["\n" => $this->idml->BR(), "\r" => '']);
                 }
                 $this->storyFrame($stories, $storyId, $spreadCode, $y, $col, $text);
 

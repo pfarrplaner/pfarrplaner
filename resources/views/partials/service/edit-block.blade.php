@@ -1,5 +1,5 @@
 <a class="btn btn-sm btn-secondary"
-   href="{{ route('calendar', $service->day->date->format('Y-m')) }}"
+   href="{{ route('calendar', $service->date->format('Y-m')) }}"
    title="Im Kalender ansehen"><span class="fa fa-calendar"></span></a>
 @can('update', $service)
     <a class="btn btn-sm btn-primary" href="{{route('service.edit', $service->slug)}}" title="Bearbeiten"><span

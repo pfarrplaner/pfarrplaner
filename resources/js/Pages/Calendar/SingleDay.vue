@@ -46,15 +46,15 @@
                             {{ today.format('D') }}
                         </div>
                         <div class="liturgy">
-                            <div class="liturgy-sermon" v-if="day.liturgy.perikope">
-                                <div :class="day.liturgy.litColor" class="liturgy-color" :title="day.liturgy.feastCircleName"></div>
-                                <a :href="day.liturgy.currentPerikopeLink" target="_blank">
-                                    {{ day.liturgy.currentPerikope }}
+                            <div class="liturgy-sermon" v-if="liturgy.perikope">
+                                <div :class="liturgy.litColor" class="liturgy-color" :title="liturgy.feastCircleName"></div>
+                                <a :href="liturgy.currentPerikopeLink" target="_blank">
+                                    {{ liturgy.currentPerikope }}
                                 </a>
                             </div>
                         </div>
-                        <div class="card-footer day-name" :title="day.liturgy.litProfileGist" v-if="day.liturgy.title">
-                            {{day.liturgy.title}}
+                        <div class="card-footer day-name" :title="liturgy.litProfileGist" v-if="liturgy.title">
+                            {{liturgy.title}}
                         </div>
                     </div>
                 </th>
@@ -85,7 +85,8 @@ export default {
     props: ['services', 'day', 'city', 'absences', 'canCreate'],
     data() {
         return {
-            today: moment(this.day.date).locale('de'),
+            today: moment(this.date).locale('de'),
+            liturgy: this.services.length > 0 ? this.services[0].liturgicalInfo : {},
         }
     },
     methods: {

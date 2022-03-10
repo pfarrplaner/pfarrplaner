@@ -11,8 +11,8 @@ SUMMARY:{{ $event->titleText().' P: '.$event->participantsText('P').' O: '.$even
 DESCRIPTION: {{ strtr(wordwrap ($event->descriptionText(), 62, "\\n  "), ["\r" =>'', "\n"=>'\\n']) }}
 
 CLASS:PUBLIC
-DTSTART:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->day->date->format('Y-m-d').' '.$event->timeText(false).':00', 'Europe/Berlin')->setTimezone('UTC')->format('Ymd\THis\Z') }}
-DTEND:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->day->date->format('Y-m-d').' '.$event->timeText(false).':00', 'Europe/Berlin')->addHour(1)->setTimezone('UTC')->format('Ymd\THis\Z') }}
+DTSTART:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->date->format('Y-m-d').' '.$event->timeText(false).':00', 'Europe/Berlin')->setTimezone('UTC')->format('Ymd\THis\Z') }}
+DTEND:{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $event->date->format('Y-m-d').' '.$event->timeText(false).':00', 'Europe/Berlin')->addHour(1)->setTimezone('UTC')->format('Ymd\THis\Z') }}
 DTSTAMP:{{ $event->updated_at->setTimezone('UTC')->format('Ymd\THis\Z') }}
 @else
     UID:{{ isset($event['id']) ? $event['id'] : uniqid() }}{{ '@' }}{{ parse_url(env('APP_URL'), PHP_URL_HOST) }}

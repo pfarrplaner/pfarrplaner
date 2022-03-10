@@ -119,7 +119,7 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
                 if (is_numeric($x)) {
                     $offerings[$service->offering_goal]['amount'] += (float)$x;
                 }
-                if ($service->day->date <= Carbon::now()) {
+                if ($service->date <= Carbon::now()) {
                     $offerings[$service->offering_goal]['done']++;
                 }
             }

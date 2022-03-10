@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Anmeldungen für den Gottesdienst am '.$service->day->date->format('d.m.Y').' um '.$service->timeText())
+@section('title', 'Anmeldungen für den Gottesdienst am '.$service->date->format('d.m.Y').' um '.$service->timeText())
 
 @section('navbar-left')
     @if($capacity >0)

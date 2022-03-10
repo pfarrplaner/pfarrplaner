@@ -57,7 +57,7 @@
                         Weitere Aktionen
                     </a>
 
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" v-if="service.slug">
                         <a class="dropdown-item" :href="route('service.ical', {service: service.slug})">In Outlook
                             übernehmen</a>
                         <a class="dropdown-item"
@@ -65,10 +65,10 @@
                             Ordnungsamt</a>
                     </div>
                 </div>
-                <a class="btn btn-light" :href="route('liturgy.editor', service.slug)"
+                <a class="btn btn-light" :href="route('liturgy.editor', service.slug)" v-if="service.slug"
                    title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-view-list"></span><span
                     class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
-                <a class="btn btn-light" :href="route('service.sermon.editor', service.slug)"
+                <a class="btn btn-light" :href="route('service.sermon.editor', service.slug)"  v-if="service.slug"
                    title="Predigt zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-microphone"></span><span
                     class="d-none d-md-inline"> Predigt</span></a>&nbsp;
             </template>
@@ -77,15 +77,19 @@
                     <tab-header id="home" title="Allgemeines" :active-tab="activeTab"/>
                     <tab-header id="people" title="Mitwirkende" :active-tab="activeTab" :count="peopleCount"/>
                     <tab-header id="offerings" title="Opfer" :active-tab="activeTab"/>
-                    <tab-header id="rites" title="Kasualien" :active-tab="activeTab"
+                    <tab-header v-if="service.id"
+                                id="rites" title="Kasualien" :active-tab="activeTab"
                                 :count="service.funerals.length+service.baptisms.length+service.weddings.length"/>
                     <tab-header id="cc" title="Kinderkirche" :active-tab="activeTab"/>
-                    <tab-header id="streaming" title="Streaming" :active-tab="activeTab" v-if="hasStreaming"/>
+                    <tab-header v-if="service.id && hasStreaming"
+                                id="streaming" title="Streaming" :active-tab="activeTab"/>
                     <tab-header id="registrations" title="Anmeldungen" :active-tab="activeTab"
-                                :count="service.seating.count"/>
-                    <tab-header id="attachments" title="Dateien" :active-tab="activeTab" :count="countAttachments()"/>
-                    <tab-header id="comments" title="Kommentare" :active-tab="activeTab"
-                                :count="service.comments.length"/>
+                                :count="service.seating ? service.seating.count : 0"/>
+                    <tab-header v-if="service.id"
+                                id="attachments" title="Dateien" :active-tab="activeTab" :count="countAttachments()"/>
+                    <tab-header v-if="service.id"
+                                id="comments" title="Kommentare" :active-tab="activeTab"
+                                :count="service.comments ? service.comments.length : 0"/>
                 </tab-headers>
             </template>
             <form @submit.prevent="saveService" id="formSermon">
@@ -172,6 +176,7 @@ export default {
     },
     computed: {
         hasAnnouncements() {
+            if (!this.service.id) return false;
             let found = false;
             this.service.attachments.forEach(attachment => {
                 found = found || (attachment.title == 'Bekanntgaben');
@@ -270,6 +275,7 @@ export default {
             return (undefined != this.service.id) && (this.service.city.google_access_token != '');
         },
         countAttachments() {
+            if (!this.service.slug) return 0;
             var ctr = this.editedService.attachments.length;
             if (this.editedService.liturgy_blocks.length) {
                 for (var sheet in this.liturgySheets) {

@@ -37,7 +37,7 @@
             <div v-for="(service,serviceIndex) in services" :key="serviceIndex" class="row mt-3 p-1"
                  :class="{'stripe-odd': (serviceIndex % 2 == 0)}">
                 <div class="col-md-2">
-                    <div>{{ moment(service.day.date).locale('de-DE').format('LL') }}</div>
+                    <div>{{ moment(service.date).locale('de-DE').format('LL') }}</div>
                     <div>{{ service.timeText }}</div>
                     <div>{{ service.locationText }}</div>
                 </div>

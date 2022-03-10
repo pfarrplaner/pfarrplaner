@@ -51,16 +51,17 @@ class Vacations
 {
 
     /**
-     * @param $day
+     * @param $date Date
      * @return array
      */
-    public static function getByDay($day)
+    public static function getByDate($date)
     {
+        if (!is_a($date, Carbon::class)) $date = Carbon::parse($date);
         $vacationers = [];
         $vacationData = self::getVacationDataFromCache();
 
         foreach ($vacationData as $key => $datum) {
-            if (($day->date >= $datum['start']) && ($day->date <= $datum['end'])) {
+            if (($date >= $datum['start']) && ($date <= $datum['end'])) {
                 if (preg_match('/(?:U:|FB:) (\w*)/', $datum['title'], $tmp)) {
                     $vacationers[$tmp[1]] = $tmp[0];
                 }

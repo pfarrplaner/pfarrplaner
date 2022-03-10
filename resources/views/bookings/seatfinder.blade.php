@@ -8,7 +8,7 @@
             @csrf
             @component('components.ui.card')
                 @slot('cardHeader')
-                    Reservierung für: {{ $service->titleText() }} am {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}
+                    Reservierung für: {{ $service->titleText() }} am {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}
                 @endslot
                 @slot('cardFooter')
                     <button type="submit" class="btn btn-primary">Buchen</button>

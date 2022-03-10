@@ -58,7 +58,7 @@ export default {
             return seconds;
         },
         countStarter() {
-            let t = this.start || this.service.time;
+            let t = this.start || moment(this.service.date).locale('de').format('HH:mm');
             if (t.length == 5) t += ':00';
             console.log('count starter', t, this.parseTimeString(t));
             return this.parseTimeString(t);

@@ -38,6 +38,7 @@ use App\Seating\RowBasedSeatFinder;
 use App\Tools\StringTool;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
+use App\Traits\HasLiturgicalInfo;
 use App\Traits\IncludesPermissionAttributes;
 use App\Traits\TracksChangesTrait;
 use Carbon\Carbon;
@@ -66,6 +67,7 @@ class Service extends Model
     use TracksChangesTrait;
     use HasAttachmentsTrait;
     use IncludesPermissionAttributes;
+    use HasLiturgicalInfo;
 
     /**
      * @var array
@@ -194,6 +196,7 @@ class Service extends Model
         'slug',
         'controlled_access',
         'alt_liturgy_date',
+        'date',
     ];
 
     /**
@@ -221,6 +224,7 @@ class Service extends Model
         'datetime',
         'liturgicalInfoDate',
         'liturgicalInfo',
+        'keyDate',
     ];
 
     /**
@@ -238,6 +242,7 @@ class Service extends Model
     ];
 
     protected $dates = [
+        'date',
         'registration_online_start',
         'registration_online_end',
         'communiapp_listing_start',
@@ -293,7 +298,7 @@ class Service extends Model
     {
         return (view(
             'services.youtube.snippet.description',
-            ['service' => $this, 'liturgy' => Liturgy::getDayInfo($this->day)]
+            ['service' => $this, 'liturgy' => Liturgy::getDayInfo($this->date->format('Y-m-d'))]
         )->render());
     }
 
@@ -302,9 +307,9 @@ class Service extends Model
      */
     public function getBroadcastTitleAttribute()
     {
-        $liturgy = Liturgy::getDayInfo($this->day);
+        $liturgy = Liturgy::getDayInfo($this->date->format('Y-m-d'));
         return ($this->title ?: (isset($liturgy['title']) ? $liturgy['title']
-            . ' (' . $this->day->date->format('d.m.Y') . ')'
+            . ' (' . $this->date->format('d.m.Y') . ')'
             : 'Gottesdienst mit ' . $this->participantsText('P', true)));
     }
 
@@ -345,6 +350,14 @@ class Service extends Model
         }
     }
 
+    /**
+     * @return array
+     */
+    public function ministries()
+    {
+        return $this->participantsWithMinistry->groupBy('pivot.category');
+    }
+
     public function getCreditsAttribute()
     {
         $credits = [
@@ -358,6 +371,7 @@ class Service extends Model
         $separator = utf8_encode(' ' . chr(183) . ' ');
         return join($separator, $credits);
     }
+//
 
     /**
      * @return mixed
@@ -366,7 +380,6 @@ class Service extends Model
     {
         return $this->dateText();
     }
-//
 
     /**
      * @param string $format
@@ -374,22 +387,12 @@ class Service extends Model
      */
     public function dateText($format = '%d.%m.%Y')
     {
-        return $this->day->date->formatLocalized($format);
+        return $this->date->formatLocalized($format);
     }
 
     public function getDatetimeAttribute()
     {
-        return $this->dateTime()->setTimezone('UTC');
-    }
-
-    /**
-     * @return mixed
-     */
-    public function dateTime()
-    {
-        if (false === strpos($this->time, ':')) return new Carbon();
-        list ($hour, $minute) = explode(':', $this->time);
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->day->date->format('Y-m-d').' '.$this->time.':00', 'Europe/Berlin');
+        return $this->date->copy();
     }
 
     /**
@@ -434,6 +437,21 @@ class Service extends Model
     }
 
     /**
+     * Get an instance of SeatFinder for this service
+     * @return AbstractSeatFinder
+     */
+    public function getSeatFinder()
+    {
+        if ($this->seatFinder) {
+            return $this->seatFinder;
+        }
+        if (is_object($this->location) && (count($this->location->seatingSections) > 0)) {
+            return new RowBasedSeatFinder($this);
+        }
+        return new MaximumBasedSeatFinder($this);
+    }
+
+    /**
      * @return bool
      */
     public function getHasSeatsAttribute() {
@@ -443,16 +461,6 @@ class Service extends Model
     public function getIsMineAttribute()
     {
         return $this->participants->contains(Auth::user());
-    }
-
-    public function getLiturgicalInfoAttribute()
-    {
-        return $this->alt_liturgy_date ? (new Day(['date' => $this->alt_liturgy_date]))->liturgy : $this->day->liturgy;
-    }
-
-    public function getLiturgicalInfoDateAttribute()
-    {
-        return $this->alt_liturgy_date ?: $this->day->date;
     }
 
     /**
@@ -501,14 +509,6 @@ class Service extends Model
     public function getMinistriesByCategoryAttribute()
     {
         return $this->ministries();
-    }
-
-    /**
-     * @return array
-     */
-    public function ministries()
-    {
-        return $this->participantsWithMinistry->groupBy('pivot.category');
     }
 
     /**
@@ -625,21 +625,6 @@ class Service extends Model
     }
 
     /**
-     * Get an instance of SeatFinder for this service
-     * @return AbstractSeatFinder
-     */
-    public function getSeatFinder()
-    {
-        if ($this->seatFinder) {
-            return $this->seatFinder;
-        }
-        if (is_object($this->location) && (count($this->location->seatingSections) > 0)) {
-            return new RowBasedSeatFinder($this);
-        }
-        return new MaximumBasedSeatFinder($this);
-    }
-
-    /**
      * @return string
      */
     public function getSongsheetUrlAttribute()
@@ -648,7 +633,7 @@ class Service extends Model
             'storage',
             [
                 'path' => pathinfo($this->songsheet, PATHINFO_FILENAME),
-                'prettyName' => $this->day->date->format('Ymd') . '-Liedblatt.' . pathinfo(
+                'prettyName' => $this->date->format('Ymd') . '-Liedblatt.' . pathinfo(
                         $this->songsheet,
                         PATHINFO_EXTENSION
                     )
@@ -682,7 +667,9 @@ class Service extends Model
      */
     public function timeText($uhr = true, $separator = ':', $skipMinutes = false, $nbsp = false, $leadingZero = false)
     {
-        return StringTool::timeText($this->time, $uhr, $separator, $skipMinutes, $nbsp, $leadingZero);
+        return $this->date->copy()->setTimeZone('Europe/Berlin')
+                ->format(($leadingZero ? 'H' : 'G').($skipMinutes ?  '' : $separator.'i'))
+            .($uhr ? ($nbsp ? '&nbsp;' : ' ') . 'Uhr' : '');
     }
 
     public function getTitleTextAttribute()
@@ -755,7 +742,7 @@ class Service extends Model
     public function getVideoTimeStringAttribute()
     {
         $thisTime = Carbon::createFromTimeString(
-            $this->day->date->format('Y-m-d') . ' ' . $this->time,
+            $this->date->format('Y-m-d') . ' ' . $this->time,
             'Europe/Berlin'
         );
         return $thisTime->setTimezone('UTC')->format('Y-m-d\TH:i:s') . '.000Z';
@@ -778,9 +765,7 @@ class Service extends Model
      * @return Builder
      */
     public function scopeAtDate(Builder $query, $date) {
-        return $query->whereHas('day', function ($query) use ($date) {
-            $query->where('date', $date);
-        });
+        return $query->whereDate('date', $date);
     }
 
     /**
@@ -790,12 +775,9 @@ class Service extends Model
      */
     public function scopeBetween(Builder $query, Carbon $start, Carbon $end)
     {
-        return $query->whereHas(
-            'day',
-            function ($query) use ($start, $end) {
-                $query->whereBetween('date', [$start, $end]);
-            }
-        );
+        $start = $start->copy()->setTime(0,0,0);
+        $end = $end->copy()->setTime(23,59,59);
+        return $query->whereBetween('date', [$start, $end]);
     }
 
     /**
@@ -806,13 +788,9 @@ class Service extends Model
      */
     public function scopeDateRange(Builder $query, Carbon $start, Carbon $end)
     {
-        return $query->whereHas(
-            'day',
-            function ($query2) use ($start, $end) {
-                $query2->where('date', '>=', $start)
-                    ->where('date', '<=', $end);
-            }
-        );
+        $start = $start->copy()->setTime(0,0,0);
+        $end = $end->copy()->setTime(23,59,59);
+        return $query->whereBetween('date', [$start, $end]);
     }
 
     /**
@@ -822,12 +800,7 @@ class Service extends Model
      */
     public function scopeEndingAt(Builder $query, Carbon $date)
     {
-        return $query->whereHas(
-            'day',
-            function ($query) use ($date) {
-                $query->where('date', '<=', $date);
-            }
-        );
+        return $query->whereDate('date', '<=', $date);
     }
 
     /**
@@ -837,16 +810,13 @@ class Service extends Model
      */
     public function scopeHavingOpenMinistries(Builder $query, $ministries)
     {
-        return $query->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
-            ->whereDoesntHave(
+        return $query->whereDoesntHave(
                 'participants',
                 function ($query) use ($ministries) {
                     $query->whereIn('service_user.category', $ministries);
                 }
             )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC');
+            ->orderBy('date', 'ASC');
     }
 
     /**
@@ -891,19 +861,12 @@ class Service extends Model
      */
     public function scopeInMonth(Builder $query, $year, $month)
     {
-        $monthStart = Carbon::createFromFormat('Y-m-d H:i:s', $year . '-' . $month . '-01 0:00:00');
-        $monthEnd = (clone $monthStart)->addMonth(1)->subSecond(1);
-        return $query->between($monthStart, $monthEnd);
+        return $query->whereYear('date', $year)->whereMonth('date', $month);
     }
 
     public function scopeInMonthByDate(Builder $query, Carbon $date)
     {
-        return $query->whereHas(
-            'day',
-            function ($query2) use ($date) {
-                return $query2->inMonth($date);
-            }
-        );
+        return $query->whereMonth('date', $date->month)->whereYear('date', $date->year);
     }
 
     /**
@@ -913,12 +876,7 @@ class Service extends Model
      */
     public function scopeIsAgenda(Builder $query)
     {
-        return $query->whereHas(
-            'day',
-            function ($query2) {
-                $query2->where('date', '1978-03-05');
-            }
-        );
+        return $query->whereDate('date', '1978-03-05');
     }
 
     /**
@@ -928,12 +886,7 @@ class Service extends Model
      */
     public function scopeIsNotAgenda(Builder $query)
     {
-        return $query->whereHas(
-            'day',
-            function ($query2) {
-                $query2->where('date', '!=', '1978-03-05');
-            }
-        );
+        return $query->whereDate('date', '!=', '1978-03-05');
     }
 
     /**
@@ -949,12 +902,9 @@ class Service extends Model
      * @param Builder $query
      * @return Builder
      */
-    public function scopeOrdered(Builder $query)
+    public function scopeOrdered(Builder $query, $direction = 'ASC')
     {
-        return $query->select('services.*')
-            ->join('days', 'services.day_id', 'days.id')
-            ->orderBy('days.date')
-            ->orderBy('time');
+        return $query->orderBy('date', $direction);
     }
 
     /**
@@ -963,10 +913,7 @@ class Service extends Model
      */
     public function scopeOrderedDesc(Builder $query)
     {
-        return $query->select('services.*')
-            ->join('days', 'services.day_id', 'days.id')
-            ->orderByDesc('days.date')
-            ->orderByDesc('time');
+        return $query->ordered('DESC');
     }
 
     /**
@@ -988,12 +935,7 @@ class Service extends Model
      */
     public function scopeStartingFrom(Builder $query, Carbon $date)
     {
-        return $query->whereHas(
-            'day',
-            function ($query) use ($date) {
-                $query->where('date', '>=', $date);
-            }
-        );
+        return $query->whereDate('date', '>=', $date);
     }
 
     /**
@@ -1026,6 +968,7 @@ class Service extends Model
 // SETTERS
 // SETTERS
 // SETTERS
+// SETTERS
     /**
      * Mix a collection of services into an array of events
      * @param $events
@@ -1037,10 +980,8 @@ class Service extends Model
     public static function mix($events, $services, Carbon $start, Carbon $end)
     {
         foreach ($services as $service) {
-            if (is_object($service->day)) {
-                if (($service->day->date <= $end) && ($service->day->date >= $start)) {
-                    $events[$service->dateTime()->format('YmdHis')][] = $service;
-                }
+            if (($service->date <= $end) && ($service->date >= $start)) {
+                $events[$service->date->format('YmdHis')][] = $service;
             }
         }
 
@@ -1164,14 +1105,6 @@ class Service extends Model
     }
 
     /**
-     * @return BelongsToMany
-     */
-    public function relatedCities()
-    {
-        return $this->belongsToMany(City::class);
-    }
-
-    /**
      * @return HasMany
      */
     public function bookings()
@@ -1228,7 +1161,7 @@ class Service extends Model
         } else {
             $t = $this->cc_alt_time;
         }
-        return new Carbon($this->day->date->format('Y-m-d') . ' ' . $t);
+        return new Carbon($this->date->format('Y-m-d') . ' ' . $t);
     }
 
     public function checkIfPredicantNeeded()
@@ -1254,15 +1187,25 @@ class Service extends Model
     }
 
     /**
+     * @return mixed
+     */
+    public function dateTime()
+    {
+        if (false === strpos($this->time, ':')) return new Carbon();
+        list ($hour, $minute) = explode(':', $this->time);
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->date->format('Y-m-d').' '.$this->time.':00', 'Europe/Berlin');
+    }
+
+    /**
      * @param null $format
      * @return mixed
      */
     public function date($format = null)
     {
         if (is_null($format)) {
-            return $this->day->date;
+            return $this->date;
         } else {
-            return $this->day->date->format($format);
+            return $this->date->format($format);
         }
     }
 
@@ -1366,68 +1309,6 @@ class Service extends Model
     }
 
     /**
-     * @param User $author
-     * @param $text
-     */
-    public function notifyOfCreation(User $author, $text)
-    {
-        $mailText = sprintf($text, $author->name . ' (' . $author->email . ')') . "\r\n\r\n"
-            . "Gottesdienst:\r\n=============\r\n";
-
-        foreach ($this->revisionFormattedFieldNames as $key => $name) {
-            $attribute = $this->getAttribute($key);
-            if ($key == 'time') {
-                $attribute = strftime('%H:%M', strtotime($attribute));
-            }
-            if ($key == 'day_id') {
-                $attribute = strftime('%A, %d. %B %Y', $this->day->date->getTimestamp());
-            }
-            if ($key == 'city_id') {
-                $attribute = $this->city->name;
-            }
-            if ($key == 'location_id') {
-                if (is_object($this->location)) {
-                    $attribute = $this->location->name;
-                } else {
-                    $attribute = $this->special_location;
-                }
-            }
-            if ($key != 'special_location') {
-                $mailText .= 'Feld "' . $name . '": "' . $attribute . '"' . "\r\n";
-            }
-        }
-
-        $mailText .= "\r\n\r\nDiese Benachrichtigung wurde automatisch erzeugt.";
-
-        $this->notify($mailText);
-    }
-
-    /**
-     * @param $text
-     */
-    protected function notify($text)
-    {
-        $users = User::whereHas(
-            'cities',
-            function ($query) {
-                $query->where('city_id', $this->city_id);
-            }
-        )->where('notifications', 1)
-            ->get();
-
-        foreach ($users as $user) {
-            mail(
-                $user->email,
-                'Gottesdienst am ' . $this->day->date->format('d.m.Y')
-                . ', ' . strftime('%H:%M Uhr', strtotime($this->time))
-                . ', ' . ($this->special_location ?: $this->location->name) . "\r\n\r\n",
-                utf8_decode($text),
-                'From: no-reply@tailfingen.de'
-            );
-        }
-    }
-
-    /**
      * @return string
      */
     public function offeringText()
@@ -1437,7 +1318,7 @@ class Service extends Model
 
     public function oneLiner($title = false)
     {
-        return ($title ? $this->titleText(false) . ', ' : '') . $this->day->date->format(
+        return ($title ? $this->titleText(false) . ', ' : '') . $this->date->format(
                 'd.m.Y'
             ) . ', ' . $this->timeText() . ', ' . $this->locationText();
     }
@@ -1556,11 +1437,34 @@ class Service extends Model
      */
     public function trueDate()
     {
-        return Carbon::createFromTimeString($this->day->date->format('Y-m-d') . ' ' . $this->time);
+        return Carbon::createFromTimeString($this->date->format('Y-m-d') . ' ' . $this->time);
     }
 
     public function unsetAdditionalFields() {
         $this->appends = [];
+    }
+
+    public function updateRelatedCitiesFromRequest(Request $request)
+    {
+        $cityIds = $request->get('related_cities', []);
+        if (!is_array($cityIds)) return;
+        $existing = $this->relatedCities->pluck('id');
+        $result = $existing->filter(function ($item) use ($cityIds) {
+            if (!Auth::user()->cities->pluck('id')->contains($item)) return true;
+            if (in_array($item, $cityIds)) return true;
+        });
+        foreach ($cityIds as $cityId) {
+            if (!$result->contains($cityId)) $result->push($cityId);
+        }
+        $this->relatedCities()->sync($result);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function relatedCities()
+    {
+        return $this->belongsToMany(City::class);
     }
 
     /**
@@ -1579,18 +1483,8 @@ class Service extends Model
         return $this->hasMany(Wedding::class);
     }
 
-    public function updateRelatedCitiesFromRequest(Request $request)
+    public function getKeyDateAttribute()
     {
-        $cityIds = $request->get('related_cities', []);
-        if (!is_array($cityIds)) return;
-        $existing = $this->relatedCities->pluck('id');
-        $result = $existing->filter(function ($item) use ($cityIds) {
-            if (!Auth::user()->cities->pluck('id')->contains($item)) return true;
-            if (in_array($item, $cityIds)) return true;
-        });
-        foreach ($cityIds as $cityId) {
-            if (!$result->contains($cityId)) $result->push($cityId);
-        }
-        $this->relatedCities()->sync($result);
+        return $this->date->format('Y-m-d');
     }
 }

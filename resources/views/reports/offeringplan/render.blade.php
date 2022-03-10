@@ -45,7 +45,7 @@
             @foreach ($dayServices as $service)
                 <?php $ct++; ?>
                 <tr @if($ct %2 == 1)style="background-color: lightgray;"@endif>
-                    <td valign="top" style="max-width: 3.5cm; width: 3.5cm;"><small><b>{{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText(true) }}
+                    <td valign="top" style="max-width: 3.5cm; width: 3.5cm;"><small><b>{{ $service->date->format('d.m.Y') }}, {{ $service->timeText(true) }}
                             <br />{{ $service->locationText() }}</b>
                         @if ($service->descriptionText() != '')<br />{{ $service->descriptionText }}</small>@endif
                     </td>

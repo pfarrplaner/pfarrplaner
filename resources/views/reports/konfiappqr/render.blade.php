@@ -32,7 +32,7 @@
         @for($i=0; $i<$copies; $i++)
             <div class="container" @if($loop->last) style="page-break-after: always;" @endif>
                 <p style="font-weight: bold">{{ $service->title ?: 'Gottesdienst' }}<br/>
-                    am {{ $service->day->date->format('d.m.Y') }} um {{ $service->timeText() }}
+                    am {{ $service->date->format('d.m.Y') }} um {{ $service->timeText() }}
                     <br/>{{ $service->locationText() }}</p>
                 <p>
                     <barcode code="{{ $service->konfiapp_event_qr }}" size="2" type="QR" error="M" class="barcode"
@@ -44,7 +44,7 @@
                             "{{ $type->name }}"
                         @endif
                     @endforeach
-                    <span style="font-size: 0.65em; font-style: italic;">gültig am {{ $service->day->date->format('d.m.Y') }} ab {{ $service->timeText() }} für 3 Stunden. </span>
+                    <span style="font-size: 0.65em; font-style: italic;">gültig am {{ $service->date->format('d.m.Y') }} ab {{ $service->timeText() }} für 3 Stunden. </span>
                 </p>
 
                 <p style="font-size: 0.4em;">

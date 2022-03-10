@@ -38,6 +38,7 @@ use App\Liturgy\PronounSets\PronounSets;
 use App\Location;
 use App\Service;
 use App\Traits\HandlesAttachmentsTrait;
+use App\User;
 use App\Wedding;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\Factory;
@@ -204,10 +205,113 @@ class WeddingController extends Controller
      * @param Request $request
      * @return Factory|View
      */
-    public function wizardStep1(Request $request)
+    public function wizard(Request $request)
     {
         $cities = Auth::user()->writableCities;
-        return view('weddings.wizard.step1', compact('cities'));
+        $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
+        $people = User::all();
+        $user = Auth::user();
+        return Inertia::render('Rites/WeddingWizard', compact('cities', 'locations', 'people', 'user'));
+    }
+
+    public function wizardSave(Request $request)
+    {
+        $data = $request->validate(
+            [
+                'date' => 'required|date_format:d.m.Y H:i',
+                'city' => 'required|exists:cities,id',
+                'location' => 'required',
+                'spouse1_name' => 'required|string',
+                'spouse2_name' => 'required|string',
+                'pastor' => 'nullable',
+            ]
+        );
+
+        if (is_numeric($data['location'])) {
+            $request->validate(['location' => 'exists:locations,id']);
+        }
+        $data['date'] = Carbon::createFromFormat('d.m.Y H:i', $data['date']);
+
+        $city = City::find($data['city']);
+
+        $location = $specialLocation = null;
+        if ((!is_numeric($data['location'])) || (null === Location::find($data['location']))) {
+            $specialLocation = $data['location'];
+            $data['location'] = 0;
+            $time = $data['date']->format('H:i');
+            $ccLocation = $request->get('cc_location') ?: '';
+        } else {
+            if ($data['location']) {
+                $location = Location::find($data['location']);
+                $time = $data['date']->format('H:i');
+                $ccLocation = $request->get('cc_location') ?: ($request->get(
+                    'cc'
+                ) ? $location->cc_default_location : '');
+            } else {
+                $time = $data['date']->format('H:i');
+                $ccLocation = $request->get('cc_location') ?: '';
+            }
+        }
+
+        $service = Service::create(
+            [
+                'date' => $data['date'],
+                'location_id' => ($location ? $location->id : null),
+                'special_location' => $specialLocation ?? null,
+                'city_id' => $city->id,
+                'others' => '',
+                'description' => '',
+                'need_predicant' => 0,
+                'baptism' => 0,
+                'eucharist' => 0,
+                'offerings_counter1' => '',
+                'offerings_counter2' => '',
+                'offering_goal' => '',
+                'offering_description' => '',
+                'offering_type' => '',
+                'cc' => 0,
+                'cc_location' => '',
+                'cc_lesson' => '',
+                'cc_staff' => '',
+            ]
+        );
+        $service->update(['slug' => $service->createSlug()]);
+        if (!is_array($data['pastor'])) {
+            if (Auth::user()->hasRole('Pfarrer*in')) {
+                $service->pastors()->sync([Auth::user()->id => ['category' => 'P']]);
+            }
+        } else {
+            $sync = [];
+            foreach ($data['pastor'] as $person) {
+                if (null !== $person) $sync[(is_numeric($person) ? $person : $person['id'])] = ['category' => 'P'];
+
+            }
+            $service->pastors()->sync($sync);
+        }
+
+        $wedding = Wedding::create(
+            [
+                'service_id' => $service->id,
+                'spouse1_name' => $data['spouse1_name'],
+                'spouse2_name' => $data['spouse2_name'],
+                'spouse1_birth_name' => '',
+                'spouse2_birth_name' => '',
+                'spouse1_email' => '',
+                'spouse2_email' => '',
+                'spouse1_phone' => '',
+                'spouse2_phone' => '',
+                'text' => '',
+                'registered' => 0,
+                'signed' => 0,
+                'docs_ready' => 0,
+                'docs_where' => '',
+                'registration_document' => '',
+            ]
+        );
+
+        return redirect()->route('weddings.edit', $wedding->id);
+
+
     }
 
 
@@ -230,32 +334,9 @@ class WeddingController extends Controller
 
         $city = City::find($cityId);
 
-        // check if day exists
-        $day = Day::where('date', $date)->first();
-        if ($day) {
-            // check if it visible for this city
-            if ($day->day_type == Day::DAY_TYPE_LIMITED) {
-                if (!$day->cities->contains($city)) {
-                    $day->cities()->attach($city);
-                }
-            }
-        } else {
-            // create day
-            $day = new Day(
-                [
-                    'date' => $date,
-                    'name' => '',
-                    'description' => '',
-                    'day_type' => Day::DAY_TYPE_LIMITED,
-                ]
-            );
-            $day->save();
-            $day->cities()->sync([$cityId]);
-        }
-
         $locations = Location::where('city_id', $cityId)->get();
 
-        return view('weddings.wizard.step2', compact('day', 'city', 'locations'));
+        return view('weddings.wizard.step2', compact('date', 'city', 'locations'));
     }
 
 

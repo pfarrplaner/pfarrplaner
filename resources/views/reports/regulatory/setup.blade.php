@@ -15,7 +15,7 @@
                 <select id="service" class="form-control" name="service">
                     @foreach($services as $service)
                         <option data-number="{{ $service->estimatePeoplePresent() }}" @if($service->id == $preselectedService) selected @endif value="{{ $service->id }}">
-                            {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}, {{ $service->titleText() }} [{{ $service->estimatePeoplePresent() }}]
+                            {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}, {{ $service->titleText() }} [{{ $service->estimatePeoplePresent() }}]
                         </option>
                     @endforeach
                 </select>
