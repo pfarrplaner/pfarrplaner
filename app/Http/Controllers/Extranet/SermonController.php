@@ -46,7 +46,7 @@ class SermonController extends Controller
         $isPrivate = false;
         foreach ($sermon->services as $service) {
             $isPrivate = $isPrivate || (count($service->funerals) || count($service->weddings));
-            if (($service->day->date <= Carbon::now()) || ($includePreview)) {
+            if (($service->date <= Carbon::now()) || ($includePreview)) {
                 $services[] = [
                     /** @var \App\Service $service */
                     'date' => $service->dateTime,

@@ -29,7 +29,7 @@
                             <tr data-service="{{$service->id}}" data-city="{{ $service->city_id }}"
                                 data-day="{{ $service->day_id }}">
                                 <th>
-                                    {{ $service->day->date->format('d.m.Y') }}
+                                    {{ $service->date->format('d.m.Y') }}
                                     , {{ strftime('%H:%M Uhr', strtotime($service->time)) }}<br/>
                                     {{ $service->locationText() }}
                                 </th>

@@ -234,7 +234,7 @@
         </tr>
     </table>
 </htmlpagefooter>
-<h1>Lieder und Texte zum Gottesdienst am {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}</h1>
+<h1>Lieder und Texte zum Gottesdienst am {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}</h1>
 @foreach($service->liturgyBlocks as $block)
     @foreach ($block->items as $item)
         @if($item->data_type == 'song')

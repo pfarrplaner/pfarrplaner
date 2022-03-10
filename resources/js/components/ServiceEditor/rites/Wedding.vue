@@ -30,7 +30,7 @@
 <template>
     <div class="wedding row">
         <div class="col-md-2" v-if="showService">
-            {{ moment(wedding.service.day.date).format('DD.MM.YYYY') }}<br />
+            {{ moment(wedding.service.date).format('DD.MM.YYYY') }}<br />
             {{ wedding.service.timeText }}<br />
             {{ wedding.service.locationText }}
             <div v-if="showPastor">

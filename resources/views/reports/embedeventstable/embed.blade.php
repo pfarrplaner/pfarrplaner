@@ -46,7 +46,7 @@
                 @foreach ($events as $theseEvents)
                     @foreach($theseEvents as $event)
 
-                        <?php $eventStart = is_array($event) ? $event['start'] : $event->day->date ?>
+                        <?php $eventStart = is_array($event) ? $event['start'] : $event->date ?>
                         @if ($lastDate != $eventStart->format('Ymd') )
                             <?php
                             $lastDate = $eventStart->format('Ymd');

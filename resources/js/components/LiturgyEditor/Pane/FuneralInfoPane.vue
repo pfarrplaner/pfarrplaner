@@ -81,7 +81,7 @@ export default {
             if (!this.funeral.dod) return;
             let dod = moment(this.funeral.dod).locale('de');
             const cb = navigator.clipboard;
-            cb.writeText(dod.format('LL') + ' = ' + RelativeDate(dod.format('DD.MM.YYYY'), moment(this.service.day.date).format('DD.MM.YYYY')) + ', im Alter von ' + this.age + ' Jahren ');
+            cb.writeText(dod.format('LL') + ' = ' + RelativeDate(dod.format('DD.MM.YYYY'), moment(this.service.date).format('DD.MM.YYYY')) + ', im Alter von ' + this.age + ' Jahren ');
         }
     }
 }

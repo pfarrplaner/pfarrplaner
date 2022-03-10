@@ -236,7 +236,7 @@ class SermonHandoutLiturgySheet extends AbstractLiturgySheet
         $run->addTextBreak();
         $run->addText($this->service->participantsText('P', true));
         $run->addTextBreak();
-        $run->addText($this->service->day->date->format('d.m.Y').', '.$this->service->locationText());
+        $run->addText($this->service->date->format('d.m.Y').', '.$this->service->locationText());
         $table->addRow(Converter::cmToTwip(0.66));
         $table->addCell(Converter::cmToTwip(6));
         $textRun = $table->addCell(Converter::cmToTwip(3.75), ['valign' => 'bottom', 'borderLeftSize' => Converter::pointToTwip(1), 'borderLeftColor' => '951981'])

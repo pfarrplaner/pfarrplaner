@@ -38,7 +38,7 @@
             @foreach ($days as $day)
                 <tr class="@if($loop->index % 2) highlight-row @endif">
                     <td>
-                       <b>{{ $day->date->formatLocalized('%d. %B') }},<br/>
+                       <b>{{ \Carbon\Carbon::parse($day)->formatLocalized('%d. %B') }},<br/>
                         {{ str_replace('So. n.', 'Sonntag nach', $day->name) }}</b>
                     </td>
                     @foreach($locations as $location)
@@ -206,7 +206,7 @@
                     <ul>
                     @foreach($group['services'] as $service)
                             <li>
-                                {{ $service->day->date->formatLocalized('%A, %d. %B') }}{!! ((!$group['options']['sameTime']) || (count($group['services']) == 1)) ? ', '.$service->timeText(true, '.', false, true) : '' !!}{{ ((!$group['options']['sameLocation']) && (trim($service->locationText()) != '')) ? ', '.$service->locationText() : ''  }}
+                                {{ $service->date->formatLocalized('%A, %d. %B') }}{!! ((!$group['options']['sameTime']) || (count($group['services']) == 1)) ? ', '.$service->timeText(true, '.', false, true) : '' !!}{{ ((!$group['options']['sameLocation']) && (trim($service->locationText()) != '')) ? ', '.$service->locationText() : ''  }}
                             </li>
                     @endforeach
                     </ul>

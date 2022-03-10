@@ -199,7 +199,7 @@ class BillBoardReport extends AbstractWordDocumentReport
                 $dateFormat = $ctr ? '%A, %d. %B' : '%A, %d. %B %Y';
 
                 /** @var Carbon $eventStart */
-                $eventStart = is_array($event) ? $event['start'] : $event->day->date;
+                $eventStart = is_array($event) ? $event['start'] : $event->date;
                 $done = false;
 
                 // header for the day
@@ -303,7 +303,7 @@ class BillBoardReport extends AbstractWordDocumentReport
                     [
                         Carbon::createFromFormat(
                             'Y-m-d H:i',
-                            $event->day->date->format('Y-m-d') . ' ' . $event->time
+                            $event->date->format('Y-m-d') . ' ' . $event->time
                         )->formatLocalized('%H.%M Uhr') . "\t",
                         []
                     ],
@@ -330,7 +330,7 @@ class BillBoardReport extends AbstractWordDocumentReport
                         [
                             Carbon::createFromFormat(
                                 'Y-m-d H:i',
-                                $event->day->date->format('Y-m-d') . ' ' . ($event->cc_alt_time ?? $event->time)
+                                $event->date->format('Y-m-d') . ' ' . ($event->cc_alt_time ?? $event->time)
                             )->formatLocalized('%H.%M Uhr') . "\t",
                             []
                         ],

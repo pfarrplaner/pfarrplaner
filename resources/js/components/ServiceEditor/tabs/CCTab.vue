@@ -35,7 +35,7 @@
         <div class="row">
             <div class="col-md-6">
                 <form-input name="cc_alt_time" label="Vom Gottesdienst abweichende Uhrzeit"
-                            :help="'Leer lassen, wenn der Kindergottesdienst zur selben Zeit ('+myService.time+' Uhr) beginnt.'"
+                            :help="'Leer lassen, wenn der Kindergottesdienst zur selben Zeit ('+myService.timeText+') beginnt.'"
                             placeholder="HH:MM"
                             v-model="myService.cc_alt_time"
                             :disabled="disabled"

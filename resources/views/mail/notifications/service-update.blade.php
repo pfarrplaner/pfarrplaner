@@ -1,17 +1,17 @@
 @extends('mail.layout.default')
 
 @section('preview')
-    Änderungen am Gottesdienst vom {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }} ({{ $service->locationText() }})
+    Änderungen am Gottesdienst vom {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }} ({{ $service->locationText() }})
 @endsection
 
 @section('content')
 
     @component('mail.layout.blocks.content-table')
         @slot('title')
-            Änderungen am Gottesdienst vom {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }} ({{ $service->locationText() }})
+            Änderungen am Gottesdienst vom {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }} ({{ $service->locationText() }})
         @endslot
         @slot('subtitle')
-            {{ strftime('%A, %d. %B %Y', $service->day->date->timestamp) }}, {{ $service->timeText() }}
+            {{ strftime('%A, %d. %B %Y', $service->date->timestamp) }}, {{ $service->timeText() }}
             <br>{{ $service->locationText() }}<br/>
             <small style="font-size: 8pt;">
                 Geändert am {{ date('d.m.Y') }} um {{ date('H:i') }} Uhr

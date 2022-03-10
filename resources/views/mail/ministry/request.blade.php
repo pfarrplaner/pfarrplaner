@@ -10,7 +10,7 @@ Hallo {{ $user->name }},
 "{{ $ministry }}" zu übernehmen.
 
 @foreach($services as $service)
-- {{ $service->day->date->formatLocalized('%A, %d. %B %Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}
+- {{ $service->date->formatLocalized('%A, %d. %B %Y') }}, {{ $service->timeText() }}, {{ $service->locationText() }}
 @endforeach
 
 @if($text)

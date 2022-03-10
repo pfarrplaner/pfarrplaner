@@ -67,7 +67,7 @@ class LiturgicItemHelper extends AbstractItemHelper
                             ) : 'bestattung:todesdatum',
                             'bestattung:todesdatum:relativ' =>
                                 $funeral->dod ? '' //$this->relativeDateString(
-                                    //$service->day->date,
+                                    //$service->date,
                                     //$funeral->dod
                                 //)
                                     : 'bestattung:todesdatum:relativ',

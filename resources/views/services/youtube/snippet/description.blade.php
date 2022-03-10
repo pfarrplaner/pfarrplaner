@@ -1,4 +1,4 @@
-{!! $service->titleText(false) !!} am {!! $service->day->date->format('d.m.Y') !!} @if(isset($liturgy['title'])) ({!! $liturgy['title'] !!})@endif mit {!! $service->participantsText('P', true, true) !!}@if($service->youtube_prefix_description)
+{!! $service->titleText(false) !!} am {!! $service->date->format('d.m.Y') !!} @if(isset($liturgy['title'])) ({!! $liturgy['title'] !!})@endif mit {!! $service->participantsText('P', true, true) !!}@if($service->youtube_prefix_description)
 
 
 {!! $service->youtube_prefix_description !!} @endif    @if ($service->descriptionText(['needs_reservations'])!='')

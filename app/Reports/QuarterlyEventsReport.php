@@ -82,39 +82,25 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'title' => 'required',
                 'quarter' => 'required',
-                'location' => 'required|integer',
+                'location' => 'required|int|exists:locations,id',
             ]
         );
 
-        $location = Location::find($request->get('location'));
-        $title = $request->get('title') ?: 'Quartalsprogramm für ' . $location->name;
-        $quarter = Carbon::createFromFormat('Y-m-d', $request->get('quarter'));
+        $location = Location::findOrFail($data['location']);
+        $title = $data['title'] ?: 'Quartalsprogramm für ' . $location->name;
+        $quarter = Carbon::createFromFormat('Y-m-d', $data['quarter']);
 
-        $days = Day::where('date', '>=', $quarter->format('Y-m-d'))
-            ->where('date', '<=', $quarter->endOfQuarter()->format('Y-m-d'))
-            ->orderBy('date', 'ASC')
-            ->get();
+        $serviceList = Service::between($quarter, $quarter->copy()->endOfQuarter())
+            ->notHidden()
+            ->where('location_id', $location->id)
+            ->ordered()
+            ->get()
+            ->groupBy('key_date');
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
-                ->notHidden()
-                ->where('day_id', $day->id)
-                ->where('location_id', $location->id)
-                ->orderBy('time', 'ASC')
-                ->get();
-        }
-
-        $dates = [];
-        foreach ($serviceList as $day => $services) {
-            foreach ($services as $service) {
-                $dates[] = $service->day->date;
-            }
-        }
 
         $this->wordDocument->setDefaultFontName('Helvetica Condensed');
         $this->wordDocument->setDefaultFontSize(14);
@@ -178,8 +164,8 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
         foreach ($serviceList as $dayList) {
             foreach ($dayList as $service) {
                 $table->addRow();
-                $table->addCell()->addText(strftime('%a., %d. %B', $service->day->date->getTimeStamp()));
-                $table->addCell()->addText(strftime('%H:%M Uhr', strtotime($service->time)));
+                $table->addCell()->addText($service->date->formatLocalized('%a., %d. %B'));
+                $table->addCell()->addText($service->timeText());
                 if ($request->get('includePastor')) {
                     $table->addCell()->addText($service->participantsText('P'));
                 }

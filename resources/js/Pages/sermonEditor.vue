@@ -37,7 +37,7 @@
                 <div v-if="services.length >0" class="mb-3">
                     <div class="row py-1 border-bottom mb-1" v-for="service in services">
                         <div class="col-md-8">
-                            {{ service.titleText }} am {{ moment(service.day.date).format('DD.MM.YYYY') }},
+                            {{ service.titleText }} am {{ moment(service.date).format('DD.MM.YYYY') }},
                             {{ service.timeText }}, {{ service.locationText }}
                         </div>
                         <div class="col-md-4 text-right">

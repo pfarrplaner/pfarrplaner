@@ -78,49 +78,36 @@ class OfferingPlanReport extends AbstractPDFDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
-                'city' => 'required',
+                'city' => 'required|int|exists:cities,id',
                 'year' => 'required|int'
             ]
         );
 
-        $year = $request->get('year');
-        $days = Day::where('date', '>=', Carbon::create($year, 1, 1, 0, 0, 0))
-            ->where('date', '<=', Carbon::create($year, 12, 31, 23, 59, 59))
-            ->orderBy('date', 'ASC')
+        $city = City::findOrFail($data['city']);
+
+        $serviceList = Service::inCity($city)
+            ->whereYear('date', $data['year'])
+            ->ordered()
             ->get();
 
-        $city = City::find($request->get('city'));
+        $dates = $serviceList->pluck('date')->toArray();
+        $serviceList = $serviceList->groupBy('key_date');
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
-                ->where('day_id', $day->id)
-                ->where('city_id', $city->id)
-                ->orderBy('time', 'ASC')
-                ->get();
-        }
-
-        $dates = [];
-        foreach ($serviceList as $day => $services) {
-            foreach ($services as $service) {
-                $dates[] = $service->day->date;
-            }
-        }
 
         $minDate = min($dates);
         $maxDate = max($dates);
 
         return $this->sendToFile(
-            $year . ' Opferplan ' . $city->name . '.pdf',
+            $data['year'] . ' Opferplan ' . $city->name . '.pdf',
             [
                 'start' => $minDate,
                 'end' => $maxDate,
                 'city' => $city,
                 'services' => $serviceList,
                 'count' => count($dates),
-                'year' => $year,
+                'year' => $data['year'],
             ],
             ['format' => 'A4']
         );

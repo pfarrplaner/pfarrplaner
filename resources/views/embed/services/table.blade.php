@@ -53,8 +53,8 @@
             @foreach($services as $service)
                 <tr data-url="{{ $service->youtube_url ?? '' }}" class="{{ $service->youtube_url ? 'youtube' : '' }}"
                     title="{{ $service->youtube_url ? 'Klicken Sie hier, um den Gottesdienst auf Youtube anzuschauen' : '' }}">
-                    @if ($lastDate != $service->day->date->format('d.m.') )
-                        <td>{{ $lastDate = $service->day->date->format('d.m.') }}</td>
+                    @if ($lastDate != $service->date->format('d.m.') )
+                        <td>{{ $lastDate = $service->date->format('d.m.') }}</td>
                     @else
                         <td></td>
                     @endif

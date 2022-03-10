@@ -15,7 +15,7 @@
             @foreach($services as $service)
                 <tr>
                     <td>{{ $service->city->name }}</td>
-                    <td>{{ $service->day->date->format('d.m.Y') }}</td>
+                    <td>{{ $service->date->format('d.m.Y') }}</td>
                     <td>{{ $service->timeText() }}</td>
                     <td>{{ $service->locationText() }}</td>
                     <td>{{ $service->descriptionText() }}</td>

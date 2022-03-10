@@ -81,7 +81,7 @@ class PredicantsReport extends AbstractWordDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'city' => 'required|integer',
                 'start' => 'required|date|date_format:d.m.Y',
@@ -89,30 +89,16 @@ class PredicantsReport extends AbstractWordDocumentReport
             ]
         );
 
-        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . '0:00:00'))
-            ->where('date', '<=', Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end') . ' 23:59:59'))
-            ->orderBy('date', 'ASC')
-            ->get();
+        $serviceList = Service::between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
+            ->notHidden()
+            ->whereIn('city_id', $request->get('includeCities'))
+            ->ordered()
+            ->get()
+            ->groupBy('key_date');
 
-        $city = City::find($request->get('city'));
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
-                ->join('days', 'days.id', '=', 'day_id')
-                ->where('day_id', $day->id)
-                ->where('need_predicant', 1)
-                ->where('city_id', $city->id)
-                ->orderBy('days.date', 'ASC')
-                ->orderBy('time', 'ASC')
-                ->get();
-        }
 
-        foreach ($serviceList as $key => $item) {
-            if (!count($item)) {
-                unset($serviceList[$key]);
-            }
-        }
+        $city = City::find($data['city']);
 
         $this->wordDocument->setDefaultFontName('Arial');
         $this->wordDocument->setDefaultFontSize(11);
@@ -186,9 +172,8 @@ class PredicantsReport extends AbstractWordDocumentReport
 
         foreach ($serviceList as $services) {
             foreach ($services as $service) {
-                $day = Day::find($service->getAttribute('day_id'));
                 $table->addRow();
-                $table->addCell(Converter::cmToTwip(3.25))->addText($day->date->format('d.m.Y') . '<w:br />');
+                $table->addCell(Converter::cmToTwip(3.25))->addText($service->date->format('d.m.Y') . '<w:br />');
                 $table->addCell(Converter::cmToTwip(5))->addText($service->locationText());
                 $table->addCell(Converter::cmToTwip(3.25))->addText(strftime('%H:%M Uhr', strtotime($service->time)));
                 $table->addCell(Converter::cmToTwip(6))->addText($service->descriptionText());

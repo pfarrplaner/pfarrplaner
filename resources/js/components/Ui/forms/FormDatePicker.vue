@@ -31,7 +31,7 @@
     <form-group :id="id" :label="label" :help="help" :name="name" :pre-label="preLabel" :required="required"
                 :value="myValue" :is-checked-item="isCheckedItem">
         <date-picker v-model="myValue" :config="myDatePickerConfig" :disabled="disabled" :required="required"
-                     :aria-required="required" @input="$emit('input', $event)" />
+                     :aria-required="required" @input="handleInputEvent" />
     </form-group>
 </template>
 
@@ -70,6 +70,7 @@ export default {
             default: false,
         },
         config: Object,
+        isoDate: Boolean,
     },
     data() {
         return {
@@ -80,6 +81,15 @@ export default {
                 showClear: true,
             },
         }
+    },
+    methods: {
+        handleInputEvent(e) {
+            if (this.isoDate) {
+                this.$emit('input', moment(e, this.config.format).toISOString());
+            } else {
+                this.$emit('input', e);
+            }
+        },
     }
 };
 </script>

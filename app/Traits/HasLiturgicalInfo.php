@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -28,48 +28,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Created by PhpStorm.
- * User: Christoph Fischer
- * Date: 27.06.2019
- * Time: 13:08
- */
-
-namespace App\Http\Controllers;
-
+namespace App\Traits;
 
 use App\Day;
-use App\Vacations;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\View\View;
+use App\Liturgy;
 
-/**
- * Class VacationController
- * @package App\Http\Controllers
- */
-class VacationController extends Controller
+trait HasLiturgicalInfo
 {
 
     /**
-     * @var array
+     * Add liturgy attribute
+     * @return array
      */
-    protected $vacationData = [];
-
-    public function __construct()
+    public function getLiturgicalInfoAttribute(): array
     {
-        $this->middleware('auth');
+        return Liturgy::getDayInfo($this->alt_liturgy_date ?: $this->date);
     }
 
-    /**
-     * @param $dayId
-     * @return Application|Factory|View
-     */
-    public function vacationsByDay($dayId)
+    public function getLiturgicalInfoDateAttribute()
     {
-        $day = Day::find($dayId);
-        $vacations = Vacations::getByDay($day);
-        return view('vacations.ajax.byDay', compact('day', 'vacations'));
+        return $this->alt_liturgy_date ?: $this->date;
     }
+
+
 
 }

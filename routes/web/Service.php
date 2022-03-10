@@ -44,7 +44,7 @@
 use App\Http\Controllers\ServiceController;
 
 // multiple services
-Route::get('/gottesdienste/neu/{date}/{city}', [ServiceController::class, 'add'])->name('services.add');
+Route::get('/gottesdienste/neu/{city}/{date}', [ServiceController::class, 'create'])->name('service.create');
 Route::get('/gottesdienste/meine/letzte-aktualisierung', [ServiceController::class, 'lastUpdate'])->name('services.currentUser.lastUpdate');
 
 // one service

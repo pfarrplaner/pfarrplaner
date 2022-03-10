@@ -44,7 +44,7 @@
                         @foreach($services as $service)
                                 <tr class="data-row" data-location="{{ $service->locationText() }}">
                                 <th>
-                                    {{ $service->day->date->format('d.m.Y') }}
+                                    {{ $service->date->format('d.m.Y') }}
                                     , {{ strftime('%H:%M Uhr', strtotime($service->time)) }}<br/>
                                     {{ $service->locationText() }}
                                 </th>

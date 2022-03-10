@@ -9,7 +9,7 @@
             @method('PATCH')
             @component('components.ui.card')
                 @slot('cardHeader')
-                    Reservierung für: {{ $booking->service->titleText() }} am {{ $booking->service->day->date->format('d.m.Y') }}, {{ $booking->service->timeText() }}, {{ $booking->service->locationText() }}
+                    Reservierung für: {{ $booking->service->titleText() }} am {{ $booking->service->date->format('d.m.Y') }}, {{ $booking->service->timeText() }}, {{ $booking->service->locationText() }}
                 @endslot
                 @slot('cardFooter')
                     <button type="submit" class="btn btn-primary">Buchung ändern</button>

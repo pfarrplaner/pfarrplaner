@@ -118,6 +118,7 @@ class ServiceRequest extends FormRequest
             'communiapp_listing_start' => 'nullable',
             'controlled_access' => 'nullable|int',
             'alt_liturgy_date' => 'nullable|date_format:d.m.Y',
+            'date' => 'nullable|date',
         ];
     }
 
@@ -180,6 +181,10 @@ class ServiceRequest extends FormRequest
             $data['communiapp_listing_start'] = Carbon::createFromFormat('d.m.Y', $data['communiapp_listing_start']);
         } else {
             $data['communiapp_listing_start'] = null;
+        }
+
+        if (isset($data['date'])) {
+            $data['time'] = Carbon::parse($data['date'])->setTimezone('Europe/Berlin')->format('H:i:s');
         }
 
         return $data;

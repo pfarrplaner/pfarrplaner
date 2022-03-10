@@ -12,11 +12,11 @@
         <div class="d-none d-md-inline calendar-full-container">
             <calendar-pane-horizontal v-if="orientation == 'horizontal'"
                                       :date="date" :days="myDays" :cities="cityList" :services="services" :years="years"
-                                      :key="collapseKey"  :collapseState="collapseState"
+                                      :key="collapseKey"
                                       :absences="absences" :can-create="canCreate"/>
             <calendar-pane-vertical v-else
                                     :date="date" :days="myDays" :cities="cityList" :services="services" :years="years"
-                                    :key="collapseKey" :collapseState="collapseState"
+                                    :key="collapseKey"
                                     :absences="absences" :can-create="canCreate "/>
         </div>
         <div class="d-inline d-md-none">
@@ -38,17 +38,18 @@ export default {
     components: {CalendarPaneMobile},
     props: ['date', 'days', 'cities',  'years', 'absences', 'canCreate', 'services'],
     data() {
-        var myDays = this.days;
+        var myDays = {};
 
-        myDays.forEach((day,dayIndex) => {
-            myDays[dayIndex].collapsed = false;
-            myDays[dayIndex].initialized = false;
-            myDays[dayIndex].hasMine = false;
-        });
+        for (let dayIndex in this.days) {
+            myDays[this.days[dayIndex].date] = {
+                ...this.days[dayIndex],
+                id: this.days[dayIndex].date,
+                hasMine: false,
+            }
+        }
 
         return {
             myDays: myDays,
-            collapseState: null,
             collapseKey: Math.random()*9999999,
             cityList: this.cities,
             orientation: vm.$children[0].page.props.settings.calendar_view,
@@ -59,8 +60,10 @@ export default {
     created() {
         this.cities.forEach(city => {
             this.loading++;
+            city['loading'] = city.id;
             axios.get(route('cal.city', {date: moment(this.date).format('YYYY-MM'), city: city.id}))
             .then(response => {
+                city['loading'] = false;
                 this.myServices[city.id] = response.data;
                 this.loading--;
                 this.$forceUpdate();

@@ -38,6 +38,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 
@@ -77,7 +78,7 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'city' => 'required',
                 'start' => 'required|date|date_format:d.m.Y',
@@ -85,34 +86,28 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
             ]
         );
 
-        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')))
-            ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')))
-            ->orderBy('date', 'ASC')
-            ->get();
+        $serviceList = Service::between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
+            ->notHidden()
+            ->where('city_id', $data['city'])
+            ->where('cc', 1)
+            ->ordered()
+            ->get()
+            ->groupBy('key_date');
 
-        $city = City::find($request->get('city'));
+        $dates = Service::select(DB::raw('DISTINCT DATE(date) as day'))
+            ->between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
+            ->notHidden()
+            ->where('city_id', $data['city'])
+            ->where('cc', 1)
+            ->orderBy('day', 'ASC')
+            ->get()
+            ->pluck('day');
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
-                ->notHidden()
-                ->where('day_id', $day->id)
-                ->where('cc', 1)
-                ->where('city_id', $city->id)
-                ->orderBy('time', 'ASC')
-                ->get();
-        }
-
-        $dates = [];
-        foreach ($serviceList as $day => $services) {
-            foreach ($services as $service) {
-                $dates[] = $service->day->date;
-            }
-        }
+        $city = City::findOrFail($data['city']);
 
         if (count($dates)) {
-            $minDate = min($dates);
-            $maxDate = max($dates);
+            $minDate = $dates->min();
+            $maxDate = $dates->max();
         } else {
             return redirect()->back()->with('error', 'In der gewählten Zeit findet kein Kindergottesdienst statt.');
         }

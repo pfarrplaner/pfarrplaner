@@ -3,7 +3,7 @@
         Der komplette Gottesdienst in der Übersicht
     @endslot
     @slot('subtitle')
-        {{ strftime('%A, %d. %B %Y', $service->day->date->timestamp) }}, {{ $service->timeText() }}<br>{{ $service->locationText() }}<br />
+        {{ strftime('%A, %d. %B %Y', $service->date->timestamp) }}, {{ $service->timeText() }}<br>{{ $service->locationText() }}<br />
     @endslot
 
     @component('mail.layout.blocks.section')
@@ -17,7 +17,7 @@
         @endslot
         <tr>
             @component('mail.layout.blocks.cell')Datum @endcomponent
-            @component('mail.layout.blocks.cell'){{ $service->day->date->format('d.m.Y') }}@endcomponent
+            @component('mail.layout.blocks.cell'){{ $service->date->format('d.m.Y') }}@endcomponent
         </tr>
         <tr>
             @component('mail.layout.blocks.cell')Uhrzeit @endcomponent

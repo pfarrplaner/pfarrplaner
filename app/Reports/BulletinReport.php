@@ -34,6 +34,7 @@ use App\Day;
 use App\Liturgy;
 use App\Service;
 use Carbon\Carbon;
+use Carbon\PHPStan\AbstractMacro;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -87,7 +88,7 @@ class BulletinReport extends AbstractWordDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'includeCities' => 'required',
                 'start' => 'required|date|date_format:d.m.Y',
@@ -95,25 +96,18 @@ class BulletinReport extends AbstractWordDocumentReport
             ]
         );
 
-        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')))
-            ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')))
-            ->orderBy('date', 'ASC')
-            ->get();
+        $serviceList = Service::between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
+            ->notHidden()
+            ->whereIn('city_id', $request->get('includeCities'))
+            ->ordered()
+            ->get()
+            ->groupBy('key_date');
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
-                ->notHidden()
-                ->where('day_id', $day->id)
-                ->whereIn('city_id', $request->get('includeCities'))
-                ->orderBy('time', 'ASC')
-                ->get();
-        }
 
         $format = $request->get('format') ?: $this->formats[0];
         $renderMethod = "render{$format}Format";
         if (method_exists($this, $renderMethod)) {
-            return $this->$renderMethod($days, $serviceList);
+            return $this->$renderMethod($serviceList);
         } else {
             return redirect()->route('reports.setup', $this->getKey());
         }
@@ -123,23 +117,24 @@ class BulletinReport extends AbstractWordDocumentReport
      * @param $days
      * @param $serviceList
      */
-    public function renderTailfingenFormat($days, $serviceList)
+    public function renderTailfingenFormat($serviceList)
     {
         $section = $this->commonDocumentSetup();
+        $table = $section->addTable('table');
 
-        foreach ($days as $day) {
+        foreach ($serviceList as $dayList) {
             $ctr = 0;
-            foreach ($serviceList[$day->date->format('Y-m-d')] as $service) {
+            foreach ($dayList as $service) {
                 $ctr++;
                 $textRun = $section->addTextRun('list');
                 if ($ctr == 1) {
-                    $textRun->addText($day->date->format('d.m.Y'));
+                    $textRun->addText($service->date->format('d.m.Y'));
                 }
                 if ($ctr == 2) {
-                    $textRun->addText(htmlspecialchars($day->name));
+                    $textRun->addText(htmlspecialchars($dayList->name));
                 }
                 $textRun->addText("\t");
-                $textRun->addText(strftime('%H:%M', strtotime($service->time)) . " Uhr\t");
+                $textRun->addText($service->timeText()."\t");
                 if (!is_object($service->location)) {
                     $textRun->addText(htmlspecialchars($service->special_location) . "\t");
                 } else {
@@ -190,22 +185,20 @@ class BulletinReport extends AbstractWordDocumentReport
      * @param $days
      * @param $serviceList
      */
-    public function renderTruchtelfingenFormat($days, $serviceList)
+    public function renderTruchtelfingenFormat($serviceList)
     {
         $section = $this->commonDocumentSetup();
         $table = $section->addTable('table');
 
-
-        /** @var Day $day */
-        foreach ($days as $day) {
+        foreach ($serviceList as $day => $dayList) {
             $liturgy = Liturgy::getDayInfo($day);
             /** @var Service $service */
             $first = true;
-            foreach ($serviceList[$day->date->format('Y-m-d')] as $service) {
+            foreach ($dayList as $service) {
                 $table->addRow();
-                $table->addCell(Converter::cmToTwip(2.5))->addText($first ? $day->name : '');
-                $table->addCell(Converter::cmToTwip(1.73))->addText($first ? $day->date->format('d.m.Y') : '');
-                $table->addCell(Converter::cmToTwip(1.58))->addText(strftime('%H:%M Uhr', strtotime($service->time)));
+                $table->addCell(Converter::cmToTwip(2.5))->addText($first ? ($liturgy['title'] ?? '') : '');
+                $table->addCell(Converter::cmToTwip(1.73))->addText($first ? $service->date->format('d.m.Y') : '');
+                $table->addCell(Converter::cmToTwip(1.58))->addText($service->timeText());
                 $table->addCell(Converter::cmToTwip(2.11))->addText($service->locationText());
                 $table->addCell(Converter::cmToTwip(2.32))->addText($service->descriptionText());
                 $table->addCell(Converter::cmToTwip(3.52))->addText($service->participantsText('P', false, false));

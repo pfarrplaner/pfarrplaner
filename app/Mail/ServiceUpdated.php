@@ -95,7 +95,7 @@ class ServiceUpdated extends AbstractServiceMailable
             'ical/ical',
             ['services' => [$this->service], 'token' => null, 'action' => null, 'key' => null]
         )->render();
-        $icsTitle = 'GD ' . $this->service->day->date->format('Ymd') . ' ' . $this->service->timeText(
+        $icsTitle = 'GD ' . $this->service->date->format('Ymd') . ' ' . $this->service->timeText(
                 false
             ) . ' ' . $this->service->locationText() . '.ics';
         return $this->subject(

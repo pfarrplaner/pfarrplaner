@@ -44,7 +44,7 @@ export default {
     },
     methods: {
         title(service) {
-            return 'Liturgie für ' + moment(service.day.date).locale('de-DE').format('DD.MM.YYYY') + ', ' + service.timeText;
+            return 'Liturgie für ' + moment(service.date).locale('de-DE').format('DD.MM.YYYY') + ', ' + service.timeText;
         },
         updateFocus(blockIndex, itemIndex, element) {
             this.blockIndex = blockIndex;

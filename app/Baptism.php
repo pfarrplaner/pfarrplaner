@@ -143,7 +143,7 @@ class Baptism extends Model
             'endDate' => $this->appointment->copy()->addHour(1),
             'title' => 'Taufgespräch '.$this->candidate_name,
             'description' =>
-                '<p>Taufe am '.$this->service->day->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'
+                '<p>Taufe am '.$this->service->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'
                 .'<p><a href="'.route('baptisms.edit', $this->id).'">Taufe im Pfarrplaner öffnen</a></p>'
                 .(count($contacts) ? '<p>Kontakt: '.join(', ', $contacts).'</p>' : '')
                 .AbstractSyncEngine::AUTO_WARNING,

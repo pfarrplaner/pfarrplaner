@@ -25,18 +25,18 @@
                         <div class="col-md-2">{{ $location->name }}</div>
                     @endforeach
                 </div>
-                @foreach($empty as $dayRecord)
+                @foreach($empty as $date => $dayRecord)
                     <div class="row">
                         <div class="col-md-2">
-                            <input type="checkbox" name="dayList[]" value="{{ $dayRecord['day']->id }}" checked>
-                            {{ $dayRecord['day']->date->formatLocalized('%A, %d.%m.%Y') }}
+                            <input type="checkbox" name="dayList[]" value="{{ $date }}" checked>
+                            {{ \Carbon\Carbon::parse($date)->formatLocalized('%A, %d.%m.%Y') }}
                         </div>
                         @foreach($locations as $location)
                             <div class="col-md-2">
-                                @if(isset($dayRecord['locations'][$location->id]))
+                                @if(isset($dayRecord[$location->id]))
                                     <div class="form-group">
                                     <textarea class="form-control"
-                                              name="empty[{{$location->id}}][{{$dayRecord['day']->id}}]">{{ $dayRecord['locations'][$location->id] }}</textarea>
+                                              name="empty[{{$location->id}}][{{$date}}]">{{ $dayRecord[$location->id] }}</textarea>
                                     </div>
                                 @endif
                             </div>

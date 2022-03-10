@@ -19,7 +19,7 @@
                 @foreach ($services as $dayServices)
                     @foreach ($dayServices as $service)
                         <tr>
-                            <td valign="top" width="10%">{{ $service->day->date->format('d.m.Y') }}</td>
+                            <td valign="top" width="10%">{{ $service->date->format('d.m.Y') }}</td>
                             <td valign="top" width="10%">{{ $service->ccTimeText(false, true) }}</td>
                             <td valign="top" width="20%"
                                 @if($service->hasNonStandardCCLocation()) style="color: red;" @endif>{{ $service->ccLocationText() }}</td>

@@ -91,6 +91,22 @@ class ServiceController extends Controller
         $service->updateRelatedCitiesFromRequest($request);
     }
 
+    public function create(City $city, $date)
+    {
+        $location = $city->locations->first();
+        if ($location && $location->default_time) {
+            $date = Carbon::parse($date . ' ' . $location->default_time, 'Europe/Berlin');
+        } else {
+            $date = Carbon::parse($date . ' 10:00:00', 'Europe/Berlin');
+        }
+        $service = Service::create([
+                                       'city_id' => $city->id,
+                                       'date' => $date->setTimezone('UTC'),
+                                       'location_id' => $location ? $location->id : null,
+                                   ]);
+        return redirect()->route('service.edit', $service->slug);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -102,7 +118,9 @@ class ServiceController extends Controller
     public function edit(Request $request, Service $service, $tab = 'home')
     {
         $tab = $request->get('tab', 'home');
-        $service->load(['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups', 'relatedCities']);
+        $service->load(
+            ['attachments', 'comments', 'bookings', 'liturgyBlocks', 'tags', 'serviceGroups', 'relatedCities']
+        );
         $service->setAppends(
             [
                 'pastors',
@@ -204,7 +222,9 @@ class ServiceController extends Controller
 
         $service->refresh();
 
-        if ($request->get('format', null) == 'json') return \response()->json($service);
+        if ($request->get('format', null) == 'json') {
+            return \response()->json($service);
+        }
 
 
         $closeAfterSaving = $request->get('closeAfterSaving', 1);
@@ -228,13 +248,13 @@ class ServiceController extends Controller
      */
     public function destroy(Service $service)
     {
-        $day = Day::find($service->day_id);
+        $date = $service->date->format('Y-m');
 
         // emit event so that integrations may react to impending delete
         event(new ServiceBeforeDelete($service));
 
         $service->delete();
-        return redirect()->route('calendar', $day->date->format('Y-m'))
+        return redirect()->route('calendar', $date)
             ->with('success', 'Der Gottesdiensteintrag wurde gelöscht.');
     }
 
@@ -253,7 +273,9 @@ class ServiceController extends Controller
             'location_id' => $city->locations->first()->id,
         ];
 
-        if ($city->konfiapp_default_type) $data['konfiapp_event_type'] = $city->konfiapp_default_type;
+        if ($city->konfiapp_default_type) {
+            $data['konfiapp_event_type'] = $city->konfiapp_default_type;
+        }
 
         $service = Service::create($data);
         $service->update(['slug' => $service->createSlug()]);
@@ -304,8 +326,8 @@ class ServiceController extends Controller
         $route = route(
             'calendar',
             [
-                'year' => $service->day->date->format('Y'),
-                'month' => $service->day->date->format('m'),
+                'year' => $service->date->format('Y'),
+                'month' => $service->date->format('m'),
                 'highlight' => $service->id,
                 'slave' => 1
             ]

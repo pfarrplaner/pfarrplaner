@@ -17,7 +17,8 @@
                     <div v-if="day.liturgy.title" class="liturgy">{{ day.liturgy.title }}</div>
                 </th>
                 <td class="day-cell" v-for="(city,index) in cities"
-                    @click="goToDay(day.id,city.id)">
+                    @click="goToDay(day.date,city.id)">
+                    <div v-if="city.loading"><span class="mdi mdi-spin mdi-loading"></span></div>
                     <div class="service-info" v-for="(service, serviceIndex) in getServices(city,day)"
                          :key="service.id"
                          :class="{ mine: service.isMine, funeral: (service.funerals.length > 0)}">
@@ -42,12 +43,11 @@ export default {
         },
         getServices(city, day) {
             if (this.services[city.id] == undefined) return [];
-            if (this.services[city.id][day.id] == undefined) return [];
-            return this.services[city.id][day.id];
+            if (this.services[city.id][day.date] == undefined) return [];
+            return this.services[city.id][day.date];
         },
         dayBadgeClass(day) {
             if (moment(day.date).isoWeekday() == 7) return 'badge-danger';
-            if (day.day_type == 1) return 'badge-info';
             return 'badge-light';
         },
         dayTooltip(day) {

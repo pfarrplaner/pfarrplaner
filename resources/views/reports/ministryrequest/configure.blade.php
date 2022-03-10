@@ -28,7 +28,7 @@
                     @foreach ($services as $service)
                         <tr>
                             <td>@checkbox(['name' => 'services['.$service->id.']', 'label' => '', 'value' => ($service->participantsText($ministry) == '')])</td>
-                            <td><b>{{$service->day->date->formatLocalized('%A, %d.%m.%Y')}} {{$service->timeText()}}</b><br /> {{$service->locationText()}}</td>
+                            <td><b>{{$service->date->formatLocalized('%A, %d.%m.%Y')}} {{$service->timeText()}}</b><br /> {{$service->locationText()}}</td>
                             <td>{{ $service->participantsText($ministry) }}</td>
                         </tr>
                     @endforeach

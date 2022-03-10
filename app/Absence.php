@@ -201,10 +201,10 @@ class Absence extends Model
     {
         $dayAbsences = [];
         foreach ($days as $day) {
-            $dayAbsences[$day->id] = collect();
+            $dayAbsences[$day] = collect();
             foreach ($absences as $absence) {
-                if ($absence->containsDate($day->date)) {
-                    $dayAbsences[$day->id]->push($absence);
+                if ($absence->containsDate($day)) {
+                    $dayAbsences[$day]->push($absence);
                 }
             }
         }
@@ -250,8 +250,9 @@ class Absence extends Model
         return $this->hasOne(User::class, 'id', 'admin_id');
     }
 
-    public function containsDate(Carbon $date)
+    public function containsDate($date)
     {
+        if (is_string($date)) $date = Carbon::parse($date);
         return ($date >= $this->from) && ($date <= $this->to);
     }
 

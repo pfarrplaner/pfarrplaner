@@ -15,7 +15,7 @@
                     <span style="{{ $spouse == 1 ? 'font-weight: bold' : '' }}">{{ $rite->spouse1_name }}</span> &amp;
                     <span style="{{ $spouse == 2 ? 'font-weight: bold' : '' }}">{{ $rite->spouse2_name }}</span>
             @endif
-                    @if ($rite->service) am {{ $rite->service->day->date->format('d.m.Y') }} um {{ $rite->service->timeText() }}
+                    @if ($rite->service) am {{ $rite->service->date->format('d.m.Y') }} um {{ $rite->service->timeText() }}
                     (Kirchengemeinde: {{ $rite->service->city->name }}, {{ $rite->service->participantsText('P', true) }}) @endif
                     zu erteilen.</p>
                 <p>Wenn Sie das Dimissoriale hiermit erteilen wollen, klicken Sie hier:</p>

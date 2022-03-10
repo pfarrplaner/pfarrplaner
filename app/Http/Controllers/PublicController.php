@@ -57,72 +57,6 @@ use niklasravnsborg\LaravelPdf\Facades\Pdf;
  */
 class PublicController extends Controller
 {
-    /**
-     * @var array
-     */
-    protected $vacationData = [];
-
-    /**
-     * @return Application|Factory|View
-     */
-    public function absences()
-    {
-        $start = Carbon::now()
-            ->setTime(0, 0, 0);
-        $end = Carbon::createFromDate($start->year, $start->month, 1)
-            ->setTime(0, 0, 0)
-            ->addMonth(2)
-            ->subSecond(1);
-
-        $vacations = $this->getVacationers($start, $end);
-        $cities = City::orderBy('name', 'ASC')->get();
-
-        return view(
-            'public.absences',
-            [
-                'vacations' => $vacations,
-                'start' => $start,
-                'end' => $end,
-                'cities' => $cities,
-            ]
-        );
-    }
-
-    /**
-     * @param $start
-     * @param $end
-     * @return array
-     */
-    protected function getVacationers($start, $end)
-    {
-        $vacationers = [];
-        if (env('VACATION_URL')) {
-            if (!count($this->vacationData)) {
-                $this->vacationData = json_decode(file_get_contents(env('VACATION_URL')), true);
-            }
-            foreach ($this->vacationData as $key => $datum) {
-                $vacStart = Carbon::createFromTimeString($datum['start']);
-                $vacEnd = Carbon::createFromTimeString($datum['end']);
-                if ((($vacStart < $start) && ($vacEnd >= $start)) || (($vacStart >= $start) && ($vacStart <= $end))) {
-                    if (preg_match('/(?:U:|FB:) (\w*)/', $datum['title'], $tmp)) {
-                        preg_match('/V: ((?:\w|\/)*)/', $datum['title'], $tmp2);
-                        $sub = [];
-                        foreach (explode('/', $tmp2[1]) as $name) {
-                            $sub[] = $this->findUserByLastName(trim($name));
-                        }
-
-                        $vacationers[] = [
-                            'away' => $this->findUserByLastName($tmp[1]),
-                            'substitute' => $sub,
-                            'start' => $vacStart,
-                            'end' => $vacEnd,
-                        ];
-                    }
-                }
-            }
-        }
-        return $vacationers;
-    }
 
     /**
      * @param $lastName
@@ -145,34 +79,37 @@ class PublicController extends Controller
             return redirect()->route('home');
         }
 
-        $minDate = Carbon::now()->subDays(1);
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first()->date;
+        $minDate = $maxDate = Carbon::now()->subDays(1);
+        $latest = Service::inCity($city)
+            ->ordered('DESC')
+            ->limit(1)
+            ->first();
+        if ($latest) $maxDate = $latest->date;
 
-        $days = Day::where('date', '>=', $minDate)
-            ->where('date', '<=', $maxDate)
-            ->orderBy('date', 'ASC')
+        $serviceList = Service::with(['location', 'day'])
+            ->between($minDate, $maxDate)
+            ->where('cc', 1)
+            ->inCity($city)
+            ->ordered()
             ->get();
+        $count = count($serviceList);
+        $serviceList = $serviceList->groupBy('key_date');
 
-        $serviceList = [];
-        foreach ($days as $day) {
-            $serviceList[$day->date->format('Y-m-d')] = Service::with(['location', 'day'])
-                ->where('day_id', $day->id)
+        if ($count) {
+            $minDate = Service::with(['location', 'day'])
+                ->between($minDate, $maxDate)
                 ->where('cc', 1)
-                ->where('city_id', $city->id)
-                ->orderBy('time', 'ASC')
-                ->get();
-        }
-
-        $dates = [];
-        foreach ($serviceList as $day => $services) {
-            foreach ($services as $service) {
-                $dates[] = $service->day->date;
-            }
-        }
-
-        if (count($dates)) {
-            $minDate = min($dates);
-            $maxDate = max($dates);
+                ->inCity($city)
+                ->ordered()
+                ->first()
+                ->date;
+            $maxDate = Service::with(['location', 'day'])
+                ->between($minDate, $maxDate)
+                ->where('cc', 1)
+                ->inCity($city)
+                ->ordered('DESC')
+                ->first()
+                ->date;
         }
 
         if ($request->is('*/pdf')) {
@@ -183,7 +120,7 @@ class PublicController extends Controller
                     'end' => $maxDate,
                     'city' => $city,
                     'services' => $serviceList,
-                    'count' => count($dates),
+                    'count' => $count,
                 ]
             );
             $filename = $minDate->format('Ymd') . '-' . $maxDate->format(
@@ -199,7 +136,7 @@ class PublicController extends Controller
                 'end' => $maxDate,
                 'city' => $city,
                 'services' => $serviceList,
-                'count' => count($dates),
+                'count' => $count,
             ]
         );
     }

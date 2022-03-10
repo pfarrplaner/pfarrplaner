@@ -32,27 +32,20 @@ namespace App\Http\Controllers;
 
 use App\Attachment;
 use App\City;
-use App\Day;
 use App\Events\ServiceUpdated;
 use App\Funeral;
 use App\Http\Requests\FuneralStoreRequest;
 use App\Liturgy\PronounSets\PronounSets;
 use App\Location;
-use App\Mail\ServiceCreated;
 use App\Service;
-use App\Subscription;
 use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Inertia\Inertia;
@@ -129,29 +122,6 @@ class FuneralController extends Controller
 
         $city = City::find($data['city']);
 
-        // check if day exists
-        $day = Day::where('date', $data['date']->format('Y-m-d'))->first();
-        if ($day) {
-            // check if it visible for this city
-            if ($day->day_type == Day::DAY_TYPE_LIMITED) {
-                if (!$day->cities->contains($data['city'])) {
-                    $day->cities()->attach($city);
-                }
-            }
-        } else {
-            // create day
-            $day = new Day(
-                [
-                    'date' => $data['date'],
-                    'name' => '',
-                    'description' => '',
-                    'day_type' => Day::DAY_TYPE_LIMITED,
-                ]
-            );
-            $day->save();
-            $day->cities()->sync([$data['city']]);
-        }
-
         $location = $specialLocation = null;
         if ((!is_numeric($data['location'])) || (null === Location::find($data['location']))) {
             $specialLocation = $data['location'];
@@ -173,9 +143,8 @@ class FuneralController extends Controller
 
         $service = Service::create(
             [
-                'day_id' => $day->id,
+                'date' => $data['date'],
                 'location_id' => ($location ? $location->id : null),
-                'time' => $time,
                 'special_location' => $specialLocation ?? null,
                 'city_id' => $city->id,
                 'others' => '',
@@ -284,8 +253,8 @@ class FuneralController extends Controller
     public function pdfForm(Funeral $funeral)
     {
         $funeral->load('service');
-        $funeral->service->load('day', 'location', 'city');
-        $filename = $funeral->service->day->date->format('Ymd') . ' ' . $funeral->buried_name . ' KRA.pdf';
+        $funeral->service->load('location', 'city');
+        $filename = $funeral->service->date->format('Ymd') . ' ' . $funeral->buried_name . ' KRA.pdf';
 
         $pdf = PDF::loadView('funerals.pdf.form', compact('funeral'), [], ['format' => 'A5', 'useActiveForms' => true]);
 

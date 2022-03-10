@@ -31,7 +31,7 @@
     <div class="liturgy-editor-info-pane">
         <div class="card" v-if="liturgy['title']">
             <div class="card-body">
-                <div v-if="myService.day.date != myService.liturgicalInfoDate" class="alert alert-warning mb-1">
+                <div v-if="myService.date != myService.liturgicalInfoDate" class="alert alert-warning mb-1">
                     Aufgrund der Gottesdiensteinstellungen werden hier die liturgischen Informationen für
                     <b>{{ moment(myService.liturgicalInfoDate).locale('de').format('dddd, DD.MM.YYYY') }}</b> angezeigt.
                 </div>
@@ -96,7 +96,7 @@
             <card-body>
                 <div class="row">
                     <div class="col-md-8">
-                        Für {{ moment(myService.day.date).locale('de').format('dddd, DD.MM.YYYY') }} sind keine
+                        Für {{ moment(myService.date).locale('de').format('dddd, DD.MM.YYYY') }} sind keine
                         liturgischen Informationen vorhanden.
                     </div>
                     <div class="col-md-4 text-right">

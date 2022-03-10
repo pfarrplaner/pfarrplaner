@@ -127,7 +127,7 @@ class LiturgyEditorController extends Controller
             if (!$service->day == null)
             $services[$service->dateTime->timestamp . $service->id] = [
                 'id' => $service->id,
-                'text' => trim(($service->day ? $service->day->date->format('d.m.Y') : '').' '.$service->timeText().' '.$service->titleText().' '.$service->locationText),
+                'text' => trim(($service->day ? $service->date->format('d.m.Y') : '').' '.$service->timeText().' '.$service->titleText().' '.$service->locationText),
             ];
         }
         krsort($services);

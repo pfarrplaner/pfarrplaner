@@ -35,7 +35,7 @@
     @foreach ($services as $service)
         <tr @if($loop->index % 2 == 0)class="even" @endif>
             <td valign="top" width="20%"><small>
-                <b>{{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }}</b><br />
+                <b>{{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }}</b><br />
                 {{ $service->locationText() }}<br />
                 {{ $service->titleText(false) }}<br />
                     P: {{ $service->participantsText('P') }}

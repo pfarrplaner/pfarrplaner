@@ -77,13 +77,13 @@ export default {
             itemIndex: null,
             element: null,
             infoWindow: false,
-            agendaMode: moment(this.service.day.date).format('YYYYMMDD') == 19780305,
+            agendaMode: moment(this.service.date).format('YYYYMMDD') == 19780305,
         }
     },
     methods: {
         title(service) {
             if (this.agendaMode) return 'Agende bearbeiten';
-            return 'Liturgie für ' + moment(service.day.date).locale('de-DE').format('DD.MM.YYYY') + ', ' + service.timeText;
+            return 'Liturgie für ' + moment(service.date).locale('de-DE').format('DD.MM.YYYY') + ', ' + service.timeText;
         },
         updateFocus(blockIndex, itemIndex, element) {
             this.blockIndex = blockIndex;

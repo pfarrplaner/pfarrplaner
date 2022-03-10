@@ -80,22 +80,6 @@
                 <span class="mdi mdi-chevron-right"></span>
             </inertia-link>
         </div>
-        <div class="btn-group mr-2 d-none d-md-block" role="group" v-if="!slave">
-            <a class="btn btn-default btn-toggle-limited-days"
-               @click.prevent="toggleColumns"
-               title="Alle ausgeblendeten Tage einblenden"><span
-                :class="{
-                   'mdi': true,
-                   'mdi-checkbox-blank-outline': !allColumnsOpen,
-                   'mdi-checkbox-marked-outline': allColumnsOpen,
-                }"></span></a>
-        </div>
-        <div class="btn-group mr-2" role="group">
-            <a class="btn btn-success"
-               :href="route('days.add', {year: date.getFullYear(), month: date.getMonth()+1})"
-               title="Angezeigte Tage ändern"><span
-                class="mdi mdi-calendar-plus"></span><span class="d-none d-md-inline"> Tage</span></a>
-        </div>
         <a class="btn btn-default" :href="route('reports.setup', {report: 'ministryRequest'})"
            title="Dienstanfrage per E-Mail senden"><span class="mdi mdi-email"></span> <span class="d-none d-md-inline">Anfrage senden...</span></a>
 
@@ -116,7 +100,7 @@ export default {
         }
     },
     props: {
-        'date': {type: Date}, 'years': {type: Object}, 'orientation': {type: String},
+        date: {type: Date}, years: {type: Array}, orientation: {type: String},
     },
     methods: {
         monthLink: function (month) {

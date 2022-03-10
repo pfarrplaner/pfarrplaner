@@ -40,7 +40,7 @@
                     :headers="['Gottesdienst', 'Diensteinteilung']"></fake-table>
         <div v-for="serviceSlug in serviceSlugs" class="row">
             <div class="col-md-3 pb-1 px-1 pl-2 border-bottom" v-if="services[serviceSlug]">
-                {{ moment(services[serviceSlug].day.date).format('DD.MM.YYYY') }}, {{
+                {{ moment(services[serviceSlug].date).format('DD.MM.YYYY') }}, {{
                     services[serviceSlug].timeText
                 }}<br/>
                 {{ services[serviceSlug].locationText }}

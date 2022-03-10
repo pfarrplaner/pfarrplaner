@@ -159,10 +159,6 @@ class KonfiAppIntegration extends AbstractIntegration
         if ($service->konfiapp_event_type != '') {
             if ($service->konfiapp_event_qr == '') {
                 Log::debug('Updating service #'.$service->id.', no KonfiApp QR set yet.');
-                if (!trim($service->time)) {
-                    Log::debug('No service time set yet, aborting.');
-                    return;
-                }
                 $code = $this->createQRCode($service);
                 Log::debug('Got code '.$code);
                 $service->update(['konfiapp_event_qr' => $code]);
@@ -193,16 +189,14 @@ class KonfiAppIntegration extends AbstractIntegration
      */
     public function createQRCode(Service $service)
     {
-        $time = ($service->time == ':0') ? '' : ($service->time ?: '');
-        $serviceTime = Carbon::createFromTimeString(trim($service->day->date->format('Y-m-d') . ' ' . $time));
         return ($this->requestData(
             'verwaltung/veranstaltungen/qr/add/',
             [
                 'veranstaltungID' => $service->konfiapp_event_type,
-                'dateStart' => $service->day->date->format('Y.m.d'),
-                'dateEnd' => $service->day->date->format('Y.m.d'),
-                'timeStart' => $serviceTime->format('H:i'),
-                'timeEnd' => $serviceTime->clone()->addHour(3)->format('H:i'),
+                'dateStart' => $service->date->format('Y.m.d'),
+                'dateEnd' => $service->date->format('Y.m.d'),
+                'timeStart' => $service->date->format('H:i'),
+                'timeEnd' => $service->date->clone()->addHour(3)->format('H:i'),
             ]
         ))->code;
     }

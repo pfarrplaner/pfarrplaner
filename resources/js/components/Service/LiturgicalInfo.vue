@@ -31,7 +31,7 @@
     <div class="liturgical-info">
         <div v-if="liturgy.title">
             {{ liturgy.title }}
-            <span v-if="service.day.date != service.liturgicalInfoDate"
+            <span v-if="service.date != service.liturgicalInfoDate"
                   class="mdi mdi-calendar text-warning"
                   :title="'Aufgrund der Gottesdiensteinstellungen werden abweichend die Informationen für '
                   +moment(service.liturgicalInfoDate).locale('de').format('dddd, DD.MM.YYYY')+' angezeigt'">

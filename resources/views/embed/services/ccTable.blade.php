@@ -13,8 +13,8 @@
     <?php $lastDate = ''; ?>
     @foreach($services as $service)
         <tr>
-            @if ($lastDate != $service->day->date->format('d.m.') )
-                <td>{{ $lastDate = $service->day->date->format('d.m.') }}</td>
+            @if ($lastDate != $service->date->format('d.m.') )
+                <td>{{ $lastDate = $service->date->format('d.m.') }}</td>
             @else
                 <td></td>
             @endif

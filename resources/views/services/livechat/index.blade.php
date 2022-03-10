@@ -33,7 +33,7 @@
 @endsection
 
 @section('title')
-    LiveChat :: @if($service->title){{ $service->title }} @else Gottesdienst am {{ $service->day->date->format('d.m.Y') }}, {{ $service->timeText() }} @endif
+    LiveChat :: @if($service->title){{ $service->title }} @else Gottesdienst am {{ $service->date->format('d.m.Y') }}, {{ $service->timeText() }} @endif
 @endsection
 
 @section('content')

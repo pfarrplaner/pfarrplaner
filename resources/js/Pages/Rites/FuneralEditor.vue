@@ -151,7 +151,7 @@
                             collapsed-header="Bestattung">
                     <div class="row p-1">
                         <div class="col-md-2">{{
-                                moment(myFuneral.service.day.date).format('DD.MM.YYYY')
+                                moment(myFuneral.service.date).format('DD.MM.YYYY')
                             }}
                         </div>
                         <div class="col-md-2">{{ myFuneral.service.timeText }}</div>
