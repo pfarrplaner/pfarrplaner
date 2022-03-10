@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.123.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.122.0...v2022.123.0) (2022-03-10)
+
+
+### Features
+
+* Rewritten location admin ([e965926](https://github.com/pfarrplaner/pfarrplaner/commits/e96592675c4ef82e08120faa26b823c1c314f20a))
+
 ## [2022.122.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.121.0...v2022.122.0) (2022-03-07)
 
 
