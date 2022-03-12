@@ -53,3 +53,12 @@ Route::resource('approvals', 'ApprovalController');
 foreach(glob(base_path('routes/web/*.php')) as $file) {
     Route::group([], $file);
 }
+
+// admin routes
+Route::prefix('admin')->group(function () {
+    foreach(glob(base_path('routes/web/admin/*.php')) as $file) {
+        Route::group([], $file);
+    }
+});
+
+

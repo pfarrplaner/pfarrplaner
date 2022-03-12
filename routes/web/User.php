@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -28,43 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
 
 use App\Http\Controllers\UserController;
 
-// all users
-Route::get('/benutzer', [UserController::class, 'index'])->name('users.index');
-Route::match(['GET', 'POST'], '/benutzer/{user}/zusammenfuehren', [UserController::class, 'join'])->name('user.join');
-Route::post('/benutzer/final-zusammenfuehren', [UserController::class, 'doJoin'])->name('user.join.finalize');
-Route::get('/doppelte-benutzer', [UserController::class, 'findDuplicates'])->name('users.duplicates');
-Route::post('/doppelte-benutzer', [UserController::class, 'fixDuplicates'])->name('users.duplicates.fix');
-
-// create person via ajax call
-Route::post('/person/neu', [UserController::class, 'add'])->name('users.add');
-
-// single user
-Route::post('/benutzer', [UserController::class, 'store'])->name('user.store');
-Route::get('/benutzer/neu', [UserController::class, 'create'])->name('user.create');
-Route::get('/benutzer/{user}', [UserController::class, 'edit'])->name('user.edit');
-Route::patch('/benutzer/{user}', [UserController::class, 'update'])->name('user.update');
-Route::delete('/benutzer/{user}', [UserController::class, 'destroy'])->name('user.destroy');
-Route::post('/benutzer/{model}/attach', [UserController::class, 'attachImage'])->name('user.attach');
-Route::delete('/benutzer/{model}/detach', [UserController::class, 'detachImage'])->name('user.detach');
-Route::post('/benutzer/{user}/passwort-zuruecksetzen', [UserController::class, 'resetPassword'])->name('user.password.reset');
-
-// additional user routes
 Route::get('/profil', [UserController::class, 'profile'])->name('user.profile');
 Route::patch('/profil', [UserController::class, 'profileSave'])->name('user.profile.save');
 Route::get('/benutzer/{user}/gottesdienste', [UserController::class, 'services'])->name('user.services');
-Route::get('/benutzer/login-als/{user}', [UserController::class, 'switch'])->name('user.switch');
