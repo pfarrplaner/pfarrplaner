@@ -71,7 +71,7 @@
                                                 <span class="mdi mdi-pencil"></span>
                                             </inertia-link>
                                             <button class="btn  btn-sm btn-danger ml-1" title="Rolle löschen"
-                                                    @click="deleteCity(row)">
+                                                    @click="deleteRole(row)">
                                                 <span class="mdi mdi-delete"></span>
                                             </button>
                                         </td>
