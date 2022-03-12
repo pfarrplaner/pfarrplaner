@@ -160,6 +160,7 @@ class WeddingController extends Controller
      */
     public function edit(Wedding $wedding)
     {
+        $wedding->load('service');
         $pronounSets = PronounSets::toArray();
         return Inertia::render('Rites/WeddingEditor', compact('wedding', 'pronounSets'));
     }

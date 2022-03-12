@@ -117,6 +117,41 @@
                 </fieldset>
             </tab>
             <tab id="prep" :active-tab="activeTab">
+                <fake-table :columns="[2,2,2,3,3]" :headers="['Datum', 'Uhrzeit', 'Ort', 'Pfarrer:in', '']"
+                            collapsed-header="Bestattung">
+                    <div class="row p-1">
+                        <div class="col-md-2">{{
+                                moment(myWedding.service.date).format('DD.MM.YYYY')
+                            }}
+                        </div>
+                        <div class="col-md-2">{{ myWedding.service.timeText }}</div>
+                        <div class="col-md-2">{{ myWedding.service.locationText }}</div>
+                        <div class="col-md-3">
+                            <participants :participants="myWedding.service.pastors"></participants>
+                        </div>
+                        <div class="col-md-3 text-right">
+                            <inertia-link :href="route('service.edit', wedding.service.slug)"
+                                          title="Gottesdienst bearbeiten"
+                                          class="btn btn-light">
+                                <span class="mdi mdi-pencil"></span> <span
+                                class="d-none d-md-inline">Gottesdienst</span>
+                            </inertia-link>
+                            <inertia-link :href="route('liturgy.editor', wedding.service.slug)"
+                                          title="Liturgie bearbeiten"
+                                          class="btn btn-light">
+                                <span class="mdi mdi-view-list"></span> <span
+                                class="d-none d-md-inline">Liturgie</span>
+                            </inertia-link>
+                            <inertia-link :href="route('service.sermon.editor', wedding.service.slug)"
+                                          title="Predigt bearbeiten"
+                                          class="btn btn-light">
+                                <span class="mdi mdi-microphone"></span> <span
+                                class="d-none d-md-inline">Predigt</span>
+                            </inertia-link>
+                        </div>
+                    </div>
+                </fake-table>
+                <hr/>
                 <fieldset id="fsPrep">
                     <legend>Traugespräch</legend>
                     <form-group label="Traugespräch" :is-checked-item="true" :value="myWedding.appointment"
