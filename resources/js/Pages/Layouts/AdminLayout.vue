@@ -131,9 +131,9 @@
 
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <div class="content-header border-bottom pb-0 mb-0" v-if="(title) && (!noContentHeader)">
+            <div class="content-header border-bottom pb-0 mb-0" v-if="!noContentHeader">
                 <div class="container-fluid mb-0 pb-0">
-                    <h1 class="m-0 mb-4 text-dark">{{ title }}</h1>
+                    <h1 v-if="title" class="m-0 mb-4 text-dark">{{ title }}</h1>
                     <!-- flash messages here -->
                     <slot name="before-flash" />
                     <div v-if="(layout.errors.length > 0) || layout.flash.error" class="alert alert-danger">
@@ -187,13 +187,17 @@ export default {
         noContentHeader: Boolean,
         noPadding: Boolean,
     },
+    computed: {
+        layout() {
+            return vm.$root.$children[0].$page.props;
+        }
+    },
     mounted() {
         if (this.title != '') document.title = this.title + ' :: ' + this.layout.appName;
     },
     data() {
         return {
             dev: vm.$root.$children[0].$page.props.dev,
-            layout: vm.$root.$children[0].$page.props,
             package: vm.$root.$children[0].$page.props.package,
         };
     },
