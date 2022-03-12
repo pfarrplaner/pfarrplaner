@@ -53,7 +53,7 @@
                 </checked-process-item>
             </div>
             <div>
-                <checked-process-item :check="wedding.registered" positive="Anmeldeformular erstellt" negative="Anmeldeformular noch nicht erstellt" />
+                <checked-process-item :check="hasRegistrationForm" positive="Anmeldeformular erstellt" negative="Anmeldeformular noch nicht erstellt" />
                 <checked-process-item :check="wedding.signed" positive="Anmeldung unterschrieben" negative="Anmeldung noch nicht unterschrieben" />
             </div>
             <checked-process-item :check="wedding.text" positive="Trautext" negative="Trautext noch nicht eingetragen">
@@ -136,6 +136,15 @@ export default {
         DetailsInfo,
         Attachment,
         CheckedProcessItem,
+    },
+    computed: {
+        hasRegistrationForm() {
+            var found = false;
+            this.myWedding.attachments.forEach(attachment => {
+                found = found || (attachment.title == 'Anmeldeformular');
+            });
+            return found;
+        },
     },
     data() {
         return {
