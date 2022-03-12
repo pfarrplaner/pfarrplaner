@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.126.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.125.0...v2022.126.0) (2022-03-12)
+
+
+### Features
+
+* group admin urls under /admin ([af6025f](https://github.com/pfarrplaner/pfarrplaner/commits/af6025f52eabc92e533ca61698f691692cfde756))
+* Rewrote Role admin in vue ([2812c58](https://github.com/pfarrplaner/pfarrplaner/commits/2812c587223d1b19dfdc1371bbe3409f844ed29d))
+* Rewrote Tag admin in vue ([0aa3d17](https://github.com/pfarrplaner/pfarrplaner/commits/0aa3d1729a02018465ae678e64ecc61b718690e8))
+* Stabilization for quick layout switches ([0f1fd25](https://github.com/pfarrplaner/pfarrplaner/commits/0f1fd25bc60034a90dc30aa9da8e40a3cf4ffeca))
+
+
+### Bug Fixes
+
+* Login page CSRF token expires when page remains open for a long time ([75d041d](https://github.com/pfarrplaner/pfarrplaner/commits/75d041d521b6b31a051215a8bae6045626c7bead))
+* Missing component imports ([c9ac87d](https://github.com/pfarrplaner/pfarrplaner/commits/c9ac87d59ec463bdb3d3c4959bc47b59f3f6ece2))
+* Wedding registration document todo item is not checked after upload ([a99f461](https://github.com/pfarrplaner/pfarrplaner/commits/a99f461f22004bb798fed0b6c0f15cf425522c9d))
+* wrong method name ([398c8c5](https://github.com/pfarrplaner/pfarrplaner/commits/398c8c51025ab841ee7bcc291ac69d41b914e8b0))
+
 ## [2022.125.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.124.0...v2022.125.0) (2022-03-12)
 
 
