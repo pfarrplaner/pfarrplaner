@@ -153,7 +153,7 @@ class Wedding extends Model
         $key = 'wedding_prep_'.$this->id;
 
         $description =                 '<p>Trauung am '.$this->service->date->format('d.m.Y').' um '.$this->service->timeText().' ('.$this->service->locationText().')</p>'
-            .'<p><a href="'.route('funerals.edit', $this->id).'">Trauung im Pfarrplaner öffnen</a></p>'
+            .'<p><a href="'.route('weddings.edit', $this->id).'">Trauung im Pfarrplaner öffnen</a></p>'
             .'<p>Kontakt:<br />'
             .trim(' - '.$this->spouse1_name.': '.$this->spouse1_phone.' '.$this->spouse1_email).'<br />'
             .trim(' - '.$this->spouse2_name.': '.$this->spouse2_phone.' '.$this->spouse2_email)
