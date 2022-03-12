@@ -80,7 +80,7 @@ class AdminModule extends AbstractModule
                 'icon' => 'mdi mdi-badge-account',
                 'url' => route('roles.index'),
                 'active' => $route == 'roles.index',
-                'inertia' => false,
+                'inertia' => true,
             ];
             $adminActive |= ($route == 'roles.index');
         }

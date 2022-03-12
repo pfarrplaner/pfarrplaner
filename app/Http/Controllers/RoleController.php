@@ -32,6 +32,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -51,12 +52,12 @@ class RoleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $roles = Role::all()->sortBy('name');
-        return view('roles.index', compact('roles'));
+        $roles = Role::with('permissions')->orderBy('name', 'ASC')->get();
+        return Inertia::render('Admin/Role/Index', compact('roles'));
     }
 
     /**
@@ -78,13 +79,12 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
-                'name' => 'required'
+                'name' => 'required',
             ]
         );
-        $role = new Role(['name' => $request->get('name')]);
-        $role->save();
+        $role = Role::create(['name' => $data['name']]);
         $permissions = $request->get('permissions') ?: [];
         foreach ($permissions as $permissionName) {
             $permission = Permission::findOrCreate($permissionName);
@@ -94,26 +94,16 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param Role $role
-     * @return Response
-     */
-    public function show(Role $role)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param Role $role
-     * @return Response
+     * @return \Inertia\Response
      */
     public function edit(Role $role)
     {
+        $role->load('permissions');
         $permissions = Permission::all()->sortBy('name');
-        return view('roles.edit', compact('role', 'permissions'));
+        return Inertia::render('Admin/Role/RoleEditor',  compact('role', 'permissions'));
     }
 
     /**
@@ -125,13 +115,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $request->validate(
+        $data = $request->validate(
             [
-                'name' => 'required'
+                'name' => 'required',
             ]
         );
-        $role->name = $request->get('name');
-        $role->save();
+        $role->update($data);
         $permissions = $request->get('permissions') ?: [];
         foreach ($permissions as $permissionName) {
             $permission = Permission::findOrCreate($permissionName);
@@ -148,6 +137,7 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        $role->delete();
+        return redirect()->route('roles.index')->with('success', 'Die Benutzerrolle wurde gelöscht.');
     }
 }
