@@ -250,10 +250,14 @@ import FormRadioGroup from "../../components/Ui/forms/FormRadioGroup";
 import FormSelectize from "../../components/Ui/forms/FormSelectize";
 import DimissorialUrl from "../../components/RiteEditors/DimissorialUrl";
 import FormBibleReferenceInput from "../../components/Ui/forms/FormBibleReferenceInput";
+import FakeTable from "../../components/Ui/FakeTable";
+import Participants from "../../components/Calendar/Service/Participants";
 
 export default {
     name: "WeddingEditor",
     components: {
+        Participants,
+        FakeTable,
         FormBibleReferenceInput,
         DimissorialUrl,
         FormSelectize,
