@@ -128,7 +128,7 @@ class LoginController extends Controller
 
     public function keepTokenAlive()
     {
-        return csrf_token();
+        return response()->json(['token' => csrf_token()]);
     }
 
 }

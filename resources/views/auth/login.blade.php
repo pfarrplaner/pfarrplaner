@@ -9,6 +9,7 @@
     <meta content="" name="description">
     <meta content="" name="keywords">
     <meta content="notranslate" name="google">
+    <meta content="{{ csrf_token() }}" name="csrf-token">
 
     <!-- Favicons -->
     <link href="/landing/assets/img/favicon.png" rel="icon">
@@ -652,6 +653,25 @@
         });
     </script>
 @endif
+<!--
+Keep CSRF token alive to prevent expired tokens when login page is displayed for a long time.
+This will send a keep-alive request every 5 minutes.
+-->
+<script>
+    setInterval(keepTokenAlive, 300000)
+
+    function keepTokenAlive() {
+        let token = document.querySelector('meta[name="csrf-token"]').content;
+        fetch('{{ route('csrf.keepalive') }}', {
+            headers: {
+                'X-CSRF-TOKEN': token,
+            }
+        }).then(response => response.json())
+        .then(data => {
+            document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+        });
+    }
+</script>
 
 </body>
 </html>
