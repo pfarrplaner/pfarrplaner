@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -28,28 +28,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
 
-Route::resource('days', 'DayController')->middleware('auth');
-Route::resource('comments', 'CommentController')->middleware('auth');
-Route::resource('booking', 'BookingController');
-Route::resource('calendarConnection', 'CalendarConnectionController');
-Route::resource('baptisms', 'BaptismController')->middleware('auth');
-Route::resource('weddings', 'WeddingController')->middleware('auth');
-Route::resource('revisions', 'RevisionController');
-Route::resource('approvals', 'ApprovalController');
+use App\Http\Controllers\TagController;
+
+Route::get('/kennzeichnungen', [TagController::class, 'index'])->name('tags.index');
+Route::get('/kennzeichnungen/neu', [TagController::class, 'create'])->name('tag.create');
+Route::post('/kennzeichnungen', [TagController::class, 'store'])->name('tag.store');
+Route::get('/kennzeichnung/{tag}', [TagController::class, 'edit'])->name('tag.edit');
+Route::patch('/kennzeichnung/{tag}', [TagController::class, 'update'])->name('tag.update');
+Route::delete('/kennzeichnung/{tag}', [TagController::class, 'destroy'])->name('tag.destroy');
 
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}

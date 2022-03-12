@@ -31,8 +31,10 @@
 namespace App\Http\Controllers;
 
 use App\Tag;
+use Aws\Inspector\Exception\InspectorException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 /**
  * Class TagController
@@ -49,12 +51,12 @@ class TagController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function index()
     {
-        $tags = Tag::all();
-        return view('tags.index', compact('tags'));
+        $tags = Tag::orderBy('name')->get();
+        return Inertia::render('Admin/Tag/Index', compact('tags'));
     }
 
     /**
@@ -75,7 +77,7 @@ class TagController extends Controller
     public function store()
     {
         Tag::create($this->validateRequest());
-        return redirect()->route('tags.index')->with('success', 'Das Tag wurde angelegt.');
+        return redirect()->route('tags.index')->with('success', 'Die neue Kennzeichnung wurde angelegt.');
     }
 
     /**
@@ -93,25 +95,14 @@ class TagController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param Tag $tag
-     * @return Response
-     */
-    public function show(Tag $tag)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param Tag $tag
-     * @return Response
+     * @return \Inertia\Response
      */
     public function edit(Tag $tag)
     {
-        return view('tags.edit', compact('tag'));
+        return Inertia::render('Admin/Tag/TagEditor', compact('tag'));
     }
 
     /**
@@ -123,7 +114,7 @@ class TagController extends Controller
     public function update(Tag $tag)
     {
         $tag->update($this->validateRequest());
-        return redirect()->route('tags.index')->with('success', 'Das Tag wurde geändert.');
+        return redirect()->route('tags.index')->with('success', 'Die Kennzeichnung wurde geändert.');
     }
 
     /**
@@ -135,6 +126,6 @@ class TagController extends Controller
     public function destroy(Tag $tag)
     {
         $tag->delete();
-        return redirect()->route('tags.index')->with('success', 'Das Tag wurde gelöscht.');
+        return redirect()->route('tags.index')->with('success', 'Die Kennzeichnung wurde gelöscht.');
     }
 }

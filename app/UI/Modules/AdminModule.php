@@ -110,7 +110,7 @@ class AdminModule extends AbstractModule
                 'icon' => 'mdi mdi-tag',
                 'url' => route('tags.index'),
                 'active' => $route == 'tags.index',
-                'inertia' => false,
+                'inertia' => true,
             ];
             $adminActive |= ($route == 'tags.index');
         }
