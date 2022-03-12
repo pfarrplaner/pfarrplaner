@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.125.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.124.0...v2022.125.0) (2022-03-12)
+
+
+### Features
+
+* Link to wedding service from wedding record ([7cfdfad](https://github.com/pfarrplaner/pfarrplaner/commits/7cfdfad2efd0fb7e5c717b774e9843bae8a3984d)), closes [#233](https://github.com/pfarrplaner/pfarrplaner/issues/233)
+* Link to wedding service from wedding record ([e7aa1b7](https://github.com/pfarrplaner/pfarrplaner/commits/e7aa1b7fbfb5dab9999452491977690b9e78bab6)), closes [#233](https://github.com/pfarrplaner/pfarrplaner/issues/233)
+* Rewrite service calendaring, remove Day objects ([aba9a18](https://github.com/pfarrplaner/pfarrplaner/commits/aba9a18d1cee56006e763a730904376d8e4bb09f))
+
+
+### Bug Fixes
+
+* Wedding appointment calendar item in Outlook has funeral details link ([3df6521](https://github.com/pfarrplaner/pfarrplaner/commits/3df65218e06ef89cf5c29c819ed26b91dd970073)), closes [#232](https://github.com/pfarrplaner/pfarrplaner/issues/232)
+* Wedding appointment calendar item in Outlook has funeral details link ([78d7fb9](https://github.com/pfarrplaner/pfarrplaner/commits/78d7fb9c7b4c9d15cc5dec85baf6d396cd37b241)), closes [#232](https://github.com/pfarrplaner/pfarrplaner/issues/232)
+
 ## [2022.124.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.123.0...v2022.124.0) (2022-03-10)
 
 
