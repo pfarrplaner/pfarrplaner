@@ -59,6 +59,9 @@ class AbstractReport
      */
     public $description = '';
 
+    /** @var bool */
+    protected $inertia = false;
+
 
     /**
      * Returns true if the report is active for the current user
@@ -147,4 +150,22 @@ class AbstractReport
         $data = array_merge(['report' => $this->getKey()], $data);
         return view($this->getViewName($view), $data);
     }
+
+    /**
+     * @return bool
+     */
+    public function isInertia(): bool
+    {
+        return $this->inertia;
+    }
+
+    /**
+     * @param bool $inertia
+     */
+    public function setInertia(bool $inertia): void
+    {
+        $this->inertia = $inertia;
+    }
+
+
 }

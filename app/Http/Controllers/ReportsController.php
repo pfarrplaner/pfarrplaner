@@ -31,11 +31,13 @@
 namespace App\Http\Controllers;
 
 use App\Reports\AbstractReport;
+use App\Services\ColorService;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class ReportsController
@@ -49,23 +51,41 @@ class ReportsController extends Controller
         $this->middleware('auth', ['except' => ['embed']]);
     }
 
+    /**
+     * @return \Inertia\Response
+     */
     public function list()
     {
-        $reports = [];
+        $reports = collect();
         foreach (glob(app_path('Reports') . '/*Report.php') as $file) {
             if (substr(pathinfo($file, PATHINFO_FILENAME), 0, 8) !== 'Abstract') {
                 $reportClass = 'App\\Reports\\' . pathinfo($file, PATHINFO_FILENAME);
                 if (class_exists($reportClass)) {
+                    /** @var AbstractReport $report */
                     $report = new $reportClass();
                     if ($report->isActive()) {
-                        $reports[$report->group][$report->title] = $report;
-                        ksort($reports[$report->group]);
+                        $reports->push([
+                            'title' => $report->title,
+                            'key' => $report->getKey(),
+                            'icon' => $report->icon,
+                            'description' => $report->description,
+                            'group' => $report->group,
+                            'inertia' => $report->isInertia(),
+                        ]);
                     }
                 }
             }
         }
-        ksort($reports);
-        return view('reports.list', compact('reports'));
+        $rainbow = ColorService::rainbowArray($reports->pluck('group')->unique());
+
+        $reports = $reports
+            ->map(function ($item) use ($rainbow) {
+                $item['backgroundColor'] = $rainbow[$item['group']];
+                $item['color'] = ColorService::contrastColor($item['backgroundColor']);
+                return $item;
+            })
+            ->sortBy(['group','title']);
+        return Inertia::render('Reports/Index', compact('reports'));
     }
 
     /**

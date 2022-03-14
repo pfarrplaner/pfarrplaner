@@ -46,7 +46,7 @@ class ExportsModule extends AbstractModule
             'icon' => 'mdi mdi-printer',
             'url' => route('reports.list'),
             'active' => request()->is(['report*']),
-            'inertia' => false,
+            'inertia' => true,
         ];
         return $items;
     }
