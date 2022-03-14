@@ -109,5 +109,10 @@ class RegulatoryReport extends AbstractReport
         return redirect()->to(Session::pull('back'))->with('success', 'Deine Gottesdienstmeldung wurde an '.$data['email'].' gesendet.');
     }
 
+    public function isActive(): bool
+    {
+        return false; // This report is currently not needed and therefore disabled.
+    }
+
 
 }

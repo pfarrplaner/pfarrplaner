@@ -60,9 +60,12 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink" v-if="service.slug">
                         <a class="dropdown-item" :href="route('service.ical', {service: service.slug})">In Outlook
                             übernehmen</a>
+                        <!--
+                        This report is currently not needed and therefore disabled
                         <a class="dropdown-item"
                            :href="route('reports.setup', {report: 'regulatory', service: service.id})">Meldung an das
                             Ordnungsamt</a>
+                            -->
                     </div>
                 </div>
                 <a class="btn btn-light" :href="route('liturgy.editor', service.slug)" v-if="service.slug"
