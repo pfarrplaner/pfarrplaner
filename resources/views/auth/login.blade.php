@@ -117,7 +117,7 @@
                             Arbeitswelt aktualisiert
                         </div>
                     @endif
-                    <form method="POST" action="{{ route('login') }}">
+                    <form method="POST" action="{{ route('login') }}" onsubmit="submitLogin()" id="loginForm">
                         <div class="login-form">
                             @csrf
                             @if(!$demo)
@@ -655,21 +655,28 @@
 @endif
 <!--
 Keep CSRF token alive to prevent expired tokens when login page is displayed for a long time.
-This will send a keep-alive request every 5 minutes.
+This will send a keep-alive request every 2 seconds. Also, the token will be renewed once more
+before submitting the form.
 -->
 <script>
-    setInterval(keepTokenAlive, 300000)
+    setInterval(keepTokenAlive, 2000)
 
-    function keepTokenAlive() {
+    async function keepTokenAlive() {
         let token = document.querySelector('meta[name="csrf-token"]').content;
-        fetch('{{ route('csrf.keepalive') }}', {
+        await fetch('{{ route('csrf.keepalive') }}', {
             headers: {
                 'X-CSRF-TOKEN': token,
             }
         }).then(response => response.json())
         .then(data => {
             document.querySelector('meta[name="csrf-token"]').setAttribute('content', data.token);
+            document.querySelector('input[name=_token]').value = data.token;
         });
+    }
+
+    function submitLogin() {
+        keepTokenAlive();
+        document.getElementById('loginForm').submit();
     }
 </script>
 
