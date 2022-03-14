@@ -40,7 +40,6 @@ use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpPresentation\DocumentLayout;
 use PhpOffice\PhpPresentation\IOFactory;
 use PhpOffice\PhpPresentation\PhpPresentation;
-use PhpOffice\PhpPresentation\Shape\Media;
 use PhpOffice\PhpPresentation\Shape\RichText;
 use PhpOffice\PhpPresentation\Slide;
 use PhpOffice\PhpPresentation\Style\Alignment;
@@ -96,7 +95,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
             $this->slide();
         }
         if ($this->config['includeJingleAndIntro']) {
-            $this->createJingleSlide();
+            $this->slide('Hier Jingle einfügen');
             $this->slide('Hier Intro einfügen');
         }
         if ($this->config['includeEmpty']) {
@@ -127,7 +126,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
             $this->creditsSlide($service->credits);
         }
         if ($this->config['includeJingleAndIntro']) {
-            $this->createJingleSlide();
+            $this->slide('Hier Jingle einfügen', 18);
         }
 
         $fileName = $service->dateTime()->format('Ymd-Hi') . ' Texte und Lieder.pptx';
@@ -171,7 +170,7 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
                 ->setPath($image)
                 ->setWidth(940)
                 ->setOffsetX(10);
-            $shape->setOffsetY(520-$shape->getHeight());
+             $shape->setOffsetY(520-$shape->getHeight());
 
         }
 
@@ -280,20 +279,6 @@ class SongPPTLiturgySheet extends AbstractLiturgySheet
             ->setCategory('Gottesdienst')
             ->setKeywords('Gottesdienst, Lieder, Psalm, Mitwirkende')
             ->setCompany('Evangelische Kirchengemeinde '.$service->city->name);
-    }
-
-    protected function createJingleSlide()
-    {
-        $slide = $this->slide('Hier Jingle einfügen', 18);
-        $media = new Media();
-        $media->setName('Jingle')
-            ->setPath(base_path('assets/jingle.mp4'))
-            ->setOffsetX(0)
-            ->setOffsetY(0)
-            ->setWidth($slide->getExtentX())
-            ->setHeight(500);
-        $slide->addShape($media);
-        //dd(base_path('assets/jingle.mp4'), $media, $slide);
     }
 
 }
