@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.126.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.126.0...v2022.126.1) (2022-03-14)
+
+
+### Bug Fixes
+
+* Revert premature changes to SongPPTLiturgySheet ([4a92014](https://github.com/pfarrplaner/pfarrplaner/commits/4a92014aa4a9fafd949d69043acc501a2c9a45d9))
+
 ## [2022.126.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.125.0...v2022.126.0) (2022-03-12)
 
 
