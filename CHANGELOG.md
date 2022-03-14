@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.127.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.126.1...v2022.127.0) (2022-03-14)
+
+
+### Features
+
+* New index view for reports ([7a7eb70](https://github.com/pfarrplaner/pfarrplaner/commits/7a7eb70e2caddf251f1826c863aefd50b43e7dd2))
+
 ### [2022.126.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.126.0...v2022.126.1) (2022-03-14)
 
 
