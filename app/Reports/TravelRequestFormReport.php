@@ -79,6 +79,7 @@ class TravelRequestFormReport extends AbstractPDFDocumentReport
     public function render(Request $request)
     {
         $data = $request->validate(['absence' => 'int|exists:absences,id']);
+
         $data['absence'] = Absence::find($data['absence']);
 
         $data['duration'] = $data['absence']->to->diff($data['absence']->from)->days+1;

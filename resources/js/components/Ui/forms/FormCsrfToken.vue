@@ -28,42 +28,16 @@
   -->
 
 <template>
-    <admin-layout title="Dienstreiseantrag erstellen">
-        <template v-slot:navbar-left>
-            <save-button label="Erstellen" title="Dienstreiseantrag erstellen" @click="renderReport" />
-        </template>
-        <form method="post" :action="route('reports.render', {report: 'travelRequestForm'})" ref="myForm">
-            <form-csrf-token />
-            <form-selectize name="absence" label="Abwesenheitseintrag" v-model="myAbsence" :options="myAbsences" />
-            <input type="hidden" name="absence" v-model="myAbsence" />
-        </form>
-    </admin-layout>
+    <input type="hidden" name="_token" :value="token" />
 </template>
 
 <script>
-import SaveButton from "../../../components/Ui/buttons/SaveButton";
-import FormSelectize from "../../../components/Ui/forms/FormSelectize";
-import FormCsrfToken from "../../../components/Ui/forms/FormCsrfToken";
 export default {
-    name: "Setup",
-    props: ['absences'],
-    components: {FormCsrfToken, FormSelectize, SaveButton},
+    name: "FormCsrfToken",
     data() {
-        let myAbsences = this.absences;
-
-        for (let key in myAbsences) {
-            myAbsences[key].name = myAbsences[key].durationText + ' ' + myAbsences[key].reason;
-        }
-
         return {
-            myAbsence: myAbsences.length ? myAbsences[0].id : null,
-            myAbsences,
+            token: document.querySelector('meta[name="csrf-token"]').content,
         }
-    },
-    methods: {
-        renderReport() {
-            this.$refs.myForm.submit();
-        },
     }
 }
 </script>
