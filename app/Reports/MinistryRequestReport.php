@@ -31,9 +31,11 @@
 namespace App\Reports;
 
 
+use App\City;
 use App\Day;
 use App\Location;
 use App\Mail\MinistryRequest;
+use App\Ministry;
 use App\Service;
 use App\User;
 use Auth;
@@ -43,6 +45,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
+use Inertia\Inertia;
+
 
 class MinistryRequestReport extends AbstractReport
 {
@@ -64,157 +68,103 @@ class MinistryRequestReport extends AbstractReport
      */
     public $icon = 'fa fa-envelope';
 
+    protected $inertia = true;
+
 
     /**
      * @return Application|Factory|View
      */
     public function setup()
     {
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first()->date;
+        $cities = Auth::user()->writableCities;
         $locations = Location::whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
-        return $this->renderView('setup', compact('maxDate', 'locations'));
+        $ministries = Ministry::all();
+        $users = User::all();
+
+        return Inertia::render('Report/MinistryRequest/Setup', compact('cities', 'locations', 'ministries', 'users'));
     }
+
 
     /**
+     * Retrieve list of services
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function configure(Request $request)
+    public function services(Request $request)
     {
-        $data = $request->validate(
-            [
-                'locations' => 'required',
-                'locations.*' => 'exists:locations,id',
-                'ministry' => 'required',
-                'start' => 'required|date_format:d.m.Y',
-                'end' => 'required|date_format:d.m.Y',
-            ]
-        );
+        $data = $request->validate([
+            'start' => 'date',
+            'end' => 'date',
+            'locations.*' => 'int|exists:locations,id',
+            'city' => 'int|exists:cities,id',
+                           ]);
 
-        $cities = Location::select('city_id')->whereIn('id', $data['locations'])->get()->pluck('city_id');
+        $services = Service::where('city_id', $data['city'])
+            ->between(Carbon::parse($data['start']), Carbon::parse($data['end']))
+            ->ordered();
 
-        $data['start'] = Carbon::createFromFormat('d.m.Y', $data['start']);
-        $data['end'] = Carbon::createFromFormat('d.m.Y', $data['end']);
+        if (count($data['locations'] ?? [])) {
+            $services->whereIn('location_id', ($data['locations'] ?? []));
+        }
 
-        $data['users'] = User::with('services')->select('id')->whereHas(
+        return response()->json($services->get());
+    }
+
+    public function recipients(Request $request)
+    {
+        $data = $request->validate([
+                                       'ministry' => 'string',
+                                       'city' => 'int|exists:cities,id',
+                                   ]);
+
+        $users = User::select('id')->whereHas(
             'services',
-            function ($query) use ($data, $cities) {
+            function ($query) use ($data) {
                 $query->where('service_user.category', $data['ministry']);
-                $query->whereIn('city_id', $cities);
+                $query->where('city_id', $data['city']);
             }
-        )->get()->unique()->sortBy('name');
+        )->get()->pluck('id')->unique();
 
-
-        $data['services'] = Service::select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
-            ->whereIn('location_id', $data['locations'])
-            ->whereHas(
-                'day',
-                function ($query) use ($data) {
-                    $query->where('date', '>=', $data['start'])
-                        ->where('date', '<=', $data['end']);
-                }
-            )->orderBy('days.date')->orderBy('time')->get();
-
-        return $this->renderView('configure', $data);
+        return response()->json($users);
     }
 
-    public function addresses(Request $request)
+    public function render(Request $request)
     {
         $data = $request->validate(
             [
-                'locations' => 'required',
                 'ministry' => 'required',
-                'start' => 'required|date_format:d.m.Y',
-                'end' => 'required|date_format:d.m.Y',
-                'services' => 'required',
-                'recipients' => 'required',
-            ]
-        );
-
-        $recipients = [];
-        $data['users'] = [];
-        foreach ($data['recipients'] as $recipient) {
-            if (!is_numeric($recipient)) {
-                $tmp = explode(' ', $recipient);
-                $lastName = $tmp[count($tmp) - 1];
-                unset($tmp[count($tmp) - 1]);
-                $firstName = join(' ', $tmp);
-                $thisUser= User::create(
-                    [
-                        'name' => $recipient,
-                        'first_name' => $firstName,
-                        'last_name' => $lastName,
-                    ]
-                );
-                $data['users'][] = $thisUser;
-                $recipients[] = $thisUser->id;
-            } else {
-                $thisUser = User::find($recipient);
-                if (null !== $thisUser) {
-                    $recipients[] = $recipient;
-                    $data['users'][] = $thisUser;
-                }
-            }
-        }
-        $data['recipients'] = $recipients;
-
-        $services = [];
-        foreach ($data['services'] as $key => $service) {
-            if ($service) {
-                $services[] = $key;
-            }
-        }
-        $data['services'] = $services;
-
-        //$data['users'] = User::whereIn('id', $data['recipients'])->get();
-
-        return $this->renderView('addresses', $data);
-    }
-
-
-    public function send(Request $request)
-    {
-        $data = $request->validate(
-            [
-                'locations' => 'required',
-                'ministry' => 'required',
-                'start' => 'required|date_format:d.m.Y',
-                'end' => 'required|date_format:d.m.Y',
                 'services' => 'required',
                 'recipients' => 'required|exists:users,id',
-                'address' => 'required',
+                'address' => 'nullable',
                 'address.*' => 'nullable|email',
                 'text' => 'nullable|string',
             ]
         );
 
-        foreach ($data['address'] as $id => $address) {
+
+        foreach (($data['address'] ?? []) as $id => $address) {
             if (!$address) {
                 unset($data['address'][$id]);
             } else {
-                User::find($id)->update(['email' => $address]);
+                $user = User::find($id)->update(['email' => $address]);
             }
         }
 
-        $userIds = array_keys($data['address']);
+        $data['recipients'] = User::whereIn('id', $data['recipients'])->get();
 
-        $data['services'] = Service::select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
-            ->whereIn('services.id', explode(',', $data['services']))
-            ->orderBy('days.date')
-            ->orderBy('time')
+        $data['services'] = Service::whereIn('id', $data['services'])
+            ->ordered()
             ->get();
 
-        foreach ($userIds as $userId) {
-            $user = User::find($userId);
+
+        foreach ($data['recipients'] as $user) {
             $sender = Auth::user();
             Mail::to($user->email)->cc($sender)->send(
                 new MinistryRequest($user, $sender, $data['ministry'], $data['services'], $data['text'])
             );
         }
 
-
-        return redirect('home')->with('success', 'Deine Anfrage wurde gesendet.');
+        return redirect()->route('home')->with('success', 'Deine Anfrage wurde gesendet.');
     }
 
 }
