@@ -39,6 +39,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use PhpOffice\PhpWord\Exception\Exception;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
@@ -64,14 +65,16 @@ class PredicantsReport extends AbstractWordDocumentReport
      */
     public $description = 'Vorausgefülltes Prädikantenformular für das Dekanatamt';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities]);
+        return Inertia::render('Report/Predicants/Setup', compact('cities'));
     }
 
     /**
@@ -83,7 +86,7 @@ class PredicantsReport extends AbstractWordDocumentReport
     {
         $data = $request->validate(
             [
-                'city' => 'required|integer',
+                'city' => 'required|int|exists:cities,id',
                 'start' => 'required|date|date_format:d.m.Y',
                 'end' => 'required|date|date_format:d.m.Y',
             ]
@@ -91,12 +94,10 @@ class PredicantsReport extends AbstractWordDocumentReport
 
         $serviceList = Service::between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
             ->notHidden()
-            ->whereIn('city_id', $request->get('includeCities'))
+            ->where('city_id', $data['city'])
             ->ordered()
             ->get()
             ->groupBy('key_date');
-
-
 
         $city = City::find($data['city']);
 

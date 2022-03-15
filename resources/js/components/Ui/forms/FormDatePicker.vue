@@ -30,7 +30,7 @@
 <template>
     <form-group :id="id" :label="label" :help="help" :name="name" :pre-label="preLabel" :required="required"
                 :value="myValue" :is-checked-item="isCheckedItem">
-        <date-picker v-model="myValue" :config="myDatePickerConfig" :disabled="disabled" :required="required"
+        <date-picker :name="name" v-model="myValue" :config="myDatePickerConfig" :disabled="disabled" :required="required"
                      :aria-required="required" @input="handleInputEvent" />
     </form-group>
 </template>
