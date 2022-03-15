@@ -3,7 +3,7 @@
   -
   - @package Pfarrplaner
   - @author Christoph Fischer <chris@toph.de>
-  - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
+  - @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
   - @version git: $Id$
@@ -28,15 +28,18 @@
   -->
 
 <template>
-    <nav-button type="primary" icon="mdi mdi-content-save" title="Änderungen speichern" @click="$emit('click')">{{ label || 'Speichern'}}</nav-button>
+    <admin-layout title="Dienstreiseantrag erstellen">
+        <template v-slot:navbar-left>
+            <save-button title="Erstellen"
+        </template>
+    </admin-layout>
 </template>
 
 <script>
-import NavButton from "./NavButton";
+import SaveButton from "../../../components/Ui/buttons/SaveButton";
 export default {
-    name: "SaveButton",
-    props: ['label'],
-    components: {NavButton}
+    name: "Setup",
+    components: {SaveButton}
 }
 </script>
 

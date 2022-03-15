@@ -35,6 +35,7 @@ use App\Absence;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use Mpdf\Mpdf;
 
 class TravelRequestFormReport extends AbstractPDFDocumentReport
@@ -53,6 +54,8 @@ class TravelRequestFormReport extends AbstractPDFDocumentReport
      */
     public $description = 'Dienstreiseantrag für das Dekanatamt';
 
+    protected $inertia = true;
+
 
     /**
      * Returns true if the report is active for the current user
@@ -70,7 +73,7 @@ class TravelRequestFormReport extends AbstractPDFDocumentReport
             ->orderBy('from')
             ->get();
 
-        return $this->renderView('setup', compact('absences'));
+        return Inertia::render('Report/TravelRequest/Setup', compact('absences'));
     }
 
     public function render(Request $request)
