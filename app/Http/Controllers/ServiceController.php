@@ -94,10 +94,11 @@ class ServiceController extends Controller
     public function create(City $city, $date)
     {
         $location = $city->locations->first();
+        $date = Carbon::parse($date);
         if ($location && $location->default_time) {
-            $date = Carbon::parse($date . ' ' . $location->default_time, 'Europe/Berlin');
+            $date = Carbon::parse($date->format('Y-m-d') . ' ' . $location->default_time, 'Europe/Berlin');
         } else {
-            $date = Carbon::parse($date . ' 10:00:00', 'Europe/Berlin');
+            $date = Carbon::parse($date->format('Y-m-d') . ' 10:00:00', 'Europe/Berlin');
         }
         $service = Service::create([
                                        'city_id' => $city->id,
