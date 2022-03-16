@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.127.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.0...v2022.127.1) (2022-03-16)
+
+
+### Features
+
+* Disable obsolete RegulatoryReport ([9d2563b](https://github.com/pfarrplaner/pfarrplaner/commits/9d2563b9071738e7c74ffaacef8b12ba2c6bcdc2))
+* Even more tricks to prevent login form token expiration ([fd255c7](https://github.com/pfarrplaner/pfarrplaner/commits/fd255c75e4d1f47b51788a498d290f345d8d6c20))
+* Permit changing text of a SaveButton ([28aa47d](https://github.com/pfarrplaner/pfarrplaner/commits/28aa47d06cfb4c6b412f0dc22f5f4c04c7824a06))
+
+
+### Bug Fixes
+
+* Cannot create new service from calendar ([3d0bef6](https://github.com/pfarrplaner/pfarrplaner/commits/3d0bef6b35710972f00f9e8b7193cd3b8c595f97))
+
 ## [2022.127.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.126.1...v2022.127.0) (2022-03-14)
 
 
