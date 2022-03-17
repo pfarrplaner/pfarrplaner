@@ -40,6 +40,7 @@ use App\Service;
 use App\Tools\StringTool;
 use App\Wedding;
 use Carbon\Carbon;
+use http\Env\Response;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -48,6 +49,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use NumberFormatter;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\Element\TextRun;
@@ -99,68 +101,63 @@ class AnnouncementsReport extends AbstractWordDocumentReport
     /** @var Section */
     protected $section;
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(compact('cities'));
-    }
-
-    /**
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function configure(Request $request)
-    {
-        $request->validate(['city' => 'required|int']);
-        $city = City::findOrFail($request->get('city'));
-        $request->session()->put('city', $city->id);
-        return redirect()->route('report.step', ['report' => $this->getKey(), 'step' => 'configure2']);
+        return Inertia::render('Report/Announcements/Setup', compact('cities'));
     }
 
 
     /**
      * @param Request $request
-     * @return Application|Factory|View
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function configure2(Request $request)
+    public function services(Request $request)
     {
-        $city = City::findOrFail($request->session()->get('city'));
-        $services = Service::with(['day', 'location'])
+        $data = $request->validate(['city' => 'required|int']);
+        $city = City::findOrFail($data['city']);
+        $serviceList = Service::with(['location'])
             ->regularForCity($city)
             ->notHidden()
             ->startingFrom(Carbon::now()->subHours(8))
             ->ordered()
             ->get();
 
-        return $this->renderView('configure', compact('city', 'services'));
+        $services = [];
+        foreach ($serviceList as $service) {
+            $services[] = [
+                'id' => $service->id,
+                'name' => $service->date->format('d.m.Y') . ' ' . $service->timeText() . ', ' . $service->locationText
+            ];
+        }
+
+        return response()->json([
+                                    'services' => $services,
+                                    'mixOutlook' => (bool)$city->public_events_calendar_url,
+                                    'mixOP' => (bool)$city->op_customer_token,
+                                ]);
     }
 
     /**
      * @param Request $request
-     * @return RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function input(Request $request)
+    public function lastServiceDays(Request $request)
     {
-        $request->validate(['service' => 'required|int']);
-        $service = Service::findOrFail($request->get('service'));
-        $request->session()->put('service', $service->id);
-        return redirect()->route('report.step', ['report' => $this->getKey(), 'step' => 'postInput']);
-    }
+        $data = $request->validate([
+            'city' => 'required|int|exists:cities,id',
+            'service' => 'required|int|exists:services,id'
+                                   ]);
 
+        $city = City::findOrFail($data['city']);
+        $service = Service::findOrFail($data['service']);
 
-    /**
-     * @param Request $request
-     * @return Application|Factory|View
-     */
-    public function postInput(Request $request)
-    {
-        $service = Service::findOrFail($request->session()->get('service'));
-        $city = City::findOrFail(Session::get('city'));
-
-        $lastDaysWithServices = Service::select(DB::raw('DISTINCT DATE(date) AS day'))
+        $days = Service::select(DB::raw('DISTINCT DATE(date) AS day'))
             ->endingAt($service->date)
             ->regularForCity($city)
             ->orderBy('day', 'DESC')
@@ -168,57 +165,71 @@ class AnnouncementsReport extends AbstractWordDocumentReport
             ->get()
             ->pluck('day');
 
-        $fmt = new NumberFormatter('de_DE', NumberFormatter::CURRENCY);
-
-        // add up all offerings for the day
-        $offerings = [];
-        foreach ($lastDaysWithServices as $day) {
-            $dayServices = Service::whereDate('date', $day)
-                ->inCity($service->city)
-                ->notHidden()
-                ->get();
-            $amount = 0;
-            foreach ($dayServices as $dayService) {
-                //$amount += (float)filter_var(strtr($dayService->offering_amount, [',' => '.', ' ' => '', '€' => '']), FILTER_SANITIZE_NUMBER_FLOAT);
-                $amount += (float)strtr($dayService->offering_amount, [' ' => '', '€' => '']);
-            }
-
-            //$offerings[$day->id] = trim(money_format('%=*^#0.2n', $amount));
-            $offerings[$day] = trim($fmt->formatCurrency($amount, 'EUR'));
+        $lastServiceDays = [];
+        foreach ($days as $day) {
+            $lastServiceDays[] = ['id' => $day, 'name' => Carbon::parse($day)->formatLocalized('%A, %d. %B %Y')];
         }
 
-        return $this->renderView('input', compact('service', 'lastDaysWithServices', 'offerings'));
+        return response()->json($lastServiceDays);
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function offerings(Request $request) {
+        $data = $request->validate([
+            'city' => 'required|int|exists:cities,id',
+            'day' => 'required|date'
+                                   ]);
+        $services = Service::whereDate('date', Carbon::parse($data['day']))
+            ->where('city_id', $data['city'])
+            ->get();
+
+        $amount = 0;
+        foreach ($services as $service) {
+            $amount += (float)strtr($service->offering_amount, [' ' => '', '€' => '']);
+        }
+
+        return response()->json($amount);
+    }
+
 
     public function auto(Request $request)
     {
-        if (!$request->has('service')) abort(404);
+        if (!$request->has('service')) {
+            abort(404);
+        }
         $service = Service::findOrFail($request->get('service'));
         $lastService = Service::where('offering_amount', '!=', '')
             ->endingAt($service->dateTime)
             ->orderedDesc()
             ->first();
         $this->renderReport([
-            'lastService' => $lastService->date->format('d.m.Y'),
-            'offerings' => $lastService->offering_amount,
-            'offering_text' => $service->offering_text,
-            'service' => $service,
-            'mix_outlook' => $service->city->public_events_calendar_url ? true : false,
-            'mix_op' => $service->city->op_customer_token ? true : false,
-                                   ]);
+                                'lastService' => $lastService->date->format('d.m.Y'),
+                                'offerings' => $lastService->offering_amount,
+                                'offering_text' => $service->offering_text,
+                                'service' => $service,
+                                'mix_outlook' => $service->city->public_events_calendar_url ? true : false,
+                                'mix_op' => $service->city->op_customer_token ? true : false,
+                            ]);
     }
 
     public function renderReport($data)
     {
-        $service = $data['service'] ?? Service::findOrFail($data['service_id'] ?? session()->pull('service'));
-        $city = $service->city ?? City::findOrFail(session()->pull('city'));
+        $service = Service::findOrFail($data['service']);
+        $city = City::findOrFail($data['city']);
 
         $lastService = $data['lastService'];
         $offerings = $data['offerings'];
         $offeringText = $data['offering_text'] ?? '';
 
         $lastWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 last Sunday');
-        $nextWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 next Sunday')->setTime(23,59, 59);
+        $nextWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 next Sunday')->setTime(
+            23,
+            59,
+            59
+        );
 
         $funerals = Funeral::where('announcement', $service->date->format('Y-m-d'))
             ->whereHas(
@@ -278,7 +289,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
 
         $events = Service::mix($events, $services, $service->date, $nextWeek);
 
-        if ($data['mix_op'] ??  false) {
+        if ($data['mix_op'] ?? false) {
             $op = new OPEventsImport($city);
             $events = $op->mix($events, $service->date, $nextWeek);
         }
@@ -427,7 +438,11 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                                     []
                                 ],
                                 [
-                                    trim(StringTool::sanitizeXMLString($event['title']) . ' (' . StringTool::sanitizeXMLString($event['place']) . ')'),
+                                    trim(
+                                        StringTool::sanitizeXMLString(
+                                            $event['title']
+                                        ) . ' (' . StringTool::sanitizeXMLString($event['place']) . ')'
+                                    ),
                                     []
                                 ]
                             ]
@@ -470,9 +485,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
                                     [' (' . ($event->cc_location ?? $event->locationText()) . ')', []],
                                 ]
                             );
-
                         }
-
                     }
 
 
@@ -724,7 +737,6 @@ Amen.'
 
         $filename = $service->date->format('Y_m_d') . ' Bekanntgaben';
         $this->sendToBrowser($filename);
-
     }
 
     /**
@@ -737,12 +749,16 @@ Amen.'
         return $this->renderReport(
             $request->validate(
                 [
+                    'city' => 'required|int|exists:cities,id',
+                    'service' => 'required|int|exists:services,id',
                     'offerings' => 'required|string',
-                    'lastService' => 'required|date|date_format:d.m.Y',
+                    'lastService' => 'required|date',
+                    'mix_op' => 'nullable|checkbox',
+                    'mix_outlook' => 'nullable|checkbox',
+                    'offering_text' => 'nullable|string',
                 ]
             )
         );
-
     }
 
     /**
