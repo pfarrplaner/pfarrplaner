@@ -33,7 +33,7 @@
         <input class="form-control" :class="{'is-invalid': $page.props.errors[name], 'checked-input': isCheckedItem}" :type="type" v-model="myValue" :id="myId+'Input'"
                :placeholder="placeholder" :aria-placeholder="placeholder" :autofocus="autofocus"
                @input="$emit('input', $event.target.value);" :disabled="disabled"
-               :required="required" :aria-required="required"/>
+               :required="required" :aria-required="required" :name="name"/>
     </form-group>
 </template>
 

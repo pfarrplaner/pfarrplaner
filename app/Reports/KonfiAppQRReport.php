@@ -44,6 +44,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
+use Inertia\Inertia;
+
+use function PHPUnit\Framework\returnArgument;
+
 
 /**
  * Class KonfiAppQRReport
@@ -65,6 +69,8 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
      */
     public $description = 'QR Codes für Gottesdienste, die von den Konfis mit der KonfiApp gescannt werden können.';
 
+    protected $inertia = true;
+
     /**
      * Only active if at least one of the user's cities has KonfiApp integration
      * @return bool
@@ -84,12 +90,10 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
      */
     public function setup()
     {
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
-        $users = User::all();
         $cities = Auth::user()->writableCities->reject(function ($item) {
             return $item->konfiapp_apikey == '';
         });
-        return $this->renderSetupView(compact('maxDate', 'users', 'cities'));
+        return Inertia::render('Report/KonfiAppQR/Setup', compact( 'cities'));
     }
 
     /**
