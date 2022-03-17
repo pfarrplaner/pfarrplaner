@@ -50,6 +50,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class EmbedContactLookupReport
@@ -75,13 +76,15 @@ class EmbedRegistrationReport extends AbstractEmbedReport
      */
     public $icon = 'fa fa-file-code';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(compact('cities'));
+        return Inertia::render('Report/EmbedRegistration/Setup', compact('cities'));
     }
 
     /**
@@ -95,7 +98,7 @@ class EmbedRegistrationReport extends AbstractEmbedReport
                 'cors-origin' => 'required|url',
                 'includeCities' => 'nullable',
                 'includeCities.*' => 'nullable|exists:cities,id',
-                'singleDay' => 'nullable|date_format:d.m.Y',
+                'singleDay' => 'nullable|date',
                 'singleService' => 'nullable|exists:services,id',
             ]
         );
@@ -109,7 +112,10 @@ class EmbedRegistrationReport extends AbstractEmbedReport
         $url = route('report.embed', compact('report', 'cities', 'corsOrigin', 'singleDay', 'singleService'));
         $randomId = uniqid();
 
-        return $this->renderView('render', compact('url', 'randomId'));
+        $html = \Illuminate\Support\Facades\View::make('reports.embedregistration.render', compact('url', 'randomId'))->render();
+        $title = 'HTML-Code für Onlineanmeldungen erstellen';
+
+        return Inertia::render('Report/EmbedRegistration/Render', compact('html', 'title'));
     }
 
 
