@@ -38,7 +38,6 @@
 namespace App\Reports;
 
 
-use App\Location;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
@@ -46,6 +45,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class EmbedStreamingReport
@@ -71,14 +71,15 @@ class EmbedStreamingReport extends AbstractEmbedReport
      */
     public $icon = 'fa fa-file-code';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Render
      */
     public function setup()
     {
         $cities = Auth::user()->cities;
-        $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
-        return $this->renderSetupView(compact('cities'));
+        return Inertia::render('Report/EmbedStreaming/Setup', compact('cities'));
     }
 
     /**
@@ -95,7 +96,9 @@ class EmbedStreamingReport extends AbstractEmbedReport
         );
         $data['url'] = route('embed.report', ['report' => 'streaming', 'city' => $data['city']]);
         $data['randomId'] = uniqid();
-        return view('reports.embedstreaming.render', $data);
+        $html = \Illuminate\Support\Facades\View::make('reports.embedstreaming.render', $data)->render();
+        $title = 'HTML-Code für Gottesdienststreams erstellen';
+        return Inertia::render('Report/EmbedStreaming/Render', compact('html', 'title'));
     }
 
     /**
