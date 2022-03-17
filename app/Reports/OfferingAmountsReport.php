@@ -39,6 +39,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Settings;
@@ -63,16 +64,16 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
      */
     public $group = 'Opfer';
 
+    protected $inertia = true;
+
 
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
+        return Inertia::render('Report/OfferingAmounts/Setup', compact('cities'));
     }
 
     /**
@@ -82,30 +83,19 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'cities.*' => 'required|integer|exists:cities,id',
-                'start' => 'required|date|date_format:d.m.Y',
+                'start' => 'required|date',
+                'end' => 'required|date',
             ]
         );
 
-        $start = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00');
-        $end = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('end') . ' 23:59:59');
-        $cityIds = $request->get('cities');
-        $cities = City::whereIn('id', $cityIds)->get();
+        $cities = City::whereIn('id', $data['cities'])->get();
 
-        $services = Service::whereIn('city_id', $cityIds)
-            ->select('services.*')
-            ->join('days', 'days.id', '=', 'services.day_id')
-            ->whereHas(
-                'day',
-                function ($query) use ($start, $end) {
-                    $query->where('date', '>=', $start);
-                    $query->where('date', '<=', $end);
-                }
-            )
-            ->orderBy('days.date')
-            ->orderBy('time')
+        $services = Service::whereIn('city_id', $data['cities'])
+            ->between(Carbon::parse($data['start']), Carbon::parse($data['end']))
+            ->ordered()
             ->get();
 
         $offerings = [];
@@ -160,14 +150,14 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
         // content rows
 
         $row = 1;
-        foreach ($offerings as $category => $data) {
+        foreach ($offerings as $category => $data2) {
             $row++;
             $sheet->setCellValue("A{$row}", $category);
-            $sheet->setCellValue("B{$row}", $data['ct']);
-            $sheet->setCellValue("C{$row}", $data['done']);
+            $sheet->setCellValue("B{$row}", $data2['ct']);
+            $sheet->setCellValue("C{$row}", $data2['done']);
             $sheet->setCellValueExplicit(
                 "D{$row}",
-                (float)str_replace(',', '.', (string)$data['amount']),
+                (float)str_replace(',', '.', (string)$data2['amount']),
                 DataType::TYPE_NUMERIC
             );
             //$sheet->setCellValue("D{$row}", ));
@@ -176,7 +166,7 @@ class OfferingAmountsReport extends AbstractExcelDocumentReport
         }
 
         // output
-        $filename = 'Opfersummen von ' . $start->format('Y-m-d') . ' bis ' . $end->format(
+        $filename = 'Opfersummen von ' . Carbon::parse($data['start'])->format('Y-m-d') . ' bis ' . Carbon::parse($data['end'])->format(
                 'Y-m-d'
             ) . ' -- ' . $cities->pluck('name')->join(', ');
         $this->sendToBrowser($filename);
