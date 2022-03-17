@@ -47,6 +47,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class EmbedContactLookupReport
@@ -72,13 +73,15 @@ class EmbedContactLookupReport extends AbstractEmbedReport
      */
     public $icon = 'fa fa-file-code';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(compact('cities'));
+        return Inertia::render('Report/EmbedContactLookup/Setup', compact('cities'));
     }
 
     /**
@@ -101,7 +104,10 @@ class EmbedContactLookupReport extends AbstractEmbedReport
         $url = route('report.embed', compact('report', 'cities', 'corsOrigin'));
         $randomId = uniqid();
 
-        return $this->renderView('render', compact('url', 'randomId'));
+        $title = 'HTML-Code für Ansprechpartnerformular erstellen';
+        $html = \Illuminate\Support\Facades\View::make('reports.embedcontactlookup.html', compact('url', 'randomId'))->render();
+
+        return Inertia::render('Report/EmbedContactLookup/Render', compact('html', 'title'));
     }
 
 
