@@ -33,12 +33,14 @@ namespace App\Reports;
 use App\City;
 use App\Day;
 use App\Funeral;
+use App\Liturgy;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\Exception;
 
 /**
@@ -60,16 +62,25 @@ class FuneralsRelativesReport extends AbstractExcelDocumentReport
      */
     public $group = 'Kasualien';
 
+    protected $inertia = true;
+
 
     /**
      * @return Application|Factory|View
      */
     public function setup()
     {
-        $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
+        // set default date to now()
+        $start = Carbon::now();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
+        $year = Carbon::now()->year;
+        $liturgy = Liturgy::getCompleteLiturgyInfoArray();
+        foreach ($liturgy as $date => $litInfo) {
+            if (($litInfo['calendarYear'] == $year) && ($litInfo['title'] == '1. Advent')) {
+                $start = Carbon::parse($litInfo['dateSql'])->setTime(0,0,0)->subDays(6);
+            }
+        }
+        return Inertia::render('Report/FuneralsRelatives/Setup', compact('start', 'cities'));
     }
 
     /**
@@ -79,27 +90,22 @@ class FuneralsRelativesReport extends AbstractExcelDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
-                'city' => 'required|integer',
-                'start' => 'required|date|date_format:d.m.Y',
+                'city' => 'required|int|exists:cities,id',
+                'start' => 'required|date',
             ]
         );
 
-        $start = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00');
+        $start = Carbon::parse($data['start'], 'Europe/Berlin')->setTime(0,0,0);
         $city = City::find($request->get('city'));
 
         $funerals = Funeral::with('service')
             ->whereHas(
                 'service',
                 function ($query) use ($city, $start) {
-                    $query->where('city_id', $city->id);
-                    $query->whereHas(
-                        'day',
-                        function ($query2) use ($start) {
-                            $query2->where('date', '>=', $start);
-                        }
-                    );
+                    $query->where('city_id', $city->id)
+                        ->startingFrom($start);
                 }
             )
             ->get();
