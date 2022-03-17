@@ -31,6 +31,7 @@
 namespace App\Reports;
 
 use App\Day;
+use App\Ministry;
 use App\Participant;
 use App\Service;
 use App\User;
@@ -40,6 +41,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 
 /**
@@ -62,18 +64,16 @@ class SingleMinistryReport extends AbstractPDFDocumentReport
      */
     public $description = 'Liste mit allen eingeteilten Personen für einen bestimmten Dienst';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-
         $ministries = $this->getAvailableMinistries();
-
-
-        return $this->renderSetupView(compact('maxDate', 'cities', 'ministries'));
+        return Inertia::render('Report/SingleMinistry/Setup', compact('cities', 'ministries'));
     }
 
     /**
@@ -84,27 +84,19 @@ class SingleMinistryReport extends AbstractPDFDocumentReport
     {
         $data = $request->validate(
             [
-                'start' => 'required|date|date_format:d.m.Y',
-                'end' => 'required|date|date_format:d.m.Y',
+                'start' => 'required|date',
+                'end' => 'required|date',
                 'city' => 'required|int|exists:cities,id',
                 'ministry' => 'required|string',
             ]
         );
 
         $services = Service::with(['location'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
+            ->between(Carbon::parse($data['start']), Carbon::parse($data['end']))
             ->whereDoesntHave('funerals')
             ->whereDoesntHave('weddings')
             ->where('city_id', $data['city'])
-            ->whereHas(
-                'day',
-                function ($query) use ($data) {
-                    $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $data['start']));
-                    $query->where('date', '<=', Carbon::createFromFormat('d.m.Y', $data['end']));
-                }
-            )->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            ->ordered()
             ->get();
 
         return $this->sendToBrowser(
@@ -113,7 +105,7 @@ class SingleMinistryReport extends AbstractPDFDocumentReport
                 'start' => $data['start'],
                 'end' => $data['end'],
                 'services' => $services,
-                'ministry' => $data['ministry'],
+                'ministry' => $this->getAvailableMinistries()[$data['ministry']],
             ],
             ['format' => 'A4']
         );
