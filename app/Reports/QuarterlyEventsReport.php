@@ -40,6 +40,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Font;
 use PhpOffice\PhpWord\Style\Section;
@@ -65,15 +66,15 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
      */
     public $description = 'Übersicht aller Termine für ein Quartal an einem bestimmten Veranstaltungsort';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $minDate = max(Carbon::now(), Day::orderBy('date', 'ASC')->limit(1)->get()->first()->getAttribute('date'));
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first()->getAttribute('date');
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
-        return $this->renderSetupView(compact('minDate', 'maxDate', 'locations'));
+        return Inertia::render('Report/QuarterlyEvents/Setup', compact('locations'));
     }
 
     /**
@@ -87,6 +88,8 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
                 'title' => 'required',
                 'quarter' => 'required',
                 'location' => 'required|int|exists:locations,id',
+                'notes1' => 'nullable|string',
+                'notes2' => 'nullable|string',
             ]
         );
 
@@ -126,8 +129,8 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
 
         $section->addText('Für das ' . $quarter->quarter . '. Quartal ' . $quarter->year, ['size' => 18]);
 
-        if ($notes = $request->get('notes1')) {
-            $section->addText(str_replace("\n", '<w:br />', $notes));
+        if (isset($data['notes1'])) {
+            $section->addText(str_replace("\n", '<w:br />', $data['notes1']));
             $section->addText();
         }
 
@@ -181,9 +184,9 @@ class QuarterlyEventsReport extends AbstractWordDocumentReport
             }
         }
 
-        if ($notes = $request->get('notes2')) {
+        if (isset($data['notes2'])) {
             $section->addText();
-            $section->addText(str_replace("\n", '<w:br />', $notes));
+            $section->addText(str_replace("\n", '<w:br />', $data['notes2']));
         }
 
         if ($request->get('includeContact')) {
