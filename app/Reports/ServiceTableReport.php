@@ -33,6 +33,8 @@ namespace App\Reports;
 use App\City;
 use App\Day;
 use App\Liturgy;
+use App\Ministry;
+use App\Participant;
 use App\Service;
 use App\User;
 use Carbon\Carbon;
@@ -41,6 +43,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -69,16 +72,17 @@ class ServiceTableReport extends AbstractExcelDocumentReport
      */
     public $group = 'Listen';
 
+    protected $inertia = true;
+
 
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
+        $ministries = Ministry::selectList();
+        return Inertia::render('Report/ServiceTable/Setup', compact('cities', 'ministries'));
     }
 
     /**
@@ -93,8 +97,12 @@ class ServiceTableReport extends AbstractExcelDocumentReport
             [
                 'city' => 'required|integer',
                 'year' => 'required|integer',
+                'ministries' => 'nullable',
+                'ministries.*' => 'nullable|string',
+                'name_format' => 'required|int|in:1,2,3',
             ]
         );
+
 
 
         $serviceList = Service::between(
@@ -106,12 +114,11 @@ class ServiceTableReport extends AbstractExcelDocumentReport
             ->get()
             ->groupBy('key_date');
 
-
         $city = City::findOrFail($data['city']);
 
 
-        $ministries = $request->get('ministries') ?? [];
-        $nameFormat = $request->get('name_format') ?? User::NAME_FORMAT_DEFAULT;
+        $ministries = $data['ministries'] ?? [];
+        $nameFormat = $data['name_format'] ?? User::NAME_FORMAT_DEFAULT;
 
         $columns = [
             'A' => 12.73046875,
@@ -401,5 +408,4 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         }
         return join(', ', $recs);
     }
-
 }

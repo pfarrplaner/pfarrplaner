@@ -32,6 +32,7 @@ namespace App;
 
 
 use Illuminate\Support\Collection;
+use phpDocumentor\Reflection\Types\Self_;
 
 /**
  * Class Ministry
@@ -73,5 +74,26 @@ class Ministry
             return 'Weitere Beteiligte';
         }
         return $title;
+    }
+
+    /**
+     * @return array
+     */
+    public static function POMA() {
+        return ['P' => 'Pfarrer*in', 'O' => 'Organst*in', 'M' => 'Mesner*in', 'A' => 'Weitere Beteiligte'];
+    }
+
+    /**
+     * @return array
+     */
+    public static function selectList() {
+        $ministries = [];
+        foreach (Participant::all()->pluck('category')->unique() as $ministry) {
+            $ministries[] = [
+                'id' => $ministry,
+                'name' => self::POMA()[$ministry] ?? $ministry,
+            ];
+        }
+        return $ministries;
     }
 }
