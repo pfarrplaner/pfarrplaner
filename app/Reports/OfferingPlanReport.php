@@ -39,6 +39,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 
 /**
@@ -61,15 +62,15 @@ class OfferingPlanReport extends AbstractPDFDocumentReport
      */
     public $description = 'Übersicht aller Opferzwecke für ein Jahr';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $minDate = Day::orderBy('date', 'ASC')->limit(1)->get()->first();
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['minDate' => $minDate, 'maxDate' => $maxDate, 'cities' => $cities]);
+        return Inertia::render('Report/OfferingPlan/Setup', compact('cities'));
     }
 
     /**
