@@ -38,6 +38,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 
 /**
@@ -60,14 +61,15 @@ class PersonReport extends AbstractPDFDocumentReport
      */
     public $description = 'Liste mit allen Gottesdiensten, für die eine bestimmte Person eingeteilt ist';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $users = User::all();
-        return $this->renderSetupView(compact('maxDate', 'users'));
+        return Inertia::render('Report/Person/Setup', compact( 'users'));
     }
 
     /**
@@ -76,33 +78,25 @@ class PersonReport extends AbstractPDFDocumentReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
-                'start' => 'required|date|date_format:d.m.Y',
-                'end' => 'required|date|date_format:d.m.Y',
+                'person' => 'required|int|exists:users,id',
+                'start' => 'required|date',
+                'end' => 'required|date',
             ]
         );
 
-        $userIds = $request->get('person');
-        $userIds = is_array($userIds) ? $userIds : [$userIds];
+        $userIds = is_array($data['person']) ? $data['person'] : [$data['person']];
         $users = User::whereIn('id', $userIds)->get();
 
         $services = Service::with(['location'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
+            ->between(Carbon::parse($data['start']), Carbon::parse($data['end']))
             ->whereHas(
                 'participants',
                 function ($query) use ($userIds) {
                     $query->whereIn('user_id', $userIds);
                 }
-            )->whereHas(
-                'day',
-                function ($query) use ($request) {
-                    $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')));
-                    $query->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')));
-                }
-            )->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            )->ordered()
             ->get();
 
         return $this->sendToBrowser(

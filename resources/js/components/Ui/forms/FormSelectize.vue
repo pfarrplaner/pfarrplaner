@@ -35,7 +35,7 @@
             <option v-for="item in items" :value="item[idKey]">{{ titleKey ? item[titleKey] : item }}</option>
         </selectize>
         <selectize class="form-control" :class="{'is-invalid': $page.props.errors[name]}" v-model="myValue" :id="myId+'Input'"
-               :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled"
+               :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled" :name="name"
                @input="changed" :settings="mySettings" :multiple="multiple" v-else>
         </selectize>
     </form-group>
