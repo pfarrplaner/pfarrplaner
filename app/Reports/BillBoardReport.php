@@ -41,6 +41,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\Element\TextRun;
 use PhpOffice\PhpWord\Exception\Exception;
@@ -92,13 +93,16 @@ class BillBoardReport extends AbstractWordDocumentReport
     /** @var Section */
     protected $section;
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(compact('cities'));
+
+        return Inertia::render('Report/BillBoard/Setup', compact('cities'));
     }
 
     /**
@@ -111,11 +115,13 @@ class BillBoardReport extends AbstractWordDocumentReport
         $request->validate(
             [
                 'city' => 'required|int',
-                'start' => 'required|date|date_format:d.m.Y',
+                'start' => 'required|date',
+                'mixOutlook' => 'nullable|checkbox',
+                'mixOP' => 'nullable|checkbox',
             ]
         );
 
-        $start = Carbon::createFromFormat('d.m.Y H:i:s', $request->get('start') . ' 0:00:00');
+        $start = Carbon::parse( $request->get('start'))->setTime(0,0,0);
         $city = City::findOrFail($request->get('city'));
 
         $end = $start->copy()->addDays(8)->subSecond(1);
@@ -128,14 +134,14 @@ class BillBoardReport extends AbstractWordDocumentReport
 
         $events = [];
 
-        if ($request->get('mix_outlook', false)) {
+        if ($data['mixOutlook'] ?? false) {
             $calendar = new EventCalendarImport($city->public_events_calendar_url);
             $events = $calendar->mix($events, $start, $end->copy()->subDay(1), true);
         }
 
         $events = Service::mix($events, $services, $start, $end);
 
-        if ($request->get('mix_op', false)) {
+        if ($data['mixOP'] ?? false) {
             $op = new OPEventsImport($city);
             $events = $op->mix($events, $start, $end);
         }
