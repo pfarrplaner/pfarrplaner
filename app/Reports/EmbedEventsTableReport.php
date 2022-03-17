@@ -48,6 +48,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class EmbedEventsTableReport
@@ -73,13 +74,15 @@ class EmbedEventsTableReport extends AbstractEmbedReport
      */
     public $icon = 'fa fa-file-code';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(compact('cities'));
+        return Inertia::render('Report/EmbedEventsTable/Setup', compact('cities'));
     }
 
     /**
@@ -88,10 +91,11 @@ class EmbedEventsTableReport extends AbstractEmbedReport
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'cors-origin' => 'required|url',
-                'city' => 'required',
+                'city' => 'required|int|exists:cities,id',
+                'numDays' => 'required|int',
             ]
         );
         $city = City::findOrFail($request->get('city'));
@@ -102,7 +106,11 @@ class EmbedEventsTableReport extends AbstractEmbedReport
         $url = route('report.embed', compact('report', 'days', 'city', 'corsOrigin'));
         $randomId = uniqid();
 
-        return view('reports.embedeventstable.render', compact('url', 'randomId'));
+        $html = \Illuminate\Support\Facades\View::make('reports.embedeventstable.render', compact('url', 'randomId'))
+            ->render();
+        $title = 'HTML-Code für eine Veranstaltungstabelle erstellen';
+
+        return Inertia::render('Report/EmbedEventsTable/Render', compact('html', 'title'));
     }
 
 
