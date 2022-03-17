@@ -80,7 +80,7 @@ class Ministry
      * @return array
      */
     public static function POMA() {
-        return ['P' => 'Pfarrer*in', 'O' => 'Organst*in', 'M' => 'Mesner*in', 'A' => 'Weitere Beteiligte'];
+        return ['P' => 'Pfarrer*in', 'O' => 'Organist*in', 'M' => 'Mesner*in', 'A' => 'Weitere Beteiligte'];
     }
 
     /**
