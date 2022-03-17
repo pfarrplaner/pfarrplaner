@@ -41,6 +41,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class MinistrySignupSheetReport extends AbstractPDFDocumentReport
 {
@@ -58,16 +60,16 @@ class MinistrySignupSheetReport extends AbstractPDFDocumentReport
      */
     public $description = 'Dienstplan für bestimmte Dienste zum Eintragen im Umlaufverfahren';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $cities = Auth::user()->writableCities;
-        $ministries = Ministry::all();
-        $ministries->push('Pfarrer*in', 'Organist*in', 'Mesner*in');
-        $ministries = $ministries->sort();
-        return $this->renderSetupView(compact('cities', 'ministries'));
+        $ministries = Ministry::selectList();
+        return Inertia::render('Report/MinistrySignupSheet/Setup', compact('cities', 'ministries'));
     }
 
     public function render(Request $request)
@@ -78,6 +80,7 @@ class MinistrySignupSheetReport extends AbstractPDFDocumentReport
                                        'start' => 'required|date_format:d.m.Y',
                                        'end' => 'required|date_format:d.m.Y',
                                    ]);
+
         $data['city'] = City::find($data['city']);
         $data['start'] = Carbon::createFromFormat('d.m.Y H:i:s', $data['start'] . ' 0:00:00');
         $data['end'] = Carbon::createFromFormat('d.m.Y H:i:s', $data['end'] . ' 23:59:00');

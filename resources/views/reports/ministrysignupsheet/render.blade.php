@@ -27,7 +27,7 @@
                 Gottesdienst
             </th>
             @foreach($ministries as $ministry)
-                <th>{{ $ministry }}</th>
+                <th>{{ \App\Ministry::title($ministry) }}</th>
             @endforeach
         </tr>
     </thead>
