@@ -40,6 +40,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 
 /**
@@ -62,14 +63,15 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
      */
     public $description = 'Übersicht aller Termine der Kinderkirche mit Themen und Mitarbeitern';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities]);
+        return Inertia::render('Report/ChildrensChurch/Setup', compact('cities'));
     }
 
     /**
@@ -81,12 +83,12 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
         $data = $request->validate(
             [
                 'city' => 'required',
-                'start' => 'required|date|date_format:d.m.Y',
-                'end' => 'required|date|date_format:d.m.Y',
+                'start' => 'required|date',
+                'end' => 'required|date',
             ]
         );
 
-        $serviceList = Service::between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
+        $serviceList = Service::between(Carbon::parse($data['start']), Carbon::parse($data['end']))
             ->notHidden()
             ->where('city_id', $data['city'])
             ->where('cc', 1)
