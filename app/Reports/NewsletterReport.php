@@ -31,17 +31,14 @@
 namespace App\Reports;
 
 use App\City;
-use App\Day;
 use App\Imports\EventCalendarImport;
 use App\Imports\OPEventsImport;
-use App\Liturgy;
 use App\Service;
 use Carbon\Carbon;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 
 /**
@@ -69,50 +66,46 @@ class NewsletterReport extends AbstractWordDocumentReport
     public $icon = 'fa fa-file-code';
 
 
+    protected $inertia = true;
+
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['cities' => $cities]);
+        return Inertia::render('Report/Newsletter/Setup', compact('cities'));
     }
 
 
     /**
      * @param Request $request
-     * @return Application|Factory|View|string
+     * @return \Inertia\Response
      */
     public function render(Request $request)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'city' => 'required|int|exists:cities,id',
-                'start' => 'required|date|date_format:d.m.Y',
-                'end' => 'required|date|date_format:d.m.Y',
-                'mixOP' => 'nullable|int',
-                'mixOutlook' => 'nullable|int',
+                'start' => 'required|date',
+                'end' => 'required|date',
+                'mixOP' => 'nullable|bool',
+                'mixOutlook' => 'nullable|bool',
             ]
         );
 
         $city = City::findOrFail($request->get('city'));
-        $start = Carbon::createFromFormat('d.m.Y', $request->get('start'))->setTime(0,0,0)->setTimezone('Europe/Berlin');
-        $end = Carbon::createFromFormat('d.m.Y', $request->get('end'))->setTime(23,59,59)->setTimezone('Europe/Berlin');
-
-        $days = Day::where('date', '>=', Carbon::createFromFormat('d.m.Y', $request->get('start')))
-            ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $request->get('end')))
-            ->orderBy('date', 'ASC')
-            ->get();
-        $dayIds = $days->plucK('id');
+        $start = Carbon::parse($data['start'])->setTime(0,0,0);
+        $end = Carbon::parse($data['end'])->setTime(0,0,0);
 
         $services = Service::with(['location', 'day'])
             ->notHidden()
-            ->whereIn('day_id', $dayIds)
+            ->between($start, $end)
             ->where('city_id', $city->id)
             ->whereDoesntHave('funerals')
             ->whereDoesntHave('weddings')
-            ->orderBy('time', 'ASC')
+            ->ordered()
             ->get();
 
         $events = [];
@@ -132,8 +125,10 @@ class NewsletterReport extends AbstractWordDocumentReport
             $events = $op->mix($events, $start, $end, true);
         }
 
+        $html = View::make('reports.newsletter.html', compact('services', 'events'))->render();
 
-        return view('reports.newsletter.render', compact('events', 'days'));
+        return Inertia::render('Report/Newsletter/Render', compact('html'));
+
     }
 
 
