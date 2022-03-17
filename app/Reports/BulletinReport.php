@@ -41,6 +41,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 use PhpOffice\PhpWord\Element\Section;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\Style\Tab;
@@ -71,14 +72,17 @@ class BulletinReport extends AbstractWordDocumentReport
      */
     public $formats = ['Tailfingen', 'Truchtelfingen'];
 
+
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
-        $maxDate = Day::orderBy('date', 'DESC')->limit(1)->get()->first();
         $cities = Auth::user()->cities;
-        return $this->renderSetupView(['maxDate' => $maxDate, 'cities' => $cities, 'formats' => $this->formats]);
+        $formats = $this->formats;
+        return Inertia::render('Report/Bulletin/Setup', compact('cities', 'formats'));
     }
 
 
@@ -91,20 +95,23 @@ class BulletinReport extends AbstractWordDocumentReport
         $data = $request->validate(
             [
                 'includeCities' => 'required',
-                'start' => 'required|date|date_format:d.m.Y',
-                'end' => 'required|date|date_format:d.m.Y',
+                'includeCities.*' => 'int|exists:cities,id',
+                'start' => 'required|date',
+                'end' => 'required|date',
+                'format' => 'nullable',
             ]
         );
 
-        $serviceList = Service::between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
+
+        $serviceList = Service::between(Carbon::parse($data['start']), Carbon::parse($data['end']))
             ->notHidden()
             ->whereIn('city_id', $request->get('includeCities'))
             ->ordered()
             ->get()
             ->groupBy('key_date');
 
+        $format = $data['format'] ?? $this->formats[0];
 
-        $format = $request->get('format') ?: $this->formats[0];
         $renderMethod = "render{$format}Format";
         if (method_exists($this, $renderMethod)) {
             return $this->$renderMethod($serviceList);
@@ -131,7 +138,7 @@ class BulletinReport extends AbstractWordDocumentReport
                     $textRun->addText($service->date->format('d.m.Y'));
                 }
                 if ($ctr == 2) {
-                    $textRun->addText(htmlspecialchars($dayList->name));
+                    $textRun->addText(htmlspecialchars(Liturgy::getDayInfo($service->date)['title'] ?? ''));
                 }
                 $textRun->addText("\t");
                 $textRun->addText($service->timeText()."\t");
