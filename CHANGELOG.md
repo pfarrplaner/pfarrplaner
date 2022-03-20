@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.127.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.1...v2022.127.2) (2022-03-20)
+
+
+### Bug Fixes
+
+* Streaming troubleshooter fails with invalid sql query ([f4fac0c](https://github.com/pfarrplaner/pfarrplaner/commits/f4fac0cf76dc9455d0cf48aa1d5742f976228240))
+* Typo ([beef278](https://github.com/pfarrplaner/pfarrplaner/commits/beef2783a23bd6ec37e7b2fc92ab89ec867a26cf))
+* youtube:update command still used days in sql query ([f0f1c84](https://github.com/pfarrplaner/pfarrplaner/commits/f0f1c84868e106b6f0037dcf6ac5c2af9fe0c50b))
+
 ### [2022.127.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.0...v2022.127.1) (2022-03-16)
 
 
