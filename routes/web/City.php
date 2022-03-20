@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -28,28 +28,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
 
 use App\Http\Controllers\CityController;
 
-Route::get('/kirchengemeinden', [CityController::class, 'index'])->name('cities.index');
-Route::get('/kirchengemeinden/neu', [CityController::class, 'create'])->name('cities.create');
-
-
-Route::get('/kirchengemeinde/{city:name}', [CityController::class, 'edit'])->name('city.edit');
-Route::patch('/kirchengemeinde/{city:name}', [CityController::class, 'update'])->name('city.update');
-Route::delete('/kirchengemeinde/{city:name}', [CityController::class, 'destroy'])->name('city.delete');
-
-Route::post('/city/{city}/attach/{field}', [CityController::class, 'attachImage'])->name('city.attach');
-Route::delete('/city/{city}/detach/{field}', [CityController::class, 'detachImage'])->name('city.detach');
+Route::get('qr/{city}', [CityController::class, 'qr'])->name('qr');
