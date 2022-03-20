@@ -92,12 +92,9 @@ class UpdateYoutubeStream extends Command
             }
             $this->output('Keys: '.$city->youtube_active_stream_id.' (active) / '.$city->youtube_passive_stream_id.' (passive)');
 
-            $services = Service::where('city_id', $city->id)
-                ->select('services.*')
-                ->join('days', 'days.id', 'services.day_id')
+            $services = Service::inCity($city)
                 ->where('youtube_url', '!=', '')
-                ->orderBy('days.date')
-                ->orderBy('time')
+                ->ordered()
                 ->get();
             $current = null;
             $youtube = YoutubeIntegration::get($city);
