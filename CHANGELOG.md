@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.127.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.2...v2022.127.3) (2022-03-20)
+
+
+### Bug Fixes
+
+* qr code route not found ([7a53050](https://github.com/pfarrplaner/pfarrplaner/commits/7a53050b7d47f306d9f42691840bee30f36e73fe))
+
 ### [2022.127.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.1...v2022.127.2) (2022-03-20)
 
 
