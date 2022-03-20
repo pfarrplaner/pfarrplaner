@@ -182,19 +182,10 @@ class EmbedRegistrationReport extends AbstractEmbedReport
             $tmpServices = Service::with('day')->where('id', $singleService)->get();
         } else {
             $tmpServices = Service::where('needs_reservations', 1)
-                ->select(['services.*', 'days.date'])
-                ->join('days', 'days.id', '=', 'day_id')
+                ->between($start, $end)
                 ->whereIn('city_id', $cities)
                 ->where('hidden', '!=', 1)
-                ->whereHas(
-                    'day',
-                    function ($query) use ($start, $end) {
-                        $query->where('date', '>=', $start);
-                        $query->where('date', '<=', $end);
-                    }
-                )
-                ->orderBy('days.date', 'ASC')
-                ->orderBy('time', 'ASC')
+                ->ordered()
                 ->get();
         }
 

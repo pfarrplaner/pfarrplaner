@@ -15,17 +15,9 @@ class CheckInController extends Controller
     public function create(Location $location)
     {
         $service = Service::where('location_id', $location->id)
-            ->select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now());
-                }
-            )
+            ->startingFrom(Carbon::now())
             ->where('needs_reservations', '!=', 1)
-            ->orderBy('days.date')
-            ->orderBy('time')
+            ->ordered()
             ->first();
 
         return view('checkin.create', compact('location', 'service'));

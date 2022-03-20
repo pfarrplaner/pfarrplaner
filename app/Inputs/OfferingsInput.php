@@ -32,6 +32,7 @@ namespace App\Inputs;
 
 use App\City;
 use App\Service;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -79,13 +80,9 @@ class OfferingsInput extends AbstractInput
         $year = $request->get('year');
 
         $services = Service::with('day', 'location')
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
+            ->whereYear('date', $year)
             ->whereIn('city_id', $cityIds)
-            ->where('days.date', '>=', $year . '-01-01')
-            ->where('days.date', '<=', $year . '-12-31')
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            ->ordered()
             ->get();
 
 

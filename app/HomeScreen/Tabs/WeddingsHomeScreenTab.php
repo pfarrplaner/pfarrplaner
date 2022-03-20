@@ -84,10 +84,8 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
 
         $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
 
-        $query =  Wedding::with(['service', 'service.day'])
-            ->select(['weddings.*'])
-            ->join('services', 'services.id', 'weddings.service_id')
-            ->join('days', 'days.id', 'services.day_id')
+        $query =  Wedding::with(['service'])
+            ->join('services', 'weddings.service_id', 'services.id')
             ->whereHas('service', function($service) {
                 if (!$this->config['excludeProcessed']) {
                     $service->startingFrom(Carbon::now()->subWeeks(2));
@@ -107,8 +105,7 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
                 } else {
                     $service->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
                 }
-            })->orderBy('days.date', $order)
-            ->orderBy('time', $order);
+            })->orderBy('services.date', $order);
 
         if ($this->config['excludeProcessed']) $query->where('processed', '!=', 1);
 

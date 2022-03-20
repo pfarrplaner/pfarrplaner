@@ -65,19 +65,10 @@ class AdminHomeScreen extends AbstractHomeScreen
         $start = Carbon::now();
         $end = Carbon::now()->addMonth(2);
 
-        $services = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
+        $services = Service::with(['baptisms', 'weddings', 'funerals', 'location'])
+            ->between($start, $end)
             ->whereIn('city_id', $user->writableCities->pluck('id'))
-            ->whereHas(
-                'day',
-                function ($query) use ($start, $end) {
-                    $query->where('date', '>=', $start)
-                        ->where('date', '<=', $end);
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            ->ordered()
             ->get();
 
         $end = Carbon::now()->addYear(1);

@@ -65,16 +65,8 @@ class RegulatoryReport extends AbstractReport
     {
         $preselectedService = \request()->get('service', null);
         $services = Service::whereIn('city_id', Auth::user()->writableCities->pluck('id'))
-            ->select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now()->format('Y-m-d'));
-                }
-            )
-            ->orderBy('days.date')
-            ->orderBy('time')
+            ->startingFrom(Carbon::now())
+            ->ordered()
             ->limit(20)
             ->get();
 

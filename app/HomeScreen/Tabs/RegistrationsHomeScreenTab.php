@@ -100,19 +100,10 @@ class RegistrationsHomeScreenTab extends AbstractHomeScreenTab
         $cities = Auth::user()->writableCities->pluck('id');
 
         $query = Service::where('needs_reservations', 1)
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
+            ->between($start, $end)
             ->whereIn('city_id', $cities)
             ->whereHas('location')
-            ->whereHas(
-                'day',
-                function ($query) use ($start, $end) {
-                    $query->where('date', '>=', $start)
-                        ->where('date', '<=', $end);
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC');
+            ->ordered();
         return $query;
     }
 

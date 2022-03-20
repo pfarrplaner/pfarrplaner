@@ -84,7 +84,6 @@ class PlanningInput extends AbstractInput
         );
 
         return Inertia::render('Inputs/Planning/PlanningInputSetup', compact('cities', 'ministries', 'locations'));
-
     }
 
     /**
@@ -117,7 +116,9 @@ class PlanningInput extends AbstractInput
                     }
                     break;
                 default:
-                    if (Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can('gd-freie-dienste-bearbeiten')) {
+                    if (Auth::user()->can('gd-allgemein-bearbeiten') || Auth::user()->can(
+                            'gd-freie-dienste-bearbeiten'
+                        )) {
                         $ministries[$ministry] = $ministry;
                     }
             }
@@ -147,14 +148,14 @@ class PlanningInput extends AbstractInput
 
         $teams = Team::with('users')->where('city_id', $city->id)->get();
 
-         $query = Service::with([])
+        $query = Service::with([])
             ->select('services.slug')
-            ->join('days', 'services.day_id', '=', 'days.id')
+            ->between(
+                Carbon::createFromFormat('d.m.Y', $setup['from']),
+                Carbon::createFromFormat('d.m.Y', $setup['to'])
+            )
             ->where('city_id', $city->id)
-            ->where('days.date', '>=', Carbon::createFromFormat('d.m.Y', $setup['from']))
-            ->where('days.date', '<=', Carbon::createFromFormat('d.m.Y', $setup['to']))
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC');
+            ->ordered();
 
         if (count($setup['locations'] ?? [])) {
             $query->whereIn('services.location_id', $setup['locations']);
@@ -169,7 +170,10 @@ class PlanningInput extends AbstractInput
 
         $input = $this;
 
-        return Inertia::render('Inputs/Planning/PlanningInputForm', compact('serviceSlugs', 'users', 'ministries', 'teams', 'city'));
+        return Inertia::render(
+            'Inputs/Planning/PlanningInputForm',
+            compact('serviceSlugs', 'users', 'ministries', 'teams', 'city')
+        );
     }
 
     /**
@@ -179,8 +183,8 @@ class PlanningInput extends AbstractInput
     public function save(Request $request)
     {
         $data = $request->validate([
-            'slug' => 'required|string|exists:services,slug',
-            'ministries' => 'required',
+                                       'slug' => 'required|string|exists:services,slug',
+                                       'ministries' => 'required',
                                    ]);
 
         $service = Service::where('slug', $data['slug'])->first();

@@ -47,15 +47,9 @@ class BekanntgabenReplacer extends AbstractReplacer
         $lastWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 last Sunday');
         $nextWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 next Sunday');
         $lastServices = Service::select('*')
-            ->join('days', 'days.id', 'services.day_id')
-            ->whereHas(
-                'day',
-                function ($query) use ($service) {
-                    $query->where('date', '<=', $service->date->format('Y-m-d'));
-                }
-            )
+            ->endingAt($service->date->copy()->subSecond(1))
             ->where('offering_amount', '!=', '')
-            ->orderByDesc('days.date')
+            ->orderedDesc()
             ->limit(10)
             ->get();
 

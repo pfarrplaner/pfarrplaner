@@ -94,10 +94,8 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
 
         $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
 
-        $this->baptismQuery = Baptism::with(['service', 'service.day'])
-            ->select(['baptisms.*'])
-            ->join('services', 'services.id', 'baptisms.service_id')
-            ->join('days', 'days.id', 'services.day_id')
+        $this->baptismQuery = Baptism::with(['service'])
+            ->join('services', 'baptisms.service_id', 'services.id')
             ->whereHas('service', function($service) {
                 if (!$this->config['excludeProcessed']) {
                     $service->startingFrom(Carbon::now()->subWeeks(2));
@@ -117,8 +115,7 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
                 } else {
                     $service->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
                 }
-            })->orderBy('days.date', $order)
-            ->orderBy('time', $order);
+            })->orderBy('services.date', $order);
 
         if ($this->config['excludeProcessed']) $this->baptismQuery->where('processed', '!=', 1);
 

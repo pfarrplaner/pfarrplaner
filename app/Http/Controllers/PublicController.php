@@ -162,33 +162,16 @@ class PublicController extends Controller
             abort(404);
         }
 
-        $service = Service::select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now()->setTime(0,0,0));
-                }
-            )
-            ->whereIn('city_id', $cityIds)
+        $service = Service::whereIn('city_id', $cityIds)
+            ->startingFrom(Carbon::now()->setTime(0,0,0))
             ->where('youtube_url', '!=', '')
-            ->orderBy('days.date')
-            ->orderBy('time')
+            ->ordered()
             ->first();
         if (!$service) {
             // get the last available service with a stream
-            $service = Service::select('services.*')
-                ->join('days', 'days.id', 'services.day_id')
-                ->whereHas(
-                    'day',
-                    function ($query) {
-                        $query->where('date', '<=', Carbon::now()->setTime(0,0,0));
-                    }
-                )
-                ->whereIn('city_id', $cityIds)
+            $service = Service::whereIn('city_id', $cityIds)
                 ->where('youtube_url', '!=', '')
-                ->orderByDesc('days.date')
-                ->orderByDesc('time')
+                ->ordered('DESC')
                 ->first();
             if (!$service) {
                 abort(404);
@@ -202,11 +185,8 @@ class PublicController extends Controller
     {
         if (is_numeric($user)) $user = User::findOrFail($user);
         if (!$request->hasValidSignature()) abort(401);
-        $services = Service::select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
-            ->whereIn('services.id', explode(',', $services))
-            ->orderBy('days.date')
-            ->orderBy('time')
+        $services = Service::whereIn('services.id', explode(',', $services))
+            ->ordered()
             ->get();
         $report = 'ministryRequest';
         return view(

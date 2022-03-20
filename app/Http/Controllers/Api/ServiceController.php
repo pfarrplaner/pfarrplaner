@@ -100,19 +100,15 @@ class ServiceController extends Controller
     public function byUser(User $user)
     {
         $services = Service::select('services.*')
-            ->with('location', 'city', 'participants', 'funerals', 'baptisms', 'weddings', 'day')
-            ->join('days', 'days.id', 'services.day_id')
+            ->with('location', 'city', 'participants', 'funerals', 'baptisms', 'weddings')
             ->whereHas(
                 'participants',
                 function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 }
-            )->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now());
-                }
-            )->orderBy('days.date')->get();
+            )->startingFrom(Carbon::now())
+            ->ordered()
+            ->get();
 
 
         foreach ($services as $service) {

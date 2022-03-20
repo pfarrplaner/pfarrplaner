@@ -111,32 +111,16 @@ class EmbedStreamingReport extends AbstractEmbedReport
             abort(404);
         }
         $nextService = Service::where('city_id', $request->get('city'))
-            ->select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
+            ->startingFrom(Carbon::now())
             ->notHidden()
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now()->format('Y-m-d'));
-                }
-            )
             ->where('youtube_url', '!=', '')
-            ->orderBy('days.date')
-            ->orderBy('time')
+            ->ordered()
             ->first();
 
         $lastServices = Service::where('city_id', $request->get('city'))
-            ->select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
+            ->startingFrom(Carbon::now())
             ->notHidden()
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '<=', Carbon::now()->format('Y-m-d'));
-                }
-            )
-            ->orderBy('days.date', 'desc')
-            ->orderBy('time', 'desc')
+            ->orderedDesc()
             ->limit(100)
             ->get();
 

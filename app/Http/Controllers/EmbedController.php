@@ -71,18 +71,10 @@ class EmbedController extends Controller
         $ids = explode(',', $ids);
         $title = $request->has('title') ? $request->get('title') : '';
         $services = Service::with('location')
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
+            ->startingFrom(Carbon::now()->setTime(0,0,0))
             ->whereIn('location_id', $ids)
             ->where('hidden', '!=', 1)
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0, 0, 0));
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            ->ordered()
             ->limit($limit)
             ->get();
         return view('embed.services.table', compact('services', 'ids', 'title'));
@@ -100,20 +92,12 @@ class EmbedController extends Controller
         $title = $request->has('title') ? $request->get('title') : '';
         $withStreaming = $request->get('withStreaming', false);
         $services = Service::with(['location', 'participants'])
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
             ->inCities($ids)
             ->where('hidden', '!=', 1)
-            ->whereHas(
-                'day',
-                function ($query) {
-                    $query->where('date', '>=', Carbon::now('Europe/Berlin')->setTime(0, 0, 0));
-                }
-            )
+            ->startingFrom(Carbon::now()->setTime(0,0,0))
             ->doesntHave('funerals')
             ->doesntHave('weddings')
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            ->ordered()
             ->limit($limit)
             ->get();
 

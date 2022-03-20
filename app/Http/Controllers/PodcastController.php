@@ -54,11 +54,8 @@ class PodcastController extends Controller
         }
 
         $services = Service::where('city_id', $city->id)
-            ->select('services.*')
-            ->join('days', 'days.id', 'services.day_id')
             ->where('recording_url', '!=', '')
-            ->orderBy('days.date', 'desc')
-            ->orderBy('time', 'desc')
+            ->ordered()
             ->get();
 
         return response()->view('podcasts.podcast', compact('city', 'services'))

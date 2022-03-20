@@ -80,34 +80,28 @@ class CasesHomeScreenTab extends AbstractHomeScreenTab
     {
         $cities = (is_array($this->config['includeCities']) ? $this->config['includeCities'] : [$this->config['includeCities']]);
 
-        $this->queries['funerals'] = Funeral::with(['service', 'service.day'])
+        $this->queries['funerals'] = Funeral::with(['service'])
             ->select(['funerals.*'])
             ->join('services', 'services.id', 'funerals.service_id')
-            ->join('days', 'days.id', 'services.day_id')
             ->whereHas('service', function($service) use ($cities){
                 $service->whereIn('city_id', $cities);
-            })->orderBy('days.date', 'DESC')
-            ->orderBy('time', 'DESC')
+            })->orderBy('services.date', 'DESC')
             ->limit(10);
 
-        $this->queries['weddings'] = Wedding::with(['service', 'service.day'])
+        $this->queries['weddings'] = Wedding::with(['service'])
             ->select(['weddings.*', 'services.*'])
             ->join('services', 'services.id', 'weddings.service_id')
-            ->join('days', 'days.id', 'services.day_id')
             ->whereHas('service', function($service) use ($cities){
                 $service->whereIn('city_id', $cities);
-            })->orderBy('days.date', 'DESC')
-            ->orderBy('time', 'DESC')
+            })->orderBy('services.date', 'DESC')
             ->limit(10);
 
-        $this->queries['baptisms'] = Baptism::with(['service', 'service.day'])
+        $this->queries['baptisms'] = Baptism::with(['service'])
             ->select(['baptisms.*', 'services.*'])
             ->join('services', 'services.id', 'baptisms.service_id')
-            ->join('days', 'days.id', 'services.day_id')
             ->whereHas('service', function($service) use ($cities){
                 $service->whereIn('city_id', $cities);
-            })->orderBy('days.date', 'DESC')
-            ->orderBy('time', 'DESC')
+            })->orderBy('services.date', 'DESC')
             ->limit(10);
 
     }

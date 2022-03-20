@@ -78,13 +78,9 @@ class PastorsInput extends AbstractInput
         $year = $request->get('year');
 
         $services = Service::with('day', 'location')
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
+            ->whereYear('date', $year)
             ->where('city_id', $city->id)
-            ->where('days.date', '>=', $year . '-01-01')
-            ->where('days.date', '<=', $year . '-12-31')
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            ->ordered()
             ->get();
 
 

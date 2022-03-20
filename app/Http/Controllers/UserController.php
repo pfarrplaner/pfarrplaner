@@ -499,16 +499,13 @@ class UserController extends Controller
      */
     public function services(User $user)
     {
-        $services = Service::with('location', 'day', 'participants')
-            ->select('services.*')
-            ->join('days', 'days.id', '=', 'services.day_id')
+        $services = Service::with('location', 'participants')
             ->whereHas(
                 'participants',
                 function ($query) use ($user) {
                     $query->where('user_id', $user->id);
                 }
-            )->orderBy('days.date', 'ASC')
-            ->orderBy('time')
+            )->ordered()
             ->get();
         return view('users.services', compact('user', 'services'));
     }

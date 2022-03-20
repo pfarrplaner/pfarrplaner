@@ -82,19 +82,10 @@ class NextOfferingsHomeScreenTab extends AbstractHomeScreenTab
         $start = Carbon::now()->setTime(0, 0, 0);
         $end = Carbon::now()->addMonth(2);
 
-        $query = Service::with(['baptisms', 'weddings', 'funerals', 'location', 'day'])
-            ->select(['services.*', 'days.date'])
-            ->join('days', 'days.id', '=', 'day_id')
+        $query = Service::with(['baptisms', 'weddings', 'funerals', 'location'])
+            ->between($start, $end)
             ->whereIn('city_id', Auth::user()->writableCities->pluck('id'))
-            ->whereHas(
-                'day',
-                function ($query) use ($start, $end) {
-                    $query->where('date', '>=', $start)
-                        ->where('date', '<=', $end);
-                }
-            )
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC');
+            ->ordered();
         return $query;
     }
 

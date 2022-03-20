@@ -84,10 +84,8 @@ class FuneralsHomeScreenTab extends AbstractHomeScreenTab
 
         $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
 
-        $query =  Funeral::with(['service', 'service.day'])
-            ->select(['funerals.*'])
-            ->join('services', 'services.id', 'funerals.service_id')
-            ->join('days', 'days.id', 'services.day_id')
+        $query =  Funeral::with(['service'])
+            ->join('services', 'funerals.service_id', 'services.id')
             ->whereHas('service', function($service) {
                 if (!$this->config['excludeProcessed']) {
                     $service->startingFrom(Carbon::now()->subWeeks(2));
@@ -107,8 +105,7 @@ class FuneralsHomeScreenTab extends AbstractHomeScreenTab
                 } else {
                     $service->whereIn('city_id', Auth::user()->writableCities->pluck('id'));
                 }
-            })->orderBy('days.date', $order)
-            ->orderBy('time', $order);
+            })->orderBy('services.date', $order);
         return $query;
     }
 

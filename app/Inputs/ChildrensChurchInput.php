@@ -34,6 +34,7 @@ use App\City;
 use App\Mail\ServiceUpdated;
 use App\Service;
 use App\Subscription;
+use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -75,13 +76,9 @@ class ChildrensChurchInput extends AbstractInput
         $year = $request->get('year');
 
         $services = Service::with('day', 'location')
-            ->select('services.*')
-            ->join('days', 'services.day_id', '=', 'days.id')
             ->where('city_id', $city->id)
-            ->where('days.date', '>=', $year . '-01-01')
-            ->where('days.date', '<=', $year . '-12-31')
-            ->orderBy('days.date', 'ASC')
-            ->orderBy('time', 'ASC')
+            ->whereYear('date', $year)
+            ->ordered()
             ->get();
 
 
