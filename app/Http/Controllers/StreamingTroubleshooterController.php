@@ -9,6 +9,7 @@ use App\Integrations\Youtube\YoutubeIntegration;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 
@@ -35,7 +36,6 @@ class StreamingTroubleshooterController extends Controller
 
         $nextServicesWithoutStream = Service::inCity($city)
             ->startingFrom(Carbon::now()->setTime(0,0,0))
-            ->where('days.date', '>=', Carbon::now())
             ->where(function ($query) {
                 $query->where('youtube_url', '')
                     ->orWhereNull('youtube_url');
