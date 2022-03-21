@@ -62,7 +62,7 @@ class CalendarLinks
                 if (class_exists($calendarLinkClass)) {
                     /** @var AbstractCalendarLink $calendarLink */
                     $calendarLink = new $calendarLinkClass();
-                    $calendarLinks[$calendarLink->getTitle()] = $calendarLink;
+                    $calendarLinks[] = $calendarLink->toArray();
                 }
             }
         }

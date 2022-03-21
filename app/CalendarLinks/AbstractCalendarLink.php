@@ -72,6 +72,8 @@ class AbstractCalendarLink
     /** @var User $user */
     protected $user = null;
 
+    protected $needs = [];
+
 
     public function __construct()
     {
@@ -218,5 +220,18 @@ class AbstractCalendarLink
         return [];
     }
 
+    /**
+     * Convert into array for vue
+     * @return string[]
+     */
+    public function toArray()
+    {
+        return [
+            'id' => $this->getKey(),
+            'name' => $this->getTitle(),
+            'description' => $this->getDescription(),
+            'needs' => $this->needs,
+        ];
+    }
 
 }

@@ -67,6 +67,9 @@ class CityEventsCalendarLink extends AbstractCalendarLink
      */
     protected $viewName = 'events';
 
+    /** @var string[]  */
+    protected $needs = ['cities', 'includeHidden'];
+
     /**
      * @return array
      */

@@ -41,8 +41,10 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
+use Inertia\Inertia;
 
 /**
  * Class ICalController
@@ -166,13 +168,13 @@ class ICalController extends Controller
 
 
     /**
-     * @return Application|Factory|\Illuminate\View\View
+     * @return \Inertia\Response
      */
     public function connect()
     {
         $calendarLinks = CalendarLinks::all();
-        /** @var AbstractCalendarLink $calendarLink */
-        return view('ical.choice', compact('calendarLinks'));
+        $cities = Auth::user()->cities;
+        return Inertia::render('OutlookExport/Connect', compact('calendarLinks', 'cities'));
     }
 
 

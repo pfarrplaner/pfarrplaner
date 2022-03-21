@@ -61,6 +61,8 @@ class AllServicesCalendarLink extends AbstractCalendarLink
      */
     protected $description = 'Kalender, der alle Gottesdienste ausgewählter Kirchengemeinden enthält';
 
+    protected $needs = ['cities', 'includeHidden'];
+
     /**
      * @return array
      */

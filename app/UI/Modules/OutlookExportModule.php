@@ -47,7 +47,7 @@ class OutlookExportModule extends AbstractModule
             'icon' => 'mdi mdi-calendar-export',
             'url' => route('ical.connect'),
             'active' => request()->is(['ical*']),
-            'inertia' => false,
+            'inertia' => true,
         ];
         return $items;
     }
