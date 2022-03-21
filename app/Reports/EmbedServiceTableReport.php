@@ -44,6 +44,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class EmbedServiceTableReport
@@ -69,14 +70,16 @@ class EmbedServiceTableReport extends AbstractEmbedReport
      */
     public $icon = 'fa fa-file-code';
 
+    protected $inertia = true;
+
     /**
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup()
     {
         $cities = Auth::user()->cities;
         $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
-        return $this->renderSetupView(compact('cities', 'locations'));
+        return Inertia::render('Report/EmbedServiceTable/Setup', compact('cities', 'locations'));
     }
 
     /**
@@ -88,27 +91,28 @@ class EmbedServiceTableReport extends AbstractEmbedReport
         $data = $request->validate(
             [
                 'listType' => 'required',
-                'ids' => 'required',
+                'limit' => 'required|int',
+                'cities.*' => 'required|int|exists:cities,id',
+                'locations.*' => 'required|int|exists:cities,id',
+                'maxBaptisms' => 'nullable|int',
                 'cors-origin' => 'required|url',
                 'withStreaming' => 'nullable|boolean',
             ]
         );
 
         $listType = $request->get('listType');
-        $ids = join(',', $request->get('ids'));
+        $ids = $data['listType'] == 'table-locations' ? join(',', $data['locations']) : join(',', $data['cities']);
 
-        $limit = $request->get('limit') ?: 5;
-        $corsOrigin = $request->get('cors-origin');
-        $withStreaming = $request->get('withStreaming', false);
+        $limit = $data['limit'] ?? 5;
+        $maxBaptisms = $data['maxBaptisms'] ?? null;
+        $corsOrigin = $data['cors-origin'] ?? '';
 
-        $url = route('embed.' . $listType, compact('ids', 'limit'));
-        if ($corsOrigin) {
-            $url .= '?cors-origin=' . urlencode($corsOrigin);
-        }
-
+        $url = route('embed.' . $data['listType'], compact('ids', 'limit', 'maxBaptisms', 'corsOrigin'));
         $randomId = uniqid();
 
-        return view('reports.embedservicetable.render', compact('url', 'randomId', 'withStreaming'));
+        $html = \Illuminate\Support\Facades\View::make('reports.embedservicetable.render', compact('url', 'randomId'))->render();
+        $title= 'HTML-Code für eine Gottesdienstliste erstellen';
+        return Inertia::render('Report/EmbedServiceTable/Render', compact('html', 'title'));
     }
 
 
