@@ -95,6 +95,7 @@ class BaptismsHomeScreenTab extends AbstractHomeScreenTab
         $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
 
         $this->baptismQuery = Baptism::with(['service'])
+            ->select('baptisms.*')
             ->join('services', 'baptisms.service_id', 'services.id')
             ->whereHas('service', function($service) {
                 if (!$this->config['excludeProcessed']) {

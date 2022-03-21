@@ -85,6 +85,7 @@ class FuneralsHomeScreenTab extends AbstractHomeScreenTab
         $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
 
         $query =  Funeral::with(['service'])
+            ->select('funerals.*')
             ->join('services', 'funerals.service_id', 'services.id')
             ->whereHas('service', function($service) {
                 if (!$this->config['excludeProcessed']) {

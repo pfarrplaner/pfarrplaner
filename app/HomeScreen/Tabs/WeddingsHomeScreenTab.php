@@ -85,6 +85,7 @@ class WeddingsHomeScreenTab extends AbstractHomeScreenTab
         $order = $this->config['newestFirst'] ? 'DESC' : 'ASC';
 
         $query =  Wedding::with(['service'])
+            ->select('weddings.*')
             ->join('services', 'weddings.service_id', 'services.id')
             ->whereHas('service', function($service) {
                 if (!$this->config['excludeProcessed']) {
