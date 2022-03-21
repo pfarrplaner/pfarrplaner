@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.127.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.3...v2022.127.4) (2022-03-21)
+
+
+### Bug Fixes
+
+* Baptisms/Funerals/Weddings throw a 404 when opened from HomeScreen ([fe2f892](https://github.com/pfarrplaner/pfarrplaner/commits/fe2f892cd32ee8e1399c12dea9c2c6e31396aa7a))
+
 ### [2022.127.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.2...v2022.127.3) (2022-03-20)
 
 
