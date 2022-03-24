@@ -85,7 +85,11 @@ export default {
     methods: {
         handleInputEvent(e) {
             if (this.isoDate) {
-                this.$emit('input', moment.utc(e, this.myDatePickerConfig.format).toISOString());
+                if (this.myDatePickerConfig.format == 'DD.MM.YYYY') {
+                    this.$emit('input', moment.utc(e, this.myDatePickerConfig.format).toISOString());
+                } else {
+                    this.$emit('input', moment(e, this.myDatePickerConfig.format).toISOString());
+                }
             } else {
                 this.$emit('input', e);
             }
