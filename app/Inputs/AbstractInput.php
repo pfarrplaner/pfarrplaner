@@ -48,6 +48,9 @@ class AbstractInput
      * @var string
      */
     public $title = '';
+
+    public $description = '';
+
     /**
      * @var string
      */

@@ -31,10 +31,12 @@
 namespace App\Http\Controllers;
 
 use App\Inputs\AbstractInput;
+use App\Inputs\Inputs;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class InputController
@@ -46,6 +48,15 @@ class InputController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+    }
+
+    /**
+     * @return \Inertia\Response
+     */
+    public function index()
+    {
+        $inputs = Inputs::all();
+        return Inertia::render('Inputs/Index', compact('inputs'));
     }
 
     /**

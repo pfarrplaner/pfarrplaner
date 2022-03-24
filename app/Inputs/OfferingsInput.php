@@ -50,6 +50,7 @@ class OfferingsInput extends AbstractInput
      * @var string
      */
     public $title = 'Opferplan';
+    public $description = 'Opferzwecke für ein ganzes Jahr bearbeiten';
     /**
      * @var string
      */

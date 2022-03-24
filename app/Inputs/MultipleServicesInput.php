@@ -54,6 +54,7 @@ class MultipleServicesInput extends AbstractInput
      * @var string
      */
     public $title = 'Mehrere Gottesdienste';
+    public $description = 'Eine ganze Reihe von Gottesdiensten auf einmal anlegen';
 
     public function canEdit(): bool
     {

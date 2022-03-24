@@ -53,6 +53,7 @@ class ChildrensChurchInput extends AbstractInput
      * @var string
      */
     public $title = 'Kinderkirche';
+    public $description = 'Plan für die Kinderkirche bearbeiten';
 
     public function canEdit(): bool
     {

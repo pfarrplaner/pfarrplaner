@@ -42,27 +42,14 @@ class InputsModule extends AbstractModule
 
     public function addItems(array $items): array
     {
-        $inputMenu = [];
-        /** @var AbstractInput $input */
-        foreach (Inputs::all() as $input) {
-            $inputMenu[] = [
-                'text' => $input->title,
-                'icon' => 'mdi mdi-keyboard',
-                'url' => route('inputs.setup', $input->getKey()),
-                'inertia' => false,
-            ];
-        }
+        $items[] = [
+            'text' => 'Sammeleingaben',
+            'icon' => 'mdi mdi-keyboard',
+            'url' => route('inputs.index'),
+            'active' => request()->is(['input*']),
+            'inertia' => true,
+        ];
 
-        if (count($inputMenu)) {
-            $items[] = [
-                'text' => 'Sammeleingaben',
-                'icon' => 'mdi mdi-keyboard',
-                'url' => '#',
-                'submenu' => $inputMenu,
-                'active' => request()->is(['input*']),
-                'inertia' => false,
-            ];
-        }
         return $items;
     }
 
