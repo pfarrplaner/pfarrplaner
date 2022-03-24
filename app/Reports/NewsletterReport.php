@@ -97,7 +97,7 @@ class NewsletterReport extends AbstractWordDocumentReport
 
         $city = City::findOrFail($request->get('city'));
         $start = Carbon::parse($data['start'])->setTime(0,0,0);
-        $end = Carbon::parse($data['end'])->setTime(0,0,0);
+        $end = Carbon::parse($data['end'])->setTime(23,59,59);
 
         $services = Service::with(['location', 'day'])
             ->notHidden()
