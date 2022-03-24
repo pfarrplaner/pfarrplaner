@@ -30,17 +30,19 @@
 
 namespace App\Inputs;
 
-use App\City;
+use App\Location;
 use App\Mail\ServiceUpdated;
 use App\Service;
 use App\Subscription;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class ChildrensChurchInput
@@ -61,72 +63,74 @@ class ChildrensChurchInput extends AbstractInput
     }
 
     /**
-     * @param Request $request
-     * @return Application|Factory|View|void
+     * @return \Inertia\Response
      */
-    public function input(Request $request)
+    public function setup(Request $request)
     {
-        $request->validate(
-            [
-                'year' => 'int|required',
-                'city' => 'int|required',
-            ]
-        );
-
-        $city = City::find($request->get('city'));
-        $year = $request->get('year');
-
-        $services = Service::with('day', 'location')
-            ->where('city_id', $city->id)
-            ->whereYear('date', $year)
-            ->ordered()
-            ->get();
-
-
-        $input = $this;
-        return view($this->getInputViewName(), compact('input', 'city', 'services', 'year'));
+        $cities = Auth::user()->cities;
+        $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
+        return Inertia::render('Inputs/ChildrensChurch/Setup', compact('cities', 'locations'));
     }
 
     /**
      * @param Request $request
-     * @return RedirectResponse|void
+     * @return \Inertia\Response
+     */
+    public function input(Request $request)
+    {
+        $setup = $request->validate(
+            [
+                'from' => 'required|date_format:d.m.Y',
+                'to' => 'required|date_format:d.m.Y',
+                'cities.*' => 'required|exists:cities,id',
+                'locations.*' => 'nullable|exists:locations,id',
+            ]
+        );
+
+        $locations = Location::whereIn('city_id', $setup['cities'])->get();
+
+        $query = Service::with(['city'])
+            ->select('services.slug')
+            ->between(
+                Carbon::createFromFormat('d.m.Y', $setup['from']),
+                Carbon::createFromFormat('d.m.Y', $setup['to'])
+            )
+            ->whereIn('city_id', $setup['cities'])
+            ->ordered();
+
+        if (count($setup['locations'] ?? [])) {
+            $query->whereIn('services.location_id', $setup['locations']);
+        }
+
+        $serviceSlugs = $query->get()->pluck('slug');
+        return Inertia::render('Inputs/ChildrensChurch/Form', compact('serviceSlugs'));
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse|void
      */
     public function save(Request $request)
     {
-        $services = $request->get('service') ?: [];
-        foreach ($services as $id => $data) {
-            $service = Service::find($id);
-            if (null !== $service) {
-                // get old data set for comparison
-                $original = clone $service;
-                foreach (['P', 'O', 'M', 'A'] as $key) {
-                    $originalParticipants[$key] = $original->participantsText($key);
-                }
-
-
-                if (isset($data['cc']) ? $data['cc'] : 0) {
-                    if (!is_object($service->location)) {
-                        $ccLocation = isset($data['cc_location']) ? $data['cc_location'] : '';
-                    } else {
-                        $ccLocation = isset($data['cc_location']) ? $data['cc_location'] : $service->location->cc_default_location;
-                    }
-                } else {
-                    $ccLocation = '';
-                }
-
-                $service->cc = isset($data['cc']) ? 1 : 0;
-                $service->cc_location = $ccLocation;
-                $service->cc_lesson = $data['cc_lesson'] ?: '';
-                $service->cc_staff = $data['cc_staff'] ?: '';
-                $dirty = (count($service->getDirty()) > 0);
-                $service->save();
-
-                if ($dirty) {
-                    Subscription::send($service, ServiceUpdated::class, compact('original', 'originalParticipants'));
-                }
-            }
+        $data = $request->validate([
+                                       'id' => 'required|exists:services,id',
+                                       'cc' => 'nullable|bool',
+                                       'cc_location' => 'nullable|string',
+                                       'cc_alt_time' => 'nullable|string',
+                                       'cc_lesson' => 'nullable|string',
+                                       'cc_staff' => 'nullable|string',
+                                   ]);
+        $service = Service::find($data['id']);
+        if (!$service) abort (404);
+        unset($data['id']);
+        if (!$data['cc']) {
+            $data['cc_location'] = '';
+            $data['cc_alt_time'] = '';
+            $data['cc_lesson'] = '';
+            $data['cc_staff'] = '';
         }
-        return redirect()->route('calendar')->with('success', 'Der Plan für die Kinderkirche wurde gespeichert.');
+        $service->update($data);
+        return response()->json($service->slug);
     }
 
 
