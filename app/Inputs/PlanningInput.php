@@ -59,6 +59,7 @@ class PlanningInput extends AbstractInput
      * @var string
      */
     public $title = 'Planungstabelle';
+    public $description = 'Beliebige Dienste für einen bestimmten Zeitraum eintragen';
 
     public function canEdit(): bool
     {
@@ -137,24 +138,23 @@ class PlanningInput extends AbstractInput
             [
                 'from' => 'required|date_format:d.m.Y',
                 'to' => 'required|date_format:d.m.Y',
-                'city' => 'required|exists:cities,id',
+                'cities.*' => 'required|exists:cities,id',
                 'locations.*' => 'nullable|exists:locations,id',
                 'ministries.*' => 'required|string',
             ]
         );
 
-        $city = City::find($setup['city']);
-        $locations = Location::where('city_id', $city->id)->get();
+        $locations = Location::whereIn('city_id', $setup['cities'])->get();
 
-        $teams = Team::with('users')->where('city_id', $city->id)->get();
+        $teams = Team::with('users')->whereIn('city_id', $setup['cities'])->get();
 
-        $query = Service::with([])
+        $query = Service::with(['city'])
             ->select('services.slug')
             ->between(
                 Carbon::createFromFormat('d.m.Y', $setup['from']),
                 Carbon::createFromFormat('d.m.Y', $setup['to'])
             )
-            ->where('city_id', $city->id)
+            ->whereIn('city_id', $setup['cities'])
             ->ordered();
 
         if (count($setup['locations'] ?? [])) {
@@ -172,7 +172,7 @@ class PlanningInput extends AbstractInput
 
         return Inertia::render(
             'Inputs/Planning/PlanningInputForm',
-            compact('serviceSlugs', 'users', 'ministries', 'teams', 'city')
+            compact('serviceSlugs', 'users', 'ministries', 'teams')
         );
     }
 

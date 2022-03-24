@@ -33,43 +33,100 @@
             <div v-if="(serviceSlugs.length - serviceLoaded) > 0" class="alert alert-info">
                 Daten für {{ serviceSlugs.length - serviceLoaded }} Gottesdienste werden geladen...
             </div>
-            <div v-if="saving" class="alert alert-warning">Änderungen werden gespeichert ... <span class="mdi mdi-spin mdi-loading"></span></div>
-            <div v-if="saved" class="alert alert-success"><span class="mdi mdi-check"></span> Änderungen wurden automatisch gespeichert.</div>
-        </template>
-        <fake-table :columns="[3, 9]" collapsed-header="Gottesdienste"
-                    :headers="['Gottesdienst', 'Diensteinteilung']"></fake-table>
-        <div v-for="serviceSlug in serviceSlugs" class="row">
-            <div class="col-md-3 pb-1 px-1 pl-2 border-bottom" v-if="services[serviceSlug]">
-                {{ moment(services[serviceSlug].date).format('DD.MM.YYYY') }}, {{
-                    services[serviceSlug].timeText
-                }}<br/>
-                {{ services[serviceSlug].locationText }}
+            <div v-if="saving" class="alert alert-warning">Änderungen werden gespeichert ... <span
+                class="mdi mdi-spin mdi-loading"></span></div>
+            <div v-if="saved" class="alert alert-success"><span class="mdi mdi-check"></span> Änderungen wurden
+                automatisch gespeichert.
             </div>
-            <div class="col-md-9 pb-1 px-1 border-bottom" v-if="services[serviceSlug]">
+        </template>
+        <div v-if="(serviceSlugs.length - serviceLoaded) == 0">
+            <dataset v-slot="{ ds }"
+                     :ds-data="services"
+                     ds-sort-by="date">
                 <div class="row">
-                    <div v-for="(ministry,ministryKey,ministryIndex) in ministries" class="col-12" :class="'col-md-'+columnWidth">
-                            <people-select :label="ministry" :people="users" :teams="teams" :include-teams-from-city="city"
-                                           v-model="services[serviceSlug].ministries[ministryKey]"
-                                           @input="saveService(serviceSlug, services[serviceSlug])" />
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover d-md-table">
+                                <thead>
+                                <tr>
+                                    <th>Gottesdienst</th>
+                                    <th v-for="(ministry,ministryKey,ministryIndex) in ministries">
+                                        {{ ministry }}
+                                    </th>
+                                </tr>
+                                </thead>
+                                <dataset-item tag="tbody">
+                                    <template #default="{ row, rowIndex }">
+                                        <tr>
+                                            <td>
+                                                {{ row.date }}, {{
+                                                    row.timeText
+                                                }}<br/>
+                                                {{ row.locationText }}
+                                                <div>
+                                                    <span class="badge badge-secondary">{{ row.city.name }}</span>
+                                                </div>
+                                                <div>
+                                                    <nav-button type="primary" icon="mdi mdi-pencil" force-icon
+                                                                class="btn-sm"
+                                                                force-no-text title="Gottesdienst bearbeiten (in neuem Tab)"
+                                                                @click="editService(row)">Bearbeiten</nav-button>
+
+                                                </div>
+                                            </td>
+                                            <td v-for="(ministry,ministryKey,ministryIndex) in ministries">
+                                                <people-select :label="ministry" :people="users" :teams="teams"
+                                                               :include-teams-from-city="row.city"
+                                                               v-model="row.ministries[ministryKey]"
+                                                               @input="saveService(row.slug, row)"/>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template #noDataFound>
+                                        <div class="col-md-12 pt-2">
+                                            <p class="text-center">No results found</p>
+                                        </div>
+                                    </template>
+                                </dataset-item>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
+                <div class="d-flex flex-md-row flex-column justify-content-between align-items-center border-top pt-2">
+                    <dataset-info class="mb-2 mb-md-0"/>
+                    <dataset-show class="mb-2 mb-md-0" :ds-show-entries="showEntries"/>
+                    <dataset-pager/>
+                </div>
+            </dataset>
         </div>
     </admin-layout>
 </template>
 
 <script>
-import FakeTable from "../../../components/Ui/FakeTable";
 import PeopleSelect from "../../../components/Ui/elements/PeopleSelect";
+import NavButton from "../../../components/Ui/buttons/NavButton";
+import {Dataset, DatasetItem, DatasetSearch} from "vue-dataset";
+import DatasetInfo from "../../../components/Ui/dataset/DatasetInfo";
+import DatasetPager from "../../../components/Ui/dataset/DatasetPager";
+import DatasetShow from "../../../components/Ui/dataset/DatasetShow";
+
 
 export default {
     name: "PlanningInputForm",
-    components: {PeopleSelect, FakeTable},
-    props: ['serviceSlugs', 'users', 'ministries', 'teams', 'city'],
-    mounted() {
+    components: {
+        NavButton, PeopleSelect,
+        Dataset,
+        DatasetItem,
+        DatasetInfo,
+        DatasetPager,
+        DatasetSearch,
+        DatasetShow
+    },
+    props: ['serviceSlugs', 'users', 'ministries', 'teams'],
+    created() {
         var myMinistries = [];
         Object.keys(this.ministries).forEach(ministry => {
-            if (!['P','O','M','A'].includes(ministry)) myMinistries.push(ministry);
+            if (!['P', 'O', 'M', 'A'].includes(ministry)) myMinistries.push(ministry);
         })
         this.serviceSlugs.forEach(slug => {
             if (slug) {
@@ -77,19 +134,21 @@ export default {
                     var record = {
                         ministries: {},
                         slug: response.data.slug,
+                        date: moment(response.data.date).format('DD.MM.YYYY'),
                         day: response.data.day,
                         locationText: response.data.locationText,
                         timeText: response.data.timeText,
+                        city: response.data.city,
                     };
                     for (const ministryKey in this.ministries) {
-                        if (!['P','O','M','A'].includes(ministryKey)) {
+                        if (!['P', 'O', 'M', 'A'].includes(ministryKey)) {
                             record['ministries'][ministryKey] = response.data.ministriesByCategory[ministryKey] || [];
                         } else {
                             record['ministries'][ministryKey] = response.data[this.basicMinistryKeys[ministryKey]] || [];
                         }
                     }
 
-                    this.services[response.data.slug] = record;
+                    this.services.push(record);
                     this.serviceLoaded++;
                 });
             } else {
@@ -106,10 +165,11 @@ export default {
         return {
             basicMinistryKeys: {P: 'pastors', O: 'organists', M: 'sacristans', A: 'otherParticipants'},
             serviceLoaded: 0,
-            services: {},
+            services: [],
             columnWidth: columnWidth,
             saving: false,
             saved: false,
+            showEntries: 25,
         }
     },
     methods: {
@@ -117,22 +177,25 @@ export default {
             this.saved = false;
             this.saving = true;
             this.$forceUpdate();
-            console.log('updating service '+slug);
+            console.log('updating service ' + slug);
 
             axios.post(route('inputs.save', 'planning'), service).then(response => {
-                console.log('updated service '+response.data);
+                console.log('updated service ' + response.data);
                 this.saving = false;
                 this.saved = true;
                 this.$forceUpdate();
             });
-        }
+        },
+        editService(service) {
+            window.open(route('service.edit', service.slug));
+        },
     }
 
 }
 </script>
 
 <style scoped>
-    .alert.alert-success {
-        animation: fadeOut 5s forwards;
-    }
+.alert.alert-success {
+    animation: fadeOut 5s forwards;
+}
 </style>

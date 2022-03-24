@@ -35,7 +35,8 @@
                         :title="setup.ministries.length ? 'Planungstabelle erstellen und anzeigen' : 'Du musst mindestens einen Dienst auswählen, um eine Planungstabelle erstellen zu können.'"
                         @click="showTable">Planungstabelle anzeigen</nav-button>
         </template>
-        <form-selectize label="Planungstabelle für folgende Kirchengemeinde erstellen" :options="cities" v-model="setup.city" />
+        <form-selectize label="Planungstabelle für folgende Kirchengemeinden erstellen" :options="cities"
+                        v-model="setup.cities" name="cities" multiple />
         <form-selectize label="Auf folgende Orte beschränken" placeholder="Leer lassen für alle Orte"
                         v-model="setup.locations" :options="locations" multiple />
         <form-group name="from" label="Gottesdienste anzeigen ab">
@@ -74,9 +75,9 @@ export default {
             setup: {
                 from: moment().format('DD.MM.YYYY'),
                 to: moment().add(1, 'months').format('DD.MM.YYYY'),
-                city: this.cities[0].id,
+                cities: this.cities.length ? [this.cities[0].id] : null,
                 locations: [],
-                ministries: [],
+                ministries: ['P'],
             }
         }
     },
