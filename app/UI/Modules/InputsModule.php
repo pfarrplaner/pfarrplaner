@@ -36,14 +36,14 @@ use App\Inputs\Inputs;
 class InputsModule extends AbstractModule
 {
 
-    protected $title = 'Sammeleingaben';
+    protected $title = 'Assistenten';
     protected $icon = 'mdi mdi-keyboard';
 
 
     public function addItems(array $items): array
     {
         $items[] = [
-            'text' => 'Sammeleingaben',
+            'text' => 'Assistenten',
             'icon' => 'mdi mdi-keyboard',
             'url' => route('inputs.index'),
             'active' => request()->is(['input*']),

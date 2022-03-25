@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <admin-layout title="Sammeleingabe wählen">
+    <admin-layout title="Assistent wählen">
         <dataset v-slot="{ ds }"
                  :ds-data="inputs"
                  ds-sort-by="name"
@@ -47,7 +47,7 @@
                         <template #default="{ row, rowIndex }">
                             <div class="col-md-4">
                                 <a @click.prevent.stop="createInput(row)" href="#" class="report-link">
-                                    <card class="mb-2 report-card" title="Klicken, um diese Sammeleingabe zu wählen"
+                                    <card class="mb-2 report-card" title="Klicken, um diesen Assistenten zu wählen"
                                           @click="createInput(row)">
                                         <card-body>
                                             <h3 class="card-title text-truncate mb-2" :title="`Index: ${rowIndex}`">
