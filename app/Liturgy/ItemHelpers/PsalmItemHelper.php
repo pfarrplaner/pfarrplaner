@@ -36,6 +36,7 @@ class PsalmItemHelper extends AbstractItemHelper
 
     public function getTitleText()
     {
+        if (!isset($this->item->data['psalm'])) return '';
         $title = $this->item->data['psalm']['songbook_abbreviation'] ?: $this->getItem()->data['psalm']['songbook'] ?: '';
         $title .= ' '.($this->item->data['psalm']['reference'] ?? '').' '.($this->item->data['psalm']['title'] ?? '');
         return trim(str_replace('  ', ' ', $title));
@@ -43,6 +44,7 @@ class PsalmItemHelper extends AbstractItemHelper
 
     public function getVerses()
     {
+        if (!isset($this->item->data['psalm'])) return [];
         $verses = [];
         $verse = [];
         $indent = false;
