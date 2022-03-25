@@ -111,6 +111,7 @@ class Liturgy
         if (is_a($date, Day::class)) $date = $date->date;
 
         if (is_string($date)) $date = Carbon::parse($date);
+        if (!$date) return [];
         $data = self::getCompleteLiturgyInfoArray();
 
         $result = null;

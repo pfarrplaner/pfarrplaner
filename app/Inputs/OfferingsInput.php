@@ -31,13 +31,16 @@
 namespace App\Inputs;
 
 use App\City;
+use App\Location;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class OfferingsInput
@@ -63,40 +66,72 @@ class OfferingsInput extends AbstractInput
 
     /**
      * @param Request $request
-     * @return Application|Factory|View|void
+     * @return \Inertia\Response
+     */
+    public function setup(Request $request)
+    {
+        $cities = Auth::user()->cities;
+        $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
+        return Inertia::render('Inputs/Offerings/Setup', compact('cities', 'locations'));
+    }
+
+
+    /**
+     * @param Request $request
+     * @return \Inertia\Response
      */
     public function input(Request $request)
     {
-        $request->validate(
+        $setup = $request->validate(
             [
-                'year' => 'int|required',
-                'cities' => 'required',
-                'cities.*' => 'int|required|exists:cities,id',
+                'from' => 'required|date_format:d.m.Y',
+                'to' => 'required|date_format:d.m.Y',
+                'cities.*' => 'required|exists:cities,id',
+                'locations.*' => 'nullable|exists:locations,id',
             ]
         );
 
+        $locations = Location::whereIn('city_id', $setup['cities'])->get();
 
-        $cityIds = $request->get('cities');
-        $cities = City::whereIn('id', $cityIds)->get();
-        $year = $request->get('year');
+        $query = Service::with(['city'])
+            ->select('services.slug')
+            ->between(
+                Carbon::createFromFormat('d.m.Y', $setup['from']),
+                Carbon::createFromFormat('d.m.Y', $setup['to'])
+            )
+            ->whereIn('city_id', $setup['cities'])
+            ->ordered();
 
-        $services = Service::with('day', 'location')
-            ->whereYear('date', $year)
-            ->whereIn('city_id', $cityIds)
-            ->ordered()
-            ->get();
+        if (count($setup['locations'] ?? [])) {
+            $query->whereIn('services.location_id', $setup['locations']);
+        }
 
-
-        $input = $this;
-        return view($this->getInputViewName(), compact('input', 'cities', 'services', 'year'));
+        $serviceSlugs = $query->get()->pluck('slug');
+        return Inertia::render('Inputs/Offerings/Form', compact('serviceSlugs'));
     }
 
     /**
      * @param Request $request
+     * @return JsonResponse|void
      */
     public function save(Request $request)
     {
+        $data = $request->validate([
+                                       'id' => 'required|exists:services,id',
+                                       'offering_goal' => 'nullable|string',
+                                       'offering_type' => 'nullable|string',
+                                       'offering_description' => 'nullable|string',
+                                       'offerings_counter1' => 'nullable|string',
+                                       'offerings_counter2' => 'nullable|string',
+                                       'offering_amount' => 'nullable|string',
+                                   ]);
+        $service = Service::find($data['id']);
+        if (!$service) {
+            abort(404);
+        }
+        unset($data['id']);
+        $service->update($data);
+        return response()->json($service->slug);
     }
-
 
 }

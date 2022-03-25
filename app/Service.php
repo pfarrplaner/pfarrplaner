@@ -1182,7 +1182,7 @@ class Service extends Model
 
     public function createSlug()
     {
-        return $this->dateTime()->format('Ymd-Hi').'-'.$this->id
+        return $this->date->format('Ymd-Hi').'-'.$this->id
             .($this->city ? '-'.Str::slug($this->city->name) : '');
     }
 
