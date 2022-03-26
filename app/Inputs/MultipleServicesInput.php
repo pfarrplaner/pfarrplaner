@@ -42,6 +42,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use Inertia\Inertia;
 
 /**
  * Class MultipleServicesInput
@@ -63,71 +64,22 @@ class MultipleServicesInput extends AbstractInput
 
     /**
      * @param Request $request
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function setup(Request $request)
     {
-        $cities = Auth::user()->writableCities;
-        $locations = Location::whereIn('city_id', $cities->pluck('id'))->get();
-
-        return view(
-            $this->getViewName('setup'),
-            [
-                'input' => $this,
-                'cities' => $cities,
-                'locations' => $locations,
-            ]
-        );
+        $locations = Location::whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
+        return Inertia::render('Inputs/MultipleServices/Setup', compact('locations'));
     }
 
 
     /**
      * @param Request $request
-     * @return Application|Factory|View|void
+     * @return RedirectResponse
      */
     public function input(Request $request)
     {
-        $data = $request->validate(
-            [
-                'includeLocations' => 'required',
-                'from' => 'required',
-                'to' => 'required',
-                'rhythm' => 'required|int',
-                'title' => 'nullable|string',
-                'weekday' => 'required|string',
-            ]
-        );
-
-        $rhythm = $data['rhythm'] ?? 1;
-        $title = $data['title'] ?? '';
-
-        $services = [];
-
-
-        $locations = Location::whereIn('id', $data['includeLocations'] ?? [])->get();
-
-        $from = Carbon::parse(Carbon::createFromFormat('d.m.Y', $request->get('from')));
-        while ($from->format('l') != $data['weekday']) {
-            $from->addDay(1);
-        }
-        $to = Carbon::createFromFormat('d.m.Y', $request->get('to'));
-
-        $today = $from->copy();
-        $ctr = 0;
-        while ($today <= $to) {
-            foreach ($locations as $location) {
-                $services[] = [
-                    'index' => $ctr,
-                    'date' => $today->copy(),
-                    'location' => $location,
-                ];
-                $ctr++;
-            }
-            $today->addWeek($rhythm);
-        }
-
-        $input = $this;
-        return view($this->getInputViewName(), compact('input', 'from', 'to', 'locations', 'services', 'title'));
+        return redirect()->route('inputs.setup', 'multipleServices');
     }
 
     /**
@@ -136,58 +88,51 @@ class MultipleServicesInput extends AbstractInput
      */
     public function save(Request $request)
     {
-        $ctrAdded = $ctrExisting = 0;
-        $firstDay = null;
+        $data = $request->validate([
+            'title' => 'nullable|string',
+            'services.*.date' => 'date',
+            'services.*.time' => 'date_format:H:i',
+            'services.*.location' => 'int|exists:locations,id',
+                                   ]);
+        $serviceRecords = [];
+        $ctrExisting = $ctrAdded = 0;
 
-        $data = $request->get('service') ?: [];
-        if (!count($data)) return redirect()->route('calendar');
+        foreach ($data['services'] as $serviceData) {
+            $location = Location::find($serviceData['location']);
+            $date = Carbon::parse($serviceData['date'], 'UTC')
+                ->setTimezone('Europe/Berlin')
+                ->setTimeFromTimeString($serviceData['time'])
+                ->setTimezone('UTC');
 
-        foreach ($data as $dayDate => $services) {
-            $dayDate = Carbon::createFromFormat('d.m.Y', $dayDate);
-            foreach ($services as $service) {
-                $location = Location::find($service['location']);
+            // check if service already exists
+            $existing = Service::select('services.*')
+                ->where('location_id', $serviceData['location'])
+                ->where('date', $date)
+                ->first();
 
-                $time = $service['time'] ?? '';
-                if (($time == '') || (!preg_match('/^[0-9]{2}:[0-9]{2}$/', $time))) {
-                    $time = $location->default_time;
-                }
-
-                $serviceDate = Carbon::parse($dayDate->format('Y-m-d').' '.$time, 'Europe/Berlin')->setSeconds(0)->setTimezone('UTC');
-
-                // check if service already exists
-                $service = Service::select('services.*')
-                    ->where('location_id', $service['location'])
-                    ->where('date', $serviceDate)
-                    ->first();
-                if (null == $service) {
-                    $newService = new Service(
-                        [
-                            'location_id' => $location->id,
-                            'city_id' => $location->city_id,
-                            'date' => $serviceDate,
-                            'description' => '',
-                            'need_predicant' => false,
-                            'baptism' => false,
-                            'eucharist' => false,
-                            'offerings_counter1' => '',
-                            'offerings_counter2' => '',
-                            'offering_goal' => '',
-                            'offering_description' => '',
-                            'offering_type' => '',
-                            'title' => $request->get('title', ''),
-                        ]
-                    );
-                    $newService->save();
-                    $newService->update(['slug' => $newService->createSlug()]);
-                    $serviceRecords[] = $newService;
-                    $ctrAdded++;
-                } else {
-                    $ctrExisting++;
-                    $serviceRecords[] = $service;
-                }
+            $service = null;
+            if (!$existing) {
+                $service = [
+                    'date' =>  $date,
+                    'location_id' => $serviceData['location'],
+                    'city_id' => $location->city_id,
+                    'description' => '',
+                    'need_predicant' => false,
+                    'baptism' => false,
+                    'eucharist' => false,
+                    'offerings_counter1' => '',
+                    'offerings_counter2' => '',
+                    'offering_goal' => '',
+                    'offering_description' => '',
+                    'offering_type' => '',
+                ];
+                $serviceRecords[] = Service::create($service);
+                $ctrAdded++;
+            } else {
+                $ctrExisting++;
+                $serviceRecords[] = $existing;
             }
         }
-
 
         foreach ($serviceRecords as $key => $record) {
             $serviceRecords[$key] = $record->load(['location']);
