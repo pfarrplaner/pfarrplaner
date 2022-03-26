@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.128.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.4...v2022.128.0) (2022-03-26)
+
+
+### Bug Fixes
+
+* DatePicker uses wrong timezone when iso-date is set ([c224a5b](https://github.com/pfarrplaner/pfarrplaner/commits/c224a5b8841f77aefae7a6c6dbbd7c93eac1f20a))
+* FormDatePicker applies still applies wrong timezone conversion when handling dates with time ([1285b17](https://github.com/pfarrplaner/pfarrplaner/commits/1285b17ac64f301bfefe5b16aa4142e1a185729a))
+* NewsletterReport omits final day in date range ([15e6d2d](https://github.com/pfarrplaner/pfarrplaner/commits/15e6d2d0dedeba678b32d67146cc26504382d0fd))
+* PsalmItemHelper throws error when no psalm has been chosen ([f940a92](https://github.com/pfarrplaner/pfarrplaner/commits/f940a926d8871b56426f7869ff04edd6b7158bd9))
+
 ### [2022.127.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.3...v2022.127.4) (2022-03-21)
 
 
