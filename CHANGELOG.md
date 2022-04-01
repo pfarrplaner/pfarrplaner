@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.128.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.128.0...v2022.128.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* MinistryRequestReport fails to send messages ([ad5d819](https://github.com/pfarrplaner/pfarrplaner/commits/ad5d8195bcc6403fcc4f3c0e3e9995938800ec8c))
+
 ## [2022.128.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.127.4...v2022.128.0) (2022-03-26)
 
 
