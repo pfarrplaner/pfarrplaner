@@ -230,10 +230,14 @@ export default {
                 let user = this.users.filter(u => {
                     return u.id === recipient;
                 })[0];
-                if (!user.email) {
-                    let address = window.prompt('Bitte gib eine E-Mailadresse für '+user.name+' an.');
-                    if (address) {
-                        record.address[recipient] = address;
+                if (user) {
+                    if (!user.email) {
+                        let address = window.prompt('Bitte gib eine E-Mailadresse für '+user.name+' an.');
+                        if (address) {
+                            record.address[recipient] = address;
+                        }
+                    } else {
+                        record.address[recipient] = user.email;
                     }
                 }
             });
