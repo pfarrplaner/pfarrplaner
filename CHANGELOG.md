@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.128.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.128.1...v2022.128.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* Cannot save changes to wedding records when appointment date is set ([d94bd33](https://github.com/pfarrplaner/pfarrplaner/commits/d94bd333eafa9a4d79e13d9d43fa798c7ed8c410))
+* Funeral wizard results in wrong service time (timezone problem) ([8ab5610](https://github.com/pfarrplaner/pfarrplaner/commits/8ab561044eaa9572a910d988478c8e2984b1bdef))
+
 ### [2022.128.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.128.0...v2022.128.1) (2022-04-01)
 
 
