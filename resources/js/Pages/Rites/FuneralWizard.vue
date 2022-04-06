@@ -35,7 +35,7 @@
             </button>
         </template>
         <form-group label="Datum">
-            <date-picker :config="myDatePickerConfig" v-model="funeral.date"/>
+            <date-picker :config="myDatePickerConfig" v-model="funeral.date" iso-date />
         </form-group>
         <form-selectize v-model="funeral.city" :options="cities" name="city"
                         id-key="id" title-key="name"

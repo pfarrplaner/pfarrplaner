@@ -108,7 +108,7 @@ class FuneralController extends Controller
     {
         $data = $request->validate(
             [
-                'date' => 'required|date_format:d.m.Y H:i',
+                'date' => 'required|date',
                 'city' => 'required|exists:cities,id',
                 'location' => 'required',
                 'name' => 'required|string',
@@ -118,7 +118,7 @@ class FuneralController extends Controller
         if (is_numeric($data['location'])) {
             $request->validate(['location' => 'exists:locations,id']);
         }
-        $data['date'] = Carbon::createFromFormat('d.m.Y H:i', $data['date']);
+        $data['date'] = Carbon::parse($data['date'], 'Europe/Berlin')->setTimezone('UTC');
 
         $city = City::find($data['city']);
 
