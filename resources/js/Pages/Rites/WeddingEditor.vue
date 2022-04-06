@@ -154,10 +154,8 @@
                 <hr/>
                 <fieldset id="fsPrep">
                     <legend>Traugespräch</legend>
-                    <form-group label="Traugespräch" :is-checked-item="true" :value="myWedding.appointment"
-                                name="candidate_appointment">
-                        <date-picker v-model="myWedding.appointment" :config="myDateTimePickerConfig"/>
-                    </form-group>
+                    <form-date-picker label="Traugespräch" :is-checked-item="true" :value="myWedding.appointment" iso-date
+                                name="candidate_appointment" v-model="myWedding.appointment" :config="myDateTimePickerConfig"/>
                     <form-bible-reference-input name="text" label="Trautext" v-model="myWedding.text" :is-checked-item="true"/>
                     <form-textarea name="notes" label="Notizen aus dem Traugespräch" v-model="myWedding.notes"/>
                 </fieldset>
@@ -352,8 +350,11 @@ export default {
             return 'spouse' + index + '_' + key;
         },
         saveWedding() {
-            var result = this.myWedding;
-            result.needs_permission = this.permissionState;
+            var result = {
+                ...this.myWedding,
+                needs_permission: this.permissionState,
+                service: this.myWedding.service.id,
+            };
 
             ['permission_requested',
                 'permission_received',
@@ -365,7 +366,6 @@ export default {
                 if (result[item]) result[item] = moment(result['item']).format('DD.MM.YYYY');
             });
 
-            if (result.appointment) result.appointment = moment(result.appointment, 'DD.MM.YYYY HH:mm').format('DD.MM.YYYY HH:mm');
 
             this.$inertia.patch(route('weddings.update', this.myWedding.id), result);
         },

@@ -470,7 +470,7 @@ class WeddingController extends Controller
                 'signed' => 'nullable|bool',
                 'docs_ready' => 'nullable|bool',
                 'docs_where' => 'nullable|string',
-                'appointment' => 'nullable|date_format:"d.m.Y H:i"',
+                'appointment' => 'nullable|date',
                 'spouse1_dob' => 'nullable|date_format:"d.m.Y"',
                 'spouse1_address' => 'nullable|string',
                 'spouse1_zip' => 'nullable|string',
@@ -519,9 +519,7 @@ class WeddingController extends Controller
 
         // dates
         if (isset($data['appointment'])) {
-            $data['appointment'] = Carbon::parse($data['appointment'], 'Europe/Berlin')->setTimezone('UTC')->format(
-                'd.m.Y H:i'
-            );
+            $data['appointment'] = Carbon::parse($data['appointment'], 'Europe/Berlin')->setTimezone('UTC');
         }
 
         if (isset($data['spouse1_dob'])) {
@@ -560,7 +558,6 @@ class WeddingController extends Controller
         if (isset($data['permission_received'])) {
             $data['permission_received'] = Carbon::createFromFormat('d.m.Y', $data['permission_received']);
         }
-
         return $data;
     }
 }
