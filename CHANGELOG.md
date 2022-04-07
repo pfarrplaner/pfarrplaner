@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.129.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.128.2...v2022.129.0) (2022-04-07)
+
+
+### Features
+
+* Use AJAX for broadcast creation from StreamingTab ([8f58bb9](https://github.com/pfarrplaner/pfarrplaner/commits/8f58bb969cd5da06939e992e740dac88df3dc722)), closes [#237](https://github.com/pfarrplaner/pfarrplaner/issues/237)
+
+
+### Bug Fixes
+
+* Participants counter wrong ([d665455](https://github.com/pfarrplaner/pfarrplaner/commits/d6654551143b8baadef5b6bd8345cdaf88b6c360))
+* PredicantReport includes funerals ([b5f7db7](https://github.com/pfarrplaner/pfarrplaner/commits/b5f7db737f1d5337eccd2e8146f5b157f0dc402b))
+* Tabs sometimes not shown ([c0b6eac](https://github.com/pfarrplaner/pfarrplaner/commits/c0b6eace4701d5a02cedc257366ea22941e2007c))
+
 ### [2022.128.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.128.1...v2022.128.2) (2022-04-06)
 
 
