@@ -69,21 +69,6 @@ module.exports = {
 // this plugin strips out unnecessary locales from moment.js
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
-//mix.js('resources/js/app.js', 'public/js-old')
-//   .sass('resources/sass/app.scss', 'public/css-old');
-
-mix.js('resources/scripts/bundle.js', 'public/js')
-    .version()
-    .autoload({
-        'jquery': ['$', 'window.jQuery', 'jQuery'],
-        'vue': ['Vue','window.Vue'],
-        'moment': ['moment','window.moment'],
-    })
-    .styles(['https://fonts.googleapis.com/css?family=Nunito',
-        'resources/css/pfarrplaner.css'], 'public/css/pfarrplaner.css');
-//.js('resources/scripts/pfarrplaner-scripts.js', 'public/js');
-
-
 mix.js('resources/js/inertia-app.js', 'public/js')
     .version()
     .autoload({
