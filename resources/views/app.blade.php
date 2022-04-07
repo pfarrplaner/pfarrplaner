@@ -85,7 +85,6 @@
 </script>
 <script src="{{ mix('/js/bundle.js') }}&v={{ json_decode(file_get_contents(base_path('package.json')), true)['version'] }}"></script>
 <!-- other libraries -->
-<script src="{{ asset('js/pfarrplaner/forms.js') }}"></script>
 @yield('scripts')
 @if(env('MATOMO_SITE') >0)
     <script>
