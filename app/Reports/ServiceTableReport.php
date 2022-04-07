@@ -391,7 +391,7 @@ class ServiceTableReport extends AbstractExcelDocumentReport
         }
 
         // output
-        $filename = $data['year'] . ' Plan für Gottesdienste ' . $city->name;
+        $filename = $data['year'] . ' Plan für Gottesdienste ' . $city->name.'.xlsx';
         $this->sendToBrowser($filename);
     }
 
