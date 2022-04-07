@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.129.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.129.0...v2022.129.1) (2022-04-07)
+
+
+### Bug Fixes
+
+* ServiceTableReport is missing file prefix ([2f68de4](https://github.com/pfarrplaner/pfarrplaner/commits/2f68de437f3753514ec193ba985419cf956fffce))
+
 ## [2022.129.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.128.2...v2022.129.0) (2022-04-07)
 
 
