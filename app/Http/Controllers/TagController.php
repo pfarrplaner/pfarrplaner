@@ -62,11 +62,12 @@ class TagController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function create()
     {
-        return view('tags.create');
+        $tag = new Tag(['name' => '']);
+        return Inertia::render('Admin/Tag/TagEditor', compact('tag'));
     }
 
     /**

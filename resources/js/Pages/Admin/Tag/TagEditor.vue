@@ -31,7 +31,7 @@
     <admin-layout :title="tag.id ? tag.name+' bearbeiten' : 'Neue Kennzeichnung' ">
         <template v-slot:navbar-left>
             <save-button @click="saveTag" />
-            <nav-button class="ml-1"
+            <nav-button class="ml-1" v-if="myTag.id"
                         @click="deleteTag" type="danger" title="Kennzeichnung löschen"
                         icon="mdi mdi-delete">Löschen</nav-button>
         </template>
