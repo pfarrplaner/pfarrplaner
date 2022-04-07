@@ -194,6 +194,7 @@ class CityController extends Controller
      * Show QR codes
      * @param Request $request
      * @param string $city
+     * @return \Inertia\Response
      */
     public function qr(Request $request, $city) {
         $city = City::where('name', 'like', '%' . str_replace('-', ' ', $city) . '%')->first();
@@ -202,8 +203,7 @@ class CityController extends Controller
             $query->where('date', Carbon::now()->setTime(0,0,0));
         })->whereNotNull('konfiapp_event_qr')->get();
         $types = KonfiAppIntegration::get($city)->listEventTypes();
-
-        return view('cities.qr', compact('services', 'city', 'types'));
+        return Inertia::render('Public/City/QR', compact('services', 'city', 'types'));
     }
 
 }
