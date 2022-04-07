@@ -166,7 +166,6 @@ class BaptismController extends Controller
         }
 
         return Inertia::render('Rites/BaptismEditor', compact('baptism', 'services', 'cities', 'pronounSets'));
-        //return view('baptisms.edit', compact('baptism', 'baptismalServices', 'otherServices', 'cities'));
     }
 
     /**
