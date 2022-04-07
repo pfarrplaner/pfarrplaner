@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.131.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.130.0...v2022.131.0) (2022-04-07)
+
+
+### Features
+
+* Add mouseover title for required field labels ([898b744](https://github.com/pfarrplaner/pfarrplaner/commits/898b7440893a65f99f9c429be76ead578653da6d))
+* Add required attribute for FormTextarea ([43a88b4](https://github.com/pfarrplaner/pfarrplaner/commits/43a88b42e85ceb2124a83d5d5f76c45018c75788))
+* NavButtons can have a href ([f51c1d1](https://github.com/pfarrplaner/pfarrplaner/commits/f51c1d1fa6afdfd09df78b012c5e6b39329fe773))
+* Remove heavy dependencies to lighten page load ([d525089](https://github.com/pfarrplaner/pfarrplaner/commits/d5250892c25aafa6f1c33eceddb4853a80d8c1ae))
+
+
+### Bug Fixes
+
+* Cannot create new role ([0bbb29c](https://github.com/pfarrplaner/pfarrplaner/commits/0bbb29c488cfccfe13d77a936214fbf6f8fbf3a4))
+* New parishes cannot be created ([b827887](https://github.com/pfarrplaner/pfarrplaner/commits/b827887351f198aadf5dbd19063c6a24dd0f8bdb))
+
 ## [2022.130.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.129.1...v2022.130.0) (2022-04-07)
 
 
