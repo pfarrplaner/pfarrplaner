@@ -190,19 +190,6 @@ class ICalController extends Controller
 
     /**
      * @param Request $request
-     * @param $key
-     * @return Application|Factory|\Illuminate\View\View
-     */
-    public function link(Request $request, $key)
-    {
-        /** @var AbstractCalendarLink $calendarLink */
-        $calendarLink = CalendarLinks::findKey($key);
-        $calendarLink->setDataFromRequest($request);
-        return view('ical.link', compact('calendarLink'));
-    }
-
-    /**
-     * @param Request $request
      * @param User $user
      * @param $token
      * @param $key

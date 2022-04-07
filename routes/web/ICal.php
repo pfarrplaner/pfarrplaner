@@ -41,12 +41,11 @@
 
 
 
-use App\Http\Controllers\ICalController; 
+use App\Http\Controllers\ICalController;
 
 Route::get('/ical/private/{name}/{token}', [ICalController::class, 'private'])->name('ical.private');
 Route::get('/ical/gemeinden/{locationIds}/{token}', [ICalController::class, 'byLocation'])->name('ical.byLocation');
 Route::get('/ical/urlaub/{user}/{token}', [ICalController::class, 'absences'])->name('ical.absences');
 Route::get('/ical/connect', [ICalController::class, 'connect'])->name('ical.connect');
 Route::get('/ical/setup/{key}', [ICalController::class, 'setup'])->name('ical.setup');
-Route::match(['GET', 'POST'], '/ical/link/{key}', [ICalController::class, 'link'])->name('ical.link');
 Route::get('/ical/export/{user}/{token}/{key}', [ICalController::class, 'export'])->name('ical.export');
