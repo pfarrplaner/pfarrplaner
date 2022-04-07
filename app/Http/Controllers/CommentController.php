@@ -70,31 +70,28 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->has('body')) {
-            $commentableType = $request->get('commentable_type');
-            $commentableId = $request->get('commentable_id');
-            $owner = app($commentableType)->find($commentableId);
-            if ($this->canCommentOnThisObject($owner)) {
-                $comment = $owner->comments()->create(
-                    [
-                        'body' => $request->get('body'),
-                        'private' => $request->get('private'),
-                        'user_id' => Auth::user()->id
-                    ]
-                );
-                if ($request->header('Accept', '') == 'application/json') {
-                    $comment->load('user');
-                    return response()->json($comment);
-                }
-                return view('partials.comments.single', compact('comment'));
-            } else {
-                if ($request->header('Accept', '') == 'application/json') {
-                    return response()->json(['message' => 'Leider hast du keine Berechtigung zum Kommentieren dieses Objekts.'], 401);
-                }
-                return '<div class="alert alert-danger">Leider hast du keine Berechtigung zum Kommentieren dieses Objekts.</div>';
-            }
+        if (!$request->has('body')) {
+            abort(403);
         }
-        return '';
+        $commentableType = $request->get('commentable_type');
+        $commentableId = $request->get('commentable_id');
+        $owner = app($commentableType)->find($commentableId);
+        if ($this->canCommentOnThisObject($owner)) {
+            $comment = $owner->comments()->create(
+                [
+                    'body' => $request->get('body'),
+                    'private' => $request->get('private'),
+                    'user_id' => Auth::user()->id
+                ]
+            );
+            $comment->load('user');
+            return response()->json($comment);
+        } else {
+            return response()->json(
+                ['message' => 'Leider hast du keine Berechtigung zum Kommentieren dieses Objekts.'],
+                401
+            );
+        }
     }
 
     /**
@@ -131,21 +128,6 @@ class CommentController extends Controller
     public function edit(Comment $comment)
     {
         return view('partials.comments.form', compact('comment'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param Comment $comment
-     * @return Response
-     */
-    public function update(Request $request, Comment $comment)
-    {
-        $comment->body = $request->get('body') ?: '';
-        $comment->private = $request->get('private') ?: '';
-        $comment->save();
-        return view('partials.comments.single', compact('comment'));
     }
 
     /**
