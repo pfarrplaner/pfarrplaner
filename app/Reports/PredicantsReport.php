@@ -94,6 +94,8 @@ class PredicantsReport extends AbstractWordDocumentReport
 
         $serviceList = Service::between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
             ->notHidden()
+            ->whereDoesntHave('funerals')
+            ->where('need_predicant', 1)
             ->where('city_id', $data['city'])
             ->ordered()
             ->get()
