@@ -78,7 +78,8 @@
             </div>
         </div>
         <hr/>
-        <a class="btn btn-success" :href="route('seatfinder', myService.id)">Neue Anmeldung</a>
+        <nav-button :href="route('seatfinder', service.slug)" title="Anmeldung hinzufügen"
+                    type="success" icon="mdi mdi-ticket">Neue Anmeldung</nav-button>
         <a class="btn btn-light" :href="route('booking.finalize', myService.id)"><span class="mdi mdi-file-pdf-box"></span>
             Anmeldeliste</a>
         <div class="bookings mt-3">
@@ -119,10 +120,8 @@
                             </div>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-light" title="Buchung bearbeiten"
-                               :href="route('booking.edit', booking.id)">
-                                <span class="mdi mdi-pencil"></span>
-                            </a>
+                            <nav-button type="light" icon="mdi mdi-pencil" title="Buchung bearbeiten" class="btn-sm"
+                               :href="route('booking.edit', booking.id)" force-icon force-no-text />
                             <button class="btn btn-sm btn-danger" title="Buchung löschen"
                                     @click.prevent="deleteBooking(booking, bookingKey)">
                                 <span class="mdi mdi-delete"></span>
@@ -147,10 +146,13 @@ import SeatSelect from "../../Ui/elements/SeatSelect";
 import Seat from "../../Ui/elements/seating/Seat";
 import SectionSelect from "../../Ui/elements/SectionSelect";
 import FormDatePicker from "../../Ui/forms/FormDatePicker";
+import NavButton from "../../Ui/buttons/NavButton";
 
 export default {
     name: "RegistrationsTab",
-    components: {FormDatePicker, SectionSelect, Seat, SeatSelect, FormSelectize, FormGroup, FormInput, FormCheck},
+    components: {
+        NavButton,
+        FormDatePicker, SectionSelect, Seat, SeatSelect, FormSelectize, FormGroup, FormInput, FormCheck},
     props: ['service'],
     data() {
         var myService = this.service;

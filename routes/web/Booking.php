@@ -41,9 +41,13 @@
 
 
 
-use App\Http\Controllers\BookingController; 
+use App\Http\Controllers\BookingController;
 
 Route::post('booking/{booking}/pin', [BookingController::class, 'pin'])->name('booking.pin');
 Route::get('services/{service}/bookings', [BookingController::class, 'index'])->name('service.bookings');
-Route::get('seatfinder/{service}/{number?}', [BookingController::class, 'findSeat'])->name('seatfinder');
+Route::get('anmelden/{service:slug}', [BookingController::class, 'findSeat'])->name('seatfinder');
 Route::get('services/{service}/bookingList', [BookingController::class, 'finalize'])->name('booking.finalize');
+
+Route::get('anmeldung/{booking}', [BookingController::class, 'edit'])->name('booking.edit');
+Route::patch('anmeldung/{booking}', [BookingController::class, 'update'])->name('booking.update');
+Route::delete('anmeldung/{booking}', [BookingController::class, 'destroy'])->name('booking.destroy');

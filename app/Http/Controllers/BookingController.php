@@ -35,6 +35,7 @@ use App\Booking;
 use App\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 class BookingController extends Controller
@@ -49,30 +50,24 @@ class BookingController extends Controller
     }
 
     /**
-     * @param Service $service
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function index(Service $service)
-    {
-        $bookings = Booking::where('service_id', $service->id)
-            ->get();
-
-        $capacity = $service->getSeatFinder()->remainingCapacity();
-        $seating = $service->getSeatFinder()->getSeatingTable();
-
-        // for some unknown reason, this needs to be sorted after the query
-        $bookings = $bookings->sortBy('name')->sortBy('first_name');
-        return view('bookings.service', compact('service', 'bookings', 'capacity', 'seating'));
-    }
-
-    /**
      * @param Request $request
      * @param Service $service
-     * @param int|null $number
+     * @return \Inertia\Response
      */
-    public function findSeat(Request $request, Service $service, $number = null)
+    public function findSeat(Request $request, Service $service)
     {
-        return view('bookings.seatfinder', compact('service'));
+        $booking = new Booking([
+                                   'service_id' => $service->id,
+                                   'name' => '',
+                                   'first_name' => '',
+                                   'contact' => '',
+                                   'email' => '',
+                                   'number' => 1,
+                                   'fixed_seat' => '',
+                                   'override_seats' => '',
+                                   'override_split' => '',
+                               ]);
+        return Inertia::render('Service/Registrations/BookingEditor', compact('service', 'booking'));
     }
 
     /**
@@ -85,7 +80,8 @@ class BookingController extends Controller
         $data['code'] = Booking::createCode();
         $booking = Booking::create($data);
         $message = ($data['number'] == 1 ? 'Der Platz wurde reserviert.' : $data['number'] . ' zusammenhängende Plätze wurden reserviert.');
-        return redirect()->route('service.bookings', $booking->service->id)->with('success', $message);
+        return redirect()->route('service.edit', ['service' => $booking->service->slug, 'tab' => 'registrations']
+        )->with('success', $message);
     }
 
     /**
@@ -94,7 +90,8 @@ class BookingController extends Controller
      */
     public function edit(Booking $booking)
     {
-        return view('bookings.edit', compact('booking'));
+        $service = $booking->service;
+        return Inertia::render('Service/Registrations/BookingEditor', compact('service', 'booking'));
     }
 
     /**
@@ -107,7 +104,7 @@ class BookingController extends Controller
     {
         $data = $this->validateRequest($request);
         $booking->update($data);
-        return redirect()->route('service.bookings', $booking->service->id)
+        return redirect()->route('service.edit', ['service' => $booking->service->slug, 'tab' => 'registrations'])
             ->with('success', 'Die Buchung wurde erfolgreich geändert.');
     }
 
@@ -135,13 +132,14 @@ class BookingController extends Controller
 
         $participants = [];
         foreach ($service->participants as $participant) {
-            $participants[] = $participant->first_name ? $participant->last_name.', '.$participant->first_name : $participant->fullName();
+            $participants[] = $participant->first_name ? $participant->last_name . ', ' . $participant->first_name : $participant->fullName(
+            );
         }
         $participants = array_unique($participants);
         sort($participants);
 
         $pdf = PDF::loadView(
-            'bookings.pdf.list.'.$viewName,
+            'bookings.pdf.list.' . $viewName,
             array_merge($result, compact('service', 'participants')),
             [],
             [
@@ -166,7 +164,8 @@ class BookingController extends Controller
      * @param Booking $booking
      * @return \Illuminate\Http\JsonResponse
      */
-    protected function pin(Request $request, Booking $booking) {
+    protected function pin(Request $request, Booking $booking)
+    {
         $data = $request->validate(['fixed_seat' => 'required|string|seatable_fixed:booking_id']);
         $booking->update($data);
         return response()->json($booking);

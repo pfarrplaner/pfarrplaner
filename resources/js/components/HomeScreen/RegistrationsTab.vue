@@ -43,15 +43,13 @@
             </div>
             <div class="col-md-2">{{ service.freeSeatsText}}</div>
             <div class="col-md-4 text-right">
-                <a :href="route('seatfinder', service.id)" title="Anmeldung hinzufügen"
-                   class="btn btn-success"><span class="mdi mdi-ticket"></span>
-                    <span class="d-none d-md-inline">Neue Anmeldung</span>
-                </a>
-                <a :href="route('service.bookings', service.id)" title="Anmeldungen anzeigen"
-                   class="btn btn-light"><span class="mdi mdi-ticket"></span>
+                <nav-button :href="route('seatfinder', service.slug)" title="Anmeldung hinzufügen"
+                            type="success" icon="mdi mdi-ticket">Neue Anmeldung</nav-button>
+                <nav-button type="light" icon="mdi mdi-ticket" title="Anmeldungen anzeigen"
+                            :href="route('service.edit', {service: service.slug, tab: 'registrations'})">
                     <span class="d-none d-md-inline">Anmeldungen</span>
                     <span v-if="service.bookings.length > 0" class="badge badge-info">{{ service.bookings.length }}</span>
-                </a>
+                </nav-button>
                 <a :href="route('booking.finalize', service.id)" title="Anmeldeliste ausgeben"
                    class="btn btn-light"><span class="mdi mdi-clipboard-check"></span>
                     <span class="d-none d-md-inline">Anmeldeliste</span>
@@ -64,9 +62,10 @@
 <script>
 import FakeTable from "../Ui/FakeTable";
 import DetailsInfo from "../Service/DetailsInfo";
+import NavButton from "../Ui/buttons/NavButton";
 export default {
     name: "RegistrationsTab",
-    components: {DetailsInfo, FakeTable},
+    components: {NavButton, DetailsInfo, FakeTable},
     props: {
         title: String, description: String, user: Object, settings: Object, services: Array, count: Number,
     },
