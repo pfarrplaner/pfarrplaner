@@ -45,7 +45,7 @@
         <div :class="{'service-location': 1, 'service-special-location': isSpecialLocation(service)}">
             {{ isSpecialLocation(service) ?  service.special_location : service.location.name }}
         </div>
-        <img v-if="service.cc" src="/img/cc.png" :title="ccTitle(service)">
+        <img v-if="(!settings.show_cc_details) && (service.cc)" src="/img/cc.png" :title="ccTitle(service)">
         <span v-if="service.youtube_url">
             <a :href="service.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span class="mdi mdi-youtube"></span></a>
             <a v-if="service.city.youtube_channel_url" :href="service.liveDashboardUrl" target="_blank" class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="mdi mdi-video"></span></a>
@@ -72,6 +72,11 @@
                 <span class="mdi mdi-water" :title="hasPermission('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
             </div>
         </div>
+        <div v-if="settings.show_cc_details && (service.cc)">
+            <hr />
+            <img src="/img/cc.png" :title="ccTitle(service)">
+            Kinderkirche: {{ service.cc_lesson }} ({{ service.cc_staff }})
+        </div>
     </div>
 </template>
 <script>
@@ -81,8 +86,7 @@ import ControlledAccess from "./Element/ControlledAccess";
 export default {
     components: {ControlledAccess},
     props: ['service'],
-    computed: {
-    },
+    inject: ['settings'],
     methods: {
         isSpecialTime: function(service) {
             if (null == service.location) return true;

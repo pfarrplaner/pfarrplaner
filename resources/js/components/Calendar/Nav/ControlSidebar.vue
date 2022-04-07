@@ -53,6 +53,7 @@
         <hr class="mb-2">
         <calendar-control-city-sort :cities="cities" />
         <hr class="mb-2">
+        <form-check label="Details zur Kinderkirche anzeigen" v-model="mySettings.show_cc_details" @input="setSetting('show_cc_details', $event)"/>
     </div>
 </template>
 
@@ -61,18 +62,21 @@ import EventBus from "../../../plugins/EventBus";
 import draggable from 'vuedraggable'
 import {CalendarNewOrientationEvent} from "../../../events/CalendarNewOrientationEvent";
 import {CalendarNewNameFormatEvent} from "../../../events/CalendarNewNameFormatEvent";
+import FormCheck from "../../Ui/forms/FormCheck";
 
 export default {
     components: {
+        FormCheck,
         draggable,
     },
     props: ['date', 'cities'],
+    inject: ['settings'],
     data() {
         return {
-            settings: window.vm.$children[0].$page.props.settings,
             orientation: window.vm.$children[0].$page.props.settings.calendar_view,
             nameFormat: window.vm.$children[0].$page.props.settings.calendar_name_format,
             user: window.vm.$children[0].$page.props.currentUser.data,
+            mySettings: this.settings,
         }
     },
     methods: {
@@ -82,6 +86,13 @@ export default {
                 value: this.orientation
             });
         },
+        setSetting(key, value) {
+            console.log('setSetting', key, value);
+            this.$emit('setSetting', {key, value});
+            axios.post(route('setting.set', {user: this.user.id, key: key}), {
+                value: value,
+            });
+        }
     }
 }
 </script>

@@ -4,7 +4,7 @@
             <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse" :orientation="orientation"></calendar-nav-top>
         </template>
         <template #control-sidebar>
-            <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities"/>
+            <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities" @set-setting="setSetting"/>
         </template>
         <template slot="after-flash">
             <div class="alert alert-info" v-if="loading > 0"><span class="mdi mdi-spin mdi-loading"></span> Daten für {{ loading }} Orte werden geladen ...</div>
@@ -37,6 +37,11 @@ import CalendarPaneMobile from "../../components/Calendar/Pane/Mobile";
 export default {
     components: {CalendarPaneMobile},
     props: ['date', 'days', 'cities',  'years', 'absences', 'canCreate', 'services'],
+    provide() {
+        return {
+            settings: this.settings,
+        }
+    },
     data() {
         var myDays = {};
 
@@ -53,11 +58,13 @@ export default {
             collapseKey: Math.random()*9999999,
             cityList: this.cities,
             orientation: vm.$children[0].page.props.settings.calendar_view,
+            settings: window.vm.$children[0].$page.props.settings || {},
             myServices: this.services,
             loading: 0,
         }
     },
     created() {
+        if (undefined === this.settings.show_cc_details) this.settings.show_cc_details = 0;
         this.cities.forEach(city => {
             this.loading++;
             city['loading'] = city.id;
@@ -94,6 +101,10 @@ export default {
             });
             this.collapseState = e;
             this.collapseKey = Math.random()*9999999;
+        },
+        setSetting(setting) {
+            this.settings[setting.key] = setting.value;
+            this.$forceUpdate();
         }
     },
     computed: {
