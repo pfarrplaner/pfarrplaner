@@ -73,7 +73,7 @@ export default {
     },
     methods: {
         saveComment() {
-            axios.post(route('comments.store'), this.newComment, {
+            axios.post(route('comment.store'), this.newComment, {
                 headers: { Accept: 'application/json' }
             })
             .then((response)=>{
@@ -86,7 +86,7 @@ export default {
             });
         },
         deleteComment(id, key, index) {
-            axios.delete(route('comments.destroy', id))
+            axios.delete(route('comment.destroy', id))
                 .then(this.myService.comments.splice(key, 1));
         }
     }

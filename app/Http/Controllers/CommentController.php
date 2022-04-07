@@ -42,24 +42,9 @@ use Illuminate\Support\Facades\Auth;
  */
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
+    public function __construct()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
+        $this->middleware('auth');
     }
 
     /**
@@ -108,27 +93,6 @@ class CommentController extends Controller
         return Auth::user()->can('update', $owningService);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Comment $comment
-     * @return Response
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param Comment $comment
-     * @return Response
-     */
-    public function edit(Comment $comment)
-    {
-        return view('partials.comments.form', compact('comment'));
-    }
 
     /**
      * Remove the specified resource from storage.
