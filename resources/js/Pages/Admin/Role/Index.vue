@@ -119,7 +119,7 @@ export default {
     props: ['roles'],
     methods: {
         addRole() {
-            this.$inertia.get(route('roles.create'));
+            this.$inertia.get(route('role.create'));
         },
         deleteRole(role) {
             if (confirm('Willst du diese Benutzerrolle wirklich komplett löschen?')) {

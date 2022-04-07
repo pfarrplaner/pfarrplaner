@@ -63,12 +63,13 @@ class RoleController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Inertia\Response
      */
     public function create()
     {
         $permissions = Permission::all()->sortBy('name');
-        return view('roles.create', compact('permissions'));
+        $role = new Role();
+        return Inertia::render('Admin/Role/RoleEditor', compact('role', 'permissions'));
     }
 
     /**
