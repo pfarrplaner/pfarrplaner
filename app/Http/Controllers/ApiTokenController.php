@@ -32,6 +32,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 /**
  * Class ApiTokenController
@@ -49,7 +50,7 @@ class ApiTokenController extends Controller
      * Update the authenticated user's API token.
      *
      * @param Request $request
-     * @return array
+     * @return \Inertia\Response
      */
     public function update(Request $request)
     {
@@ -61,6 +62,6 @@ class ApiTokenController extends Controller
             ]
         )->save();
 
-        return view('apitoken', compact('token'));
+        return Inertia::render('ApiToken', compact('token'));
     }
 }
