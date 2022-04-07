@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.130.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.129.1...v2022.130.0) (2022-04-07)
+
+
+### Features
+
+* Optionally show CC details in calendar ([516887a](https://github.com/pfarrplaner/pfarrplaner/commits/516887a56e5bd38166654a32949201bcbb8f3eaa))
+
 ### [2022.129.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.129.0...v2022.129.1) (2022-04-07)
 
 
