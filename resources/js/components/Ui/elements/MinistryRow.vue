@@ -111,9 +111,8 @@ export default {
             this.store[this.myDescription] = newVal;
             this.$emit('input', this.store);
         },
-        deleteRow(index) {
-            delete this.store[this.myDescription];
-            this.$emit('delete', this.store);
+        deleteRow() {
+            this.$emit('delete', this.myDescription);
         }
     }
 }

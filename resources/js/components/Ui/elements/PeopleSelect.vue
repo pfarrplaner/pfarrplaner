@@ -85,7 +85,7 @@ export default {
         if (this.myId == '') this.myId = this._uid;
     },
     data() {
-        var myValue = this.value;
+        var myValue = [];
         var myPeople = this.people;
         var myPeopleReference = {};
         var myTeamReference = {};

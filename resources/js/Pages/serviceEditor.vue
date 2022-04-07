@@ -215,7 +215,9 @@ export default {
             });
 
             Object.keys(ministries).forEach(ministry => {
-                count += ministries[ministry].length;
+                ministries[ministry].forEach(item => {
+                    if (isNaN(item)) count++;
+                })
             });
             this.peopleCount = count;
         },

@@ -117,8 +117,10 @@ export default {
             this.myService.ministriesByCategory['Neuer Dienst'] = [];
             this.$forceUpdate();
         },
-        deleteRow(store) {
-            this.myService.ministriesByCategory = store;
+        deleteRow(category) {
+            console.log('deleteRow', category);
+            delete this.myService.ministriesByCategory[category];
+            this.updatePeopleCounter();
             this.$forceUpdate();
         },
         copyCredits() {
