@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <div class="form-group" :class="{'form-group-required' : required}">
+    <div class="form-group" :class="{'form-group-required' : required}" :title="required ? 'Dieses Feld muss ausgefüllt werden.' : ''">
         <value-check v-if="isCheckedItem" :value="value" />
         <label v-if="label" :for="id+'Input'" class="control-label"><span v-if="preLabel" :class="preLabel"></span> {{ label }}</label>
         <slot />
