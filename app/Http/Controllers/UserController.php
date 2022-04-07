@@ -169,13 +169,6 @@ class UserController extends Controller
                 'modules' => Modules::tree(),
             ]
         );
-
-
-        $cities = City::all();
-        $parishes = Parish::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
-        $users = User::all();
-        $roles = $this->getRoles();
-        return view('users.create', compact('cities', 'roles', 'parishes', 'users'));
     }
 
     /**
@@ -417,61 +410,26 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Der Benutzer wurde gelöscht.');
     }
 
-    /**
-     * @param $id
-     * @return Application|Factory|View
-     */
-    public function preferences($id)
-    {
-        $user = User::find($id);
-        $preferenceCities = City::whereIn('id', $user->preference_cities ?: $user->cities);
-        $allowedCities = City::whereIn('id', $user->cities);
-        foreach ($allowedCities as $city) {
-            if ($preferenceCities->contains($city)) {
-                $allowedCities->forget($city);
-            }
-        }
-        return view('users.preferences', compact('user', 'allowedCities', 'preferenceCities'));
-    }
-
-    /**
-     * @param Request $request
-     * @param $id
-     */
-    public function savePreferences(Request $request, $id)
-    {
-    }
 
     /**
      * @param User $user
-     * @return Application|Factory|View
+     * @return \Inertia\Response
      */
     public function join(User $user)
     {
-        $users = User::where('id', '!=', $user->id)->orderBy('name')->get();
-        return view('users.join', compact('user', 'users'));
+        $people = User::where('id', '!=', $user->id)->orderBy('name')->get();
+        return Inertia::render('Admin/User/Join', compact('user', 'people'));
     }
 
     /**
      * @param Request $request
+     * @param User $user1
+     * @param User $user2
      * @return RedirectResponse
      * @throws AuthorizationException
      */
-    public function doJoin(Request $request)
+    public function doJoin(Request $request, User $user1, User $user2)
     {
-        $request->validate(
-            [
-                'user1' => 'required|integer',
-                'user2' => 'required|integer',
-            ]
-        );
-
-        $user1Id = $request->get('user1');
-        $user2Id = $request->get('user2');
-
-        $user1 = User::findOrFail($user1Id);
-        $user2 = User::findOrFail($user2Id);
-
         $this->authorize('delete', $user1);
         $this->authorize('update', $user2);
 
@@ -479,12 +437,7 @@ class UserController extends Controller
             return redirect()->route('home')->with('error', 'Ein Fehler ist aufgetreten.');
         }
 
-        // replace all the pivot records
-
-        DB::statement(
-            'UPDATE service_user SET user_id=:user2Id WHERE user_id=:user1Id;',
-            compact('user1Id', 'user2Id')
-        );
+        $user1->mergeInto($user2);
 
         // delete old user
         $user1->delete();
@@ -492,23 +445,6 @@ class UserController extends Controller
         return redirect()->route('users.index')->with('success', 'Die Benutzer wurden zusammengeführt.');
     }
 
-
-    /**
-     * @param User $user
-     * @return Application|Factory|View
-     */
-    public function services(User $user)
-    {
-        $services = Service::with('location', 'participants')
-            ->whereHas(
-                'participants',
-                function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                }
-            )->ordered()
-            ->get();
-        return view('users.services', compact('user', 'services'));
-    }
 
     /**
      * @param User $user

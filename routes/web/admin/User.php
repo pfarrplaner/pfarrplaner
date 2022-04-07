@@ -46,7 +46,7 @@ use App\Http\Controllers\UserController;
 // all users
 Route::get('/benutzer', [UserController::class, 'index'])->name('users.index');
 Route::match(['GET', 'POST'], '/benutzer/{user}/zusammenfuehren', [UserController::class, 'join'])->name('user.join');
-Route::post('/benutzer/final-zusammenfuehren', [UserController::class, 'doJoin'])->name('user.join.finalize');
+Route::post('/benutzer/final-zusammenfuehren/{user1}/{user2}', [UserController::class, 'doJoin'])->name('user.join.finalize');
 Route::get('/doppelte-benutzer', [UserController::class, 'findDuplicates'])->name('users.duplicates');
 Route::post('/doppelte-benutzer', [UserController::class, 'fixDuplicates'])->name('users.duplicates.fix');
 
