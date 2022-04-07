@@ -44,7 +44,7 @@
     <meta name="theme-color" content="#ffffff">
 </head>
 <body
-    class="notranslate hold-transition sidebar-mini sidebar-collapse {{ strtolower(str_replace('.', '-', Request::route()->getName())) }} @if(isset($slave) && $slave) slave @endif">
+    class="notranslate hold-transition sidebar-mini sidebar-collapse">
     @inertia
 <!-- ./wrapper -->
 

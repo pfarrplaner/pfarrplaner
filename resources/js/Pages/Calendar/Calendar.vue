@@ -1,5 +1,5 @@
 <template>
-    <admin-layout enable-control-sidebar="true" :title="title(date)" no-padding>
+    <admin-layout enable-control-sidebar="true" :title="title(date)" no-padding no-content-header>
         <template #navbar-left>
             <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse" :orientation="orientation"></calendar-nav-top>
         </template>
