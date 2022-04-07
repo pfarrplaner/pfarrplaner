@@ -39,7 +39,6 @@
 |
 */
 
-Route::resource('days', 'DayController')->middleware('auth');
 Route::resource('comments', 'CommentController')->middleware('auth');
 Route::resource('booking', 'BookingController');
 Route::resource('calendarConnection', 'CalendarConnectionController');
