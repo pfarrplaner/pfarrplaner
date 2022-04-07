@@ -28,9 +28,9 @@
   -->
 
 <template>
-    <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel">
+    <form-group :id="myId" :label="label" :help="help" :name="name" :pre-label="preLabel" :required="required">
         <textarea class="form-control" :class="{'is-invalid': $page.props.errors[name]}" :rows="rows" v-model="myValue" :id="myId+'Input'"
-               :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled" :name="name"
+               :placeholder="placeholder" :aria-placeholder="placeholder" :disabled="disabled" :name="name" :aria-required="required"
                @input="$emit('input', $event.target.value)" />
     </form-group>
 </template>
@@ -53,6 +53,7 @@ export default {
         placeholder: String,
         error: String,
         preLabel: String,
+        required: Boolean,
         disabled: {
             type: Boolean,
             default: false,
