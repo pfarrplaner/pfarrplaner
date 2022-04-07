@@ -232,14 +232,6 @@ class Absence extends Model
         return $days;
     }
 
-    /**
-     * @return HasMany
-     */
-    public function approvals()
-    {
-        return $this->hasMany(Approval::class);
-    }
-
     public function approvedBy()
     {
         return $this->hasOne(User::class, 'id', 'approver_id');

@@ -45,7 +45,6 @@ Route::resource('calendarConnection', 'CalendarConnectionController');
 Route::resource('baptisms', 'BaptismController')->middleware('auth');
 Route::resource('weddings', 'WeddingController')->middleware('auth');
 Route::resource('revisions', 'RevisionController');
-Route::resource('approvals', 'ApprovalController');
 
 
 // import individual route files

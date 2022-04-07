@@ -857,7 +857,6 @@ class User extends Authenticatable
 
         }
         Absence::where('user_id', $this->id)->update(['user_id' => $user->id]);
-        Approval::where('user_id', $this->id)->update(['user_id' => $user->id]);
         CalendarConnection::where('user_id', $this->id)->update(['user_id' => $user->id]);
         Comment::where('user_id', $this->id)->update(['user_id' => $user->id]);
         Participant::where('user_id', $this->id)->update(['user_id' => $user->id]);

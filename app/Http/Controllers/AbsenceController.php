@@ -31,7 +31,6 @@
 namespace App\Http\Controllers;
 
 use App\Absence;
-use App\Approval;
 use App\Attachment;
 use App\Events\AbsenceApproved;
 use App\Events\AbsenceDemanded;
