@@ -44,18 +44,22 @@
                 <div class="col-md-4">
                     <details-info :service="service"/>
                 </div>
-                <div class="col-md-6">
-                    <a v-if="!service.youtube_url" class="btn btn-primary" title="Neuen Livestream für diesen Gottesdienst anlegen"
-                       :href="route('broadcast.create', service.id)">
-                        Livestream anlegen
-                    </a>
+                <div class="col-md-6" :key="service.youtube_url+service.creatingStream+service.id">
+                    <div v-if="!service.youtube_url">
+                        <div v-if="service.city.google_access_token && (!service.creatingStream)" class="form-class">
+                            <button class="btn btn-light" @click.prevent="createLivestream(serviceIndex)"><span class="mdi mdi-youtube"></span> Jetzt auf YouTube anlegen</button>
+                        </div>
+                        <div v-if="service.creatingStream" :key="service.creatingStream">
+                            <div class="alert alert-info"><span class="mdi mdi-spin mdi-loading"></span> Ein Livestream wird angelegt. Bitte warten...</div>
+                        </div>
+                    </div>
                     <div v-else>
                         <a class="btn btn-light" :href="service.youtube_url" target="_blank"
-                           title="Gehe zum Livestream auf YouTube"><span class="mdi mdi--youtube"></span>
+                           title="Gehe zum Livestream auf YouTube"><span class="mdi mdi-youtube"></span>
                             <span class="d-none d-md-inline">Video</span>
                         </a>
                         <a class="btn btn-light" v-if="dashboardUrl(service)" :href="dashboardUrl(service)" target="_blank"
-                           title="Gehe zum Live Dashboard auf YouTube"><span class="mdi mdi--video"></span>
+                           title="Gehe zum Live Dashboard auf YouTube"><span class="mdi mdi-video"></span>
                         </a>
                         <a class="btn btn-light" :href="route('broadcast.refresh', service.id)"
                            title="Beschreibung auf YouTube erneuern"><span class="mdi mdi-sync"></span>
@@ -79,6 +83,12 @@ export default {
     props: {
         title: String, description: String, user: Object, settings: Object, services: Array, count: Number,
     },
+    data() {
+        this.services.forEach(service => {
+            service.creatingStream = false;
+        });
+        return {};
+    },
     methods: {
         deleteBroadcast(service) {
             this.$inertia.delete(route('broadcast.delete', service.id), {preserveState: false});
@@ -88,6 +98,19 @@ export default {
             if (!service.youtube_url) return null;
             var videoId = service.youtube_url.replace('https://youtu.be/', '').replace('https://www.youtube.com/watch?v=', '');
             return 'https://studio.youtube.com/video/'+videoId+'/livestreaming';
+        },
+        createLivestream(serviceIndex) {
+            let service = this.services[serviceIndex];
+            let myServiceIndex = serviceIndex;
+            this.services[myServiceIndex].creatingStream = true;
+            this.$forceUpdate();
+            axios.get(route('broadcast.create', {service: service.id, json: 1}))
+                .then(response => { return response.data })
+                .then(data => {
+                    this.services[myServiceIndex].creatingStream = false;
+                    this.services[myServiceIndex].youtube_url = data.url;
+                    this.$forceUpdate();
+                });
         }
     }
 }
