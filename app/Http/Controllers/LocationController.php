@@ -69,7 +69,15 @@ class LocationController extends Controller
     {
         $cities = Auth::user()->writableCities;
         $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->get();
-        return view('location.create', compact('cities', 'alternateLocations'));
+        $location = new Location([
+                                     'name' => 'Neue Kirche',
+                                     'alternate_location_id' => '',
+                                 ]);
+        $seatingRows = [];
+        return Inertia::render(
+            'Admin/Location/LocationEditor',
+            compact('cities', 'location', 'alternateLocations', 'seatingRows')
+        );
     }
 
     /**
@@ -104,17 +112,6 @@ class LocationController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param Location $location
@@ -127,11 +124,15 @@ class LocationController extends Controller
 
         $seatingRows = SeatingRow::with('seatingSection')
             ->whereHas('seatingSection', function ($q) use ($location) {
-                $q->where( 'location_id', $location->id);
+                $q->where('location_id', $location->id);
             })->get();
 
-        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->where('id', '!=', $location->id)->get();
-        return Inertia::render('Admin/Location/LocationEditor', compact('cities', 'location', 'alternateLocations', 'seatingRows'));
+        $alternateLocations = Location::whereIn('city_id', $cities->pluck('id'))->where('id', '!=', $location->id)->get(
+        );
+        return Inertia::render(
+            'Admin/Location/LocationEditor',
+            compact('cities', 'location', 'alternateLocations', 'seatingRows')
+        );
     }
 
     /**

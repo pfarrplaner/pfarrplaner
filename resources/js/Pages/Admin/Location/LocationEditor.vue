@@ -31,9 +31,9 @@
     <admin-layout :title="myLocation ? myLocation.name+' bearbeiten' : 'Kirche / Gottesdienstort bearbeiten'">
         <template slot="navbar-left">
             <save-button @click="saveLocation"/>
-            <nav-button title="Bereich hinzufügen"
+            <nav-button title="Bereich hinzufügen" v-if="myLocation.id"
                         class="ml-1" type="success" icon="mdi mdi-plus">Bereich hinzufügen</nav-button>
-            <nav-button @click="addRow" title="Reihe hinzufügen"
+            <nav-button @click="addRow" title="Reihe hinzufügen" v-if="myLocation.id"
                         class="ml-1" type="success" icon="mdi mdi-plus">Reihe hinzufügen</nav-button>
         </template>
         <template slot="tab-headers">
@@ -170,7 +170,7 @@ export default {
             if (this.myLocation.id) {
                 this.$inertia.patch(route('location.update', this.myLocation.id), this.myLocation);
             } else {
-                this.$inertia.post(route('locations.store'), this.myLocation);
+                this.$inertia.post(route('location.store'), this.myLocation);
             }
         },
         addSection() {},
