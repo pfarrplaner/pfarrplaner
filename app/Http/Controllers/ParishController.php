@@ -68,8 +68,10 @@ class ParishController extends Controller
      */
     public function create()
     {
-        $cities = Auth::user()->cities;
-        return view('parishes.create', compact('cities'));
+        $this->authorize('create', Parish::class);
+        $cities = Auth::user()->writableCities;
+        $parish = new Parish();
+        return Inertia::render('Admin/Parish/ParishEditor', compact('parish','cities'));
     }
 
     /**

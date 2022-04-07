@@ -29,6 +29,11 @@
 
 <template>
     <admin-layout title="Pfarrämter">
+        <template v-slot:navbar-left>
+            <nav-button type="success" icon="mdi mdi-plus" title="Pfarramt hinzufügen" @click="addParish">
+                Neues Pfarramt
+            </nav-button>
+        </template>
         <dataset v-slot="{ ds }"
                  :ds-data="parishes"
                  ds-sort-by="title"
