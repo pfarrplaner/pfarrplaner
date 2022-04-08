@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.132.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.131.0...v2022.132.0) (2022-04-08)
+
+
+### Features
+
+* Provide button to copy funeral life story to sermon text ([48b9e91](https://github.com/pfarrplaner/pfarrplaner/commits/48b9e91ed7cc1169e1dc88676ae5774011f012c4))
+
 ## [2022.131.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.130.0...v2022.131.0) (2022-04-07)
 
 
