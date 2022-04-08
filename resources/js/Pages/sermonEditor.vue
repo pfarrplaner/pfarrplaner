@@ -102,7 +102,7 @@
                     <!-- HERE --->
 
                     <quill-editor :class="{focused: textEditorActive}" ref="textEditor"
-                                  v-model="editedSermon.text"
+                                  v-model="editedSermon.text" :key="textUpdated"
                                   :options="editorOption" @focus="textEditorActive = true"
                                   @blur="textEditorActive = false">
                         <div id="toolbar" slot="toolbar">
@@ -123,7 +123,15 @@
                         </div>
                     </quill-editor>
 
-                    <text-stats :text="editedSermon.text"/>
+                    <text-stats :text="editedSermon.text"  :key="textUpdated"/>
+                    <div v-if="funerals.length > 0" class="mt-1 mb-3">
+                        <nav-button v-for="(funeral, funeralIndex, funeralKey) in funerals" type="light" class="mr-1"
+                                    :key="funeralKey"
+                                    icon="mdi mdi-text" :title="'Lebenslauf von '+funeral.buried_name+' in den Text einfügen'"
+                                    @click="insertFuneralStory(funeral)">
+                            Lebenslauf von {{ funeral.buried_name }} einfügen
+                        </nav-button>
+                    </div>
 
                 </div>
                 <div class="row">
@@ -196,10 +204,12 @@ import TextStats from "../components/LiturgyEditor/Elements/TextStats";
 import Card from "../components/Ui/cards/card";
 import CardBody from "../components/Ui/cards/cardBody";
 import FormBibleReferenceInput from "../components/Ui/forms/FormBibleReferenceInput";
+import NavButton from "../components/Ui/buttons/NavButton";
 
 export default {
     name: "sermonEditor",
     components: {
+        NavButton,
         FormBibleReferenceInput,
         CardBody,
         Card,
@@ -215,6 +225,19 @@ export default {
             type: Object,
             default: null,
         },
+    },
+    computed: {
+        funerals() {
+            let f = [];
+            this.services.forEach(s => {
+                if (s.funerals.length > 0) {
+                    s.funerals.forEach(funeral => {
+                        f.push(funeral);
+                    });
+                }
+            });
+            return f;
+        }
     },
     data() {
         var emptySermon = {
@@ -299,6 +322,7 @@ export default {
             fileUpload: null,
             removeImage: false,
             textSources,
+            textUpdated: 0,
         }
     },
     methods: {
@@ -386,6 +410,11 @@ export default {
                 roman = (key[+digits.pop() + (i * 10)] || "") + roman;
             return Array(+digits.join("") + 1).join("M") + roman;
         },
+        insertFuneralStory(funeral) {
+            if (this.editedSermon.text.trim() != '') this.editedSermon.text += "\n\n";
+            this.editedSermon.text += funeral.life;
+            this.textUpdated++;
+        }
     }
 }
 </script>
