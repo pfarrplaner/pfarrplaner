@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.134.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.133.0...v2022.134.0) (2022-04-09)
+
+
+### Bug Fixes
+
+* Adding a songbook causes duplicate entries ([dab51f1](https://github.com/pfarrplaner/pfarrplaner/commits/dab51f1c0d1af49a87615ae9bfef14d8258d4964))
+* SermonEditor uses bold font for sermon text ([de96547](https://github.com/pfarrplaner/pfarrplaner/commits/de965474c42f60903e790d0aa6dd54d694157f4e))
+
 ## [2022.133.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.132.0...v2022.133.0) (2022-04-09)
 
 
