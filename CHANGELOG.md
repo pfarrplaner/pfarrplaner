@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.133.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.132.0...v2022.133.0) (2022-04-09)
+
+
+### Features
+
+* A song can belong to more than one songbook ([c1a32c0](https://github.com/pfarrplaner/pfarrplaner/commits/c1a32c037c0aa9980f9b4e5d5dfb09a9f8f21ca4))
+
 ## [2022.132.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.131.0...v2022.132.0) (2022-04-08)
 
 
