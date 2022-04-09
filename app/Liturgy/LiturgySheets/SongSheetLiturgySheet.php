@@ -128,12 +128,12 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
         $doc->getSection()->addTitle($helper->getTitleText(),3);
-        if ($item->data['song']['copyrights']) {
-            $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 8]);
+        if ($item->data['song']['song']['copyrights']) {
+            $doc->renderNormalText($item->data['song']['song']['copyrights'], ['size' => 8]);
         }
 
-        if ($this->config['renderMusic'] && isset($item->data['song']['notation'])) {
-            $song = Song::find($item->data['song']['id']);
+        if ($this->config['renderMusic'] && isset($item->data['song']['song']['notation'])) {
+            $song = Song::find($item->data['song']['song_id']);
             $images = ABCMusic::images($song, $item->data['verses']);
             foreach ($images as $image) {
                 $doc->getSection()->addImage($image, ['width' => Converter::cmToPoint(17.5)]);
@@ -141,11 +141,11 @@ class SongSheetLiturgySheet extends AbstractLiturgySheet
         } else {
             foreach ($helper->getActiveVerses() as $verse) {
                 if ($verse['refrain_before']) {
-                    $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+                    $doc->renderNormalText($item->data['song']['song']['refrain'], ['italic' => true]);
                 }
                 $doc->renderNormalText($verse['number'].'. '.$verse['text']);
                 if ($verse['refrain_after']) {
-                    $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+                    $doc->renderNormalText($item->data['song']['song']['refrain'], ['italic' => true]);
                 }
             }
         }

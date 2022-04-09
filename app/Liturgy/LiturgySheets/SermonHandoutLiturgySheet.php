@@ -298,17 +298,17 @@ class SermonHandoutLiturgySheet extends AbstractLiturgySheet
         /** @var SongItemHelper $helper */
         $helper = $item->getHelper();
         $doc->renderNormalText($helper->getTitleText(), ['size' => 9, 'bold' => true]);
-        if ($item->data['song']['copyrights']) {
-            $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 7]);
+        if ($item->data['song']['song']['copyrights']) {
+            $doc->renderNormalText($item->data['song']['song']['copyrights'], ['size' => 7]);
         }
 
         foreach ($helper->getActiveVerses() as $verse) {
             if ($verse['refrain_before']) {
-                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true, 'size' => 9]);
+                $doc->renderNormalText($item->data['song']['song']['refrain'], ['italic' => true, 'size' => 9]);
             }
             $doc->renderNormalText($verse['number'].'. '.$verse['text'],[ 'size' => 9]);
             if ($verse['refrain_after']) {
-                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true, 'size' => 9]);
+                $doc->renderNormalText($item->data['song']['song']['refrain'], ['italic' => true, 'size' => 9]);
             }
         }
     }

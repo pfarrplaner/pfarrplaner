@@ -36,8 +36,8 @@ class SongItemHelper extends AbstractItemHelper
 
     public function getTitleText()
     {
-        $title = $this->item->data['song']['songbook_abbreviation'] ?: $this->getItem()->data['song']['songbook'] ?: '';
-        $title .= ' '.($this->item->data['song']['reference'] ?? '').' '.($this->item->data['song']['title'] ?? '');
+        $title = $this->item->data['song']['code'] ?: $this->getItem()->data['song']['songbook']['name'] ?: '';
+        $title .= ' '.($this->item->data['song']['reference'] ?? '').' '.($this->item->data['song']['song']['title'] ?? '');
         if ($this->item->data['verses']) $title.= ', '.$this->item->data['verses'];
         return trim(str_replace('  ', ' ', $title));
     }
@@ -46,7 +46,7 @@ class SongItemHelper extends AbstractItemHelper
     {
         $verseRefs = [];
         if (($this->item->data['verses'] ?? '') == '') {
-            foreach ($this->item->data['song']['verses'] as $verse) $verseRefs[] = $verse['number'];
+            foreach ($this->item->data['song']['song']['verses'] as $verse) $verseRefs[] = $verse['number'];
         } else {
             foreach (explode('+', $this->item->data['verses']) as $range) {
                 $subRange = explode('-', $range);
@@ -72,7 +72,7 @@ class SongItemHelper extends AbstractItemHelper
     {
         $verses = [];
         foreach ($this->getActiveVerseNumbers() as $number) {
-            foreach ($this->item->data['song']['verses'] ?? [] as $verse) {
+            foreach ($this->item->data['song']['song']['verses'] ?? [] as $verse) {
                 if ($verse['number'] == $number) $verses[] = $verse;
             }
         }

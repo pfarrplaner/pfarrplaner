@@ -48,7 +48,15 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
         $body = 'Hier meine Liederliste für den o.g. Gottesdienst:'.PHP_EOL.PHP_EOL;
         foreach ($service->liturgyBlocks as $block) {
             foreach ($block->items as $item) {
-                if (($item->data_type == 'song') || ($item->data_type == 'psalm')) {
+                if ($item->data_type == 'song') {
+                $body .= '  - '.$item->title.': '
+                    .($item->data[$item->data_type]['code'] ?? $item->data[$item->data_type]['songbook']['name'])
+                    .' '
+                    .$item->data[$item->data_type]['reference'].' '
+                    .$item->data[$item->data_type]['song']['title']
+                    .(isset($item->data['verses']) && ($item->data['verses'] != '') ? ', '. $item->data['verses']: '')
+                    .PHP_EOL;
+                } elseif ($item->data_type == 'psalm') {
                     $body .= '  - '.$item->title.': '
                         .($item->data[$item->data_type]['songbook_abbreviation'] ?? $item->data[$item->data_type]['songbook'])
                         .' '

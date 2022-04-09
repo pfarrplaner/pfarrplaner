@@ -17556,6 +17556,228 @@
      
 }
 
+    namespace Revolution\Amazon\ProductAdvertising\Facades { 
+            /**
+     * 
+     *
+     */ 
+        class AmazonProduct {
+                    /**
+         * 
+         *
+         * @return \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi 
+         * @static 
+         */ 
+        public static function api()
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->api();
+        }
+                    /**
+         * 
+         *
+         * @param \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi $api
+         * @return \Revolution\Amazon\ProductAdvertising\AmazonClient 
+         * @static 
+         */ 
+        public static function config($api)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->config($api);
+        }
+                    /**
+         * 
+         *
+         * @param \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi|callable $api
+         * @return \Revolution\Amazon\ProductAdvertising\AmazonClient 
+         * @static 
+         */ 
+        public static function apiUsing($api)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->apiUsing($api);
+        }
+                    /**
+         * ASIN (Default), SKU, UPC, EAN, and ISBN.
+         *
+         * @param string $idType
+         * @return \Revolution\Amazon\ProductAdvertising\Contracts\Factory 
+         * @static 
+         */ 
+        public static function setIdType($idType)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->setIdType($idType);
+        }
+                    /**
+         * 
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function getIdType()
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->getIdType();
+        }
+                    /**
+         * 
+         *
+         * @param string $node
+         * @param string $sort
+         * @return mixed 
+         * @throws ApiException
+         * @static 
+         */ 
+        public static function browse($node, $sort = 'TopSellers')
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->browse($node, $sort);
+        }
+                    /**
+         * 
+         *
+         * @param string $asin
+         * @return mixed 
+         * @throws ApiException
+         * @static 
+         */ 
+        public static function item($asin)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->item($asin);
+        }
+                    /**
+         * 
+         *
+         * @param array $asin
+         * @return mixed 
+         * @throws ApiException
+         * @static 
+         */ 
+        public static function items($asin)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->items($asin);
+        }
+                    /**
+         * 
+         *
+         * @param string $category
+         * @param string|null $keyword
+         * @param int $page
+         * @return mixed 
+         * @throws ApiException
+         * @static 
+         */ 
+        public static function search($category, $keyword = null, $page = 1)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->search($category, $keyword, $page);
+        }
+                    /**
+         * 
+         *
+         * @param string $asin
+         * @param int $page
+         * @return mixed 
+         * @throws ApiException
+         * @static 
+         */ 
+        public static function variations($asin, $page = 1)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->variations($asin, $page);
+        }
+                    /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param object|callable $macro
+         * @return void 
+         * @static 
+         */ 
+        public static function macro($name, $macro)
+        {
+                        \Revolution\Amazon\ProductAdvertising\AmazonClient::macro($name, $macro);
+        }
+                    /**
+         * Mix another object into the class.
+         *
+         * @param object $mixin
+         * @param bool $replace
+         * @return void 
+         * @throws \ReflectionException
+         * @static 
+         */ 
+        public static function mixin($mixin, $replace = true)
+        {
+                        \Revolution\Amazon\ProductAdvertising\AmazonClient::mixin($mixin, $replace);
+        }
+                    /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasMacro($name)
+        {
+                        return \Revolution\Amazon\ProductAdvertising\AmazonClient::hasMacro($name);
+        }
+                    /**
+         * Flush the existing macros.
+         *
+         * @return void 
+         * @static 
+         */ 
+        public static function flushMacros()
+        {
+                        \Revolution\Amazon\ProductAdvertising\AmazonClient::flushMacros();
+        }
+                    /**
+         * Add hook.
+         *
+         * @param string $name
+         * @param callable $hook
+         * @return void 
+         * @static 
+         */ 
+        public static function hook($name, $hook)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        $instance->hook($name, $hook);
+        }
+                    /**
+         * 
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */ 
+        public static function hasHook($name)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->hasHook($name);
+        }
+                    /**
+         * 
+         *
+         * @param string $name
+         * @param $request
+         * @return mixed 
+         * @static 
+         */ 
+        public static function callHook($name, $request)
+        {
+                        /** @var \Revolution\Amazon\ProductAdvertising\AmazonClient $instance */
+                        return $instance->callHook($name, $request);
+        }
+         
+    }
+     
+}
+
     namespace SimpleSoftwareIO\QrCode\Facades { 
             /**
      * 
@@ -21587,6 +21809,7 @@ namespace  {
             class Debugbar extends \Barryvdh\Debugbar\Facades\Debugbar {}
             class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
             class Agent extends \Jenssegers\Agent\Facades\Agent {}
+            class AmazonProduct extends \Revolution\Amazon\ProductAdvertising\Facades\AmazonProduct {}
             class QrCode extends \SimpleSoftwareIO\QrCode\Facades\QrCode {}
             class HealthCheck extends \UKFast\HealthCheck\Facade\HealthCheck {}
      

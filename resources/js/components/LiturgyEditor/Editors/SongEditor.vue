@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <div class="liturgy-item-psalm-editor">
+    <div class="liturgy-item-song-editor">
         <form @submit.prevent="save">
             <div class="row">
                 <div class="col-md-6">
@@ -81,76 +81,13 @@
                 </inertia-link>
             </div>
         </form>
-        <modal :title="(editedElement.data.song.id == -1) ? 'Neues Lied' : 'Lied bearbeiten'" v-if="modalOpen"
-               @close="(editedElement.data.song.id == -1) ? saveText() : updateText()" @cancel="modalOpen = false;"
+        <modal :title="(editedElement.data.song.song.id == -1) ? 'Neues Lied' : 'Lied bearbeiten'" v-if="modalOpen"
+               @close="(editedElement.data.song.song.id == -1) ? saveText() : updateText()" @cancel="modalOpen = false;"
                close-button-label="Lied speichern" cancel-button-label="Abbrechen" max-width="800"
         >
+            <song-edit-pane :song="modalSong" />
 
 
-            <div class="form-group">
-                <label for="title">Titel des Lieds</label>
-                <input class="form-control" v-model="modalSong.title"/>
-            </div>
-            <div class="form-group">
-                <label>Kehrvers</label>
-                <textarea class="form-control" v-model="modalSong.refrain"
-                          placeholder="Leer lassen, wenn es keinen Kehrvers gibt"></textarea>
-            </div>
-            <div class="row">
-                <div class="col-1 form-group">
-                    <label>Strophe</label>
-                </div>
-                <div class="col-10 form-group">
-                    <label>Text der Strophe</label>
-                </div>
-            </div>
-            <div v-for="(verse,verseKey,verseIndex) in modalSong.verses">
-                <div class="row">
-                    <div class="col-1 form-group">
-                        <input type="text" class="form-control" v-model="verse.number"/>
-                    </div>
-                    <div class="col-10">
-                        <div class="form-group">
-                            <textarea class="form-control" v-model="verse.text"></textarea>
-                        </div>
-                        <div class="form-check-inline">
-                            <input type="checkbox" v-model="verse.refrain_before"/> &nbsp;Kehrvers vor
-                            dieser
-                            Strophe
-                        </div>
-                        <div class="form-check-inline">
-                            <input type="checkbox" v-model="verse.refrain_after"/> &nbsp;Kehrvers nach
-                            dieser
-                            Strophe
-                        </div>
-                    </div>
-                    <div class="col-1 text-right" style="margin-top: 2em;">
-                        <button class="btn btn-sm btn-danger" @click.prevent="deleteVerse(verseKey)">
-                            <span class="mdi mdi-delete"></span>
-                        </button>
-                    </div>
-                </div>
-                <hr/>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-sm btn-light" @click.prevent="addVerse">Strophe hinzufügen</button>
-            </div>
-            <div class="form-group">
-                <label>Copyrights</label>
-                <textarea class="form-control" v-model="modalSong.copyrights"></textarea>
-            </div>
-            <div class="form-group">
-                <label>Liederbuch</label>
-                <selectize v-model="songbook" :settings="selectizeSettings">
-                    <option v-for="songbook in songbooks" :value="songbook">
-                        {{ songbookTitle(songbook) }}
-                    </option>
-                </selectize>
-            </div>
-            <div class="form-group">
-                <label for="reference">Liednummer</label>
-                <input class="form-control" v-model="modalSong.reference"/>
-            </div>
         </modal>
     </div>
 </template>
@@ -161,10 +98,12 @@ import Selectize from 'vue2-selectize';
 import Modal from "../../Ui/modals/Modal";
 import TextStats from "../Elements/TextStats";
 import TimeFields from "./Elements/TimeFields";
+import SongEditPane from "./Elements/SongEditPane";
 
 export default {
     name: "SongEditor",
     components: {
+        SongEditPane,
         TimeFields,
         TextStats,
         Nl2br,
@@ -184,7 +123,7 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        const songs = await axios.get(route('liturgy.song.index'))
+        const songs = await axios.get(route('api.liturgy.song.index', { api_token: this.apiToken }))
         if (songs.data) {
             this.songs = songs.data;
         }
@@ -220,6 +159,7 @@ export default {
         if (undefined == e.data.verses) e.data.verses = '';
         if (undefined == e.data.song) e.data.song = emptySong;
         return {
+            apiToken: this.$page.props.currentUser.data.api_token,
             editedElement: e,
             emptySong: emptySong,
             songs: null,
@@ -301,18 +241,6 @@ export default {
         editMusic() {
             window.open(route('liturgy.song.musiceditor', this.editedElement.data.song.id));
         },
-        addVerse() {
-            this.modalSong.verses.push({
-                id: -1,
-                number: this.modalSong.verses.length + 1,
-                text: '',
-                refrain_before: false,
-                refrain_after: false
-            });
-        },
-        deleteVerse(verseIndex) {
-            this.editedElement.data.song.verses.splice(verseIndex, 1);
-        },
         save: function () {
             var data = {
                 ...this.editedElement,
@@ -332,7 +260,7 @@ export default {
         saveText() {
             this.songs = [];
             var component = this;
-            axios.post(route('liturgy.song.store'), this.modalSong).then(response => {
+            axios.post(route('api.liturgy.song.store', {api_token: this.apiToken}), this.modalSong).then(response => {
                 return response.data;
             }).then(data => {
                 component.songs = data.songs;
@@ -347,7 +275,10 @@ export default {
         updateText() {
             this.songs = [];
             var component = this;
-            axios.patch(route('liturgy.song.update', this.editedElement.data.song.id), this.modalSong).then(response => {
+            axios.patch(route('api.liturgy.song.update', {
+                song: this.editedElement.data.song.id,
+                api_token: this.apiToken,
+            }), this.modalSong).then(response => {
                 return response.data;
             }).then(data => {
                 component.songs = data.songs;
@@ -360,22 +291,24 @@ export default {
             this.quote = this.quotableText();
         },
         displayTitle(song) {
-            var title = song.title;
+            if ((!song) || (!song.song)) return '';
+            var title = song.song.title;
             if (song.reference) {
                 title = song.reference + ' ' + title;
             }
-            if (song.songbook_abbreviation) {
-                title = song.songbook_abbreviation + ' ' + title;
+            if (song.code) {
+                title = song.code + ' ' + title;
             } else if (song.songbook) {
-                title = song.songbook + ' ' + title;
+                title = song.songbook.name + ' ' + title;
             }
             return title;
         },
         getVersesToDisplay(range) {
             var verses = [];
             if ((null === range) || (undefined === range)) return [];
+            if ((!this.editedElement.data.song) || (!this.editedElement.data.song.song)) return [];
             if (range == '') {
-                this.editedElement.data.song.verses.forEach(function (verse) {
+                this.editedElement.data.song.song.verses.forEach(function (verse) {
                     verses.push(verse.number);
                 });
                 return verses;
@@ -402,20 +335,20 @@ export default {
             var e = this.editedElement;
 
             var text = '';
-            var title = this.displayTitle(this.editedElement.data.song);
+            var title = this.displayTitle(this.editedElement.data.song.song);
             if (title.trim().length > 0) {
                 text = '<b>' + title + "</b>\n\n";
             }
 
             this.getVersesToDisplay(e.data.verses).forEach(function (verseNumber) {
-                e.data.song.verses.forEach(function (verse) {
+                e.data.song.song.verses.forEach(function (verse) {
                     if (verse.number == verseNumber) {
                         if (verse.refrain_before) {
-                            text = text + "<p>" + e.data.song.refrain + "</p>";
+                            text = text + "<p>" + e.data.song.song.refrain + "</p>";
                         }
                         text = text + "<p>" + (verse.number != '' ? verse.number + '. ' : '') + verse.text + "</p>";
                         if (verse.refrain_after) {
-                            text = text + "<p>" + e.data.song.refrain + "</p>";
+                            text = text + "<p>" + e.data.song.song.refrain + "</p>";
                         }
                     }
                 });
@@ -436,7 +369,7 @@ export default {
 </script>
 
 <style scoped>
-.liturgy-item-psalm-editor {
+.liturgy-item-song-editor {
     padding: 5px;
 }
 

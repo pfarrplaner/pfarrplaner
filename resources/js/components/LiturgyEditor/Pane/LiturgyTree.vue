@@ -537,14 +537,15 @@ export default {
                     return item.data.reference;
                 case 'song':
                     if (undefined == item.data.song) return '';
-                    var title = item.data.song.title;
+                    if (undefined == item.data.song.song) return '';
+                    var title = item.data.song.song.title;
                     if (item.data.song.reference) {
                         title = item.data.song.reference + ' ' + title;
                     }
-                    if (item.data.song.songbook_abbreviation) {
-                        title = item.data.song.songbook_abbreviation + ' ' + title;
+                    if (item.data.song.code) {
+                        title = item.data.song.code + ' ' + title;
                     } else if (item.data.song.songbook) {
-                        title = item.data.song.songbook + ' ' + title;
+                        title = item.data.song.songbook.name + ' ' + title;
                     }
                     if (item.data.verses) {
                         title = title + ', ' + item.data.verses;

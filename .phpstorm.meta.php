@@ -11,6 +11,7 @@ namespace PHPSTORM_META {
     */
     override(new \Illuminate\Contracts\Container\Container, map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -47,6 +48,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -193,6 +195,7 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Container\Container::makeWith(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -229,6 +232,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -375,6 +379,7 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Contracts\Container\Container::get(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -411,6 +416,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -557,6 +563,7 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Contracts\Container\Container::make(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -593,6 +600,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -739,6 +747,7 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Contracts\Container\Container::makeWith(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -775,6 +784,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -921,6 +931,7 @@ namespace PHPSTORM_META {
         ]));
     override(\App::get(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -957,6 +968,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -1103,6 +1115,7 @@ namespace PHPSTORM_META {
         ]));
     override(\App::make(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -1139,6 +1152,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -1285,6 +1299,7 @@ namespace PHPSTORM_META {
         ]));
     override(\App::makeWith(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -1321,6 +1336,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -1467,6 +1483,7 @@ namespace PHPSTORM_META {
         ]));
     override(\app(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -1503,6 +1520,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -1649,6 +1667,7 @@ namespace PHPSTORM_META {
         ]));
     override(\resolve(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -1685,6 +1704,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,
@@ -1831,6 +1851,7 @@ namespace PHPSTORM_META {
         ]));
     override(\Psr\Container\ContainerInterface::get(0), map([
         '' => '@',
+            'Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi' => \Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi::class,
             'Barryvdh\Debugbar\LaravelDebugbar' => \Barryvdh\Debugbar\LaravelDebugbar::class,
             'DatabaseEncryption' => \AustinHeap\Database\Encryption\EncryptionHelper::class,
             'DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator' => \DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator::class,
@@ -1867,6 +1888,7 @@ namespace PHPSTORM_META {
             'Illuminate\Testing\ParallelTesting' => \Illuminate\Testing\ParallelTesting::class,
             'Inertia\ResponseFactory' => \Inertia\ResponseFactory::class,
             'NunoMaduro\Collision\Contracts\Provider' => \NunoMaduro\Collision\Provider::class,
+            'Revolution\Amazon\ProductAdvertising\Contracts\Factory' => \Revolution\Amazon\ProductAdvertising\AmazonClient::class,
             'Spatie\Backup\Helpers\ConsoleOutput' => \Spatie\Backup\Helpers\ConsoleOutput::class,
             'Spatie\Backup\Tasks\Cleanup\CleanupStrategy' => \Spatie\Backup\Tasks\Cleanup\Strategies\DefaultStrategy::class,
             'Spatie\Permission\PermissionRegistrar' => \Spatie\Permission\PermissionRegistrar::class,

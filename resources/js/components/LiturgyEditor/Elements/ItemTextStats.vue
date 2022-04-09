@@ -76,8 +76,9 @@ export default {
             const range = song.data.verses;
             var verses = [];
             if (undefined == song.data.song) return [];
+            if (undefined == song.data.song.song) return [];
             if ((null === range) || (undefined === range) || (range == '')) {
-                song.data.song.verses.forEach(function (verse) {
+                song.data.song.song.verses.forEach(function (verse) {
                     verses.push(verse.number);
                 });
                 return verses;
@@ -103,14 +104,14 @@ export default {
         quotableSongText(song) {
             var text = '';
             this.getVersesToDisplay(song).forEach(function (verseNumber) {
-                song.data.song.verses.forEach(function (verse) {
+                song.data.song.song.verses.forEach(function (verse) {
                     if (verse.number == verseNumber) {
                         if (verse.refrain_before) {
-                            text = text + "<p>" + song.data.song.refrain + "</p>";
+                            text = text + "<p>" + song.data.song.song.refrain + "</p>";
                         }
                         text = text + "<p>" + (verse.number != '' ? verse.number + '. ' : '') + verse.text + "</p>";
                         if (verse.refrain_after) {
-                            text = text + "<p>" + song.data.song.refrain + "</p>";
+                            text = text + "<p>" + song.data.song.song.refrain + "</p>";
                         }
                     }
                 });

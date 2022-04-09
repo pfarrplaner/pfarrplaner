@@ -39,20 +39,13 @@
 |
 */
 
-Route::resource('calendarConnection', 'CalendarConnectionController');
-Route::resource('baptisms', 'BaptismController')->middleware('auth');
-Route::resource('weddings', 'WeddingController')->middleware('auth');
 
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
+use App\Http\Controllers\Api\SongController;
 
-// admin routes
-Route::prefix('admin')->group(function () {
-    foreach(glob(base_path('routes/web/admin/*.php')) as $file) {
-        Route::group([], $file);
-    }
-});
+Route::get('/liturgy/songs', [SongController::class, 'index'])->name('liturgy.song.index');
+Route::get('/liturgy/songs/songbooks', [SongController::class, 'songbooks'])->name('liturgy.song.songbooks');
+Route::post('/liturgy/songs', [SongController::class, 'store'])->name('liturgy.song.store');
+Route::patch('/liturgy/songs/{song}', [SongController::class, 'update'])->name('liturgy.song.update');
 
+Route::get('/liturgie/lied/{song}/noten/{verses?}/{lineNumber?}', [SongController::class, 'music'])->name('liturgy.song.music');

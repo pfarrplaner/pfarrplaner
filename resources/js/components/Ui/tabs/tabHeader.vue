@@ -28,9 +28,10 @@
   -->
 
 <template>
-    <li :id="id+'Tab'" class="nav-item" :title="disabled ? disabledTitle : ''">
+    <li :id="id+'Tab'" class="nav-item" :title="disabled ? disabledTitle : ''" @click="tabSwitch">
         <span v-if="(!title) && (!icon)" class="nav-link mdi mdi-spin mdi-loading"></span>
-        <a v-else class="nav-link" :class="{active: (active || (activeTab == id)) && !disabled, disabled: disabled}" :href="href || ('#'+id)" role="tab" data-toggle="tab">
+        <a v-else class="nav-link" :class="{active: (active || (activeTab == id)) && !disabled, disabled: disabled}" :href="href || ('#'+id)" role="tab"
+           data-toggle="tab" @click="tabSwitch">
             <span v-if="icon" :class="icon"></span>
             {{ title }}
             <span v-if="count && (count > 0) && (!disabled)" class="badge" :class="badgeClass()">{{ count }}</span>
@@ -45,10 +46,24 @@ import ValueCheck from "../elements/ValueCheck";
 export default {
     name: "tabHeader",
     components: {ValueCheck},
-    props: ['id', 'active', 'activeTab', 'title', 'count', 'badgeType', 'icon', 'href', 'isCheckedItem', 'checkValue', 'disabled', 'disabledTitle'],
+    props: ['id', 'active', 'activeTab', 'title', 'count', 'badgeType', 'icon', 'href', 'isCheckedItem', 'checkValue', 'disabled', 'disabledTitle', 'switchHandler'],
+    data() {
+        return {
+            myActiveTab: this.activeTab,
+        }
+    },
     methods: {
         badgeClass() {
             return this.badgeType ? 'badge-'+this.badgeType : 'badge-primary';
+        },
+        tabSwitch(e) {
+            if (this.switchHandler) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('switching to', this.id);
+                this.myActiveTab = this.id;
+                this.$emit('tab', this.id);
+            }
         }
     }
 }

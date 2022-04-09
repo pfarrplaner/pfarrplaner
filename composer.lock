@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "96ca2d18b69bb3901464fc9441bdaeca",
+    "content-hash": "381737d31ad9e80eb81d432fee58cebb",
     "packages": [
         {
             "name": "almasaeed2010/adminlte",
@@ -6763,6 +6763,65 @@
                 "source": "https://github.com/reactphp/promise/tree/v2.8.0"
             },
             "time": "2020-05-12T15:16:56+00:00"
+        },
+        {
+            "name": "revolution/laravel-amazon-product-api",
+            "version": "4.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kawax/laravel-amazon-product-api.git",
+                "reference": "6b9c7c09dbb730fe5a114ae554f790675c9987cd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kawax/laravel-amazon-product-api/zipball/6b9c7c09dbb730fe5a114ae554f790675c9987cd",
+                "reference": "6b9c7c09dbb730fe5a114ae554f790675c9987cd",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3||^7.0",
+                "illuminate/support": "^6.0||^7.0||^8.0||^9.0",
+                "php": "^7.4||^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^4.0||^5.0||^6.0||^7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Revolution\\Amazon\\ProductAdvertising\\Providers\\AmazonProductServiceProvider"
+                    ],
+                    "aliases": {
+                        "AmazonProduct": "Revolution\\Amazon\\ProductAdvertising\\Facades\\AmazonProduct"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Amazon\\ProductAdvertisingAPI\\v1\\": "paapi5-php-sdk/src/",
+                    "Revolution\\Amazon\\ProductAdvertising\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "kawax",
+                    "email": "kawaxbiz@gmail.com"
+                }
+            ],
+            "description": "Amazon Product Advertising API for Laravel",
+            "keywords": [
+                "amazon",
+                "laravel"
+            ],
+            "support": {
+                "source": "https://github.com/kawax/laravel-amazon-product-api/tree/4.5.0"
+            },
+            "time": "2022-01-22T02:53:15+00:00"
         },
         {
             "name": "seld/jsonlint",

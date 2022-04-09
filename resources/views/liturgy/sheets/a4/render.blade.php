@@ -256,11 +256,11 @@
                 @elseif($item->data_type == 'song')
                     <td valign="top">
                         @if(isset($item->data['song']))
-                            @if (isset($item->data['song']['songbook_abbreviation']) || isset($item->data['song']['songbook']))
-                                {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
+                            @if (isset($item->data['song']['code']) || isset($item->data['song']['songbook']))
+                                {{ $item->data['song']['code'] ?: ($item['song']['songbook']['name'] ?: '') }}
                             @endif
                             {{ $item->data['song']['reference'] ?: '' }}
-                            {{ $item->data['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                            {{ $item->data['song']['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
                         @endif
                     </td>
                 @elseif($item->data_type == 'psalm')

@@ -28,14 +28,19 @@
   -->
 
 <template>
-    <ul class="nav nav-tabs" role="tablist">
+    <ul class="nav nav-tabs" role="tablist" @tab="tabSwitch">
         <slot />
     </ul>
 </template>
 
 <script>
 export default {
-    name: "tabHeaders"
+    name: "tabHeaders",
+    methods: {
+        tabSwitch(e) {
+            console.log('tabSwitch', e);
+        },
+    }
 }
 </script>
 

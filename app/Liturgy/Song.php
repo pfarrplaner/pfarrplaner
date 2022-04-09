@@ -50,23 +50,30 @@ class Song extends \Illuminate\Database\Eloquent\Model
         'refrain_notation',
         'refrain_text_notation',
     ];
-    protected $with = ['verses'];
+    protected $with = ['verses', 'songbooks'];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        // Order by sortable ASC
-        static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('songbook_abbreviation', 'asc');
-            $builder->orderBy('reference', 'asc');
-            $builder->orderBy('title', 'asc');
-        });
-    }
-
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function verses()
     {
         return $this->hasMany(SongVerse::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function songbooks()
+    {
+        return $this->belongsToMany(Songbook::class)->withPivot('reference');
+    }
+
+    public function syncSongbooksFromRequest($data)
+    {
+        $sync = [];
+        foreach ($data['songbooks'] as $item) {
+            $sync[$item['pivot']['songbook_id']] = ['reference' => $item['pivot']['reference'], 'code' => $item['code']];
+        }
+        $this->songbooks()->sync($sync);
     }
 }

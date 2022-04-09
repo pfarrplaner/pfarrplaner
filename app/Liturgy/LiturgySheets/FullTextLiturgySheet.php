@@ -185,9 +185,9 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
         $helper = $item->getHelper();
         $doc->getSection()->addTitle($helper->getTitleText(),3);
         if (isset($item->data['song'])) {
-            if (isset($item->data['song']['copyrights'])) {
-                if ($item->data['song']['copyrights']) {
-                    $doc->renderNormalText($item->data['song']['copyrights'], ['size' => 8]);
+            if (isset($item->data['song']['song']['copyrights'])) {
+                if ($item->data['song']['song']['copyrights']) {
+                    $doc->renderNormalText($item->data['song']['song']['copyrights'], ['size' => 8]);
                 }
             }
         }
@@ -195,11 +195,11 @@ class FullTextLiturgySheet extends AbstractLiturgySheet
 
         foreach ($helper->getActiveVerses() as $verse) {
             if ($verse['refrain_before']) {
-                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+                $doc->renderNormalText($item->data['song']['song']['refrain'], ['italic' => true]);
             }
             $doc->renderNormalText($verse['number'].'. '.$verse['text']);
             if ($verse['refrain_after']) {
-                $doc->renderNormalText($item->data['song']['refrain'], ['italic' => true]);
+                $doc->renderNormalText($item->data['song']['song']['refrain'], ['italic' => true]);
             }
         }
     }
