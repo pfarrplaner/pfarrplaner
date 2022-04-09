@@ -49,11 +49,23 @@ class AdminModule extends AbstractModule
 
     public function addItems(array $items): array
     {
+        if (count(self::modules())) {
+            $items[] = [
+                'text' => 'Administration',
+                'icon' => 'mdi mdi-shield-account',
+                'url' => route('admin.index'),
+                'active' => Route::currentRouteName() == 'admin.index',
+                'inertia' => false,
+            ];
+        }
+        return $items;
+    }
+
+    public static function modules() {
         $adminMenu = [];
         $adminActive = false;
         $user = Auth::user();
         $route = Route::currentRouteName();
-
         if ($user->can('index', User::class)) {
             $adminMenu[] = [
                 'text' => 'Benutzer',
@@ -124,17 +136,7 @@ class AdminModule extends AbstractModule
             ];
             $adminActive |= ($route == 'parishes.index');
         }
-        if (count($adminMenu)) {
-            $items[] = [
-                'text' => 'Administration',
-                'icon' => 'mdi mdi-shield-account',
-                'url' => '#',
-                'submenu' => $adminMenu,
-                'active' => $adminActive,
-                'inertia' => false,
-            ];
-        }
-        return $items;
+        return $adminMenu;
     }
 
 }
