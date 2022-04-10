@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.135.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.134.0...v2022.135.0) (2022-04-10)
+
+
+### Features
+
+* New admin index page ([1012372](https://github.com/pfarrplaner/pfarrplaner/commits/10123724fab996674e8c7b6c41e8701327d8553e))
+
+
+### Bug Fixes
+
+* LiturgySheets fail when no song is chosen ([4d23f2e](https://github.com/pfarrplaner/pfarrplaner/commits/4d23f2e99771a74d81d0156c355083b113c6cf8c))
+* Remaining public blade-based views fail because bundle.js is missing ([8e4d507](https://github.com/pfarrplaner/pfarrplaner/commits/8e4d5075f28b219d7a62ac981799e9922c4ce8a4))
+
 ## [2022.134.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.133.0...v2022.134.0) (2022-04-09)
 
 
