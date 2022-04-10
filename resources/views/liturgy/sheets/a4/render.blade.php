@@ -255,7 +255,7 @@
                     <td valign="top"></td>
                 @elseif($item->data_type == 'song')
                     <td valign="top">
-                        @if(isset($item->data['song']))
+                        @if(isset($item->data['song']) && isset($item->data['song']['song']))
                             @if (isset($item->data['song']['code']) || isset($item->data['song']['songbook']))
                                 {{ $item->data['song']['code'] ?: ($item['song']['songbook']['name'] ?: '') }}
                             @endif

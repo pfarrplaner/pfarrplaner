@@ -238,7 +238,7 @@
 @foreach($service->liturgyBlocks as $block)
     @foreach ($block->items as $item)
         @if($item->data_type == 'song')
-            @if(isset($item->data['song']))
+            @if(isset($item->data['song']) && isset($item->data['song']['song']))
                 @if($item->data['song']['title'])<h2>{{ $item->data['song']['title'] }}</h2>@endif
                 <small> {{ $item->data['song']['songbook_abbreviation'] ?: ($item['song']['songbook'] ?: '') }}
                     {{ $item->data['song']['reference'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}</small>@endif
