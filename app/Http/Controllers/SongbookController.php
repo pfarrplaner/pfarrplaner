@@ -31,8 +31,10 @@
 namespace App\Http\Controllers;
 
 use App\Liturgy\Songbook;
+use App\Services\ResourcePolicyService;
 use App\Traits\HandlesAttachedImageTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class SongbookController extends Controller
@@ -48,6 +50,7 @@ class SongbookController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Songbook::class, 'songbook');
     }
 
     /**
@@ -55,7 +58,7 @@ class SongbookController extends Controller
      */
     public function index()
     {
-        $songbooks = Songbook::orderBy('code')->get();
+        $songbooks = ResourcePolicyService::attachPermissions(Songbook::orderBy('code')->get());
         return Inertia::render('Admin/Songbook/Index', compact('songbooks'));
     }
 

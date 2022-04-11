@@ -66,9 +66,11 @@
                                             <div class="text-small">{{ row.description }}</div>
                                         </td>
                                         <td class="text-right">
-                                            <nav-button type="primary" icon="mdi mdi-pencil" title="Liederbuch bearbeiten"
+                                            <nav-button v-if="row.can.update" class="btn-sm"
+                                                        type="primary" icon="mdi mdi-pencil" title="Liederbuch bearbeiten"
                                                         force-icon force-no-text :href="route('songbook.edit', row.id)" />
-                                            <nav-button type="danger" icon="mdi mdi-delete" title="Liederbuch löschen"
+                                            <nav-button v-if="row.can.delete" class="btn-sm"
+                                                        type="danger" icon="mdi mdi-delete" title="Liederbuch löschen"
                                                         force-icon force-no-text @click="deleteSongbook(row)" />
                                         </td>
                                     </tr>
