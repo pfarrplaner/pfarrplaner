@@ -33,6 +33,7 @@ namespace App\UI\Modules;
 use App\City;
 use App\Inputs\AbstractInput;
 use App\Inputs\Inputs;
+use App\Liturgy\Songbook;
 use App\Location;
 use App\Parish;
 use App\Tag;
@@ -137,7 +138,7 @@ class AdminModule extends AbstractModule
                 'inertia' => true,
             ];
         }
-        if ($user->can('index', Parish::class)) {
+        if ($user->can('index', Songbook::class)) {
             $adminMenu[] = [
                 'text' => 'Liederbücher',
                 'icon' => 'mdi mdi-book-music-outline',
@@ -146,7 +147,7 @@ class AdminModule extends AbstractModule
                 'inertia' => true,
             ];
         }
-        return $adminMenu;
+        return array_values(collect($adminMenu)->sortBy('text')->toArray());
     }
 
 }
