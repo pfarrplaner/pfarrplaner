@@ -127,7 +127,19 @@ export default {
             } else {
                 this.$inertia.post(route('song.store'), this.mySong);
             }
-        }
+        },
+        addVerse() {
+            this.song.verses.push({
+                id: -1,
+                number: this.song.verses.length + 1,
+                text: '',
+                refrain_before: false,
+                refrain_after: false
+            });
+        },
+        deleteVerse(verseIndex) {
+            this.song.song.verses.splice(verseIndex, 1);
+        },
     }
 }
 </script>

@@ -64,6 +64,30 @@ class SongController extends Controller
     }
 
     /**
+     * Create a new record
+     *
+     * @return \Inertia\Response
+     */
+    public function create()
+    {
+        $song = new Song([
+                             'title' => '',
+                             'refrain' => '',
+                             'copyrights' => '',
+                             'key' => '',
+                             'measure' => '',
+                             'note_length' => '',
+                             'prolog' => '',
+                             'notation' => '',
+                             'refrain_notation' => '',
+                             'refrain_text_notation' => '',
+                         ]);
+        $song->songbooks = [];
+        $song->verses = [];
+        return Inertia::render('Admin/Song/SongEditor', compact('song'));
+    }
+
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function songbooks()

@@ -29,6 +29,10 @@
 
 <template>
     <admin-layout title="Lieder">
+        <template v-slot:navbar-left>
+            <nav-button type="success" icon="mdi mdi-plus" title="Lied hinzufügen"
+                        :href="route('song.create')">Neues Lied</nav-button>
+        </template>
         <dataset v-slot="{ ds }"
                  :ds-data="songs"
                  ds-sort-by="title"
