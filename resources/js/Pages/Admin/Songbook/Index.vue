@@ -28,11 +28,11 @@
   -->
 
 <template>
-    <admin-layout title="Administration">
+    <admin-layout title="Liederbücher">
         <dataset v-slot="{ ds }"
-                 :ds-data="modules"
-                 ds-sort-by="text"
-                 :ds-search-in="['text']">
+                 :ds-data="songbooks"
+                 ds-sort-by="name"
+                 :ds-search-in="['name', 'code']">
             <div class="row mb-3" :data-page-count="ds.dsPagecount">
                 <div class="col-md-6 mb-2 mb-md-0">
                     <dataset-search ds-search-placeholder="Suchen..." ref="search" autofocus />
@@ -47,15 +47,29 @@
                         <table class="table table-striped table-hover d-md-table">
                             <thead>
                             <tr>
-                                <th>Bereich</th>
+                                <th></th>
+                                <th>Kürzel</th>
+                                <th>Titel</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <dataset-item tag="tbody">
                                 <template #default="{ row, rowIndex }">
-                                    <tr @click="$inertia.get(row.url)" style="cursor:pointer;" title="Klicken, um diesen Bereich zu öffnen">
+                                    <tr>
                                         <td>
-                                            <span :class="row.icon" class="mr-1"></span>
-                                            {{ row.text }}
+                                            <img v-if="row.image"
+                                                 :src="route('image', {path: row.image.replace('attachments/', '')})"
+                                                 class="img-fluid" style="max-width: 3em;" />
+                                        </td>
+                                        <td>{{ row.code }}</td>
+                                        <td><div class="text-bold">{{ row.name }}</div>
+                                            <div class="text-small">{{ row.description }}</div>
+                                        </td>
+                                        <td class="text-right">
+                                            <nav-button type="primary" icon="mdi mdi-pencil" title="Liederbuch bearbeiten"
+                                                        force-icon force-no-text :href="route('songbook.edit', row.id)" />
+                                            <nav-button type="danger" icon="mdi mdi-delete" title="Liederbuch löschen"
+                                                        force-icon force-no-text @click="deleteSongbook(row)" />
                                         </td>
                                     </tr>
                                 </template>
@@ -75,15 +89,17 @@
 <script>
 
 import {Dataset, DatasetItem, DatasetSearch,} from 'vue-dataset';
-import DatasetInfo from "../../components/Ui/dataset/DatasetInfo";
-import DatasetShow from "../../components/Ui/dataset/DatasetShow";
-import DatasetPager from "../../components/Ui/dataset/DatasetPager";
+import DatasetInfo from "../../../components/Ui/dataset/DatasetInfo";
+import DatasetShow from "../../../components/Ui/dataset/DatasetShow";
+import DatasetPager from "../../../components/Ui/dataset/DatasetPager";
+import NavButton from "../../../components/Ui/buttons/NavButton";
 
 
 export default {
     name: "Index",
-    props: ['modules'],
+    props: ['songbooks'],
     components: {
+        NavButton,
         Dataset,
         DatasetItem,
         DatasetInfo,
@@ -91,6 +107,12 @@ export default {
         DatasetSearch,
         DatasetShow
     },
+    methods: {
+        deleteSongbook(songbook) {
+            if (!confirm('Willst du wirklich das komplette Liederbuch löschen?')) return;
+            this.$inertia.delete(route('songbook.destroy', songbook.id));
+        }
+    }
 }
 </script>
 

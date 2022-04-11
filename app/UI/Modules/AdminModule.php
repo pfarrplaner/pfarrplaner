@@ -54,7 +54,7 @@ class AdminModule extends AbstractModule
                 'text' => 'Administration',
                 'icon' => 'mdi mdi-shield-account',
                 'url' => route('admin.index'),
-                'active' => Route::currentRouteName() == 'admin.index',
+                'active' => request()->is('admin.*'),
                 'inertia' => false,
             ];
         }
@@ -63,7 +63,6 @@ class AdminModule extends AbstractModule
 
     public static function modules() {
         $adminMenu = [];
-        $adminActive = false;
         $user = Auth::user();
         $route = Route::currentRouteName();
         if ($user->can('index', User::class)) {
@@ -74,7 +73,6 @@ class AdminModule extends AbstractModule
                 'active' => $route == 'users.index',
                 'inertia' => true,
             ];
-            $adminActive |= ($route == 'users.index');
         }
         if ($user->can('index', Team::class)) {
             $adminMenu[] = [
@@ -84,7 +82,6 @@ class AdminModule extends AbstractModule
                 'active' => $route == 'teams.index',
                 'inertia' => true,
             ];
-            $adminActive |= ($route == 'users.index');
         }
         if ($user->can('index', Role::class)) {
             $adminMenu[] = [
@@ -94,7 +91,6 @@ class AdminModule extends AbstractModule
                 'active' => $route == 'roles.index',
                 'inertia' => true,
             ];
-            $adminActive |= ($route == 'roles.index');
         }
         if ($user->can('index', City::class)) {
             $adminMenu[] = [
@@ -104,7 +100,6 @@ class AdminModule extends AbstractModule
                 'active' => $route == 'cities.index',
                 'inertia' => true,
             ];
-            $adminActive |= ($route == 'cities.index');
         }
         if ($user->can('index', Location::class)) {
             $adminMenu[] = [
@@ -114,7 +109,6 @@ class AdminModule extends AbstractModule
                 'active' => $route == 'locations.index',
                 'inertia' => true,
             ];
-            $adminActive |= ($route == 'locations.index');
         }
         if ($user->can('index', Tag::class)) {
             $adminMenu[] = [
@@ -124,7 +118,6 @@ class AdminModule extends AbstractModule
                 'active' => $route == 'tags.index',
                 'inertia' => true,
             ];
-            $adminActive |= ($route == 'tags.index');
         }
         if ($user->can('index', Parish::class)) {
             $adminMenu[] = [
@@ -134,7 +127,24 @@ class AdminModule extends AbstractModule
                 'active' => $route == 'parishes.index',
                 'inertia' => true,
             ];
-            $adminActive |= ($route == 'parishes.index');
+        }
+        if ($user->can('index', Parish::class)) {
+            $adminMenu[] = [
+                'text' => 'Pfarrämter',
+                'icon' => 'mdi mdi-home-variant-outline',
+                'url' => route('parishes.index'),
+                'active' => $route == 'parishes.index',
+                'inertia' => true,
+            ];
+        }
+        if ($user->can('index', Parish::class)) {
+            $adminMenu[] = [
+                'text' => 'Liederbücher',
+                'icon' => 'mdi mdi-book-music-outline',
+                'url' => route('songbooks.index'),
+                'active' => $route == 'songbooks.index',
+                'inertia' => true,
+            ];
         }
         return $adminMenu;
     }

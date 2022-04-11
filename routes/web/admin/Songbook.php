@@ -28,27 +28,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Liturgy;
+use App\Http\Controllers\SongbookController;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+Route::get('/liederbuecher', [SongbookController::class, 'index'])->name('songbooks.index');
+Route::post('/liederbuecher', [SongbookController::class, 'story'])->name('songbook.store');
+Route::get('/liederbuch/{songbook}', [SongbookController::class, 'edit'])->name('songbook.edit');
+Route::patch('/liederbuch/{songbook}', [SongbookController::class, 'update'])->name('songbook.update');
+Route::delete('/liederbuch/{songbook}', [SongbookController::class, 'destroy'])->name('songbook.destroy');
 
-class Songbook extends Model
-{
-    use HasFactory;
+// Cover image
+Route::post('/liederbuch/{model}/cover', [SongbookController::class, 'attachImage'])->name('songbook.cover.attach');
+Route::delete('/liederbuch/{model}/cover', [SongbookController::class, 'detachImage'])->name('songbook.cover.detach');
 
-    protected $fillable = ['name', 'code', 'description', 'image'];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function songs()
-    {
-        return $this->belongsToMany(Song::class)->withPivot('reference');
-    }
-
-    public function getImageField()
-    {
-        return 'image';
-    }
-}
