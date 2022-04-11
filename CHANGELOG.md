@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.136.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.135.0...v2022.136.0) (2022-04-11)
+
+
+### Features
+
+* Admin interface for songbooks ([4836514](https://github.com/pfarrplaner/pfarrplaner/commits/4836514038dd379c61a7cc8b188b70351c8db104))
+* Song admin ui ([e3b7e25](https://github.com/pfarrplaner/pfarrplaner/commits/e3b7e25b323d89163f6aae9cb534c72625d267f5))
+* User proper authorization for songbooks admin ui ([096793c](https://github.com/pfarrplaner/pfarrplaner/commits/096793c3ec8d2aa4004a659d4d4e5d11020a309d))
+
+
+### Bug Fixes
+
+* Return admin modules sorted ([48599b5](https://github.com/pfarrplaner/pfarrplaner/commits/48599b5a4d37b7087fb79d99396d64633a850746))
+
 ## [2022.135.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.134.0...v2022.135.0) (2022-04-10)
 
 
