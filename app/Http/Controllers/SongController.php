@@ -36,6 +36,9 @@ use App\Liturgy\Music\ABCMusic;
 use App\Liturgy\Psalm;
 use App\Liturgy\Song;
 use App\Liturgy\SongVerse;
+use App\Services\ResourcePolicyService;
+use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -48,14 +51,16 @@ class SongController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->authorizeResource(Song::class, 'song');
     }
 
     /**
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Inertia\Response
      */
     public function index()
     {
-        return response()->json(Song::all());
+        $songs = ResourcePolicyService::attachPermissions(Song::all());
+        return Inertia::render('Admin/Song/Index', compact('songs'));
     }
 
     /**
@@ -80,6 +85,18 @@ class SongController extends Controller
     }
 
     /**
+     * Edit a record
+     *
+     * @param Song $song
+     * @return \Inertia\Response
+     */
+    public function edit(Song $song)
+    {
+        return Inertia::render('Admin/Song/SongEditor', compact('song'));
+    }
+
+
+    /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -91,28 +108,75 @@ class SongController extends Controller
             $verse['song_id'] = $song->id;
             SongVerse::create($verse);
         }
-        $songs = Song::all();
-        return response()->json(compact('song', 'songs'));
+        $song->syncSongbooksFromRequest($data);
+        return redirect()->route('songs.index')->with('success', 'Das neue Lied wurde gespeichert.');
     }
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return RedirectResponse
      */
     public function update(Request $request, Song $song)
     {
         $data = $this->validateRequest($request);
-
         $song->update($data);
         $song->verses()->delete();
         foreach ($data['verses'] as $verse) {
             $verse['song_id'] = $song->id;
             SongVerse::create($verse);
         }
-        $song->refresh();
-        $song->load('verses');
-        $songs = Song::all();
-        return response()->json(compact('song', 'songs'));
+
+        $song->syncSongbooksFromRequest($data);
+        return redirect()->route('songs.index')->with('success', 'Die Änderungen wurden gespeichert.');
+    }
+
+    /**
+     * @param Song $song
+     * @return RedirectResponse
+     */
+    public function destroy(Song $song)
+    {
+        $song->delete();
+        return redirect()->route('songs.index')->with('success', 'Das Lied wurde gelöscht.');
+    }
+
+    /**
+     * Create a separate song from a songbook reference on an existing one
+     *
+     * @param Song $song
+     * @param $reference
+     * @return RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function split(Song $song, $reference)
+    {
+        $this->authorize('update', $song);
+
+
+
+        $song->load('songbooks');
+
+        $origSync = $splitSync = [];
+        foreach ($song->songbooks as $songbook) {
+            if ($songbook->pivot->songbook_id == $reference) {
+                $splitSync[$songbook->pivot->songbook_id] = ['reference' => $songbook->pivot->reference, 'code' => $songbook->pivot->code];
+            } else {
+                $origSync[$songbook->pivot->songbook_id] = ['reference' => $songbook->pivot->reference, 'code' => $songbook->pivot->code];
+            }
+        }
+
+        $song->songbooks()->sync([]);
+        $song->songbooks()->sync($origSync);
+
+        $newSong = $song->replicate();
+        $newSong->save();
+        $newSong->refresh();
+        $newSong->songbooks()->sync([]);
+        $newSong->songbooks()->sync($splitSync);
+        $newSong->push();
+        $newSong->refresh();
+
+        return redirect()->route('song.edit', $newSong->id);
     }
 
     /**
@@ -126,9 +190,6 @@ class SongController extends Controller
                 'title' => 'required|string',
                 'refrain' => 'nullable|string',
                 'copyrights' => 'nullable|string',
-                'songbook' => 'nullable|string',
-                'songbook_abbreviation' => 'nullable|string',
-                'reference' => 'nullable|string',
                 'key' => 'nullable|string',
                 'measure' => 'nullable|string',
                 'note_length' => 'nullable|string',
@@ -140,6 +201,9 @@ class SongController extends Controller
                 'verses.*.refrain_before' => 'nullable|bool',
                 'verses.*.refrain_after' => 'nullable|bool',
                 'verses.*.notation' => 'nullable|string',
+                'songbooks.*.code' => 'nullable|string',
+                'songbooks.*.pivot.songbook_id' => 'nullable|int|exists:songbooks,id',
+                'songbooks.*.pivot.reference' => 'nullable|string',
             ]
         );
     }

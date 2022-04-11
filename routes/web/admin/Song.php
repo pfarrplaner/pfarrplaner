@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -28,23 +28,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-
-
 use App\Http\Controllers\SongController;
 
-Route::get('/liturgie/lied/{song}/noten-editor', [SongController::class, 'musicEditor'])->name('liturgy.song.musiceditor');
-Route::get('/liturgie/lied/{song}/noten/{verses?}/{lineNumber?}', [SongController::class, 'music'])->name('liturgy.song.music');
+Route::get('/lieder', [SongController::class, 'index'])->name('songs.index');
+Route::post('/lieder', [SongController::class, 'store'])->name('song.store');
+Route::get('/lied/{song}', [SongController::class, 'edit'])->name('song.edit');
+Route::patch('/lied/{song}', [SongController::class, 'update'])->name('song.update');
+Route::delete('/lied/{song}', [SongController::class, 'destroy'])->name('song.destroy');
 
-Route::get('/liturgy/songs/songbooks', [SongController::class, 'songbooks'])->name('liturgy.song.songbooks');
+Route::post('/lied/{song}/split/{reference}',[SongController::class, 'split'])->name('song.songbook.split');
 

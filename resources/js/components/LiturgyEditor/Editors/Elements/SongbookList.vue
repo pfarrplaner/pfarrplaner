@@ -42,7 +42,7 @@
                     <div v-if="editing == songbookIndex">
                         <form-input v-model="songbook.pivot.reference" />
                     </div>
-                    <div v-else>{{ songbook.pivot.reference }}</div>
+                    <div v-else>{{ songbook.pivot.reference || ''}}</div>
                 </td>
                 <td class="text-right">
                     <nav-button icon="mdi mdi-pencil" title="Eintrag bearbeiten" v-if="editing != songbookIndex"
@@ -51,6 +51,10 @@
                     <nav-button icon="mdi mdi-delete" title="Eintrag löschen" v-if="editing != songbookIndex"
                                 class="btn-sm" type="danger"
                                 force-no-text force-icon @click="deleteEntry(songbookIndex)" />
+                    <nav-button icon="mdi mdi-call-split" title="Eintrag zu neuem Lied umwandeln"
+                                v-if="allowSplit && (editing != songbookIndex) && (mySongbooks.length > 1)"
+                                class="btn-sm"
+                                force-no-text force-icon @click="splitOffEntry(songbook)" />
                     <nav-button icon="mdi mdi-check" v-if="editing == songbookIndex"
                                 class="btn-sm"
                                 type="success" title="Bestätigen"
@@ -72,7 +76,7 @@ import SongbookSelect from "./SongbookSelect";
 export default {
     name: "SongbookList",
     components: {SongbookSelect, FormInput, NavButton},
-    props: ['value'],
+    props: ['value', 'allowSplit'],
     created() {
         axios.get(route('api.songbooks.index', { api_token: this.apiToken }))
         .then(result => {
@@ -110,6 +114,10 @@ export default {
                 }
             });
             this.editing = this.mySongbooks.length - 1;
+        },
+        splitOffEntry(songbook) {
+            if (!confirm('Willst du wirklich ein separates Lied aus diesem Eintrag erstellen?')) return;
+            this.$inertia.post(route('song.songbook.split', {song: songbook.pivot.song_id, reference: songbook.pivot.songbook_id }), {}, {preserveState: false});
         }
     }
 }
