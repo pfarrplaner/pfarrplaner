@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.137.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.136.0...v2022.137.0) (2022-04-11)
+
+
+### Bug Fixes
+
+* Cannot add new songs ([e3c7f7c](https://github.com/pfarrplaner/pfarrplaner/commits/e3c7f7c4121f570635b5e83d6a62d60594920869))
+
 ## [2022.136.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.135.0...v2022.136.0) (2022-04-11)
 
 
