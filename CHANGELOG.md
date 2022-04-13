@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.137.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.137.1...v2022.137.2) (2022-04-13)
+
+
+### Bug Fixes
+
+* dataReplacerTitle() fails when a rite has been chosen as replacement and then was deleted ([f665514](https://github.com/pfarrplaner/pfarrplaner/commits/f665514b150a99e75602a555a7db460214fe35b6))
+
 ### [2022.137.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.137.0...v2022.137.1) (2022-04-13)
 
 
