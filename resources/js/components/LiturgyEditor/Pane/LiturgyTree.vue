@@ -607,6 +607,7 @@ export default {
             this.service[item.data.needs_replacement + 's'].forEach(obj => {
                 if (obj.id == item.data.replacement) replacerObject = obj;
             })
+            if (null === replacerObject) item.data.replacement = null;
             switch (item.data.needs_replacement) {
                 case 'funeral':
                     t += 'für eine Bestattung';
@@ -619,7 +620,7 @@ export default {
                     break;
                 case 'baptism':
                     t += 'für eine Taufe';
-                    if (!item.data.replacement) {
+                    if (!item.data.replacement) {3
                         error = 'Es ist noch keine Taufe ausgewählt!';
                         if (this.service.baptisms.length == 0) error += ' Dem Gottesdienst sind keine Taufen zugeordnet!';
                     } else {
