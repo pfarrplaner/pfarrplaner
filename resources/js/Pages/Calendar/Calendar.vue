@@ -39,7 +39,7 @@ export default {
     props: ['date', 'days', 'cities',  'years', 'absences', 'canCreate', 'services'],
     provide() {
         return {
-            settings: this.settings,
+            settings: this.$page.props.settings || {},
         }
     },
     data() {

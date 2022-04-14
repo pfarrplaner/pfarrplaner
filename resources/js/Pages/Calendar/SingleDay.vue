@@ -83,6 +83,12 @@
 export default {
     name: "SingleDay",
     props: ['services', 'day', 'city', 'absences', 'canCreate'],
+    provide() {
+        return {
+            settings: this.$page.props.settings || {},
+
+    }
+    },
     data() {
         return {
             today: moment(this.date).locale('de'),
