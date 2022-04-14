@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.137.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.137.2...v2022.137.3) (2022-04-14)
+
+
+### Bug Fixes
+
+* SingleDay view on mobile does show services ([ce265ea](https://github.com/pfarrplaner/pfarrplaner/commits/ce265ea38a861fcb64f1d2cc479cf2cbafbee8d9))
+
 ### [2022.137.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.137.1...v2022.137.2) (2022-04-13)
 
 
