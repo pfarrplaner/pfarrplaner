@@ -53,7 +53,7 @@ class SermonController extends Controller
                     'time' => $service->timeText(),
                     'title' => $service->titleText(false),
                     'location' => $service->locationText(),
-                    'liturgy' => $service->day->liturgy,
+                    'liturgy' => $service->liturgicalInfo,
                     'video' => $service->youtube_url,
                 ];
             }
