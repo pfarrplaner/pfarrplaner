@@ -40,6 +40,7 @@ use App\Service;
 use App\User;
 use App\Wedding;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Builder;
@@ -317,7 +318,18 @@ class PublicController extends Controller
             'email' => 'required|email',
             'subject' => 'required|string',
             'message' => 'required|string',
+            'g-recaptcha-response' => 'required',
                                    ]);
+
+
+        $client = new Client();
+        $response = $client->post('https://www.google.com/recaptcha/api/siteverify', [
+            'query' => [
+                'secret' => config('recaptcha.secret'),
+                'response' => $data['g-recaptcha-response'],
+            ],
+        ]);
+        if (!json_decode($response->getBody(), true)['success']) abort(403);
 
         Mail::to('christoph.fischer@elkw.de')->send(new ContactFormMessage($data));
         return response('OK');

@@ -49,6 +49,8 @@
     <!-- refresh every 10 Minutes to minimize session timeouts -->
     <meta http-equiv="refresh" content="600">
 
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
     <!-- =======================================================
     * Template Name: Bootslander - v4.7.0
     * Template URL: https://bootstrapmade.com/bootslander-free-bootstrap-landing-page-template/
@@ -574,6 +576,7 @@
                             <div class="error-message"></div>
                             <div class="sent-message">Deine Nachricht wurde gesendet. Danke!</div>
                         </div>
+                        <div class="g-recaptcha" data-sitekey="{{ $recaptchaKey }}"></div>
                         <div class="text-center">
                             <button type="submit">Nachricht senden</button>
                         </div>

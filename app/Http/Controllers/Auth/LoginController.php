@@ -119,7 +119,9 @@ class LoginController extends Controller
         $packageConfig = json_decode(file_get_contents(base_path('package.json')), true);
         $version = $packageConfig['version'];
 
-        return view('auth.login', compact('blog', 'videos', 'count', 'version', 'demo', 'users'));
+        $recaptchaKey = config('recaptcha.key');
+
+        return view('auth.login', compact('blog', 'videos', 'count', 'version', 'demo', 'users', 'recaptchaKey'));
     }
 
     public function setInitialPassword()
