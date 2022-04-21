@@ -68,12 +68,12 @@
                             -->
                     </div>
                 </div>
-                <a class="btn btn-light" :href="route('liturgy.editor', service.slug)" v-if="service.slug"
-                   title="Liturgie zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-view-list"></span><span
-                    class="d-none d-md-inline"> Liturgie</span></a>&nbsp;
-                <a class="btn btn-light" :href="route('service.sermon.editor', service.slug)"  v-if="service.slug"
-                   title="Predigt zu diesem Gottesdienst bearbeiten"><span class="mdi mdi-microphone"></span><span
-                    class="d-none d-md-inline"> Predigt</span></a>&nbsp;
+                <nav-button :href="route('liturgy.editor', service.slug)" v-if="service.slug"
+                            icon="mdi mdi-view-list" force-icon type="light"
+                            title="Liturgie zu diesem Gottesdienst bearbeiten">Liturgie</nav-button>
+                <nav-button :href="route('service.sermon.editor', service.slug)" v-if="service.slug"
+                            icon="mdi mdi-microphone" force-icon type="light"
+                            title="Predigt zu diesem Gottesdienst bearbeiten">Predigt</nav-button>
             </template>
             <template v-slot:tab-headers>
                 <tab-headers>
@@ -151,10 +151,12 @@ import AttachmentsTab from "../components/ServiceEditor/tabs/AttachmentsTab";
 import PeopleTab from "../components/ServiceEditor/tabs/PeopleTab";
 import CommentsTab from "../components/ServiceEditor/tabs/CommentsTab";
 import RegistrationsTab from "../components/ServiceEditor/tabs/RegistrationsTab";
+import NavButton from "../components/Ui/buttons/NavButton";
 
 export default {
     name: "serviceEditor",
     components: {
+        NavButton,
         RegistrationsTab,
         CommentsTab,
         PeopleTab,
