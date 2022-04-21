@@ -60,7 +60,6 @@ export default {
             if (this.switchHandler) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log('switching to', this.id);
                 this.myActiveTab = this.id;
                 this.$emit('tab', this.id);
             }
