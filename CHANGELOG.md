@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.138.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.138.0...v2022.138.1) (2022-04-21)
+
+
+### Bug Fixes
+
+* Cannot create new songs from LiturgyEditor ([da4202f](https://github.com/pfarrplaner/pfarrplaner/commits/da4202f884fc2596508be36f5c5cc5500cc880e4))
+* Liturgy button in ServiceEditor does not use Inertia ([b1d51ea](https://github.com/pfarrplaner/pfarrplaner/commits/b1d51ea29c7b6f7c30fea3c9adc6f767ae3e8686)), closes [#254](https://github.com/pfarrplaner/pfarrplaner/issues/254)
+* Sermon editor uses bold text ([9afcd14](https://github.com/pfarrplaner/pfarrplaner/commits/9afcd14839deef1d252dfef94fa0598090343c69)), closes [#251](https://github.com/pfarrplaner/pfarrplaner/issues/251)
+
 ## [2022.138.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.137.3...v2022.138.0) (2022-04-20)
 
 
