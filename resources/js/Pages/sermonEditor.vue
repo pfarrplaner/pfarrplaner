@@ -423,8 +423,11 @@ export default {
 .ql-toolbar .quill-mdi-button {
     padding-top: 1px;
 }
-
-.quill-editor .ql-container.ql-snow {
+>>> .ql-container.ql-snow,
+>>> .ql-container.ql-snow .ql-editor {
     font-family: inherit !important;
+    font-weight: normal;
 }
+
+
 </style>

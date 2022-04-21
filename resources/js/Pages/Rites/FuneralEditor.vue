@@ -666,4 +666,12 @@ export default {
     color: gray !important;
 }
 
+>>> .ql-container.ql-snow,
+>>> .ql-container.ql-snow .ql-editor {
+    font-family: inherit !important;
+    font-weight: normal;
+}
+
+
+
 </style>
