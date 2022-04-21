@@ -49,7 +49,8 @@
                         <div class="form-group">
                             <label for="verses">Zu singende Strophen</label>
                             <input class="form-control" :value="editedElement.data.verses"
-                                   placeholder="Gültiges Format z.B. 1-2+4; leer lassen = alle Strophen" @input="updateQuote($event)"/>
+                                   placeholder="Gültiges Format z.B. 1-2+4; leer lassen = alle Strophen"
+                                   @input="updateQuote($event)"/>
                             <small>Strophen: {{ getVersesToDisplay(editedElement.data.verses) }}</small>
                         </div>
                         <div class="form-group">
@@ -69,10 +70,10 @@
                 </div>
                 <div class="col-md-6">
                     <div class="liturgical-text-quote" v-html="quote"/>
-                    <text-stats :text="quote" />
+                    <text-stats :text="quote"/>
                 </div>
             </div>
-            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
+            <time-fields :service="service" :element="element" :agenda-mode="agendaMode"/>
             <div class="form-group">
                 <button class="btn btn-primary" @click="save">Speichern
                 </button>
@@ -81,11 +82,11 @@
                 </inertia-link>
             </div>
         </form>
-        <modal :title="(editedElement.data.song.song.id == -1) ? 'Neues Lied' : 'Lied bearbeiten'" v-if="modalOpen"
-               @close="(editedElement.data.song.song.id == -1) ? saveText() : updateText()" @cancel="modalOpen = false;"
+        <modal :title="(modalSong.song.id == -1) ? 'Neues Lied' : 'Lied bearbeiten'" v-if="modalOpen"
+               @close="((modalSong.song.id == -1) ? saveText() : updateText())" @cancel="modalOpen = false;"
                close-button-label="Lied speichern" cancel-button-label="Abbrechen" max-width="800"
         >
-            <song-edit-pane :song="modalSong" />
+            <song-edit-pane :song="modalSong"/>
 
 
         </modal>
@@ -123,7 +124,7 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        const songs = await axios.get(route('api.liturgy.song.index', { api_token: this.apiToken }))
+        const songs = await axios.get(route('api.liturgy.song.index', {api_token: this.apiToken}))
         if (songs.data) {
             this.songs = songs.data;
         }
@@ -220,18 +221,23 @@ export default {
     },
     methods: {
         newSong() {
-            this.modalSong = {
-                id: -1,
-                title: '',
-                verses: [
-                    {id: -1, number: '1', text: '', refrain_before: false, refrain_after: false}
-                ],
-                refrain: '',
-                copyrights: '',
-                songbook: '',
-                songbook_abbreviation: '',
-                reference: '',
-            };
+            this.modalSong =
+                {
+                    code: null,
+                    songbook_id: null,
+                    reference: null,
+                    song_id: null,
+                    song: {
+                        id: -1,
+                        title: '',
+                        verses: [
+                            {id: -1, number: '1', text: '', refrain_before: false, refrain_after: false}
+                        ],
+                        refrain: '',
+                        copyrights: '',
+                        songbooks: [],
+                    },
+                }
             this.modalOpen = true;
         },
         editSong() {
