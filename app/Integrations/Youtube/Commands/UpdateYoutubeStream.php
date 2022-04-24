@@ -110,12 +110,14 @@ class UpdateYoutubeStream extends Command
                         // check status
                         /** @var \Google_Service_YouTube_Video $video */
                         $lastVideo = $youtube->getVideo(YoutubeHelper::getCode($last->youtube_url));
-                        if ($this->videoHasEnded($lastVideo)) {
-                            $this->output('Last service #' . $last->id . ' (' . $last->formatTime('Y-m-d H:i') . ') has ended.');
-                        }
+                        if (null !== $lastVideo) {
+                            if ($this->videoHasEnded($lastVideo)) {
+                                $this->output('Last service #' . $last->id . ' (' . $last->formatTime('Y-m-d H:i') . ') has ended.');
+                            }
 
-                        $this->output('Next Service #' . $service->id . ' (' . $service->formatTime('Y-m-d H:i') . ')...');
-                        $this->setBroadcastOptions($service, true);
+                            $this->output('Next Service #' . $service->id . ' (' . $service->formatTime('Y-m-d H:i') . ')...');
+                            $this->setBroadcastOptions($service, true);
+                        }
 
                     } else {
                         $this->output('Future Service #' . $service->id . ' (' . $service->formatTime('Y-m-d H:i') . ')...');

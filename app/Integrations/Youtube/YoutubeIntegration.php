@@ -105,7 +105,7 @@ class YoutubeIntegration extends AbstractIntegration
      */
     public function getVideo($id)
     {
-        return $this->youtube->videos->listVideos('snippet,contentDetails,statistics,status,liveStreamingDetails', ['id' => $id])->getItems()[0];
+        return $this->youtube->videos->listVideos('snippet,contentDetails,statistics,status,liveStreamingDetails', ['id' => $id])->getItems()[0] ?? null;
     }
 
     /**
