@@ -71,7 +71,8 @@
                             <input type="checkbox" v-model="service.checked">
                         </div>
                         <div class="col-md-6">
-                            {{ moment(service.date).locale('de').format('LLLL') }}
+                            {{ moment(service.date).locale('de').format('LLLL') }}<br />
+                            {{ service.titleText }}
                         </div>
                         <div class="col-md-5">
                             {{ service.locationText }}
