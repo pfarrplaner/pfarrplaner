@@ -301,7 +301,7 @@ class Broadcast
 
         $broadcastsResponse = $instance->getYoutube()->liveBroadcasts->listLiveBroadcasts(
             'id,snippet,status,contentDetails,contentDetails',
-            ['mine' => true]
+            ['mine' => true, 'maxResults' => 255]
         );
 
         foreach ($broadcastsResponse->getItems() as $broadcastItem) {
@@ -326,7 +326,7 @@ class Broadcast
 
         $broadcastsResponse = $instance->getYoutube()->liveBroadcasts->listLiveBroadcasts(
             'id,snippet,status,contentDetails',
-            ['mine' => true]
+            ['mine' => true, 'maxResults' => 255]
         );
 
         foreach ($broadcastsResponse->getItems() as $broadcastItem) {
@@ -366,7 +366,7 @@ class Broadcast
         // set all others to passive:
         $broadcastsResponse = $this->getYoutube()->liveBroadcasts->listLiveBroadcasts(
             'id,snippet,status,contentDetails',
-            ['mine' => true]
+            ['mine' => true, 'maxResults' => 255]
         );
         foreach ($broadcastsResponse->getItems() as $item) {
             if (($item->getId() != $broadcast->getId())
