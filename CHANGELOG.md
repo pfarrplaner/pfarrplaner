@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.139.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.138.1...v2022.139.0) (2022-04-24)
+
+
+### Features
+
+* Show service title in MinistryRequestReport selector ([3202643](https://github.com/pfarrplaner/pfarrplaner/commits/3202643dee72b18432f1d8a1f32ff1f3ca01a8a9)), closes [#258](https://github.com/pfarrplaner/pfarrplaner/issues/258)
+
+
+### Bug Fixes
+
+* Broadcast list does not include all broadcasts ([3aa62ce](https://github.com/pfarrplaner/pfarrplaner/commits/3aa62ce85fb259b32c913d1f15c1719f59276f2a))
+* Removed monitoring from StreamingTroubleshooter ([41d682d](https://github.com/pfarrplaner/pfarrplaner/commits/41d682d759ef76af4d265d0866fc56ddd06a9153))
+* UpdateYoutubeStream command fails when getVideo return null ([7e98b48](https://github.com/pfarrplaner/pfarrplaner/commits/7e98b48822ffa021122c331fc7f9f92d7e1617a0))
+
 ### [2022.138.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.138.0...v2022.138.1) (2022-04-21)
 
 
