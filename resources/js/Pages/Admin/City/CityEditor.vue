@@ -6,7 +6,7 @@
   - @copyright (c) 2021 Christoph Fischer, https://christoph-fischer.org
   - @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
   - @link https://github.com/pfarrplaner/pfarrplaner
-  - @version git: $Id$
+  - @version git: $Id: 12187c866f72c68ef3d63946ac26a5ffdd5fc292 $
   -
   - Sponsored by: Evangelischer Kirchenbezirk Balingen, https://www.kirchenbezirk-balingen.de
   -
@@ -148,10 +148,10 @@
                                     sogenannte "Scopes" aktiviert werden. Folgende Scopes sind für das Funktionieren der
                                     Integration erforderlich:</p>
                                 <p>
-                                    <span class="badge badge-secondary">veranstaltungen_list</span>
-                                    <span class="badge badge-secondary">qr_list</span>
-                                    <span class="badge badge-secondary">qr_create</span>
-                                    <span class="badge badge-secondary">qr_delete</span>
+                                    <span class="badge badge-secondary">veranstaltungen.read</span>
+                                    <span class="badge badge-secondary">veranstaltungen.qr.read</span>
+                                    <span class="badge badge-secondary">veranstaltungen.qr.create</span>
+                                    <span class="badge badge-secondary">veranstaltungen.qr.delete</span>
                                 </p>
                                 <form-input name="konfiapp_apikey" label="API-Schlüssel für die KonfiApp"
                                             v-model="myCity.konfiapp_apikey"/>
