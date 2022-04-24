@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.140.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.139.0...v2022.140.0) (2022-04-24)
+
+
+### Features
+
+* Show streaming details on StreamingTab ([8979bdf](https://github.com/pfarrplaner/pfarrplaner/commits/8979bdfbd74b7b85d7467a95fdedf1429a682817)), closes [#260](https://github.com/pfarrplaner/pfarrplaner/issues/260)
+
 ## [2022.139.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.138.1...v2022.139.0) (2022-04-24)
 
 
