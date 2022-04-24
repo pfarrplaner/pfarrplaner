@@ -144,15 +144,6 @@
             Der Zugang zum Live Control Room ist nur mit entsprechenden Zugangsdaten (Benutzername, Passwort) möglich.
         </div>
         <hr />
-        <div v-if="broadcast.contentDetails.monitorStream.enableMonitorStream">
-            <h3>Monitoring</h3>
-            <div class="video-container">
-                <iframe :src="'https://www.youtube.com/embed/'+broadcast.id+'?autoplay=1'"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowfullscreen frameborder="0"></iframe>
-            </div>
-        </div>
-        <hr/>
         <h3>Allgemeine Problemlösung</h3>
         <div v-if="broadcast.service" class="alert alert-light">
             Um bisher nicht genannte Probleme zu lösen, kannst du versuchen, den Stream erneut zu aktivieren.
