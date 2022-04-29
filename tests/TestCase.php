@@ -30,7 +30,12 @@
 
 namespace Tests;
 
+use App\Console\Kernel;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabaseState;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class TestCase
@@ -39,8 +44,25 @@ use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
+    use RefreshDatabase;
 
     protected function output($line) {
         fwrite(STDERR, $line.PHP_EOL);
+    }
+
+    protected function refreshTestDatabase()
+    {
+        if (! RefreshDatabaseState::$migrated) {
+            $files = scandir(base_path('/tests/database/'), SCANDIR_SORT_DESCENDING);
+            DB::unprepared(file_get_contents(base_path('/tests/database/'.$files[0])));
+
+            $this->artisan('migrate');
+
+            $this->app[Kernel::class]->setArtisan(null);
+
+            RefreshDatabaseState::$migrated = true;
+        }
+
+        $this->beginDatabaseTransaction();
     }
 }

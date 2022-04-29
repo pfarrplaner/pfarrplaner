@@ -32,7 +32,6 @@ namespace Tests\Unit;
 
 use App\Http\Requests\ServiceRequest;
 use App\Service;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
@@ -41,8 +40,6 @@ use Tests\TestCase;
  */
 class ServiceUnitTest extends TestCase
 {
-
-    use RefreshDatabase;
 
     /**
      * Test that a service can be created

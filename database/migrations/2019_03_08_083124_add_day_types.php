@@ -47,9 +47,9 @@ class AddDayTypes extends Migration
         Schema::create(
             'city_day',
             function (Blueprint $table) {
-                $table->increments('id')->nullable();
-                $table->integer('day_id')->nullable();
-                $table->integer('city_id')->nullable();
+                $table->increments('id');
+                $table->integer('day_id');
+                $table->integer('city_id');
                 $table->timestamps();
             }
         );

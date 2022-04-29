@@ -26,10 +26,8 @@ class PreventOrphans extends Migration
         if ($keyType != $localKeyType) {
             Schema::table($tableName, function (Blueprint $table) use ($keyType, $foreignKey) {
                 if ($keyType == 'bigint') {
-                    echo 'Changing my key to unsignedBigInteger'.PHP_EOL;
                     $table->unsignedBigInteger($foreignKey)->change();
                 } elseif (substr($keyType,0,7) == 'integer') {
-                    echo 'Changing my key to unsignedInteger'.PHP_EOL;
                     $table->unsignedInteger($foreignKey)->change();
                 }
             });

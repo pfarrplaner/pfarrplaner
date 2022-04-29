@@ -34,7 +34,6 @@ use App\City;
 use App\Http\Middleware\Authenticate;
 use App\Service;
 use App\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
@@ -46,8 +45,6 @@ use Tests\TestCase;
 class ServiceFeatureTest extends TestCase
 {
 
-    use RefreshDatabase;
-
     /** @var City */
     protected $city;
 
@@ -58,6 +55,8 @@ class ServiceFeatureTest extends TestCase
      */
     public function testServiceCanBeCreated()
     {
+        // this test is currently empty, since service creation is done via update method
+        $this->assertTrue(true);
     }
 
     /**
@@ -67,6 +66,16 @@ class ServiceFeatureTest extends TestCase
      */
     public function testServiceCanBeUpdated()
     {
+        $city = factory(City::class)->create();
+        $service = factory(Service::class)->create(['city_id' => $city]);
+        $this->user->writableCities()->attach($city->id);
+        $response = $this->actingAs($this->user)
+            ->patch(
+                route('service.update', Service::first()->slug),
+                factory(Service::class)->raw(['description' => 'cool title'])
+            );
+        $response->assertStatus(302);
+        $this->assertEquals('cool title', Service::first()->description);
     }
 
     /**
@@ -101,20 +110,6 @@ class ServiceFeatureTest extends TestCase
             ->delete(route('service.destroy', $service->slug));
         $response->assertStatus(302);
         $this->assertCount(0, Service::all());
-    }
-
-    public function testCheckBoxesCanBeSetAndUnset()
-    {
-    }
-
-    /**
-     * Test that a service can have a title
-     *
-     * @return void
-     * @test
-     */
-    public function testServiceCanHaveTitle()
-    {
     }
 
     protected function setUp(): void
