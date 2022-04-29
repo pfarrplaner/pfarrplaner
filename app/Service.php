@@ -1197,19 +1197,6 @@ class Service extends Model
     }
 
     /**
-     * @param null $format
-     * @return mixed
-     */
-    public function date($format = null)
-    {
-        if (is_null($format)) {
-            return $this->date;
-        } else {
-            return $this->date->format($format);
-        }
-    }
-
-    /**
      * @return BelongsTo
      */
     public function day()

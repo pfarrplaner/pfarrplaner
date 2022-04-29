@@ -36,7 +36,7 @@ $factory->define(
         $church = $faker->name('male');
         $church .= (substr($church, -1) == 's' ? '' : 's') . 'kirche';
         return [
-            'day_id' => factory(\App\Day::class),
+            'date' => $faker->dateTime(),
             'location_id' => factory(\App\Location::class),
             'city_id' => factory(\App\City::class),
             'time' => $faker->time('H:i'),
