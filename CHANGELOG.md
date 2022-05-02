@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.141.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.141.0...v2022.141.1) (2022-05-02)
+
+
+### Bug Fixes
+
+* Wrong button actions ([122d6cb](https://github.com/pfarrplaner/pfarrplaner/commits/122d6cbaee8e5112fa641d76e7b26bb78b7451b2))
+
 ## [2022.141.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.140.0...v2022.141.0) (2022-05-02)
 
 
