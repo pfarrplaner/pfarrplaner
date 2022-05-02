@@ -33,8 +33,9 @@
             <nav-button type="success" icon="mdi mdi-plus" title="Lied hinzufügen"
                         :href="route('song.create')">Neues Lied</nav-button>
         </template>
-        <dataset v-slot="{ ds }"
-                 :ds-data="songs"
+            <dataset
+                 v-slot="{ ds }"
+                 :ds-data="mySongs"
                  ds-sort-by="title"
                  :ds-search-in="['title']"
                  :ds-search-as="{
@@ -71,10 +72,10 @@
                                         </td>
                                         <td>{{ row.title }}</td>
                                         <td class="text-right">
-                                            <nav-button v-if="row.can.update" class="btn-sm"
+                                            <nav-button class="btn-sm"
                                                         type="primary" icon="mdi mdi-pencil" title="Lied bearbeiten"
                                                         force-icon force-no-text :href="route('song.edit', row.id)" />
-                                            <nav-button v-if="row.can.delete" class="btn-sm"
+                                            <nav-button class="btn-sm"
                                                         type="danger" icon="mdi mdi-delete" title="Lied löschen"
                                                         force-icon force-no-text @click="deleteSong(row)" />
                                         </td>
@@ -105,6 +106,11 @@ import NavButton from "../../../components/Ui/buttons/NavButton";
 export default {
     name: "Index",
     props: ['songs'],
+    data() {
+        return {
+            mySongs: this.songs,
+        }
+    },
     components: {
         NavButton,
         Dataset,

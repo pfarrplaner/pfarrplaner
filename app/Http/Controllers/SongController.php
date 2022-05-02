@@ -59,7 +59,7 @@ class SongController extends Controller
      */
     public function index()
     {
-        $songs = ResourcePolicyService::attachPermissions(Song::all());
+        $songs = Song::without(['verses'])->select(['id', 'title'])->get();
         return Inertia::render('Admin/Song/Index', compact('songs'));
     }
 
