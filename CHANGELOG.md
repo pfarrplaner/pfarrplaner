@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.141.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.140.0...v2022.141.0) (2022-05-02)
+
+
+### Features
+
+* Add Psalms admin module ([06cffaf](https://github.com/pfarrplaner/pfarrplaner/commits/06cffaf04847626e521e718279840c08064f5ae6))
+
+
+### Bug Fixes
+
+* Bots (like Twitter) do not see images for sermons ([3380d29](https://github.com/pfarrplaner/pfarrplaner/commits/3380d29dbfcd679e17873f50e4f6acdeae8c4a31))
+* Cannot delete verse in SongEditor ([a06c638](https://github.com/pfarrplaner/pfarrplaner/commits/a06c638d52e5a90575ebce70f16d5649539171e8))
+* Songs/Index is very slow ([d69de4e](https://github.com/pfarrplaner/pfarrplaner/commits/d69de4e305aaa910fda592d88f392e9ddee41ab0))
+
 ## [2022.140.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.139.0...v2022.140.0) (2022-04-24)
 
 
