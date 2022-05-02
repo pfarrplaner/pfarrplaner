@@ -138,7 +138,7 @@ export default {
             });
         },
         deleteVerse(verseIndex) {
-            this.song.song.verses.splice(verseIndex, 1);
+            this.song.verses.splice(verseIndex, 1);
         },
     }
 }

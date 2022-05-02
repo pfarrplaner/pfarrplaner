@@ -177,15 +177,20 @@ class SongController extends Controller
         $this->authorize('update', $song);
 
 
-
         $song->load('songbooks');
 
         $origSync = $splitSync = [];
         foreach ($song->songbooks as $songbook) {
             if ($songbook->pivot->songbook_id == $reference) {
-                $splitSync[$songbook->pivot->songbook_id] = ['reference' => $songbook->pivot->reference, 'code' => $songbook->pivot->code];
+                $splitSync[$songbook->pivot->songbook_id] = [
+                    'reference' => $songbook->pivot->reference,
+                    'code' => $songbook->pivot->code
+                ];
             } else {
-                $origSync[$songbook->pivot->songbook_id] = ['reference' => $songbook->pivot->reference, 'code' => $songbook->pivot->code];
+                $origSync[$songbook->pivot->songbook_id] = [
+                    'reference' => $songbook->pivot->reference,
+                    'code' => $songbook->pivot->code
+                ];
             }
         }
 
@@ -198,6 +203,18 @@ class SongController extends Controller
         $newSong->songbooks()->sync([]);
         $newSong->songbooks()->sync($splitSync);
         $newSong->push();
+
+        /** @var SongVerse $verse */
+        foreach ($song->verses as $verse) {
+            $newVerse = SongVerse::create([
+                                              'song_id' => $newSong->id,
+                                              'number' => $verse->number,
+                                              'text' => $verse->text,
+                                              'refrain_before' => $verse->refrain_before,
+                                              'refrain_after' => $verse->refrain_after,
+                                              'notation' => $verse->notation,
+                                          ]);
+        }
         $newSong->refresh();
 
         return redirect()->route('song.edit', $newSong->id);
