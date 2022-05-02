@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.141.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.141.1...v2022.141.2) (2022-05-02)
+
+
+### Bug Fixes
+
+* PsalmEditor uses unauthenticated API route ([a443efb](https://github.com/pfarrplaner/pfarrplaner/commits/a443efb72d15a44ad7e112877da3f46550573e3f))
+
 ### [2022.141.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.141.0...v2022.141.1) (2022-05-02)
 
 
