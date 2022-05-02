@@ -95,7 +95,7 @@ export default {
             if (this.myPsalm.id) {
                 this.$inertia.patch(route('psalm.update', this.myPsalm.id), this.myPsalm);
             } else {
-                this.$inertia.post(route('psalm.store'), this.myPsalm);
+                this.saveAsCopy();
             }
         },
         saveAsCopy() {

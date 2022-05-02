@@ -31,7 +31,7 @@
     <admin-layout title="Psalmen">
         <template v-slot:navbar-left>
             <nav-button type="success" icon="mdi mdi-plus" title="Psalm hinzufügen"
-                        :href="route('song.create')">Neuer Psalm</nav-button>
+                        :href="route('psalm.create')">Neuer Psalm</nav-button>
         </template>
             <dataset
                  v-slot="{ ds }"
