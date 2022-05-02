@@ -33,6 +33,7 @@ namespace App\UI\Modules;
 use App\City;
 use App\Inputs\AbstractInput;
 use App\Inputs\Inputs;
+use App\Liturgy\Psalm;
 use App\Liturgy\Song;
 use App\Liturgy\Songbook;
 use App\Location;
@@ -130,12 +131,12 @@ class AdminModule extends AbstractModule
                 'inertia' => true,
             ];
         }
-        if ($user->can('index', Parish::class)) {
+        if ($user->can('viewAny', Psalm::class)) {
             $adminMenu[] = [
-                'text' => 'Pfarrämter',
-                'icon' => 'mdi mdi-home-variant-outline',
-                'url' => route('parishes.index'),
-                'active' => $route == 'parishes.index',
+                'text' => 'Psalmen',
+                'icon' => 'mdi mdi-hands-pray',
+                'url' => route('psalms.index'),
+                'active' => $route == 'psalms.index',
                 'inertia' => true,
             ];
         }

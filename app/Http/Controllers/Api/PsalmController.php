@@ -28,13 +28,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 
+use App\Http\Controllers\Controller;
 use App\Liturgy\Psalm;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class PsalmController extends Controller
 {
@@ -44,51 +43,32 @@ class PsalmController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth:api');
     }
 
     /**
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
-        $psalms = Psalm::all();
-        return Inertia::render('Admin/Psalm/Index', compact('psalms'));
-    }
-
-    /**
-     * @return \Inertia\Response
-     */
-    public function create()
-    {
-        $psalm = new Psalm();
-        return Inertia::render('Admin/Psalm/PsalmEditor', compact('psalm'));
-    }
-
-    /**
-     * @param Psalm $psalm
-     * @return \Inertia\Response
-     */
-    public function edit(Psalm $psalm)
-    {
-        return Inertia::render('Admin/Psalm/PsalmEditor', compact('psalm'));
+        return response()->json(Psalm::all());
     }
 
     /**
      * @param Request $request
-     * @return RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         $data = $this->validateRequest($request);
         $psalm = Psalm::create($data);
         $psalms = Psalm::all();
-        return redirect()->route('psalms.index')->with('success', 'Der Psalm wurde gespeichert.');
+        return response()->json(compact('psalm', 'psalms'));
     }
 
     /**
      * @param Request $request
-     * @return RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, Psalm $psalm)
     {
@@ -97,17 +77,7 @@ class PsalmController extends Controller
         $psalm->update($data);
         $psalm->refresh();
         $psalms = Psalm::all();
-        return redirect()->route('psalms.index')->with('success', 'Der Psalm wurde gespeichert.');
-    }
-
-    /**
-     * @param Psalm $psalm
-     * @return RedirectResponse
-     */
-    public function destroy(Psalm $psalm)
-    {
-        $psalm->delete();
-        return redirect()->route('psalms.index')->with('success', 'Der Psalm wurde gelöscht.');
+        return response()->json(compact('psalm', 'psalms'));
     }
 
     /**

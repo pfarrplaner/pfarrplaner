@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -41,7 +41,7 @@
 
 
 
-use App\Http\Controllers\PsalmController; 
+use App\Http\Controllers\Api\PsalmController;
 
 Route::get('/liturgy/psalms', [PsalmController::class, 'index'])->name('liturgy.psalm.index');
 Route::post('/liturgy/psalms', [PsalmController::class, 'store'])->name('liturgy.psalm.store');
