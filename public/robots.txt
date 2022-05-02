@@ -1,5 +1,7 @@
 User-agent: *
+Allow: /image/*.jpg
 Disallow: /
 User-Agent: Googlebot
+Allow: /image/*.jpg
 Disallow: /
 
