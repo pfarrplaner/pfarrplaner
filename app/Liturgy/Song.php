@@ -70,6 +70,7 @@ class Song extends \Illuminate\Database\Eloquent\Model
 
     public function syncSongbooksFromRequest($data)
     {
+        if (!isset($data['songbooks'])) return;
         $sync = [];
         foreach ($data['songbooks'] as $item) {
             $sync[$item['pivot']['songbook_id']] = ['reference' => $item['pivot']['reference'], 'code' => $item['code']];
