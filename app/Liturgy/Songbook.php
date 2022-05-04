@@ -37,7 +37,7 @@ class Songbook extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'code', 'description', 'image'];
+    protected $fillable = ['name', 'code', 'description', 'isbn', 'image'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -34,7 +34,6 @@ use App\Liturgy\Songbook;
 use App\Services\ResourcePolicyService;
 use App\Traits\HandlesAttachedImageTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class SongbookController extends Controller
@@ -54,6 +53,8 @@ class SongbookController extends Controller
     }
 
     /**
+     * Show all records
+     *
      * @return \Inertia\Response
      */
     public function index()
@@ -64,6 +65,22 @@ class SongbookController extends Controller
 
     /**
      * Create a new record
+     *
+     * @return \Inertia\Response
+     */
+    public function create()
+    {
+        $songbook = new Songbook([
+            'name' => '',
+            'code' => '',
+            'isbn' => '',
+            'description' => '',
+                                 ]);
+        return Inertia::render('Admin/Songbook/SongbookEditor', compact('songbook'));
+    }
+
+    /**
+     * Store a new record
      *
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse

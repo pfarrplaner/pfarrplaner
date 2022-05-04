@@ -29,6 +29,11 @@
 
 <template>
     <admin-layout title="Liederbücher">
+        <template v-slot:navbar-left>
+            <nav-button type="success" icon="mdi mdi-plus" title="Neues Liederbuch anlegen" :href="route('songbook.create')">
+                Neues Liederbuch
+            </nav-button>
+        </template>
         <dataset v-slot="{ ds }"
                  :ds-data="songbooks"
                  ds-sort-by="name"
