@@ -97,7 +97,7 @@ class ChildrensChurchReport extends AbstractPDFDocumentReport
             ->groupBy('key_date');
 
         $dates = Service::select(DB::raw('DISTINCT DATE(date) as day'))
-            ->between(Carbon::createFromFormat('d.m.Y', $data['start']), Carbon::createFromFormat('d.m.Y', $data['end']))
+            ->between(Carbon::createFromFormat('d.m.Y', $data['start'])->subWeek(1), Carbon::createFromFormat('d.m.Y', $data['end']))
             ->notHidden()
             ->where('city_id', $data['city'])
             ->where('cc', 1)
