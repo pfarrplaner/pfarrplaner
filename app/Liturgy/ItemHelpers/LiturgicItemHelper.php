@@ -134,25 +134,25 @@ class LiturgicItemHelper extends AbstractItemHelper
         return $text;
     }
 
-    protected function relativeDateString(Carbon $relativeToday, Carbon $dateToDescribe)
+    public function relativeDateString(Carbon $relativeToday, Carbon $dateToDescribe)
     {
         $diff = $dateToDescribe->diffInDays($relativeToday);
+        if ($diff == 0) return 'heute';
         if ($diff == 1) {
             return 'gestern';
         }
         if ($diff == 2) {
             return 'vorgestern';
         }
-        if ($diff >= 3 && $diff <= 9) {
-            if ($dateToDescribe->weekNumberInMonth == $relativeToday->weekNumberInMonth) {
-                return 'am ' . $dateToDescribe->formatLocalized('%A');
-            }
-            return 'letzten ' . $dateToDescribe->formatLocalized('%A');
+        if ($diff >= 3 && $diff <= 6) {
+            return 'am ' . $dateToDescribe->formatLocalized('%A');
         }
-        $weeks = sprintf('%d', floor($diff / 7));
-        $d2 = $relativeToday->copy()->subDays($diff % 7);
-        dump('hi');
-        return $this->relativeDateString($relativeToday, $d2) . ' vor ' . $weeks . ' Woche' . ($weeks > 1 ? 'n' : '');
+        if ( $diff == 7) return 'am ' . $dateToDescribe->formatLocalized('%A').' der letzten Woche';
+        if ($diff <= 12) {
+            return 'am ' . $dateToDescribe->formatLocalized('%A').' vor einer Woche';
+        }
+        $weeks = sprintf('%d', floor(($diff+1) / 7));
+        return 'am ' . $dateToDescribe->formatLocalized('%A').' vor '.$weeks.' Wochen';
     }
 
 
