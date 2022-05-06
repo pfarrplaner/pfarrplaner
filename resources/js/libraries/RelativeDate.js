@@ -39,9 +39,10 @@ function relative(date1, date2) {
     if (dayDiff == 0) return 'heute';
     if (dayDiff == 1) return 'gestern';
     if (dayDiff == 2) return 'vorgestern';
-    if (dayDiff < 6) return 'am '+date1.format('dddd');
-    if (dayDiff < 13) return 'letzten '+date1.format('dddd');
-    return 'am '+date1.format('dddd')+' vor '+Math.floor(dayDiff / 7)+' Wochen';
+    if (dayDiff <= 6) return 'am '+date1.format('dddd');
+    if (dayDiff == 7) return 'am '+date1.format('dddd')+' der letzten Woche';
+    if (dayDiff <= 12) return 'am '+date1.format('dddd')+' vor einer Woche';
+    return 'am '+date1.format('dddd')+' vor '+Math.floor((dayDiff+1) / 7)+' Wochen';
 }
 
 
