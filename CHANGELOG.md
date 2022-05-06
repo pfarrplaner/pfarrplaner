@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.142.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.0...v2022.142.1) (2022-05-06)
+
+
+### Features
+
+* Show one week back in ChildrensChurchReport ([ea3bcc9](https://github.com/pfarrplaner/pfarrplaner/commits/ea3bcc9f720e853bb9dc6a868d15ef6ceaffbf13))
+
+
+### Bug Fixes
+
+* Funeral: Relative date text is one week off ([962b931](https://github.com/pfarrplaner/pfarrplaner/commits/962b9319ea1bffa8d53dbac6016daff3c0c2ef2d)), closes [#264](https://github.com/pfarrplaner/pfarrplaner/issues/264)
+
 ## [2022.142.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.141.2...v2022.142.0) (2022-05-04)
 
 
