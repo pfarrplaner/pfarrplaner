@@ -37,6 +37,10 @@
             <form-check v-if="service.city.konfiapp_apikey && service.konfiapp_event_qr"
                         label="QR-Code für KonfiApp" v-model="myConfig.includeFullReadings" name="config[includeQR]"/>
         </fieldset>
+        <fieldset>
+            <legend>Layout</legend>
+            <form-check label="Seitenzahlen" v-model="myConfig.pageNumbers" name="config[pageNumbers]"/>
+        </fieldset>
     </liturgy-sheet-configuration-layout>
 </template>
 
