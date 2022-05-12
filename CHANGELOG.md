@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.142.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.2...v2022.142.3) (2022-05-12)
+
+
+### Features
+
+* Optionally include page numbers in FullTextLiturgySheet ([9d31474](https://github.com/pfarrplaner/pfarrplaner/commits/9d31474cc47c0012d61c09531f1221ab30b3aba6)), closes [#265](https://github.com/pfarrplaner/pfarrplaner/issues/265)
+
 ### [2022.142.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.1...v2022.142.2) (2022-05-06)
 
 
