@@ -37,7 +37,7 @@
                         <input class="form-control" v-model="editedElement.title" v-focus/>
                     </div>
                     <div v-if="this.songs === null">
-                        Bitte warten, Liederliste wird geladen...
+                        <span class="mdi mdi-spin mdi-loading"></span> Bitte warten, Liederliste wird geladen...
                     </div>
                     <div v-else>
                         <div class="form-group">
