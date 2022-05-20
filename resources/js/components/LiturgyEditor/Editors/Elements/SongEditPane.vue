@@ -50,7 +50,7 @@
                         <label>Text der Strophe</label>
                     </div>
                 </div>
-                <div v-for="(verse,verseKey,verseIndex) in song.song.verses">
+                <div v-for="(verse,verseKey,verseIndex) in song.song.verses" class="mb-2">
                     <div class="row">
                         <div class="col-1 form-group">
                             <input type="text" class="form-control" v-model="verse.number"/>
@@ -76,10 +76,10 @@
                             </button>
                         </div>
                     </div>
-                    <hr/>
-                    <div class="form-group">
-                        <button class="btn btn-sm btn-light" @click.prevent="addVerse">Strophe hinzufügen</button>
-                    </div>
+                </div>
+                <hr/>
+                <div class="form-group">
+                    <button class="btn btn-sm btn-light" @click.prevent="addVerse">Strophe hinzufügen</button>
                 </div>
             </tab>
             <tab id="songbooks" :active-tab="activeTab">
@@ -108,9 +108,9 @@ export default {
     },
     methods: {
         addVerse() {
-            this.song.verses.push({
+            this.song.song.verses.push({
                 id: -1,
-                number: this.song.verses.length + 1,
+                number: this.song.song.verses.length + 1,
                 text: '',
                 refrain_before: false,
                 refrain_after: false
