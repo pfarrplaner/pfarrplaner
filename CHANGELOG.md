@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.142.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.3...v2022.142.4) (2022-05-20)
+
+
+### Bug Fixes
+
+* Cannot add verses on new songs ([0fd6769](https://github.com/pfarrplaner/pfarrplaner/commits/0fd67696ac419c177cc70a70b7a16593c14af0ab)), closes [#268](https://github.com/pfarrplaner/pfarrplaner/issues/268)
+* Cannot type continuously in funeral appointment place field ([0189b2c](https://github.com/pfarrplaner/pfarrplaner/commits/0189b2c4edc369f73b3e55eebe8f2e55432aaccf)), closes [#269](https://github.com/pfarrplaner/pfarrplaner/issues/269)
+* Loading message has no spinner ([9af408b](https://github.com/pfarrplaner/pfarrplaner/commits/9af408bc9194b1507cace29a4cff4c3d66ca3980))
+* Songs without songbooks do not appear in song list ([b774935](https://github.com/pfarrplaner/pfarrplaner/commits/b774935494b4ab16bf3773b2acfcb15c1f4aa632))
+
 ### [2022.142.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.2...v2022.142.3) (2022-05-12)
 
 
