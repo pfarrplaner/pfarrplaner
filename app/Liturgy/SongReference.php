@@ -37,6 +37,8 @@ class SongReference extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['song_id', 'songbook_id'];
+
     protected $table = 'song_songbook';
     protected $with = ['song', 'songbook'];
 

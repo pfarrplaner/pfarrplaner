@@ -56,7 +56,19 @@ class SongController extends Controller
      */
     public function index()
     {
-        return response()->json(SongReference::orderBy('code')->orderBy('reference')->get());
+        $listed = SongReference::orderBy('code')->orderBy('reference')->get();
+        $songsWithoutSongBook = Song::whereDoesntHave('songbooks')->orderBy('title')->get();
+        foreach ($songsWithoutSongBook as $song) {
+            $listed->push([
+                              'id' => 1000000 + $song->id, // fake an id
+                              'song_id' => $song->id,
+                              'song' => $song,
+                              'code' => '',
+                              'reference' => '',
+                              'songbook' => null,
+                          ]);
+        }
+        return response()->json($listed);
     }
 
     /**
@@ -153,7 +165,6 @@ class SongController extends Controller
     {
         return response()->file(ABCMusic::renderToFile($song, $verses, ABCMusic::make($song, $verses, $lineNumber)));
     }
-
 
 
 }
