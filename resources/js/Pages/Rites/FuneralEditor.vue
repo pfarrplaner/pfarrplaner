@@ -248,7 +248,7 @@
                     </div>
                     <div class="col-md-6">
                         <form-input label="Ort des Trauergesprächs" name="appointment_address"
-                                    :key="myFuneral.appointment_address"
+                                    :key="appointmentPlaceCopied"
                                     v-model="myFuneral.appointment_address"/>
                         <button class="btn btn-sm btn-light" @click="copyBuriedAddress">Von Adresse übernehmen</button>
                         <button class="btn btn-sm btn-light" @click="copyRelativeAddress">Von Angehörigen übernehmen
@@ -523,6 +523,7 @@ export default {
             showStoryEditor: false,
             myFuneral: myFuneral,
             copied: 0,
+            appointmentPlaceCopied: 0,
             textEditorActive: false,
             editorOption: {
                 placeholder: 'Hier kannst du einen Textentwurf für den Lebenslauf schreiben...',
@@ -551,9 +552,13 @@ export default {
         },
         copyBuriedAddress() {
             this.myFuneral.appointment_address = this.myFuneral.buried_address + ', ' + this.myFuneral.buried_zip + ' ' + this.myFuneral.buried_city;
+            this.appointmentPlaceCopied++;
+            this.$forceUpdate();
         },
         copyRelativeAddress() {
             this.myFuneral.appointment_address = this.myFuneral.relative_address + ', ' + this.myFuneral.relative_zip + ' ' + this.myFuneral.relative_city;
+            this.appointmentPlaceCopied++;
+            this.$forceUpdate();
         },
         saveFuneral() {
             let record = __.clone(this.myFuneral);
