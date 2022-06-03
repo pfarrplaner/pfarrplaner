@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.142.5](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.4...v2022.142.5) (2022-06-03)
+
+
+### Bug Fixes
+
+* MinistryRequest ignores selection ([948212e](https://github.com/pfarrplaner/pfarrplaner/commits/948212e82cd8380d101b15d32099f185f1aef687)), closes [#275](https://github.com/pfarrplaner/pfarrplaner/issues/275)
+
 ### [2022.142.4](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.3...v2022.142.4) (2022-05-20)
 
 
