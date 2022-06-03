@@ -225,7 +225,7 @@ export default {
                 text: this.message,
             };
             this.services.forEach(service => {
-                record.services.push(service.id)
+                if (service.checked) record.services.push(service.id)
             });
             this.recipients.forEach(recipient => {
                 let user = this.users.filter(u => {
