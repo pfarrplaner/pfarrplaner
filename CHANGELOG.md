@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.143.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.5...v2022.143.0) (2022-06-20)
+
+
+### Features
+
+* Implement A3 song list ([7e40b9a](https://github.com/pfarrplaner/pfarrplaner/commits/7e40b9a7f672d03c0e2e55b32a0f69bf0007454e)), closes [#279](https://github.com/pfarrplaner/pfarrplaner/issues/279)
+
+
+### Bug Fixes
+
+* iCal links stopped working ([394b97e](https://github.com/pfarrplaner/pfarrplaner/commits/394b97ebb2481dde91319718c4f3eea2ceee3af0))
+
 ### [2022.142.5](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.4...v2022.142.5) (2022-06-03)
 
 
