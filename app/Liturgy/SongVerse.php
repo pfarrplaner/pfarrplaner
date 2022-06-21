@@ -44,7 +44,7 @@ class SongVerse extends \Illuminate\Database\Eloquent\Model
 
         // Order by sortable ASC
         static::addGlobalScope('order', function (Builder $builder) {
-            $builder->orderBy('number', 'asc');
+            $builder->orderByRaw('abs(number)');
         });
     }
 
