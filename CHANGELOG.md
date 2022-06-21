@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.143.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.0...v2022.143.1) (2022-06-21)
+
+
+### Bug Fixes
+
+* Song verses are not sorted numerically ([6b2e87e](https://github.com/pfarrplaner/pfarrplaner/commits/6b2e87e710aafe013817f4d47722425f1f76ae05)), closes [#280](https://github.com/pfarrplaner/pfarrplaner/issues/280)
+
 ## [2022.143.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.142.5...v2022.143.0) (2022-06-20)
 
 
