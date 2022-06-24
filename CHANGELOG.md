@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.144.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.3...v2022.144.0) (2022-06-24)
+
+
+### Features
+
+* Better error page for 500 ([33ff446](https://github.com/pfarrplaner/pfarrplaner/commits/33ff4464c4a4482f19ec5916711bfd7a3ef86824)), closes [#267](https://github.com/pfarrplaner/pfarrplaner/issues/267)
+* Better exception handling ([713d59b](https://github.com/pfarrplaner/pfarrplaner/commits/713d59b629a98c19b7e7001692611f23cd7689db))
+* Show past week in CC plan ([4b3d8bb](https://github.com/pfarrplaner/pfarrplaner/commits/4b3d8bba5564abe20e88fc83007cb12331a9dbdc)), closes [#263](https://github.com/pfarrplaner/pfarrplaner/issues/263)
+
 ### [2022.143.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.2...v2022.143.3) (2022-06-24)
 
 
