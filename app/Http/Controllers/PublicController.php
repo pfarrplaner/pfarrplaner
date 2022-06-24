@@ -80,7 +80,7 @@ class PublicController extends Controller
             return redirect()->route('home');
         }
 
-        $minDate = $maxDate = Carbon::now()->subDays(1);
+        $minDate = $maxDate = Carbon::now()->subDays(8);
         $latest = Service::inCity($city)
             ->ordered('DESC')
             ->limit(1)
