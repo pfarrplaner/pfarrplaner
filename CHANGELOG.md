@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.143.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.2...v2022.143.3) (2022-06-24)
+
+
+### Bug Fixes
+
+* Include weddings in EmbedEventsTableReport ([ea59f4d](https://github.com/pfarrplaner/pfarrplaner/commits/ea59f4d79dd92751d9ac27b92c0b67066ac6d976))
+
 ### [2022.143.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.1...v2022.143.2) (2022-06-24)
 
 
