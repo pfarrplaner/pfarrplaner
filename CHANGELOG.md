@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.143.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.1...v2022.143.2) (2022-06-24)
+
+
+### Bug Fixes
+
+* Satuday announcements only cover a single day ([49361a3](https://github.com/pfarrplaner/pfarrplaner/commits/49361a383a459724baf36e1a2b626201aae24657))
+
 ### [2022.143.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.0...v2022.143.1) (2022-06-21)
 
 
