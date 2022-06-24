@@ -1,10 +1,10 @@
 <?php
-/**
+/*
  * Pfarrplaner
  *
  * @package Pfarrplaner
  * @author Christoph Fischer <chris@toph.de>
- * @copyright (c) 2020 Christoph Fischer, https://christoph-fischer.org
+ * @copyright (c) 2022 Christoph Fischer, https://christoph-fischer.org
  * @license https://www.gnu.org/licenses/gpl-3.0.txt GPL 3.0 or later
  * @link https://github.com/pfarrplaner/pfarrplaner
  * @version git: $Id$
@@ -28,32 +28,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+namespace App\Exceptions;
 
-Route::resource('calendarConnection', 'CalendarConnectionController');
-Route::resource('baptisms', 'BaptismController')->middleware('auth');
-Route::resource('weddings', 'WeddingController')->middleware('auth');
+use Illuminate\Bus\Queueable;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Spatie\FlareClient\Report;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
+
+class ExceptionMail extends Mailable implements ShouldQueue
+{
+    use Queueable, SerializesModels;
+
+    /** @var FlattenException */
+    protected $flattenedException;
+
+    /** @var array */
+    protected $report;
 
 
-// import individual route files
-foreach(glob(base_path('routes/web/*.php')) as $file) {
-    Route::group([], $file);
-}
-
-// admin routes
-Route::prefix('admin')->group(function () {
-    foreach(glob(base_path('routes/web/admin/*.php')) as $file) {
-        Route::group([], $file);
+    /**
+     * Create a new message instance.
+     *
+     * @return void
+     */
+    public function __construct($flat, $report) {
+        $this->flattenedException = $flat;
+        $this->report = $report;
     }
-});
 
-
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        return $this->markdown('mail.dev.exception', [
+            'flat' => $this->flattenedException,
+            'report' => $this->report,
+        ])->subject('Exception: '.$this->flattenedException->getMessage());
+    }
+}

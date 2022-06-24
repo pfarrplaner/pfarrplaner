@@ -30,8 +30,18 @@
 
 namespace App\Exceptions;
 
+use BeyondCode\DumpServer\RequestContextProvider;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Mail;
+use PHPUnit\Exception;
+use Spatie\FlareClient\Context\BaseContextProviderDetector;
+use Spatie\FlareClient\Context\ConsoleContextProvider;
+use Spatie\FlareClient\Truncation\ReportTrimmer;
+use Spatie\LaravelIgnition\ContextProviders\LaravelContextProviderDetector;
+use Spatie\LaravelIgnition\Facades\Flare;
+use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Throwable;
+use Spatie\FlareClient\Report;
 
 class Handler extends ExceptionHandler
 {
@@ -67,5 +77,49 @@ class Handler extends ExceptionHandler
                 //
             }
         );
+    }
+
+
+    /**
+     * Converts the Exception in a PHP Exception to be able to serialize it.
+     *
+     * @param \Exception $exception
+     * @return \Symfony\Component\Debug\Exception\FlattenException
+     * @source https://github.com/squareboat/sneaker/blob/master/src/ExceptionHandler.php
+     */
+    private function getFlattenedException($exception)
+    {
+        if (!$exception instanceof FlattenException) {
+            $exception = FlattenException::createFromThrowable($exception);
+        }
+
+        return $exception;
+    }
+
+    public function report(Throwable $e)
+    {
+        parent::report($e);
+
+        $flat = $this->getFlattenedException($e);
+        $flare = Flare::make()
+            ->setStage(app()->environment())
+            ->setContextProviderDetector(new LaravelContextProviderDetector())
+            ->setApiToken('')
+            ->registerMiddleware(collect(config('flare.flare_middleware'))
+                                     ->map(function ($value, $key) {
+                                         if (is_string($key)) {
+                                             $middlewareClass = $key;
+                                             $parameters = $value ?? [];
+                                         } else {
+                                             $middlewareClass = $value;
+                                             $parameters = [];
+                                         }
+
+                                         return new $middlewareClass(...array_values($parameters));
+                                     })
+                                     ->values()
+                                     ->toArray());
+        $report = $flare->createReport($e);
+        Mail::to('dev@toph.de')->send(new ExceptionMail($flat, $report->toArray()));
     }
 }
