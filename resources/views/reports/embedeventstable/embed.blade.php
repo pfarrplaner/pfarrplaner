@@ -70,7 +70,7 @@
                                     style="vertical-align:top;">{!! $eventStart->formatLocalized('%a.,&nbsp;%d.%m.') !!}</td>
                                 <td valign="top">{{ $event->timeText(true, '.') }}</td>
                                 <td valign="top">
-                                    <b>{{ ($event->title ?: 'Gottesdienst') }}</b> @if($event->participantsText('P') != '')
+                                    <b>{{ $event->titleText(false, false) }}</b> @if($event->participantsText('P') != '')
                                         ({{ $event->participantsText('P') }})@endif
                                     @if($event->descriptionText())<br/>{{ $event->descriptionText() }}@endif
                                     @if($event->controlled_access) @component('components.service.controlledAccess', ['service' => $event]) @endcomponent @endif
