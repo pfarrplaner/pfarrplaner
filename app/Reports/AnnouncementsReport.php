@@ -225,7 +225,7 @@ class AnnouncementsReport extends AbstractWordDocumentReport
         $offeringText = $data['offering_text'] ?? '';
 
         $lastWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 last Sunday');
-        $nextWeek = Carbon::createFromTimeString($service->date->format('Y-m-d') . ' 0:00:00 next Sunday')->setTime(
+        $nextWeek = $lastWeek->copy()->addWeeks(2)->setTime(
             23,
             59,
             59
