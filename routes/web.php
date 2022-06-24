@@ -56,4 +56,7 @@ Route::prefix('admin')->group(function () {
     }
 });
 
+Route::get('/panic', function() {
+    throw new \Exception('Whoops');
+});
 
