@@ -35,9 +35,14 @@
             </nav-button>
         </template>
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <location-select label="Gottesdienste an folgendem Ort anlegen" :locations="locations"
                                  v-model="setup.location" @input="serviceList" use-input />
+            </div>
+            <div class="col-md-3">
+                <div v-if="eventTypes[location.city_id]">
+                    <form-selectize label="KonfiApp" :options="eventTypes[location.city_id].types" v-model="setup.eventType"/>
+                </div>
             </div>
             <div class="col-md-6">
                 <form-input label="Abweichender Titel" v-model="setup.title"  @input="serviceList"/>
@@ -141,7 +146,7 @@ export default {
         DatasetSearch,
         DatasetShow
     },
-    props: ['cities', 'locations'],
+    props: ['cities', 'locations', 'eventTypes'],
     mounted() {
         this.serviceList();
     },
@@ -175,6 +180,7 @@ export default {
                 title: '',
                 rhythm: 1,
                 weekDay: 0,
+                eventType: this.locations[0].city.konfiapp_default_type || null,
             },
             weekDays: [
                 {id: 0, name: 'Sonntag'},
@@ -188,10 +194,26 @@ export default {
             services: [],
         }
     },
+    watch: {
+        setup: {
+            handler (newVal, oldVal) {
+                let newCity = this.locations.filter(item => {
+                    return item.id==newVal.location;
+                })[0];
+                let oldCity = this.locations.filter(item => {
+                    return item.id==newVal.location;
+                })[0];
+                if (undefined != this.eventTypes[newVal]) {
+                    if (newCity != oldCity) {
+                        this.setup.eventType = newCity.konfiapp_default_type || null;
+                    }
+                } else {
+                    this.setup.eventType = null;
+                }
+            },
+        }
+    },
     methods: {
-        showTable() {
-            this.$inertia.post(route('inputs.input', 'offerings'), this.setup);
-        },
         serviceList() {
             if (!this.setup.from) return;
             if (!this.setup.to) return;
@@ -225,7 +247,7 @@ export default {
             });
         },
         createServices() {
-            this.$inertia.post(route('inputs.save', 'multipleServices'), {services: this.services, title: this.setup.title});
+            this.$inertia.post(route('inputs.save', 'multipleServices'), {services: this.services, title: this.setup.title, eventType: this.setup.eventType});
         },
         deleteRow(index) {
             this.services.splice(index, 1);

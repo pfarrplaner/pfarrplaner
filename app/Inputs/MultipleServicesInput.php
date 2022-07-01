@@ -31,6 +31,7 @@
 namespace App\Inputs;
 
 use App\Day;
+use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Location;
 use App\Mail\ServiceCreatedMultiple;
 use App\Service;
@@ -68,8 +69,19 @@ class MultipleServicesInput extends AbstractInput
      */
     public function setup(Request $request)
     {
+        $eventTypes = [];
+        foreach (Auth::user()->writableCities as $city) {
+            if ($city->konfiapp_apikey) {
+                $konfiApp = new KonfiAppIntegration($city->konfiapp_apikey);
+                $eventTypes[$city->id] = [
+                    'types' => $konfiApp->listEventTypes(),
+                    'default' => $city->konfiapp_default_type,
+                    ];
+            }
+        }
+
         $locations = Location::whereIn('city_id', Auth::user()->writableCities->pluck('id'))->get();
-        return Inertia::render('Inputs/MultipleServices/Setup', compact('locations'));
+        return Inertia::render('Inputs/MultipleServices/Setup', compact('locations', 'eventTypes'));
     }
 
 
@@ -93,9 +105,12 @@ class MultipleServicesInput extends AbstractInput
             'services.*.date' => 'date',
             'services.*.time' => 'date_format:H:i',
             'services.*.location' => 'int|exists:locations,id',
+            'eventType' => 'nullable|int',
                                    ]);
         $serviceRecords = [];
         $ctrExisting = $ctrAdded = 0;
+
+        $eventTypes = [];
 
         foreach ($data['services'] as $serviceData) {
             $location = Location::find($serviceData['location']);
@@ -126,7 +141,18 @@ class MultipleServicesInput extends AbstractInput
                     'offering_description' => '',
                     'offering_type' => '',
                 ];
-                $serviceRecords[] = Service::create($service);
+
+                // check KonfiApp event types
+                if ($data['eventType'] && $location->city->konfiapp_apikey) {
+                    $service['konfiapp_event_type'] = $data['eventType'];
+                }
+                $serviceRecords[] = $serviceModel = Service::create($service);
+
+                if ($data['eventType'] && $location->city->konfiapp_apikey) {
+                    $konfiApp = new KonfiAppIntegration($location->city->konfiapp_apikey);
+                    $serviceModel->update(['konfiapp_event_qr' => $konfiApp->createQRCode($serviceModel)]);
+                }
+
                 $ctrAdded++;
             } else {
                 $ctrExisting++;
