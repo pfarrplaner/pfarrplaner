@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.145.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.144.0...v2022.145.0) (2022-07-01)
+
+
+### Features
+
+* Allow setting KonfiApp event type when creating multiple new services ([c2f254d](https://github.com/pfarrplaner/pfarrplaner/commits/c2f254db85d5693c7f5109e204386a5d54e4131d)), closes [#285](https://github.com/pfarrplaner/pfarrplaner/issues/285)
+
+
+### Bug Fixes
+
+* Outputs fail when no pronoun set is selected for a funeral ([8acb29d](https://github.com/pfarrplaner/pfarrplaner/commits/8acb29dffac3d3280c41aa7e1d647a6538b02341))
+
 ## [2022.144.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.143.3...v2022.144.0) (2022-06-24)
 
 
