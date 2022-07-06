@@ -50,7 +50,7 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
             foreach ($block->items as $item) {
                 if (($item->data_type == 'song') && (isset($item->data['song']))) {
                 $body .= '  - '.$item->title.': '
-                    .($item->data[$item->data_type]['code'] ?? $item->data[$item->data_type]['songbook']['name'])
+                    .($item->data[$item->data_type]['code'] ?? $item->data[$item->data_type]['songbook']['name'] ?? '')
                     .' '
                     .$item->data[$item->data_type]['reference'].' '
                     .$item->data[$item->data_type]['song']['title']
@@ -58,7 +58,7 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
                     .PHP_EOL;
                 } elseif ($item->data_type == 'psalm') {
                     $body .= '  - '.$item->title.': '
-                        .($item->data[$item->data_type]['songbook_abbreviation'] ?? $item->data[$item->data_type]['songbook'])
+                        .($item->data[$item->data_type]['songbook_abbreviation'] ?? $item->data[$item->data_type]['songbook'] ?? '')
                         .' '
                         .$item->data[$item->data_type]['reference'].' '
                         .$item->data[$item->data_type]['title']
