@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.146.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.145.0...v2022.146.0) (2022-07-06)
+
+
+### Bug Fixes
+
+* Cannot send SongMailLiturgySheet when a psalm in the liturgy has no songbook ([d77e24f](https://github.com/pfarrplaner/pfarrplaner/commits/d77e24f88729000d47872a9be6109cd70701023c))
+
 ## [2022.145.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.144.0...v2022.145.0) (2022-07-01)
 
 
