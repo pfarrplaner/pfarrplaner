@@ -255,20 +255,20 @@
                     <td valign="top">
                         @if(isset($item->data['song']) && isset($item->data['song']['song']))
                             @if (isset($item->data['song']['code']) || isset($item->data['song']['songbook']))
-                                {{ $item->data['song']['code'] ?: ($item['song']['songbook']['name'] ?: '') }}
+                                {{ $item->data['song']['code'] ?? ($item['song']['songbook']['name'] ?? '') }}
                             @endif
-                            {{ $item->data['song']['reference'] ?: '' }}
-                            {{ $item->data['song']['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
+                            {{ $item->data['song']['reference'] ?? '' }}
+                            {{ $item->data['song']['song']['title'] ?? '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
                         @endif
                     </td>
                 @elseif($item->data_type == 'psalm')
                     <td valign="top">
                         @if(isset($item->data['psalm']))
                             @if (isset($item->data['psalm']['songbook_abbreviation']) || isset($item->data['psalm']['songbook']))
-                                {{ $item->data['psalm']['songbook_abbreviation'] ?: ($item['psalm']['songbook'] ?: '') }}
+                                {{ $item->data['psalm']['songbook_abbreviation'] ?? ($item['psalm']['songbook'] ?? '') }}
                             @endif
-                            {{ $item->data['psalm']['reference'] ?: '' }}
-                            {{ $item->data['psalm']['title'] ?: '' }}
+                            {{ $item->data['psalm']['reference'] ?? '' }}
+                            {{ $item->data['psalm']['title'] ?? '' }}
                         @endif
                     </td>
                 @elseif($item->data_type == 'reading')
