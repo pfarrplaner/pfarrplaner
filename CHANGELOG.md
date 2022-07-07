@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.147.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.146.0...v2022.147.0) (2022-07-07)
+
+
+### Bug Fixes
+
+* A4LiturgySheet, A5LiturgySheet fail when a song has no songbook abbreviation ([f615f4f](https://github.com/pfarrplaner/pfarrplaner/commits/f615f4f4da87d1e6250685efcbe3f0f14a807302))
+* ExceptionMail is missing primary context info ([9f6cb66](https://github.com/pfarrplaner/pfarrplaner/commits/9f6cb66856c9c27e5c4074b9fecd2e861b90e3a3))
+
 ## [2022.146.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.145.0...v2022.146.0) (2022-07-06)
 
 
