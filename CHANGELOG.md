@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.147.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.147.0...v2022.147.1) (2022-07-22)
+
+
+### Bug Fixes
+
+* FuneralWizard does not fill in current user as pastor ([c4f4aa6](https://github.com/pfarrplaner/pfarrplaner/commits/c4f4aa64399e45a57094d9164f9b551ddd6dcca7))
+* LiturgicItemHelper throws an exception when names are not correctly formatted "lastName, firstName" ([97bb219](https://github.com/pfarrplaner/pfarrplaner/commits/97bb219f580a9d38f707583d7191c5ac7303b922))
+
 ## [2022.147.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.146.0...v2022.147.0) (2022-07-07)
 
 
