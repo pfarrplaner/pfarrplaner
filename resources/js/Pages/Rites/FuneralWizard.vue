@@ -72,7 +72,7 @@ export default {
                 city: null,
                 location: null,
                 name: null,
-                pastor: [this.user.id],
+                pastor: [this.$page.props.currentUser.data],
             },
         }
     },
