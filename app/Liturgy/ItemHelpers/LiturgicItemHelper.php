@@ -36,6 +36,7 @@ use App\Funeral;
 use App\Liturgy\PronounSets\AbstractPronounSet;
 use App\Liturgy\PronounSets\PronounSets;
 use App\Service;
+use App\Services\NameService;
 use App\Wedding;
 use Carbon\Carbon;
 
@@ -56,7 +57,7 @@ class LiturgicItemHelper extends AbstractItemHelper
                 $funeralId = $this->item->data['replacement'] ?? $service->funerals->first()->id;
                 if ($service->funerals->pluck('id')->contains($funeralId)) {
                     $funeral = Funeral::find($funeralId);
-                    list($lastName, $firstName) = explode(',', $funeral->buried_name);
+                    list($lastName, $firstName) = NameService::fromName($funeral->buried_name)->format(NameService::LAST_FIRST_ARRAY);
                     foreach (
                         [
                             'bestattung:vorname' => trim($firstName),
@@ -88,7 +89,7 @@ class LiturgicItemHelper extends AbstractItemHelper
                 $baptismId = $this->item->data['replacement'] ?? $service->baptisms->first()->id;
                 if ($service->baptisms->pluck('id')->contains($baptismId)) {
                     $baptism = Baptism::find($baptismId);
-                    list($lastName, $firstName) = explode(',', $baptism->candidate_name);
+                    list($lastName, $firstName) = NameService::fromName($baptism->candidate_name)->format(NameService::LAST_FIRST_ARRAY);
                     foreach (
                         [
                             'taufe:vorname' => trim($firstName),
@@ -108,8 +109,8 @@ class LiturgicItemHelper extends AbstractItemHelper
                 $weddingId = $this->item->data['replacement']  ?? $service->weddings->first()->id;
                 if ($service->weddings->pluck('id')->contains($weddingId)) {
                     $wedding = Wedding::find($weddingId);
-                    list($lastName1, $firstName1) = explode(',', $wedding->spouse1_name);
-                    list($lastName2, $firstName2) = explode(',', $wedding->spouse2_name);
+                    list($lastName1, $firstName1) = NameService::fromName($wedding->spouse1_name)->format(NameService::LAST_FIRST_ARRAY);
+                    list($lastName2, $firstName2) = NameService::fromName($wedding->spouse2_name)->format(NameService::LAST_FIRST_ARRAY);
                     foreach (
                         [
                             'trauung:person1:vorname' => trim($firstName1),
