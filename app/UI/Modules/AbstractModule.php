@@ -45,7 +45,7 @@ class AbstractModule
 
     public function isActive(): bool
     {
-        return (bool)$this->config[$this->getKey()];
+        return (bool)($this->config[$this->getKey()] ?? false);
     }
 
     /**

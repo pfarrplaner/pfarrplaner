@@ -29,26 +29,6 @@
  */
 
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+use App\Http\Controllers\RitesController;
+
+Route::get('/kasualien', [RitesController::class, 'index'])->name('rites.index');

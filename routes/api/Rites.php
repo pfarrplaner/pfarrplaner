@@ -29,26 +29,4 @@
  */
 
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+Route::get('rites/find/{query}', [\App\Http\Controllers\Api\RitesController::class, 'query'])->name('rites.query');

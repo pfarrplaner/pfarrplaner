@@ -28,27 +28,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace App\Http\Controllers;
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+
+class RitesController extends Controller
+{
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index()
+    {
+        return Inertia::render('Rites/Index');
+    }
+
+}

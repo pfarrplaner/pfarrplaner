@@ -28,27 +28,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace App\UI\Modules;
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+class RitesModule extends AbstractModule
+{
+    protected $title = 'Kasualien';
+    protected $icon = 'mdi mdi-cross';
+    protected $defaultRoute = 'rites.index';
+
+    public function addItems(array $items): array
+    {
+        $items[] = [
+            'text' => 'Kasualien',
+            'icon' => 'mdi mdi-cross',
+            'url' => route('rites.index'),
+            'active' => request()->is(['rites*']),
+            'inertia' => true,
+        ];
+        return $items;
+    }
+
+}

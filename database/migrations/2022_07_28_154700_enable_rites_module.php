@@ -28,27 +28,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use App\Liturgy\Item;
+use App\Liturgy\Song;
+use App\Liturgy\Songbook;
+use App\Liturgy\SongReference;
+use App\Service;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+return new class extends Migration {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        $new = \App\UI\Modules\Modules::defaultConfig();
+        $old = $new;
+        unset($old['rites']);
+
+        foreach (\App\User::all() as $user) {
+            if ($user->getSetting('modules', []) == $old) $user->setSetting('modules', $new);
+        }
+
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        $old = \App\UI\Modules\Modules::defaultConfig();
+        $new = $old;
+        unset($new['rites']);
+
+        foreach (\App\User::all() as $user) {
+            if ($user->getSetting('modules', []) == $old) $user->setSetting('modules', $new);
+        }
+    }
+
+};
