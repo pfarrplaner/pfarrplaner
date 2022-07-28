@@ -83,15 +83,9 @@ class PersonalServicesCalendarLink extends AbstractCalendarLink
      */
     public function getRenderData(Request $request, User $user)
     {
-        $servicesQuery = Service::select('services.*')
-            ->with('location', 'day', 'participants')
-            ->whereHas(
-                'participants',
-                function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                }
-            );
-        if (!$request->get('includeHidden', 0)) $servicesQuery->notHidden();
+        $servicesQuery = Service::with('location')
+            ->userParticipates($user)
+            ->ordered();
         return $servicesQuery->get();
     }
 
