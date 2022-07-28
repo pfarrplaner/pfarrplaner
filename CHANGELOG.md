@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.149.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.148.0...v2022.149.0) (2022-07-28)
+
+
+### Features
+
+* New rites module ([dc1ce11](https://github.com/pfarrplaner/pfarrplaner/commits/dc1ce1146cd5e342c1f61bc2669a88d768f303e6))
+
 ## [2022.148.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.147.1...v2022.148.0) (2022-07-28)
 
 
