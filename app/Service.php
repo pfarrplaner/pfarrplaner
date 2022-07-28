@@ -35,6 +35,7 @@ use App\Liturgy\Block;
 use App\Seating\AbstractSeatFinder;
 use App\Seating\MaximumBasedSeatFinder;
 use App\Seating\RowBasedSeatFinder;
+use App\Services\NameService;
 use App\Tools\StringTool;
 use App\Traits\HasAttachmentsTrait;
 use App\Traits\HasCommentsTrait;
@@ -273,7 +274,7 @@ class Service extends Model
     {
         $baptisms = [];
         foreach ($this->baptisms as $baptism) {
-            $baptisms[] = $baptism->candidate_name;
+            $baptisms[] = NameService::fromName($baptism->candidate_name)->format(NameService::FIRST_LAST);
         }
         return
             ($includeText ? ($this->baptisms()->count() == 1 ? 'Taufe ' : 'Taufen ') . 'von ' : '')
@@ -716,9 +717,9 @@ class Service extends Model
         $weddings = [];
         /** @var Wedding $wedding */
         foreach ($this->weddings as $wedding) {
-            $weddings[] = 'Trauung von ' . $wedding->spouse1_name
+            $weddings[] = 'Trauung von ' . NameService::fromName($wedding->spouse1_name)->format(NameService::FIRST_LAST)
                 . ($wedding->spouse1_birth_name ? ' (' . $wedding->spouse1_birth_name . ')' : '')
-                . ' und ' . $wedding->spouse2_name
+                . ' und ' . NameService::fromName($wedding->spouse2_name)->format(NameService::FIRST_LAST)
                 . ($wedding->spouse2_birth_name ? ' (' . $wedding->spouse2_birth_name . ')' : '');
         }
         return (join('; ', $weddings));
@@ -731,7 +732,7 @@ class Service extends Model
     {
         $funerals = [];
         foreach ($this->funerals as $funeral) {
-            $funerals[] = $funeral->type . ' von ' . $funeral->buried_name;
+            $funerals[] = ($funeral->type  ?: 'Bestattung'). ' von ' . NameService::fromName($funeral->buried_name)->format(NameService::FIRST_LAST);
         }
         return (join('; ', $funerals));
     }
