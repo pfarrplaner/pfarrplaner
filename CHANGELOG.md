@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.148.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.147.1...v2022.148.0) (2022-07-28)
+
+
+### Features
+
+* Format names "first last" in service titles with rites ([bd00576](https://github.com/pfarrplaner/pfarrplaner/commits/bd005763e538dd1525c1034cc8d538c447ae163b))
+
+
+### Bug Fixes
+
+* ICAL does not show newer services ([029a322](https://github.com/pfarrplaner/pfarrplaner/commits/029a322170c83aaf4d3d369e59b1878a5f42e830))
+
 ### [2022.147.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.147.0...v2022.147.1) (2022-07-22)
 
 
