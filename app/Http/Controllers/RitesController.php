@@ -46,7 +46,8 @@ class RitesController extends Controller
 
     public function index()
     {
-        return Inertia::render('Rites/Index');
+        $config = Auth::user()->getSetting('homeScreenConfig', []);
+        return Inertia::render('Rites/Index', compact('config'));
     }
 
 }
