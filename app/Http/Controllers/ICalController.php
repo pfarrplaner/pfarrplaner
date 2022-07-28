@@ -58,7 +58,7 @@ class ICalController extends Controller
     public function private($name, $token)
     {
         $this->checkToken($token);
-        $services = Service::with(['day', 'location'])
+        $services = Service::with(['location'])
             ->where(
                 function ($query) use ($name) {
                     $query->where('pastor', 'like', '%' . $name . '%')
@@ -107,7 +107,7 @@ class ICalController extends Controller
     public function byLocation($locationIds, $token)
     {
         $this->checkToken($token);
-        $services = Service::with(['day', 'location'])
+        $services = Service::with(['location'])
             ->whereIn('city_id', explode(',', $locationIds))
             ->get();
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');

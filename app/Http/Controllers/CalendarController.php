@@ -143,9 +143,8 @@ class CalendarController extends Controller
         $filteredLocations = CalendarService::getLocationsFilter($request, $possibleLocations, $user);
 
         // services
-        $serviceQuery = Service::with('day', 'location')
+        $serviceQuery = Service::with('location')
             ->whereIn('city_id', $cities->pluck('id'))
-            ->whereIn('day_id', $days->pluck('id'))
             ->orderBy('time');
 
         if (count($filteredLocations)) {

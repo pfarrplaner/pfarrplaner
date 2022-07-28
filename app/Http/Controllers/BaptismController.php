@@ -111,7 +111,7 @@ class BaptismController extends Controller
     protected function getBaptismalServices($baptismFlag = 1)
     {
         return Service::setEagerLoads([])
-            ->with(['day', 'baptisms', 'participants'])
+            ->with(['baptisms', 'participants'])
             ->where('baptism', '=', $baptismFlag)
             ->whereDoesntHave('funerals')
             ->inCities(Auth::user()->cities)
@@ -129,7 +129,7 @@ class BaptismController extends Controller
     public function edit(Baptism $baptism)
     {
         $baptismalServicesQuery = Service::setEagerLoads([])
-            ->with(['day', 'baptisms', 'participants'])
+            ->with(['baptisms', 'participants'])
             ->where('baptism', '=', 1)
             ->inCities(Auth::user()->cities)
             ->startingFrom(Carbon::now())
