@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.149.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.149.1...v2022.149.2) (2022-07-28)
+
+
+### Bug Fixes
+
+* KonfiAppQRReport did not include newer services ([0a7761f](https://github.com/pfarrplaner/pfarrplaner/commits/0a7761fb91447d1f6571a37c08bf89ad713e08e3))
+
 ### [2022.149.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.149.0...v2022.149.1) (2022-07-28)
 
 
