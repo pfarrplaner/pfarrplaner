@@ -114,14 +114,9 @@ class KonfiAppQRReport extends AbstractPDFDocumentReport
 
         $allServices = Service::where('city_id', $data['city'])
             ->where('konfiapp_event_qr', '!=', '')
-            ->whereHas(
-                'day',
-                function ($query) use ($data) {
-                    $query->where('date', '>=', Carbon::createFromFormat('d.m.Y', $data['start'])->format('Y-m-d'))
-                        ->where('date', '<=', Carbon::createFromFormat('d.m.Y', $data['end'])->format('Y-m-d'));
-                }
-            )
-            ->get();
+            ->between(Carbon::createFromFormat('d.m.Y', $data['start']),
+                      Carbon::createFromFormat('d.m.Y', $data['end'])
+            )->ordered()->get();
 
 
         // group by location
