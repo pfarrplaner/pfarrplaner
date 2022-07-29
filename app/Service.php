@@ -283,6 +283,11 @@ class Service extends Model
             . join('; ', $baptisms);
     }
 
+    public function diaryEntries()
+    {
+        return $this->hasMany(DiaryEntry::class);
+    }
+
     /**
      * @return HasMany
      */

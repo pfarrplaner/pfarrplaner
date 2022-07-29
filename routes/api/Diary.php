@@ -28,28 +28,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+use App\Http\Controllers\Api\DiaryController;
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-            \App\UI\Modules\DiaryModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+Route::post('amtskalender/kategorie/{category}/gottesdienste/{service}', [DiaryController::class, 'addService'])->name('diary.category.services.add');
+Route::post('amtskalender/kategorie/{category}/verschieben/{diaryEntry}', [DiaryController::class, 'moveItem'])->name('diary.category.items.move');
+
+Route::delete('amtskalender/eintrag/{diaryEntry}', [DiaryController::class, 'destroy'])->name('diary.entry.destroy');

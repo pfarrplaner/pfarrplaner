@@ -28,28 +28,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+namespace App\UI\Modules;
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-            \App\UI\Modules\DiaryModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+use Illuminate\Support\Facades\Auth;
+
+class DiaryModule extends AbstractModule
+{
+    protected $title = 'Amtskalender';
+    protected $icon = 'mdi mdi-notebook';
+    protected $defaultRoute = 'diary.index';
+
+    public function addItems(array $items): array
+    {
+        $items[] = [
+            'text' => 'Amtskalender',
+            'icon' => 'mdi mdi-notebook',
+            'url' => route('diary.index'),
+            'active' => request()->is(['diary*']),
+            'inertia' => true,
+        ];
+        return $items;
+    }
+
+    public function isActive(): bool
+    {
+        return parent::isActive() && Auth::user()->hasRole('Pfarrer*in');
+    }
+
+
+}

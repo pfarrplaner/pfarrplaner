@@ -1,4 +1,3 @@
-<?php
 /*
  * Pfarrplaner
  *
@@ -28,28 +27,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+const GTA = 'Gottesdienst, Taufe und Abendmahl';
+const AMT = 'Amtshandlungen';
+const SSD = 'Seelsorge, Diakonie';
+const UJU = 'Unterricht, Jugendarbeit';
+const BEB = 'Bibelarbeit, Erwachsenenbildung';
+const MGD = 'Mitarbeiterschaft, Gremien, Dienstbesprechung';
 
-return [
-    'groups' => [
-        'default' => [
-            \App\UI\Modules\ProfileModule::class,
-            \App\UI\Modules\CalendarModule::class,
-            \App\UI\Modules\RitesModule::class,
-            \App\UI\Modules\AbsencesModule::class,
-            \App\UI\Modules\DiaryModule::class,
-        ],
-        'Eingabe' => [
-            \App\UI\Modules\InputsModule::class,
-        ],
-        'Ausgabe' => [
-            \App\UI\Modules\ExportsModule::class,
-            \App\UI\Modules\OutlookExportModule::class,
-        ],
-        'Administration' => [
-            \App\UI\Modules\AdminModule::class,
-        ],
-        'Information' => [
-            \App\UI\Modules\InfoModule::class,
-        ],
-    ],
-];
+export const DiaryCategories =  {
+    GTA: GTA,
+    AMT: AMT,
+    SSD: SSD,
+    UJU: UJU,
+    BEB: BEB,
+    MGD: MGD,
+};
