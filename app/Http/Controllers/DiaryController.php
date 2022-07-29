@@ -54,7 +54,7 @@ class DiaryController extends Controller
      */
     public function index($date = null)
     {
-        $start = $date ? Carbon::parse($date.'-01 0:00:00') : Carbon::now()->startOfMonth();
+        $start = $date ? Carbon::parse($date . '-01 0:00:00') : Carbon::now()->startOfMonth();
         $end = $start->copy()->addMonth(1)->subSecond(1);
         $date ??= Carbon::now()->startOfMonth();
 
@@ -63,7 +63,9 @@ class DiaryController extends Controller
             ->userParticipates(Auth::user())
             ->where(function ($q) {
                 $q->whereDoesntHave('diaryEntries')
-                    ->orWhereHas('diaryEntries', function ($q2) { $q2->where('user_id', '!=', Auth::user()->id); });
+                    ->orWhereHas('diaryEntries', function ($q2) {
+                        $q2->where('user_id', '!=', Auth::user()->id);
+                    });
             })
             ->ordered()
             ->get();
@@ -76,6 +78,39 @@ class DiaryController extends Controller
 
 
         return Inertia::render('Diary/Index', compact('date', 'services', 'diaryEntries'));
+    }
+
+    /**
+     * Auto-create DiaryEntry records for all services in a month
+     *
+     * @param null $date
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function autoSortServices($date)
+    {
+        $start = Carbon::parse($date . '-01 0:00:00');
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+
+        $services = Service::with('location')
+            ->between($start, $end)
+            ->userParticipates(Auth::user())
+            ->where(function ($q) {
+                $q->whereDoesntHave('diaryEntries')
+                    ->orWhereHas('diaryEntries', function ($q2) {
+                        $q2->where('user_id', '!=', Auth::user()->id);
+                    });
+            })
+            ->ordered()
+            ->get();
+
+        foreach ($services as $service) {
+            DiaryEntry::createFromService(
+                $service,
+                (count($service->weddings) || count($service->funerals)) ? 'AMT' : 'GTA'
+            );
+        }
+
+        return redirect()->route('diary.index', compact('date'));
     }
 
 }

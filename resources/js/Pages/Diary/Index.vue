@@ -39,15 +39,26 @@
         <div class="row">
             <div class="col-md-4">
                 <h2>Gottesdienste</h2>
-                <draggable v-if="myServices.length > 0" :list="services" :class="{ghostClass: 'ghost-block'}"
-                    group="items" id="service_list" @change="itemDroppedBack">
-                    <div v-for="(service, serviceKey) in myServices" :key="'service_'+serviceKey"
-                        class="border m-1 rounded p-2 service-item">
-                        <div>{{ service.titleText }}</div>
-                        <div>{{ moment(service.date).locale('de').format('DD.MM.YYYY, HH:mm') }}</div>
-                        <div>{{ service.locationText }}</div>
+                <div v-if="this.myServices.length == 0" class="text-small text-muted">Zur Zeit sind keine Gottesdienste
+                    vorhanden, die noch nicht eingetragen sind.
+                </div>
+                <div v-else>
+                    <div>
+                        <nav-button type="light" icon="mdi mdi-notebook-multiple"
+                                    title="Gottesdienste automatisch eintragen"
+                                    force-icon class="btn-sm" @click="autoSort">Alle automatisch eintragen
+                        </nav-button>
                     </div>
-                </draggable>
+                    <draggable v-if="myServices.length > 0" :list="services" :class="{ghostClass: 'ghost-block'}"
+                               group="items" id="service_list" @change="itemDroppedBack">
+                        <div v-for="(service, serviceKey) in myServices" :key="'service_'+serviceKey"
+                             class="border m-1 rounded p-2 service-item">
+                            <div>{{ service.titleText }}</div>
+                            <div>{{ moment(service.date).locale('de').format('DD.MM.YYYY, HH:mm') }}</div>
+                            <div>{{ service.locationText }}</div>
+                        </div>
+                    </draggable>
+                </div>
                 <h2>Kalender</h2>
             </div>
             <div class="col-md-8">
@@ -56,7 +67,7 @@
                         <card-header>{{ diaryCategory }} ({{ diaryKey }})</card-header>
                         <card-body>
                             <draggable group="items" :list="diary[diaryKey]" class="category-list"
-                                :id="'category_'+diaryKey" @change="itemDropped($event, diaryKey)">
+                                       :id="'category_'+diaryKey" @change="itemDropped($event, diaryKey)">
                                 <div v-for="(item, itemKey) in diary[diaryKey]" :key="'item_'+diaryKey+'_'+itemKey">
                                     {{ moment(item.date).locale('de').format('DD.MM. HH:mm') }} {{ item.title }}
                                 </div>
@@ -109,8 +120,11 @@ export default {
         }
     },
     methods: {
+        autoSort() {
+            this.$inertia.post(route('diary.autosort', {date: this.myDate}), {}, {preserveState: false});
+        },
         sortList(category) {
-            (category ? this.diary[category] : this.myServices).sort(function(a, b) {
+            (category ? this.diary[category] : this.myServices).sort(function (a, b) {
                 var keyA = new Date(a.date),
                     keyB = new Date(b.date);
                 // Compare the 2 dates
@@ -169,14 +183,15 @@ export default {
 </script>
 
 <style scoped>
-    .category-list {
-        font-size: .8em;
-    }
-    .service-item {
-        font-size: .8em;
-    }
+.category-list {
+    font-size: .8em;
+}
 
-    .service-item div:first-child {
-        font-weight: bold;
-    }
+.service-item {
+    font-size: .8em;
+}
+
+.service-item div:first-child {
+    font-weight: bold;
+}
 </style>

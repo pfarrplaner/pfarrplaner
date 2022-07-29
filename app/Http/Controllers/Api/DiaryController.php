@@ -56,15 +56,7 @@ class DiaryController extends \App\Http\Controllers\Controller
      */
     public function addService($category, Service $service)
     {
-        $diaryEntry = DiaryEntry::create([
-                                             'date' => $service->date->copy()->setTimeZone('Europe/Berlin'),
-                                             'title' => $service->titleText(false),
-                                             'user_id' => Auth::user()->id,
-                                             'service_id' => $service->id,
-                                             'category' => $category,
-                                         ]);
-
-        return response()->json($diaryEntry);
+        return response()->json(DiaryEntry::createFromService($service, $category));
     }
 
     /**
