@@ -30,6 +30,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CalendarConnection;
 use App\DiaryEntry;
 use App\Service;
 use Carbon\Carbon;
@@ -76,8 +77,14 @@ class DiaryController extends Controller
             ->orderBy('date')
             ->get();
 
+        $calendarConnections = collect();
+        $allCalendarConnections = CalendarConnection::where('user_id', Auth::user()->id)->get();
+        foreach ($allCalendarConnections as $calendarConnection) {
+            if (substr($calendarConnection->connection_string, 0, 4) == 'exc:')
+                $calendarConnections->push(['id' => $calendarConnection->id, 'name' => $calendarConnection['title']]);
+        }
 
-        return Inertia::render('Diary/Index', compact('date', 'services', 'diaryEntries'));
+        return Inertia::render('Diary/Index', compact('date', 'services', 'diaryEntries', 'calendarConnections'));
     }
 
     /**

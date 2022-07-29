@@ -5,8 +5,8 @@ namespace App\Calendars\Exchange;
 
 
 use App\Calendars\Exchange\Exceptions\RequestFailedException;
+use Carbon\Carbon;
 use Closure;
-use jamesiarmes\PhpEws\ArrayType\ArrayOfResponseMessagesType;
 use jamesiarmes\PhpEws\ArrayType\NonEmptyArrayOfAllItemsType;
 use jamesiarmes\PhpEws\ArrayType\NonEmptyArrayOfBaseFolderIdsType;
 use jamesiarmes\PhpEws\ArrayType\NonEmptyArrayOfBaseItemIdsType;
@@ -24,12 +24,15 @@ use jamesiarmes\PhpEws\Enumeration\UnindexedFieldURIType;
 use jamesiarmes\PhpEws\Request\CreateItemType;
 use jamesiarmes\PhpEws\Request\DeleteItemType;
 use jamesiarmes\PhpEws\Request\FindFolderType;
+use jamesiarmes\PhpEws\Request\FindItemType;
 use jamesiarmes\PhpEws\Request\GetItemType;
 use jamesiarmes\PhpEws\Request\UpdateItemType;
 use jamesiarmes\PhpEws\Response;
 use jamesiarmes\PhpEws\Type\CalendarItemType;
+use jamesiarmes\PhpEws\Type\CalendarViewType;
 use jamesiarmes\PhpEws\Type\ConstantValueType;
 use jamesiarmes\PhpEws\Type\DistinguishedFolderIdType;
+use jamesiarmes\PhpEws\Type\FolderIdType;
 use jamesiarmes\PhpEws\Type\FolderResponseShapeType;
 use jamesiarmes\PhpEws\Type\ItemIdType;
 use jamesiarmes\PhpEws\Type\ItemResponseShapeType;
@@ -92,6 +95,34 @@ class ExchangeCalendar extends \App\Calendars\AbstractCalendar
             }
         }
         return $calendars;
+    }
+
+    public function getAllEventsForRange(Carbon $start, Carbon $end)
+    {
+        $request = new FindItemType();
+        $request->ParentFolderIds = new NonEmptyArrayOfBaseFolderIdsType();
+
+        $request->ItemShape = new ItemResponseShapeType();
+        $request->ItemShape->BaseShape = DefaultShapeNamesType::ALL_PROPERTIES;
+
+        $request->ParentFolderIds->FolderId = new FolderIdType();
+        $request->ParentFolderIds->FolderId->Id = $this->folder->FolderId->Id;
+
+        $request->CalendarView = new CalendarViewType();
+        $request->CalendarView->StartDate = $start->format('c');
+        $request->CalendarView->EndDate = $end->format('c');
+
+        $response = $this->client->FindItem($request);
+        $response_messages = $response->ResponseMessages->FindItemResponseMessage;
+        foreach ($response_messages as $response_message) {
+            if ($response_message->ResponseClass != ResponseClassType::SUCCESS) {
+                $code = $response_message->ResponseCode;
+                $message = $response_message->MessageText;
+                fwrite(STDERR, "Failed to find folders with \"$code: $message\"\n");
+                return null;
+            }
+            return $response_message->RootFolder->Items->CalendarItem;
+        }
     }
 
     public function findFolder()

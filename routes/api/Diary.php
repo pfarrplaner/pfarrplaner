@@ -34,3 +34,6 @@ Route::post('amtskalender/kategorie/{category}/gottesdienste/{service}', [DiaryC
 Route::post('amtskalender/kategorie/{category}/verschieben/{diaryEntry}', [DiaryController::class, 'moveItem'])->name('diary.category.items.move');
 
 Route::delete('amtskalender/eintrag/{diaryEntry}', [DiaryController::class, 'destroy'])->name('diary.entry.destroy');
+
+Route::get('amtskalender/kalender/{calendarConnection}/{date}', [DiaryController::class, 'getCalendar'])->name('diary.calendar');
+Route::post('amtskalender/kategorie/{category}/events', [DiaryController::class, 'addEvent'])->name('diary.category.events.add');

@@ -38,42 +38,74 @@
         </template>
         <div class="row">
             <div class="col-md-4">
-                <h2>Gottesdienste</h2>
-                <div v-if="this.myServices.length == 0" class="text-small text-muted">Zur Zeit sind keine Gottesdienste
-                    vorhanden, die noch nicht eingetragen sind.
-                </div>
-                <div v-else>
-                    <div>
-                        <nav-button type="light" icon="mdi mdi-notebook-multiple"
-                                    title="Gottesdienste automatisch eintragen"
-                                    force-icon class="btn-sm" @click="autoSort">Alle automatisch eintragen
-                        </nav-button>
-                    </div>
-                    <draggable v-if="myServices.length > 0" :list="services" :class="{ghostClass: 'ghost-block'}"
-                               group="items" id="service_list" @change="itemDroppedBack">
-                        <div v-for="(service, serviceKey) in myServices" :key="'service_'+serviceKey"
-                             class="border m-1 rounded p-2 service-item">
-                            <div>{{ service.titleText }}</div>
-                            <div>{{ moment(service.date).locale('de').format('DD.MM.YYYY, HH:mm') }}</div>
-                            <div>{{ service.locationText }}</div>
+                <tab-headers>
+                    <tab-header id="services" title="Gottesdienste" :active-tab="activeTab"/>
+                    <tab-header id="calendars" title="Kalender" :active-tab="activeTab"
+                                v-if="calendarConnections.length > 0"/>
+                </tab-headers>
+                <tabs class="mb-4">
+                    <tab id="services" :active-tab="activeTab">
+                        <div v-if="this.myServices.length == 0" class="text-small text-muted">Zur Zeit sind keine
+                            Gottesdienste
+                            vorhanden, die noch nicht eingetragen sind.
                         </div>
-                    </draggable>
-                </div>
-                <h2>Kalender</h2>
+                        <div v-else>
+                            <div>
+                                <nav-button type="light" icon="mdi mdi-notebook-multiple"
+                                            title="Gottesdienste automatisch eintragen"
+                                            force-icon class="btn-sm" @click="autoSort">Alle automatisch eintragen
+                                </nav-button>
+                            </div>
+                            <draggable v-if="myServices.length > 0" :list="services"
+                                       :class="{ghostClass: 'ghost-block'}"
+                                       group="items" id="service_list" @change="itemDroppedBack">
+                                <div v-for="(service, serviceKey) in myServices" :key="'service_'+serviceKey"
+                                     class="border m-1 rounded p-2 service-item">
+                                    <div>{{ service.titleText }}</div>
+                                    <div>{{ moment(service.date).locale('de').format('DD.MM.YYYY, HH:mm') }}</div>
+                                    <div>{{ service.locationText }}</div>
+                                </div>
+                            </draggable>
+                        </div>
+                    </tab>
+                    <tab id="calendars" :active-tab="activeTab" v-if="calendarConnections.length > 0">
+                        <form-selectize label="Kalender auswählen" v-model="activeCalendar"
+                                        :options="calendarConnections"/>
+                        <div v-if="calendarLoading">
+                            <span class="mdi mdi-spin mdi-loading"></span> Kalendereinträge werden geladen.
+                        </div>
+                        <div v-else>
+                            <form-date-picker v-if="activeCalendar" :config="calendarConfig"
+                                              v-model="activeCalendarDate"/>
+                            <draggable :list="calendarItems[activeCalendarDate] || []" group="items"
+                                       @change="itemDroppedBack">
+                                <div v-for="(event, eventKey) in (calendarItems[activeCalendarDate] || [])"
+                                     :key="'event_'+event.UID"
+                                     class="border m-1 rounded p-2 service-item">
+                                    <div>{{ event.Subject }}</div>
+                                    <div>{{ moment(event.Start).locale('de').format('DD.MM.YYYY, HH:mm') }}</div>
+                                </div>
+                            </draggable>
+                        </div>
+                    </tab>
+                </tabs>
             </div>
             <div class="col-md-8">
                 <div class="row">
-                    <card class="col-md-4" v-for="(diaryCategory,diaryKey) in diaryCategories" :key="diaryKey">
-                        <card-header>{{ diaryCategory }} ({{ diaryKey }})</card-header>
-                        <card-body>
-                            <draggable group="items" :list="diary[diaryKey]" class="category-list"
-                                       :id="'category_'+diaryKey" @change="itemDropped($event, diaryKey)">
-                                <div v-for="(item, itemKey) in diary[diaryKey]" :key="'item_'+diaryKey+'_'+itemKey">
-                                    {{ moment(item.date).locale('de').format('DD.MM. HH:mm') }} {{ item.title }}
-                                </div>
-                            </draggable>
-                        </card-body>
-                    </card>
+                    <div class="col-md-4 p-1" v-for="(diaryCategory,diaryKey) in diaryCategories" :key="diaryKey">
+                        <card>
+                            <card-header>{{ diaryCategory }}</card-header>
+                            <card-body>
+                                <draggable group="items" :list="diary[diaryKey]" class="category-list"
+                                           :id="'category_'+diaryKey" @change="itemDropped($event, diaryKey)">
+                                    <div v-for="(item, itemKey) in diary[diaryKey]" :key="'item_'+diaryKey+'_'+itemKey">
+                                        <span v-if="item.title != undefined">{{ moment(item.date).locale('de').format('DD.MM. HH:mm') }} {{ item.title }}</span>
+                                        <span v-else class="mdi mdi-spin mdi-loading" title="Eintrag wird erstellt..."></span>
+                                    </div>
+                                </draggable>
+                            </card-body>
+                        </card>
+                    </div>
                 </div>
             </div>
         </div>
@@ -87,11 +119,20 @@ import Card from "../../components/Ui/cards/card";
 import CardHeader from "../../components/Ui/cards/cardHeader";
 import CardBody from "../../components/Ui/cards/cardBody";
 import {DiaryCategories} from "./DiaryCategories";
+import TabHeaders from "../../components/Ui/tabs/tabHeaders";
+import TabHeader from "../../components/Ui/tabs/tabHeader";
+import Tabs from "../../components/Ui/tabs/tabs";
+import Tab from "../../components/Ui/tabs/tab";
+import FormSelectize from "../../components/Ui/forms/FormSelectize";
+import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 
 export default {
     name: "Index",
-    components: {Card, CardBody, CardHeader, NavButton, draggable},
-    props: ['date', 'services', 'diaryEntries'],
+    components: {
+        FormDatePicker,
+        FormSelectize, Tab, Tabs, TabHeader, TabHeaders, Card, CardBody, CardHeader, NavButton, draggable
+    },
+    props: ['date', 'services', 'diaryEntries', 'calendarConnections'],
     data() {
         let diary = {};
         let draggableList = {};
@@ -105,21 +146,52 @@ export default {
 
         return {
             apiToken: this.$page.props.currentUser.data.api_token,
+            activeTab: 'calendars', //'services',
             myDate: (moment(this.date) || moment()).format('YYYY-MM'),
             myDatePickerSettings: {
                 format: 'YYYY-MM',
                 locale: 'de-de',
                 viewMode: 'months',
             },
+            calendarConfig: {
+                format: 'YYYY-MM-DD',
+                locale: 'de-de',
+                inline: true,
+                minDate: (moment(this.date) || moment()).format('YYYY-MM') + '-01',
+                maxDate: (moment(this.date) || moment()).endOf('month').format('YYYY-MM-DD'),
+                enabledDates: [
+                    (moment(this.date) || moment()).format('YYYY-MM') + '-01',
+                ],
+            },
+            activeCalendarDate: (moment(this.date) || moment()).format('YYYY-MM') + '-01',
             picking: false,
             diaryCategories: DiaryCategories,
             diary,
             draggableList,
             myServices: this.services,
-            currentService: null,
+            activeCalendar: this.calendarConnections.length ? this.calendarConnections[0].id : null,
+            calendarLoading: false,
+            calendarItems: {},
         }
     },
+    created() {
+        this.loadCalendar();
+    },
     methods: {
+        loadCalendar() {
+            this.calendarLoading = true;
+            axios.get(route('api.diary.calendar', {
+                calendarConnection: this.activeCalendar,
+                date: this.myDate,
+                api_token: this.apiToken,
+            })).then(response => {
+                this.calendarItems = response.data;
+                let enabledDates = Object.keys(this.calendarItems);
+                this.calendarConfig.enabledDates = enabledDates;
+                if (!enabledDates.includes(this.activeCalendarDate)) this.activeCalendarDate = enabledDates[0] || null;
+                this.calendarLoading = false;
+            });
+        },
         autoSort() {
             this.$inertia.post(route('diary.autosort', {date: this.myDate}), {}, {preserveState: false});
         },
@@ -141,6 +213,9 @@ export default {
                 }
                 if (added.element.titleText != undefined) {
                     this.serviceAddedToCategory(added.element, added.newIndex, category);
+                }
+                if (added.element.UID != undefined) {
+                    this.eventAddedToCategory(added.element, added.newIndex, category);
                 }
             }
         },
@@ -166,15 +241,34 @@ export default {
                 this.$forceUpdate();
             })
         },
+        eventAddedToCategory(event, newIndex, category) {
+            console.log('Event added to cat '+category, event, newIndex);
+            axios.post(route('api.diary.category.events.add', {
+                category: category,
+                api_token: this.apiToken,
+            }), {event: event}).then(response => {
+                this.diary[category][newIndex] = response.data;
+                this.sortList(category);
+                this.$forceUpdate();
+            })
+        },
         itemDroppedBack({added}) {
             if (!added) return;
+            let orginal = added.element;
             console.log('itemDroppedBack data', added);
             axios.delete(route('api.diary.entry.destroy', {
                 diaryEntry: added.element.id,
                 api_token: this.apiToken,
             })).then(response => {
-                this.myServices[added.newIndex] = response.data;
-                this.sortList(null);
+                if (response.data.id) {
+                    this.myServices[added.newIndex] = response.data;
+                    this.sortList(null);
+                } else {
+                    this.calendarItems[moment(response.data.date).format('YYYY-MM-DD')][added.newIndex] = {
+                        Start: response.data.date,
+                        Subject: response.data.title,
+                    }
+                }
                 this.$forceUpdate();
             });
         }

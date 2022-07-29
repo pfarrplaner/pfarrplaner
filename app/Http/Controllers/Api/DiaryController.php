@@ -30,11 +30,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\CalendarConnection;
+use App\Calendars\Exchange\ExchangeCalendar;
 use App\DiaryEntry;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use jamesiarmes\PhpEws\ArrayType\NonEmptyArrayOfBaseFolderIdsType;
+use jamesiarmes\PhpEws\Request\FindItemType;
 
 class DiaryController extends \App\Http\Controllers\Controller
 {
@@ -60,6 +65,19 @@ class DiaryController extends \App\Http\Controllers\Controller
     }
 
     /**
+     * Add a record from a calendar event
+     *
+     * @param $category Target category
+     * @return JsonResponse New DiaryEntry record
+     */
+    public function addEvent(Request $request, $category)
+    {
+        $eventData = $request->get('event', null);
+        if (!$eventData) abort(500);
+        return response()->json(DiaryEntry::createFromEvent($eventData, $category));
+    }
+
+    /**
      * Move DiaryEntry to another category
      *
      * @param $category Target category
@@ -81,8 +99,35 @@ class DiaryController extends \App\Http\Controllers\Controller
     public function destroy(DiaryEntry $diaryEntry)
     {
         $service = $diaryEntry->service;
+        if (!$service) {
+            $service = ['date' => $diaryEntry->date, 'title' => $diaryEntry->title];
+        }
         $diaryEntry->delete();
         return response()->json($service);
+    }
+
+
+    public function getCalendar(CalendarConnection $calendarConnection, $date)
+    {
+        $start = Carbon::parse($date.'-01 0:00:00');
+        $end = $start->copy()->endOfMonth();
+        /** @var ExchangeCalendar $calendar */
+        $calendar = $calendarConnection->getSyncEngine()->getCalendar();
+        $events = $calendar->getAllEventsForRange($start, $end);
+
+        $days = [];
+        foreach ($events as $event) {
+            if ($event->TimeZone == 'UTC') {
+                $tzCode = 'UTC';
+            } else {
+                preg_match('/[\+\-]\d\d\:\d\d/', $event->TimeZone, $matches);
+                $tzCode = $matches[0];
+            }
+
+            $days[Carbon::parse($event->Start, $tzCode)->setTimezone('Europe/Berlin')->format('Y-m-d')][] = $event;
+        }
+
+        return response()->json($days);
     }
 
 }
