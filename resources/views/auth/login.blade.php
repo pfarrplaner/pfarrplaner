@@ -324,6 +324,12 @@
                 </div>
                 <div class="col-lg-3 col-md-4 mt-4">
                     <div class="icon-box" data-aos="zoom-in" data-aos-delay="600">
+                        <i class="mdi mdi-notebook" style="color: purple;"></i>
+                        <h3>Amtskalenderführung für Pfarrer:innen</h3>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 mt-4">
+                    <div class="icon-box" data-aos="zoom-in" data-aos-delay="600">
                         <i class="mdi mdi-application-braces" style="color: darkgray;"></i>
                         <h3>Ständige Weiterentwicklung</h3>
                     </div>
