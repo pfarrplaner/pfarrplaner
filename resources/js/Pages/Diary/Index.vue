@@ -30,11 +30,22 @@
 <template>
     <admin-layout :title="'Amtskalender '+moment(myDate+'-01').locale('de').format('MMMM YYYY')" no-content-header>
         <template v-slot:navbar-left>
-            <nav-button type="light" v-if="!picking" @click="picking=true">
+            <nav-button type="default" class="mr-1" title="Einen Monat zurück" icon="mdi mdi-chevron-left" force-icon
+                        force-no-text
+                        @click="myDate = moment(myDate+'-01').subtract(1, 'month').format('YYYY-MM')"/>
+            <nav-button type="default" class="mr-1" title="Gehe zu heute" icon="mdi mdi-calendar-today" force-icon
+                        force-no-text
+                        @click="myDate = moment().format('YYYY-MM')"/>
+            <nav-button type="default" v-if="!picking" @click="focusPicker" class="mr-1">
                 {{ moment(myDate + '-01').locale('de').format('MMMM YYYY') }}
             </nav-button>
             <date-picker v-if="picking" v-model="myDate" :config="myDatePickerSettings" @input="picking=false"
-                         autofocus/>
+                         autofocus ref="picker"/>
+            <nav-button type="default" class="mr-1" title="Einen Monat vor" icon="mdi mdi-chevron-right" force-icon
+                        force-no-text
+                        @click="myDate = moment(myDate+'-01').add(1, 'month').format('YYYY-MM')"/>
+            <nav-button type="light" icon="mdi mdi-file-word" title="Worddokument herunterladen" force-icon
+                        @click="openAsWordDocument">Als Dokument öffnen</nav-button>
         </template>
         <div class="row">
             <div class="col-md-4">
@@ -58,7 +69,7 @@
                             </div>
                             <draggable v-if="myServices.length > 0" :list="services"
                                        :class="{ghostClass: 'ghost-block'}"
-                                       group="items" id="service_list" @change="itemDroppedBack">
+                                       :group="{name: 'items', put: false}" id="service_list" @change="itemDroppedBack">
                                 <div v-for="(service, serviceKey) in myServices" :key="'service_'+serviceKey"
                                      class="border m-1 rounded p-2 service-item">
                                     <div>{{ service.titleText }}</div>
@@ -77,7 +88,7 @@
                         <div v-else>
                             <form-date-picker v-if="activeCalendar" :config="calendarConfig"
                                               v-model="activeCalendarDate"/>
-                            <draggable :list="calendarItems[activeCalendarDate] || []" group="items"
+                            <draggable :list="calendarItems[activeCalendarDate] || []" :group="{name: 'items', put: false}"
                                        @change="itemDroppedBack">
                                 <div v-for="(event, eventKey) in (calendarItems[activeCalendarDate] || [])"
                                      :key="'event_'+event.UID"
@@ -98,7 +109,8 @@
                             <card-body>
                                 <draggable group="items" :list="diary[diaryKey]" class="category-list"
                                            :id="'category_'+diaryKey" @change="itemDropped($event, diaryKey)">
-                                    <div v-for="(item, itemKey) in diary[diaryKey]" :key="'item_'+diaryKey+'_'+itemKey">
+                                    <div v-for="(item, itemKey) in diary[diaryKey]" :key="'item_'+diaryKey+'_'+itemKey"
+                                         class="diary-entry" @click="edit(item)">
                                         <span v-if="item.title != undefined">{{ moment(item.date).locale('de').format('DD.MM. HH:mm') }} {{ item.title }}</span>
                                         <span v-else class="mdi mdi-spin mdi-loading" title="Eintrag wird erstellt..."></span>
                                     </div>
@@ -109,6 +121,7 @@
                 </div>
             </div>
         </div>
+        <diary-entry-editor v-if="editing" :diary-entry="activeEntry" @input="editing = false"/>
     </admin-layout>
 </template>
 
@@ -125,10 +138,12 @@ import Tabs from "../../components/Ui/tabs/tabs";
 import Tab from "../../components/Ui/tabs/tab";
 import FormSelectize from "../../components/Ui/forms/FormSelectize";
 import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
+import DiaryEntryEditor from "./DiaryEntryEditor";
 
 export default {
     name: "Index",
     components: {
+        DiaryEntryEditor,
         FormDatePicker,
         FormSelectize, Tab, Tabs, TabHeader, TabHeaders, Card, CardBody, CardHeader, NavButton, draggable
     },
@@ -146,12 +161,13 @@ export default {
 
         return {
             apiToken: this.$page.props.currentUser.data.api_token,
-            activeTab: 'calendars', //'services',
+            activeTab: 'services',
             myDate: (moment(this.date) || moment()).format('YYYY-MM'),
             myDatePickerSettings: {
                 format: 'YYYY-MM',
                 locale: 'de-de',
                 viewMode: 'months',
+                keepOpen: true,
             },
             calendarConfig: {
                 format: 'YYYY-MM-DD',
@@ -172,10 +188,24 @@ export default {
             activeCalendar: this.calendarConnections.length ? this.calendarConnections[0].id : null,
             calendarLoading: false,
             calendarItems: {},
+            activeEntry: null,
+            editing: false,
         }
     },
     created() {
         this.loadCalendar();
+    },
+    watch: {
+        myDate: {
+            handler: function (newVal, oldVal) {
+                this.$inertia.get(route('diary.index', {date: newVal}), {}, {preserveState: false});
+            },
+        },
+        activeCalendar: {
+            handler: function (newVal, oldVal) {
+                this.loadCalendar();
+            },
+        }
     },
     methods: {
         loadCalendar() {
@@ -191,6 +221,12 @@ export default {
                 if (!enabledDates.includes(this.activeCalendarDate)) this.activeCalendarDate = enabledDates[0] || null;
                 this.calendarLoading = false;
             });
+        },
+        focusPicker() {
+            this.picking = true;
+            this.$nextTick(function() {
+                this.$refs.picker.$el.focus();
+            }, this);
         },
         autoSort() {
             this.$inertia.post(route('diary.autosort', {date: this.myDate}), {}, {preserveState: false});
@@ -271,6 +307,13 @@ export default {
                 }
                 this.$forceUpdate();
             });
+        },
+        openAsWordDocument() {
+            window.location.href = route('diary.word', {date: this.myDate});
+        },
+        edit(item) {
+            this.activeEntry = item;
+            this.editing = true
         }
     }
 }
@@ -287,5 +330,10 @@ export default {
 
 .service-item div:first-child {
     font-weight: bold;
+}
+
+.diary-entry:hover {
+    cursor: pointer;
+    background-color: lightyellow;
 }
 </style>

@@ -90,6 +90,16 @@ class DiaryController extends \App\Http\Controllers\Controller
         return response()->json($diaryEntry);
     }
 
+    public function update(Request $request, DiaryEntry $diaryEntry)
+    {
+        $diaryEntry->update($request->validate([
+            'title' => 'required|string',
+            'date' => 'required|date',
+            'category' => 'required|string',
+                                               ]));
+        return response()->json($diaryEntry);
+    }
+
     /**
      * Delete a record
      *

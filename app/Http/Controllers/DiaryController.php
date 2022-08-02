@@ -32,10 +32,15 @@ namespace App\Http\Controllers;
 
 use App\CalendarConnection;
 use App\DiaryEntry;
+use App\Documents\Word\OfficialDiaryWordDocument;
 use App\Service;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use PhpOffice\PhpWord\Shared\Converter;
+use PhpOffice\PhpWord\SimpleType\Jc;
+use PhpOffice\PhpWord\SimpleType\LineSpacingRule;
+use PhpOffice\PhpWord\Style\Tab;
 
 class DiaryController extends Controller
 {
@@ -80,8 +85,9 @@ class DiaryController extends Controller
         $calendarConnections = collect();
         $allCalendarConnections = CalendarConnection::where('user_id', Auth::user()->id)->get();
         foreach ($allCalendarConnections as $calendarConnection) {
-            if (substr($calendarConnection->connection_string, 0, 4) == 'exc:')
+            if (substr($calendarConnection->connection_string, 0, 4) == 'exc:') {
                 $calendarConnections->push(['id' => $calendarConnection->id, 'name' => $calendarConnection['title']]);
+            }
         }
 
         return Inertia::render('Diary/Index', compact('date', 'services', 'diaryEntries', 'calendarConnections'));
@@ -118,6 +124,43 @@ class DiaryController extends Controller
         }
 
         return redirect()->route('diary.index', compact('date'));
+    }
+
+    /**
+     * Render word document for a month
+     *
+     * @param $date
+     * @throws \PhpOffice\PhpWord\Exception\Exception
+     */
+    public function exportToWord($date)
+    {
+        $user = Auth::user();
+        $start = Carbon::parse($date . '-01 0:00:00');
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+
+        $diaryEntries = DiaryEntry::where('user_id', Auth::user()->id)
+            ->whereDate('date', '>=', $start)
+            ->whereDate('date', '<=', $end)
+            ->orderBy('date')
+            ->get();
+
+        $doc = new OfficialDiaryWordDocument();
+        $doc->render($start, $end, $diaryEntries);
+        $doc->sendToBrowser($date.' Amtskalender '.$user->lastName().' '.$user->first_name);
+
+    }
+
+    /**
+     * Delete a single record
+     *
+     * @param DiaryEntry $diaryEntry
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(DiaryEntry $diaryEntry)
+    {
+        $date = Carbon::parse($diaryEntry->date);
+        $diaryEntry->delete();
+        return redirect()->route('diary.index', ['date' => $date->format('Y-m')]);
     }
 
 }

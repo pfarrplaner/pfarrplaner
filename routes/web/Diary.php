@@ -32,4 +32,6 @@
 use App\Http\Controllers\DiaryController;
 
 Route::get('amtskalender/{date?}', [DiaryController::class, 'index'])->name('diary.index');
+Route::get('amtskalender/{date}/word', [DiaryController::class, 'exportToWord'])->name('diary.word');
 Route::post('amtskalender/{date}/sortieren', [DiaryController::class, 'autoSortServices'])->name('diary.autosort');
+Route::delete('amtskalender/eintrag/{diaryEntry}', [DiaryController::class, 'destroy'])->name('diary.entry.destroy');

@@ -12,7 +12,7 @@ class DiaryEntry extends Model
     use HasFactory;
 
     protected $fillable = ['user_id', 'service_id', 'date', 'title', 'category'];
-    protected $dates = ['date'];
+    protected $dates = ['date', 'created_at', 'updated_at'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
