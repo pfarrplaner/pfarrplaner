@@ -29,8 +29,8 @@
 
 <template>
     <modal v-if="showModal" title="Eintrag bearbeiten" @close="submit" @cancel="deleteEntry"
-           style="min-height: 50vh;" cancel-button-type="danger"
-           close-button-label="Speichern" cancel-button-label="Löschen">
+           style="min-height: 50vh;" :cancel-button-type="this.myDiaryEntry.id == -1 ? 'secondary' : 'danger'"
+           close-button-label="Speichern" :cancel-button-label="this.myDiaryEntry.id == -1 ? 'Abbrechen' : 'Löschen'">
         <form-date-picker label="Datum und Uhrzeit" v-model="myDiaryEntry.date" :config="myDatePickerConfig"
         iso-date/>
         <form-input ref="title" label="Bezeichnung" v-model="myDiaryEntry.title" autofocus />
@@ -63,19 +63,36 @@ export default {
     },
     methods: {
         submit() {
-            // TODO: actually save this item
-            axios.patch(route('api.diary.entry.update', {
-                diaryEntry: this.myDiaryEntry.id,
-                api_token: this.apiToken,
-            }), this.myDiaryEntry)
-                .then(response => {
-                    this.myDiaryEntry = response.data;
-                    this.$emit('input', this.myDiaryEntry);
+            if (this.myDiaryEntry.id != -1) {
+                axios.patch(route('api.diary.entry.update', {
+                    diaryEntry: this.myDiaryEntry.id,
+                    api_token: this.apiToken,
+                }), this.myDiaryEntry)
+                    .then(response => {
+                        this.myDiaryEntry = response.data;
+                        this.$emit('input', this.myDiaryEntry);
+                    })
+            } else {
+                axios.post(route('api.diary.entry.store', {
+                    api_token: this.apiToken,
+                }), {
+                    ...this.myDiaryEntry,
+                    id: null,
                 })
+                    .then(response => {
+                        this.myDiaryEntry = response.data;
+                        this.$emit('input', {...this.myDiaryEntry, created: true});
+                    })
+            }
         },
-        deleteEntry() {
+        deleteEntry(source) {
             this.showModal = false;
-            this.$inertia.delete(route('diary.entry.destroy', this.myDiaryEntry.id), { preserveState: false });
+            if (this.myDiaryEntry.id != -1) {
+                if (source != 'window') this.$inertia.delete(route('diary.entry.destroy', this.myDiaryEntry.id), {preserveState: false});
+                this.$emit('cancel');
+            } else {
+                this.$emit('cancel');
+            }
         }
     }
 }

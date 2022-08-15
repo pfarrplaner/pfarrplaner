@@ -73,7 +73,9 @@ class DiaryController extends \App\Http\Controllers\Controller
     public function addEvent(Request $request, $category)
     {
         $eventData = $request->get('event', null);
-        if (!$eventData) abort(500);
+        if (!$eventData) {
+            abort(500);
+        }
         return response()->json(DiaryEntry::createFromEvent($eventData, $category));
     }
 
@@ -90,13 +92,34 @@ class DiaryController extends \App\Http\Controllers\Controller
         return response()->json($diaryEntry);
     }
 
+    /**
+     * Store a new DiaryEntry in the database
+     *
+     * @param Request $request
+     * @return JsonResponse Diary entry
+     */
+    public function store(Request $request)
+    {
+        $data =             $request->validate([
+                                                   'title' => 'required|string',
+                                                   'date' => 'required|date',
+                                                   'category' => 'required|string',
+                                               ]);
+        $data['user_id'] = Auth::user()->id;
+        $data['date'] = Carbon::parse($data['date'], 'UTC')->setTimezone('Europe/Berlin');
+        $diaryEntry = DiaryEntry::create($data);
+        return response()->json($diaryEntry);
+    }
+
     public function update(Request $request, DiaryEntry $diaryEntry)
     {
-        $diaryEntry->update($request->validate([
-            'title' => 'required|string',
-            'date' => 'required|date',
-            'category' => 'required|string',
-                                               ]));
+        $diaryEntry->update(
+            $request->validate([
+                                   'title' => 'required|string',
+                                   'date' => 'required|date',
+                                   'category' => 'required|string',
+                               ])
+        );
         return response()->json($diaryEntry);
     }
 
@@ -119,7 +142,7 @@ class DiaryController extends \App\Http\Controllers\Controller
 
     public function getCalendar(CalendarConnection $calendarConnection, $date)
     {
-        $start = Carbon::parse($date.'-01 0:00:00');
+        $start = Carbon::parse($date . '-01 0:00:00');
         $end = $start->copy()->endOfMonth();
         /** @var ExchangeCalendar $calendar */
         $calendar = $calendarConnection->getSyncEngine()->getCalendar();

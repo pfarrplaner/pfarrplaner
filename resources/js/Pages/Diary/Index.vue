@@ -88,7 +88,7 @@
                         <div v-else>
                             <form-date-picker v-if="activeCalendar" :config="calendarConfig"
                                               v-model="activeCalendarDate"/>
-                            <draggable :list="calendarItems[activeCalendarDate] || []" :group="{name: 'items', put: false}"
+                            <draggable :list="calendarItems[activeCalendarDate] || []" :group="{name: 'items', put: false}"n
                                        @change="itemDroppedBack">
                                 <div v-for="(event, eventKey) in (calendarItems[activeCalendarDate] || [])"
                                      :key="'event_'+event.UID"
@@ -115,13 +115,15 @@
                                         <span v-else class="mdi mdi-spin mdi-loading" title="Eintrag wird erstellt..."></span>
                                     </div>
                                 </draggable>
+                                <nav-button icon="mdi mdi-plus" class="btn-sm" type="success" title="Eintrag hinzufügen"
+                                            force-no-text force-icon @click="createItem(diaryKey)"/>
                             </card-body>
                         </card>
                     </div>
                 </div>
             </div>
         </div>
-        <diary-entry-editor v-if="editing" :diary-entry="activeEntry" @input="editing = false"/>
+        <diary-entry-editor v-if="editing" :diary-entry="activeEntry" @input="storeItem" @cancel="cancelCreateItem"/>
     </admin-layout>
 </template>
 
@@ -314,6 +316,37 @@ export default {
         edit(item) {
             this.activeEntry = item;
             this.editing = true
+        },
+        createItem(category) {
+            this.activeEntry = {
+                id: -1,
+                title: '',
+                date: moment(this.myDate).startOf('month'),
+                category: category,
+            };
+            this.diary[category].push(this.activeEntry);
+            this.editing = true
+        },
+        cancelCreateItem(source) {
+            let found = false;
+            for (let index in this.diary[this.activeEntry.category]) {
+                if (this.diary[this.activeEntry.category][index].id == -1) found = index;
+            }
+            if (found) this.diary[this.activeEntry.category].splice(found, 1);
+            this.activeEntry = null;
+            this.editing = false;
+            this.$forceUpdate();
+        },
+        storeItem(item) {
+            this.editing = false;
+            if (item.created) {
+                console.log('Created!', item, this.diary[item.category]);
+                for (let index in this.diary[item.category]) {
+                   if (this.diary[item.category][index].id == -1) this.diary[item.category][index] = item;
+                };
+            }
+            this.sortList(item.category);
+
         }
     }
 }

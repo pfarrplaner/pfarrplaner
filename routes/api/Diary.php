@@ -33,6 +33,7 @@ use App\Http\Controllers\Api\DiaryController;
 Route::post('amtskalender/kategorie/{category}/gottesdienste/{service}', [DiaryController::class, 'addService'])->name('diary.category.services.add');
 Route::post('amtskalender/kategorie/{category}/verschieben/{diaryEntry}', [DiaryController::class, 'moveItem'])->name('diary.category.items.move');
 
+Route::post('amtskalender/eintrag', [DiaryController::class, 'store'])->name('diary.entry.store');
 Route::patch('amtskalender/eintrag/{diaryEntry}', [DiaryController::class, 'update'])->name('diary.entry.update');
 Route::delete('amtskalender/eintrag/{diaryEntry}', [DiaryController::class, 'destroy'])->name('diary.entry.destroy');
 
