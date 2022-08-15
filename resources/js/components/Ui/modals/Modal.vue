@@ -36,7 +36,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title">{{ title }}</h5>
                             <button v-if="allowCancel" type="button" class="close" data-dismiss="modal"
-                                    aria-label="Fenster schließen" @click.prevent="cancelModal">
+                                    aria-label="Fenster schließen" @click.prevent="cancelModal('window')">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -47,7 +47,7 @@
                             <button type="button" :class="'btn btn-'+submitButtonType"
                                     @click.prevent="closeModal">{{ closeButtonLabel }}
                             </button>
-                            <button v-if="allowCancel" type="button" :class="'btn btn-'+cancelButtonType" @click.prevent="cancelModal">
+                            <button v-if="allowCancel" type="button" :class="'btn btn-'+cancelButtonType" @click.prevent="cancelModal('button')">
                                 {{ cancelButtonLabel }}
                             </button>
                         </div>
@@ -108,9 +108,9 @@ export default {
             document.body.classList.remove("modal-open");
             this.$emit('close');
         },
-        cancelModal() {
+        cancelModal(source) {
             document.body.classList.remove("modal-open");
-            this.$emit('cancel');
+            this.$emit('cancel', source);
         },
     }
 }
