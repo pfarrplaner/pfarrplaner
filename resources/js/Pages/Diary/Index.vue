@@ -86,6 +86,10 @@
                             <span class="mdi mdi-spin mdi-loading"></span> Kalendereinträge werden geladen.
                         </div>
                         <div v-else>
+                            <div>
+                                <nav-button type="light" icon="mdi mdi-notebook-multiple" title="Kalendereinträge automatisch eintragen (soweit möglich)"
+                                            force-icon @click="autoSortCalendar(activeCalendar)">Automatisch eintragen</nav-button>
+                            </div>
                             <form-date-picker v-if="activeCalendar" :config="calendarConfig"
                                               v-model="activeCalendarDate"/>
                             <draggable :list="calendarItems[activeCalendarDate] || []" :group="{name: 'items', put: false}"n
@@ -233,6 +237,12 @@ export default {
         autoSort() {
             this.$inertia.post(route('diary.autosort', {date: this.myDate}), {}, {preserveState: false});
         },
+        autoSortCalendar(calendarConnection) {
+            this.$inertia.post(route('diary.autosort.calendar', {
+                date: this.myDate,
+                calendarConnection: calendarConnection,
+            }), {}, { preserveState: false});
+        },
         sortList(category) {
             (category ? this.diary[category] : this.myServices).sort(function (a, b) {
                 var keyA = new Date(a.date),
@@ -347,7 +357,7 @@ export default {
             }
             this.sortList(item.category);
 
-        }
+        },
     }
 }
 </script>

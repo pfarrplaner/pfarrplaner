@@ -31,6 +31,7 @@
 namespace App\Http\Controllers;
 
 use App\CalendarConnection;
+use App\Calendars\Exchange\ExchangeCalendar;
 use App\DiaryEntry;
 use App\Documents\Word\OfficialDiaryWordDocument;
 use App\Service;
@@ -121,6 +122,116 @@ class DiaryController extends Controller
                 $service,
                 (count($service->weddings) || count($service->funerals)) ? 'AMT' : 'GTA'
             );
+        }
+
+        return redirect()->route('diary.index', compact('date'));
+    }
+
+
+    /**
+     * Auto-categorize a calendar event
+     * @param $event
+     * @return false|string
+     */
+    private function classifyEvent($event) {
+        if ($category = $this->classifyByCategory($event)) return $category;
+        if ($category = $this->classifyBySubject($event)) return $category;
+        return false;
+    }
+
+    /**
+     * Auto-categorize calendar event by Outlook category
+     * @param $event
+     * @return false|string
+     */
+    private function classifyByCategory($event) {
+        if (!$event->Categories)  return false;
+        foreach ($event->Categories->String as $category) {
+            if (substr(strtolower($category), 0, 13) == 'amtskalender:') {
+                $category = strtolower(strtr(trim(substr($category, 13)), [' ' => '', ',' => '/', ';' => '/']));
+                switch ($category) {
+                    case 'gottesdienst/taufe/abendmahl':
+                        return 'GTA';
+                    case 'amtshandlungen':
+                        return 'AMT';
+                    case 'seelsorge/diakonie':
+                        return 'SSD';
+                    case 'unterricht/jugendarbeit':
+                        return 'UJU';
+                    case 'bibelarbeit/erwachsenenbildung':
+                        return 'BEB';
+                    case 'mitarbeiterschaft/gremien/dienstbesprechung':
+                        return 'MGD';
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Auto-categorize calendar event by subject keywords
+     *
+     * Recognized keywords:
+     * SSD: Trauergespräch, Geburststagsbesuch, Besuch, Traugespräch, Taufgespräch, Ehejubiläum
+     * UJU: RU, KU, Konfi, Konfi...
+     * MGD: KGR, Sitzung, Planung, Beirat, Ausschuss, DB, Dienstbesprechung
+     *
+     * @param $event
+     * @return false|string
+     */
+    private function classifyBySubject($event) {
+        if (!$event->Subject)  return false;
+        $subject = strtolower($event->Subject);
+        $firstWord = strtok($subject, ' ');
+
+        // SSD
+        if ($firstWord == 'trauergespräch') return 'SSD';
+        if ($firstWord == 'traugespräch') return 'SSD';
+        if ($firstWord == 'taufgespräch') return 'SSD';
+        if ($firstWord == 'geburtstagsbesuch') return 'SSD';
+        if ($firstWord == 'besuch') return 'SSD';
+        if ($firstWord == 'ehejubiläum') return 'SSD';
+
+        // UJU
+        if ($firstWord == 'ru') return 'UJU';
+        if ($firstWord == 'ku') return 'UJU';
+        if ($firstWord == 'konfi') return 'UJU';
+        if (str_contains($firstWord, 'konfi') && ($firstWord != 'konfirmation')) return 'UJU';
+
+        // MGD
+        if ($firstWord == 'kgr') return 'MGD';
+        if ($firstWord == 'kgr-sitzung') return 'MGD';
+        if ($firstWord == 'sitzung') return 'MGD';
+        if ($firstWord == 'planung') return 'MGD';
+        if ($firstWord == 'beirat') return 'MGD';
+        if ($firstWord == 'ausschuss') return 'MGD';
+        if ($firstWord == 'db') return 'MGD';
+        if ($firstWord == 'dienstbesprechung') return 'MGD';
+
+
+        return false;
+    }
+
+    /**
+     * Auto-create DiaryEntry records for calendar entries based on categories and keywords
+     *
+     * @param null $date
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function autoSortCalendar($date, CalendarConnection $calendarConnection)
+    {
+        $start = Carbon::parse($date . '-01 0:00:00');
+        $end = $start->copy()->addMonth(1)->subSecond(1);
+
+        /** @var ExchangeCalendar $calendar */
+        $calendar = $calendarConnection->getSyncEngine()->getCalendar();
+        $events = $calendar->getAllEventsForRange($start, $end);
+
+        foreach ($events as $event) {
+            if ($category = $this->classifyEvent($event)) {
+                DiaryEntry::createFromEvent((array)$event, $category);
+            }
+
         }
 
         return redirect()->route('diary.index', compact('date'));
