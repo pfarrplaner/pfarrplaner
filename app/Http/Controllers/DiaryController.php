@@ -172,7 +172,7 @@ class DiaryController extends Controller
      * Auto-categorize calendar event by subject keywords
      *
      * Recognized keywords:
-     * SSD: Trauergespräch, Geburststagsbesuch, Besuch, Traugespräch, Taufgespräch, Ehejubiläum
+     * SSD: Trauergespräch, Geburtstagsbesuch, Besuch, Traugespräch, Taufgespräch, Ehejubiläum
      * UJU: RU, KU, Konfi, Konfi...
      * MGD: KGR, Sitzung, Planung, Beirat, Ausschuss, DB, Dienstbesprechung
      *
