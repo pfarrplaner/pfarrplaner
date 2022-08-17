@@ -11,7 +11,7 @@ class DiaryEntry extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'service_id', 'date', 'title', 'category'];
+    protected $fillable = ['user_id', 'service_id', 'event_id', 'date', 'title', 'category'];
     protected $dates = ['date', 'created_at', 'updated_at'];
 
     /**
@@ -82,6 +82,7 @@ class DiaryEntry extends Model
                                 'title' => $eventData['Subject'],
                                 'user_id' => Auth::user()->id,
                                 'service_id' => null,
+                                'event_id' => $eventData['UID'],
                                 'category' => $category,
                             ]);
     }

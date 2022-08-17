@@ -17,6 +17,7 @@ class CreateDiaryEntriesTable extends Migration
             $table->id();
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('service_id')->nullable();
+            $table->string('event_id')->nullable();
             $table->dateTime('date')->nullable();
             $table->text('title')->nullable();
             $table->string('category');

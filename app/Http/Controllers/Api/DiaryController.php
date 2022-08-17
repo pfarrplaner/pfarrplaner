@@ -31,6 +31,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\CalendarConnection;
+use App\CalendarConnectionEntry;
 use App\Calendars\Exchange\ExchangeCalendar;
 use App\DiaryEntry;
 use App\Service;
@@ -144,20 +145,44 @@ class DiaryController extends \App\Http\Controllers\Controller
     {
         $start = Carbon::parse($date . '-01 0:00:00');
         $end = $start->copy()->endOfMonth();
+
+        // get UIDs for event already contained in diary, i.e. to be filtered out
+        $uidsWithExistingEntry = DiaryEntry::select('event_id')
+            ->whereDate('date', '>=', $start)
+            ->whereDate('date', '<=', $end)
+            ->where('user_id', Auth::user()->id)
+            ->get()
+            ->pluck('event_id');
+
+        // get calendar ids for services to be filtered out
+        $uidsWithServiceRecord = collect();
+        $servicesInMonth = Service::with([])->select('id')->between($start, $end)->get()->pluck('id');
+        foreach ($servicesInMonth as $serviceId) {
+            $entry = CalendarConnectionEntry::where('calendar_connection_id', $calendarConnection->id)
+                ->where('service_id', $serviceId)
+                ->first();
+            if ($entry) $uidsWithServiceRecord->push($entry->foreign_id);
+        }
+        $uidsWithServiceRecord->push("040000008200E00074C5B7101A82E0080000000076510F975C3FD801000000000000000010000000A14DEB7A1BEA794B9B187FDDB36E92FF");
+
+
         /** @var ExchangeCalendar $calendar */
         $calendar = $calendarConnection->getSyncEngine()->getCalendar();
         $events = $calendar->getAllEventsForRange($start, $end);
 
         $days = [];
         foreach ($events as $event) {
-            if ($event->TimeZone == 'UTC') {
-                $tzCode = 'UTC';
-            } else {
-                preg_match('/[\+\-]\d\d\:\d\d/', $event->TimeZone, $matches);
-                $tzCode = $matches[0];
-            }
+            // filter out existing entries and service entries
+            if ((!$uidsWithExistingEntry->contains($event->UID)) && (!$uidsWithServiceRecord->contains($event->UID))) {
+                if ($event->TimeZone == 'UTC') {
+                    $tzCode = 'UTC';
+                } else {
+                    preg_match('/[\+\-]\d\d\:\d\d/', $event->TimeZone, $matches);
+                    $tzCode = $matches[0];
+                }
 
-            $days[Carbon::parse($event->Start, $tzCode)->setTimezone('Europe/Berlin')->format('Y-m-d')][] = $event;
+                $days[Carbon::parse($event->Start, $tzCode)->setTimezone('Europe/Berlin')->format('Y-m-d')][] = $event;
+            }
         }
 
         return response()->json($days);
