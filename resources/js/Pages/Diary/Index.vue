@@ -379,4 +379,12 @@ export default {
     cursor: pointer;
     background-color: lightyellow;
 }
+
+>>> .datepicker table tr td.day:not(.disabled) {
+    font-weight: bold !important;
+    color: rgb(0, 123, 255) !important;
+}
+>>> .datepicker table tr td.day:not(.disabled).active {
+    color: white !important;
+}
 </style>
