@@ -45,7 +45,7 @@
                         force-no-text
                         @click="myDate = moment(myDate+'-01').add(1, 'month').format('YYYY-MM')"/>
             <nav-button type="light" icon="mdi mdi-file-word" title="Worddokument herunterladen" force-icon
-                        @click="openAsWordDocument">Als Dokument öffnen</nav-button>
+                        @click="showPrintDialog = true">Als Dokument öffnen</nav-button>
         </template>
         <div class="row">
             <div class="col-md-4">
@@ -128,6 +128,11 @@
             </div>
         </div>
         <diary-entry-editor v-if="editing" :diary-entry="activeEntry" @input="storeItem" @cancel="cancelCreateItem"/>
+        <modal v-if="showPrintDialog" title="Als Word-Dokument exportieren" close-button-label="Exportieren"
+               @close="openAsWordDocument" @cancel="showPrintDialog = false">
+            <form-input label="Erste Seitennummer" placeholder="leer lassen, um keine Seitennummern zu drucken" v-model="firstPage" />
+            <form-check label="Seitenzahlen abwechselnd links und rechts" v-model="printDoubleSided" />
+        </modal>
     </admin-layout>
 </template>
 
@@ -145,10 +150,16 @@ import Tab from "../../components/Ui/tabs/tab";
 import FormSelectize from "../../components/Ui/forms/FormSelectize";
 import FormDatePicker from "../../components/Ui/forms/FormDatePicker";
 import DiaryEntryEditor from "./DiaryEntryEditor";
+import Modal from "../../components/Ui/modals/Modal";
+import FormInput from "../../components/Ui/forms/FormInput";
+import FormCheck from "../../components/Ui/forms/FormCheck";
 
 export default {
     name: "Index",
     components: {
+        FormCheck,
+        FormInput,
+        Modal,
         DiaryEntryEditor,
         FormDatePicker,
         FormSelectize, Tab, Tabs, TabHeader, TabHeaders, Card, CardBody, CardHeader, NavButton, draggable
@@ -196,6 +207,9 @@ export default {
             calendarItems: {},
             activeEntry: null,
             editing: false,
+            showPrintDialog: false,
+            firstPage: 1,
+            printDoubleSided: true,
         }
     },
     created() {
@@ -321,7 +335,8 @@ export default {
             });
         },
         openAsWordDocument() {
-            window.location.href = route('diary.word', {date: this.myDate});
+            this.showPrintDialog = false;
+            window.location.href = route('diary.word', {date: this.myDate, page: this.firstPage, double: this.printDoubleSided});
         },
         edit(item) {
             this.activeEntry = item;

@@ -33,7 +33,9 @@ namespace App\Documents\Word;
 use App\Absence;
 use App\DiaryEntry;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PhpOffice\PhpWord\Element\Footer;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\SimpleType\LineSpacingRule;
@@ -44,6 +46,8 @@ class OfficialDiaryWordDocument extends DefaultWordDocument
 
     protected function configureLayout()
     {
+        $firstPage = request()->get('page', 1);
+
         $this->section = $this->phpWord->addSection(
             [
                 'orientation' => 'portrait',
@@ -53,6 +57,7 @@ class OfficialDiaryWordDocument extends DefaultWordDocument
                 'marginBottom' => Converter::cmToTwip(2.5),
                 'marginLeft' => Converter::cmToTwip(2),
                 'marginRight' => Converter::cmToTwip(1),
+                'pageNumberingStart' => $firstPage,
             ]
         );
     }
@@ -194,8 +199,6 @@ class OfficialDiaryWordDocument extends DefaultWordDocument
 
     public function render($start, $end, $diaryEntries)
     {
-
-
         $groupedDiaryEntries = $diaryEntries->groupBy('category');
         $dailyDiaryEntries = $diaryEntries->groupBy(function($entry) {
             return Carbon::parse($entry->date)->format('Y-m-d');
@@ -266,6 +269,17 @@ class OfficialDiaryWordDocument extends DefaultWordDocument
             }
         }
         $this->getSection()->addTitle($start->formatLocalized('%B %Y'), 1);
+
+        // setup page numbering
+        if (request()->get('page', false)) {
+            $footerOdd = $this->getSection()->addFooter(Footer::AUTO);
+            $footerOdd->addPreserveText('{PAGE}', ['name' => 'Times New Roman', 'size' => 10], ['align' => 'right']);
+            if (request()->get('double', false)) {
+                $this->getPhpWord()->getSettings()->setEvenAndOddHeaders(true);
+                $footerEven = $this->getSection()->addFooter(Footer::EVEN);
+                $footerEven->addPreserveText('{PAGE}', ['name' => 'Times New Roman', 'size' => 10], ['align' => 'left']);
+            }
+        }
 
         $day = $start->copy();
         while ($day < $end) {
