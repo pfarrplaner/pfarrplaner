@@ -30,7 +30,10 @@
 
 namespace App\Documents\Word;
 
+use App\Absence;
+use App\DiaryEntry;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use PhpOffice\PhpWord\Shared\Converter;
 use PhpOffice\PhpWord\SimpleType\Jc;
 use PhpOffice\PhpWord\SimpleType\LineSpacingRule;
@@ -191,10 +194,30 @@ class OfficialDiaryWordDocument extends DefaultWordDocument
 
     public function render($start, $end, $diaryEntries)
     {
+
+
         $groupedDiaryEntries = $diaryEntries->groupBy('category');
         $dailyDiaryEntries = $diaryEntries->groupBy(function($entry) {
             return Carbon::parse($entry->date)->format('Y-m-d');
         });
+
+        $absences = Absence::byUserAndPeriod(Auth::user(), $start, $end)->orderBy('from')->get();
+        foreach ($absences as $absence) {
+            $myDate = $absence->from->copy()->startOfDay();
+            while ($myDate <= $absence->to) {
+                if ($myDate->month == $start->month) {
+                    if (!isset($dailyDiaryEntries[$myDate->format('Y-m-d')])) $dailyDiaryEntries[$myDate->format('Y-m-d')] = collect();
+                    $dailyDiaryEntries[$myDate->format('Y-m-d')]->prepend(new DiaryEntry([
+                        'title' => $absence->reason,
+                        'date' => $myDate,
+                        'user_id' => Auth::user()->id,
+                                                                                         ]));
+                }
+                $myDate->addDay(1);
+            }
+        }
+        $dailyDiaryEntries = $dailyDiaryEntries->sortKeys();
+
 
         $this->getPhpWord()->addTableStyle(
             'table',
@@ -289,7 +312,7 @@ class OfficialDiaryWordDocument extends DefaultWordDocument
 
             $dayEvents = [];
             foreach ($dailyDiaryEntries[$day->format('Y-m-d')] ?? [] as $entry) {
-                $dayEvents[] = Carbon::parse($entry->date)->format('H:i').' '.$entry->title;
+                $dayEvents[] = (Carbon::parse($entry->date)->format('Hi') != '000' ? Carbon::parse($entry->date)->format('H:i').' ' : '').$entry->title;
             }
             $run2->addText(join('; ', $dayEvents), ['name' => 'Times New Roman', 'size' => 10]);
             $breakCount = ($day->dayOfWeek == 6 ? 1 : 2) - floor(strlen(join('; ', $dayEvents)) / 110);
