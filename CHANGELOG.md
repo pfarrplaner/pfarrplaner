@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.150.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.149.2...v2022.150.0) (2022-08-17)
+
+
+### Features
+
+* Advertise new diary functions on landing page ([baf8ffd](https://github.com/pfarrplaner/pfarrplaner/commits/baf8ffd2db7457bb6b9c10da5fbbbab7576a6ac4))
+* Allow auto-categorizing calendar entries as DiaryEntries ([586b088](https://github.com/pfarrplaner/pfarrplaner/commits/586b088f22e304f939bba8133875b0d6aa2b09b7))
+* Allow creating new DiaryEntries ([1d0fe44](https://github.com/pfarrplaner/pfarrplaner/commits/1d0fe44b9ea0a560b196a870b8d33af3934e6baf))
+* Allow editing and deleting diary entries ([57412f5](https://github.com/pfarrplaner/pfarrplaner/commits/57412f5e582bf4f577bfcec91409b15d8ba5ae1b))
+* Auto-sort services into official diary ([6d22900](https://github.com/pfarrplaner/pfarrplaner/commits/6d2290043cbe9cfdd4041115979ffef5fedb12dc))
+* Basic infrastructure for official diary (services) ([298a171](https://github.com/pfarrplaner/pfarrplaner/commits/298a1710935505a04401110269c852df0bc9f4e1))
+* exclude existing calendar entries / service entries from addable events ([d34fb33](https://github.com/pfarrplaner/pfarrplaner/commits/d34fb3328fc1b98dc2adc11df09df652573979c9))
+* Import events from Outlook into official diary ([d8d0214](https://github.com/pfarrplaner/pfarrplaner/commits/d8d02140da5815a9de1e2bc2d8afbcd498807a4d))
+* UI refinements ([3fa7146](https://github.com/pfarrplaner/pfarrplaner/commits/3fa71460e0ddb4665ed5f68e6696d2cc235df98f))
+
+
+### Bug Fixes
+
+* Canceling modal window via titlebar button is not distinguishable from cancel button ([8757555](https://github.com/pfarrplaner/pfarrplaner/commits/87575556f474185bcaa2da0ac45cd759cbf6a00f))
+* typo ([92f894c](https://github.com/pfarrplaner/pfarrplaner/commits/92f894c0c8631e286e7f974bd9a455dfcd904ab9))
+
 ### [2022.149.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.149.1...v2022.149.2) (2022-07-28)
 
 
