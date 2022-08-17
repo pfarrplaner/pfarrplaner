@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.151.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.150.0...v2022.151.0) (2022-08-17)
+
+
+### Features
+
+* Add absences in diary export ([4f467d9](https://github.com/pfarrplaner/pfarrplaner/commits/4f467d9eea9dbe8e98b335a8126871382f64ec93))
+* Add page numbering in diary export ([37acfd2](https://github.com/pfarrplaner/pfarrplaner/commits/37acfd2efa5630be30e99dcd9c30ac0f6d2ac839))
+
 ## [2022.150.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.149.2...v2022.150.0) (2022-08-17)
 
 
