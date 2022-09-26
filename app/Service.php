@@ -1188,7 +1188,7 @@ class Service extends Model
 
     public function createSlug()
     {
-        return $this->date->format('Ymd-Hi').'-'.$this->id
+        return $this->date->copy()->setTimeZone('Europe/Berlin')->format('Ymd-Hi').'-'.$this->id
             .($this->city ? '-'.Str::slug($this->city->name) : '');
     }
 
