@@ -91,7 +91,7 @@ export default {
     },
     data() {
         return {
-            today: moment(this.date).locale('de'),
+            today: moment(this.day).locale('de'),
             liturgy: this.services.length > 0 ? this.services[0].liturgicalInfo : {},
         }
     },
