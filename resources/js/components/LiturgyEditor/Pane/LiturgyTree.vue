@@ -211,7 +211,7 @@
                     </optgroup>
                     <optgroup label="Gottesdienste">
                         <option v-for="service in services" :value="service.id">
-                            {{ service.text }})
+                            {{ service.text }}
                         </option>
                     </optgroup>
                 </selectize>
