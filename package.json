@@ -1,5 +1,5 @@
 {
-    "version": "2022.151.1",
+    "version": "2022.151.2",
     "private": true,
     "scripts": {
         "dev": "npm run development",

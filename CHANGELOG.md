@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.151.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.1...v2022.151.2) (2022-09-26)
+
+
+### Bug Fixes
+
+* Mobile-size single-day view shows current date instead of selected one ([5b43cc8](https://github.com/pfarrplaner/pfarrplaner/commits/5b43cc85403687d5ee880566adcb94d7db1ff7bd))
+
 ### [2022.151.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.0...v2022.151.1) (2022-09-26)
 
 
