@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.151.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.0...v2022.151.1) (2022-09-26)
+
+
+### Bug Fixes
+
+* Missing parenthesis ")" in liturgy import list ([f9ac72e](https://github.com/pfarrplaner/pfarrplaner/commits/f9ac72eae9d803a71aac71c4da19dd95eda4d3a9)), closes [#305](https://github.com/pfarrplaner/pfarrplaner/issues/305)
+* Service slug uses UTC time ([a23b54e](https://github.com/pfarrplaner/pfarrplaner/commits/a23b54e2daf379b7d6e2db8d19e9a4cef8795c51)), closes [#304](https://github.com/pfarrplaner/pfarrplaner/issues/304) [#299](https://github.com/pfarrplaner/pfarrplaner/issues/299)
+
 ## [2022.151.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.150.0...v2022.151.0) (2022-08-17)
 
 
