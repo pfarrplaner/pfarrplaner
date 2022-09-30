@@ -155,7 +155,11 @@ export default {
     mounted() {
         this.serviceSlugs.forEach(slug => {
             if (slug) {
-                axios.get(route('service.data', slug)).then(response => {
+                axios.get(route('service.data', slug), {
+                    fields: ['offering_goal', 'offering_description', 'offerings_counter1', 'offerings_counter2', 'offering_amount', 'city_id', 'location_id'],
+                    load: ['location', 'city'],
+                    append: ['locationText', 'timeText'],
+                }).then(response => {
                     response.data.offering_type = response.data.offering_type || '';
                     this.services.push(response.data);
                     this.services = __.orderBy(this.services, ['date'], ['asc']);

@@ -380,18 +380,50 @@ class ServiceController extends Controller
     }
 
     /**
-     * @param Service $service
+     * @param Request $request
+     * @param $key
+     * @return array|mixed|string[]
+     */
+    private function arrayFromRequest(Request $request, $key) {
+        if (!$request->has($key)) return [];
+        $value = $request->get($key);
+        if (!is_array($value)) $value = explode(',', $value);
+        return $value;
+    }
+
+    /**
+     * @param int $service
+     * @param Request $request
      * @return JsonResponse
      */
-    public function data(Service $service)
+    public function data(Request $request, $service)
     {
-        $service->load(
-            ['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms', 'day', 'tags', 'serviceGroups']
-        );
+        if ($request->has('load')) {
+            $load = $this->arrayFromRequest($request, 'load');
+        } else {
+            $load = ['location', 'city', 'participants', 'weddings', 'funerals', 'baptisms', 'tags', 'serviceGroups'];
+        }
+        $serviceQuery = Service::setEagerLoads([])->where('slug', $service);
+
+        $appends = $this->arrayFromRequest($request, 'append');
+
+        if ($request->has('fields')) {
+            $fields = $this->arrayFromRequest($request, 'fields');
+            if (!in_array('id', $fields)) $fields[] = 'id';
+            if (!in_array('date', $fields)) $fields[] = 'date';
+            $serviceQuery->select($fields);
+        }
+        $service = $serviceQuery->first();
+        if (!$service) return response()->json(null);
+        if ($request->has('append')) $service->setAppends($appends);
+        foreach ($load as $l) $service->load($l);
+
+        /*
         $service->liturgy = Liturgy::getDayInfo($service->day);
         if (isset($liturgy['title']) && ($service->day->name == '')) {
             $service->day->name = $service->liturgy['title'];
         }
+        */
         return response()->json($service);
     }
 
