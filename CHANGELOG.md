@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.151.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.2...v2022.151.3) (2022-09-30)
+
+
+### Bug Fixes
+
+* inputs show unsorted list of services ([9be31a9](https://github.com/pfarrplaner/pfarrplaner/commits/9be31a9da41fe6fe36bd14f7e6335b89f27b49fc))
+* Wrong title in offering plan input ([e3d7296](https://github.com/pfarrplaner/pfarrplaner/commits/e3d729626be4855c37f406f740036701f54e6258))
+
 ### [2022.151.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.1...v2022.151.2) (2022-09-26)
 
 
