@@ -152,7 +152,7 @@ export default {
         DatasetShow
     },
     props: ['serviceSlugs', 'users', 'ministries', 'teams'],
-    mounted() {
+    created() {
         this.serviceSlugs.forEach(slug => {
             if (slug) {
                 axios.get(route('service.data', slug), {
