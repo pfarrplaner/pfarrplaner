@@ -28,7 +28,7 @@
   -->
 
 <template>
-    <admin-layout title="Plan für die Kinderkirche">
+    <admin-layout title="Opferplan bearbeiten">
         <template slot="after-flash">
             <div v-if="(serviceSlugs.length - serviceLoaded) > 0" class="alert alert-info">
                 Daten für {{ serviceSlugs.length - serviceLoaded }} Gottesdienste werden geladen...
