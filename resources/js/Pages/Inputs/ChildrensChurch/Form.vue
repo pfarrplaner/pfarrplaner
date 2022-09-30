@@ -148,6 +148,7 @@ export default {
             if (slug) {
                 axios.get(route('service.data', slug)).then(response => {
                     this.services.push(response.data);
+                    this.services = __.orderBy(this.services, ['date'], ['asc']);
                     this.serviceLoaded++;
                 });
             } else {

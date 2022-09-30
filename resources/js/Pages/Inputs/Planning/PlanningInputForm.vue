@@ -109,6 +109,7 @@ import {Dataset, DatasetItem, DatasetSearch} from "vue-dataset";
 import DatasetInfo from "../../../components/Ui/dataset/DatasetInfo";
 import DatasetPager from "../../../components/Ui/dataset/DatasetPager";
 import DatasetShow from "../../../components/Ui/dataset/DatasetShow";
+import __ from "lodash";
 
 
 export default {
@@ -149,6 +150,7 @@ export default {
                     }
 
                     this.services.push(record);
+                    this.services = __.orderBy(this.services, ['date'], ['asc']);
                     this.serviceLoaded++;
                 });
             } else {

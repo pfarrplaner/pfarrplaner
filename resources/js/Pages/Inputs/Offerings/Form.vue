@@ -152,12 +152,13 @@ export default {
         DatasetShow
     },
     props: ['serviceSlugs', 'users', 'ministries', 'teams'],
-    created() {
+    mounted() {
         this.serviceSlugs.forEach(slug => {
             if (slug) {
                 axios.get(route('service.data', slug)).then(response => {
                     response.data.offering_type = response.data.offering_type || '';
                     this.services.push(response.data);
+                    this.services = __.orderBy(this.services, ['date'], ['asc']);
                     this.serviceLoaded++;
                 });
             } else {
