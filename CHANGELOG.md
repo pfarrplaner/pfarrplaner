@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.152.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.3...v2022.152.0) (2022-10-24)
+
+
+### Features
+
+* New assistant to add birthday visits to calendar ([1853cf0](https://github.com/pfarrplaner/pfarrplaner/commits/1853cf0e599823737ee0b0aa231bb4090689c259)), closes [#309](https://github.com/pfarrplaner/pfarrplaner/issues/309)
+
 ### [2022.151.3](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.2...v2022.151.3) (2022-09-30)
 
 
