@@ -295,7 +295,7 @@ export default {
             'spouse2_dimissorial_requested',
             'spouse2_dimissorial_received'
         ].forEach(item => {
-            if (myWedding[item]) myWedding[item] = moment(myWedding['item']);
+            if (myWedding[item]) myWedding[item] = moment(myWedding[item]);
         });
 
         return {
@@ -356,6 +356,7 @@ export default {
                 service: this.myWedding.service.id,
             };
 
+
             ['permission_requested',
                 'permission_received',
                 'spouse1_dimissorial_requested',
@@ -363,9 +364,10 @@ export default {
                 'spouse2_dimissorial_requested',
                 'spouse2_dimissorial_received'
             ].forEach(item => {
-                if (result[item]) result[item] = moment(result['item']).format('DD.MM.YYYY');
+                if (this.myWedding[item] && moment.isMoment(this.myWedding[item])) {
+                    result[item] = this.myWedding[item].format('DD.MM.YYYY');
+                }
             });
-
 
             this.$inertia.patch(route('weddings.update', this.myWedding.id), result);
         },
