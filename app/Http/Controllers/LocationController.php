@@ -103,7 +103,7 @@ class LocationController extends Controller
                 'city_id' => 'required|integer',
                 'default_time' => 'nullable|date_format:H:i',
                 'cc_default_location' => 'nullable|string',
-                'alternate_location_id' => 'nullable|string',
+                'alternate_location_id' => 'nullable|int|exists:locations,id',
                 'general_location_name' => 'nullable|string',
                 'at_text' => 'nullable|string',
                 'instructions' => 'nullable|string'

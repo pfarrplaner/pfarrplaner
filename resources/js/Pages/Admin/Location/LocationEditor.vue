@@ -166,7 +166,7 @@ export default {
     },
     methods: {
         saveLocation() {
-            this.myLocation.alternate_location_id = String(this.myLocation.alternate_location_id) || '';
+            this.myLocation.alternate_location_id = this.myLocation.alternate_location_id ? String(this.myLocation.alternate_location_id) : '';
             if (this.myLocation.id) {
                 this.$inertia.patch(route('location.update', this.myLocation.id), this.myLocation);
             } else {
