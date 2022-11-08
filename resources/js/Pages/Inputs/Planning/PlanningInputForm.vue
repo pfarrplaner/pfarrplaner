@@ -74,7 +74,7 @@
 
                                                 </div>
                                             </td>
-                                            <td v-for="(ministry,ministryKey,ministryIndex) in ministries">
+                                            <td v-for="(ministry,ministryKey,ministryIndex) in ministries" :key="ministryKey+rowIndex">
                                                 <people-select :label="ministry" :people="users" :teams="teams"
                                                                :include-teams-from-city="row.city"
                                                                v-model="row.ministries[ministryKey]"
@@ -136,6 +136,7 @@ export default {
                         ministries: {},
                         slug: response.data.slug,
                         date: moment(response.data.date).format('DD.MM.YYYY'),
+                        rawDate: moment(response.data.date).format('YYYYMMDD'),
                         day: response.data.day,
                         locationText: response.data.locationText,
                         timeText: response.data.timeText,
@@ -150,7 +151,7 @@ export default {
                     }
 
                     this.services.push(record);
-                    this.services = __.orderBy(this.services, ['date'], ['asc']);
+                    this.services = __.orderBy(this.services, ['rawDate'], ['asc']);
                     this.serviceLoaded++;
                 });
             } else {
