@@ -60,7 +60,7 @@
                                 </thead>
                                 <dataset-item tag="tbody">
                                     <template #default="{ row, rowIndex }">
-                                        <tr>
+                                        <tr :key="rowIndex">
                                             <td :class="row.cc ? '' : 'text-muted'">
                                                 {{ moment(row.date).format('DD.MM.YYYY') }}, {{
                                                     row.timeText

@@ -59,7 +59,7 @@
                                 </thead>
                                 <dataset-item tag="tbody">
                                     <template #default="{ row, rowIndex }">
-                                        <tr>
+                                        <tr :key="rowIndex">
                                             <td>
                                                 <form-check v-model="row.cc" title="Kinderkirche findet statt " @input="saveService(row.slug, row)"/>
                                             </td>
