@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.152.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.152.0...v2022.152.1) (2022-11-09)
+
+
+### Bug Fixes
+
+* locations.alternate_location_id needs to be nullable ([0f9daf9](https://github.com/pfarrplaner/pfarrplaner/commits/0f9daf9b0a4ce660fdcb709001df188086e36b76)), closes [#313](https://github.com/pfarrplaner/pfarrplaner/issues/313)
+* Pagination problems in multi-page table datasets ([0dd7274](https://github.com/pfarrplaner/pfarrplaner/commits/0dd7274f132bfba87c27fbb9c7623d4f08c4eed7))
+* PlanningInput does not sort and paginate correctly ([ba6a31a](https://github.com/pfarrplaner/pfarrplaner/commits/ba6a31a7731c544e38a3b82583a1feb2fa5256da))
+* WeddingEditor does not save date for dimissorial request ([f6c932a](https://github.com/pfarrplaner/pfarrplaner/commits/f6c932a5240aece1a7d6550ec5941c750d679397)), closes [#315](https://github.com/pfarrplaner/pfarrplaner/issues/315)
+
 ## [2022.152.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.151.3...v2022.152.0) (2022-10-24)
 
 
