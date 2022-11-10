@@ -198,6 +198,7 @@ class Service extends Model
         'controlled_access',
         'alt_liturgy_date',
         'date',
+        'wtc_category',
     ];
 
     /**

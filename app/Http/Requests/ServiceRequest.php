@@ -119,6 +119,7 @@ class ServiceRequest extends FormRequest
             'controlled_access' => 'nullable|int',
             'alt_liturgy_date' => 'nullable|date_format:d.m.Y',
             'date' => 'nullable|date',
+            'wtc_category' => 'nullable|string',
         ];
     }
 

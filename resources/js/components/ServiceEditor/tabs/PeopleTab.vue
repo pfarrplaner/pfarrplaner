@@ -49,6 +49,12 @@
                                @count="updatePeopleCounter"  />
             </div>
         </div>
+        <hr />
+        <form-radio-group name="wtc_category" label="Einstufung für Hauptamtliche mit AZE" v-model="myService.wtc_category" :items="{
+                            '': 'ohne Kategorie',
+                            'HG': 'Hauptgottesdienst',
+                            'WG': 'Weiterer Gottesdienst',
+                        }"/>
         <hr/>
         <div><label><span class="mdi mdi-account-multiple"></span> Weitere Dienste</label></div>
         <div class="row">
@@ -82,10 +88,12 @@ import DaySelect from "../../Ui/elements/DaySelect";
 import PeopleSelect from "../../Ui/elements/PeopleSelect";
 import FormCheck from "../../Ui/forms/FormCheck";
 import MinistryRow from "../../Ui/elements/MinistryRow";
+import FormRadioGroup from "../../Ui/forms/FormRadioGroup";
 
 export default {
     name: "PeopleTab",
     components: {
+        FormRadioGroup,
         MinistryRow,
         PeopleSelect,
         DaySelect,

@@ -161,6 +161,7 @@ class FuneralController extends Controller
                 'cc_location' => '',
                 'cc_lesson' => '',
                 'cc_staff' => '',
+                'wtc_category' => 'WG',
             ]
         );
         $service->update(['slug' => $service->createSlug()]);
