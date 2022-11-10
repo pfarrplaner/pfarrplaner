@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.153.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.152.1...v2022.153.0) (2022-11-10)
+
+
+### Features
+
+* Add new report for user AZE statistics ([67b7563](https://github.com/pfarrplaner/pfarrplaner/commits/67b7563ed6cfad50d5e3a623dd16a0824421c89b))
+* Add work-time-calculation (AZE) category to services ([272b93b](https://github.com/pfarrplaner/pfarrplaner/commits/272b93b67ca5ed60a0a48eed9273f124be5154fa))
+* Create NameService instance from user object ([cca699a](https://github.com/pfarrplaner/pfarrplaner/commits/cca699a374bd99bfbf872d3fb6c49ceafc00a4b7))
+
 ### [2022.152.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.152.0...v2022.152.1) (2022-11-09)
 
 
