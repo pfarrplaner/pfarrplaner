@@ -30,6 +30,8 @@
 
 namespace App\Services;
 
+use App\User;
+
 class NameService
 {
 
@@ -56,6 +58,10 @@ class NameService
             $firstName = join(' ', $parts);
         }
         return new self($firstName, $lastName);
+    }
+
+    public static function fromUser(User $user): NameService {
+        return self::fromName($user->name);
     }
 
     public function format($format = self::LAST_COMMA_FIRST)
