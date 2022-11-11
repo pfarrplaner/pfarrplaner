@@ -29,13 +29,17 @@
 
 
 // Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
+@import url('/css/google-fonts.css');
 
 // Variables
 @import 'variables';
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+$font-family-sans-serif: "Nunito", sans-serif;
+
+@import '~admin-lte/dist/css/adminlte.min.css';
+
 
 .navbar-laravel {
   background-color: #fff;

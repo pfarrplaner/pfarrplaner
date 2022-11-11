@@ -16,9 +16,7 @@
     <link href="/landing/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
     <!-- Google Fonts -->
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
-        rel="stylesheet">
+    <link rel="stylesheet" href="/css/google-fonts.css">
 
     <!-- Vendor CSS Files -->
     <link href="/landing/assets/vendor/aos/aos.css" rel="stylesheet">
