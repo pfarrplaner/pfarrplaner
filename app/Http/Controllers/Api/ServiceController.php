@@ -50,6 +50,7 @@ use App\Subscription;
 use App\Traits\HandlesAttachmentsTrait;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -147,6 +148,40 @@ class ServiceController extends Controller
             event(new \App\Events\ServiceUpdated($service, $originalParticipants));
         }
 
+        return response()->json(compact('service'));
+    }
+
+
+    /**
+     * Assign users to a service
+     * @param Request $request
+     * @param Service $service
+     */
+    public function assign(Request $request, Service $service)
+    {
+        $data = $request->validate([
+                                       'ministry' => 'required|string',
+                                       'users.*' => 'required|int|exists:users,id',
+                                       'exclusive' => 'required|checkbox',
+                                   ]);
+        $participants = $service->getSyncableParticipantsArray();
+        if (!isset($participants[$data['ministry']])) {
+            $participants[$data['ministry']] = [];
+        }
+        $existing = $participants[$data['ministry']];
+        if ($data['exclusive']) {
+            $participants[$data['ministry']] = [];
+        }
+        foreach ($data['users'] as $userId) {
+            if (isset($existing[$userId])) {
+                unset($participants[$data['ministry']][$userId]);
+            } else {
+                $participants[$data['ministry']][$userId]['category'] = $data['ministry'];
+            }
+        }
+        $service->syncParticipantsFromArray($participants);
+        $service->refresh();
+        $service->load(['baptisms', 'funerals', 'weddings', 'participants']);
         return response()->json(compact('service'));
     }
 

@@ -36,7 +36,9 @@
     >
         <div class="celldata">
             <div v-if="city.loading"><span class="mdi mdi-spin mdi-loading"></span></div>
-            <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"/>
+            <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"
+                              :targetMode="targetMode" :target="target"
+            />
         </div>
     </td>
 </template>
@@ -45,7 +47,7 @@ import EventBus from "../../plugins/EventBus";
 import { CalendarToggleDayColumnEvent} from "../../events/CalendarToggleDayColumnEvent";
 
 export default {
-    props: ['city', 'day', 'services'],
+    props: ['city', 'day', 'services', 'targetMode', 'target'],
 }
 </script>
 <style scoped>

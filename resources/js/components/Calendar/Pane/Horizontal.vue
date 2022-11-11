@@ -22,6 +22,7 @@
                         <span class="pt-2">{{ city.name }}</span><span class="mdi mdi-arrow-down-circle pt-2"></span>
                     </th>
                     <calendar-cell v-for="(day,index) in myDays" :day="day"
+                                   :targetMode="targetMode" :target="target"
                                    :key="city.loading+'_'+day.date+'_'+city.id"
                                    :index="index" :services="getServices(city,day)"
                                    :city="city" :can-create="canCreate" />
@@ -36,7 +37,7 @@
 import NavButton from "../../Ui/buttons/NavButton";
 export default {
     components: {NavButton},
-    props: ['date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate','collapseState'],
+    props: ['date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate','collapseState', 'targetMode', 'target'],
     data() {
         var myDays = this.days;
 

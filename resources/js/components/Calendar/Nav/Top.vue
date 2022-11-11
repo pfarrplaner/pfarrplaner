@@ -80,6 +80,16 @@
                 <span class="mdi mdi-chevron-right"></span>
             </inertia-link>
         </div>
+        <nav-button class="mr-2"
+                    :type="targetMode ? 'warning' : 'default'"
+                    :icon="targetMode ? (target.exclusive ? 'mdi mdi-account-convert-outline': 'mdi mdi-account-arrow-down-outline') : 'mdi mdi-target-account'"
+                    :force-no-text="!targetMode"
+                    force-icon
+                    :title="'Benutzer schnell zuordnen'+(targetMode ? ' ('+targetTitle()+(target.exclusive ? ', überschreiben' : '')+')' : '')"
+                    @click="$emit('toggle-target-mode', !targetMode)">
+            {{ targetTitle() }}
+        </nav-button>
+
         <a class="btn btn-default" :href="route('reports.setup', {report: 'ministryRequest'})"
            title="Dienstanfrage per E-Mail senden"><span class="mdi mdi-email"></span> <span class="d-none d-md-inline">Anfrage senden...</span></a>
 
@@ -90,8 +100,10 @@
 <script>
 import EventBus from "../../../plugins/EventBus";
 import {CalendarToggleDayColumnEvent} from "../../../events/CalendarToggleDayColumnEvent";
+import NavButton from "../../Ui/buttons/NavButton";
 
 export default {
+    components: {NavButton},
     data() {
         return {
             slave: false,
@@ -100,7 +112,7 @@ export default {
         }
     },
     props: {
-        date: {type: Date}, years: {type: Array}, orientation: {type: String},
+        date: {type: Date}, years: {type: Array}, orientation: {type: String}, targetMode: {type: Boolean}, target: {type: Object}
     },
     methods: {
         monthLink: function (month) {
@@ -128,6 +140,12 @@ export default {
                 this.$inertia.get(route('calendar', moment().format('YYYY-MM')));
             }
         },
+        targetTitle() {
+            if (!this.targetMode) return '';
+            let people = [];
+            this.target.people.forEach(person => people.push(person.name));
+            return this.target.ministry + ': ' + people.join(', ');
+        }
     }
 }
 </script>

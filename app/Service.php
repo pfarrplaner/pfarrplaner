@@ -1076,6 +1076,16 @@ class Service extends Model
                 }
             }
         }
+
+        return $this->syncParticipantsFromArray($participants);
+    }
+
+    /**
+     * @param array $participants
+     * @return array
+     */
+    public function syncParticipantsFromArray($participants)
+    {
         $this->participants()->sync([]);
         if (count($participants)) {
             foreach ($participants as $category => $participant) {
@@ -1083,6 +1093,18 @@ class Service extends Model
             }
         }
         return $participants;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSyncableParticipantsArray()
+    {
+        $data = [];
+        foreach ($this->participants as $participant) {
+            $data[$participant->pivot->category][$participant->id]['category'] = $participant->pivot->category;
+        }
+        return $data;
     }
 
     /**

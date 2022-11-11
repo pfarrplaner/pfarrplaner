@@ -30,52 +30,68 @@
 <template>
     <div :class="{
         'service-entry': 1,
-        'editable': service.isEditable,
-        'mine': service.isMine,
+        'editable': myService.isEditable,
+        'mine': myService.isMine,
         'highlighted': 0,
-        'funeral': service.funerals.length > 0,
-        'hidden': service.hidden}"
-        :title="service.isEditable ? clickTitle(service) : null"
-         @click.stop="service.isEditable ? edit(service, $event) : null"
+        'possible-target': targetMode,
+        'funeral': myService.funerals.length > 0,
+        'reloading': loading,
+        'hidden': myService.hidden}"
+         :title="myService.isEditable ? clickTitle(service) : null"
+         @click.stop="myService.isEditable ? edit(service, $event) : null"
     >
-        <div :class="{'service-time': 1,  'service-special-time': isSpecialTime(service)}">
-            {{ service.timeText }}
-        </div>
-        <span class="separator">|</span>
-        <div :class="{'service-location': 1, 'service-special-location': isSpecialLocation(service)}">
-            {{ isSpecialLocation(service) ?  service.special_location : service.location.name }}
-        </div>
-        <img v-if="(!settings.show_cc_details) && (service.cc)" src="/img/cc.png" :title="ccTitle(service)">
-        <span v-if="service.youtube_url">
-            <a :href="service.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span class="mdi mdi-youtube"></span></a>
-            <a v-if="service.city.youtube_channel_url" :href="service.liveDashboardUrl" target="_blank" class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="mdi mdi-video"></span></a>
-        </span>
-        <controlled-access v-if="service.controlled_access" :service="service" />
-        <div v-if="(service.titleText != 'Gottesdienst') && (service.titleText != 'GD') && (service.funerals.length == 0)" class="service-description">{{ service.titleText }}</div>
-
-        <div class="service-description" v-if="service.funerals.length > 0">
-            <span class="mdi mdi-grave-stone"></span>
-            <calendar-service-funeral v-for="(funeral, index) in service.funerals" :key="funeral.id" :funeral="funeral" trailer=", " :trail="index > 0"/>
-        </div>
-        <div class="service-description" v-html="service.descriptionText"></div>
-        <div class="service-description" v-if="service.internal_remarks">
-            <span class="mdi mdi-eye-off" title="Anmerkung nur für den internen Gebrauch"></span> {{ service.internal_remarks }}
-        </div>
-
-        <calendar-service-participants :participants="service.pastors" category="P" :predicant="service.need_predicant" />
-        <calendar-service-participants :participants="service.organists" category="O" :predicant="0" />
-        <calendar-service-participants :participants="service.sacristans" category="M" :predicant="0" />
-        <calendar-service-participants v-for="participants,ministry in service.ministriesByCategory" :key="ministry"
-                                       :participants="participants" :category="ministry" :predicant="0" />
-        <div v-if="hasPermission('gd-kasualien-lesen') || hasPermission('gd-kasualien-nur-statistik')">
-            <div class="service-description" v-if="service.baptisms.length > 0">
-                <span class="mdi mdi-water" :title="hasPermission('gd-kasualien-lesen') ? service.baptismsText : ''"></span> {{ service.baptisms.length }}
+        <div v-if="loading" class="text-center"><span class="mdi mdi-spin mdi-loading"></span></div>
+        <div v-else>
+            <div :class="{'service-time': 1,  'service-special-time': isSpecialTime(service)}">
+                {{ myService.timeText }}
             </div>
-        </div>
-        <div v-if="settings.show_cc_details && (service.cc)">
-            <hr />
-            <img src="/img/cc.png" :title="ccTitle(service)">
-            Kinderkirche: {{ service.cc_lesson }} ({{ service.cc_staff }})
+            <span class="separator">|</span>
+            <div :class="{'service-location': 1, 'service-special-location': isSpecialLocation(service)}">
+                {{ isSpecialLocation(service) ? myService.special_location : myService.location.name }}
+            </div>
+            <img v-if="(!settings.show_cc_details) && (myService.cc)" src="/img/cc.png" :title="ccTitle(service)">
+            <span v-if="myService.youtube_url">
+            <a :href="myService.youtube_url" target="_blank" class="youtube-link" title="Zum Youtube-Video"><span
+                class="mdi mdi-youtube"></span></a>
+            <a v-if="myService.city.youtube_channel_url" :href="myService.liveDashboardUrl" target="_blank"
+               class="youtube-livedashboard-link" title="Zum LiveDashboard"><span class="mdi mdi-video"></span></a>
+        </span>
+            <controlled-access v-if="myService.controlled_access" :service="service"/>
+            <div
+                v-if="(myService.titleText != 'Gottesdienst') && (myService.titleText != 'GD') && (myService.funerals.length == 0)"
+                class="service-description">{{ myService.titleText }}
+            </div>
+
+            <div class="service-description" v-if="myService.funerals.length > 0">
+                <span class="mdi mdi-grave-stone"></span>
+                <calendar-service-funeral v-for="(funeral, index) in myService.funerals" :key="funeral.id"
+                                          :funeral="funeral" trailer=", " :trail="index > 0"/>
+            </div>
+            <div class="service-description" v-html="myService.descriptionText"></div>
+            <div class="service-description" v-if="myService.internal_remarks">
+                <span class="mdi mdi-eye-off" title="Anmerkung nur für den internen Gebrauch"></span>
+                {{ myService.internal_remarks }}
+            </div>
+
+            <calendar-service-participants :participants="myService.pastors" category="P"
+                                           :predicant="myService.need_predicant"/>
+            <calendar-service-participants :participants="myService.organists" category="O" :predicant="0"/>
+            <calendar-service-participants :participants="myService.sacristans" category="M" :predicant="0"/>
+            <calendar-service-participants v-for="participants,ministry in myService.ministriesByCategory"
+                                           :key="ministry"
+                                           :participants="participants" :category="ministry" :predicant="0"/>
+            <div v-if="hasPermission('gd-kasualien-lesen') || hasPermission('gd-kasualien-nur-statistik')">
+                <div class="service-description" v-if="myService.baptisms.length > 0">
+                    <span class="mdi mdi-water"
+                          :title="hasPermission('gd-kasualien-lesen') ? myService.baptismsText : ''"></span>
+                    {{ myService.baptisms.length }}
+                </div>
+            </div>
+            <div v-if="settings.show_cc_details && (myService.cc)">
+                <hr/>
+                <img src="/img/cc.png" :title="ccTitle(service)">
+                Kinderkirche: {{ myService.cc_lesson }} ({{ myService.cc_staff }})
+            </div>
         </div>
     </div>
 </template>
@@ -83,31 +99,60 @@
 
 
 import ControlledAccess from "./Element/ControlledAccess";
+
 export default {
     components: {ControlledAccess},
-    props: ['service'],
+    props: ['service', 'targetMode', 'target'],
     inject: ['settings'],
+    data() {
+        return {
+            myService: this.service,
+            apiToken: this.$page.props.currentUser.data.api_token,
+            loading: false,
+        }
+    },
     methods: {
-        isSpecialTime: function(service) {
+        isSpecialTime: function (service) {
             if (null == service.location) return true;
             if (null == service.location.default_time) return true;
             if ('' == service.location.default_time) return true;
-            return service.time != service.location.default_time.substr(0,5);
+            return service.time != service.location.default_time.substr(0, 5);
         },
-        isSpecialLocation: function(service) {
+        isSpecialLocation: function (service) {
             return service.location == null;
         },
-        ccTitle: function(service) {
-            return 'Parallel Kinderkirche ('+service.cc_location+') zum Thema "'+service.cc_lesson+'": '+service.cc_staff;
+        ccTitle: function (service) {
+            return 'Parallel Kinderkirche (' + service.cc_location + ') zum Thema "' + service.cc_lesson + '": ' + service.cc_staff;
         },
         clickTitle: function (service) {
-            return service.isEditable ? 'Klicken, um diesen Eintrag zu bearbeiten (#'+service.id+')' : 'Nicht bearbeitbar';
+            if (this.targetMode && service.isEditable) {
+                let people = [];
+                this.target.people.forEach(person => people.push(person.name));
+                return 'Klicken für ' + this.target.ministry + ': ' + people.join(', ');
+            }
+            return service.isEditable ? 'Klicken, um diesen Eintrag zu bearbeiten (#' + service.id + ')' : 'Nicht bearbeitbar';
         },
-        redirect: function(url) {
-            window.location.href=url;
+        redirect: function (url) {
+            window.location.href = url;
         },
-        edit: function(service, clickEvent) {
+        edit: function (service, clickEvent) {
             console.log('service clicked');
+            if (this.targetMode) {
+                let peopleIds = [];
+                this.target.people.forEach(person => peopleIds.push(person.id));
+                this.loading = true;
+
+                axios.post(route('api.service.assign', service.id), {
+                    api_token: this.apiToken,
+                    ministry: this.target.ministry,
+                    users: peopleIds,
+                    exclusive: this.target.exclusive,
+                }).then(response => {
+                    this.myService = response.data.service;
+                    this.loading = false;
+                });
+                return;
+            }
             if (clickEvent.ctrlKey) {
                 window.open(route('service.edit', service.slug), '_blank');
             } else {
@@ -120,13 +165,37 @@ export default {
 </script>
 
 <style scoped>
-    .service-entry.editable {
-        cursor: pointer;
-    }
-    .youtube-link {
-        color: red;
-    }
-    .youtube-livedashboard-link {
-        color: darkgray;
-    }
+.service-entry.reloading {
+    border-color: lightgoldenrodyellow;
+    background-color: transparent !important;
+    color: #ffc107 !important;
+    font-size: 3em !important;
+}
+
+.service-entry.editable.possible-target:not(.mine) {
+    background-color: lightgoldenrodyellow;
+}
+
+.service-entry.editable.possible-target:hover {
+    background-color: #ffc107;
+    box-shadow: 0 0 0 .2rem lightgoldenrodyellow;
+    border: 0;
+}
+
+
+.service-entry.editable {
+    cursor: pointer;
+}
+
+.service-entry.editable.possible-target {
+    cursor: crosshair;
+}
+
+.youtube-link {
+    color: red;
+}
+
+.youtube-livedashboard-link {
+    color: darkgray;
+}
 </style>

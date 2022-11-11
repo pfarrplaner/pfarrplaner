@@ -1,7 +1,9 @@
 <template>
     <admin-layout enable-control-sidebar="true" :title="title(date)" no-padding no-content-header>
         <template #navbar-left>
-            <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse" :orientation="orientation"></calendar-nav-top>
+            <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse"
+                              :orientation="orientation" :targetMode="targetMode" :target="target"
+                              @toggle-target-mode="toggleTargetMode" />
         </template>
         <template #control-sidebar>
             <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities" @set-setting="setSetting"/>
@@ -13,10 +15,12 @@
             <calendar-pane-horizontal v-if="orientation == 'horizontal'"
                                       :date="date" :days="myDays" :cities="cityList" :services="services" :years="years"
                                       :key="collapseKey"
+                                      :targetMode="targetMode" :target="target"
                                       :absences="absences" :can-create="canCreate"/>
             <calendar-pane-vertical v-else
                                     :date="date" :days="myDays" :cities="cityList" :services="services" :years="years"
                                     :key="collapseKey"
+                                    :targetMode="targetMode" :target="target"
                                     :absences="absences" :can-create="canCreate "/>
         </div>
         <div class="d-inline d-md-none">
@@ -24,6 +28,14 @@
             <calendar-pane-mobile :date="date" :days="days" :cities="cityList" :services="services" :years="years"
                                     :absences="absences" :can-create="canCreate" :loading="loading"/>
         </div>
+        <modal v-if="showTargetModeModal" title="Person(en) schnell eintragen"
+               @close="setTarget"
+               close-button-label="Aktivieren"
+               @cancel="showTargetModeModal = false; targetMode = false;">
+            <people-select :people="people" v-model="target.people" label="Folgende Person(en) eintragen" />
+            <form-selectize label="Für folgenden Dienst eintragen" v-model="target.ministry" :options="myMinistries" />
+            <form-check label="Bestehende Einträge überschreiben" v-model="target.exclusive" />
+        </modal>
     </admin-layout>
 </template>
 
@@ -33,10 +45,14 @@ import EventBus from "../../plugins/EventBus";
 import {CalendarNewSortOrderEvent} from "../../events/CalendarNewSortOrderEvent";
 import {CalendarNewOrientationEvent} from "../../events/CalendarNewOrientationEvent";
 import CalendarPaneMobile from "../../components/Calendar/Pane/Mobile";
+import Modal from "../../components/Ui/modals/Modal";
+import PeopleSelect from "../../components/Ui/elements/PeopleSelect";
+import FormSelectize from "../../components/Ui/forms/FormSelectize";
+import FormCheck from "../../components/Ui/forms/FormCheck";
 
 export default {
-    components: {CalendarPaneMobile},
-    props: ['date', 'days', 'cities',  'years', 'absences', 'canCreate', 'services'],
+    components: {FormCheck, FormSelectize, PeopleSelect, Modal, CalendarPaneMobile},
+    props: ['date', 'days', 'cities',  'years', 'absences', 'canCreate', 'services', 'people', 'ministries'],
     provide() {
         return {
             settings: this.$page.props.settings || {},
@@ -53,6 +69,15 @@ export default {
             }
         }
 
+        var myMinistries = [
+            { id: 'P', 'name': 'Pfarrer*in'},
+            { id: 'O', 'name': 'Organist*in'},
+            { id: 'M', 'name': 'Mesner*in'},
+        ];
+        for(const ministryKey in this.ministries) {
+            myMinistries.push({id: this.ministries[ministryKey], name: this.ministries[ministryKey]});
+        }
+
         return {
             myDays: myDays,
             collapseKey: Math.random()*9999999,
@@ -61,6 +86,14 @@ export default {
             settings: window.vm.$children[0].$page.props.settings || {},
             myServices: this.services,
             loading: 0,
+            targetMode: false,
+            showTargetModeModal: false,
+            myMinistries,
+            target: {
+                people: this.people.filter(person => person.id == this.$page.props.currentUser.data.id),
+                ministry: this.$page.props.currentUser.data.isPastor ? 'P' : null,
+                exclusive: false,
+            }
         }
     },
     created() {
@@ -105,6 +138,17 @@ export default {
         setSetting(setting) {
             this.settings[setting.key] = setting.value;
             this.$forceUpdate();
+        },
+        toggleTargetMode(e) {
+            if (!e) {
+                this.targetMode = false;
+                return;
+            }
+            this.showTargetModeModal = true;
+        },
+        setTarget() {
+            this.showTargetModeModal = false;
+            this.targetMode = true;
         }
     },
     computed: {

@@ -20,7 +20,7 @@
                         :key="day.id"
                         :scroll-to-date="scrollToDate"
                         :absences="absences[day.id]"  />
-                    <calendar-cell v-for="(city,index) in cities" :day="day" :key="city.id"
+                    <calendar-cell v-for="(city,index) in cities" :day="day" :key="city.id" :targetMode="targetMode" :target="target"
                                    :services="getServices(city,day)" :city="city" :can-create="canCreate"
                                     />
                 </tr>
@@ -34,7 +34,7 @@
 import NavButton from "../../Ui/buttons/NavButton";
 export default {
     components: {NavButton},
-    props: ['date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate', 'collapseState'],
+    props: ['date', 'days', 'cities', 'services', 'years', 'absences', 'canCreate', 'collapseState', 'targetMode', 'target'],
     data() {
         var myDays = this.days;
         var scrollToDate = null;

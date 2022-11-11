@@ -6,9 +6,11 @@ use App\Absence;
 use App\City;
 use App\Day;
 use App\Liturgy;
+use App\Ministry;
 use App\Service;
 use App\Services\CalendarService;
 use App\Services\RedirectorService;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,6 +75,7 @@ class CalController extends Controller
 
         $user = Auth::user();
         $cities = $user->cities;
+        $people = User::all();
 
 
         $services = [];
@@ -94,10 +97,11 @@ class CalController extends Controller
         );
 
         $canCreate = $user->can('create', Service::class);
+        $ministries = Ministry::all();
 
         return Inertia::render(
             'Calendar/Calendar',
-            compact('date', 'days', 'cities', 'years', 'absences', 'canCreate', 'services')
+            compact('date', 'days', 'cities', 'years', 'absences', 'canCreate', 'services', 'people', 'ministries')
         );
     }
 
