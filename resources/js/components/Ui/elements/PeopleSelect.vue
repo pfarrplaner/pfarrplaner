@@ -86,18 +86,33 @@ export default {
     },
     data() {
         var myValue = [];
-        var myPeople = this.people;
         var myPeopleReference = {};
         var myTeamReference = {};
+        var myPeople = this.people.filter(person => person.id != this.$page.props.currentUser.data.id);
+        myPeople.unshift(this.$page.props.currentUser.data);
+
 
         this.value.forEach(function (person) {
             myValue.push(person.id);
         });
 
+
+        // add own user first
+        myPeopleReference[this.$page.props.currentUser.data.id] = {
+            type: 'mdi mdi-account',
+            name: this.$page.props.currentUser.data.name,
+            userString: this.$page.props.currentUser.data.name,
+            category: 'Ich selbst',
+        }
+
         myPeople.forEach(person => {
             myPeopleReference[person.id] = person;
             person.type = person.type || 'mdi mdi-account';
-            person.category = person.category || 'Personen';
+            if (person.id == this.$page.props.currentUser.data.id) {
+                person.category = 'Ich'
+            } else {
+                person.category = person.category || 'Andere Personen';
+            }
             person.userString = person.userString || '';
         });
 
@@ -134,7 +149,7 @@ export default {
                 optgroupField: 'category',
                 optgroupLabelField: 'groupName',
                 optgroupValueField: 'groupName',
-                optgroups: [{ groupName: 'Personen'}, {groupName: 'Teams'}],
+                optgroups: [{groupName: 'Ich'},{ groupName: 'Andere Personen'}, {groupName: 'Teams'}],
                 create: this.addPerson,
                 options: myPeople,
                 render: {
