@@ -34,7 +34,10 @@ Route::get('servicesByDayAndCity/{day}/{city}', [ServiceController::class, 'byDa
 Route::get('user/{user}/services', [ServiceController::class, 'byUser'])->name('user.services');
 
 // authenticated:
-Route::get('service/{service}', [ServiceController::class, 'show'])->name('service.show')->middleware('auth:api');
-Route::patch('service/{service}', [ServiceController::class, 'update'])->name('service.update')->middleware('auth:api');
+Route::group(['middleware' => 'auth:api'], function () {
+    Route::get('service/{service}', [ServiceController::class, 'show'])->name('service.show');
+    Route::patch('service/{service}', [ServiceController::class, 'update'])->name('service.update');
+});
+
 
 
