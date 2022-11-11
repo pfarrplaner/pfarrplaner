@@ -245,8 +245,8 @@ export default {
             lastName = tmp[1];
             this.newPerson = {
                 name: item,
-                first_name: firstName.trim(),
-                last_name: lastName.trim(),
+                first_name: lastName ? firstName.trim() : '',
+                last_name: lastName ? lastName.trim() : firstName,
                 title: '',
                 email: '',
             };
