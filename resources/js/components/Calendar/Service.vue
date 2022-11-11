@@ -36,7 +36,7 @@
         'funeral': service.funerals.length > 0,
         'hidden': service.hidden}"
         :title="service.isEditable ? clickTitle(service) : null"
-         @click.stop="service.isEditable ? edit(service) : null"
+         @click.stop="service.isEditable ? edit(service, $event) : null"
     >
         <div :class="{'service-time': 1,  'service-special-time': isSpecialTime(service)}">
             {{ service.timeText }}
@@ -106,9 +106,13 @@ export default {
         redirect: function(url) {
             window.location.href=url;
         },
-        edit: function(service) {
+        edit: function(service, clickEvent) {
             console.log('service clicked');
-            this.$inertia.visit(route('service.edit', service.slug));
+            if (clickEvent.ctrlKey) {
+                window.open(route('service.edit', service.slug), '_blank');
+            } else {
+                this.$inertia.visit(route('service.edit', service.slug));
+            }
         },
     }
 }
