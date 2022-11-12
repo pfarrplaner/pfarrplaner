@@ -28,28 +28,19 @@
   -->
 
 <template>
-    <form @submit.prevent="save">
-        <div class="liturgy-item-reading-editor">
-                <div class="form-group">
-                    <label for="title">Titel im Ablaufplan</label>
-                    <input class="form-control" v-model="editedElement.title" v-focus/>
-                </div>
-                <form-bible-reference-input v-model="editedElement.data.reference" :sources="textSources" />
-                </div>
-            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
-            <div class="form-group">
-                <button class="btn btn-primary" @click="save">Speichern</button>
-                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">
-                    Abbrechen
-                </inertia-link>
-            </div>
+    <div class="liturgy-item-reading-editor">
+        <div class="form-group">
+            <label for="title">Titel im Ablaufplan</label>
+            <input class="form-control" v-model="editedElement.title" v-focus/>
         </div>
-    </form>
+        <form-bible-reference-input v-model="editedElement.data.reference" :sources="textSources"/>
+    </div>
 </template>
 
 <script>
 import TimeFields from "./Elements/TimeFields";
 import FormBibleReferenceInput from "../../Ui/forms/FormBibleReferenceInput";
+
 export default {
     name: "ReadingEditor",
     components: {FormBibleReferenceInput, TimeFields},
@@ -67,23 +58,23 @@ export default {
 
         let textSources = {};
         if (undefined !== this.service.liturgicalInfo.title) {
-            textSources['Perikope für '+this.service.liturgicalInfo.title] = this.service.liturgicalInfo.currentPerikope;
-            for (let i=1; i<=6; i++) {
-                textSources[this.service.liturgicalInfo.title+' '+this.romanize(i)] = this.service.liturgicalInfo['litTextsPerikope'+i];
+            textSources['Perikope für ' + this.service.liturgicalInfo.title] = this.service.liturgicalInfo.currentPerikope;
+            for (let i = 1; i <= 6; i++) {
+                textSources[this.service.liturgicalInfo.title + ' ' + this.romanize(i)] = this.service.liturgicalInfo['litTextsPerikope' + i];
             }
-            textSources[this.service.liturgicalInfo.title+' Psalm'] = this.service.liturgicalInfo['litTextsWeeklyPsalm'];
-            textSources[this.service.liturgicalInfo.title+' Wochenspruch'] = this.service.liturgicalInfo['litTextsWeeklyQuote'];
+            textSources[this.service.liturgicalInfo.title + ' Psalm'] = this.service.liturgicalInfo['litTextsWeeklyPsalm'];
+            textSources[this.service.liturgicalInfo.title + ' Wochenspruch'] = this.service.liturgicalInfo['litTextsWeeklyQuote'];
         }
         this.service.baptisms.forEach(baptism => {
-            if (baptism.text) textSources['Taufspruch '+baptism.candidate_name] = baptism.text;
+            if (baptism.text) textSources['Taufspruch ' + baptism.candidate_name] = baptism.text;
         });
         this.service.funerals.forEach(funeral => {
-            if (funeral.text) textSources['Beerdigungstext '+funeral.buried_name] = funeral.text;
-            if (funeral.confirmation_text) textSources['Denkspruch '+funeral.buried_name] = funeral.confirmation_text;
-            if (funeral.wedding_text) textSources['Trauspruch '+funeral.buried_name] = funeral.wedding_text;
+            if (funeral.text) textSources['Beerdigungstext ' + funeral.buried_name] = funeral.text;
+            if (funeral.confirmation_text) textSources['Denkspruch ' + funeral.buried_name] = funeral.confirmation_text;
+            if (funeral.wedding_text) textSources['Trauspruch ' + funeral.buried_name] = funeral.wedding_text;
         });
         this.service.weddings.forEach(wedding => {
-            if (wedding.text) textSources['Trauspruch '+wedding.spouse1_name+' & '+wedding.spouse2_name] = wedding.text;
+            if (wedding.text) textSources['Trauspruch ' + wedding.spouse1_name + ' & ' + wedding.spouse2_name] = wedding.text;
         });
 
         return {
@@ -122,7 +113,7 @@ export default {
 </script>
 
 <style scoped>
-    .liturgy-item-reading-editor {
-        padding: 5px;
-    }
+.liturgy-item-reading-editor {
+    padding: 5px;
+}
 </style>

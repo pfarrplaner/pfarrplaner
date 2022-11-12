@@ -28,109 +28,91 @@
   -->
 
 <template>
-    <form @submit.prevent="save">
-        <div class="liturgy-item-liturgic-editor">
-            <div class="row">
-                <div class="col-md-8">
-                    <default-fields v-if="service" :service="service" :element="editedElement"
-                                    :agenda-mode="agendaMode"/>
-                    <div v-if="(agendaMode) && (service)" class="form-group">
-                        <label for="text_filter">Agenda-Code zum Filtern der Textliste</label>
-                        <input class="form-control" type="text" name="text_filter"
-                               v-model="editedElement.data.text_filter"/>
-                    </div>
-                    <div v-if="service">
-                        <div class="form-group">
-                            <label for="existing_text">Liturgische Texte</label>
-                            <div v-if="texts.length == 0">
-                                Bitte warten, Textliste wird geladen...
-                            </div>
-                            <selectize v-if="texts.length > 0" class="form-control" name="existing_text"
-                                       :value="selectedText"
-                                       :settings="settings"
-                                       @input="chosen">
-                                <optgroup v-if="(editedElement.data.text_filter != '')" label="Vorgeschlagene Texte">
-                                    <option v-for="text in texts"
-                                            v-if="editedElement.data.text_filter == text.agenda_code"
-                                            :value="text.id">
-                                        {{ text.title + (text.source ? '(' + text.source + ')' : '') }}
-                                    </option>
-                                </optgroup>
-                                <optgroup v-if="(editedElement.data.text_filter != '')" label="Andere Texte">
-                                    <option v-for="text in texts"
-                                            v-if="editedElement.data.text_filter != text.agenda_code"
-                                            :value="text.id">
-                                        {{ text.title + (text.source ? '(' + text.source + ')' : '') }}
-                                    </option>
-                                </optgroup>
-                                <option v-if="(editedElement.data.text_filter == '')" v-for="text in texts"
+    <div class="liturgy-item-liturgic-editor">
+        <div class="row">
+            <div class="col-md-8">
+                <default-fields v-if="service" :service="service" :element="editedElement"
+                                :agenda-mode="agendaMode"/>
+                <div v-if="(agendaMode) && (service)" class="form-group">
+                    <label for="text_filter">Agenda-Code zum Filtern der Textliste</label>
+                    <input class="form-control" type="text" name="text_filter"
+                           v-model="editedElement.data.text_filter"/>
+                </div>
+                <div v-if="service">
+                    <div class="form-group">
+                        <label for="existing_text">Liturgische Texte</label>
+                        <div v-if="texts.length == 0">
+                            Bitte warten, Textliste wird geladen...
+                        </div>
+                        <selectize v-if="texts.length > 0" class="form-control" name="existing_text"
+                                   :value="selectedText"
+                                   :settings="settings"
+                                   @input="chosen">
+                            <optgroup v-if="(editedElement.data.text_filter != '')" label="Vorgeschlagene Texte">
+                                <option v-for="text in texts"
+                                        v-if="editedElement.data.text_filter == text.agenda_code"
                                         :value="text.id">
                                     {{ text.title + (text.source ? '(' + text.source + ')' : '') }}
                                 </option>
-                            </selectize>
-                        </div>
-                        <div v-if="editedElement.data.needs_replacement == 'funeral'" class="form-group">
-                            <label>Platzhalter ersetzen für Beerdigung</label>
-                            <select class="form-control" v-model="editedElement.data.replacement">
-                                <option v-for="funeral in service.funerals" :value="funeral.id">{{
-                                        funeral.buried_name
-                                    }}
+                            </optgroup>
+                            <optgroup v-if="(editedElement.data.text_filter != '')" label="Andere Texte">
+                                <option v-for="text in texts"
+                                        v-if="editedElement.data.text_filter != text.agenda_code"
+                                        :value="text.id">
+                                    {{ text.title + (text.source ? '(' + text.source + ')' : '') }}
                                 </option>
-                            </select>
-                        </div>
-                        <div v-if="editedElement.data.needs_replacement == 'baptism'" class="form-group">
-                            <label>Platzhalter ersetzen für Taufe</label>
-                            <select class="form-control" v-model="editedElement.data.replacement">
-                                <option v-for="baptism in service.baptisms" :value="baptism.id">{{
-                                        baptism.candidate_name
-                                    }}
-                                </option>
-                            </select>
-                        </div>
-                        <div v-if="editedElement.data.needs_replacement == 'wedding'" class="form-group">
-                            <label>Platzhalter ersetzen für Trauung</label>
-                            <select class="form-control" v-model="editedElement.data.replacement">
-                                <option v-for="wedding in service.weddings" :value="wedding.id">{{
-                                        wedding.spouse1_name
-                                    }}
-                                    &amp; {{ wedding.spouse2_name }}
-                                </option>
-                            </select>
-                        </div>
+                            </optgroup>
+                            <option v-if="(editedElement.data.text_filter == '')" v-for="text in texts"
+                                    :value="text.id">
+                                {{ text.title + (text.source ? '(' + text.source + ')' : '') }}
+                            </option>
+                        </selectize>
                     </div>
-                    <div v-else class="liturgical-text-quote">
-                        <nl2br tag="div" :text="editedElement.data.text"/>
+                    <div v-if="editedElement.data.needs_replacement == 'funeral'" class="form-group">
+                        <label>Platzhalter ersetzen für Beerdigung</label>
+                        <select class="form-control" v-model="editedElement.data.replacement">
+                            <option v-for="funeral in service.funerals" :value="funeral.id">{{
+                                    funeral.buried_name
+                                }}
+                            </option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <button class="btn btn-sm btn-light" @click.prevent="editText"
-                                v-if="editedElement.data.id != -1">Text bearbeiten
-                        </button>
-                        <button class="btn btn-sm btn-light" @click.prevent="openNewTextForm">Neuer Text</button>
+                    <div v-if="editedElement.data.needs_replacement == 'baptism'" class="form-group">
+                        <label>Platzhalter ersetzen für Taufe</label>
+                        <select class="form-control" v-model="editedElement.data.replacement">
+                            <option v-for="baptism in service.baptisms" :value="baptism.id">{{
+                                    baptism.candidate_name
+                                }}
+                            </option>
+                        </select>
+                    </div>
+                    <div v-if="editedElement.data.needs_replacement == 'wedding'" class="form-group">
+                        <label>Platzhalter ersetzen für Trauung</label>
+                        <select class="form-control" v-model="editedElement.data.replacement">
+                            <option v-for="wedding in service.weddings" :value="wedding.id">{{
+                                    wedding.spouse1_name
+                                }}
+                                &amp; {{ wedding.spouse2_name }}
+                            </option>
+                        </select>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="liturgical-text-quote">
-                        <nl2br tag="div" :text="editedElement.data.text" />
-                    </div>
-                    <text-stats class="mt-3" :text="editedElement.data.text" />
+                <div v-else class="liturgical-text-quote">
+                    <nl2br tag="div" :text="editedElement.data.text"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-sm btn-light" @click.prevent="editText"
+                            v-if="editedElement.data.id != -1">Text bearbeiten
+                    </button>
+                    <button class="btn btn-sm btn-light" @click.prevent="openNewTextForm">Neuer Text</button>
                 </div>
             </div>
-            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
-            <div class="form-group" v-if="service">
-                <button class="btn btn-primary" @click="save">Speichern</button>
-                <inertia-link class="btn btn-secondary"
-                              :href="route('liturgy.editor', this.service.slug)">
-                    Abbrechen
-                </inertia-link>
+            <div class="col-md-3">
+                <div class="liturgical-text-quote">
+                    <nl2br tag="div" :text="editedElement.data.text"/>
+                </div>
+                <text-stats class="mt-3" :text="editedElement.data.text"/>
             </div>
-            <div class="form-group" v-else>
-                <button class="btn btn-primary" @click="updateText">Speichern</button>
-                <inertia-link class="btn btn-secondary"
-                              :href="route('liturgy.text.index')">
-                    Abbrechen
-                </inertia-link>
-            </div>
-
         </div>
         <modal :title="(editedElement.data.id == -1) ? 'Neuer Text' : 'Text bearbeiten'" v-if="editingText || newText"
                @close="newText ? saveText() : updateText()" @cancel="newText = editingText = false;"
@@ -162,8 +144,7 @@
                 </select>
             </div>
         </modal>
-
-    </form>
+    </div>
 </template>
 
 <script>

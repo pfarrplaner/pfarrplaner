@@ -28,10 +28,18 @@
   -->
 
 <template>
-    <div class="liturgy-editor-details-pane" v-scroll-to>
-        <component :is="editorComponent" :element="element" v-model="element" :service="service"
-                   :agenda-mode="agendaMode" :markers="markers" />
-    </div>
+    <form submit.prevent="save">
+        <div class="liturgy-editor-details-pane p-1" v-scroll-to :key="state">
+            <component :is="editorComponent" :element="editedElement" v-model="editedElement" :service="service"
+                       :agenda-mode="agendaMode" :markers="markers" @unfocus="$emit('unfocus')"/>
+            <time-fields v-if="element.data_type != 'block'"
+                :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
+            <div class="form-group">
+                <button class="btn btn-primary" @click.prevent.stop="save">Speichern</button>
+                <button class="btn btn-secondary" @click.prevent.stop="cancel">Abbrechen</button>
+            </div>
+        </div>
+    </form>
 </template>
 
 <script>
@@ -43,10 +51,13 @@ import PsalmEditor from "../Editors/PsalmEditor";
 import ReadingEditor from "../Editors/ReadingEditor";
 import SermonEditor from "../Editors/SermonEditor";
 import SongEditor from "../Editors/SongEditor";
+import __ from "lodash";
+import TimeFields from "../Editors/Elements/TimeFields";
 
 export default {
     name: "DetailsPane",
     components: {
+        TimeFields,
         BlockEditor,
         FreetextEditor,
         LiturgicEditor,
@@ -69,7 +80,38 @@ export default {
     },
     data() {
         return {
-            editorComponent: this.element.data_type.charAt(0).toUpperCase() + this.element.data_type.slice(1)+'Editor',
+            apiToken: this.$page.props.currentUser.data.api_token,
+            savedState: Object.assign({}, this.element),
+            editorComponent: this.element.data_type.charAt(0).toUpperCase() + this.element.data_type.slice(1) + 'Editor',
+            editedElement: this.element,
+            state: 1,
+        }
+    },
+    methods: {
+        save: function () {
+            if (this.editedElement.data_type == 'block') {
+                axios.patch(route('api.liturgy.block.update', {
+                    api_token: this.apiToken,
+                    block: this.editedElement.id,
+                }), this.editedElement).then(response => {
+                    this.editedElement.editing = false;
+                    this.$emit('unfocus', this.editedElement);
+                })
+            } else {
+                axios.patch(route('api.liturgy.item.update', {
+                    api_token: this.apiToken,
+                    item: this.editedElement.id,
+                }), this.editedElement).then(response => {
+                    this.editedElement.editing = false;
+                    this.$emit('unfocus', this.editedElement);
+                });
+            }
+        },
+        cancel: function () {
+            this.editedElement = Object.assign({}, this.savedState);
+            this.state++;
+            this.editedElement.editing = false;
+            this.$emit('unfocus', this.savedState);
         }
     }
 }

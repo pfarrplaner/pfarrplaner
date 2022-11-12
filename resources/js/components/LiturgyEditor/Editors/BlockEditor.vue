@@ -28,22 +28,17 @@
   -->
 
 <template>
-    <form @submit.prevent="save">
+    <form @submit.prevent.stop="save">
         <div class="liturgy-item-block-editor">
             <default-fields :service="service" :element="editedElement" :agenda-mode="agendaMode"/>
-            <div class="form-group">
-                <button class="btn btn-primary" @click="save">Speichern</button>
-                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">Abbrechen
-                </inertia-link>
-            </div>
         </div>
-        <hr v-if="element.items.length > 0"/>
     </form>
 </template>
 
 <script>
 import DefaultFields from "./Elements/DefaultFields";
 import TimeFields from "./Elements/TimeFields";
+import __ from "lodash";
 
 export default {
     name: "BlockEditor",
@@ -61,19 +56,11 @@ export default {
     },
     data() {
         return {
+            apiToken: this.$page.props.currentUser.data.api_token,
+            savedState: __.clone(this.element),
             editedElement: this.element,
         };
     },
-    methods: {
-        save: function () {
-            this.$inertia.patch('/liturgy/' + this.element.service_id + '/block/' + this.element.id, this.editedElement, {
-                preserveState: false,
-            });
-        },
-        cancel: function () {
-            this.$emit('cancel');
-        }
-    }
 }
 </script>
 

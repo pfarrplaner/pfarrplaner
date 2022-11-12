@@ -28,25 +28,17 @@
   -->
 
 <template>
-    <form @submit.prevent="save">
-        <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
-        <div class="liturgy-item-freetext-editor">
-            <div class="form-group">
-                <label for="title">Titel im Ablaufplan</label>
-                <input class="form-control" v-model="editedElement.title" v-focus/>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary" @click="save">Speichern</button>
-                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">
-                    Abbrechen
-                </inertia-link>
-            </div>
+    <div class="liturgy-item-sermon-editor">
+        <div class="form-group">
+            <label for="title">Titel im Ablaufplan</label>
+            <input class="form-control" v-model="editedElement.title" v-focus/>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>
 import TimeFields from "./Elements/TimeFields";
+
 export default {
     name: "SermonEditor",
     components: {TimeFields},

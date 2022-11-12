@@ -29,204 +29,217 @@
 
 <template>
     <div class="liturgy-tree pb-4">
-        <template slot="toolbar">
-        </template>
-        <div class="row py-2 border-bottom mb-2">
-            <div class="col-md-6">
-                <button class="btn btn-success" @click="addBlock"><span class="mdi mdi-format-section"></span> Abschnitt
-                    hinzufügen...
-                </button>
-                <button class="btn btn-light" @click.prevent="modalOpen = true">Ablaufelemente importieren...
-                </button>
-            </div>
-            <div class="col-md-6 text-right">
-                <div class="dropdown" v-if="hasDownload">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                            title="Dokumente herunterladen">
-                        <span class="mdi mdi-download"></span> Herunterladen
+        <div v-if="reloadingTree" class="tree-loader">
+            <span class="mdi mdi-spin mdi-loading"></span>
+        </div>
+        <div v-else>
+            <template slot="toolbar">
+            </template>
+            <div class="row py-2 border-bottom mb-2">
+                <div class="col-md-6">
+                    <button class="btn btn-success" @click="addBlock"><span class="mdi mdi-format-section"></span>
+                        Abschnitt
+                        hinzufügen...
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <div v-for="sheet in sheets">
-                            <liturgy-sheet-link :service="service" :sheet="sheet" @open="dialogs[sheet.key] = true"/>
+                    <button class="btn btn-light" @click.prevent="modalOpen = true">Ablaufelemente importieren...
+                    </button>
+                </div>
+                <div class="col-md-6 text-right">
+                    <div class="dropdown" v-if="hasDownload">
+                        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                title="Dokumente herunterladen">
+                            <span class="mdi mdi-download"></span> Herunterladen
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <div v-for="sheet in sheets">
+                                <liturgy-sheet-link :service="service" :sheet="sheet"
+                                                    @open="dialogs[sheet.key] = true"/>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <draggable :list="blocks" group="blocks" v-bind:class="{ghostClass: 'ghost-block'}" class="liturgy-blocks-list"
-                   @start="focusOff" @end="saveState" :disabled="!editable" handle=".handle">
-            <div v-for="block,blockIndex in blocks" class="liturgy-block"
-                 :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
-                 @click="focusBlock(blockIndex)">
-                <div class="row">
-                    <div class="col-11 liturgy-block-title">
+            <draggable :list="blocks" group="blocks" v-bind:class="{ghostClass: 'ghost-block'}"
+                       class="liturgy-blocks-list" :key="treeState+blocks.length"
+                       @start="focusOff" @end="saveState" :disabled="!editable" handle=".handle">
+                <div v-for="(block,blockIndex) in blocks" class="liturgy-block"
+                     :class="{focused: (focusedBlock == blockIndex) && (focusedItem == null)}"
+                     @click="focusBlock(blockIndex)" >
+                    <div class="row" :ref="'block'+blockIndex" :key="'block'+blockIndex">
+                        <div class="col-11 liturgy-block-title">
                         <span class="mdi mdi-drag-horizontal handle mr-1"
                               title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
-                        <span class="mdi mdi-chevron-right-circle" style="display: none;"></span> {{ block.title }}
+                            <span class="mdi mdi-chevron-right-circle" style="display: none;"></span> {{ block.title }}
+                        </div>
+                        <div class="col-1 text-right" v-if="editable">
+                            <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
+                                    title="Abschnitt löschen">
+                                <span class="mdi mdi-delete"></span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="col-1 text-right" v-if="editable">
-                        <button @click.stop="deleteBlock(blockIndex)" class="btn btn-sm btn-danger"
-                                title="Abschnitt löschen">
-                            <span class="mdi mdi-delete"></span>
-                        </button>
+                    <div class="row" v-if="editable">
+                        <div class="col-12">
+                            <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light"
+                                    title="Freitext hinzufügen"><span class="mdi mdi-text"></span>
+                            </button>
+                            <button @click.stop="addItem(blockIndex, 'Psalm')" class="btn btn-sm btn-light"
+                                    title="Psalm hinzufügen"><span class="mdi mdi-hands-pray"></span>
+                            </button>
+                            <button @click.stop="addItem(blockIndex, 'Reading')" class="btn btn-sm btn-light"
+                                    title="Schriftlesung hinzufügen"><span class="mdi mdi-book-open-variant"></span>
+                            </button>
+                            <button @click.stop="addItem(blockIndex, 'Sermon')" class="btn btn-sm btn-light"
+                                    title="Predigt hinzufügen"><span
+                                class="mdi mdi-microphone"></span></button>
+                            <button @click.stop="addItem(blockIndex, 'Song')" class="btn btn-sm btn-light"
+                                    title="Lied hinzufügen"><span class="mdi mdi-music"></span></button>
+                            <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light"
+                                    title="Liturgischen Text hinzufügen"><span
+                                class="mdi mdi-text-box"></span></button>
+                        </div>
                     </div>
-                </div>
-                <div class="row" v-if="editable">
-                    <div class="col-12">
-                        <button @click.stop="addItem(blockIndex, 'Freetext')" class="btn btn-sm btn-light"
-                                title="Freitext hinzufügen"><span class="mdi mdi-text"></span>
-                        </button>
-                        <button @click.stop="addItem(blockIndex, 'Psalm')" class="btn btn-sm btn-light"
-                                title="Psalm hinzufügen"><span class="mdi mdi-hands-pray"></span>
-                        </button>
-                        <button @click.stop="addItem(blockIndex, 'Reading')" class="btn btn-sm btn-light"
-                                title="Schriftlesung hinzufügen"><span class="mdi mdi-book-open-variant"></span>
-                        </button>
-                        <button @click.stop="addItem(blockIndex, 'Sermon')" class="btn btn-sm btn-light"
-                                title="Predigt hinzufügen"><span
-                            class="mdi mdi-microphone"></span></button>
-                        <button @click.stop="addItem(blockIndex, 'Song')" class="btn btn-sm btn-light"
-                                title="Lied hinzufügen"><span class="mdi mdi-music"></span></button>
-                        <button @click.stop="addItem(blockIndex, 'Liturgic')" class="btn btn-sm btn-light"
-                                title="Liturgischen Text hinzufügen"><span
-                            class="mdi mdi-text-box"></span></button>
-                    </div>
-                </div>
-                <details-pane v-if="block.editing == true" :service="service" :element="block"
-                              :agenda-mode="agendaMode" :markers="markers"/>
+                    <details-pane v-if="block.editing == true" :service="service" :element="block"
+                                  @unfocus="cancelEditing($event, blockIndex)"
+                                  :agenda-mode="agendaMode" :markers="markers"/>
 
-                <draggable :list="block.items" group="items" class="liturgy-items-list" handle=".handle"
-                           v-bind:class="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
-                           :disabled="!editable">
-                    <div v-for="item,itemIndex in block.items" class="liturgy-item"
-                         @click.stop="focusItem(blockIndex, itemIndex)"
-                         :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}"
-                         :data-block-index="blockIndex" :data-item-index="itemIndex">
-                        <div class="row item"
-                             title="Klicken, um zu bearbeiten.">
-                            <div class="col-sm-3 item-title">
+                    <draggable :list="block.items" group="items" class="liturgy-items-list" handle=".handle"
+                               v-bind:class="{ghostClass: 'ghost-item'}" @start="focusOff" @end="saveState"
+                               :disabled="!editable">
+                        <div v-for="(item,itemIndex) in block.items" class="liturgy-item"
+                             @click.stop="focusItem(blockIndex, itemIndex)"
+                             :class="{focused: (focusedBlock == blockIndex) && (focusedItem == itemIndex)}"
+                             :data-block-index="blockIndex" :data-item-index="itemIndex">
+                            <div class="row item" :ref="'block'+blockIndex+'_item'+itemIndex"
+                                 title="Klicken, um zu bearbeiten.">
+                                <div class="col-sm-3 item-title">
                                     <span class="fa data-type-icon handle mr-1" :class="icons[item.data_type]"
                                           title="Klicken und ziehen, um die Position im Ablauf zu verändern"></span>
-                                <span class="mdi mdi-chevron-right-circle"
-                                      style="display: none;"></span> {{ item.title }}
-                            </div>
-                            <div class="col-sm-4" v-if="item.data_type == 'sermon'">
-                                <div v-if="service.sermon === null">
-                                    <form-selectize v-if="sermons.length > 0" :options="sermons" id-key="id"
-                                                    title-key="title"
-                                                    label="Bestehende Predigt auswählen"
-                                                    :settings="sermonSelectizeSettings"
-                                                    @input="setSermon($event, item)"/>
-                                    <inertia-link :href="route('service.sermon.editor', {service: service.slug})"
-                                                  @click.stop=""
-                                                  class="btn btn-success"
-                                                  title="Hier klicken, um die Predigt jetzt anzulegen">
-                                        Neue Predigt anlegen
-                                    </inertia-link>
+                                    <span class="mdi mdi-chevron-right-circle"
+                                          style="display: none;"></span> {{ item.title }}
                                 </div>
-                                <div v-else>
-                                    <inertia-link :href="route('sermon.editor', {sermon: service.sermon.id})"
-                                                  @click.stop="" title="Hier klicken, um die Predigt zu bearbeiten">
-                                        {{ service.sermon.title }}<span
-                                        v-if="service.sermon.subtitle">: {{ service.sermon.subtitle }}</span>
-                                    </inertia-link>
-                                    <button class="btn btn-sm btn-light ml-1" @click="setSermon(null, item)"
-                                            title="Verknüpfung mit dieser Predigt aufheben">
-                                        <span class="mdi mdi-link-off"></span>
-                                    </button>
-                                    <br/>
-                                    <small>{{ service.sermon.reference }}</small>
-                                </div>
-                            </div>
-                            <div class="col-sm-4" v-else>{{ itemDescription(item) }}
-                                <span v-if="item.data.needs_replacement" class="badge" :class="dataReplacerClass(item)">
-                                        <span class="mdi mdi-account" :title="dataReplacerTitle(item)"></span>
-                                    </span>
-                                <span v-if="(item.data_type=='song') && item.data.song && item.data.song.notation"
-                                      class="mdi mdi-music text-success"
-                                      title="Zu diesem Lied sind Noten vorhanden."/>
-                            </div>
-                            <div class="col-sm-2 responsible-list"
-                                 @click="editResponsibles(blockIndex, itemIndex, item)">
-                                <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
-                                             :ministries="ministries"/>
-                                <div v-else>
-                                    <div v-if="item.data.responsible.length > 0">
-                                            <span class="badge badge-light" v-for="record in item.data.responsible"
-                                                  v-html="displayResponsible(record)"/>
+                                <div class="col-sm-4" v-if="item.data_type == 'sermon'">
+                                    <div v-if="myService.sermon === null">
+                                        <form-selectize v-if="sermons.length > 0" :options="sermons" id-key="id"
+                                                        title-key="title"
+                                                        label="Bestehende Predigt auswählen"
+                                                        :settings="sermonSelectizeSettings"
+                                                        @input="setSermon($event, item)"/>
+                                        <inertia-link :href="route('service.sermon.editor', {service: myService.slug})"
+                                                      @click.stop=""
+                                                      class="btn btn-success"
+                                                      title="Hier klicken, um die Predigt jetzt anzulegen">
+                                            Neue Predigt anlegen
+                                        </inertia-link>
                                     </div>
                                     <div v-else>
-                                        <div v-if="editable">
-                                            <span class="mdi mdi-account-multiple"></span> Hier klicken, um Verantwortliche
-                                            auszuwählen.
+                                        <inertia-link :href="route('sermon.editor', {sermon: myService.sermon.id})"
+                                                      @click.stop="" title="Hier klicken, um die Predigt zu bearbeiten">
+                                            {{ myService.sermon.title }}<span
+                                            v-if="myService.sermon.subtitle">: {{ myService.sermon.subtitle }}</span>
+                                        </inertia-link>
+                                        <button class="btn btn-sm btn-light ml-1" @click="setSermon(null, item)"
+                                                title="Verknüpfung mit dieser Predigt aufheben">
+                                            <span class="mdi mdi-link-off"></span>
+                                        </button>
+                                        <br/>
+                                        <small>{{ myService.sermon.reference }}</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4" v-else>{{ itemDescription(item) }}
+                                    <span v-if="item.data.needs_replacement" class="badge"
+                                          :class="dataReplacerClass(item)">
+                                        <span class="mdi mdi-account" :title="dataReplacerTitle(item)"></span>
+                                    </span>
+                                    <span v-if="(item.data_type=='song') && item.data.song && item.data.song.notation"
+                                          class="mdi mdi-music text-success"
+                                          title="Zu diesem Lied sind Noten vorhanden."/>
+                                </div>
+                                <div class="col-sm-2 responsible-list"
+                                     @click="editResponsibles(blockIndex, itemIndex, item)">
+                                    <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
+                                                 :ministries="ministries"/>
+                                    <div v-else>
+                                        <div v-if="item.data.responsible.length > 0">
+                                            <span class="badge badge-light" v-for="record in item.data.responsible"
+                                                  v-html="displayResponsible(record)"/>
+                                        </div>
+                                        <div v-else>
+                                            <div v-if="editable">
+                                                <span class="mdi mdi-account-multiple"></span> Hier klicken, um
+                                                Verantwortliche
+                                                auszuwählen.
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-2">
-                                <div class="row">
-                                    <item-starting-time class="col-6" :item="item" :service="service"/>
-                                    <item-text-stats class="col-6" :item="item" :service="service"/>
+                                <div class="col-sm-2">
+                                    <div class="row">
+                                        <item-starting-time class="col-6" :item="item" :service="service"/>
+                                        <item-text-stats class="col-6" :item="item" :service="service"/>
+                                    </div>
+                                </div>
+                                <div class="col-1 text-right" v-if="editable">
+                                    <button @click.stop="deleteItem(blockIndex, itemIndex)"
+                                            class="btn btn-sm btn-danger" title="Element löschen">
+                                        <span class="mdi mdi-delete"></span>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="col-1 text-right" v-if="editable">
-                                <button @click.stop="deleteItem(blockIndex, itemIndex)"
-                                        class="btn btn-sm btn-danger" title="Element löschen">
-                                    <span class="mdi mdi-delete"></span>
-                                </button>
-                            </div>
+                            <details-pane v-if="item.editing == true" :service="service" :element="item"
+                                          :key="treeState+blockIndex+'_'+itemIndex+'_'+(item.editing ? 1 : 2)"
+                                          @unfocus="cancelEditing($event, blockIndex, itemIndex)"
+                                          :agenda-mode="agendaMode" :markers="markers"/>
                         </div>
-                        <details-pane v-if="item.editing == true" :service="service" :element="item"
-                                      :agenda-mode="agendaMode" :markers="markers"/>
+                    </draggable>
+                </div>
+            </draggable>
+            <div class="row" v-if="blocks.length > 0">
+                <div class="col-sm-7"></div>
+                <div class="col-sm-2" style="border-top: solid 1px lightgray;">
+                    <small>Berechnetes Ende:</small>
+                </div>
+                <div class="col-sm-2">
+                    <div class="row">
+                        <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}"
+                                            :service="service"/>
+                        <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}"
+                                            :service="service" start="00:00"/>
                     </div>
-                </draggable>
-            </div>
-        </draggable>
-        <div class="row" v-if="blocks.length > 0">
-            <div class="col-sm-7"></div>
-            <div class="col-sm-2" style="border-top: solid 1px lightgray;">
-                <small>Berechnetes Ende:</small>
-            </div>
-            <div class="col-sm-2">
-                <div class="row">
-                    <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}"
-                                        :service="service"/>
-                    <item-starting-time class="col-6" style="border-top: solid 1px lightgray;" :item="{id: -1}"
-                                        :service="service" start="00:00"/>
                 </div>
             </div>
-        </div>
-        <modal title="Elemente importieren" v-if="modalOpen" min-height="50vh"
-               @close="importElements" @cancel="modalOpen = false;"
-               close-button-label="Importieren" cancel-button-label="Abbrechen" max-width="800">
-            <div v-if="importFrom != null">
-                <selectize class="form-control source-select" v-model="importFrom" :settings="{
+            <modal title="Elemente importieren" v-if="modalOpen" min-height="50vh"
+                   @close="importElements" @cancel="modalOpen = false;"
+                   close-button-label="Importieren" cancel-button-label="Abbrechen" max-width="800">
+                <div v-if="importFrom != null">
+                    <selectize class="form-control source-select" v-model="importFrom" :settings="{
                                 placeholder: sourceWait,
                             }">
-                    <optgroup label="Vorlagen">
-                        <option v-for="agenda in agendas" :value="agenda.id">
-                            {{ agenda.text }}
-                        </option>
-                    </optgroup>
-                    <optgroup label="Gottesdienste">
-                        <option v-for="service in services" :value="service.id">
-                            {{ service.text }}
-                        </option>
-                    </optgroup>
-                </selectize>
-            </div>
-            <div v-else class="text-align: right; width: 100%; color: darkgray;">
-                Importmöglichquellen werden geladen... <span class="mdi mdi-spin mdi-loading"></span>
-            </div>
-        </modal>
-        <modal v-for="(sheet,sheetKey) in sheets" v-if="dialogs[sheet.key]" :title="sheet.title + ' herunterladen'"
-               :key="'dlg'+sheet.key"
-               @close="downloadConfiguredSheet(sheet)"
-               @cancel="dialogs[sheet.key] = false"
-               close-button-label="Herunterladen" cancel-button-label="Abbrechen">
-            <component :is="sheet.configurationComponent" :service="service" :sheet="sheet"/>
-        </modal>
+                        <optgroup label="Vorlagen">
+                            <option v-for="agenda in agendas" :value="agenda.id">
+                                {{ agenda.text }}
+                            </option>
+                        </optgroup>
+                        <optgroup label="Gottesdienste">
+                            <option v-for="service in services" :value="myService.id">
+                                {{ myService.text }}
+                            </option>
+                        </optgroup>
+                    </selectize>
+                </div>
+                <div v-else class="text-align: right; width: 100%; color: darkgray;">
+                    Importmöglichquellen werden geladen... <span class="mdi mdi-spin mdi-loading"></span>
+                </div>
+            </modal>
+            <modal v-for="(sheet,sheetKey) in sheets" v-if="dialogs[sheet.key]" :title="sheet.title + ' herunterladen'"
+                   :key="'dlg'+sheet.key"
+                   @close="downloadConfiguredSheet(sheet)"
+                   @cancel="dialogs[sheet.key] = false"
+                   close-button-label="Herunterladen" cancel-button-label="Abbrechen">
+                <component :is="sheet.configurationComponent" :service="service" :sheet="sheet"/>
+            </modal>
+        </div>
     </div>
 </template>
 
@@ -295,7 +308,7 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        const sources = await axios.get(route('liturgy.sources', this.service.slug))
+        const sources = await axios.get(route('liturgy.sources', this.myService.slug))
         if (sources.data) {
             this.agendas = sources.data.agendas;
             this.services = sources.data.services;
@@ -303,7 +316,7 @@ export default {
             this.importFrom = -1;
         }
 
-        this.sermons = (await axios.get(route('liturgy.sermons', this.service.slug))).data;
+        this.sermons = (await axios.get(route('liturgy.sermons', this.myService.slug))).data;
     },
     mounted() {
         if (this.autoFocusItem && this.autoFocusBlock) {
@@ -335,8 +348,9 @@ export default {
         // here we need to do some dirty checking and saving!
     },
     data() {
-        if (undefined != this.service.liturgy_blocks) {
-            var myBlocks = this.service.liturgy_blocks;
+        let myService = this.service;
+        if (undefined != myService.liturgy_blocks) {
+            var myBlocks = myService.liturgy_blocks;
         } else {
             var myBlocks = [];
         }
@@ -357,6 +371,10 @@ export default {
         });
 
         return {
+            myService,
+            apiToken: this.$page.props.currentUser.data.api_token,
+            reloadingTree: false,
+            treeState: Math.random().toString(36).substr(2, 9),
             icons: {
                 freetext: 'mdi mdi-text',
                 psalm: 'mdi mdi-hands-pray',
@@ -384,19 +402,27 @@ export default {
     },
     methods: {
         addBlock() {
-            this.$inertia.post('/liturgy/' + this.service.id + '/block',
-                {title: 'Abschnitt ' + (this.blocks.length + 1)},
-                {
-                    preserveState: false
-                }
-            );
+            axios.post(route('api.liturgy.block.store', {
+                api_token: this.apiToken,
+                service: this.service.id,
+            }), {
+                title: 'Abschnitt ' + (this.blocks.length + 1)
+            }).then(response => {
+                let block = response.data;
+                if (undefined == block.items) block.items = [];
+                block.data_type = 'block';
+                block.typeDescription = 'Abschnitt';
+                block.editing = false;
+                let blockIndex = this.blocks.push(response.data);
+                this.focusBlock(blockIndex - 1);
+            });
         },
         deleteBlock(index) {
-            this.$inertia.delete(route('liturgy.block.destroy', {
-                service: this.service.id,
-                block: this.blocks[index].id,
-            }), {
-                preserveState: false
+            axios.delete(route('api.liturgy.block.destroy', {
+                api_token: this.apiToken,
+                block: this.blocks[index].id
+            })).then(response => {
+                this.blocks.splice(index, 1);
             });
         },
         saveState() {
@@ -408,78 +434,75 @@ export default {
                     item.sortable = j++;
                 })
             })
-            this.$inertia.post(route('liturgy.save', this.service.slug), this.blocks)
+
+            axios.post(route('api.liturgy.tree.save', {service: this.service.id, api_token: this.apiToken}), {
+                blocks: this.blocks
+            })
+                .then(response => this.reloadTree(response.data));
         },
         addItem(blockIndex, type) {
             if (!this.editable) return false;
             var obj;
             switch (type) {
                 case 'Freetext':
-                    this.$inertia.post(route('liturgy.item.store', {
-                        service: this.service.id,
-                        block: this.blocks[blockIndex].id
-                    }), {
+                    obj = {
                         title: 'Freier Text',
                         data_type: 'freetext',
                         data: {description: ''},
-                    }, {preserveState: false});
+                    };
                     break;
                 case 'Liturgic':
-                    this.$inertia.post(route('liturgy.item.store', {
-                        service: this.service.id,
-                        block: this.blocks[blockIndex].id
-                    }), {
+                    obj = {
                         title: 'Liturgischer Text',
                         data_type: 'liturgic',
                         data: {id: -1, title: '', text: ''}
-                    }, {preserveState: false});
+                    };
                     break;
                 case 'Psalm':
-                    this.$inertia.post(route('liturgy.item.store', {
-                        service: this.service.id,
-                        block: this.blocks[blockIndex].id
-                    }), {
+                    obj = {
                         title: 'Psalmgebet',
                         data_type: 'psalm',
-                    }, {preserveState: false});
+                    };
                     break;
                 case 'Reading':
-                    this.$inertia.post(route('liturgy.item.store', {
-                        service: this.service.id,
-                        block: this.blocks[blockIndex].id
-                    }), {
+                    obj = {
                         title: 'Schriftlesung',
                         data_type: 'reading',
                         data: {reference: ''},
-                    }, {preserveState: false});
+                    };
                     break;
                 case 'Sermon':
-                    this.$inertia.post(route('liturgy.item.store', {
-                        service: this.service.id,
-                        block: this.blocks[blockIndex].id
-                    }), {
+                    obj = {
                         title: 'Predigt',
                         data_type: 'sermon',
-                    }, {preserveState: false});
+                    };
                     break;
                 case 'Song':
-                    this.$inertia.post(route('liturgy.item.store', {
-                        service: this.service.id,
-                        block: this.blocks[blockIndex].id
-                    }), {
+                    obj = {
                         title: 'Lied',
                         data_type: 'song',
-                    }, {preserveState: false});
+                    };
                     break;
             }
-            var index = this.blocks[blockIndex].items.push(obj);
+            axios.post(route('api.liturgy.item.store', {
+                block: this.blocks[blockIndex].id,
+                api_token: this.apiToken
+            }), obj)
+                .then(response => {
+                    let item = response.data.item;
+                    if (undefined == item.data.responsible) item.data.responsible = [];
+                    let itemIndex = this.blocks[blockIndex].items.push(item);
+                    this.focusItem(blockIndex, itemIndex - 1);
+                });
+            //var index = this.blocks[blockIndex].items.push(obj);
         },
         deleteItem(blockIndex, itemIndex) {
-            this.$inertia.delete(route('liturgy.item.destroy', {
-                service: this.service.id,
-                block: this.blocks[blockIndex].id,
+            axios.delete(route('api.liturgy.item.destroy', {
+                api_token: this.apiToken,
                 item: this.blocks[blockIndex].items[itemIndex].id,
-            }), {preserveState: false});
+            })).then(response => {
+                this.blocks[blockIndex].items.splice(itemIndex, 1);
+            });
         },
         focusBlock(blockIndex) {
             if (!this.editable) return false;
@@ -492,6 +515,7 @@ export default {
                 this.focusedBlock = blockIndex;
                 this.focusedItem = null;
                 this.updateFocus(this.blocks[blockIndex]);
+                this.scrollToRef('block' + blockIndex);
             }
         },
         focusItem(blockIndex, itemIndex) {
@@ -558,8 +582,35 @@ export default {
             this.editable = (object === null);
             this.$emit('update-focus', this.focusedBlock, this.focusedItem, object);
         },
+        reloadTree(data = null) {
+            if (!data) return;
+            if (data.service) this.myService = data.service;
+            if (data.tree) {
+                this.myService.liturgy_blocks = data.tree;
+                this.blocks = data.tree;
+            }
+
+            for (const idx in this.blocks) {
+                this.blocks[idx].data_type = 'block';
+                this.blocks[idx].typeDescription = 'Abschnitt';
+                this.blocks[idx].editing = false;
+                for (const idx2 in this.blocks[idx].items) {
+                    this.blocks[idx].items[idx2].editing = false;
+                    this.blocks[idx].items[idx2].editResponsibles = false;
+                    if (undefined == this.blocks[idx].items[idx2].data.responsible) this.blocks[idx].items[idx2].data.responsible = [];
+                }
+            }
+
+            this.reloadingTree = false;
+            this.treeState = Math.random().toString(36).substr(2, 9);
+        },
         save() {
-            this.$inertia.post(route('liturgy.save', {service: this.service}), {blocks: this.blocks}, {preserveState: true});
+            this.reloadingTree = true;
+            axios.post(route('api.liturgy.tree.save', {
+                service: this.service.id,
+                api_token: this.apiToken
+            }), {blocks: this.blocks})
+                .then(response => this.reloadTree(response.data));
         },
         editResponsibles(blockIndex, itemIndex, item) {
             this.editable = false;
@@ -571,7 +622,7 @@ export default {
             if (typeof record != 'string') return;
             var tmp = record.split(':');
             if (tmp[0] == 'user') {
-                this.service.participants.forEach(function (person) {
+                this.myService.participants.forEach(function (person) {
                     if (person.id == tmp[1]) title = '<span class="mdi mdi-account-check"></span> ' + person.name;
                 });
                 return title;
@@ -590,10 +641,16 @@ export default {
             }
         },
         importElements() {
+            this.modalOpen = false;
             if (this.importFrom == -1) return;
-            this.$inertia.post(route('liturgy.import', {service: this.service, source: this.importFrom}), {}, {
-                preserveState: false,
-            })
+            this.reloadingTree = true;
+            axios.post(route('api.liturgy.tree.import', {
+                api_token: this.apiToken,
+                service: this.service.id,
+                source: this.importFrom,
+            })).then(response => {
+                this.reloadTree(response.data);
+            });
         },
         downloadConfiguredSheet(sheet) {
             document.getElementById('frm' + sheet.key).submit();
@@ -613,16 +670,17 @@ export default {
                     t += 'für eine Bestattung';
                     if (!item.data.replacement) {
                         error = 'Es ist noch keine Bestattung ausgewählt!';
-                        if (this.service.funerals.length == 0) error += ' Dem Gottesdienst sind keine Bestattungen zugeordnet!';
+                        if (this.myService.funerals.length == 0) error += ' Dem Gottesdienst sind keine Bestattungen zugeordnet!';
                     } else {
                         t += ' (' + replacerObject.buried_name + ')';
                     }
                     break;
                 case 'baptism':
                     t += 'für eine Taufe';
-                    if (!item.data.replacement) {3
+                    if (!item.data.replacement) {
+                        3
                         error = 'Es ist noch keine Taufe ausgewählt!';
-                        if (this.service.baptisms.length == 0) error += ' Dem Gottesdienst sind keine Taufen zugeordnet!';
+                        if (this.myService.baptisms.length == 0) error += ' Dem Gottesdienst sind keine Taufen zugeordnet!';
                     } else {
                         t += ' (' + replacerObject.candidate_name + ')';
                     }
@@ -631,7 +689,7 @@ export default {
                     t += 'für eine Trauung';
                     if (!item.data.replacement) {
                         error = 'Es ist noch keine Trauung ausgewählt!';
-                        if (this.service.weddings.length == 0) error += ' Dem Gottesdienst sind keine Trauungen zugeordnet!';
+                        if (this.myService.weddings.length == 0) error += ' Dem Gottesdienst sind keine Trauungen zugeordnet!';
                     } else {
                         t += ' (' + replacerObject.spouse1_name + ' / ' + replacerObject.spouse2_name + ')';
                     }
@@ -647,18 +705,39 @@ export default {
             return 'badge-success';
         },
         setSermon(e, item) {
-            this.service.sermon_id = e;
-            axios.patch(route('service.setsermon', this.service.slug), {sermon_id: e ?? null});
+            this.myService.sermon_id = e;
+            axios.patch(route('service.setsermon', this.myService.slug), {sermon_id: e ?? null});
             if (e) {
                 this.sermons.forEach(sermon => {
-                    if (sermon.id == e) this.service.sermon = sermon;
+                    if (sermon.id == e) this.myService.sermon = sermon;
                 });
             } else {
-                this.service.sermon = null;
+                this.myService.sermon = null;
             }
             item.editing = false;
             this.focusedItem = null;
             this.focusedBlock = null;
+        },
+        scrollToRef(refId) {
+            this.$nextTick(function () {
+                let el = this.$refs[refId].$el;
+                if (undefined == el) return;
+                window.scrollTo(el.offsetLeft, el.offsetTop);
+            });
+        },
+        cancelEditing(item, blockIndex, itemIndex = null)  {
+            if (undefined == item.data.responsible) item.data.responsible = [];
+            console.log('cancelEditing', blockIndex, itemIndex);
+            if (null !== itemIndex) {
+                this.blocks[blockIndex].items[itemIndex] = item;
+                this.blocks[blockIndex].items[itemIndex].editing = false;
+            } else {
+                this.blocks[blockIndex] = item;
+                this.blocks[blockIndex].editing = false;
+            }
+            this.treeState = Math.random().toString(36).substr(2, 9);
+            this.$forceUpdate();
+            this.focusOff();
         }
     }
 }
@@ -666,6 +745,12 @@ export default {
 
 <style scoped>
 
+.tree-loader {
+    margin-top: 0;
+    font-size: 6em;
+    padding-top: 25vh;
+    text-align: center;
+}
 
 .liturgy-block {
     border-top: solid 1px darkgray;

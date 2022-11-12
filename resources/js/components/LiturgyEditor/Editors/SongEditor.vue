@@ -29,59 +29,49 @@
 
 <template>
     <div class="liturgy-item-song-editor">
-        <form @submit.prevent="save">
-            <div class="row">
-                <div class="col-md-6">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="title">Titel im Ablaufplan</label>
+                    <input class="form-control" v-model="editedElement.title" v-focus/>
+                </div>
+                <div v-if="this.songs === null">
+                    <span class="mdi mdi-spin mdi-loading"></span> Bitte warten, Liederliste wird geladen...
+                </div>
+                <div v-else>
                     <div class="form-group">
-                        <label for="title">Titel im Ablaufplan</label>
-                        <input class="form-control" v-model="editedElement.title" v-focus/>
+                        <label for="existing_text">Lied</label>
+                        <selectize class="form-control" name="existing_text" v-model="selectedSong">
+                            <option v-for="song in songs" :value="song.id">{{ displayTitle(song) }}</option>
+                        </selectize>
                     </div>
-                    <div v-if="this.songs === null">
-                        <span class="mdi mdi-spin mdi-loading"></span> Bitte warten, Liederliste wird geladen...
+                    <div class="form-group">
+                        <label for="verses">Zu singende Strophen</label>
+                        <input class="form-control" :value="editedElement.data.verses"
+                               placeholder="Gültiges Format z.B. 1-2+4; leer lassen = alle Strophen"
+                               @input="updateQuote($event)"/>
+                        <small>Strophen: {{ getVersesToDisplay(editedElement.data.verses) }}</small>
                     </div>
-                    <div v-else>
-                        <div class="form-group">
-                            <label for="existing_text">Lied</label>
-                            <selectize class="form-control" name="existing_text" v-model="selectedSong">
-                                <option v-for="song in songs" :value="song.id">{{ displayTitle(song) }}</option>
-                            </selectize>
-                        </div>
-                        <div class="form-group">
-                            <label for="verses">Zu singende Strophen</label>
-                            <input class="form-control" :value="editedElement.data.verses"
-                                   placeholder="Gültiges Format z.B. 1-2+4; leer lassen = alle Strophen"
-                                   @input="updateQuote($event)"/>
-                            <small>Strophen: {{ getVersesToDisplay(editedElement.data.verses) }}</small>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-sm btn-light" title="Neues Lied anlegen" @click.prevent="newSong">
-                                Neues Lied
-                            </button>
-                            <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
-                                    title="Lied bearbeiten" @click.prevent="editSong">Lied bearbeiten
-                            </button>
-                            <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
-                                    title="Lied im Noteneditor bearbeiten" @click.prevent="editMusic">
-                                <span class="mdi mdi-music"></span> Lied im Noteneditor bearbeiten
-                            </button>
-                        </div>
+                    <div class="form-group">
+                        <button class="btn btn-sm btn-light" title="Neues Lied anlegen" @click.prevent="newSong">
+                            Neues Lied
+                        </button>
+                        <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
+                                title="Lied bearbeiten" @click.prevent="editSong">Lied bearbeiten
+                        </button>
+                        <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
+                                title="Lied im Noteneditor bearbeiten" @click.prevent="editMusic">
+                            <span class="mdi mdi-music"></span> Lied im Noteneditor bearbeiten
+                        </button>
                     </div>
+                </div>
 
-                </div>
-                <div class="col-md-6">
-                    <div class="liturgical-text-quote" v-html="quote"/>
-                    <text-stats :text="quote"/>
-                </div>
             </div>
-            <time-fields :service="service" :element="element" :agenda-mode="agendaMode"/>
-            <div class="form-group">
-                <button class="btn btn-primary" @click="save">Speichern
-                </button>
-                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">
-                    Abbrechen
-                </inertia-link>
+            <div class="col-md-6">
+                <div class="liturgical-text-quote" v-html="quote"/>
+                <text-stats :text="quote"/>
             </div>
-        </form>
+        </div>
         <modal :title="(modalSong.song.id == -1) ? 'Neues Lied' : 'Lied bearbeiten'" v-if="modalOpen"
                @close="((modalSong.song.id == -1) ? saveText() : updateText())" @cancel="modalOpen = false;"
                close-button-label="Lied speichern" cancel-button-label="Abbrechen" max-width="800"

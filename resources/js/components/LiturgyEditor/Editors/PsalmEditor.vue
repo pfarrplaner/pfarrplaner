@@ -28,79 +28,75 @@
   -->
 
 <template>
-    <form @submit.prevent="save">
-        <div class="liturgy-item-psalm-editor">
-            <div class="form-group">
-                <label for="title">Titel im Ablaufplan</label>
-                <input class="form-control" v-model="editedElement.title" v-focus/>
-            </div>
-            <div v-if="psalms === null">
-                Bitte warten, Liste der Psalmen wird geladen...
+    <div class="liturgy-item-psalm-editor">
+        <div class="form-group">
+            <label for="title">Titel im Ablaufplan</label>
+            <input class="form-control" v-model="editedElement.title" v-focus/>
+        </div>
+        <div v-if="psalms === null">
+            Bitte warten, Liste der Psalmen wird geladen...
+        </div>
+        <div v-else>
+            <form-selectize name="psalm" label="Psalm" :value="selectedPsalm"
+                            :options="psalms" :settings="{ searchField: ['name'], }"
+                            @input="handlePsalmSelection"/>
+            <div v-if="(editedElement.data.psalm.id == -1) || editPsalm">
+                <div class="form-group">
+                    <label for="title">Titel des Psalms</label>
+                    <input class="form-control" v-model="editedElement.data.psalm.title"/>
+                </div>
+                <div class="form-group">
+                    <label>Einleitende Worte</label>
+                    <textarea class="form-control" v-model="editedElement.data.psalm.intro"
+                              placeholder="Leer lassen, wenn es keinen spezielle Einleitungstext gibt"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Text</label>
+                    <textarea rows="10" class="form-control" v-model="editedElement.data.psalm.text"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Copyrights</label>
+                    <textarea class="form-control" v-model="editedElement.data.psalm.copyrights"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-11">
+                        <div class="form-group">
+                            <label>Liederbuch</label>
+                            <textarea class="form-control" v-model="editedElement.data.psalm.songbook"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-1 form-group">
+                        <label>Abkürzung</label>
+                        <input type="text" class="form-control"
+                               v-model="editedElement.data.psalm.songbook_abbreviation"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="reference">Liednummer</label>
+                    <input class="form-control" v-model="editedElement.data.psalm.reference"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-sm btn-light" @click.prevent="saveText" v-if="!editPsalm">Als neuen Psalm
+                        speichern
+                    </button>
+                    <button class="btn btn-sm btn-light" @click.prevent="updateText" v-if="editPsalm"
+                            :title="psalmIsDirty ? 'Es existieren ungespeicherte Änderungen am Lied.' : ''">
+                        <span v-if="psalmIsDirty" class="mdi mdi-alert" style="color:red;"></span>
+                        Änderungen am Psalm speichern
+                    </button>
+                </div>
             </div>
             <div v-else>
-                <form-selectize name="psalm" label="Psalm" :value="selectedPsalm"
-                                :options="psalms" :settings="{ searchField: ['name'], }"
-                                @input="handlePsalmSelection" />
-                <div v-if="(editedElement.data.psalm.id == -1) || editPsalm">
-                    <div class="form-group">
-                        <label for="title">Titel des Psalms</label>
-                        <input class="form-control" v-model="editedElement.data.psalm.title"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Einleitende Worte</label>
-                        <textarea class="form-control" v-model="editedElement.data.psalm.intro" placeholder="Leer lassen, wenn es keinen spezielle Einleitungstext gibt"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Text</label>
-                        <textarea rows="10" class="form-control" v-model="editedElement.data.psalm.text"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Copyrights</label>
-                        <textarea class="form-control" v-model="editedElement.data.psalm.copyrights"></textarea>
-                    </div>
-                    <div class="row">
-                        <div class="col-11">
-                            <div class="form-group">
-                                <label>Liederbuch</label>
-                                <textarea class="form-control" v-model="editedElement.data.psalm.songbook"></textarea>
-                            </div>
-                        </div>
-                        <div class="col-1 form-group">
-                            <label>Abkürzung</label>
-                            <input type="text" class="form-control" v-model="editedElement.data.psalm.songbook_abbreviation"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="reference">Liednummer</label>
-                        <input class="form-control" v-model="editedElement.data.psalm.reference"/>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-sm btn-light" @click.prevent="saveText" v-if="!editPsalm">Als neuen Psalm speichern</button>
-                        <button class="btn btn-sm btn-light" @click.prevent="updateText" v-if="editPsalm" :title="psalmIsDirty ? 'Es existieren ungespeicherte Änderungen am Lied.' : ''">
-                            <span v-if="psalmIsDirty" class="mdi mdi-alert" style="color:red;"></span>
-                            Änderungen am Psalm speichern
-                        </button>
-                    </div>
+                <button class="btn btn-sm btn-light" @click.prevent="editPsalm = true">Psalm bearbeiten</button>
+                <div class="liturgical-text-quote">
+                    <p v-if="editedElement.data.psalm.title"><b>{{ editedElement.data.psalm.title }}</b></p>
+                    <p v-if="editedElement.data.psalm.intro"><i>{{ editedElement.data.psalm.intro }}</i></p>
+                    <nl2br v-if="editedElement.data.psalm.text" tag="p" :text="editedElement.data.psalm.text"/>
                 </div>
-                <div v-else>
-                    <button class="btn btn-sm btn-light" @click.prevent="editPsalm = true">Psalm bearbeiten</button>
-                    <div class="liturgical-text-quote">
-                        <p v-if="editedElement.data.psalm.title"><b>{{ editedElement.data.psalm.title }}</b></p>
-                        <p v-if="editedElement.data.psalm.intro"><i>{{ editedElement.data.psalm.intro }}</i></p>
-                        <nl2br v-if="editedElement.data.psalm.text" tag="p" :text="editedElement.data.psalm.text" />
-                    </div>
-                    <text-stats :text="editedElement.data.psalm.text" />
-                </div>
-            </div>
-            <time-fields :service="service" :element="element" :agenda-mode="agendaMode" />
-            <div class="form-group">
-                <button class="btn btn-primary" @click="save" :disabled="psalmIsDirty" :title="psalmIsDirty ? 'Du musst zuerst die Änderungen am Lied speichern.' : ''">Speichern</button>
-                <inertia-link class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)">
-                    Abbrechen
-                </inertia-link>
+                <text-stats :text="editedElement.data.psalm.text"/>
             </div>
         </div>
-    </form>
+    </div>
 </template>
 
 <script>
@@ -132,8 +128,8 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        console.log(route('api.liturgy.psalm.index', { api_token: this.apiToken }), this.apiToken);
-        const psalms = await axios.get(route('api.liturgy.psalm.index', { api_token: this.apiToken }))
+        console.log(route('api.liturgy.psalm.index', {api_token: this.apiToken}), this.apiToken);
+        const psalms = await axios.get(route('api.liturgy.psalm.index', {api_token: this.apiToken}))
         if (psalms.data) {
             psalms.data.forEach(psalm => {
                 psalm['name'] = this.displayTitle(psalm);
@@ -178,7 +174,7 @@ export default {
             }), this.editedElement, {preserveState: false});
         },
         saveText() {
-            axios.post(route('api.liturgy.psalm.store', {api_token: this.apiToken }), this.editedElement.data.psalm).then(response => {
+            axios.post(route('api.liturgy.psalm.store', {api_token: this.apiToken}), this.editedElement.data.psalm).then(response => {
                 return response.data;
             }).then(data => {
                 this.editPsalm = false;
@@ -189,7 +185,10 @@ export default {
             this.psalmIsDirty = false;
         },
         updateText() {
-            axios.patch(route('api.liturgy.psalm.update', {psalm: this.editedElement.data.psalm.id, api_token: this.apiToken}), this.editedElement.data.psalms).then(response => {
+            axios.patch(route('api.liturgy.psalm.update', {
+                psalm: this.editedElement.data.psalm.id,
+                api_token: this.apiToken
+            }), this.editedElement.data.psalms).then(response => {
                 return response.data;
             }).then(data => {
                 this.editPsalm = false;
@@ -201,13 +200,13 @@ export default {
         },
         displayTitle(psalm) {
             var title = psalm.title;
-            if (psalm.reference)  {
-                title = psalm.reference+' '+title;
+            if (psalm.reference) {
+                title = psalm.reference + ' ' + title;
             }
             if (psalm.songbook_abbreviation) {
-                title = psalm.songbook_abbreviation+' '+title;
+                title = psalm.songbook_abbreviation + ' ' + title;
             } else if (psalm.songbook) {
-                title = psalm.songbook+' '+title;
+                title = psalm.songbook + ' ' + title;
             }
             return title;
         },
@@ -215,7 +214,7 @@ export default {
             var text = '';
             var title = this.displayTitle(this.editedElement.data.psalm);
             if (title.trim().length > 0) {
-                text = '<b>'+title+"</b>\n\n";
+                text = '<b>' + title + "</b>\n\n";
             }
             text = text + this.editedElement.data.psalm.text;
 
@@ -225,7 +224,7 @@ export default {
             this.selectedPsalm = e;
 
             var found = false;
-            this.psalms.forEach(function(psalm) {
+            this.psalms.forEach(function (psalm) {
                 if (psalm.id == e) found = psalm;
             })
             if (found) this.editedElement.data.psalm = found;
