@@ -59,7 +59,7 @@ class SongController extends Controller
      */
     public function index()
     {
-        $songs = Song::without(['verses'])->select(['id', 'title'])->get();
+        $songs = Song::without(['verses'])->select(['id', 'title', 'alt_eg'])->get();
         return Inertia::render('Admin/Song/Index', compact('songs'));
     }
 
@@ -245,6 +245,7 @@ class SongController extends Controller
                 'songbooks.*.code' => 'nullable|string',
                 'songbooks.*.pivot.songbook_id' => 'nullable|int|exists:songbooks,id',
                 'songbooks.*.pivot.reference' => 'nullable|string',
+                'alt_eg' => 'nullable|string',
             ]
         );
     }

@@ -67,8 +67,9 @@
                                             <div v-for="songbook in (row.songbooks || [])"
                                                  :title="songbook.name+(songbook.pivot.reference ? ', Nr. '+songbook.pivot.reference : '')">
                                                 <img v-if="songbook.image" style="max-height: 1em;" :src="route('image', songbook.image.replace('attachments/', ''))" />
-                                                {{ songbook.code }} {{ songbook.pivot.reference}}
+                                                {{ songbook.code }} {{ songbook.pivot.reference}} <span v-if="row.alt_eg">(EG {{ row.alt_eg}})</span>
                                             </div>
+
                                         </td>
                                         <td>{{ row.title }}</td>
                                         <td class="text-right">

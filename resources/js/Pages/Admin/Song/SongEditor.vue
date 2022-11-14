@@ -90,6 +90,8 @@
             </tab>
             <tab id="songbooks" :active-tab="activeTab">
                 <songbook-list v-model="song.songbooks" :allow-split="true" />
+                <hr class="mt-3" />
+                <form-input label="Alternative EG-Nummer" v-model="song.alt_eg" />
             </tab>
         </tabs>
     </admin-layout>
@@ -106,6 +108,7 @@ import TabHeader from "../../../components/Ui/tabs/tabHeader";
 import Tabs from "../../../components/Ui/tabs/tabs";
 import Tab from "../../../components/Ui/tabs/tab";
 import SongbookList from "../../../components/LiturgyEditor/Editors/Elements/SongbookList";
+import FormGroup from "../../../components/Ui/forms/FormGroup";
 
 export default {
     name: "SongEditor",

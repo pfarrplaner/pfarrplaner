@@ -49,6 +49,7 @@ class Song extends \Illuminate\Database\Eloquent\Model
         'notation',
         'refrain_notation',
         'refrain_text_notation',
+        'alt_eg',
     ];
     protected $with = ['verses', 'songbooks'];
 

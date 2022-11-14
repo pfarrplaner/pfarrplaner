@@ -259,7 +259,7 @@
                             @if (isset($item->data['song']['code']) || isset($item->data['song']['songbook']))
                                 {{ $item->data['song']['code'] ?? ($item['song']['songbook']['name'] ?? '') }}
                             @endif
-                            {{ $item->data['song']['reference'] ?? '' }}
+                            {{ $item->data['song']['reference'] ?? '' }}@if($item->data['song']['song']['alt_eg']) (EG {{ $item->data['song']['song']['alt_eg'] }})@endif
                             {{ $item->data['song']['song']['title'] ?: '' }}@if ($item->data['verses']), {{ $item->data['verses'] }}@endif
                         @endif
                     </td>

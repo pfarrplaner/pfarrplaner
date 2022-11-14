@@ -568,6 +568,9 @@ export default {
                     if (undefined == item.data.song) return '';
                     if (undefined == item.data.song.song) return '';
                     var title = item.data.song.song.title;
+                    if (item.data.song.song.alt_eg) {
+                        title = '(EG '+item.data.song.song.alt_eg+') '+title;
+                    }
                     if (item.data.song.reference) {
                         title = item.data.song.reference + ' ' + title;
                     }
