@@ -35,7 +35,7 @@
         }"
     >
         <div class="celldata">
-            <div v-if="city.loading"><span class="mdi mdi-spin mdi-loading"></span></div>
+            <div v-if="city.loading" class="city-loading"><span class="mdi mdi-spin mdi-loading"></span></div>
             <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"
                               :targetMode="targetMode" :target="target"
             />
@@ -54,4 +54,14 @@ export default {
     .calendar-cell {
         padding: 0;
     }
+
+    .city-loading {
+        text-align: center;
+        background-color: transparent !important;
+        color: lightgray !important;
+        font-size: 3em !important;
+    }
+
+
+
 </style>

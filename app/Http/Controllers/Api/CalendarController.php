@@ -30,6 +30,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Absence;
 use App\City;
 use App\Liturgy;
 use App\Service;
@@ -53,7 +54,7 @@ class CalendarController extends \App\Http\Controllers\Controller
      */
     public function navigate($date)
     {
-        $date = Carbon::parse($date.'-01 0:00:00');
+        $date = Carbon::parse($date . '-01 0:00:00');
 
         $dates = Service::select(DB::raw('DISTINCT DATE(services.date) as day'))
             ->inCities(Auth::user()->visibleCities)
@@ -67,7 +68,18 @@ class CalendarController extends \App\Http\Controllers\Controller
             $days[$thisDate] = ['date' => $thisDate, 'liturgy' => Liturgy::getDayInfo($thisDate)];
         }
 
-        return response()->json(compact('days'));
+        // absences
+        $absences = Absence::getByDays(
+            Absence::with('user')
+                ->byPeriod($date, $date->copy()->endOfMonth())
+                ->visibleForUser(Auth::user())
+                ->showInCalendar()
+                ->get(),
+            $dates
+        );
+
+
+        return response()->json(compact('days', 'absences'));
     }
 
 
@@ -77,9 +89,12 @@ class CalendarController extends \App\Http\Controllers\Controller
      * @param string $date
      * @return \Illuminate\Http\JsonResponse
      */
-    public function city(City $city, $date) {
-        $date = Carbon::parse($date.'-01 0:00:00');
-        if ($date->format('Ym') < 201801) abort(404);
+    public function city(City $city, $date)
+    {
+        $date = Carbon::parse($date . '-01 0:00:00');
+        if ($date->format('Ym') < 201801) {
+            abort(404);
+        }
 
         $services = Service::setEagerLoads([])
             ->with(['baptisms', 'funerals', 'weddings', 'participants'])

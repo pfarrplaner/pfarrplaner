@@ -128,7 +128,7 @@ export default {
         years: {type: Array},
         orientation: {type: String},
         targetMode: {type: Boolean},
-        target: {type: Object}
+        target: {type: Object},
     },
     methods: {
         monthLink: function (month) {

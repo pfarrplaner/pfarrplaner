@@ -3,6 +3,7 @@
         <template #navbar-left>
             <calendar-nav-top :date="new Date(myDate)" :years="years" @collapseall="toggleCollapse"
                               :orientation="orientation" :targetMode="targetMode" :target="target"
+                              :people-loaded="peopleLoaded"
                               @toggle-target-mode="toggleTargetMode"
                               @navigate="navigateTo"
             />
@@ -15,30 +16,49 @@
                 {{ loading }} Orte werden geladen ...
             </div>
         </template>
-        <div class="d-none d-md-inline calendar-full-container">
-            <calendar-pane-horizontal v-if="orientation == 'horizontal'"
-                                      :date="myDate" :days="myDays" :cities="cityList" :services="services"
-                                      :years="years"
-                                      :key="collapseKey"
-                                      :targetMode="targetMode" :target="target"
-                                      :absences="absences" :can-create="canCreate"/>
-            <calendar-pane-vertical v-else
-                                    :date="myDate" :days="myDays" :cities="cityList" :services="services" :years="years"
-                                    :key="collapseKey"
-                                    :targetMode="targetMode" :target="target"
-                                    :absences="absences" :can-create="canCreate "/>
+        <div v-if="daysLoaded">
+            <div class="d-none d-md-inline calendar-full-container">
+                <calendar-pane-horizontal v-if="orientation == 'horizontal'"
+                                          :date="myDate" :days="myDays" :cities="cityList" :services="services"
+                                          :years="years"
+                                          :key="collapseKey"
+                                          :targetMode="targetMode" :target="target"
+                                          :absences="absences" :can-create="canCreate"/>
+                <calendar-pane-vertical v-else
+                                        :date="myDate" :days="myDays" :cities="cityList" :services="services"
+                                        :years="years"
+                                        :key="collapseKey"
+                                        :targetMode="targetMode" :target="target"
+                                        :absences="absences" :can-create="canCreate "/>
+            </div>
+            <div class="d-inline d-md-none">
+                <!-- mobile version -->
+                <calendar-pane-mobile :date="myDate" :days="days" :cities="cityList" :services="services" :years="years"
+                                      :absences="absences" :can-create="canCreate" :loading="loading"/>
+            </div>
         </div>
-        <div class="d-inline d-md-none">
-            <!-- mobile version -->
-            <calendar-pane-mobile :date="myDate" :days="days" :cities="cityList" :services="services" :years="years"
-                                  :absences="absences" :can-create="canCreate" :loading="loading"/>
+        <div v-else class="month-loading">
+            <div><span class="mdi mdi-spin mdi-loading"></span></div>
+            <div>Kalender wird geladen</div>
         </div>
         <modal v-if="showTargetModeModal" title="Person(en) schnell eintragen"
-               @close="setTarget"
+               @close="setTarget" :key="peopleLoaded"
                close-button-label="Aktivieren"
                @cancel="showTargetModeModal = false; targetMode = false;">
-            <people-select :people="people" v-model="target.people" label="Folgende Person(en) eintragen"/>
-            <form-selectize label="Für folgenden Dienst eintragen" v-model="target.ministry" :options="myMinistries"/>
+            <div v-if="!peopleLoaded" class="text-small text-muted"><span class="mdi mdi-spin mdi-loading"></span>
+                Personenliste wird geladen...
+            </div>
+            <div v-if="peopleLoaded" :key="myPeople.length">
+                <people-select :people="myPeople" :teams="myTeams" v-model="target.people"
+                               label="Folgende Person(en) eintragen" :key="myPeople.length"/>
+            </div>
+            <div v-if="!ministriesLoaded" class="text-small text-muted"><span class="mdi mdi-spin mdi-loading"></span>
+                Dienste werden geladen...
+            </div>
+            <div v-if="ministriesLoaded" :key="myMinistries.length">
+                <form-selectize label="Für folgenden Dienst eintragen" v-model="target.ministry" :options="myMinistries"
+                                :key="myMinistries.length"/>
+            </div>
             <form-check label="Bestehende Einträge überschreiben" v-model="target.exclusive"/>
         </modal>
     </admin-layout>
@@ -57,27 +77,19 @@ import FormCheck from "../../components/Ui/forms/FormCheck";
 
 export default {
     components: {FormCheck, FormSelectize, PeopleSelect, Modal, CalendarPaneMobile},
-    props: ['date', 'days', 'cities', 'years', 'absences', 'canCreate', 'services', 'people', 'ministries'],
+    props: ['date', 'days', 'cities', 'years', 'absences', 'canCreate', 'services', 'ministries'],
     provide() {
         return {
             settings: this.$page.props.settings || {},
         }
     },
     data() {
-        var myMinistries = [
-            {id: 'P', 'name': 'Pfarrer*in'},
-            {id: 'O', 'name': 'Organist*in'},
-            {id: 'M', 'name': 'Mesner*in'},
-        ];
-        for (const ministryKey in this.ministries) {
-            myMinistries.push({id: this.ministries[ministryKey], name: this.ministries[ministryKey]});
-        }
-
         return {
             apiToken: this.$page.props.currentUser.data.api_token,
             calendarState: Math.random().toString(36).substr(2, 9),
             myDate: this.date,
             myDays: this.initDays(this.days),
+            daysLoaded: true,
             collapseKey: Math.random() * 9999999,
             cityList: this.cities,
             orientation: vm.$children[0].page.props.settings.calendar_view,
@@ -86,9 +98,13 @@ export default {
             loading: 0,
             targetMode: false,
             showTargetModeModal: false,
-            myMinistries,
+            peopleLoaded: 0,
+            myPeople: [],
+            myTeams: [],
+            ministriesLoaded: false,
+            myMinistries: [],
             target: {
-                people: this.people.filter(person => person.id == this.$page.props.currentUser.data.id),
+                people: [],
                 ministry: this.$page.props.currentUser.data.isPastor ? 'P' : null,
                 exclusive: false,
             }
@@ -97,6 +113,31 @@ export default {
     created() {
         if (undefined === this.settings.show_cc_details) this.settings.show_cc_details = 0;
         this.loadServicesByCityAndMonth();
+
+        axios.get(route('api.people.select', {
+            api_token: this.apiToken,
+        })).then(response => {
+            this.myPeople = response.data.users;
+            this.myTeams = response.data.teams;
+            this.target.people = this.myPeople.filter(person => person.id == this.$page.props.currentUser.data.id)
+            this.peopleLoaded = 1;
+        });
+
+        axios.get(route('api.ministries.list', {
+            api_token: this.apiToken,
+        })).then(response => {
+            this.myMinistries = [
+                {id: 'P', 'name': 'Pfarrer*in'},
+                {id: 'O', 'name': 'Organist*in'},
+                {id: 'M', 'name': 'Mesner*in'},
+            ];
+            for (const ministryKey in response.data) {
+                this.myMinistries.push({id: response.data[ministryKey], name: response.data[ministryKey]});
+            }
+            this.ministriesLoaded = true;
+        });
+
+
     },
     mounted() {
         EventBus.listen(CalendarNewSortOrderEvent, this.sortHandler);
@@ -164,12 +205,15 @@ export default {
         },
         navigateTo(targetDate) {
             this.myDate = targetDate;
+            this.daysLoaded = false;
             axios.get(route('api.calendar.navigate', {
                 api_token: this.apiToken,
                 date: targetDate,
             })).then(response => {
                 console.log(response.data);
                 this.myDays = this.initDays(response.data.days);
+                this.absences = response.data.absences;
+                this.daysLoaded = true;
                 this.changeState();
                 this.loadServicesByCityAndMonth();
             });
@@ -192,5 +236,13 @@ th, td {
 
 .calendar-full-container {
     font-size: .9em;
+}
+
+.month-loading {
+    font-size: 3em;
+    font-width: bold;
+    color: lightgray;
+    text-align: center;
+    padding-top: 25vh;
 }
 </style>
