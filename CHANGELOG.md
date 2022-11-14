@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.154.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.154.1...v2022.154.2) (2022-11-14)
+
+
+### Features
+
+* Only load songlist once in LiturgyTree ([0ad9162](https://github.com/pfarrplaner/pfarrplaner/commits/0ad9162506b997ee174afaffd6bb846587b44d3a))
+
+
+### Bug Fixes
+
+* LiturgyEditor does not save Item data correctly ([880d2dc](https://github.com/pfarrplaner/pfarrplaner/commits/880d2dc0c9b6a5f1c3f66e673dcd8cb7f7649aa9))
+
 ### [2022.154.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.154.0...v2022.154.1) (2022-11-14)
 
 
