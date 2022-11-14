@@ -3,7 +3,9 @@
         <template #navbar-left>
             <calendar-nav-top :date="new Date(date)" :years="years" @collapseall="toggleCollapse"
                               :orientation="orientation" :targetMode="targetMode" :target="target"
-                              @toggle-target-mode="toggleTargetMode" />
+                              @toggle-target-mode="toggleTargetMode"
+                              @navigateTo="navigateTo"
+            />
         </template>
         <template #control-sidebar>
             <calendar-nav-control-sidebar :date="new Date(date)" :cities="cities" @set-setting="setSetting"/>
@@ -122,15 +124,11 @@ export default {
             this.cityList = e.list;
         },
         orientationHandler: function (e) {
-            console.log('orientation change received');
             this.orientation = e.orientation;
-            console.log('new orientation: ' + this.orientation);
         },
         toggleCollapse(e) {
-            console.log('toggle all collapsed', e);
             this.myDays.forEach((day,dayIndex) => {
                 this.myDays[dayIndex].collapsed = e;
-                console.log('day', dayIndex, e, this.myDays[dayIndex].collapsed);
             });
             this.collapseState = e;
             this.collapseKey = Math.random()*9999999;
@@ -149,6 +147,9 @@ export default {
         setTarget() {
             this.showTargetModeModal = false;
             this.targetMode = true;
+        },
+        navigateTo(targetDate) {
+
         }
     },
     computed: {
