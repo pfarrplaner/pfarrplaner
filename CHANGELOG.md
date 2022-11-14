@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.155.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.154.2...v2022.155.0) (2022-11-14)
+
+
+### Features
+
+* Allow loading a liturgic text into a FreetextItem ([85c13ad](https://github.com/pfarrplaner/pfarrplaner/commits/85c13ad19587b80ee540384d13d2c03856cdb7e0)), closes [#289](https://github.com/pfarrplaner/pfarrplaner/issues/289)
+* Faster saving on song updates in LiturgyTree ([91d4869](https://github.com/pfarrplaner/pfarrplaner/commits/91d4869061c57d4f5600e06452edda9d2131e034))
+* Faster song editor in LiturgyTree ([0301484](https://github.com/pfarrplaner/pfarrplaner/commits/03014840ed8904d2a83183850b8ad9c5c7393a96))
+* Songs can now have a reference to an EG number ([4261073](https://github.com/pfarrplaner/pfarrplaner/commits/42610738b0acb5027e7efd4a7dcb4e23f6a5a91d))
+* Songs can now have a reference to an EG number ([0262023](https://github.com/pfarrplaner/pfarrplaner/commits/0262023804c30d9abb75327663a346c24f91a92e))
+
 ### [2022.154.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.154.1...v2022.154.2) (2022-11-14)
 
 
