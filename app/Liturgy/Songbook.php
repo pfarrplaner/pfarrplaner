@@ -44,7 +44,7 @@ class Songbook extends Model
      */
     public function songs()
     {
-        return $this->belongsToMany(Song::class)->withPivot('reference');
+        return $this->belongsToMany(Song::class)->withPivot(['id', 'reference']);
     }
 
     public function getImageField()

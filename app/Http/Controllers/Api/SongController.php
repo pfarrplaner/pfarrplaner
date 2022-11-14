@@ -72,6 +72,57 @@ class SongController extends Controller
     }
 
     /**
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function select()
+    {
+        $songs = Song::setEagerLoads([])->with('songbooks')->select(['id', 'title'])->get();
+        $listed = [];
+        foreach ($songs as $song) {
+            if (count($song->songbooks)) {
+                foreach ($song->songbooks as $songbook) {
+                    $listed[] = [
+                        'id' => $songbook->pivot->id,
+                        'name' => ($songbook->code ?: $songbook->name) . ' ' . $songbook->pivot->reference . ' ' . $song->title,
+                    ];
+                }
+            } else {
+                $listed[] = [
+                    'id' => 1000000 + $song->id,
+                    'name' => $song->title,
+                ];
+            }
+        }
+        usort($listed, function ($a, $b) {
+            return $a['name'] <=> $b['name'];
+        });
+        return response()->json($listed);
+    }
+
+    /**
+     * Retrieve data for a single song
+     * @param int $songReferenceId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function single($songReferenceId)
+    {
+        $songReference = SongReference::find($songReferenceId);
+        if (!$songReference) {
+            $song = Song::findOrFail($songReferenceId - 1000000);
+            $songReference = [
+                'id' => 1000000 + $song->id, // fake an id
+                'song_id' => $song->id,
+                'song' => $song,
+                'code' => '',
+                'reference' => '',
+                'songbook' => null,
+            ];
+        }
+        return response()->json($songReference);
+    }
+
+    /**
      * @return \Illuminate\Http\JsonResponse
      */
     public function songbooks()
@@ -100,15 +151,7 @@ class SongController extends Controller
     {
         $data = $this->validateRequest($request)['song'];
         $song = Song::create($data);
-        foreach ($data['verses'] as $verse) {
-            $verse['song_id'] = $song->id;
-            SongVerse::create($verse);
-        }
-        $song->syncSongbooksFromRequest($data);
-        $song->refresh();
-        $song->load('verses');
-        $songs = SongReference::orderBy('code')->orderBy('reference')->get();
-        return response()->json(compact('song', 'songs'));
+        return response()->json($song);
     }
 
     /**
@@ -118,6 +161,7 @@ class SongController extends Controller
     public function update(Request $request, Song $song)
     {
         $data = $this->validateRequest($request)['song'];
+
         $song->update($data);
         $song->verses()->delete();
         foreach ($data['verses'] as $verse) {
@@ -128,8 +172,23 @@ class SongController extends Controller
         $song->syncSongbooksFromRequest($data);
         $song->refresh();
         $song->load('verses');
-        //$songs = SongReference::orderBy('code')->orderBy('reference')->get();
-        return response()->json($song);
+
+        $id = $request->get('ref');
+        if ($id < 1000000) {
+            $songReference = SongReference::where('song_id', $song->id)->where('songbook_id', $request->get('songbook')['id'])->first();
+            $listEntry = [
+                'id' => $songReference->id,
+                'name' => ($songReference->songbook->code ?: $songReference->songbook->name) . ' ' . $songReference->reference . ' ' . $song->title,
+            ];
+            $id = $songReference->id;
+        } else {
+            $listEntry = [
+                'id' => 1000000 + $song->id,
+                'name' => $song->title,
+            ];
+        }
+
+        return response()->json(compact('id', 'listEntry', 'song'));
     }
 
     /**

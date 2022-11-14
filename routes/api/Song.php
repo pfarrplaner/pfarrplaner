@@ -44,8 +44,12 @@
 use App\Http\Controllers\Api\SongController;
 
 Route::get('/liturgy/songs', [SongController::class, 'index'])->name('liturgy.song.index');
+Route::get('/liturgy/songselect', [SongController::class, 'select'])->name('liturgy.song.select');
 Route::get('/liturgy/songs/songbooks', [SongController::class, 'songbooks'])->name('liturgy.song.songbooks');
-Route::post('/liturgy/songs', [SongController::class, 'store'])->name('liturgy.song.store');
 Route::patch('/liturgy/songs/{song}', [SongController::class, 'update'])->name('liturgy.song.update');
 
 Route::get('/liturgie/lied/{song}/noten/{verses?}/{lineNumber?}', [SongController::class, 'music'])->name('liturgy.song.music');
+
+
+Route::get('/liturgy/song/{songReferenceId}', [SongController::class, 'single'])->name('liturgy.song.single');
+Route::post('/liturgy/songs', [SongController::class, 'store'])->name('liturgy.song.store');

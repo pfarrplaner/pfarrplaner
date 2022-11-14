@@ -39,12 +39,9 @@
                     <span class="mdi mdi-spin mdi-loading"></span> Bitte warten, Liederliste wird geladen...
                 </div>
                 <div v-else>
-                    <div class="form-group">
-                        <label for="existing_text">Lied</label>
-                        <selectize class="form-control" name="existing_text" v-model="selectedSong">
-                            <option v-for="song in lists.songs" :value="song.id">{{ displayTitle(song) }}</option>
-                        </selectize>
-                    </div>
+                    <form-selectize label="Lied" :options="lists.songs" @input="selectSong"
+                                    :key="songListState"
+                                    v-model="selectedSong"/>
                     <div class="form-group">
                         <label for="verses">Zu singende Strophen</label>
                         <input class="form-control" :value="editedElement.data.verses"
@@ -53,13 +50,13 @@
                         <small>Strophen: {{ getVersesToDisplay(editedElement.data.verses) }}</small>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-sm btn-light" title="Neues Lied anlegen" @click.prevent="newSong">
+                        <inertia-link class="btn btn-sm btn-light" title="Neues Lied anlegen" :href="route('song.create')">
                             Neues Lied
-                        </button>
-                        <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
-                                title="Lied bearbeiten" @click.prevent="editSong">Lied bearbeiten
-                        </button>
-                        <button v-if="editedElement.data.song.id != -1" class="btn btn-sm btn-light"
+                        </inertia-link>
+                        <inertia-link v-if="editedElement.data.song.song.id != -1" class="btn btn-sm btn-light"
+                                title="Lied bearbeiten" :href="route('song.edit', editedElement.data.song.song.id)">Lied bearbeiten
+                        </inertia-link>
+                        <button v-if="editedElement.data.song.song.id != -1" class="btn btn-sm btn-light"
                                 title="Lied im Noteneditor bearbeiten" @click.prevent="editMusic">
                             <span class="mdi mdi-music"></span> Lied im Noteneditor bearbeiten
                         </button>
@@ -90,10 +87,12 @@ import Modal from "../../Ui/modals/Modal";
 import TextStats from "../Elements/TextStats";
 import TimeFields from "./Elements/TimeFields";
 import SongEditPane from "./Elements/SongEditPane";
+import FormSelectize from "../../Ui/forms/FormSelectize";
 
 export default {
     name: "SongEditor",
     components: {
+        FormSelectize,
         SongEditPane,
         TimeFields,
         TextStats,
@@ -128,6 +127,7 @@ export default {
     },
     mounted() {
         this.quote = this.quotableText();
+        this.selectSong(this.editedElement.data.song.id);
     },
     data() {
         var e = this.element;
@@ -146,28 +146,19 @@ export default {
 
         if (undefined == e.data.verses) e.data.verses = '';
         if (undefined == e.data.song) e.data.song = emptySong;
+        const component = this;
         return {
             apiToken: this.$page.props.currentUser.data.api_token,
             editedElement: e,
             emptySong: emptySong,
             songs: this.lists.songs,
+            songList: [],
+            songListState: 0,
             songbook: e.data.song.songbook + '||' + e.data.song.songbook_abbreviation,
             songbooks: null,
             songIsDirty: false,
             selectedSong: e.data.song.id,
-            selectizeSettings: {
-                create: function (input, callback) {
-                    return callback({
-                        value: input + '||' + window.prompt('Bitte gib eine Abkürzung für "' + input + '" ein'),
-                        text: input,
-                    })
-                },
-                render: {
-                    option_create: function (data, escape) {
-                        return '<div class="create">Neues Liederbuch anlegen: <strong>' + escape(data.input) + '</strong>&hellip;</div>';
-                    }
-                },
-            },
+            component: this,
             modalSong: {},
             modalOpen: false,
             quote: '',
@@ -186,50 +177,36 @@ export default {
             },
             deep: true,
         },
-        selectedSong: {
-            handler: function (newVal, oldVal) {
-                var found = false;
-                this.lists.songs.forEach(function (song) {
-                    if (song.id == newVal) found = song;
-                });
-                if (found) {
-                    this.editedElement.data.song = found;
-                }
-                this.quote = this.quotableText();
-            }
-        },
         songbook: {
             handler: function (newVal, oldVal) {
                 var tmp = newVal.split('||');
                 this.editedElement.data.song.songbook = tmp[0];
                 this.editedElement.data.song.songbook_abbreviation = tmp[1];
             }
+        },
+        'lists.songs': {
+            handler: function(newVal, oldVal) {
+                this.selectSong(this.editedElement.data.song.id);
+                this.songListState++;
+            }
         }
     },
     methods: {
-        newSong() {
-            this.modalSong =
-                {
-                    code: null,
-                    songbook_id: null,
-                    reference: null,
-                    song_id: null,
-                    song: {
-                        id: -1,
-                        title: '',
-                        verses: [
-                            {id: -1, number: '1', text: '', refrain_before: false, refrain_after: false}
-                        ],
-                        refrain: '',
-                        copyrights: '',
-                        songbooks: [],
-                    },
-                }
-            this.modalOpen = true;
-        },
-        editSong() {
-            this.modalSong = this.editedElement.data.song;
-            this.modalOpen = true;
+        selectSong(e) {
+            console.log('selectSong', e);
+            if (undefined == this.songList[e]) {
+                axios.get(route('api.liturgy.song.single', {
+                    api_token: this.apiToken,
+                    songReferenceId: e,
+                })).then(response => {
+                    this.songList[e] = response.data;
+                    this.editedElement.data.song = this.songList[e];
+                    this.$forceUpdate();
+                });
+            } else {
+                this.editedElement.data.song = this.songList[e];
+                this.$forceUpdate();
+            }
         },
         editMusic() {
             window.open(route('liturgy.song.musiceditor', this.editedElement.data.song.id));
@@ -248,40 +225,6 @@ export default {
                 block: this.element.liturgy_block_id,
                 item: this.element.id,
             }), data, {preserveState: false});
-            this.quote = this.quotableText();
-        },
-        saveText() {
-            this.lists.songs = [];
-            var component = this;
-            axios.post(route('api.liturgy.song.store', {api_token: this.apiToken}), this.modalSong).then(response => {
-                return response.data;
-            }).then(data => {
-                component.lists.songs = data.songs;
-                component.editedElement.data.song = data.song;
-                component.songIsDirty = false;
-                component.selectedSong = data.song.id;
-            });
-            this.modalOpen = false;
-            this.songIsDirty = false;
-            this.quote = this.quotableText();
-        },
-        updateText() {
-            var updateIndex = this.lists.songs.findIndex(element => element.id == this.editedElement.data.song.id);
-            console.log('update song', this.modalSong);
-            var component = this;
-            axios.patch(route('api.liturgy.song.update', {
-                song: this.editedElement.data.song.song.id,
-                api_token: this.apiToken,
-            }), this.modalSong).then(response => {
-                console.log('updating ', updateIndex, this.lists.songs[updateIndex], response.data)
-                this.lists.songs[updateIndex].song = response.data;
-                this.editedElement.data.song.song = response.data;
-                this.songIsDirty = false;
-                this.selectedSong = this.lists.songs[updateIndex].id;
-                this.$forceUpdate();
-            });
-            this.modalOpen = false;
-            this.songIsDirty = false;
             this.quote = this.quotableText();
         },
         displayTitle(song) {

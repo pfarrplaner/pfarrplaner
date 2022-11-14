@@ -318,7 +318,7 @@ export default {
         });
 
         axios.get(route('liturgy.sermons', this.myService.slug)).then(response => this.sermons = response.data);
-        axios.get(route('api.liturgy.song.index', {api_token: this.apiToken})).then(response => {
+        axios.get(route('api.liturgy.song.select', {api_token: this.apiToken})).then(response => {
             this.songList = response.data;
         });
     },
