@@ -30,13 +30,13 @@
 <template>
     <div class="button-row no-print btn-toolbar" role="toolbar">
         <div class="btn-group mr-2" role="group">
-            <inertia-link class="btn btn-default"
-                          v-if="numericDate > 201801"
-                          :href="route('calendar', { date: moment(date).subtract(1, 'months').format('YYYY-MM') })"
-                          title="Einen Monat zurück">
+            <button class="btn btn-default"
+                    v-if="numericDate > 201801"
+                    @click.prevent.stop="$emit('navigate', moment(date).subtract(1, 'months').format('YYYY-MM'))"
+                    title="Einen Monat zurück">
                 <span class="mdi mdi-chevron-left"></span>
-            </inertia-link>
-            <button class="btn btn-default" @click="today">
+            </button>
+            <button class="btn btn-default" @click.prevent.stop="today">
                 <span class="mdi mdi-calendar-today"></span><span class="d-none d-md-inline"> Gehe zu Heute </span>
             </button>
 
@@ -47,18 +47,30 @@
                     {{ moment(date).locale('de-DE').format('MMMM') }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <inertia-link class="dropdown-item" :href="monthLink(1)">Januar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(2)">Februar</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(3)">März</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(4)">April</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(5)">Mai</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(6)">Juni</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(7)">Juli</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(8)">August</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(9)">September</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(10)">Oktober</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(11)">November</inertia-link>
-                    <inertia-link class="dropdown-item" :href="monthLink(12)">Dezember</inertia-link>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-01')">Januar</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-02')">Februar</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-03')">März</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-04')">April</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-05')">Mai</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-06')">Juni</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-07')">Juli</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-08')">August</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-09')">September</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-10')">Oktober</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-11')">November</a>
+                    <a class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', moment(date).format('YYYY')+'-12')">Dezember</a>
                 </div>
             </div>
             <div class="btn-group" role="group">
@@ -67,18 +79,18 @@
                     {{ moment(date).format('YYYY') }}
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
-                    <inertia-link v-for="year in years" class="dropdown-item"
-                                  :key="year" :year="year" :href="yearLink(year)">{{ year }}
-                    </inertia-link>
+                    <a v-for="year in years" class="dropdown-item" href="#"
+                       @click.prevent.stop="$emit('navigate', year+'-'+moment(date).format('MM'))"
+                       :key="year">{{ year }}
+                    </a>
                 </div>
             </div>
-
-
-            <inertia-link class="btn btn-default"
-                          :href="route('calendar', { date: moment(date).add(1, 'months').format('YYYY-MM') })"
-                          title="Einen Monat weiter">
+            <button class="btn btn-default"
+                    v-if="numericDate > 201801"
+                    @click.prevent.stop="$emit('navigate', moment(date).add(1, 'months').format('YYYY-MM'))"
+                    title="Einen Monat weiter">
                 <span class="mdi mdi-chevron-right"></span>
-            </inertia-link>
+            </button>
         </div>
         <nav-button class="mr-2"
                     :type="targetMode ? 'warning' : 'default'"
@@ -112,7 +124,11 @@ export default {
         }
     },
     props: {
-        date: {type: Date}, years: {type: Array}, orientation: {type: String}, targetMode: {type: Boolean}, target: {type: Object}
+        date: {type: Date},
+        years: {type: Array},
+        orientation: {type: String},
+        targetMode: {type: Boolean},
+        target: {type: Object}
     },
     methods: {
         monthLink: function (month) {
@@ -134,10 +150,10 @@ export default {
                 var el = document.getElementsByClassName('scroll-to-me');
                 if (el) {
                     el[0].parentElement.scrollIntoView();
-                    window.scroll(0, window.scrollY-84);
+                    window.scroll(0, window.scrollY - 84);
                 }
             } else {
-                this.$inertia.get(route('calendar', moment().format('YYYY-MM')));
+                this.$emit('navigate', moment().format('YYYY-MM'));
             }
         },
         targetTitle() {

@@ -105,21 +105,6 @@ class CalController extends Controller
         );
     }
 
-    public function city($date, City $city) {
-        $date = ($date ? new Carbon ($date . '-01') : Carbon::now())->setTime(0, 0, 0);
-        if ($date->format('Ym') < 201801) abort(404);
-
-        $services = Service::setEagerLoads([])
-            ->with(['baptisms', 'funerals', 'weddings', 'participants'])
-            ->inMonthByDate($date)
-            ->inCities([$city->id])
-            ->ordered()
-            ->get()
-            ->groupBy('keyDate');
-
-        return response()->json($services);
-    }
-
     public function day(Day $day, City $city)
     {
         $services = Service::setEagerLoads([])
