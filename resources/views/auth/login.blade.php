@@ -129,6 +129,11 @@
                                     @input(['name' => 'password', 'label' => '', 'placeholder' => 'Dein Passwort', 'type' => 'password'])
                                 </div>
                             </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <input type="checkbox" name="remember" value="1"> <label for="remember">Angemeldet bleiben</label>
+                                    </div>
+                                </div>
                             @else
                                 <div class="row">
                                     <div class="col-md-6">
