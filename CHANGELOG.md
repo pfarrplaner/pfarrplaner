@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.154.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.154.0...v2022.154.1) (2022-11-14)
+
+
+### Features
+
+* Browse calendar without page reload ([b0a4b3d](https://github.com/pfarrplaner/pfarrplaner/commits/b0a4b3d90b0ed64bd38a59d14b741b8bb5f05b0c)), closes [#324](https://github.com/pfarrplaner/pfarrplaner/issues/324)
+
+
+### Bug Fixes
+
+* Login needs "remember me" ([c693d8c](https://github.com/pfarrplaner/pfarrplaner/commits/c693d8c861831258f81d66eba8ae400d64d73857)), closes [#323](https://github.com/pfarrplaner/pfarrplaner/issues/323)
+
 ## [2022.154.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.153.0...v2022.154.0) (2022-11-14)
 
 
