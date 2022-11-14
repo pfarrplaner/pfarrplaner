@@ -28,25 +28,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use App\Http\Controllers\Api\LiturgicalTextsController;
-use App\Http\Controllers\Api\LiturgyController;
+namespace App\Http\Controllers\Api;
 
-// Tree
-Route::post('liturgy/tree/save/{service}', [LiturgyController::class, 'saveTreeState'])->name('liturgy.tree.save');
-Route::post('liturgy/service/{service}/import/{source}', [LiturgyController::class, 'importToTree'])->name('liturgy.tree.import');
+use App\Liturgy\Text;
 
-// Block
-Route::post('/liturgy/service/{service}/blocks', [LiturgyController::class, 'storeBlock'])->name('liturgy.block.store');
-Route::patch('/liturgy/block/{block}', [LiturgyController::class, 'updateBlock'])->name('liturgy.block.update');
-Route::delete('/liturgy/block/{block}', [LiturgyController::class, 'destroyBlock'])->name('liturgy.block.destroy');
+class LiturgicalTextsController extends \App\Http\Controllers\Controller
+{
 
-// Item
-Route::post('/liturgy/block/{block}/items', [LiturgyController::class, 'storeItem'])->name('liturgy.item.store');
-Route::patch('/liturgy/item/{item}', [LiturgyController::class, 'updateItem'])->name('liturgy.item.update');
-Route::delete('/liturgy/item/{item}', [LiturgyController::class, 'destroyItem'])->name('liturgy.item.destroy');
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
 
-// Texts
-Route::get('/liturgy/texts/list', [LiturgicalTextsController::class, 'list'])->name('liturgy.text.list');
+    /**
+     * Get a list of all liturgical texts
+     * @return mixed
+     */
+    public function list()
+    {
+        return response()->json(Text::all());
+    }
 
-
-
+}

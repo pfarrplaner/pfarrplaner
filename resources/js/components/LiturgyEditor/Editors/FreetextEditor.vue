@@ -33,9 +33,37 @@
             <label for="title">Titel im Ablaufplan</label>
             <input class="form-control" v-model="editedElement.title" v-focus/>
         </div>
+
+
         <div class="form-group">
             <label for="description">Beschreibender Text</label>
-            <textarea class="form-control" v-model="editedElement.data.description"></textarea>
+            <div class="dropdown mb-1">
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        @click="toggleTextDropdown"
+                        title="Dokumente herunterladen">
+                    <span class="mdi mdi-text"></span> Textbaustein einfügen
+                </button>
+                <div class="dropdown-menu bg-light" :style="{display: showDropdown ? 'block' : 'none'}" aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-form p-1">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div v-if="lists.texts.length > 0">
+                                    <form-selectize label="Textbaustein" :options="lists.texts" title-key="title"
+                                                    v-model="selectedText" :key="lists.texts.length"/>
+                                </div>
+                                <nav-button type="secondary" icon="mdi mdi-text"
+                                            @click="insertText(lists.texts.filter(item => item.id == selectedText)[0].text); showDropdown = false;"
+                                            title="Einfügen">Einfügen</nav-button>
+                            </div>
+                            <div class="col-sm-6">
+                                <nl2br tag="div" v-if="selectedText" :text="lists.texts.filter(item => item.id == selectedText)[0].text" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <textarea class="form-control" v-model="editedElement.data.description" ref="textEditor" rows="15"></textarea>
             <text-stats :text="editedElement.data.description"/>
         </div>
         <div class="help">
@@ -49,11 +77,16 @@
 </template>
 
 <script>
+import Nl2br from 'vue-nl2br';
 import TextStats from "../Elements/TextStats";
+import FormInput from "../../Ui/forms/FormInput";
+import FormSelectize from "../../Ui/forms/FormSelectize";
+import NavButton from "../../Ui/buttons/NavButton";
 
 export default {
     name: "FreetextEditor",
-    components: {TextStats},
+    components: {NavButton, FormSelectize, FormInput, TextStats, Nl2br},
+    inject: ['lists'],
     props: {
         element: Object,
         service: Object,
@@ -64,14 +97,40 @@ export default {
         markers: {
             type: Object,
             default: null,
-        }
+        },
     },
     data() {
         var e = this.element;
         if (undefined == e.data.description) e.data.description = '';
         return {
             editedElement: e,
+            selectedText: '',
+            showDropdown: false,
         };
+    },
+    methods: {
+        insertText(text) {
+            var myField = this.$refs['textEditor'];
+            console.log(myField);
+
+            if (myField.selectionStart || myField.selectionStart == '0') {
+                console.log('mozilla', myField.selectionStart, myField.selectionEnd, text);
+                var startPos = myField.selectionStart;
+                var endPos = myField.selectionEnd;
+                this.editedElement.data.description = myField.value.substring(0, startPos)
+                    + text
+                    + myField.value.substring(endPos, myField.value.length);
+                myField.focus();
+                myField.selectionStart = myField.selectionEnd = myField.selectionEnd+text.length;
+            } else {
+                this.editedElement.data.description += text;
+                myField.focus();
+            }
+        },
+        toggleTextDropdown() {
+            this.showDropdown = !this.showDropdown;
+            if (!this.showDropdown) this.$refs['textEditor'].focus();
+        }
     },
 }
 </script>
@@ -90,5 +149,9 @@ export default {
 .help-title {
     font-weight: bold;
     margin-bottom: .25em;
+}
+
+.dropdown-menu {
+    width: 100% !important;
 }
 </style>

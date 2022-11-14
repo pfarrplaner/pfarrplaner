@@ -318,6 +318,7 @@ export default {
         });
 
         axios.get(route('liturgy.sermons', this.myService.slug)).then(response => this.sermons = response.data);
+        axios.get(route('liturgy.text.list', this.myService.slug)).then(response => this.texts = response.data);
         axios.get(route('api.liturgy.song.select', {api_token: this.apiToken})).then(response => {
             this.songList = response.data;
         });
@@ -400,6 +401,7 @@ export default {
             dialogs: dialogs,
             sermons: [],
             songList: [],
+            texts: [],
             sermonSelectizeSettings: {
                 searchField: ['title'],
             }
@@ -755,6 +757,10 @@ export default {
         Object.defineProperty(lists, 'songs', {
             enumerable: true,
             get: () => this.songList,
+        });
+        Object.defineProperty(lists, 'texts', {
+            enumerable: true,
+            get: () => this.texts,
         });
         return {
             lists,
