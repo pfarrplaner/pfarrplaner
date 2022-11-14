@@ -308,17 +308,16 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        const sources = await axios.get(route('liturgy.sources', this.myService.slug))
-        if (sources.data) {
-            this.agendas = sources.data.agendas;
-            this.services = sources.data.services;
-            this.sourceWait = 'Ablaufelemente importieren...';
-            this.importFrom = -1;
-        }
+        axios.get(route('liturgy.sources', this.myService.slug)).then(response => {
+            if (response.data) {
+                this.agendas = response.data.agendas;
+                this.services = response.data.services;
+                this.sourceWait = 'Ablaufelemente importieren...';
+                this.importFrom = -1;
+            }
+        });
 
-        this.sermons = (await axios.get(route('liturgy.sermons', this.myService.slug))).data;
-
-
+        axios.get(route('liturgy.sermons', this.myService.slug)).then(response => this.sermons = response.data);
         axios.get(route('api.liturgy.song.index', {api_token: this.apiToken})).then(response => {
             this.songList = response.data;
         });

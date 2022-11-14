@@ -128,8 +128,8 @@ class SongController extends Controller
         $song->syncSongbooksFromRequest($data);
         $song->refresh();
         $song->load('verses');
-        $songs = SongReference::orderBy('code')->orderBy('reference')->get();
-        return response()->json(compact('song', 'songs'));
+        //$songs = SongReference::orderBy('code')->orderBy('reference')->get();
+        return response()->json($song);
     }
 
     /**

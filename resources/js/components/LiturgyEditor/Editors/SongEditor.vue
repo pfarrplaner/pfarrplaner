@@ -266,18 +266,19 @@ export default {
             this.quote = this.quotableText();
         },
         updateText() {
-            this.lists.songs = [];
+            var updateIndex = this.lists.songs.findIndex(element => element.id == this.editedElement.data.song.id);
+            console.log('update song', this.modalSong);
             var component = this;
             axios.patch(route('api.liturgy.song.update', {
-                song: this.editedElement.data.song.id,
+                song: this.editedElement.data.song.song.id,
                 api_token: this.apiToken,
             }), this.modalSong).then(response => {
-                return response.data;
-            }).then(data => {
-                component.lists.songs = data.songs;
-                component.editedElement.data.song = data.song;
-                component.songIsDirty = false;
-                component.selectedSong = data.song.id;
+                console.log('updating ', updateIndex, this.lists.songs[updateIndex], response.data)
+                this.lists.songs[updateIndex].song = response.data;
+                this.editedElement.data.song.song = response.data;
+                this.songIsDirty = false;
+                this.selectedSong = this.lists.songs[updateIndex].id;
+                this.$forceUpdate();
             });
             this.modalOpen = false;
             this.songIsDirty = false;
