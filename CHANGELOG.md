@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.154.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.153.0...v2022.154.0) (2022-11-14)
+
+
+### Features
+
+* New fully AJAX-based LiturgyTree and editors ([ef3b844](https://github.com/pfarrplaner/pfarrplaner/commits/ef3b8442dfdbfaaf776be7d7a7a86c1c754085c8))
+* One-click placement of a person in a service in the calendar ([f6c138c](https://github.com/pfarrplaner/pfarrplaner/commits/f6c138c77c1843e2347fb7cd73b94321750ace5d)), closes [#316](https://github.com/pfarrplaner/pfarrplaner/issues/316)
+* PeopleSelect: Show self first ([2fb6ae4](https://github.com/pfarrplaner/pfarrplaner/commits/2fb6ae4c99662876dca4e88a90d661fffd893aab)), closes [#319](https://github.com/pfarrplaner/pfarrplaner/issues/319)
+* Support Ctrl+click in calendar ([79e1fd5](https://github.com/pfarrplaner/pfarrplaner/commits/79e1fd5ae02b4a695b9b31292168ef1a0e924434)), closes [#318](https://github.com/pfarrplaner/pfarrplaner/issues/318)
+
+
+### Bug Fixes
+
+* New person creation in PeopleSelect fails if no spaces are present in raw name ([e32576c](https://github.com/pfarrplaner/pfarrplaner/commits/e32576ca4623cafdfd49a79f4fec9748af8b25a8)), closes [#310](https://github.com/pfarrplaner/pfarrplaner/issues/310)
+
 ## [2022.153.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.152.1...v2022.153.0) (2022-11-10)
 
 
