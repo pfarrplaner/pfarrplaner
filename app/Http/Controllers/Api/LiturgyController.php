@@ -189,7 +189,11 @@ class LiturgyController extends \App\Http\Controllers\Controller
      */
     public function updateItem(Request $request, Item $item)
     {
-        $item->update($this->validateItemRequest($request));
+        $data = $this->validateItemRequest($request);
+        $item->update($data);
+        $item->data = $data['data'];
+        $item->save();
+        $item->refresh();
         return response()->json(compact('item'));
     }
 
