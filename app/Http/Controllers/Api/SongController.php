@@ -40,6 +40,8 @@ use App\Liturgy\SongVerse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
+use function PHPUnit\Framework\isEmpty;
+
 class SongController extends Controller
 {
 
@@ -77,14 +79,22 @@ class SongController extends Controller
      */
     public function select()
     {
-        $songs = Song::setEagerLoads([])->with('songbooks')->select(['id', 'title'])->get();
+        $songs = Song::setEagerLoads([])->with('songbooks')->select(['id', 'title', 'alt_eg'])->get();
         $listed = [];
         foreach ($songs as $song) {
             if (count($song->songbooks)) {
+                $alt_eg = $song->alt_eg;
+                if (!$alt_eg) {
+                    foreach ($song->songbooks as $songbook) {
+                        if ($songbook->code == 'EG') $alt_eg = $songbook->pivot->reference;
+                    }
+                }
                 foreach ($song->songbooks as $songbook) {
                     $listed[] = [
                         'id' => $songbook->pivot->id,
-                        'name' => ($songbook->code ?: $songbook->name) . ' ' . $songbook->pivot->reference . ' ' . $song->title,
+                        'name' => ($songbook->code ?: $songbook->name) . ' ' . $songbook->pivot->reference . ' '
+                            . (($alt_eg && ($songbook->code != 'EG')) ? '(EG '.$alt_eg.') ' : '')
+                            . $song->title,
                     ];
                 }
             } else {

@@ -41,6 +41,7 @@ class SongReference extends Model
 
     protected $table = 'song_songbook';
     protected $with = ['song', 'songbook'];
+    protected $appends = ['altEG'];
 
     public function song()
     {
@@ -50,5 +51,15 @@ class SongReference extends Model
     public function songbook()
     {
         return $this->belongsTo(Songbook::class, 'songbook_id', 'id', 'songbooks');
+    }
+
+    public function getAltEGAttribute()
+    {
+        if ($this->songbook->code == 'EG') return '';
+        if ($this->song->alt_eg) return $this->song->alt_eg;
+        foreach ($this->song->songbooks as $songbook) {
+            if ($songbook->code == 'EG') return $songbook->pivot->reference;
+        }
+        return '';
     }
 }

@@ -567,9 +567,10 @@ export default {
                 case 'song':
                     if (undefined == item.data.song) return '';
                     if (undefined == item.data.song.song) return '';
+                    console.log(item.data.song);
                     var title = item.data.song.song.title;
-                    if (item.data.song.song.alt_eg) {
-                        title = '(EG '+item.data.song.song.alt_eg+') '+title;
+                    if (item.data.song.altEG) {
+                        title = '(EG '+item.data.song.altEG+') '+title;
                     }
                     if (item.data.song.reference) {
                         title = item.data.song.reference + ' ' + title;

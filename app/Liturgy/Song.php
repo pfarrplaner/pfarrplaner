@@ -78,4 +78,5 @@ class Song extends \Illuminate\Database\Eloquent\Model
         }
         $this->songbooks()->sync($sync, true);
     }
+
 }

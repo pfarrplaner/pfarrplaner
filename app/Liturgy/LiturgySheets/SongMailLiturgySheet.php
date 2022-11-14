@@ -53,7 +53,7 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
                     .($item->data[$item->data_type]['code'] ?? $item->data[$item->data_type]['songbook']['name'] ?? '')
                     .' '
                     .$item->data[$item->data_type]['reference'].' '
-                    .($item->data[$item->data_type]['song']['alt_eg'] ? '(EG '.$item->data[$item->data_type]['song']['alt_eg'].') ' : '')
+                    .($item->data[$item->data_type]['altEG'] ? '(EG '.$item->data[$item->data_type]['altEG'].') ' : '')
                     .$item->data[$item->data_type]['song']['title']
                     .(isset($item->data['verses']) && ($item->data['verses'] != '') ? ', '. $item->data['verses']: '')
                     .PHP_EOL;
