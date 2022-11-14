@@ -317,6 +317,11 @@ export default {
         }
 
         this.sermons = (await axios.get(route('liturgy.sermons', this.myService.slug))).data;
+
+
+        axios.get(route('api.liturgy.song.index', {api_token: this.apiToken})).then(response => {
+            this.songList = response.data;
+        });
     },
     mounted() {
         if (this.autoFocusItem && this.autoFocusBlock) {
@@ -395,6 +400,7 @@ export default {
             modalOpen: false,
             dialogs: dialogs,
             sermons: [],
+            songList: [],
             sermonSelectizeSettings: {
                 searchField: ['title'],
             }
@@ -738,6 +744,17 @@ export default {
             this.treeState = Math.random().toString(36).substr(2, 9);
             this.$forceUpdate();
             this.focusOff();
+        }
+    },
+    provide() {
+        const lists = {};
+
+        Object.defineProperty(lists, 'songs', {
+            enumerable: true,
+            get: () => this.songList,
+        });
+        return {
+            lists,
         }
     }
 }

@@ -35,14 +35,14 @@
                     <label for="title">Titel im Ablaufplan</label>
                     <input class="form-control" v-model="editedElement.title" v-focus/>
                 </div>
-                <div v-if="this.songs === null">
+                <div v-if="(!lists.songs) || (!lists.songs.length)">
                     <span class="mdi mdi-spin mdi-loading"></span> Bitte warten, Liederliste wird geladen...
                 </div>
                 <div v-else>
                     <div class="form-group">
                         <label for="existing_text">Lied</label>
                         <selectize class="form-control" name="existing_text" v-model="selectedSong">
-                            <option v-for="song in songs" :value="song.id">{{ displayTitle(song) }}</option>
+                            <option v-for="song in lists.songs" :value="song.id">{{ displayTitle(song) }}</option>
                         </selectize>
                     </div>
                     <div class="form-group">
@@ -109,15 +109,12 @@ export default {
             default: false,
         }
     },
+    inject: ['lists'],
     /**
      * Load existing songs
      * @returns {Promise<void>}
      */
     async created() {
-        const songs = await axios.get(route('api.liturgy.song.index', {api_token: this.apiToken}))
-        if (songs.data) {
-            this.songs = songs.data;
-        }
         const songbooks = await axios.get(route('liturgy.song.songbooks'));
         if (songbooks.data) {
             var mySongbooks = [];
@@ -153,7 +150,7 @@ export default {
             apiToken: this.$page.props.currentUser.data.api_token,
             editedElement: e,
             emptySong: emptySong,
-            songs: null,
+            songs: this.lists.songs,
             songbook: e.data.song.songbook + '||' + e.data.song.songbook_abbreviation,
             songbooks: null,
             songIsDirty: false,
@@ -192,7 +189,7 @@ export default {
         selectedSong: {
             handler: function (newVal, oldVal) {
                 var found = false;
-                this.songs.forEach(function (song) {
+                this.lists.songs.forEach(function (song) {
                     if (song.id == newVal) found = song;
                 });
                 if (found) {
@@ -254,12 +251,12 @@ export default {
             this.quote = this.quotableText();
         },
         saveText() {
-            this.songs = [];
+            this.lists.songs = [];
             var component = this;
             axios.post(route('api.liturgy.song.store', {api_token: this.apiToken}), this.modalSong).then(response => {
                 return response.data;
             }).then(data => {
-                component.songs = data.songs;
+                component.lists.songs = data.songs;
                 component.editedElement.data.song = data.song;
                 component.songIsDirty = false;
                 component.selectedSong = data.song.id;
@@ -269,7 +266,7 @@ export default {
             this.quote = this.quotableText();
         },
         updateText() {
-            this.songs = [];
+            this.lists.songs = [];
             var component = this;
             axios.patch(route('api.liturgy.song.update', {
                 song: this.editedElement.data.song.id,
@@ -277,7 +274,7 @@ export default {
             }), this.modalSong).then(response => {
                 return response.data;
             }).then(data => {
-                component.songs = data.songs;
+                component.lists.songs = data.songs;
                 component.editedElement.data.song = data.song;
                 component.songIsDirty = false;
                 component.selectedSong = data.song.id;
