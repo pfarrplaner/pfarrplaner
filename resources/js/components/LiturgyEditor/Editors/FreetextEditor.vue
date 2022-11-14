@@ -86,13 +86,6 @@
                       rows="15"></textarea>
             <text-stats :text="editedElement.data.description"/>
         </div>
-        <div class="help">
-            <div class="help-title">Verfügbare Platzhalter:</div>
-            <div v-for="(marker,key) in markers" :key="key" class="row">
-                <div class="col-2">[{{ key }}]</div>
-                <div class="col-10">{{ marker }}</div>
-            </div>
-        </div>
     </div>
 </template>
 
