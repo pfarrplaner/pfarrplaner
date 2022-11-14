@@ -47,6 +47,6 @@ Route::delete('/liturgy/item/{item}', [LiturgyController::class, 'destroyItem'])
 
 // Texts
 Route::get('/liturgy/texts/list', [LiturgicalTextsController::class, 'list'])->name('liturgy.text.list');
-
+Route::post('/liturgy/text/import', [LiturgicalTextsController::class, 'importFromWord'])->name('liturgy.text.import');
 
 

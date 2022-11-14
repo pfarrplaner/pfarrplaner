@@ -38,32 +38,52 @@
         <div class="form-group">
             <label for="description">Beschreibender Text</label>
             <div class="dropdown mb-1">
-                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                        @click="toggleTextDropdown"
-                        title="Dokumente herunterladen">
-                    <span class="mdi mdi-text"></span> Textbaustein einfügen
-                </button>
-                <div class="dropdown-menu bg-light" :style="{display: showDropdown ? 'block' : 'none'}" aria-labelledby="dropdownMenuButton">
+                <div class="btn-group">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            @click="toggleTextDropdown"
+                            title="Textbaustein einfügen">
+                        <span class="mdi mdi-text"></span> Textbaustein einfügen
+                    </button>
+                    <button class="btn btn-light dropdown-toggle" type="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                            @click="toggleWordImportDropdown"
+                            title="Aus Worddokument importieren">
+                        <span class="mdi mdi-file-word"></span>
+                    </button>
+                </div>
+                <div class="dropdown-menu bg-light" :style="{display: showTextDropdown ? 'block' : 'none'}"
+                     aria-labelledby="dropdownMenuButton">
                     <div class="dropdown-form p-1">
                         <div class="row">
                             <div class="col-sm-6">
                                 <div v-if="lists.texts.length > 0">
-                                    <form-selectize label="Textbaustein" :options="lists.texts" title-key="title"
+                                    <form-selectize label="Textbaustein" :options="lists.texts"
+                                                    title-key="title"
                                                     v-model="selectedText" :key="lists.texts.length"/>
                                 </div>
                                 <nav-button type="secondary" icon="mdi mdi-text"
-                                            @click="insertText(lists.texts.filter(item => item.id == selectedText)[0].text); showDropdown = false;"
-                                            title="Einfügen">Einfügen</nav-button>
+                                            @click="insertText(lists.texts.filter(item => item.id == selectedText)[0].text); showTextDropdown = false;"
+                                            title="Einfügen">Einfügen
+                                </nav-button>
                             </div>
                             <div class="col-sm-6">
-                                <nl2br tag="div" v-if="selectedText" :text="lists.texts.filter(item => item.id == selectedText)[0].text" />
+                                <nl2br tag="div" v-if="selectedText"
+                                       :text="lists.texts.filter(item => item.id == selectedText)[0].text"/>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div class="dropdown-menu bg-light" :style="{display: showWordImportDropdown ? 'block' : 'none'}"
+                     aria-labelledby="dropdownMenuButton">
+                    <div class="dropdown-form p-1">
+                        <form-file-upload @input="upload"
+                                          no-url="1" no-pixabay="1" no-camera="1" no-description="1" />
+                    </div>
+                </div>
             </div>
-            <textarea class="form-control" v-model="editedElement.data.description" ref="textEditor" rows="15"></textarea>
+            <textarea class="form-control" v-model="editedElement.data.description" ref="textEditor"
+                      rows="15"></textarea>
             <text-stats :text="editedElement.data.description"/>
         </div>
         <div class="help">
@@ -82,10 +102,12 @@ import TextStats from "../Elements/TextStats";
 import FormInput from "../../Ui/forms/FormInput";
 import FormSelectize from "../../Ui/forms/FormSelectize";
 import NavButton from "../../Ui/buttons/NavButton";
+import FormFileUploader from "../../Ui/forms/FormFileUploader";
+import FormFileUpload from "../../Ui/forms/FormFileUpload";
 
 export default {
     name: "FreetextEditor",
-    components: {NavButton, FormSelectize, FormInput, TextStats, Nl2br},
+    components: {FormFileUpload, NavButton, FormSelectize, FormInput, TextStats, Nl2br},
     inject: ['lists'],
     props: {
         element: Object,
@@ -103,9 +125,11 @@ export default {
         var e = this.element;
         if (undefined == e.data.description) e.data.description = '';
         return {
+            apiToken: this.$page.props.currentUser.data.api_token,
             editedElement: e,
             selectedText: '',
-            showDropdown: false,
+            showTextDropdown: false,
+            showWordImportDropdown: false,
         };
     },
     methods: {
@@ -121,16 +145,37 @@ export default {
                     + text
                     + myField.value.substring(endPos, myField.value.length);
                 myField.focus();
-                myField.selectionStart = myField.selectionEnd = myField.selectionEnd+text.length;
+                myField.selectionStart = myField.selectionEnd = myField.selectionEnd + text.length;
             } else {
                 this.editedElement.data.description += text;
                 myField.focus();
             }
         },
         toggleTextDropdown() {
-            this.showDropdown = !this.showDropdown;
-            if (!this.showDropdown) this.$refs['textEditor'].focus();
-        }
+            this.showTextDropdown = !this.showTextDropdown;
+            if (!this.showTextDropdown) this.$refs['textEditor'].focus();
+        },
+        toggleWordImportDropdown() {
+            this.showWordImportDropdown = !this.showWordImportDropdown;
+            if (!this.showWordImportDropdown) this.$refs['textEditor'].focus();
+        },
+        upload(file) {
+            let fd = new FormData();
+            fd.append('import', file);
+
+            this.uploading = true;
+            axios.post(route('api.liturgy.text.import', {
+                api_token: this.apiToken,
+            }), fd, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(response => {
+                this.showWordImportDropdown = false;
+                this.insertText(response.data);
+                this.$refs['textEditor'].focus();
+            });
+        },
     },
 }
 </script>

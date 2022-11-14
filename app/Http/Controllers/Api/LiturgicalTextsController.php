@@ -31,6 +31,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Liturgy\Text;
+use http\Env\Response;
+use Illuminate\Http\Request;
+use PhpOffice\PhpWord\IOFactory;
 
 class LiturgicalTextsController extends \App\Http\Controllers\Controller
 {
@@ -49,4 +52,46 @@ class LiturgicalTextsController extends \App\Http\Controllers\Controller
         return response()->json(Text::all());
     }
 
+    /**
+     * Import text from Word document
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function importFromWord(Request $request)
+    {
+        if (!$request->hasFile('import')) {
+            return response()->json('');
+        }
+        if (!file_exists($request->file('import')->getRealPath())) {
+            return response()->json('');
+        }
+
+        $doc = IOFactory::load($request->file('import')->getRealPath());
+        $text = '';
+        $sections = $doc->getSections();
+        foreach ($sections as $s) {
+            $els = $s->getElements();
+            /** @var ElementTest $e */
+            foreach ($els as $e) {
+                $class = get_class($e);
+                if (method_exists($class, 'getText')) {
+                    $text .= $e->getText();
+                } else {
+                    if (get_class($e) === 'PhpOffice\PhpWord\Element\TextRun') {
+                        $textRunElements = $e->getElements();
+                        foreach ($textRunElements as $textRunElement) {
+                            $text .= $textRunElement->getText();
+                        }
+                        $text .= "\n";
+                    } else {
+                        $text .= "\n";
+                    }
+                }
+            }
+
+            unlink($request->file('import')->getRealPath());
+            while (str_contains($text, "\n\n\n")) $text = str_replace("\n\n\n", "\n\n", $text);
+            return response()->json(html_entity_decode(trim($text)));
+        }
+    }
 }
