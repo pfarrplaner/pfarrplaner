@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.156.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.155.0...v2022.156.0) (2022-11-14)
+
+
+### Features
+
+* Import Word document into FreetextEditor ([750e2df](https://github.com/pfarrplaner/pfarrplaner/commits/750e2dffe339931c247dbbe490110aa8dfdb1ceb))
+
 ## [2022.155.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.154.2...v2022.155.0) (2022-11-14)
 
 
