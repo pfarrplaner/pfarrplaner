@@ -32,9 +32,10 @@
         <form-group :name="name" :id="myId" :label="label" :help="help" pre-label="book-bible" :required="required" :is-checked-item="isCheckedItem" :value="myValue">
             <div class="input-group mb-3">
                 <div v-if="Object.keys(myOptions).length > 0" class="input-group-prepend">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="mdi mdi-book-open-variant"></span></button>
-                    <div class="dropdown-menu">
-                        <a v-for="option in myOptions" class="dropdown-item" @click.prevent.stop="setTextFromList(option.id)">{{ option.name }}</a>
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="dropDownVisible = !dropDownVisible">
+                        <span class="mdi mdi-book-open-variant"></span></button>
+                    <div class="dropdown-menu" :style="{display : dropDownVisible ? 'block' : 'none'}">
+                        <a v-for="(option,optionIndex) in myOptions" class="dropdown-item" @click.prevent.stop="setTextFromList(option.id); dropDownVisible = false;" :key="optionIndex">{{ option.name }}</a>
                     </div>
                 </div>
                 <input type="text" class="form-control" :aria-label="label" :name="name" :value="myValue" @input="handleInput" :key="valueChanged">
@@ -123,6 +124,7 @@ export default {
                 searchFields: ['name', 'id'],
             },
             valueChanged: 0,
+            dropDownVisible: false,
         }
     },
     watch: {
