@@ -158,7 +158,7 @@ class LiturgyController extends \App\Http\Controllers\Controller
      */
     public function storeItem(Request $request, Block $block)
     {
-        $data =
+        $data = $this->validateItemRequest($request);
         $data['liturgy_block_id'] = $block->id;
         $data['sortable'] = count($block->items);
         if (!isset($data['responsible'])) {
