@@ -53,10 +53,12 @@
                         <inertia-link class="btn btn-sm btn-light" title="Neues Lied anlegen" :href="route('song.create')">
                             Neues Lied
                         </inertia-link>
-                        <inertia-link v-if="editedElement.data.song.song.id != -1" class="btn btn-sm btn-light"
+                        <inertia-link v-if="(undefined != editedElement.data.song) && (undefined != editedElement.data.song.song) && (editedElement.data.song.song.id > 0)"
+                                      class="btn btn-sm btn-light"
                                 title="Lied bearbeiten" :href="route('song.edit', editedElement.data.song.song.id)">Lied bearbeiten
                         </inertia-link>
-                        <button v-if="editedElement.data.song.song.id != -1" class="btn btn-sm btn-light"
+                        <button v-if="(undefined != editedElement.data.song) && (undefined != editedElement.data.song.song) && (editedElement.data.song.song.id != -1)"
+                                class="btn btn-sm btn-light"
                                 title="Lied im Noteneditor bearbeiten" @click.prevent="editMusic">
                             <span class="mdi mdi-music"></span> Lied im Noteneditor bearbeiten
                         </button>
@@ -65,7 +67,7 @@
 
             </div>
             <div class="col-md-6">
-                <div class="liturgical-text-quote" v-html="quote"/>
+                <div class="liturgical-text-quote" v-html="quote" :key="editedElement.data.song.song.id"/>
                 <text-stats :text="quote"/>
             </div>
         </div>
@@ -131,6 +133,12 @@ export default {
     },
     data() {
         var e = this.element;
+
+        if (undefined == e.data.song) e.data.song = {};
+        if (undefined == e.data.song.song) e.data.song.song = {};
+        if (undefined == e.data.song.song.verses) e.data.song.song.verses = [];
+        if (undefined == e.data.song.song.id) e.data.song.song.id = -1;
+
         var emptySong = {
             id: -1,
             title: '',
@@ -194,6 +202,9 @@ export default {
     methods: {
         selectSong(e) {
             console.log('selectSong', e);
+            if (!e) return;
+            if (!e) return;
+            if (e < 0) return;
             if (undefined == this.songList[e]) {
                 axios.get(route('api.liturgy.song.single', {
                     api_token: this.apiToken,
@@ -201,10 +212,12 @@ export default {
                 })).then(response => {
                     this.songList[e] = response.data;
                     this.editedElement.data.song = this.songList[e];
+                    this.quote = this.quotableText();
                     this.$forceUpdate();
                 });
             } else {
                 this.editedElement.data.song = this.songList[e];
+                this.quote = this.quotableText();
                 this.$forceUpdate();
             }
         },
