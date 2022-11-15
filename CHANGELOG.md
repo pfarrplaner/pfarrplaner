@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.156.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.156.0...v2022.156.1) (2022-11-15)
+
+
+### Bug Fixes
+
+* Cannot add new items to LiturgyTree ([0d2ac0c](https://github.com/pfarrplaner/pfarrplaner/commits/0d2ac0c6d3ebbdedb3aa245c1b6e43177dfab229))
+* dropdown menu doesn't always work in ReadingEditor ([c62f7d4](https://github.com/pfarrplaner/pfarrplaner/commits/c62f7d49a8cf7a1db8a9a52549974f6c1fe3589d))
+* Song editor fails when initialized without a song ([cfa5a1e](https://github.com/pfarrplaner/pfarrplaner/commits/cfa5a1ecb8d1e8aa319f79332547a6b3b4f7e6cf))
+
 ## [2022.156.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.155.0...v2022.156.0) (2022-11-14)
 
 
