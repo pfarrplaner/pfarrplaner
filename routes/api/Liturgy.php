@@ -50,4 +50,6 @@ Route::post('/liturgy/item/{item}/assign', [LiturgyController::class, 'assignToI
 Route::get('/liturgy/texts/list', [LiturgicalTextsController::class, 'list'])->name('liturgy.text.list');
 Route::post('/liturgy/text/import', [LiturgicalTextsController::class, 'importFromWord'])->name('liturgy.text.import');
 
+// Sources
+Route::get('/liturgy/sources/{serviceId}', [LiturgyController::class, 'sources'])->name('liturgy.sources');
 

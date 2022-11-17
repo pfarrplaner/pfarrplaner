@@ -214,20 +214,7 @@
                    @close="importElements" @cancel="modalOpen = false;"
                    close-button-label="Importieren" cancel-button-label="Abbrechen" max-width="800">
                 <div v-if="importFrom != null">
-                    <selectize class="form-control source-select" v-model="importFrom" :settings="{
-                                placeholder: sourceWait,
-                            }">
-                        <optgroup label="Vorlagen">
-                            <option v-for="agenda in agendas" :value="agenda.id">
-                                {{ agenda.text }}
-                            </option>
-                        </optgroup>
-                        <optgroup label="Gottesdienste">
-                            <option v-for="service in services" :value="myService.id">
-                                {{ myService.text }}
-                            </option>
-                        </optgroup>
-                    </selectize>
+                    <form-selectize :options="sources" v-model="importFrom" :settings="sourceSelectizeSettings" />
                 </div>
                 <div v-else class="text-align: right; width: 100%; color: darkgray;">
                     Importmöglichquellen werden geladen... <span class="mdi mdi-spin mdi-loading"></span>
@@ -309,11 +296,13 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        axios.get(route('liturgy.sources', this.myService.slug)).then(response => {
+        axios.get(route('api.liturgy.sources', {
+            api_token: this.apiToken,
+            serviceId: this.service.id,
+        })).then(response => {
             if (response.data) {
-                this.agendas = response.data.agendas;
-                this.services = response.data.services;
-                this.sourceWait = 'Ablaufelemente importieren...';
+                this.sources = response.data;
+                this.sourceSelectizeSettings.placeholder = 'Ablaufelemente importieren...';
                 this.importFrom = -1;
             }
         });
@@ -394,10 +383,7 @@ export default {
             focusedItem: null,
             editable: true,
             importFrom: null,
-            services: [],
-            agendas: [],
             hasDownload: (myBlocks.length > 0) && (Object.keys(this.sheets).length > 0),
-            sourceWait: 'Bitte warten, Quellen werden geladen...',
             modalOpen: false,
             dialogs: dialogs,
             sermons: [],
@@ -405,6 +391,17 @@ export default {
             texts: [],
             sermonSelectizeSettings: {
                 searchField: ['title'],
+            },
+            sources: [],
+            sourceSelectizeSettings: {
+                placeholder: 'Bitte warten, Quellen werden geladen...',
+                valueField: 'id',
+                labelField: 'name',
+                searchField: ['name'],
+                optgroupField: 'group',
+                optgroupLabelField: 'groupName',
+                optgroupValueField: 'groupName',
+                optgroups: [{groupName: 'Agenden'},{ groupName: 'Gottesdienste'}],
             }
         }
     },

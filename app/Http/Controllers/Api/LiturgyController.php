@@ -34,6 +34,7 @@ use App\Liturgy\Block;
 use App\Liturgy\Item;
 use App\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LiturgyController extends \App\Http\Controllers\Controller
 {
@@ -216,6 +217,59 @@ class LiturgyController extends \App\Http\Controllers\Controller
     {
         $item->delete();
         return response()->json();
+    }
+
+
+    /**
+     * Return all import sources for a service
+     * @param Service $service
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sources(Service $service)
+    {
+        $serviceGroups = [
+            Service::setEagerLoads([])->with(['location'])
+                ->select(['id', 'title', 'date', 'location_id'])
+                ->whereHas('liturgyBlocks')
+                ->userParticipates(Auth::user(), 'P')
+                ->get(),
+            Service::setEagerLoads([])->with(['location'])
+                ->select(['id', 'title', 'date', 'location_id'])
+                ->whereHas('liturgyBlocks')
+                ->writable()
+                ->get(),
+            Service::setEagerLoads([])->with([])
+                ->select(['id', 'title', 'date'])
+                ->isAgenda()
+                ->get(),
+        ];
+
+        $sources = [];
+        foreach ($serviceGroups as $services) {
+            foreach ($services as $service) {
+                if ($service->date->format('Ymd') == '19780305') {
+                    $sources[] = [
+                        'id' => $service->id,
+                        'date' => 0,
+                        'name' => $service->title . ($service->source ? ' (' . $service->source . ')' : ''),
+                        'group' => 'Agenden',
+                    ];
+                } else {
+                    $sources[] = [
+                        'id' => $service->id,
+                        'date' => $service->date->format('YmdHi'),
+                        'name' => $service->date->setTimezone('Europe/Berlin')->isoFormat('L, LT') . ' Uhr, ' . $service->locationText(),
+                        'group' => 'Gottesdienste',
+                    ];
+                }
+            }
+        }
+
+        usort($sources, function($a, $b) {
+            return $a['date'] <=> $b['date'];
+        });
+
+        return response()->json($sources);
     }
 
     /**
