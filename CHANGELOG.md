@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.157.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.157.0...v2022.157.1) (2022-11-17)
+
+
+### Features
+
+* Add more indices for speed gains ([0f1e4e4](https://github.com/pfarrplaner/pfarrplaner/commits/0f1e4e486c4697f95ea3db814c933910a859f16b))
+* Faster-loading ServiceEditor ([3143dd8](https://github.com/pfarrplaner/pfarrplaner/commits/3143dd86ded948e3c4a35f9963cfdeabb46fa9fa))
+* Faster-loading ServiceEditor ([5dda994](https://github.com/pfarrplaner/pfarrplaner/commits/5dda994aab995e4002a863182ffe389587df0f40))
+
+
+### Bug Fixes
+
+* Source list doesn't include past services ([77239db](https://github.com/pfarrplaner/pfarrplaner/commits/77239dbd7c99fd3fb8f6dffe540338657a624ca3))
+
 ## [2022.157.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.156.1...v2022.157.0) (2022-11-17)
 
 
