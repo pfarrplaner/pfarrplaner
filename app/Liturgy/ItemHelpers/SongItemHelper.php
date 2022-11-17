@@ -86,5 +86,23 @@ class SongItemHelper extends AbstractItemHelper
         return $verses;
     }
 
+    public function getActiveVerseCount()
+    {
+        if (!isset($this->item->data['song'])) return 0;
+        if (!isset($this->item->data['song']['song'])) return 0;
+        return count($this->getActiveVerseNumbers());
+
+    }
+
+    public function forceVerseString($prefix = '')
+    {
+        if (!isset($this->item->data['song'])) return '';
+        if (!isset($this->item->data['song']['song'])) return '';
+        if (isset($this->item->data['verses'])) return $prefix.$this->item->data['verses'];
+        foreach ($this->item->data['song']['song']['verses'] as $verse) $verseRefs[] = $verse['number'];
+        if ((count($verseRefs) == 1) && ($verseRefs[0] == 1)) return '';
+        if (count($verseRefs) == 1) return $prefix.$verseRefs[0];
+        return $prefix.min($verseRefs).'-'.max($verseRefs);
+    }
 
 }

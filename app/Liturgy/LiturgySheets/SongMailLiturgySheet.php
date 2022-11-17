@@ -31,8 +31,11 @@
 namespace App\Liturgy\LiturgySheets;
 
 
+use App\Liturgy\ItemHelpers\SongItemHelper;
 use App\Service;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Pluralizer;
+use Illuminate\Support\Str;
 
 class SongMailLiturgySheet extends AbstractLiturgySheet
 {
@@ -43,45 +46,77 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
 
     public function render(Service $service)
     {
-        $subject = $service->titleText(false).' am '.$service->date->format('d.m.Y').', '.$service->timeText().', '.$service->locationText();
+        $subject = $service->titleText(false) . ' am ' . $service->date->isoFormat(
+                'dddd, DD.MM.YYYY'
+            ) . ', ' . $service->timeText() . ', ' . $service->locationText();
 
-        $body = 'Hier meine Liederliste für den o.g. Gottesdienst:'.PHP_EOL.PHP_EOL;
+        $body = 'Hier der geplante Ablauf für den Gottesdienst' . ' am ' . $service->date->isoFormat('dddd, DD. MMMM YYYY')
+            . ', ' . $service->timeText() .
+            ($service->location->at_text ? ' '.$service->location->at_text : ', '.$service->locationText())
+            . ':' . PHP_EOL . PHP_EOL;
         foreach ($service->liturgyBlocks as $block) {
             foreach ($block->items as $item) {
                 if (($item->data_type == 'song') && (isset($item->data['song']))) {
-                $body .= '  - '.$item->title.': '
-                    .($item->data[$item->data_type]['code'] ?? $item->data[$item->data_type]['songbook']['name'] ?? '')
-                    .' '
-                    .$item->data[$item->data_type]['reference'].' '
-                    .($item->data[$item->data_type]['altEG'] ? '(EG '.$item->data[$item->data_type]['altEG'].') ' : '')
-                    .$item->data[$item->data_type]['song']['title']
-                    .(isset($item->data['verses']) && ($item->data['verses'] != '') ? ', '. $item->data['verses']: '')
-                    .PHP_EOL;
+                    $helper = new SongItemHelper($item);
+                    $verseCount = $helper->getActiveVerseCount();
+
+                    $body .= '  -> ' . $item->title . ': '
+                        . ($item->data[$item->data_type]['code'] ?? $item->data[$item->data_type]['songbook']['name'] ?? '')
+                        . ' '
+                        . $item->data[$item->data_type]['reference'] . ' '
+                        . ($item->data[$item->data_type]['altEG'] ? '(EG ' . $item->data[$item->data_type]['altEG'] . ') ' : '')
+                        . $item->data[$item->data_type]['song']['title']
+                        . $helper->forceVerseString(', ')
+                        . ($verseCount ? ' ('.$verseCount.' '.($verseCount > 1 ? 'Strophen' : 'Strophe').')' : '')
+                        . PHP_EOL;
                 } elseif ($item->data_type == 'psalm') {
-                    $body .= '  - '.$item->title.': '
-                        .($item->data[$item->data_type]['songbook_abbreviation'] ?? $item->data[$item->data_type]['songbook'] ?? '')
-                        .' '
-                        .$item->data[$item->data_type]['reference'].' '
-                        .$item->data[$item->data_type]['title']
-                        .(isset($item->data['verses']) && ($item->data['verses'] != '') ? ', '. $item->data['verses']: '')
-                        .PHP_EOL;
+                    if (isset($item->data['psalm'])) {
+                        $body .= '  -> ' . $item->title . ': '
+                            . ($item->data[$item->data_type]['songbook_abbreviation'] ?? $item->data[$item->data_type]['songbook'] ?? '')
+                            . ' '
+                            . $item->data[$item->data_type]['reference'] . ' '
+                            . $item->data[$item->data_type]['title']
+                            . (isset($item->data['verses']) && ($item->data['verses'] != '') ? ', ' . $item->data['verses'] : '')
+                            . PHP_EOL;
+                    }
+                } else {
+                    if (isset($item->data['responsible'])) {
+                        $concernsOrganists = in_array('ministry:organists', $item->data['responsible']);
+                        if (!$concernsOrganists) {
+                            foreach ($service->organists as $organist) {
+                                $concernsOrganists = $concernsOrganists || in_array('user:'.$organist->id, $item->data['responsible']);
+                            }
+                        }
+                    } else {
+                        $concernsOrganists = false;
+                    }
+
+                    if ($concernsOrganists) {
+                        $body .= '  -> ' .$item->title.PHP_EOL;
+                    } else {
+                        $body .= '        '.$item->title.PHP_EOL;
+                    }
                 }
             }
         }
 
         $body .= PHP_EOL
-            .'Der komplette Ablauf kann hier heruntergeladen werden:'.PHP_EOL
-            .route('liturgy.download', ['service' => $service->slug, 'key' => 'A4']).PHP_EOL
-            .PHP_EOL.'Freundliche Grüße, '.PHP_EOL.Auth::user()->name;
+            . 'Der komplette Ablauf kann hier in einem druckbaren Format heruntergeladen werden:' . PHP_EOL
+            . route('liturgy.download', ['service' => $service->slug, 'key' => 'A4']) . PHP_EOL
+            . PHP_EOL . 'Freundliche Grüße, ' . PHP_EOL . Auth::user()->name;
 
         $recipients = [];
         foreach ($service->organists as $organist) {
             $recipients[] = $organist->email;
         }
-        if (count($recipients) == 0) $recipients[] = Auth::user()->email;
 
-        return redirect('mailto:'.join(',', $recipients).'?subject='.rawurlencode($subject).'&body='.rawurlencode($body));
+        if (count($recipients) == 0) {
+            $recipients[] = Auth::user()->email;
+        }
+
+
+        return redirect(
+            'mailto:' . join(',', $recipients) . '?subject=' . rawurlencode($subject) . '&body=' . rawurlencode($body)
+        );
     }
-
-
 }
