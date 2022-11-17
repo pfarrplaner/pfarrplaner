@@ -62,4 +62,15 @@ class PsalmItemHelper extends AbstractItemHelper
         return $verses;
     }
 
+    public function getFinalVerses($number = 2)
+    {
+        $verses = $this->getVerses();
+        $stop = min($number, count($verses));
+        $text = '';
+        for ($i=count($verses)-1; $i>=count($verses)-$stop; $i--) {
+            foreach ($verses[$i] as $line) $text .= $line.PHP_EOL;
+        }
+        return $text;
+    }
+
 }

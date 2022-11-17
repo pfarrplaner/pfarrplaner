@@ -58,7 +58,7 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
             foreach ($block->items as $item) {
                 if (($item->data_type == 'song') && (isset($item->data['song']))) {
                     $helper = new SongItemHelper($item);
-                    $verseCount = $helper->getActiveVerseCount();
+                    $verseCount = $helper->getActiveVerseCount(true, true);
 
                     $body .= '  -> ' . $item->title . ': '
                         . ($item->data[$item->data_type]['code'] ?? $item->data[$item->data_type]['songbook']['name'] ?? '')
@@ -67,7 +67,7 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
                         . ($item->data[$item->data_type]['altEG'] ? '(EG ' . $item->data[$item->data_type]['altEG'] . ') ' : '')
                         . $item->data[$item->data_type]['song']['title']
                         . $helper->forceVerseString(', ')
-                        . ($verseCount ? ' ('.$verseCount.' '.($verseCount > 1 ? 'Strophen' : 'Strophe').')' : '')
+                        . ($verseCount ? ' ('.$verseCount.')' : '')
                         . PHP_EOL;
                 } elseif ($item->data_type == 'psalm') {
                     if (isset($item->data['psalm'])) {
@@ -102,7 +102,9 @@ class SongMailLiturgySheet extends AbstractLiturgySheet
 
         $body .= PHP_EOL
             . 'Der komplette Ablauf kann hier in einem druckbaren Format heruntergeladen werden:' . PHP_EOL
-            . route('liturgy.download', ['service' => $service->slug, 'key' => 'A4']) . PHP_EOL
+            . route('liturgy.download', ['service' => $service->slug, 'key' => 'A4']) . PHP_EOL.PHP_EOL
+            . 'Außerdem gibt es den Ablauf in einem druckbaren, für Organist*innen optimierten Format hier:' . PHP_EOL
+            . route('liturgy.download', ['service' => $service->slug, 'key' => 'Organist']) . PHP_EOL
             . PHP_EOL . 'Freundliche Grüße, ' . PHP_EOL . Auth::user()->name;
 
         $recipients = [];

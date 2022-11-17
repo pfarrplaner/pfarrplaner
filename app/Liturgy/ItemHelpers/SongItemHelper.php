@@ -86,12 +86,13 @@ class SongItemHelper extends AbstractItemHelper
         return $verses;
     }
 
-    public function getActiveVerseCount()
+    public function getActiveVerseCount($skipIfZero = false, $stropheText = false)
     {
         if (!isset($this->item->data['song'])) return 0;
         if (!isset($this->item->data['song']['song'])) return 0;
-        return count($this->getActiveVerseNumbers());
-
+        $count = count($this->getActiveVerseNumbers());
+        if ($skipIfZero && ($count == 0)) return '';
+        return $count.($stropheText ? ($count == 1 ? ' Strophe' : ' Strophen'): '');
     }
 
     public function forceVerseString($prefix = '')
