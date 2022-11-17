@@ -182,6 +182,21 @@ class LiturgyController extends \App\Http\Controllers\Controller
     }
 
     /**
+     * Assign responsible people to item
+     * @param Item $item
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function assignToItem(Request $request, Item $item)
+    {
+        $data = $item->data;
+        $data['responsible'] = $request->all();
+        unset($data['responsible']['api_token']);
+        $item->data = $data;
+        $item->save();
+        return response()->json($item->data);
+    }
+
+    /**
      * Update an item
      * @param Request $request
      * @param Item $item

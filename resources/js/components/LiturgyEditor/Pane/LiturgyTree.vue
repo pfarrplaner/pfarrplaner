@@ -159,6 +159,7 @@
                                 <div class="col-sm-2 responsible-list"
                                      @click="editResponsibles(blockIndex, itemIndex, item)">
                                     <people-pane v-if="item.editResponsibles==true" :service="service" :element="item"
+                                                 @close="doneEditingResponsibles(item)"
                                                  :ministries="ministries"/>
                                     <div v-else>
                                         <div v-if="item.data.responsible.length > 0">
@@ -627,6 +628,11 @@ export default {
             this.editable = false;
             this.focusItem(blockIndex, itemIndex);
             item.editResponsibles = true;
+        },
+        doneEditingResponsibles(item) {
+            item.editResponsibles = false;
+            this.focusOff();
+            this.editable = true;
         },
         displayResponsible(record) {
             var title = '';

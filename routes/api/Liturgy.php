@@ -44,6 +44,7 @@ Route::delete('/liturgy/block/{block}', [LiturgyController::class, 'destroyBlock
 Route::post('/liturgy/block/{block}/items', [LiturgyController::class, 'storeItem'])->name('liturgy.item.store');
 Route::patch('/liturgy/item/{item}', [LiturgyController::class, 'updateItem'])->name('liturgy.item.update');
 Route::delete('/liturgy/item/{item}', [LiturgyController::class, 'destroyItem'])->name('liturgy.item.destroy');
+Route::post('/liturgy/item/{item}/assign', [LiturgyController::class, 'assignToItem'])->name('liturgy.item.assign');
 
 // Texts
 Route::get('/liturgy/texts/list', [LiturgicalTextsController::class, 'list'])->name('liturgy.text.list');

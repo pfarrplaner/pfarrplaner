@@ -39,9 +39,7 @@
 
                 </div>
                 <div class="col-sm-3 text-right" style="padding-top: 2rem;">
-                    <button class="btn btn-primary" title="Eintrag speichern"><span class="mdi mdi-content-save"></span></button>
-                    <a class="btn btn-secondary" :href="route('liturgy.editor', this.service.slug)" title="Abbrechen"><span class="mdi mdi-cancel"></span></a>
-
+                    <button class="btn btn-primary" title="Eintrag speichern" @click.prevent.stop="save"><span class="mdi mdi-content-save"></span></button>
                 </div>
             </div>
         </form>
@@ -108,6 +106,7 @@ export default {
 
 
         return {
+            apiToken: this.$page.props.currentUser.data.api_token,
             emptyOption: emptyOption,
             editedElement: e,
             selected: e.data.responsible,
@@ -140,11 +139,13 @@ export default {
     },
     methods: {
         save() {
-            this.$inertia.post(route('liturgy.item.roster', {
-                service: this.service.id,
-                block: this.element.liturgy_block_id,
+            axios.post(route('api.liturgy.item.assign', {
+                api_token: this.apiToken,
                 item: this.element.id,
-            }), this.selected, {preserveState: false});
+            }), this.selected).then(response => {
+                this.element.data = response.data;
+                this.$emit('close');
+            });
         },
     }
 }

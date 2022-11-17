@@ -41,9 +41,8 @@
 
 
 
-use App\Http\Controllers\LiturgyItemController; 
+use App\Http\Controllers\LiturgyItemController;
 
 Route::post('/liturgy/{service}/block/{block}/item', [LiturgyItemController::class, 'store'])->name('liturgy.item.store');
 Route::patch('/liturgy/{service}/block/{block}/item/{item}', [LiturgyItemController::class, 'update'])->name('liturgy.item.update');
 Route::delete('/liturgy/{service}/block/{block}/item/{item}', [LiturgyItemController::class, 'destroy'])->name('liturgy.item.destroy');
-Route::post('/liturgy/{service}/block/{block}/item/{item}/roster', [LiturgyItemController::class, 'roster'])->name('liturgy.item.roster');

@@ -101,22 +101,6 @@ class LiturgyItemController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param Service $service
-     * @param Block $block
-     * @param Item $item
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function roster(Request $request, Service $service, Block $block, Item $item)
-    {
-        $data = $item->data;
-        $data['responsible'] = $request->all();
-        $item->data = $data;
-        $item->save();
-        return redirect()->route('liturgy.editor', $service->slug);
-    }
-
-    /**
      * Validate the request
      * @param Request $request
      * @return array
