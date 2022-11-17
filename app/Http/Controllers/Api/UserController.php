@@ -31,7 +31,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Team;
-use App\User;
+use App\ListedPerson;
 
 class UserController extends \App\Http\Controllers\Controller
 {
@@ -47,8 +47,7 @@ class UserController extends \App\Http\Controllers\Controller
      */
     public function select()
     {
-        $users = User::setEagerLoads([])
-            ->select(['id', 'name'])
+        $users = ListedPerson::select(['id', 'name'])
             ->get();
         $teams = Team::with('users')->get();
         return response()->json(compact('users', 'teams'));
