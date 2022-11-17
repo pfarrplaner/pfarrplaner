@@ -41,12 +41,12 @@
                         <span class="sr-only">Weitere Optionen aufklappen</span>
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" @click.prevent="saveService(false)">
+                        <a class="dropdown-item" @click.prevent="saveService(false)" href="#">
                             <span class="mdi mdi-content-save"></span> Speichern, ohne zu schließen
                         </a>
-                        <inertia-link class="dropdown-item" @click.prevent="cancelEdit">
+                        <a class="dropdown-item" @click.prevent="cancelEdit" href="#">
                             <span class="mdi mdi-cancel"></span> Schließen, ohne zu speichern
-                        </inertia-link>
+                        </a>
                     </div>
                 </div>
                 <button class="btn btn-danger" @click.prevent="deleteService"><span
@@ -103,9 +103,13 @@
                                   :tags="tags" :service-groups="serviceGroups"/>
                     </tab>
                     <tab id="people" :active-tab="activeTab">
-                        <people-tab :service="service" :teams="teams"
-                                    :people="users" :ministries="ministries"
+                        <people-tab v-if="lists.users.length > 0"
+                                    :service="service" :teams="lists.teams"
+                                    :people="lists.users" :ministries="ministries"
                                     @count="updatePeopleCounter"/>
+                        <div v-else class="tab-loader">
+                            <span class="mdi mdi-spin mdi-loading"></span>
+                        </div>
                     </tab>
                     <tab id="offerings" :active-tab="activeTab">
                         <offerings-tab :service="service"/>
@@ -170,13 +174,11 @@ export default {
         tab: String,
         locations: Array,
         ministries: Array,
-        users: Array,
         tags: Array,
         serviceGroups: Array,
         days: Array,
         liturgySheets: Object,
         backRoute: String,
-        teams: Array,
         availableCities: Array,
     },
     computed: {
@@ -195,14 +197,26 @@ export default {
         }
 
         return {
+            apiToken: this.$page.props.currentUser.data.api_token,
             activeTab: this.tab,
             editedService: this.service,
             files: {attachments: [null], attachment_text: ['']},
             counted: 0,
             peopleCount: 0,
+            peopleLoaded: false,
+            lists: {
+                users: [],
+                teams: [],
+            }
         };
     },
     mounted() {
+        axios.get(route('api.people.select', {
+            api_token: this.apiToken,
+        })).then(response => {
+            this.lists.users = response.data.users;
+            this.lists.teams = response.data.teams;
+        })
         this.updatePeopleCounter();
     },
     methods: {
@@ -302,8 +316,33 @@ export default {
             }
         }
     },
+    provide() {
+        const lists = {};
+
+        Object.defineProperty(lists, 'users', {
+            enumerable: true,
+            get: () => this.lists.users,
+        });
+        Object.defineProperty(lists, 'teams', {
+            enumerable: true,
+            get: () => this.lists.teams,
+        });
+        return {
+            lists,
+        }
+    }
+
 }
 </script>
 
 <style scoped>
+
+.tab-loader {
+    width: 100%;
+    margin-top: 30vh;
+    font-size: 8em;
+    color: lightgray;
+    text-align: center;
+}
+
 </style>

@@ -162,9 +162,6 @@ class ServiceController extends Controller
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
         $liturgySheets = LiturgySheets::all();
 
-        $users = User::all();
-        $teams = Team::with('users')->where('city_id', $service->city_id)->get();
-
         $backRoute = RedirectorService::backRoute();
 
         $tags = Tag::all();
@@ -174,7 +171,6 @@ class ServiceController extends Controller
             compact(
                 'service',
                 'locations',
-                'users',
                 'tab',
                 'tags',
                 'serviceGroups',
@@ -182,7 +178,6 @@ class ServiceController extends Controller
                 'days',
                 'liturgySheets',
                 'backRoute',
-                'teams',
                 'availableCities',
             )
         );
