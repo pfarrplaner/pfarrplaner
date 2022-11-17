@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.157.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.156.1...v2022.157.0) (2022-11-17)
+
+
+### Features
+
+* Allow non-toggling quick-assign per API ([5d24041](https://github.com/pfarrplaner/pfarrplaner/commits/5d24041ba9602d735e752f663d16b3c0f092e1b2))
+* Improve SongMailLiturgySheet ([94f2ab0](https://github.com/pfarrplaner/pfarrplaner/commits/94f2ab0792669e34a6c61e5e9c35ab226aa0a735)), closes [#330](https://github.com/pfarrplaner/pfarrplaner/issues/330)
+* New OrganistLiturgySheet ([45ee256](https://github.com/pfarrplaner/pfarrplaner/commits/45ee25689036e6fa4f29103ce0304ecfd755347e))
+
+
+### Bug Fixes
+
+* altEG replacing causes some exports to fail ([e26b675](https://github.com/pfarrplaner/pfarrplaner/commits/e26b67517b4e1dbdea1be6a9cb105b664b503c9b))
+* Choosing responsible person reloads liturgyEditor ([422951d](https://github.com/pfarrplaner/pfarrplaner/commits/422951d31b92bde54cd397a7be196ff014cc700d)), closes [#329](https://github.com/pfarrplaner/pfarrplaner/issues/329)
+
 ### [2022.156.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.156.0...v2022.156.1) (2022-11-15)
 
 
