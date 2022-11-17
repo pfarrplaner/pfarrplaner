@@ -59,9 +59,16 @@
         </template>
         <template slot="tab-headers">
             <tab-headers>
-                <tab-header v-for="tab in myTabs" :title="tab.title" :id="tab.key" :key="tab.key"
-                            :active-tab="myActiveTab"
-                            :count="tab.count" :badge-type="tab.badgeType" :class="'tabheader-'+tab.type"/>
+                <li v-for="tab in myTabs"
+                    :id="tab.key+'Tab'" class="nav-item"  @click.prevent.stop="loadTab(tab)">
+                    <a class="nav-link" :class="{active: myActiveTab == tab.key}" href="#" role="tab"
+                       data-toggle="tab" @click.prevent.stop="loadTab(tab)">
+                        {{ tab.title }}
+                        <span v-if="tab.count > 0" class="badge"
+                              :key="tab.count"
+                              :class="tab.badgeType ? 'badge-'+tab.badgeType : 'badge-primary'">{{ tab.count }}</span>
+                    </a>
+                </li>
                 <div class="ml-auto d-inline tab-setup">
                     <a :href="route('user.profile', {tab: 'homeScreenConfiguration'})"
                        class="p-2 pl-3 tab-setup ml-auto"
@@ -81,9 +88,12 @@
         </div>
         <tabs>
             <tab v-for="tab in myTabs" :id="tab.key" :key="tab.key" :active-tab="myActiveTab">
-                <component v-if="tab.filled" :is="tabComponent(tab)" v-bind="tab"
+                <component v-if="tab.loaded" :is="tabComponent(tab)" v-bind="tab"
                            :user="user" :settings="settings"
                            :config="settings.homeScreenTabsConfig.tabs[tab.index].config"/>
+                <div v-else class="tab-loader">
+                    <span class="mdi mdi-spin mdi-loading"></span>
+                </div>
             </tab>
         </tabs>
     </admin-layout>
@@ -127,27 +137,25 @@ export default {
         StreamingTab,
         WeddingsTab,
     },
-    props: ['user', 'settings', 'activeTab', 'replacements'],
-    beforeMount() {
+    props: ['user', 'settings', 'activeTab', 'replacements', 'tab', 'tabTitles'],
+    created() {
         var index = 0;
+        console.log('beforeMount', this.myActiveTab);
         this.myTabsConfig.tabs.forEach(function (tab, tabIndex) {
             this.myTabs[tab.type + tabIndex] = {
-                title: '',
+                title: this.tabTitles[tabIndex],
                 key: tab.type + tabIndex,
                 description: '',
                 count: 0,
-                tabObject: tab
+                tabObject: tab,
+                loaded: false,
             }
-            axios.get(route('tab', tabIndex)).then(response => {
-                tab = response.data;
-                this.myTabs[tab.key] = tab;
-                this.$forceUpdate();
-            });
         }, this);
     },
     data() {
         let myTabNames = this.settings.homeScreenTabs ? this.settings.homeScreenTabs.split(',') : [];
         return {
+            apiToken: this.$page.props.currentUser.data.api_token,
             myUser: this.user,
             config: this.settings.homeScreenConfig || {},
             myTabNames: myTabNames,
@@ -156,9 +164,47 @@ export default {
             myActiveTab: this.activeTab || (this.settings.homeScreenTabsConfig.tabs[0] ? this.settings.homeScreenTabsConfig.tabs[0].type + '0' : null),
         }
     },
+    async mounted() {
+        await axios.get(route('api.tab', {
+            api_token: this.apiToken,
+            tab: this.myActiveTab,
+        })).then(response => {
+            this.myTabs[this.myActiveTab] = response.data;
+            this.myTabs[this.myActiveTab].loaded = true;
+            this.$forceUpdate();
+        })
+
+        await Object.keys(this.myTabs).forEach(function (tabKey) {
+            axios.get(route('api.tab.count', {
+                api_token: this.apiToken,
+                tab: tabKey,
+            })).then(response => {
+                this.myTabs[response.data.key].count = response.data.count;
+                this.$forceUpdate();
+            });
+        }, this);
+
+        await Object.keys(this.myTabs).forEach(function (tabKey) {
+            if (!this.myTabs[tabKey].loaded) {
+                axios.get(route('api.tab', {
+                    api_token: this.apiToken,
+                    tab: tabKey,
+                })).then(response => {
+                    this.myTabs[tabKey] = response.data;
+                    this.myTabs[tabKey].loaded = true;
+                    this.$forceUpdate();
+                });
+            }
+        }, this);
+
+    },
     methods: {
         tabComponent(tab) {
             return tab.type.charAt(0).toUpperCase() + tab.type.slice(1) + 'Tab';
+        },
+        loadTab(tab) {
+            this.myActiveTab = tab.key;
+            this.$forceUpdate();
         }
     }
 }
@@ -187,6 +233,14 @@ ul.nav.nav-tabs {
 
 .alert a {
     text-decoration: none;
+}
+
+.tab-loader {
+    width: 100%;
+    margin-top: 30vh;
+    font-size: 8em;
+    text-align: center;
+    color: lightgray;
 }
 
 </style>

@@ -95,6 +95,14 @@ class AbstractHomeScreenTab
     }
 
     /**
+     * @return int item count
+     */
+    public function getCount()
+    {
+        return 0;
+    }
+
+    /**
      * @param array|mixed $config
      */
     public function setConfig($config): void

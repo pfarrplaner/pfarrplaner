@@ -73,7 +73,7 @@ class HomeController extends Controller
      *
      * @return Renderable
      */
-    public function index($activeTab = '')
+    public function index(Request $request, $activeTab = '')
     {
         if (!Auth::user()) {
             return redirect()->route('login');
@@ -84,6 +84,8 @@ class HomeController extends Controller
         if (Hash::check('testtest', Auth::user()->password) || Auth::user()->must_change_password) {
             return redirect()->route('password.edit', ['from' => 'home']);
         }
+
+        $activeTab = $request->get('tab', $activeTab);
 
         $homeScreenSetting = Auth::user()->getSetting('homeScreen', 'homescreen:configurable');
         if (is_array($homeScreenSetting)) $homeScreenSetting = $homeScreenSetting[0];
@@ -99,7 +101,14 @@ class HomeController extends Controller
 
         $replacements = ($settings['homeScreenConfig']['showReplacements'] ?? false) ? $user->currentReplacements() : [];
 
-        return Inertia::render('HomeScreen', compact('user', 'settings', 'activeTab', 'replacements'));
+        $activeTabIndex = filter_var($activeTab, FILTER_SANITIZE_NUMBER_INT) ?: 0;
+        $config = Auth::user()->getSetting('homeScreenTabsConfig') ?? [];
+        //$tab = HomeScreenTabFactory::getOne($config['tabs'][$activeTabIndex], $activeTabIndex);
+        $tab = [];
+
+        $tabTitles = HomeScreenTabFactory::getTitles($config['tabs']);
+
+        return Inertia::render('HomeScreen', compact('user', 'settings', 'activeTab', 'replacements', 'tab', 'tabTitles'));
     }
 
     /**

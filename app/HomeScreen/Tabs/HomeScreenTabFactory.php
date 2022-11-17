@@ -90,6 +90,23 @@ class HomeScreenTabFactory
     }
 
     /**
+     * Get an item count for a single tab
+     * @param $tab
+     * @throws \Exception
+     */
+    public static function getCount($tab, $tabIndex) {
+        $class = 'App\\HomeScreen\\Tabs\\' . ucfirst($tab['type'].'HomeScreenTab');
+        if (class_exists($class)) {
+            /** @var AbstractHomeScreenTab $tabObject */
+            $tabObject = new $class($tab['config']);
+            if (!$tabObject->isAvailable()) return null;
+        } else {
+            throw new \Exception('Class not found: '.$class);
+        }
+        return $tabObject->getCount();
+    }
+
+    /**
      * Get all homescreen tabs
      * @param array $config
      * @return array
@@ -117,6 +134,22 @@ class HomeScreenTabFactory
             }
         }
         return $available;
+    }
+
+    public static function getTitles($tabsConfig)
+    {
+        $titles = [];
+        foreach ($tabsConfig as $tabIndex => $tab) {
+            $class = 'App\\HomeScreen\\Tabs\\' . ucfirst($tab['type'].'HomeScreenTab');
+            if (class_exists($class)) {
+                $tabObject = new $class($tab['config']);
+                $titles[$tabIndex] = $tabObject->getTitle();
+            } else {
+                throw new \Exception('Class not found: '.$class);
+            }
+
+        }
+        return $titles;
     }
 
 }
