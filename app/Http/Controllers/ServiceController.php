@@ -152,11 +152,6 @@ class ServiceController extends Controller
             ]
         );
 
-        $days = Day::select(['id', 'date'])->visibleForCities(collect($service->city))
-            ->orderByDesc('date')->get()->makeHidden(['liturgy'])->toArray();
-
-        $ministries = DB::table('service_user')->select('category')->distinct()->get();
-
         $availableCities = Auth::user()->cities;
 
         $locations = Location::whereIn('city_id', Auth::user()->cities->pluck('id'))->get();
@@ -174,8 +169,6 @@ class ServiceController extends Controller
                 'tab',
                 'tags',
                 'serviceGroups',
-                'ministries',
-                'days',
                 'liturgySheets',
                 'backRoute',
                 'availableCities',

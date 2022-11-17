@@ -99,13 +99,13 @@
                 <tabs>
                     <tab id="home" :active-tab="activeTab">
                         <home-tab :service="editedService" :locations="locations"
-                                  :days="days" :cities="availableCities"
+                                  :cities="availableCities"
                                   :tags="tags" :service-groups="serviceGroups"/>
                     </tab>
                     <tab id="people" :active-tab="activeTab">
-                        <people-tab v-if="lists.users.length > 0"
+                        <people-tab v-if="(lists.users.length > 0) && (Object.keys(lists.ministries).length > 0)"
                                     :service="service" :teams="lists.teams"
-                                    :people="lists.users" :ministries="ministries"
+                                    :people="lists.users" :ministries="lists.ministries"
                                     @count="updatePeopleCounter"/>
                         <div v-else class="tab-loader">
                             <span class="mdi mdi-spin mdi-loading"></span>
@@ -173,10 +173,8 @@ export default {
         service: Object,
         tab: String,
         locations: Array,
-        ministries: Array,
         tags: Array,
         serviceGroups: Array,
-        days: Array,
         liturgySheets: Object,
         backRoute: String,
         availableCities: Array,
@@ -207,6 +205,7 @@ export default {
             lists: {
                 users: [],
                 teams: [],
+                ministries: {},
             }
         };
     },
@@ -216,7 +215,12 @@ export default {
         })).then(response => {
             this.lists.users = response.data.users;
             this.lists.teams = response.data.teams;
-        })
+        });
+        axios.get(route('api.ministries.list', {
+            api_token: this.apiToken,
+        })).then(response => {
+            this.lists.ministries = response.data;
+        });
         this.updatePeopleCounter();
     },
     methods: {
@@ -324,6 +328,10 @@ export default {
             get: () => this.lists.users,
         });
         Object.defineProperty(lists, 'teams', {
+            enumerable: true,
+            get: () => this.lists.teams,
+        });
+        Object.defineProperty(lists, 'ministries', {
             enumerable: true,
             get: () => this.lists.teams,
         });

@@ -144,7 +144,6 @@ export default {
     props: {
         service: Object,
         locations: Array,
-        days: Array,
         tags: Array,
         serviceGroups: Array,
         cities: Array,
