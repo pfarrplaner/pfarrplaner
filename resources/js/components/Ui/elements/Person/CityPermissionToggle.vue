@@ -55,7 +55,6 @@ export default {
     },
     methods: {
         changed(e) {
-            console.log('toggle', e.target.value);
             this.$emit('input', e.target.value);
         }
     }

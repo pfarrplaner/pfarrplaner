@@ -136,7 +136,6 @@ export default {
             window.location.href = url;
         },
         edit: function (service, clickEvent) {
-            console.log('service clicked');
             if (this.targetMode) {
                 let peopleIds = [];
                 this.target.people.forEach(person => peopleIds.push(person.id));

@@ -63,7 +63,6 @@ export default {
     props: ['parent'],
     watch: {
         needed: function (newV, oldV) {
-            console.log('needed', newV, oldV);
             this.myParent.needs_dimissorial = newV;
         },
     },

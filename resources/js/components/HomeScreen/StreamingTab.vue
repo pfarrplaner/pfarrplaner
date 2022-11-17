@@ -36,8 +36,8 @@
             <div v-if="Object.values(streams).length">
                 <fake-table :columns="[2,4,6]" :headers="['Ort', 'Aktiver Stream', 'Links']"
                             collapsed-header="Aktive Streams" class="mb-4">
-                    <div v-for="localStreams in streams"
-                         class="row mt-3 py-1" :class="{'stripe-odd': (serviceIndex % 2 == 0)}">
+                    <div v-for="(localStreams, streamIndex) in streams"
+                         class="row mt-3 py-1" :class="{'stripe-odd': (streamIndex % 2 == 0)}">
                         <div class="col-md-2">{{ localStreams.city }}</div>
                         <div class="col-md-4">
                             <checked-process-item :check="localStreams.streams.length == 1" positive="1 aktiver Stream"

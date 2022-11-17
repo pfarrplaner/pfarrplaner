@@ -70,9 +70,7 @@
             this.getData();
         },
         beforeMount() {
-            console.log('beforeMOunt');
             this.days.forEach(function(day, idx){
-                console.log('setting collapsed on day #'+day.id+' ('+idx+') to '+(day.day_type == 1));
                 this.days[idx]['collapsed'] = day.day_type == 1;
                 this.days[idx]['foo'] = 'bar';
             })
@@ -85,8 +83,7 @@
                     .then(response => response.json())
                     .then(response => {
                         this.days = response.days;
-                    })
-                    .catch(err => console.log(err));
+                    });
             },
             formatDate: function(dateString) {
                 var m = moment(dateString);

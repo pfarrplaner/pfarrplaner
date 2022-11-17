@@ -66,8 +66,7 @@
                     .then(response => {
                         this.services = response;
                         this.loading = false;
-                    })
-                    .catch(err => console.log(err));
+                    });
             },
             serviceAddRoute: function() {
                 return route('services.add', {day: this.day.id, city: this.city.id});

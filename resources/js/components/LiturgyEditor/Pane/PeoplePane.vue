@@ -83,10 +83,8 @@ export default {
                 options.push({id: 'user:'+person.id, name: person.name, category: basicMinistries[ministryIndex], type: 'user-check'});
             });
         }
-        console.log('ministries', this.ministries, Object.keys(this.ministries));
         var knownMinistries = this.service.ministriesByCategory;
         Object.keys(this.ministries).forEach(ministry => {
-            console.log('ministry', ministry, knownMinistries[ministry]);
             if (knownMinistries[ministry]) {
                 optGroups.push({ groupName: ministry });
                 options.push({id:'ministry:'+ministry, name: ministry, category: ministry, type: 'users'});

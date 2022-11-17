@@ -56,8 +56,7 @@
                     .then(response => response.json())
                     .then(response => {
                         this.cities= response;
-                    })
-                    .catch(err => console.log(err));
+                    });
             }
         }
     };

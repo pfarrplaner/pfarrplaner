@@ -333,7 +333,6 @@ export default {
             }
             if (!formData.has('cc_license')) formData.append('cc_license', 0);
             if (!formData.has('permit_handouts')) formData.append('permit_handouts', 0);
-            console.log(this.removeImage);
             if (this.removeImage) formData.append('remove_image', 1);
             if (this.fileUpload) {
                 formData.append('image', this.fileUpload);

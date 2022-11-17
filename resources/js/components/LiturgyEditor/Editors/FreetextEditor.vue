@@ -128,10 +128,8 @@ export default {
     methods: {
         insertText(text) {
             var myField = this.$refs['textEditor'];
-            console.log(myField);
 
             if (myField.selectionStart || myField.selectionStart == '0') {
-                console.log('mozilla', myField.selectionStart, myField.selectionEnd, text);
                 var startPos = myField.selectionStart;
                 var endPos = myField.selectionEnd;
                 this.editedElement.data.description = myField.value.substring(0, startPos)

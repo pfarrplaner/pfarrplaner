@@ -161,7 +161,6 @@ export default {
         },
         upload(file) {
             let title = file.name;
-            console.log(title);
             title = title.substr(0, title.lastIndexOf('.'));
             title = title.charAt(0).toUpperCase() + title.slice(1);
             title = window.prompt('Bitte gib eine Beschreibung zu dieser Datei an.', title);
@@ -170,7 +169,6 @@ export default {
             let fd = new FormData();
             fd.append('attachment_text[0]', title);
             fd.append('attachments[0]', file);
-            console.log(file, fd);
 
             this.uploading = true;
             axios.post(route('service.attach', this.service.slug), fd, {

@@ -145,7 +145,6 @@ export default {
             })
         },
         attachFromClipboard(event) {
-            console.log(event);
             const items = (event.clipboardData || event.originalEvent.clipboardData).items;
             let blob = null;
 

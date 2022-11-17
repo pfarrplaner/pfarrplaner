@@ -128,7 +128,6 @@ export default {
      * @returns {Promise<void>}
      */
     async created() {
-        console.log(route('api.liturgy.psalm.index', {api_token: this.apiToken}), this.apiToken);
         const psalms = await axios.get(route('api.liturgy.psalm.index', {api_token: this.apiToken}))
         if (psalms.data) {
             psalms.data.forEach(psalm => {
@@ -228,7 +227,6 @@ export default {
                 if (psalm.id == e) found = psalm;
             })
             if (found) this.editedElement.data.psalm = found;
-            console.log('found', found, this.editedElement.data.psalm);
             this.psalmIsDirty = this.editPsalm;
         }
     }

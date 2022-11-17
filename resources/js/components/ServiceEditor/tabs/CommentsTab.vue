@@ -77,12 +77,9 @@ export default {
                 headers: { Accept: 'application/json' }
             })
             .then((response)=>{
-                console.log(response.data);
                 this.myService.comments.push(response.data);
                 this.newComment.body = '';
                 this.newComment.private = false;
-            }).catch((error)=>{
-                console.log(error.response.data)
             });
         },
         deleteComment(id, key, index) {

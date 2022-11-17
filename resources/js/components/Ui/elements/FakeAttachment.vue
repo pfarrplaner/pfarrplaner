@@ -41,7 +41,6 @@ export default {
     props: ['title', 'icon', 'extension', 'size', 'href'],
     methods: {
         download(e) {
-            console.log('FakeAttachment::click')
             if (this.href) {
                 e.preventDefault();
                 window.location.href = this.href;

@@ -160,7 +160,6 @@ export default {
             this.bibleText(this);
         },
         handleInput(e) {
-            console.log('handleInput', e.target.value);
             this.myValue = e.target.value;
             this.bibleText(this);
             this.$emit('input', this.myValue);

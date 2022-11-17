@@ -304,7 +304,6 @@ export default {
             })
         },
         eventAddedToCategory(event, newIndex, category) {
-            console.log('Event added to cat '+category, event, newIndex);
             axios.post(route('api.diary.category.events.add', {
                 category: category,
                 api_token: this.apiToken,
@@ -317,7 +316,6 @@ export default {
         itemDroppedBack({added}) {
             if (!added) return;
             let orginal = added.element;
-            console.log('itemDroppedBack data', added);
             axios.delete(route('api.diary.entry.destroy', {
                 diaryEntry: added.element.id,
                 api_token: this.apiToken,
@@ -365,7 +363,6 @@ export default {
         storeItem(item) {
             this.editing = false;
             if (item.created) {
-                console.log('Created!', item, this.diary[item.category]);
                 for (let index in this.diary[item.category]) {
                    if (this.diary[item.category][index].id == -1) this.diary[item.category][index] = item;
                 };

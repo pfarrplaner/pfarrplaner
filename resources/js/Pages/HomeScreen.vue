@@ -140,7 +140,6 @@ export default {
     props: ['user', 'settings', 'activeTab', 'replacements', 'tab', 'tabTitles'],
     created() {
         var index = 0;
-        console.log('beforeMount', this.myActiveTab);
         this.myTabsConfig.tabs.forEach(function (tab, tabIndex) {
             this.myTabs[tab.type + tabIndex] = {
                 title: this.tabTitles[tabIndex],

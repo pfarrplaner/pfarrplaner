@@ -570,7 +570,6 @@ export default {
                 case 'song':
                     if (undefined == item.data.song) return '';
                     if (undefined == item.data.song.song) return '';
-                    console.log(item.data.song);
                     var title = item.data.song.song.title;
                     if (item.data.song.altEG) {
                         title = '(EG '+item.data.song.altEG+') '+title;
@@ -744,7 +743,6 @@ export default {
         },
         cancelEditing(item, blockIndex, itemIndex = null)  {
             if (undefined == item.data.responsible) item.data.responsible = [];
-            console.log('cancelEditing', blockIndex, itemIndex);
             if (null !== itemIndex) {
                 this.blocks[blockIndex].items[itemIndex] = item;
                 this.blocks[blockIndex].items[itemIndex].editing = false;

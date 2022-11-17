@@ -87,7 +87,6 @@ export default {
             });
         },
         setSetting(key, value) {
-            console.log('setSetting', key, value);
             this.$emit('setSetting', {key, value});
             axios.post(route('setting.set', {user: this.user.id, key: key}), {
                 value: value,

@@ -108,7 +108,6 @@ export default {
     },
     methods: {
         createReport(report) {
-            console.log('createReport', report);
             if (report.inertia) {
                 this.$inertia.get(route('reports.setup', report.key));
             } else {

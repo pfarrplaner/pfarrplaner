@@ -91,8 +91,7 @@ export default {
                 .then(response => {
                     this.service = response;
                     this.loading = false;
-                })
-                .catch(err => console.log(err));
+                });
         },
         ccInfo: function () {
             return 'Parallel Kinderkirche (' + service.cc_location + ') zum Thema ' + service.cc_lesson + ': ' + service.cc_staff;

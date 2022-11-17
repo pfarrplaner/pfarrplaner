@@ -275,7 +275,6 @@ export default {
             this.myAbsence.to = moment(e[1]).format('YYYY-MM-DD HH:mm:ss');
         },
         setReplacementDateRange(replacement, e) {
-            console.log('setReplacementDateRange', replacement, e);
             replacement.from = moment(e[0]).format('YYYY-MM-DD HH:mm:ss');
             replacement.to = moment(e[1]).format('YYYY-MM-DD HH:mm:ss');
         },

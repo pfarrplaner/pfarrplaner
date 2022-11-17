@@ -192,10 +192,8 @@ export default {
 
             newVal.forEach(item => {
                if (isNaN(item) && (item.substr(0,5) == 'team:')) {
-                   console.log('referencing team #'+item.substr(5), this.myTeamReference[item.substr(5)]);
                    this.myTeamReference[item.substr(5)].users.forEach(user => {
                        newVal2.push(user.id);
-                       console.log('added user #'+user.id, this.myValue);
                    });
                } else {
                    newVal2.push(item);

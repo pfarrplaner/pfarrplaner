@@ -126,7 +126,6 @@ export default {
             this.$forceUpdate();
         },
         deleteRow(category) {
-            console.log('deleteRow', category);
             delete this.myService.ministriesByCategory[category];
             this.updatePeopleCounter();
             this.$forceUpdate();

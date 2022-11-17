@@ -201,7 +201,6 @@ export default {
     },
     methods: {
         selectSong(e) {
-            console.log('selectSong', e);
             if (!e) return;
             if (!e) return;
             if (e < 0) return;

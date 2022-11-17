@@ -109,9 +109,7 @@ export default {
         dragLeave(e) {
             this.dragging = false;
         },
-        drop(e) {
-            console.log('drop', e);
-        },
+        drop(e) {},
         uploadFromUrl() {
             this.$emit('upload-url', {url: this.uploadUrl, description: this.description, info: this.info});
         },

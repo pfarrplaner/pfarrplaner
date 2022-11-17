@@ -284,16 +284,13 @@ export default {
     },
     data() {
         let myUser = this.user;
-        console.log(myUser.writable_cities);
         myUser.password = null;
 
         myUser.home_cities = this.reduceToIds(myUser.home_cities);
         myUser.parishes = this.reduceToIds(myUser.parishes);
         myUser.roles = this.reduceToIds(myUser.roles);
         myUser.cities = this.reduceToIds(myUser.cities);
-        console.log(myUser.writable_cities);
         myUser.writable_cities = this.reduceToIds(myUser.writable_cities);
-        console.log(myUser.writable_cities);
         myUser.admin_cities = this.reduceToIds(myUser.admin_cities);
         myUser.vacation_admins = this.reduceToIds(myUser.vacation_admins);
         myUser.vacation_approvers = this.reduceToIds(myUser.vacation_approvers);
@@ -324,7 +321,6 @@ export default {
                 if (thisCity == city.id) cityPermission[thisCity] = {permission: 'a'};
             });
         });
-        console.log('cityPermission', cityPermission);
 
         let mySubscriptions = {};
         this.subscriptions.forEach(subscription => {
@@ -400,9 +396,7 @@ export default {
             return ids;
         },
         deleteSetting(key) {
-            console.log('delete Setting', key, this.mySettings[key]);
             delete this.mySettings[key];
-            console.log(this.mySettings[key], this.mySettings);
         }
     }
 }

@@ -210,7 +210,6 @@ export default {
                 api_token: this.apiToken,
                 date: targetDate,
             })).then(response => {
-                console.log(response.data);
                 this.myDays = this.initDays(response.data.days);
                 this.absences = response.data.absences;
                 this.daysLoaded = true;

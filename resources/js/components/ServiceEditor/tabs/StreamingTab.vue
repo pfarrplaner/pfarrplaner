@@ -108,7 +108,6 @@ export default {
             if (!url) return '';
             if (url.substr(-1) == '/') url = url.substr(0, -1);
             var tmp = url.split('/');
-            console.log('id', tmp[tmp.length-1]);
             return tmp[tmp.length-1];
         },
         embedUrl() {

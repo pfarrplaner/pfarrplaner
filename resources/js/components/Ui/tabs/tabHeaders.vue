@@ -36,11 +36,6 @@
 <script>
 export default {
     name: "tabHeaders",
-    methods: {
-        tabSwitch(e) {
-            console.log('tabSwitch', e);
-        },
-    }
 }
 </script>
 

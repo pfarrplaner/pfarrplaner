@@ -88,7 +88,6 @@ export default {
     },
     methods: {
         dragged(event) {
-            console.log('dragged', event);
             for (const personIndex in this.people) {
                 for (const dupIndex in this.people[personIndex].duplicates) {
                     if (this.people[personIndex].duplicates[dupIndex].duplicates.length > 0) {

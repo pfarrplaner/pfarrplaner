@@ -193,11 +193,9 @@ export default {
             this.saved = false;
             this.saving = true;
             this.$forceUpdate();
-            console.log('updating service ' + slug);
 
             axios.post(route('inputs.save', 'offerings'), service).then(response => {
                 service.slug = response.data;
-                console.log('updated service ' + response.data, service.slug);
                 this.saving = false;
                 this.saved = true;
                 this.$forceUpdate();
