@@ -163,6 +163,7 @@ class ServiceController extends Controller
                                        'ministry' => 'required|string',
                                        'users.*' => 'required|int|exists:users,id',
                                        'exclusive' => 'required|checkbox',
+                                       'no-toggle' => 'nullable|checkbox',
                                    ]);
         $participants = $service->getSyncableParticipantsArray();
         if (!isset($participants[$data['ministry']])) {
@@ -173,8 +174,12 @@ class ServiceController extends Controller
             $participants[$data['ministry']] = [];
         }
         foreach ($data['users'] as $userId) {
-            if (isset($existing[$userId])) {
-                unset($participants[$data['ministry']][$userId]);
+            if (!$data['no-toggle']) {
+                if (isset($existing[$userId])) {
+                    unset($participants[$data['ministry']][$userId]);
+                } else {
+                    $participants[$data['ministry']][$userId]['category'] = $data['ministry'];
+                }
             } else {
                 $participants[$data['ministry']][$userId]['category'] = $data['ministry'];
             }
