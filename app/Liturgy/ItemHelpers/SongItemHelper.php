@@ -39,7 +39,7 @@ class SongItemHelper extends AbstractItemHelper
         if (!isset($this->item->data['song'])) return '';
         $title = $this->item->data['song']['code'] ?? $this->getItem()->data['song']['songbook']['name'] ?? '';
         $title .= ' '.($this->item->data['song']['reference'] ?? '')
-            .($this->item->data['song']['song']['alt_eg'] ? ' (EG '.$this->item->data['song']['song']['alt_eg'].')' : '')
+            .(isset($this->item->data['song']['song']) && isset($this->item->data['song']['song']['alt_eg']) ? ' (EG '.$this->item->data['song']['song']['alt_eg'].')' : '')
             .' '.($this->item->data['song']['song']['title'] ?? '');
         if ($this->item->data['verses']) $title.= ', '.$this->item->data['verses'];
         return trim(str_replace('  ', ' ', $title));
