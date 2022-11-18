@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.158.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.157.1...v2022.158.0) (2022-11-18)
+
+
+### Features
+
+* directly call liturgy / sermon editors from calendar ([afa59f6](https://github.com/pfarrplaner/pfarrplaner/commits/afa59f6bf43330ff11dd6bcd0cc1f564a6fb0c1a))
+
 ### [2022.157.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.157.0...v2022.157.1) (2022-11-17)
 
 
