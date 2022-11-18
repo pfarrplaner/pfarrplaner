@@ -36,32 +36,66 @@
     >
         <div class="celldata">
             <div v-if="city.loading" class="city-loading"><span class="mdi mdi-spin mdi-loading"></span></div>
-            <calendar-service v-for="(service,index) in services" :service="service" :key="service.id" :index="index"
-                              :targetMode="targetMode" :target="target"
-            />
+            <div v-for="(service,index) in services" :key="service.id">
+                <popper v-if="service.isEditable" trigger="hover" :options="{placement: 'bottom-end'}">
+                    <div class="popper">
+                        <a href="#" class="btn btn-primary" role="button"
+                           title="Gottesdienst bearbeiten" @click.prevent.stop="edit(service, 'service.edit', $event)">
+                            <span class="mdi mdi-pencil"></span>
+                        </a>
+                        <a href="#" class="btn btn-light" role="button"
+                           title="Liturgie bearbeiten" @click.prevent.stop="edit(service, 'liturgy.editor', $event)">
+                            <span class="mdi mdi-view-list"></span>
+                        </a>
+                        <a href="#" class="btn btn-light" role="button"
+                           title="Predigt bearbeiten" @click.prevent.stop="edit(service, 'service.sermon.editor', $event)">
+                            <span class="mdi mdi-microphone"></span>
+                        </a>
+                    </div>
+                    <div slot="reference">
+                        <calendar-service :service="service" :key="service.id" :index="index"
+                                          :targetMode="targetMode" :target="target"/>
+                    </div>
+                </popper>
+
+                <calendar-service v-else :service="service" :key="service.id" :index="index"
+                                  :targetMode="targetMode" :target="target"/>
+            </div>
         </div>
     </td>
 </template>
 <script>
 import EventBus from "../../plugins/EventBus";
-import { CalendarToggleDayColumnEvent} from "../../events/CalendarToggleDayColumnEvent";
+import {CalendarToggleDayColumnEvent} from "../../events/CalendarToggleDayColumnEvent";
+import Popper from 'vue-popperjs';
+import 'vue-popperjs/dist/vue-popper.css';
+import NavButton from "../Ui/buttons/NavButton";
 
 export default {
     props: ['city', 'day', 'services', 'targetMode', 'target'],
+    components: {NavButton, Popper},
+    methods: {
+        edit(service, myRoute, clickEvent) {
+            if (clickEvent.ctrlKey) {
+                window.open(route(myRoute, service.slug), '_blank');
+            } else {
+                this.$inertia.visit(route(myRoute, service.slug));
+            }
+        }
+    }
 }
 </script>
 <style scoped>
-    .calendar-cell {
-        padding: 0;
-    }
+.calendar-cell {
+    padding: 0;
+}
 
-    .city-loading {
-        text-align: center;
-        background-color: transparent !important;
-        color: lightgray !important;
-        font-size: 3em !important;
-    }
-
+.city-loading {
+    text-align: center;
+    background-color: transparent !important;
+    color: lightgray !important;
+    font-size: 3em !important;
+}
 
 
 </style>

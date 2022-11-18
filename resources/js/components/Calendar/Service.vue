@@ -38,7 +38,7 @@
         'reloading': loading,
         'hidden': myService.hidden}"
          :title="myService.isEditable ? clickTitle(service) : null"
-         @click.stop="myService.isEditable ? edit(service, $event) : null"
+         @click="myService.isEditable ? edit(service, $event) : null"
     >
         <div v-if="loading" class="text-center"><span class="mdi mdi-spin mdi-loading"></span></div>
         <div v-else>
@@ -130,7 +130,7 @@ export default {
                 this.target.people.forEach(person => people.push(person.name));
                 return 'Klicken für ' + this.target.ministry + ': ' + people.join(', ');
             }
-            return service.isEditable ? 'Klicken, um diesen Eintrag zu bearbeiten (#' + service.id + ')' : 'Nicht bearbeitbar';
+            return '';
         },
         redirect: function (url) {
             window.location.href = url;
@@ -151,11 +151,8 @@ export default {
                     this.loading = false;
                 });
                 return;
-            }
-            if (clickEvent.ctrlKey) {
-                window.open(route('service.edit', service.slug), '_blank');
-            } else {
-                this.$inertia.visit(route('service.edit', service.slug));
+                clickEvent.preventDefault();
+                clickEvent.stopPropagation();
             }
         },
     }
@@ -181,10 +178,6 @@ export default {
     border: 0;
 }
 
-
-.service-entry.editable {
-    cursor: pointer;
-}
 
 .service-entry.editable.possible-target {
     cursor: crosshair;

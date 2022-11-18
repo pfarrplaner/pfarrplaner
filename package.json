@@ -64,6 +64,7 @@
         "vue-json-pretty": "^1.8.2",
         "vue-markdown": "^2.2.4",
         "vue-nl2br": "^0.1.2",
+        "vue-popperjs": "^2.3.0",
         "vue-quill-editor": "^3.0.6",
         "vue2-selectize": "^1.1.7",
         "vuedraggable": "^2.24.3"
