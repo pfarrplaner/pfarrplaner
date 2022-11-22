@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.158.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.158.0...v2022.158.1) (2022-11-22)
+
+
+### Bug Fixes
+
+* Ministries not editable in PeopleTab ([7bca47b](https://github.com/pfarrplaner/pfarrplaner/commits/7bca47bac8f4bf893ed2286ad0e1f0d1fec10c3f))
+
 ## [2022.158.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.157.1...v2022.158.0) (2022-11-18)
 
 
