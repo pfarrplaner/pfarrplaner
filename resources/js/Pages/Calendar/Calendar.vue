@@ -57,7 +57,7 @@
             </div>
             <div v-if="ministriesLoaded" :key="myMinistries.length">
                 <form-selectize label="Für folgenden Dienst eintragen" v-model="target.ministry" :options="myMinistries"
-                                :key="myMinistries.length"/>
+                                :key="myMinistries.length" />
             </div>
             <form-check label="Bestehende Einträge überschreiben" v-model="target.exclusive"/>
         </modal>
@@ -132,7 +132,7 @@ export default {
                 {id: 'M', 'name': 'Mesner*in'},
             ];
             for (const ministryKey in response.data) {
-                this.myMinistries.push({id: response.data[ministryKey], name: response.data[ministryKey]});
+                this.myMinistries.push({id: response.data[ministryKey].category, name: response.data[ministryKey].category});
             }
             this.ministriesLoaded = true;
         });

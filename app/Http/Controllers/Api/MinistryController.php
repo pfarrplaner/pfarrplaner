@@ -46,7 +46,11 @@ class MinistryController extends \App\Http\Controllers\Controller
      */
     public function list()
     {
-        return response()->json(Ministry::all());
+        $ministries = [];
+        foreach (Ministry::all() as $ministry) {
+            $ministries[] = ['category' => $ministry];
+        }
+        return response()->json($ministries);
     }
 
 }
