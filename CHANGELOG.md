@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2022.159.0](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.158.2...v2022.159.0) (2022-11-25)
+
+
+### Features
+
+* Add default ministries per city ([4e95cb1](https://github.com/pfarrplaner/pfarrplaner/commits/4e95cb1a09fbf7e2eb95d8cec21221bb5609cf1b))
+
 ### [2022.158.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.158.1...v2022.158.2) (2022-11-25)
 
 
