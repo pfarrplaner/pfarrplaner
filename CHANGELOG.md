@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2022.158.2](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.158.1...v2022.158.2) (2022-11-25)
+
+
+### Bug Fixes
+
+* Plan for organists reverses final psalm verses ([e9aa024](https://github.com/pfarrplaner/pfarrplaner/commits/e9aa0245f759749be969607c14e591f14fa979ff)), closes [#337](https://github.com/pfarrplaner/pfarrplaner/issues/337)
+
 ### [2022.158.1](https://github.com/pfarrplaner/pfarrplaner/compare/v2022.158.0...v2022.158.1) (2022-11-22)
 
 
