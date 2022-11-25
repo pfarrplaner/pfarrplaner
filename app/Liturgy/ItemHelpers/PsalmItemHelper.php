@@ -68,7 +68,9 @@ class PsalmItemHelper extends AbstractItemHelper
         $stop = min($number, count($verses));
         $text = '';
         for ($i=count($verses)-1; $i>=count($verses)-$stop; $i--) {
-            foreach ($verses[$i] as $line) $text .= $line.PHP_EOL;
+            $thisVerse = '';
+            foreach ($verses[$i] as $line) $thisVerse .= $line.PHP_EOL;
+            $text = $thisVerse.$text;
         }
         return $text;
     }
