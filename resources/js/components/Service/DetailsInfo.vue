@@ -50,7 +50,7 @@
         <calendar-service-participants :participants="service.pastors" category="P" :predicant="service.need_predicant" />
         <calendar-service-participants :participants="service.organists" category="O" :predicant="0" />
         <calendar-service-participants :participants="service.sacristans" category="M" :predicant="0" />
-        <calendar-service-participants v-for="participants,ministry in service.ministriesByCategory" :key="ministry"
+        <calendar-service-participants v-for="participants,ministry in myService.ministriesByCategory" :key="ministry"
                                        :participants="participants" :category="ministry" :predicant="0" />
         <div v-if="$can('gd-kasualien-lesen') || $can('gd-kasualien-nur-statistik')">
             <div class="service-description" v-if="service.baptisms.length > 0">
@@ -63,7 +63,19 @@
 <script>
 export default {
     name: "DetailsInfo",
-    props: ['service']
+    props: ['service'],
+    data() {
+        let myService = this.service;
+        if (Array.isArray(myService.ministriesByCategory)) myService.ministriesByCategory = {};
+        if (!myService.ministriesByCategory) myService.ministriesByCategory = {};
+        this.service.city.default_ministries.forEach(ministry => {
+            if (!myService.ministriesByCategory[ministry]) myService.ministriesByCategory[ministry] = [];
+        });
+
+        return {
+            myService,
+        }
+    }
 }
 </script>
 

@@ -52,7 +52,10 @@
                 <form-image-attacher v-model="myCity.logo" label="Logo der Kirchengemeinde"
                                      :attach-route="route('city.attach', {city: myCity.id, field: 'logo'})"
                                      :detach-route="route('city.detach', {city: myCity.id, field: 'logo'})"/>
-
+                <form-selectize v-if="ministriesLoaded" multiple
+                                name="default_ministries" label="Diese Dienste immer mit anzeigen" v-model="myCity.default_ministries"
+                                :options="myMinistries" />
+                <div v-else><span class="mdi mdi-spin mdi-loading"></span> Diensteliste wird geladen...</div>
             </tab>
             <tab id="offerings" :active-tab="activeTab">
                 <form-input name="default_offering_goal" label="Opferzweck, wenn nicht angegeben"
@@ -221,7 +224,18 @@ export default {
         FormImageAttacher,
         FormCheck, FormSelectize, FormInput, Tab, Tabs, TabHeader, TabHeaders, CardBody, CardHeader, Card
     },
-    props: ['city', 'streams'],
+    props: ['city', 'streams', 'ministries'],
+    created() {
+        axios.get(route('api.ministries.list', {
+            api_token: this.apiToken,
+        })).then(response => {
+            for (const ministryKey in response.data) {
+                this.myMinistries.push({id: response.data[ministryKey].category, name: response.data[ministryKey].category});
+            }
+            this.ministriesLoaded = true;
+        });
+
+    },
     data() {
         var streamOptions = [];
         for (var streamKey in this.streams) {
@@ -229,6 +243,9 @@ export default {
         }
 
         return {
+            apiToken: this.$page.props.currentUser.data.api_token,
+            myMinistries: [],
+            ministriesLoaded: false,
             myCity: this.city,
             activeTab: 'home',
             streamOptions: streamOptions,

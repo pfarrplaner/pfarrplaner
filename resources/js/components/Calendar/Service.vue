@@ -105,8 +105,15 @@ export default {
     props: ['service', 'targetMode', 'target'],
     inject: ['settings'],
     data() {
+        let myService = this.service;
+        if (Array.isArray(myService.ministriesByCategory)) myService.ministriesByCategory = {};
+        if (!myService.ministriesByCategory) myService.ministriesByCategory = {};
+        this.service.city.default_ministries.forEach(ministry => {
+            if (!myService.ministriesByCategory[ministry]) myService.ministriesByCategory[ministry] = [];
+        });
+
         return {
-            myService: this.service,
+            myService,
             apiToken: this.$page.props.currentUser.data.api_token,
             loading: false,
         }

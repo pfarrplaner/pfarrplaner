@@ -80,6 +80,7 @@ class City extends Model
         'konfiapp_default_type',
         'official_name',
         'logo',
+        'default_ministries',
     ];
 
     /**
@@ -130,6 +131,22 @@ class City extends Model
      */
     public function hasRegistrableLocations() {
         return Location::where('city_id', $this->id)->whereHas('seatingSections')->count() > 0;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getDefaultMinistriesAttribute()
+    {
+        return explode('||', $this->attributes['default_ministries']);
+    }
+
+    /**
+     * @param string[] $ministries
+     */
+    public function setDefaultMinistriesAttribute(array $ministries)
+    {
+        $this->attributes['default_ministries'] = join('||', $ministries);
     }
 
 }

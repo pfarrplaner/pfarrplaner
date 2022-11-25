@@ -33,6 +33,7 @@ namespace App\Http\Controllers;
 use App\City;
 use App\Integrations\KonfiApp\KonfiAppIntegration;
 use App\Integrations\Youtube\YoutubeIntegration;
+use App\Ministry;
 use App\Service;
 use App\Traits\HandlesAttachedImageTrait;
 use App\Traits\HandlesAttachmentsTrait;
@@ -108,7 +109,7 @@ class CityController extends Controller
      */
     protected function validateRequest()
     {
-        return request()->validate(
+        $data = request()->validate(
             [
                 'name' => 'required|max:255',
                 'public_events_calendar_url' => 'nullable',
@@ -141,8 +142,11 @@ class CityController extends Controller
                 'konfiapp_default_type' => 'nullable|string',
                 'logo' => 'nullable|string',
                 'official_name' => 'nullable|string',
+                'default_ministries' => 'nullable',
+                'default_ministries.*' => 'nullable|string',
             ]
         );
+        return $data;
     }
 
     /**

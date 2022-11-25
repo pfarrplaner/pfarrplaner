@@ -113,8 +113,15 @@ export default {
         if (!this.service.ministriesByCategory) this.service.ministriesByCategory = {};
         if (this.service.ministriesByCategory.length == 0) this.service.ministriesByCategory = {};
 
+        let myService = this.service;
+        if (Array.isArray(myService.ministriesByCategory)) myService.ministriesByCategory = {};
+        if (!myService.ministriesByCategory) myService.ministriesByCategory = {};
+        this.service.city.default_ministries.forEach(ministry => {
+            if (undefined == myService.ministriesByCategory[ministry]) myService.ministriesByCategory[ministry] = [];
+        });
+
         return {
-            myService: this.service,
+            myService,
             myLocation: this.service.location || this.service.special_location,
             locationUpdating: false,
             creditsCopied: false,
