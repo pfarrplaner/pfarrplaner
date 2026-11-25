@@ -2,4 +2,4 @@
 
 
 ## Umgezogen
-Das Repository des Pfarrplaner ist umgezogen auf [https://codeberg.org/pfarrplaner/pfarrplaner](https://codeberg.org/pfarrplaner/pfarrplaner).
+Das Repository des Pfarrplaner ist umgezogen auf [https://github.com/pfarr-tools/pfarrplaner](https://github.com/pfarr-tools/pfarrplaner). 
